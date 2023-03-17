@@ -1,0 +1,61 @@
+# Override containers for local / dev environnement
+version: "2.4"
+services:
+  reverse_proxy:
+    volumes:
+      - bal_nginx_data:/data:z
+      - ./reverse_proxy/dev/includes:/etc/nginx/templates/includes/env
+
+  ui:
+    mem_limit: 1g
+    stdin_open: true
+    volumes:
+      - ./:/app/:z
+    build:
+      context: .
+      dockerfile: ui/Dockerfile.dev
+      args:
+        - NEXT_PUBLIC_ENV=dev
+        - NEXT_PUBLIC_BASE_URL=http://localhost
+        - NEXT_PUBLIC_BASE_HOST=localhost
+        - NEXT_PUBLIC_METABASE_URL=https://pilotage.trajectoirespro.beta.gouv.fr/
+        - NEXT_PUBLIC_METABASE_SECRET_KEY=
+        - SKIP_PREFLIGHT_CHECK=true
+        - NEXT_SERVER_URI=http://server:5000/api
+  server:
+    restart: "no"
+    ports:
+      - "127.0.0.1:9229:9229" # Allows remote debugging
+      - "127.0.0.1:5000:5000"
+    volumes:
+      - ./:/app/:z
+      - bal_server_data:/data:z
+    build:
+      context: .
+      dockerfile: server/Dockerfile.dev
+    environment:
+      - MNA_BAL_POSTGRES_URI=postgresql://postgres:password@postgres:5432/postgres
+      - MNA_BAL_ENV=dev
+      - MNA_BAL_LOG_LEVEL=debug
+      - MNA_BAL_LOG_DESTINATIONS=stdout,mongodb
+    depends_on:
+      - postgres
+
+  postgres:
+      environment:
+          - POSTGRES_PASSWORD=password
+      ports:
+          - "5432:5432"
+      volumes:
+          - bal_postgres_data:/var/lib/postgresql/data:z
+
+volumes:
+  bal_postgres_data:
+    driver: local
+    name: bal_postgres_data
+  bal_nginx_data:
+    driver: local
+    name: bal_nginx_data
+  bal_server_data:
+    driver: local
+    name: bal_server_data

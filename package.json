@@ -1,0 +1,71 @@
+{
+  "name": "mna-bal",
+  "description": "[MNA] description",
+  "repository": "https://github.com/mission-apprentissage/bal.git",
+  "version": "0",
+  "author": "MNA",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "eslint-plugin-react": "^7.32.2",
+    "global": "4.4.0"
+  },
+  "scripts": {
+    "docker:clean": "docker-compose kill && docker system prune --force --volumes",
+    "lint": "eslint .",
+    "lint:staged": "lint-staged",
+    "prettier:fix": "prettier --write ./ui ./server",
+    "prettier:check": "prettier --check ./ui ./server",
+    "npm:release": "semantic-release",
+    "npm:release:local": "CI=true LOCAL_RELEASE=true semantic-release"
+  },
+  "workspaces": [
+    "ui",
+    "server",
+    "shared"
+  ],
+  "devDependencies": {
+    "@commitlint/cli": "16.2.4",
+    "@commitlint/config-conventional": "16.2.4",
+    "@semantic-release/changelog": "6.0.1",
+    "@semantic-release/exec": "6.0.3",
+    "@semantic-release/git": "10.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
+    "eslint": "8.25.0",
+    "eslint-config-next": "13.0.1",
+    "eslint-import-resolver-typescript": "^3.5.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "6.5.1",
+    "eslint-plugin-mocha": "10.1.0",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "husky": "4.3.8",
+    "lint-staged": "11.2.6",
+    "prettier": "2.7.1",
+    "semantic-release": "19.0.2",
+    "semantic-release-slack-bot": "3.5.2",
+    "typescript": "4.5.2"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "bracketSpacing": true,
+    "trailingComma": "es5",
+    "arrowParens": "always"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "./git-hooks/preventSensibleFilesCommit.sh && lint-staged",
+      "commit-msg": "[[ -n $HUSKY_BYPASS ]] || commitlint --config ./config/commitlint.config.js -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,js,tsx}": [
+      "eslint .",
+      "prettier ./ui ./server"
+    ],
+    "*.{md,json,html}": "prettier ./ui ./server ./shared"
+  },
+  "packageManager": "yarn@3.3.1"
+}

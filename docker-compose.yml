@@ -1,0 +1,72 @@
+version: "2.4"
+services:
+  reverse_proxy:
+    image: bal_reverse_proxy
+    container_name: bal_reverse_proxy
+    build:
+      context: reverse_proxy
+    mem_limit: 256m
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - bal_network
+    depends_on:
+      - server
+      - ui
+    environment:
+      - PARANOIA=1
+      - ANOMALY_INBOUND=5
+      - ANOMALY_OUTBOUND=4
+      - REPORTING_LEVEL=4
+      - DNS_SERVER=127.0.0.11
+      - PROXY=1
+      - SERVERNAME=localhost
+      - ACCESSLOG=/data/access.log
+      - ERRORLOG=/data/error.log
+      - LOGLEVEL=warn
+      - NGINX_ALWAYS_TLS_REDIRECT=false
+      - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
+
+  ui:
+    image: bal_ui
+    container_name: bal_ui
+    build:
+      context: .
+      dockerfile: ui/Dockerfile
+    mem_limit: 256m
+    networks:
+      - bal_network
+    depends_on:
+      - server
+    environment:
+      - SERVER_URI=http://server:5000
+
+  server:
+    image: bal_server
+    container_name: bal_server
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    mem_limit: 1g
+    restart: unless-stopped
+    networks:
+      - bal_network
+    depends_on:
+      - postgres
+    environment:
+      - bal_LOG_DESTINATIONS=stdout,mongodb
+
+  postgres:
+      image: postgres:14.2
+      container_name: bal_postgres
+      restart: unless-stopped
+      networks:
+        - bal_network
+      
+
+networks:
+  bal_network:
+    name: bal_network
+
