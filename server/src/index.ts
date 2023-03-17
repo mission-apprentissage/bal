@@ -14,10 +14,10 @@ server.register(
   { prefix: "/api" }
 );
 
-if (process.env.PILOTAGE_ENV !== "dev") {
+if (process.env.MNA_BAL_ENV !== "dev") {
   const knexClient = knex({
     client: "pg",
-    connection: config.PILOTAGE_POSTGRES_URI,
+    connection: config.MNA_BAL_POSTGRES_URI,
   });
 
   knexClient.migrate

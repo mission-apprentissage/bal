@@ -56,7 +56,7 @@ services:
     depends_on:
       - postgres
     environment:
-      - bal_LOG_DESTINATIONS=stdout,mongodb
+      - MNA_BAL_LOG_DESTINATIONS=stdout,mongodb
 
   postgres:
       image: postgres:14.2

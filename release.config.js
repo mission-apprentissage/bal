@@ -1,6 +1,6 @@
 const mainConfig = {
   branches: ["main", { name: "develop", channel: "beta", prerelease: "beta" }],
-  repositoryUrl: "https://github.com/mission-apprentissage/tjp-pilotage.git",
+  repositoryUrl: "https://github.com/mission-apprentissage/bal.git",
   plugins: [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
@@ -20,7 +20,13 @@ const mainConfig = {
     [
       "@semantic-release/git",
       {
-        assets: ["ui/package.json", "server/package.json", "ui/CHANGELOG.md", "CHANGELOG.md", "package.json"],
+        assets: [
+          "ui/package.json",
+          "server/package.json",
+          "ui/CHANGELOG.md",
+          "CHANGELOG.md",
+          "package.json",
+        ],
         message:
           // eslint-disable-next-line no-template-curly-in-string
           "chore(release): bump ${nextRelease.version}",
@@ -60,7 +66,7 @@ const localConfig = {
       prerelease: channel,
     },
   ],
-  repositoryUrl: "https://github.com/mission-apprentissage/tjp-pilotage.git",
+  repositoryUrl: "https://github.com/mission-apprentissage/bal.git",
   plugins: ["@semantic-release/commit-analyzer"],
 };
 

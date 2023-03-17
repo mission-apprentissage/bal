@@ -2,16 +2,16 @@ import "dotenv/config";
 
 import env from "env-var";
 export const config = {
-  PILOTAGE_POSTGRES_URI: env
-    .get("PILOTAGE_POSTGRES_URI")
+  MNA_BAL_POSTGRES_URI: env
+    .get("MNA_BAL_POSTGRES_URI")
     .default("local")
     .asString(),
-  PILOTAGE_INSERJEUNES_USERNAME: env
-    .get("PILOTAGE_INSERJEUNES_USERNAME")
+  MNA_BAL_INSERJEUNES_USERNAME: env
+    .get("MNA_BAL_INSERJEUNES_USERNAME")
     .required()
     .asString(),
-  PILOTAGE_INSERJEUNES_PASSWORD: env
-    .get("PILOTAGE_INSERJEUNES_PASSWORD")
+  MNA_BAL_INSERJEUNES_PASSWORD: env
+    .get("MNA_BAL_INSERJEUNES_PASSWORD")
     .required()
     .asString(),
 };

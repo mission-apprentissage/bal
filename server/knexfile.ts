@@ -1,6 +1,6 @@
 const defaultConfig = {
   client: "pg",
-  connection: process.env.PILOTAGE_POSTGRES_URI,
+  connection: process.env.MNA_BAL_POSTGRES_URI,
   migrations: { directory: "dist/migrations" },
 };
 
