@@ -2,6 +2,7 @@ import { MongoClient } from "mongodb";
 import omitDeep from "omit-deep";
 
 import { asyncForEach } from "../utils/asyncUtils";
+import logger from "../utils/logger";
 
 /** @type {MongoClient} */
 let mongodbClient: MongoClient;
@@ -21,7 +22,7 @@ export const connectToMongodb = async (uri: string) => {
 
   await client.connect();
   mongodbClient = client;
-  console.log("Connected to MongoDB");
+  logger.info("Connected to MongoDB");
 
   return client;
 };
