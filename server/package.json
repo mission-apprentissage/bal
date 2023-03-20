@@ -40,6 +40,8 @@
     "jsonwebtoken": "8.5.1",
     "lodash": "^4.17.21",
     "luxon": "2.3.0",
+    "mongodb": "4.11.0",
+    "omit-deep": "0.3.0",
     "rate-limiter-flexible": "2.3.6",
     "shared": "*",
     "stream-transform": "^3.2.2",
@@ -52,7 +54,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.191",
     "@types/luxon": "^3.2.0",
-    "@types/pg": "^8.6.6",
+    "@types/omit-deep": "^0.3.0",
     "chalk": "4.1.2",
     "nodemon": "^2.0.20",
     "tsup": "^6.5.0",

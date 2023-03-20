@@ -3,16 +3,10 @@ import "dotenv/config";
 import env from "env-var";
 
 export const config = {
-  MNA_BAL_POSTGRES_URI: env
-    .get("MNA_BAL_POSTGRES_URI")
-    .default("local")
-    .asString(),
-  MNA_BAL_INSERJEUNES_USERNAME: env
-    .get("MNA_BAL_INSERJEUNES_USERNAME")
-    .required()
-    .asString(),
-  MNA_BAL_INSERJEUNES_PASSWORD: env
-    .get("MNA_BAL_INSERJEUNES_PASSWORD")
-    .required()
-    .asString(),
+  appName: env.get("MNA_BAL_APP_NAME").default("BAL").asString(),
+  env: env.get("MNA_BAL_ENV").required().asString(),
+  publicUrl: env.get("MNA_BAL_PUBLIC_URL").required().asString(),
+  mongodb: {
+    uri: env.get("MNA_BAL_MONGODB_URI").required().asString(),
+  },
 };
