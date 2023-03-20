@@ -18,10 +18,11 @@ services:
         - NEXT_PUBLIC_ENV=dev
         - NEXT_PUBLIC_BASE_URL=http://localhost
         - NEXT_PUBLIC_BASE_HOST=localhost
-        - NEXT_PUBLIC_METABASE_URL=https://pilotage.trajectoirespro.beta.gouv.fr/
+        - NEXT_PUBLIC_METABASE_URL=https://bal.apprentissage.beta.gouv.fr/
         - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
         - NEXT_SERVER_URI=http://server:5000/api
+
   server:
     restart: "no"
     ports:
@@ -34,25 +35,40 @@ services:
       context: .
       dockerfile: server/Dockerfile.dev
     environment:
-      - MNA_BAL_POSTGRES_URI=postgresql://postgres:password@postgres:5432/postgres
+      - MNA_BAL_MONGODB_URI=mongodb://mongodb:27017/mna-bal?retryWrites=true&w=majority
       - MNA_BAL_ENV=dev
       - MNA_BAL_LOG_LEVEL=debug
       - MNA_BAL_LOG_DESTINATIONS=stdout,mongodb
     depends_on:
-      - postgres
+      - smtp
 
-  postgres:
-      environment:
-          - POSTGRES_PASSWORD=password
-      ports:
-          - "5432:5432"
-      volumes:
-          - bal_postgres_data:/var/lib/postgresql/data:z
+  mongodb:
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - bal_mongodb_data:/data
+
+  smtp:
+    image: mailhog/mailhog
+    container_name: bal_smtp
+    mem_limit: 128m
+    ports:
+      - 1025:1025
+    networks:
+      - bal_network
+    environment:
+      - MH_UI_WEB_PATH=smtp
+      - MH_STORAGE=mongodb
+      - MH_MONGO_URI=mongodb:27017
+      - MH_MONGO_DB=mna-bal
+      - MH_MONGO_COLLECTION=mailhog
+    depends_on:
+      - mongodb
 
 volumes:
-  bal_postgres_data:
+  bal_mongodb_data:
     driver: local
-    name: bal_postgres_data
+    name: bal_mongodb_data
   bal_nginx_data:
     driver: local
     name: bal_nginx_data

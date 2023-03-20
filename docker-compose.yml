@@ -42,6 +42,7 @@ services:
       - server
     environment:
       - SERVER_URI=http://server:5000
+      - NEXT_PUBLIC_SENTRY_DSN=
 
   server:
     image: bal_server
@@ -54,16 +55,18 @@ services:
     networks:
       - bal_network
     depends_on:
-      - postgres
+      - mongodb
     environment:
       - MNA_BAL_LOG_DESTINATIONS=stdout,mongodb
+      - MNA_BAL_SENTRY_DSN=
 
-  postgres:
-      image: postgres:14.2
-      container_name: bal_postgres
-      restart: unless-stopped
-      networks:
-        - bal_network
+  mongodb:
+    image: mongo:6.0.2-focal
+    container_name: bal_mongodb
+    mem_limit: 2g
+    restart: unless-stopped
+    networks:
+      - bal_network
       
 
 networks:

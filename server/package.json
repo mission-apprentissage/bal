@@ -1,8 +1,8 @@
 {
   "name": "server",
   "version": "0.0.1",
-  "description": "[MNA] pilotage server",
-  "repository": "https://github.com/mission-apprentissage/tjp-pilotage.git",
+  "description": "[MNA] bal server",
+  "repository": "https://github.com/mission-apprentissage/bal.git",
   "private": true,
   "author": "MNA",
   "license": "MIT",
@@ -40,16 +40,13 @@
     "env-var": "7.1.1",
     "fastify": "^4.12.0",
     "jsonwebtoken": "8.5.1",
-    "knex": "^2.4.2",
     "lodash": "^4.17.21",
     "luxon": "2.3.0",
-    "pg": "^8.9.0",
     "rate-limiter-flexible": "2.3.6",
     "shared": "*",
     "stream-transform": "^3.2.2",
     "ts-node": "^10.9.1",
-    "uuid": "9.0.0",
-    "zapatos": "^6.1.2"
+    "uuid": "9.0.0"
   },
   "engines": {
     "node": ">=18.0.0"

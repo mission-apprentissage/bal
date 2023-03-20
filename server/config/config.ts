@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import env from "env-var";
+
 export const config = {
   MNA_BAL_POSTGRES_URI: env
     .get("MNA_BAL_POSTGRES_URI")
