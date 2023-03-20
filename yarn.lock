@@ -2009,6 +2009,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/bunyan-prettystream@npm:^0.1.32":
+  version: 0.1.32
+  resolution: "@types/bunyan-prettystream@npm:0.1.32"
+  dependencies:
+    "@types/node": "*"
+  checksum: 81ef6bcb3832ccdf144e7e6d647eb87b983a77f640f985d642eba91ac46731ab2b9ecc5cbbef2027e300cfd887e892363c3a8246d5d943b59366db60b9aed446
+  languageName: node
+  linkType: hard
+
+"@types/bunyan@npm:^1.8.8":
+  version: 1.8.8
+  resolution: "@types/bunyan@npm:1.8.8"
+  dependencies:
+    "@types/node": "*"
+  checksum: b28966c13579b281ae75560d8c99ee4149348818cd4c4d6424afeee9fdab1039db2a0c06f1ab62fbf8c71f99dcebb70551bb45f2110d6a1fc3e3f891355b6b4b
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:^7.0.9":
   version: 7.0.11
   resolution: "@types/json-schema@npm:7.0.11"
@@ -9607,6 +9625,8 @@ __metadata:
     "@fastify/cors": ^8.2.0
     "@fastify/type-provider-typebox": ^2.4.0
     "@sinclair/typebox": ^0.25.21
+    "@types/bunyan": ^1.8.8
+    "@types/bunyan-prettystream": ^0.1.32
     "@types/lodash": ^4.14.191
     "@types/luxon": ^3.2.0
     "@types/omit-deep": ^0.3.0
