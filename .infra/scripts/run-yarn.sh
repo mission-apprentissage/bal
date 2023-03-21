@@ -11,7 +11,7 @@ function main() {
     local task
     task="yarn ${@}"
     
-    ssh -i ./mnadevops ansible@${env_ip} "bash -c 'sudo docker exec pilotage_server ${task}'"
+    ssh -i ./mnadevops ansible@${env_ip} "bash -c 'sudo docker exec bal_server ${task}'"
 }
 
 main "$@"

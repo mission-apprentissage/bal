@@ -25,7 +25,7 @@
         name: "backup metabase"
         minute: "20"
         hour: "0"
-        job: "bash /opt/pilotage/tools/backup-metabase.sh >> /var/log/backup-metabase.log 2>&1"
+        job: "bash /opt/bal/tools/backup-metabase.sh >> /var/log/backup-metabase.log 2>&1"
 
     - name: Add storage backup cron"
       become: true
@@ -33,7 +33,7 @@
         name: "backup OVH storage"
         minute: "30"
         hour: "0"
-        job: "bash /opt/pilotage/tools/backup-storage.sh 2>&1"
+        job: "bash /opt/bal/tools/backup-storage.sh 2>&1"
 
   when: backup_partition_name is defined
 

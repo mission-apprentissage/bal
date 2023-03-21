@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly PROJECT_DIR="/opt/pilotage"
-readonly REPO_DIR="/opt/pilotage/repository"
+readonly PROJECT_DIR="/opt/bal"
+readonly REPO_DIR="/opt/bal/repository"
 
 function reload_containers() {
   cd "${REPO_DIR}"

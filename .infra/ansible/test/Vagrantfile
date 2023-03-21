@@ -7,11 +7,11 @@
 Vagrant.configure(2) do |config|
 
   config.vm.box = "ubuntu/focal64"
-  config.vm.hostname = "pilotage-dev".gsub('_', '-')
+  config.vm.hostname = "bal-dev".gsub('_', '-')
   config.vm.network "private_network", ip: "192.168.56.7"
   config.vm.disk :disk, size: "1GB", name: "data"
   config.vm.provider :virtualbox do |provider|
-    provider.name = "pilotage-dev"
+    provider.name = "bal-dev"
     provider.memory = 2048
     provider.cpus = 2
   end
@@ -25,7 +25,7 @@ Vagrant.configure(2) do |config|
       env_type: "recette",
       git_revision: "#{ENV['GIT_REVISION']}",
       dns_name: "localhost",
-      host_name: "tjp-pilotage-test",
+      host_name: "bal-test",
       update_sshd_config: "false",
       backup_device: "/dev/sdc"
     }

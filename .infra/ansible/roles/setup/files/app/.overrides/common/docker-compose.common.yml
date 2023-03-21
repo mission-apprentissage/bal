@@ -8,28 +8,38 @@ services:
       - PROXY_SSL_CERT=/ssl/fullchain.pem
       - PROXY_SSL_CERT_KEY=/ssl/privkey.pem
     volumes:
-      - /opt/pilotage/data/nginx:/data
-      - /opt/pilotage/data/ssl:/ssl:ro
-      - /opt/pilotage/.overrides/reverse_proxy/includes:/etc/nginx/templates/includes/env
+      - /opt/bal/data/nginx:/data
+      - /opt/bal/data/ssl:/ssl:ro
+      - /opt/bal/.overrides/reverse_proxy/includes:/etc/nginx/templates/includes/env
 
   server:
     volumes:
-      - /opt/pilotage/data/server:/data
+      - /opt/bal/data/server:/data
+
+  mongodb:
+    command: mongod --auth
+    volumes:
+      - /opt/bal/data/mongodb/db:/data/db
+      - /opt/bal/data/mongodb/configdb:/data/configdb
+      - /opt/bal/data/mongodb/backups:/data/backups-legacy
+      - /opt/bal/.overrides/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+    # ports:
+    #   - "127.0.0.1:27017:27017"
 
   metabase:
-    image: metabase/metabase:v0.42.0
-    container_name: pilotage_metabase
+    image: metabase/metabase:v0.45.3
+    container_name: bal_metabase
     mem_limit: 2g
     volumes:
-      - /opt/pilotage/data/metabase:/data/metabase
-      - /opt/pilotage/backups/metabase:/data/backups
+      - /opt/bal/data/metabase:/data/metabase
+      - /opt/bal/backups/metabase:/data/backups
+    depends_on:
+      - mongodb
     environment:
+      JAVA_TIMEZONE: Europe/Paris
       MB_DB_FILE: /data/metabase/metabase.db
       MB_SITE_LOCALE: fr
+      MB_SITE_URL: http://0.0.0.0/metabase
     restart: always
     networks:
-      - pilotage_network
-
-  postgres:
-    volumes:
-      - /opt/pilotage/data/postgres/db:/var/lib/postgresql/data:z
+      - bal_network

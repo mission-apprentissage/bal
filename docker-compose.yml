@@ -68,7 +68,6 @@ services:
     networks:
       - bal_network
       
-
 networks:
   bal_network:
     name: bal_network

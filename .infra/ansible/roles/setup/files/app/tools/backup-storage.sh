@@ -4,14 +4,14 @@ set -euo pipefail
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly BACKUP_NAS_DIR="/mnt/backups/mongodb"
-readonly BACKUP_LOCAL_DIR="/opt/pilotage/backups/mongodb"
+readonly BACKUP_LOCAL_DIR="/opt/bal/backups/mongodb"
 readonly BACKUP_FILE="${BACKUP_LOCAL_DIR}/mongodb-$(date +'%Y-%m-%d_%H%M%S').gpg"
 
 function backup() {
   echo "Creating backup..."
   mkdir -p "${BACKUP_LOCAL_DIR}"
-  # bash /opt/pilotage/server-yarn.sh zipStorage | bash "${SCRIPT_DIR}/gpg/encrypt.sh" >"${BACKUP_FILE}"
-  docker exec pilotage_mongodb bash -c "mongodump --gzip --archive -u backup -p {{ vault[env_type].MNA_BAL_MONGODB_BACKUP_PASSWORD }}" \
+  # bash /opt/bal/server-yarn.sh zipStorage | bash "${SCRIPT_DIR}/gpg/encrypt.sh" >"${BACKUP_FILE}"
+  docker exec bal_mongodb bash -c "mongodump --gzip --archive -u backup -p {{ vault[env_type].MNA_BAL_MONGODB_BACKUP_PASSWORD }}" \
   | bash "${SCRIPT_DIR}/gpg/encrypt.sh" >"${BACKUP_FILE}"
 }
 

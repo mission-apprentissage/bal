@@ -1,9 +1,9 @@
 - name: Check if SSL certificate has been generated
-  stat: path=/opt/pilotage/data/ssl/privkey.pem
+  stat: path=/opt/bal/data/ssl/privkey.pem
   register: ssl
 
 - name: Generate SSL certificate with LetsEncrypt
-  shell: "bash /opt/pilotage/tools/ssl/generate-certificate.sh {{dns_name}}"
+  shell: "bash /opt/bal/tools/ssl/generate-certificate.sh {{dns_name}}"
   register: output
   when: ssl.stat.exists == False
 
@@ -17,4 +17,4 @@
     minute: "0"
     hour: "2"
     weekday: "1"
-    job: "bash /opt/pilotage/tools/ssl/renew-certificate.sh {{dns_name}} >> /var/log/cron.log 2>&1"
+    job: "bash /opt/bal/tools/ssl/renew-certificate.sh {{dns_name}} >> /var/log/cron.log 2>&1"

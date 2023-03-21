@@ -18,7 +18,7 @@ services:
         - NEXT_PUBLIC_ENV=dev
         - NEXT_PUBLIC_BASE_URL=http://localhost
         - NEXT_PUBLIC_BASE_HOST=localhost
-        - NEXT_PUBLIC_METABASE_URL=https://bal.apprentissage.beta.gouv.fr/
+        - NEXT_PUBLIC_METABASE_URL=https://localhost/metabase
         - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
         - NEXT_SERVER_URI=http://server:5000/api
@@ -39,6 +39,12 @@ services:
       - MNA_BAL_ENV=dev
       - MNA_BAL_LOG_LEVEL=debug
       - MNA_BAL_LOG_DESTINATIONS=stdout,mongodb
+      - MNA_BAL_SMTP_HOST=smtp
+      - MNA_BAL_SMTP_PORT=1025
+      - MNA_BAL_AUTH_ACTIVATION_JWT_SECRET=secret
+      - MNA_BAL_AUTH_API_TOKEN_JWT_SECRET=secret
+      - MNA_BAL_AUTH_PASSWORD_JWT_SECRET=secret
+      - MNA_BAL_SENTRY_DSN=
     depends_on:
       - smtp
 
