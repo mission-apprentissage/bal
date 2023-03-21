@@ -31,6 +31,8 @@ function encrypt() {
   add_recipients_as_params recipients
   gpg \
     --default-key "mna_devops" \
+    -vvv \
+    --charset=utf-8 \
     --encrypt \
     --cipher-algo AES256 \
     --always-trust \
