@@ -6,3 +6,5 @@ cd ./ui
 npm version ${next_version}
 cd ../server
 npm version ${next_version}
+cd ../shared
+npm version ${next_version}

@@ -1,5 +1,5 @@
 const mainConfig = {
-  branches: ["main", { name: "develop", channel: "beta", prerelease: "beta" }],
+  branches: ["main"],
   repositoryUrl: "https://github.com/mission-apprentissage/bal.git",
   plugins: [
     "@semantic-release/commit-analyzer",
@@ -23,7 +23,7 @@ const mainConfig = {
         assets: [
           "ui/package.json",
           "server/package.json",
-          "ui/CHANGELOG.md",
+          "shared/package.json",
           "CHANGELOG.md",
           "package.json",
         ],
@@ -59,7 +59,6 @@ const channel = createHash("md5").update(branch).digest("hex");
 const localConfig = {
   branches: [
     "main",
-    { name: "develop", channel: "beta", prerelease: "beta" },
     {
       name: branch,
       channel,

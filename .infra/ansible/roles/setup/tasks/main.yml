@@ -19,6 +19,9 @@
 # - import_tasks: create-cron.yml
 #   tags: cron
 
+- import_tasks: configure-ips-blacklist.yml
+  tags: ipsblacklist
+
 - import_tasks: install-scripts.yml
   tags: scripts
 
