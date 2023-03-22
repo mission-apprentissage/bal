@@ -1,3 +1,3 @@
-import usersModelDescriptor from "shared/models/users.model";
+import usersModelDescriptor from "shared/models/user.model";
 
 export const modelDescriptors = [usersModelDescriptor];
