@@ -1,5 +1,5 @@
-import { User, userSchema } from "shared/models/users.model";
-import { createUserSchema } from "shared/routes/users";
+import { IUser } from "shared/models/user.model";
+import { SReqPostUser, SResPostUser } from "shared/routes/user.routes";
 
 import { getDbCollection } from "../../../db/mongodb";
 import { Server } from "../../../server";
@@ -9,11 +9,11 @@ export const userRoutes = ({ server }: { server: Server }) => {
    * Créer un utilisateur
    */
   server.post(
-    "/users",
+    "/user",
     {
       schema: {
-        body: createUserSchema,
-        response: { 200: userSchema },
+        body: SReqPostUser,
+        response: { 200: SResPostUser },
       } as const,
     },
     async (request, response) => {
@@ -22,7 +22,7 @@ export const userRoutes = ({ server }: { server: Server }) => {
           request.body
         );
 
-        const user = await getDbCollection("users").findOne<User>({
+        const user = await getDbCollection("users").findOne<IUser>({
           _id: userId,
         });
 

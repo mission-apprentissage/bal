@@ -6,7 +6,7 @@ const indexes = () => {
   return [[{ name: 1 }, { name: "name" }]];
 };
 
-export const userSchema = {
+export const SUser = {
   type: "object",
   properties: {
     _id: { type: "string" },
@@ -16,6 +16,6 @@ export const userSchema = {
   required: ["name"],
 } as const;
 
-export type User = FromSchema<typeof userSchema>;
+export type IUser = FromSchema<typeof SUser>;
 
-export default { schema: userSchema, indexes, collectionName };
+export default { schema: SUser, indexes, collectionName };
