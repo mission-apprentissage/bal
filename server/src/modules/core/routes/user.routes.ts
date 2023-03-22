@@ -1,5 +1,7 @@
+import { User, userSchema } from "shared/models/users.model";
+import { createUserSchema } from "shared/routes/users";
+
 import { getDbCollection } from "../../../db/mongodb";
-import usersModel, { User } from "../../../models/users.model";
 import { Server } from "../../../server";
 
 export const userRoutes = ({ server }: { server: Server }) => {
@@ -10,16 +12,14 @@ export const userRoutes = ({ server }: { server: Server }) => {
     "/users",
     {
       schema: {
-        body: usersModel.schema,
-        response: { 200: usersModel.schema },
+        body: createUserSchema,
+        response: { 200: userSchema },
       } as const,
     },
     async (request, response) => {
       try {
         const { insertedId: userId } = await getDbCollection("users").insertOne(
-          {
-            name: request.body.name,
-          }
+          request.body
         );
 
         const user = await getDbCollection("users").findOne<User>({

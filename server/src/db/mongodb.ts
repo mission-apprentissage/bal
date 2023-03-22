@@ -9,7 +9,9 @@ let mongodbClient: MongoClient;
 
 const ensureInitialization = () => {
   if (!mongodbClient) {
-    throw new Error("Database connection does not exist. Please call connectToMongodb before.");
+    throw new Error(
+      "Database connection does not exist. Please call connectToMongodb before."
+    );
   }
 };
 
@@ -54,7 +56,9 @@ export const getDbCollectionIndexes = async (name: string) => {
 const createCollectionIfDoesNotExist = async (collectionName: string) => {
   const db = getDatabase();
   const collectionsInDb = await db.listCollections().toArray();
-  const collectionExistsInDb = collectionsInDb.map(({ name }) => name).includes(collectionName);
+  const collectionExistsInDb = collectionsInDb
+    .map(({ name }) => name)
+    .includes(collectionName);
 
   if (!collectionExistsInDb) {
     await db.createCollection(collectionName);
@@ -67,8 +71,34 @@ const createCollectionIfDoesNotExist = async (collectionName: string) => {
  * @param {*} collectionName
  * @returns
  */
-export const collectionExistInDb = (collectionsInDb: any[], collectionName: string) =>
-  collectionsInDb.map(({ name }: {name: string}) => name).includes(collectionName);
+export const collectionExistInDb = (
+  collectionsInDb: any[],
+  collectionName: string
+) =>
+  collectionsInDb
+    .map(({ name }: { name: string }) => name)
+    .includes(collectionName);
+
+/**
+ * Conversion du schema pour le format mongoDB
+ */
+const convertSchemaToMongoSchema = (schema: unknown) => {
+  let replacedTypes = JSON.parse(
+    JSON.stringify(schema).replaceAll("type", "bsonType")
+  );
+
+  // remplacer _id de "string" à "objectId"
+  replacedTypes = {
+    ...replacedTypes,
+    properties: {
+      ...replacedTypes.properties,
+      _id: { bsonType: "objectId" },
+    },
+  };
+
+  // strip example field because NON STANDARD jsonSchema
+  return omitDeep(replacedTypes, ["example"]);
+};
 
 /**
  * Config de la validation
@@ -77,22 +107,36 @@ export const collectionExistInDb = (collectionsInDb: any[], collectionName: stri
 export const configureDbSchemaValidation = async (modelDescriptors: any[]) => {
   const db = getDatabase();
   ensureInitialization();
-  await asyncForEach(modelDescriptors, async ({ collectionName, schema }: {collectionName: string, schema: any}) => {
-    await createCollectionIfDoesNotExist(collectionName);
+  await asyncForEach(
+    modelDescriptors,
+    async ({
+      collectionName,
+      schema,
+    }: {
+      collectionName: string;
+      schema: any;
+    }) => {
+      await createCollectionIfDoesNotExist(collectionName);
 
-    if (!schema) {
-      return;
+      if (!schema) {
+        return;
+      }
+
+      const convertedSchema = convertSchemaToMongoSchema(schema);
+
+      await db.command({
+        collMod: collectionName,
+        validationLevel: "strict",
+        validationAction: "error",
+        validator: {
+          $jsonSchema: {
+            title: `${collectionName} validation schema`,
+            ...convertedSchema,
+          },
+        },
+      });
     }
-
-    await db.command({
-      collMod: collectionName,
-      validationLevel: "strict",
-      validationAction: "error",
-      validator: {
-        $jsonSchema: { title: `${collectionName} validation schema`, ...omitDeep(schema, ["example"]) }, // strip example field because NON STANDARD jsonSchema
-      },
-    });
-  });
+  );
 };
 
 /**
