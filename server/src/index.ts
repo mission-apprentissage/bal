@@ -9,7 +9,7 @@ import { server } from "./server";
 (async function () {
   try {
     await connectToMongodb(config.mongodb.uri);
-    configureDbSchemaValidation(modelDescriptors);
+    await configureDbSchemaValidation(modelDescriptors);
 
     server.register(fastifyCors, {});
     server.register(
