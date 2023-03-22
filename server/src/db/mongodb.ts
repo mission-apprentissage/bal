@@ -1,7 +1,7 @@
-import { MongoClient } from "mongodb";
+import { CollectionInfo, MongoClient } from "mongodb";
 import omitDeep from "omit-deep";
 
-import { asyncForEach } from "../utils/asyncUtils";
+import { IModelDescriptor } from "../models/collections";
 import logger from "../utils/logger";
 
 /** @type {MongoClient} */
@@ -72,7 +72,7 @@ const createCollectionIfDoesNotExist = async (collectionName: string) => {
  * @returns
  */
 export const collectionExistInDb = (
-  collectionsInDb: any[],
+  collectionsInDb: CollectionInfo[],
   collectionName: string
 ) =>
   collectionsInDb
@@ -104,18 +104,14 @@ const convertSchemaToMongoSchema = (schema: unknown) => {
  * Config de la validation
  * @param {*} modelDescriptors
  */
-export const configureDbSchemaValidation = async (modelDescriptors: any[]) => {
+export const configureDbSchemaValidation = async (
+  modelDescriptors: IModelDescriptor[]
+) => {
   const db = getDatabase();
   ensureInitialization();
-  await asyncForEach(
-    modelDescriptors,
-    async ({
-      collectionName,
-      schema,
-    }: {
-      collectionName: string;
-      schema: any;
-    }) => {
+
+  await Promise.all(
+    modelDescriptors.map(async ({ collectionName, schema }) => {
       await createCollectionIfDoesNotExist(collectionName);
 
       if (!schema) {
@@ -135,7 +131,7 @@ export const configureDbSchemaValidation = async (modelDescriptors: any[]) => {
           },
         },
       });
-    }
+    })
   );
 };
 
