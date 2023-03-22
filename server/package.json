@@ -20,8 +20,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^8.2.0",
-    "@fastify/type-provider-typebox": "^2.4.0",
-    "@sinclair/typebox": "^0.25.21",
+    "@fastify/type-provider-json-schema-to-ts": "^2.2.2",
     "axios": "0.24.0",
     "boom": "7.3.0",
     "bunyan": "1.8.15",
@@ -34,6 +33,7 @@
     "dotenv": "^16.0.3",
     "env-var": "7.1.1",
     "fastify": "^4.12.0",
+    "json-schema-to-ts": "^2.7.2",
     "jsonwebtoken": "8.5.1",
     "lodash": "^4.17.21",
     "luxon": "2.3.0",
