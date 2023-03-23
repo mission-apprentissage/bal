@@ -1,4 +1,4 @@
-import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
+import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import fastify from "fastify";
 
 export const server = fastify({
@@ -9,6 +9,6 @@ export const server = fastify({
       keywords: ["kind", "modifier"],
     },
   },
-}).withTypeProvider<TypeBoxTypeProvider>();
+}).withTypeProvider<JsonSchemaToTsProvider>();
 
 export type Server = typeof server;
