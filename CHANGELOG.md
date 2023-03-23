@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/mission-apprentissage/bal/compare/v1.0.0...v1.1.0) (2023-03-23)
+
+
+### Features
+
+* base de code minimal ([#10](https://github.com/mission-apprentissage/bal/issues/10)) ([fb6ff23](https://github.com/mission-apprentissage/bal/commit/fb6ff23d2fb592bb04d4ca0f79082c9d16a59e62))
+
 # 1.0.0 (2023-03-21)
 
 
