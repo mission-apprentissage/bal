@@ -3,7 +3,7 @@
 # A hook script to verify that we don't commit files that could contain sensible data or credentials like json, csv, xls(x) or .env
 
 sensible_files_pattern="\.(csv|xls|xls(x?)|json|env)$"
-exception="(package.json|custom-environment-variables.json"
+exception="(package.json|custom-environment-variables.json|example.json"
 exception="$exception|manifest.json|settings.json|zapatosconfig.json"
 exception="$exception|sample.json"
 exception="$exception|eslintrc.json|app.json|tsconfig.json"

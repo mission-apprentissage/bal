@@ -18,7 +18,9 @@
     "prettier:check": "prettier --check ./ui ./server",
     "npm:release": "semantic-release",
     "npm:release:local": "CI=true LOCAL_RELEASE=true semantic-release",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "e2e": "cypress open",
+    "e2e:headless": "cypress run"
   },
   "workspaces": [
     "ui",
@@ -33,6 +35,7 @@
     "@semantic-release/git": "10.0.1",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
+    "cypress": "^12.8.1",
     "eslint": "8.25.0",
     "eslint-config-next": "13.0.1",
     "eslint-import-resolver-typescript": "^3.5.2",
