@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# [[ -n $HUSKY_BYPASS ]] || yarn commitlint --config ./config/commitlint.config.js -E HUSKY_GIT_PARAMS
 [[ -n $HUSKY_BYPASS ]] || ./node_modules/.bin/commitlint --config ./config/commitlint.config.js --edit $1
