@@ -59,6 +59,7 @@
     "@types/luxon": "^3.2.0",
     "@types/mocha": "^10.0.1",
     "@types/omit-deep": "^0.3.0",
+    "c8": "^7.13.0",
     "chalk": "4.1.2",
     "cross-env": "^7.0.3",
     "mocha": "^10.2.0",
