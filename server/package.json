@@ -18,7 +18,7 @@
     "cli": "ts-node -T src/modules/data/cli.ts ",
     "cli-docker": "docker exec -it bal_server yarn cli",
     "test": "yarn test:cmd 'tests/**/*.test.ts'",
-    "test:coverage": "c8 --check-coverage yarn test",
+    "test:coverage": "c8 --reporter lcov --reporter text yarn test",
     "test:cmd": "cross-env NODE_ENV=test DOTENV_CONFIG_PATH=.env.test ts-mocha -n loader=ts-node/esm"
   },
   "dependencies": {
@@ -59,6 +59,7 @@
     "@types/luxon": "^3.2.0",
     "@types/mocha": "^10.0.1",
     "@types/omit-deep": "^0.3.0",
+    "c8": "^7.13.0",
     "chalk": "4.1.2",
     "cross-env": "^7.0.3",
     "mocha": "^10.2.0",
