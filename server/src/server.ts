@@ -1,7 +1,8 @@
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
-import fastify from "fastify";
 
-export const server = fastify({
+import build from "./app";
+
+export const server = build({
   logger: true,
   ajv: {
     customOptions: {
