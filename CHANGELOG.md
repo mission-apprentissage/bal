@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/mission-apprentissage/bal/compare/v1.1.0...v1.2.0) (2023-03-27)
+
+
+### Features
+
+* install tests ([#11](https://github.com/mission-apprentissage/bal/issues/11)) ([70a0e13](https://github.com/mission-apprentissage/bal/commit/70a0e131c43ba1c4a0aa958bbc646712d169c5e0))
+
 # [1.1.0](https://github.com/mission-apprentissage/bal/compare/v1.0.0...v1.1.0) (2023-03-23)
 
 
