@@ -13,6 +13,9 @@ lint:
 test:
 	yarn --cwd server test
 
+coverage:
+	yarn --cwd server test:coverage
+
 clean:
 	docker-compose kill && docker system prune --force --volumes
 

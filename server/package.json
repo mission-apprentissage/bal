@@ -18,7 +18,7 @@
     "cli": "ts-node -T src/modules/data/cli.ts ",
     "cli-docker": "docker exec -it bal_server yarn cli",
     "test": "yarn test:cmd 'tests/**/*.test.ts'",
-    "test:coverage": "c8 --check-coverage yarn test",
+    "test:coverage": "c8 --reporter lcov --reporter text yarn test",
     "test:cmd": "cross-env NODE_ENV=test DOTENV_CONFIG_PATH=.env.test ts-mocha -n loader=ts-node/esm"
   },
   "dependencies": {
