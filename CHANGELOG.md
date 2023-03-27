@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/mission-apprentissage/bal/compare/v1.2.0...v1.3.0) (2023-03-27)
+
+
+### Features
+
+* talisman, coverage, cypress ([#12](https://github.com/mission-apprentissage/bal/issues/12)) ([3cd5d01](https://github.com/mission-apprentissage/bal/commit/3cd5d0100091cb2c8e493faaf7832b6b102d7d77)), closes [#13](https://github.com/mission-apprentissage/bal/issues/13)
+
 # [1.2.0](https://github.com/mission-apprentissage/bal/compare/v1.1.0...v1.2.0) (2023-03-27)
 
 
