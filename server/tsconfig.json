@@ -8,7 +8,7 @@
     "listFiles": false,
     "pretty": true,
     "isolatedModules": false,
-    "lib": ["ES2021"] /* Emit ECMAScript-standard-compliant class fields. */,
+    "lib": ["ESNEXT"] /* Emit ECMAScript-standard-compliant class fields. */,
     // "module": "ES2020" /* Specify what module code is generated. */,
     "moduleResolution": "node" /* Specify how TypeScript looks up a file from a given module specifier. */,
     "resolveJsonModule": true,
