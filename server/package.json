@@ -15,14 +15,16 @@
     "migration:create": "migrate-mongo create",
     "migration:up": "migrate-mongo up",
     "migration:down": "migrate-mongo down",
-    "cli": "ts-node -T src/modules/data/cli.ts ",
+    "cli": "ts-node -T src/jobs/cli.ts",
     "cli-docker": "docker exec -it bal_server yarn cli",
     "test": "yarn test:cmd 'tests/**/*.test.ts'",
     "test:coverage": "c8 --reporter lcov --reporter text yarn test",
     "test:cmd": "cross-env NODE_ENV=test DOTENV_CONFIG_PATH=.env.test ts-mocha -n loader=ts-node/esm"
   },
   "dependencies": {
+    "@fastify/auth": "^4.2.0",
     "@fastify/cors": "^8.2.0",
+    "@fastify/jwt": "^6.7.1",
     "@fastify/type-provider-json-schema-to-ts": "^2.2.2",
     "axios": "0.24.0",
     "boom": "7.3.0",

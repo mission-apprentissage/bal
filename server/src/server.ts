@@ -1,3 +1,4 @@
+import { FastifyAuthFunction } from "@fastify/auth";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 
 import build from "./app";
@@ -12,4 +13,8 @@ export const server = build({
   },
 }).withTypeProvider<JsonSchemaToTsProvider>();
 
-export type Server = typeof server;
+type FastifyServer = typeof server;
+
+export interface Server extends FastifyServer {
+  validateJWT: FastifyAuthFunction;
+}

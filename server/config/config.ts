@@ -13,4 +13,10 @@ export const config = {
     type: env.get("MNA_BAL_LOG_TYPE").default("console").asString(),
     level: env.get("MNA_BAL_LOG_LEVEL").default("info").asString(),
   },
+  auth: {
+    jwtSigningKey: env
+      .get("MNA_BAL_AUTH_USER_JWT_SECRET")
+      .required()
+      .asString(),
+  },
 };
