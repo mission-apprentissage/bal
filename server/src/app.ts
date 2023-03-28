@@ -6,7 +6,7 @@ import fastify, { FastifyServerOptions } from "fastify";
 import { config } from "../config/config";
 import { registerCoreModule } from "./modules/core";
 import { Server } from "./server";
-import { authValidateJWT } from "./services/authService";
+import { authValidateJWT } from "./utils/auth";
 
 export default function build(opts: FastifyServerOptions = {}) {
   const app = fastify(opts);

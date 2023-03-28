@@ -44,7 +44,13 @@ export const userRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       try {
-        const user = await createUser(request.body);
+        const _id = new ObjectId();
+        const token = request.server.jwt.sign({
+          email: request.body,
+          userId: _id,
+        });
+
+        const user = await createUser({ ...request.body, _id, token });
 
         if (!user) {
           throw new Error("User not created");

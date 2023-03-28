@@ -16,6 +16,6 @@ export const SUser = {
   required: ["email"],
 } as const;
 
-export type IUser = FromSchema<typeof SUser>;
+export interface IUser extends FromSchema<typeof SUser> {}
 
 export default { schema: SUser, indexes, collectionName };

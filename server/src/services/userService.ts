@@ -3,20 +3,16 @@ import { IUser } from "shared/models/user.model";
 import { IReqPostUser } from "shared/routes/user.routes";
 
 import { getDbCollection } from "../db/mongodb";
-import { server } from "../server";
 
-export const createUser = async (data: IReqPostUser): Promise<IUser | null> => {
-  const _id = new ObjectId();
-  const token = server.jwt.sign({
-    email: data.email,
-    userId: _id,
-  });
+interface ICreateUserData extends IReqPostUser {
+  _id?: ObjectId;
+  token: string;
+}
 
-  const { insertedId: userId } = await getDbCollection("users").insertOne({
-    ...data,
-    _id,
-    token,
-  });
+export const createUser = async (
+  data: ICreateUserData
+): Promise<IUser | null> => {
+  const { insertedId: userId } = await getDbCollection("users").insertOne(data);
 
   const user = await getDbCollection("users").findOne<IUser>({
     _id: userId,
