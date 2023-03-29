@@ -1,7 +1,8 @@
 import { FastifyAuthFunction } from "@fastify/auth";
 import { createSigner } from "fast-jwt";
 
-import { config } from "../../config/config";
+import { config } from "../../../../config/config";
+
 
 interface IJwtPayload {
   [key: string]: unknown;

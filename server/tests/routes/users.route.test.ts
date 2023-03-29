@@ -2,8 +2,8 @@ import assert from "node:assert";
 
 import { IUser } from "shared/models/user.model";
 
-import build from "../../src/app";
-import { getDbCollection } from "../../src/db/mongodb";
+import { build } from "../../src/modules/server";
+import { getDbCollection } from "../../src/utils/mongodb";
 
 const app = build();
 

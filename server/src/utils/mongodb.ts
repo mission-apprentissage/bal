@@ -1,20 +1,11 @@
 import { CollectionInfo, MongoClient } from "mongodb";
 import omitDeep from "omit-deep";
 
-import logger from "../utils/logger";
+import { IModelDescriptor } from "../db/models";
+import logger from "./logger";
 
 /** @type {MongoClient} */
 let mongodbClient: MongoClient;
-
-import usersModelDescriptor from "shared/models/user.model";
-
-export interface IModelDescriptor {
-  schema: unknown;
-  indexes: unknown;
-  collectionName: string;
-}
-
-export const modelDescriptors: IModelDescriptor[] = [usersModelDescriptor];
 
 const ensureInitialization = () => {
   if (!mongodbClient) {
@@ -113,7 +104,9 @@ const convertSchemaToMongoSchema = (schema: unknown) => {
  * Config de la validation
  * @param {*} modelDescriptors
  */
-export const configureDbSchemaValidation = async () => {
+export const configureDbSchemaValidation = async (
+    modelDescriptors: IModelDescriptor[]
+  ) => {
   const db = getDatabase();
   ensureInitialization();
 

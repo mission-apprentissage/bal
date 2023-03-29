@@ -1,12 +1,13 @@
 import { config } from "config/config";
 
-import { configureDbSchemaValidation, connectToMongodb } from "./db/mongodb";
-import { server } from "./server";
+import { modelDescriptors } from "./db/models";
+import { server } from "./modules/server";
+import { configureDbSchemaValidation, connectToMongodb } from "./utils/mongodb";
 
 (async function () {
   try {
     await connectToMongodb(config.mongodb.uri);
-    await configureDbSchemaValidation();
+    await configureDbSchemaValidation(modelDescriptors);
 
     server.listen({ port: 5000, host: "0.0.0.0" }, function (err) {
       if (err) {

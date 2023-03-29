@@ -6,9 +6,9 @@ import {
   SResPostUser,
 } from "shared/routes/user.routes";
 
-import { getDbCollection } from "../../../db/mongodb";
-import { Server } from "../../../server";
-import { createUser } from "../../../services/userService";
+import { getDbCollection } from "../../db/models";
+import { createUser } from "../actions/users.actions";
+import { Server } from ".";
 
 export const userRoutes = ({ server }: { server: Server }) => {
   server.get(
@@ -31,6 +31,23 @@ export const userRoutes = ({ server }: { server: Server }) => {
       return response.status(200).send(user);
     }
   );
+  // server.get(
+  //   "/user",
+  //   {
+  //     schema: {
+  //       response: { 200: SResGetUser },
+  //     } as const,
+  //     preHandler: server.auth([server.validateJWT]),
+  //   },
+  //   async (request, response) => {
+  //       // ACTION_STUFF_DO()
+
+  //     return response.status(200).send(user);
+  //   }
+  // );
+
+
+
   /**
    * Créer un utilisateur
    */

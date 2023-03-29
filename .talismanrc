@@ -37,16 +37,20 @@ fileignoreconfig:
     checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
   - filename: git-hooks/prepare-release.sh
     checksum: 451afde847ac06703ffa04ea37b058d8522b60b94c891bf0979158dac5bc3610
-  - filename: server/.env.test
-    checksum: c0ef2f69099b6b85e1ee02f31ead22e9b7385bbb213d610fb953c0fc976709ac
-  - filename: server/src/services/userService.ts
-    checksum: 3273a6b258bcaca7bf4e13099590cbe65a303aaa0a26709fa9dd24be46c872f4
   - filename: "*.test.ts"
     checksum: a25b36c117e32dc0806d2d15104cbf66e2dd0b85e89a544df22ca0adb857005b
-allowed_patterns:
-  - key
+  - filename: server/.env.test
+    checksum: 3273a6b258bcaca7bf4e13099590cbe65a303aaa0a26709fa9dd24be46c872f4
+  - filename: server/src/app.ts
+    checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
+  - filename: server/src/modules/server/index.ts
+    checksum: e9d1bc8dfc528ec8786f21af1d8ec5ecb290bb5f8b6b63275f744dc5b27673e3
+  - filename: server/src/utils/jwtUtils.ts
+  checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
 scopeconfig:
-  - scope: node
+- scope: node
 custom_patterns:
-  - (?s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
+- (?s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
+allowed_patterns:
+- key
 version: "1.0"

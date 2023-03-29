@@ -1,10 +1,10 @@
 import { Command } from "commander";
 import { ObjectId } from "mongodb";
 
-import { config } from "../../config/config";
-import { configureDbSchemaValidation, connectToMongodb } from "../db/mongodb";
-import { createUser } from "../services/userService";
-import { standAloneJWTSign } from "../utils/auth";
+import { config } from "../../../config/config";
+import { standAloneJWTSign } from "../../utils/auth"; // ../../utils/auth
+import { configureDbSchemaValidation, connectToMongodb } from "../../utils/mongodb";
+import { createUser } from "../actions/users.actions";
 const program = new Command();
 
 type IJob = () => Promise<void>;
