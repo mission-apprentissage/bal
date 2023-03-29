@@ -1,5 +1,7 @@
 import fastifyAuth, { FastifyAuthFunction } from "@fastify/auth";
 import fastifyCors from "@fastify/cors";
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUi from "@fastify/swagger-ui";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import fastify, { FastifyServerOptions } from "fastify";
 
@@ -15,6 +17,26 @@ import { authValidateJWT } from "./utils/auth.strategies";
 
 export function build(opts: FastifyServerOptions = {}) {
   const app = fastify(opts);
+
+  app.register(fastifySwagger, {
+    swagger: {
+      info: {
+        title: "Documentation BAL",
+        version: process.env.npm_package_version as string,
+      },
+      schemes: ["http"],
+      consumes: ["application/json"],
+      produces: ["application/json"],
+    },
+  });
+
+  app.register(fastifySwaggerUi, {
+    routePrefix: "/api/documentation",
+    uiConfig: {
+      docExpansion: "full",
+      deepLinking: false,
+    },
+  });
 
   app.decorate("validateJWT", authValidateJWT);
 
