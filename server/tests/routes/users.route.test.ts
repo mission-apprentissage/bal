@@ -1,27 +1,42 @@
 import assert from "node:assert";
 
-import { IUser } from "shared/models/user.model";
-
+import { createUser, findUser } from "../../src/modules/actions/users.actions";
 import { build } from "../../src/modules/server";
-import { getDbCollection } from "../../src/utils/mongodb";
 
 const app = build();
 
 describe("Users routes", () => {
-  it("creates a user", async () => {
+  it("should get the current user", async () => {
+    const user = await createUser({ email: "connected@exemple.fr" });
+
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/user",
+      headers: {
+        ["access-token"]: user?.token,
+      },
+    });
+
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.json()._id, user?._id);
+    assert.equal(response.json().email, "connected@exemple.fr");
+    assert.ok(response.json().token);
+  });
+
+  it("should create a user", async () => {
     const response = await app.inject({
       method: "POST",
       url: "/api/user",
       payload: { email: "email@exemple.fr" },
     });
 
-    const user = await getDbCollection("users").findOne<IUser>({
+    const user = await findUser({
       email: "email@exemple.fr",
     });
 
     assert.equal(response.statusCode, 200);
     assert.equal(response.json()._id, user?._id);
     assert.equal(response.json().email, "email@exemple.fr");
-    assert.notEqual(response.json().token, null);
+    assert.ok(response.json().token);
   });
 });

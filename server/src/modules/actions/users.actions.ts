@@ -1,35 +1,29 @@
-import { ObjectId } from "mongodb";
+import { Filter, ObjectId } from "mongodb";
 import { IUser } from "shared/models/user.model";
 import { IReqPostUser } from "shared/routes/user.routes";
 
+import { createUserToken } from "../../utils/jwtUtils";
 import { getDbCollection } from "../../utils/mongodb";
 
+export const createUser = async (data: IReqPostUser): Promise<IUser | null> => {
+  const _id = new ObjectId();
+  const token = createUserToken({ ...data, _id: _id.toString() });
 
-
-interface ICreateUserData extends IReqPostUser {
-  _id?: ObjectId;
-  token: string;
-}
-
-export const createUser = async (
-  data: ICreateUserData
-): Promise<IUser | null> => {
-
-  // TODO createToken
-  const { insertedId: userId } = await getDbCollection("users").insertOne(data);
-
-  const user = await getDbCollection("users").findOne<IUser>({
-    _id: userId,
+  const { insertedId: userId } = await getDbCollection("users").insertOne({
+    ...data,
+    _id,
+    token,
   });
+
+  const user = await findUser({ _id: userId });
 
   return user;
 };
 
-
 export const findUser = async (
-  email: string
+  filter: Filter<IUser>
 ): Promise<IUser | null> => {
-  return await getDbCollection("users").findOne<IUser>({
-    email,
-  });
-}
+  const user = await getDbCollection("users").findOne<IUser>(filter);
+
+  return user;
+};

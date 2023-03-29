@@ -1,12 +1,16 @@
 import fastifyAuth, { FastifyAuthFunction } from "@fastify/auth";
 import fastifyCors from "@fastify/cors";
-import fastifyJwt from "@fastify/jwt";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import fastify, { FastifyServerOptions } from "fastify";
 
-import { config } from "../../../config/config";
 import { coreRoutes } from "./core.routes";
 import { userRoutes } from "./user.routes";
+
+type FastifyServer = typeof server;
+export interface Server extends FastifyServer {
+  validateJWT: FastifyAuthFunction;
+}
+
 import { authValidateJWT } from "./utils/auth.strategies";
 
 export function build(opts: FastifyServerOptions = {}) {
@@ -14,9 +18,6 @@ export function build(opts: FastifyServerOptions = {}) {
 
   app.decorate("validateJWT", authValidateJWT);
 
-  app.register(fastifyJwt, {
-    secret: config.auth.jwtSigningKey,
-  });
   app.register(fastifyAuth);
   app.register(fastifyCors, {});
   app.register(
@@ -29,7 +30,6 @@ export function build(opts: FastifyServerOptions = {}) {
   return app;
 }
 
-
 export const server = build({
   logger: true,
   ajv: {
@@ -40,15 +40,7 @@ export const server = build({
   },
 }).withTypeProvider<JsonSchemaToTsProvider>();
 
-type FastifyServer = typeof server;
-
-export interface Server extends FastifyServer {
-  validateJWT: FastifyAuthFunction;
-}
-
-
 export const registerRoutes = ({ server }: { server: Server }) => {
   coreRoutes({ server });
   userRoutes({ server });
 };
-

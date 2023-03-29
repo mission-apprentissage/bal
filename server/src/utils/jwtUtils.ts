@@ -1,14 +1,27 @@
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
+import { IUser } from "shared/models/user.model";
 
-import {config} from "../../config/config";
+import { config } from "../../config/config";
 
-const createToken = (type: string, subject = null, options: any = {}) => {
+interface ICreateTokenOptions {
+  secret?: string;
+  expiresIn?: string;
+  payload?: string | Buffer | object;
+}
+
+type TokenType = "user" | "resetPasswordToken" | "activation";
+
+const createToken = (
+  type: TokenType,
+  subject: string | null = null,
+  options: ICreateTokenOptions = {}
+) => {
   const defaults = config.auth[type];
-  const secret = options.secret || defaults.jwtSecret;
-  const expiresIn = options.expiresIn || defaults.expiresIn;
-  const payload = options.payload || {};
+  const secret = options.secret ?? defaults.jwtSecret;
+  const expiresIn = options.expiresIn ?? defaults.expiresIn;
+  const payload = options.payload ?? {};
 
-  const opts: any = {
+  const opts: SignOptions = {
     issuer: config.appName,
     expiresIn: expiresIn,
   };
@@ -18,11 +31,17 @@ const createToken = (type: string, subject = null, options: any = {}) => {
   return jwt.sign(payload, secret, opts);
 };
 
-export function createResetPasswordToken(username: string, options: any = {}) {
+export function createResetPasswordToken(
+  username: string,
+  options: ICreateTokenOptions = {}
+) {
   return createToken("resetPasswordToken", username, options);
 }
 
-export function createActivationToken(subject: any, options: any = {}) {
+export function createActivationToken(
+  subject: string,
+  options: ICreateTokenOptions = {}
+) {
   return createToken("activation", subject, options);
 }
 
@@ -30,11 +49,13 @@ export function createUserTokenSimple(options = {}) {
   return createToken("user", null, options);
 }
 
-export const createUserToken = (user: any, options: any = {}) => {
+export const createUserToken = (
+  user: IUser,
+  options: ICreateTokenOptions = {}
+) => {
   const payload = {
+    id: user._id,
     is_admin: user.is_admin,
-    is_cross_organismes: user.is_cross_organismes,
-    network: user.network,
   };
-  return createToken("user", user.username, { payload, ...options });
+  return createToken("user", user.email, { payload, ...options });
 };

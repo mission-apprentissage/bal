@@ -1,30 +1,40 @@
 import { FastifyAuthFunction } from "@fastify/auth";
-import { createSigner } from "fast-jwt";
+import { JwtPayload, verify } from "jsonwebtoken";
+import { ObjectId } from "mongodb";
+import { IUser } from "shared/models/user.model";
 
 import { config } from "../../../../config/config";
+import { findUser } from "../../actions/users.actions";
 
-
-interface IJwtPayload {
-  [key: string]: unknown;
+declare module "fastify" {
+  export interface FastifyRequest {
+    authenticatedUser?: IUser;
+  }
 }
 
-export const standAloneJWTSign = (payload: IJwtPayload) => {
-  const signer = createSigner({ key: config.auth.jwtSigningKey });
-
-  return signer(payload);
-};
-
-export const authValidateJWT: FastifyAuthFunction = (request, reply, done) => {
-  const jwt = request.server.jwt;
-
-  if (!request.raw.headers.auth) {
+export const authValidateJWT: FastifyAuthFunction = async (
+  request,
+  _reply,
+  done
+) => {
+  if (!request.raw.headers["access-token"]) {
     return done(new Error("Jeton manquant"));
   }
 
-  jwt.verify(request.raw.headers.auth as string, (error) => {
-    if (error) {
-      return done(new Error("Jeton invalide"));
+  try {
+    const decoded = verify(
+      request.raw.headers["access-token"] as string,
+      config.auth.user.jwtSecret
+    ) as JwtPayload;
+
+    const user = await findUser({ _id: new ObjectId(decoded.id) });
+
+    if (user) {
+      request.authenticatedUser = user;
     }
-    done();
-  });
+
+    return done();
+  } catch (error) {
+    return done(new Error("Jeton invalide"));
+  }
 };

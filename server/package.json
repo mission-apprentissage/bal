@@ -15,7 +15,7 @@
     "migration:create": "migrate-mongo create",
     "migration:up": "migrate-mongo up",
     "migration:down": "migrate-mongo down",
-    "cli": "ts-node -T src/jobs/cli.ts",
+    "cli": "ts-node -T src/modules/data/cli.ts",
     "cli-docker": "docker exec -it bal_server yarn cli",
     "test": "yarn test:cmd 'tests/**/*.test.ts'",
     "test:coverage": "c8 --reporter lcov --reporter text yarn test",
@@ -24,7 +24,6 @@
   "dependencies": {
     "@fastify/auth": "^4.2.0",
     "@fastify/cors": "^8.2.0",
-    "@fastify/jwt": "^6.7.1",
     "@fastify/type-provider-json-schema-to-ts": "^2.2.2",
     "axios": "0.24.0",
     "boom": "7.3.0",
@@ -39,7 +38,7 @@
     "env-var": "7.1.1",
     "fastify": "^4.12.0",
     "json-schema-to-ts": "^2.7.2",
-    "jsonwebtoken": "8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
     "luxon": "2.3.0",
     "migrate-mongo": "9.0.0",
@@ -57,6 +56,7 @@
   "devDependencies": {
     "@types/bunyan": "^1.8.8",
     "@types/bunyan-prettystream": "^0.1.32",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/lodash": "^4.14.191",
     "@types/luxon": "^3.2.0",
     "@types/mocha": "^10.0.1",
