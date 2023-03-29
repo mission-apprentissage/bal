@@ -1,5 +1,12 @@
+fileignoreconfig:
+- filename: .infra/ansible/roles/setup/files/app/.overrides/production/docker-compose.env.yml
+  checksum: a0e0aee8350df735bf9e13b4d19a3ec0b2a11c742e3ed4681d2d2cc5d672994f
+- filename: .infra/ansible/roles/setup/vars/main/vault.yml
+  checksum: e40d1cfbe320ad9152ae23f552f16a1cf01451725292112f539285fa455f78fd
+- filename: server/.env.test
+  checksum: c0ef2f69099b6b85e1ee02f31ead22e9b7385bbb213d610fb953c0fc976709ac
 scopeconfig:
-  - scope: node
+- scope: node
 custom_patterns:
-  - (?s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
+- (?s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
 version: "1.0"

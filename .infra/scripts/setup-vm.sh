@@ -14,6 +14,7 @@ function setup() {
   fi
 
   cd "${ANSIBLE_DIR}"
+  ansible-galaxy install patrickjahns.promtail
   ansible-galaxy install geerlingguy.docker
   ansible-galaxy collection install community.general
   ansible-galaxy collection install community.crypto
