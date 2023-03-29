@@ -1,4 +1,6 @@
 fileignoreconfig:
+- filename: .github/workflows/publish.yml
+  checksum: c822e8212bbc54c7231bc828f65b9209dc346a0cd1e121bbd5975e3500975abe
 - filename: .infra/ansible/roles/setup/files/app/.overrides/production/docker-compose.env.yml
   checksum: a0e0aee8350df735bf9e13b4d19a3ec0b2a11c742e3ed4681d2d2cc5d672994f
 - filename: .infra/ansible/roles/setup/vars/main/vault.yml
