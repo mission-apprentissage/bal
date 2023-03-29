@@ -12,7 +12,7 @@ describe("Users routes", () => {
     const response = await app.inject({
       method: "POST",
       url: "/api/user",
-      payload: { name: "name", email: "email@exemple.fr" },
+      payload: { email: "email@exemple.fr" },
     });
 
     const user = await getDbCollection("users").findOne<IUser>({
@@ -21,7 +21,7 @@ describe("Users routes", () => {
 
     assert.equal(response.statusCode, 200);
     assert.equal(response.json()._id, user?._id);
-    assert.equal(response.json().name, "name");
     assert.equal(response.json().email, "email@exemple.fr");
+    assert.notEqual(response.json().token, null);
   });
 });
