@@ -40,7 +40,11 @@ fileignoreconfig:
   - filename: server/.env.test
     checksum: c0ef2f69099b6b85e1ee02f31ead22e9b7385bbb213d610fb953c0fc976709ac
   - filename: server/src/services/userService.ts
-    checksum: 3fec9fb5c3a8bc99a4e4f555ccf975e90fcea398d3ac228d7201b3c138267fa2
+    checksum: 3273a6b258bcaca7bf4e13099590cbe65a303aaa0a26709fa9dd24be46c872f4
+  - filename: "*.test.ts"
+    checksum: a25b36c117e32dc0806d2d15104cbf66e2dd0b85e89a544df22ca0adb857005b
+allowed_patterns:
+  - key
 scopeconfig:
   - scope: node
 custom_patterns:
