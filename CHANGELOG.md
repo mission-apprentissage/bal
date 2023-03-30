@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/mission-apprentissage/bal/compare/v1.4.0...v1.4.1) (2023-03-30)
+
+
+### Bug Fixes
+
+* push images ([f6a8249](https://github.com/mission-apprentissage/bal/commit/f6a82494f6c64a8b0631de4fe4c988717527ee38))
+
 # [1.4.0](https://github.com/mission-apprentissage/bal/compare/v1.3.0...v1.4.0) (2023-03-30)
 
 
