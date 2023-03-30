@@ -13,7 +13,7 @@ describe("Users routes", () => {
       method: "GET",
       url: "/api/user",
       headers: {
-        ["access-token"]: user?.token,
+        ["Authorization"]: `Bearer ${user?.token}`,
       },
     });
 
