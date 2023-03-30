@@ -1,3 +1,11 @@
+# [1.5.0](https://github.com/mission-apprentissage/bal/compare/v1.4.2...v1.5.0) (2023-03-30)
+
+
+### Features
+
+* ajout swagger ([#19](https://github.com/mission-apprentissage/bal/issues/19)) ([05759f6](https://github.com/mission-apprentissage/bal/commit/05759f6c65e1769e840e24613cfd05485af49bf5))
+* gestion d'utilisateur ([#16](https://github.com/mission-apprentissage/bal/issues/16)) ([4c61b19](https://github.com/mission-apprentissage/bal/commit/4c61b19c7d7c7a6e5d1cda6efa32d1226b1acd45))
+
 ## [1.4.2](https://github.com/mission-apprentissage/bal/compare/v1.4.1...v1.4.2) (2023-03-30)
 
 
