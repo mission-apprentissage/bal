@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/mission-apprentissage/bal/compare/v1.5.0...v1.5.1) (2023-03-30)
+
+
+### Bug Fixes
+
+* wks ga ([c38607f](https://github.com/mission-apprentissage/bal/commit/c38607f12e7d4ec9eb54eccb5a778df57dd7f0aa))
+
 # [1.5.0](https://github.com/mission-apprentissage/bal/compare/v1.4.2...v1.5.0) (2023-03-30)
 
 
