@@ -17,3 +17,11 @@ export const SResPostUser = SUser;
 
 export interface IResGetUser extends IUser {}
 export interface IResPostUser extends IUser {}
+
+export const SReqHeadersUser = {
+  type: "object",
+  properties: {
+    Authorization: { type: "string" },
+  },
+  required: ["Authorization"],
+};

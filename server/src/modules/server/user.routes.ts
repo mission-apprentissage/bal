@@ -1,4 +1,5 @@
 import {
+  SReqHeadersUser,
   SReqPostUser,
   SResGetUser,
   SResPostUser,
@@ -16,6 +17,7 @@ export const userRoutes = ({ server }: { server: Server }) => {
     {
       schema: {
         response: { 200: SResGetUser },
+        headers: SReqHeadersUser,
       } as const,
       preHandler: server.auth([server.validateJWT]),
     },

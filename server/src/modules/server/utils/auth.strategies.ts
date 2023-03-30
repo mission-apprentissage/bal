@@ -17,15 +17,19 @@ export const authValidateJWT: FastifyAuthFunction = async (
   _reply,
   done
 ) => {
-  if (!request.raw.headers["access-token"]) {
+  let token: string | undefined = request.raw.headers["authorization"];
+  if (!token) {
     return done(new Error("Jeton manquant"));
   }
 
+  if (token.startsWith("Bearer ")) {
+    token = token.substring(7, token.length);
+  } else {
+    return done(new Error("Jeton invalide"));
+  }
+
   try {
-    const decoded = verify(
-      request.raw.headers["access-token"] as string,
-      config.auth.user.jwtSecret
-    ) as JwtPayload;
+    const decoded = verify(token, config.auth.user.jwtSecret) as JwtPayload;
 
     const user = await findUser({ _id: new ObjectId(decoded.id) });
 
