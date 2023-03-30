@@ -5,6 +5,7 @@ import fastifySwaggerUi from "@fastify/swagger-ui";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import fastify, { FastifyServerOptions } from "fastify";
 
+import pJson from "../../../package.json";
 import { coreRoutes } from "./core.routes";
 import { userRoutes } from "./user.routes";
 
@@ -22,9 +23,8 @@ export function build(opts: FastifyServerOptions = {}) {
     swagger: {
       info: {
         title: "Documentation BAL",
-        version: process.env.npm_package_version as string,
+        version: pJson.version,
       },
-      schemes: ["http"],
       consumes: ["application/json"],
       produces: ["application/json"],
     },
