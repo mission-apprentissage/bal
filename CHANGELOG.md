@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/mission-apprentissage/bal/compare/v1.3.0...v1.4.0) (2023-03-30)
+
+
+### Features
+
+* **infra:** refactor structure playbooks ([#15](https://github.com/mission-apprentissage/bal/issues/15)) ([6c84875](https://github.com/mission-apprentissage/bal/commit/6c8487589799f6bbca62e083a8995556d0dd6e80))
+
 # [1.3.0](https://github.com/mission-apprentissage/bal/compare/v1.2.0...v1.3.0) (2023-03-27)
 
 
