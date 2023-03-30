@@ -13,4 +13,18 @@ export const config = {
     type: env.get("MNA_BAL_LOG_TYPE").default("console").asString(),
     level: env.get("MNA_BAL_LOG_LEVEL").default("info").asString(),
   },
+  auth: {
+    user: {
+      jwtSecret: env.get("MNA_BAL_AUTH_USER_JWT_SECRET").required().asString(),
+      expiresIn: "7d",
+    },
+    activation: {
+      jwtSecret: env.get("MNA_BAL_AUTH_ACTIVATION_JWT_SECRET").required().asString(),
+      expiresIn: "96h",
+    },
+    resetPasswordToken: {
+      jwtSecret: env.get("MNA_BAL_AUTH_PASSWORD_JWT_SECRET").required().asString(),
+      expiresIn: "1h",
+    },
+  },
 };

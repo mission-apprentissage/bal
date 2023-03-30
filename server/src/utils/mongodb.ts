@@ -1,8 +1,8 @@
 import { CollectionInfo, MongoClient } from "mongodb";
 import omitDeep from "omit-deep";
 
-import { IModelDescriptor } from "../models/collections";
-import logger from "../utils/logger";
+import { IModelDescriptor } from "../db/models";
+import logger from "./logger";
 
 /** @type {MongoClient} */
 let mongodbClient: MongoClient;
@@ -105,8 +105,8 @@ const convertSchemaToMongoSchema = (schema: unknown) => {
  * @param {*} modelDescriptors
  */
 export const configureDbSchemaValidation = async (
-  modelDescriptors: IModelDescriptor[]
-) => {
+    modelDescriptors: IModelDescriptor[]
+  ) => {
   const db = getDatabase();
   ensureInitialization();
 

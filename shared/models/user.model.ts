@@ -10,12 +10,12 @@ export const SUser = {
   type: "object",
   properties: {
     _id: { type: "string" },
-    name: { type: "string" },
     email: { type: "string" },
+    token: { type: "string" },
   },
-  required: ["name"],
+  required: ["email"],
 } as const;
 
-export type IUser = FromSchema<typeof SUser>;
+export interface IUser extends FromSchema<typeof SUser> {}
 
 export default { schema: SUser, indexes, collectionName };

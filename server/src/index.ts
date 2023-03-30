@@ -1,8 +1,8 @@
 import { config } from "config/config";
 
-import { configureDbSchemaValidation, connectToMongodb } from "./db/mongodb";
-import { modelDescriptors } from "./models/collections";
-import { server } from "./server";
+import { modelDescriptors } from "./db/models";
+import { server } from "./modules/server";
+import { configureDbSchemaValidation, connectToMongodb } from "./utils/mongodb";
 
 (async function () {
   try {

@@ -1,6 +1,6 @@
 import { salut } from "shared";
 
-import { Server } from "../../../server";
+import { Server } from ".";
 
 export const coreRoutes = ({ server }: { server: Server }) => {
   server.get("/", async (request, response) => {
