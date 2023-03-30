@@ -14,7 +14,7 @@ const mainConfig = {
     [
       "@semantic-release/exec",
       {
-        prepareCmd: `./git-hooks/prepare-release.sh \${nextRelease.version} ${process.env.SLACK_WEBHOOK}`,
+        prepareCmd: "./git-hooks/prepare-release.sh ${nextRelease.version}",
       },
     ],
     [

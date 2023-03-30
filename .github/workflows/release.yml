@@ -25,6 +25,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_FG_TOKEN }}
+
       - name: Run yarn Install
         run: yarn install
 
@@ -34,3 +41,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          GHCR_USER: ${{ github.actor }}
+          GHCR_PASSWORD: ${{ secrets.GH_FG_TOKEN }}
