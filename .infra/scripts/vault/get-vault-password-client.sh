@@ -2,7 +2,6 @@
 set -euo pipefail
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly ANSIBLE_DIR="${SCRIPT_DIR}/../../ansible"
 
 function usage {
   echo "Usage: $0 [params...]"
@@ -26,7 +25,7 @@ function usage {
 }
 
 function main() {
-  local vault_password_file="${ANSIBLE_DIR}/.vault-password.gpg"
+  local vault_password_file="${SCRIPT_DIR}/../../vault/.vault-password.gpg"
 
   while [[ $# -gt 0 ]]; do
     params="$1"
@@ -37,9 +36,9 @@ function main() {
       ;;
     --vault-id)
       if [[ $2 == "default" ]]; then
-        vault_password_file="${ANSIBLE_DIR}/.vault-password.gpg"
+        vault_password_file="${SCRIPT_DIR}/../../vault/.vault-password.gpg"
       else
-        vault_password_file="${ANSIBLE_DIR}/.vault-password-$2.gpg"
+        vault_password_file="${SCRIPT_DIR}/../../.vault-password-$2.gpg"
       fi
       shift
       shift

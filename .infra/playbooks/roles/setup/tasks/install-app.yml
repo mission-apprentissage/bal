@@ -1,0 +1,49 @@
+- name: Création des répertoires app -> /opt/bal
+  file:
+    path: "/opt/bal/{{ item.path }}/"
+    state: directory
+  with_filetree:
+    - app
+  when: item.state == 'directory'
+
+- name: Copie des fichiers 'tools'
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "/opt/bal/tools/{{ item.path }}"
+    mode: "g+x"
+  with_filetree:
+    - app/tools
+  when: item.state == 'file'
+
+- name: Copie des fichiers 'configs'
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "/opt/bal/configs/{{ item.path }}"
+  with_filetree:
+    - app/configs
+  when: item.state == 'file'
+
+- name: Nettoyage des permissions sudo pour le groupe 'mna'
+  lineinfile:
+    path: /etc/sudoers
+    state: absent
+    regexp: "mna"
+
+- name: Root only pour tous les répertoires applicatifs
+  file:
+    path: "{{item}}"
+    state: directory
+    owner: root
+    group: root
+    mode: 770
+  with_items:
+    - "/opt/bal/tools"
+    - "/opt/bal/data"
+    - "/opt/bal/backups"
+
+- name: Add cron to rotate nginx files
+  ansible.builtin.cron:
+    name: "rotate_nginx_log_files"
+    minute: "0"
+    hour: "1"
+    job: "bash /opt/bal/tools/rotate-nginx-log-files.sh >> /var/log/cron.log 2>&1"

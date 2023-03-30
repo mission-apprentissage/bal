@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly ANSIBLE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../ansible"
 readonly ENV_FILTER=${1:?"Merci de préciser un ou plusieurs environnements (ex. recette ou production)"}
 shift
 
@@ -12,9 +11,7 @@ function clean() {
     ansible_pass+=("--ask-become-pass")
   fi
 
-  cd "${ANSIBLE_DIR}"
-  ansible-playbook -i env.ini --limit "${ENV_FILTER}" "${ansible_pass[@]}" clean.yml "$@"
-  cd -
+  ansible-playbook -i "${SCRIPT_DIR}/../env.ini" --limit "${ENV_FILTER}" "${ansible_pass[@]}" "${SCRIPT_DIR}/../playbooks/clean.yml" "$@"
 }
 
 clean "$@"
