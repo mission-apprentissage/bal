@@ -1,82 +1,113 @@
 #!/usr/bin/env bash
 
-cd "${0%/*}/../../../" || exit;
+cd "${0%/*}/../../" || exit;
 
-Help()
-{
-   echo "Push les images docker de BAL sur le registry github (https://ghcr.io/mission-apprentissage/)"
-   echo
-   echo "Utilisation : push-images.sh -v [numéro de version] -u [login] -p [GH_PAT]"
-   echo
+echo "Push les images docker de BAL sur le registry github (https://ghcr.io/mission-apprentissage/)"
+
+file_path="./.infra/env.ini"
+
+
+generate_next_patch_version() {
+  version="$1"
+  IFS='.' read -ra parts <<< "$version"
+
+  major="${parts[0]}"
+  minor="${parts[1]}"
+  patch="${parts[2]}"
+
+  echo "$major.$minor.$((patch + 1))" # Nouvelle version de correctif
 }
 
-while getopts ":v:u:p:" option; do
-  case "${option}" in
-    v)
-        v=${OPTARG}
-        ;;
-    u)
-        u=${OPTARG}
-        ;;
-    p)
-        p=${OPTARG}
-        ;;
-    *)
-       help
-       ;;
-  esac
-done
+select_version() {
+  prompt="$1"
+  current_version="$2"
+  next_patch_version=$(generate_next_patch_version "$current_version")
 
-if [ -z "$v" ] || [ -z "$u" ] || [ -z "$p" ]; then
-  Help
-  exit 1
+  read -p "$prompt new version ($next_patch_version) ? [Y/n]: " response
+  case $response in
+    [nN][oO]|[nN])
+      read -p "Custom version : " custom_version
+      echo "$custom_version"
+      ;;
+    *)
+      echo "$next_patch_version"
+      ;;
+  esac
+}
+
+build_image() {
+  image_name="$1"
+  current_version="$2"
+  read -p "[Build&Push] $image_name image ? [Y/n]: " response
+
+  case $response in
+    [nN][oO]|[nN])
+      return
+      ;;
+  esac
+
+  new_version=$(select_version "$image_name $current_version > " "$current_version")
+  echo "$new_version"
+}
+
+if [ -f "$file_path" ]; then
+  reverse_proxy_version=$(awk -F= '/^reverse_proxy_version=/ {print $2}' "$file_path")
+  app_version=$(awk -F= '/^app_version=/ {print $2}' "$file_path")
+
+  new_reverse_proxy_version=$(build_image "Reverse Proxy" "$reverse_proxy_version")
+  new_app_version=$(build_image "App" "$app_version")
+else
+  echo "Le fichier $file_path n'a pas été trouvé. Veuillez vérifier le chemin du fichier."
 fi
 
-read -r -p "Confirmer le numéro de version $v ? [y/N] " response
+echo -e '\n'
+echo "New Reverse Proxy: $new_reverse_proxy_version"
+echo "New App version: $new_app_version"
+read -p "Confirm $v ? [Y/n]: " response
 
-case "$response" in
-    [yY][eE][sS]|[yY])
-        ;;
-    *)
-        exit
-        ;;
+case $response in
+  [nN][oO]|[nN])
+    return
+    ;;
 esac
+
+read -p "[ghcr.io] user ? : " u
+read -p "[ghcr.io] GH personnal token ? : " p
 
 echo "Login sur le registry ..."
 echo $p | docker login ghcr.io -u "$u" --password-stdin
 echo "Logged!"
 
-# Pour enlever le message "Use 'docker scan' to run Snyk ..."
-export DOCKER_SCAN_SUGGEST=false
-
 echo "Création des images docker locales (docker build)"
 
-echo "Build ui:$v ..."
-docker build . -f "ui/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$v" \
---label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
---label "org.opencontainers.image.description=Ui bal" \
---label "org.opencontainers.image.licenses=MIT"
+if [ ! -z "$new_app_version" ]; then
+  echo "Build ui:$new_app_version ..."
+  docker build . -f "ui/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$new_app_version" \
+  --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
+  --label "org.opencontainers.image.description=Ui bal" \
+  --label "org.opencontainers.image.licenses=MIT"
+  echo "Building server:$new_app_version ..."
+  docker build . -f "server/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_server:"$new_app_version" \
+            --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
+            --label "org.opencontainers.image.description=Server bal" \
+            --label "org.opencontainers.image.licenses=MIT"
+  sleep 3
+  echo "Push des images locales sur le registry"
+  echo "Pushing ui:$new_app_version ..."
+  docker push ghcr.io/mission-apprentissage/mna_bal_ui:"$new_app_version"
+  sleep 3
+  echo "Pushing server:$new_app_version ..."
+  docker push ghcr.io/mission-apprentissage/mna_bal_server:"$new_app_version"
+fi
 
-echo "Building server:$v ..."
-docker build . -f "server/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_server:"$v" \
-          --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
-          --label "org.opencontainers.image.description=Server bal" \
-          --label "org.opencontainers.image.licenses=MIT"
+if [ ! -z "$new_reverse_proxy_version" ]; then
+  echo "Building reverse_proxy:$new_reverse_proxy_version ..."
+  docker build ./reverse_proxy --tag ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:"$new_reverse_proxy_version" \
+            --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
+            --label "org.opencontainers.image.description=Reverse proxy bal" \
+            --label "org.opencontainers.image.licenses=MIT"
+  sleep 3
+  echo "Pushing reverse_proxy:$new_reverse_proxy_version ..."
+  docker push ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:"$new_reverse_proxy_version"
+fi
 
-echo "Building reverse_proxy:$v ..."
-docker build ./reverse_proxy --tag ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:"$v" \
-          --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
-          --label "org.opencontainers.image.description=Reverse proxy bal" \
-          --label "org.opencontainers.image.licenses=MIT"
-
-# L'enchainement de commande plante régulièrement => Le sleep 3 résoud en partie le problème
-sleep 3
-echo "Push des images locales sur le registry"
-echo "Pushing ui:$v ..."
-docker push ghcr.io/mission-apprentissage/mna_bal_ui:"$v"
-sleep 3
-echo "Pushing server:$v ..."
-docker push ghcr.io/mission-apprentissage/mna_bal_server:"$v"
-sleep 3
-echo "Pushing reverse_proxy:$v ..."
-docker push ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:"$v"

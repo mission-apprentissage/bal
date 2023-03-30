@@ -72,11 +72,28 @@ bash scripts/setup-vm.sh <nom_environnement> --user <nom_utilisateur>
 Il est possible de mettre à jour et déployer uniquement la partie applicative de l'application en lançant le script
 
 ```
-bash scripts/deploy.sh <nom_environnement> --user <nom_utilisateur>
+bash scripts/deploy-app.sh <nom_environnement> --user <nom_utilisateur>
+bash scripts/deploy-app.sh <nom_environnement> --extra-vars=app_version=<app_image_version> --user <nom_utilisateur>
 ```
 
 Pour information si votre utilisateur local porte le même nom que l'utilisateur distant alors `--user` n'est pas
 nécessaire.
+
+## Push des images Docker sur le registre GitHub
+
+Pour pousser les images Docker de l'application (Reverse Proxy et App) sur le registre GitHub (https://ghcr.io/mission-apprentissage/), vous pouvez utiliser le script "push-image" :
+
+\`\`\`
+bash scripts/push-image.sh
+\`\`\`
+
+Le script vous demandera si vous souhaitez créer et pousser les images pour "Reverse Proxy" et "App". Pour chaque image, il vous proposera automatiquement la prochaine version patch selon le versioning sémantique, mais vous pourrez également saisir une version personnalisée si vous le souhaitez.
+
+Après avoir sélectionné les versions, le script vous demandera de confirmer vos choix. Ensuite, il vous demandera vos identifiants GitHub (nom d'utilisateur et token personnel) pour se connecter au registre Docker.
+
+Une fois connecté, le script construira et poussera les images Docker locales sur le registre GitHub en utilisant les versions sélectionnées.
+
+Note : Si vous ne souhaitez pas créer et pousser une image particulière, vous pouvez simplement répondre "n" lorsque le script vous le demande.
 
 ## Vault
 
