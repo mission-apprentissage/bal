@@ -21,6 +21,7 @@ const mainConfig = {
       "@semantic-release/git",
       {
         assets: [
+          ".infra/env.ini",
           "ui/package.json",
           "server/package.json",
           "shared/package.json",

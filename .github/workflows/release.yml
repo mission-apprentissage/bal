@@ -35,11 +35,9 @@ jobs:
       - name: Run yarn Install
         run: yarn install
 
-      - name: bump
+      - name: bump and release
         run: yarn npm:release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          GHCR_USER: ${{ github.actor }}
-          GHCR_PASSWORD: ${{ secrets.GH_FG_TOKEN }}
