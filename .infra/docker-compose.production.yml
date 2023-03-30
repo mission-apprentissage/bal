@@ -1,0 +1,170 @@
+version: "2.4"
+services:
+  reverse_proxy:
+    image: "ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:{{ reverse_proxy_version }}"
+    container_name: bal_reverse_proxy
+    restart: unless-stopped
+    mem_limit: 256m
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - bal_network
+    depends_on:
+      - server
+      - ui
+    environment:
+      - SERVER_NAME={{dns_name}}
+      - NGINX_ALWAYS_TLS_REDIRECT=true
+      - PROXY_SSL_CERT=/ssl/fullchain.pem
+      - PROXY_SSL_CERT_KEY=/ssl/privkey.pem
+      - PARANOIA=1
+      - ANOMALY_INBOUND=5
+      - ANOMALY_OUTBOUND=4
+      - REPORTING_LEVEL=4
+      - DNS_SERVER=127.0.0.11
+      - PROXY=1
+      - SERVERNAME=localhost
+      - ACCESSLOG=/data/access.log
+      - ERRORLOG=/data/error.log
+      - LOGLEVEL=warn
+      - NGINX_ALWAYS_TLS_REDIRECT=false
+      - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
+    volumes:
+      - /opt/bal/data/nginx:/data
+      - /opt/bal/data/ssl:/ssl:ro
+
+  server:
+    image: "ghcr.io/mission-apprentissage/mna_bal_server:{{ app_version }}"
+    container_name: bal_server
+    restart: unless-stopped
+    mem_limit: 1g
+    networks:
+      - bal_network
+    depends_on:
+      - mongodb
+    environment:
+      - MNA_BAL_ENV=production
+      - MNA_BAL_LOG_LEVEL=info
+      - MNA_BAL_LOG_DESTINATIONS=stdout,mongodb,slack,json
+      - MNA_BAL_PUBLIC_URL=https://bal.apprentissage.beta.gouv.fr
+      - MNA_BAL_MONGODB_URI={{ vault[env_type].MNA_BAL_MONGODB_URI }}
+      - MNA_BAL_SLACK_WEBHOOK_URL={{ vault[env_type].MNA_BAL_SLACK_WEBHOOK_URL }}
+      - MNA_BAL_AUTH_PASSWORD_HASH_ROUNDS={{ vault[env_type].MNA_BAL_AUTH_PASSWORD_HASH_ROUNDS }}
+      - MNA_BAL_AUTH_USER_JWT_SECRET={{ vault[env_type].MNA_BAL_AUTH_USER_JWT_SECRET }}
+      - MNA_BAL_AUTH_ACTIVATION_JWT_SECRET={{ vault[env_type].MNA_BAL_AUTH_ACTIVATION_JWT_SECRET }}
+      - MNA_BAL_AUTH_PASSWORD_JWT_SECRET={{ vault[env_type].MNA_BAL_AUTH_PASSWORD_JWT_SECRET }}
+      - MNA_BAL_AUTH_ACTION_TOKEN_JWT_SECRET={{ vault[env_type].MNA_BAL_AUTH_ACTION_TOKEN_JWT_SECRET }}
+      # ADMIN
+      - MNA_BAL_USERS_DEFAULT_ADMIN_NAME={{ vault[env_type].MNA_BAL_USERS_DEFAULT_ADMIN_NAME }}
+      - MNA_BAL_USERS_DEFAULT_ADMIN_PASSWORD={{ vault[env_type].MNA_BAL_USERS_DEFAULT_ADMIN_PASSWORD }}
+      - MNA_BAL_USERS_DEFAULT_ADMIN_PERMISSIONS={{ vault[env_type].MNA_BAL_USERS_DEFAULT_ADMIN_PERMISSIONS }}
+      # OVH Storage
+      - MNA_BAL_OVH_STORAGE_USERNAME={{ vault.MNA_BAL_OVH_STORAGE_USERNAME }}
+      - MNA_BAL_OVH_STORAGE_PASSWORD={{ vault.MNA_BAL_OVH_STORAGE_PASSWORD }}
+      - MNA_BAL_OVH_STORAGE_TENANT_ID={{ vault.MNA_BAL_OVH_STORAGE_TENANT_ID }}
+      - MNA_BAL_OVH_STORAGE_CONTAINER_NAME={{ vault.MNA_BAL_OVH_STORAGE_CONTAINER_NAME }}
+      - MNA_BAL_OVH_STORAGE_ENCRYPTION_KEY={{ vault.MNA_BAL_OVH_STORAGE_ENCRYPTION_KEY }}
+      - MNA_BAL_OVH_STORAGE_URI={{ vault.MNA_BAL_OVH_STORAGE_URI }}
+      - MNA_BAL_API_KEY={{ vault[env_type].MNA_BAL_API_KEY }}
+      - MNA_BAL_SMTP_HOST={{ vault[env_type].MNA_BAL_SMTP_HOST }}
+      - MNA_BAL_SMTP_PORT={{ vault[env_type].MNA_BAL_SMTP_PORT }}
+      - MNA_BAL_SMTP_AUTH_USER={{ vault[env_type].MNA_BAL_SMTP_AUTH_USER }}
+      - MNA_BAL_SMTP_AUTH_PASS={{ vault[env_type].MNA_BAL_SMTP_AUTH_PASS }}
+      - MNA_BAL_API_ENTREPRISE_KEY={{ vault[env_type].MNA_BAL_API_ENTREPRISE_KEY }}
+      - MNA_BAL_SENTRY_DSN=
+      - SENTRY_AUTH_TOKEN={{ vault.SENTRY_AUTH_TOKEN }}
+      - MNA_BAL_IS_OFFLINE=false
+    volumes:
+      - /opt/bal/data/server:/data
+
+  ui:
+    image: "ghcr.io/mission-apprentissage/mna_bal_ui:{{ app_version }}"
+    container_name: bal_ui
+    restart: unless-stopped
+    mem_limit: 256m
+    networks:
+      - bal_network
+    depends_on:
+      - server
+    environment:
+      - SERVER_URI=http://server:5000
+      - NEXT_PUBLIC_SENTRY_DSN=
+    # build:
+    #   args:
+    #     - NEXT_PUBLIC_ENV=production
+    #     - NEXT_PUBLIC_BASE_URL=https:/bal.apprentissage.beta.gouv.fr
+    #     - NEXT_PUBLIC_BASE_HOST=bal.apprentissage.beta.gouv.fr
+    #     - NEXT_PUBLIC_METABASE_URL=https://bal.apprentissage.beta.gouv.fr
+    #     - NEXT_PUBLIC_METABASE_SECRET_KEY={{ vault[env_type].NEXT_PUBLIC_METABASE_SECRET_KEY }}
+    #     - SENTRY_AUTH_TOKEN={{ vault.SENTRY_AUTH_TOKEN }}
+
+  mongodb:
+    image: mongo:6.0.2-focal
+    container_name: bal_mongodb
+    restart: unless-stopped
+    mem_limit: 2g
+    networks:
+      - bal_network
+    command: mongod --auth
+    volumes:
+      - /opt/bal/data/mongodb/db:/data/db
+      - /opt/bal/data/mongodb/configdb:/data/configdb
+      - /opt/bal/data/mongodb/backups:/data/backups-legacy
+      - /opt/bal/configs/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+
+  metabase:
+    image: metabase/metabase:v0.46.0
+    container_name: bal_metabase
+    mem_limit: 2g
+    volumes:
+      - /opt/bal/data/metabase:/data/metabase
+      - /opt/bal/backups/metabase:/data/backups
+    depends_on:
+      - mongodb
+    environment:
+      JAVA_TIMEZONE: Europe/Paris
+      MB_DB_FILE: /data/metabase/metabase.db
+      MB_SITE_LOCALE: fr
+      MB_SITE_URL: https://bal.apprentissage.beta.gouv.fr/metabase
+    restart: always
+    networks:
+      - bal_network
+
+  nodeexporter:
+    image: prom/node-exporter:v1.5.0
+    container_name: nodeexporter
+    restart: unless-stopped
+    hostname: bal-production
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - bal_network
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.46.0
+    container_name: cadvisor
+    restart: unless-stopped
+    hostname: bal-production
+    privileged: true
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    networks:
+      - bal_network
+
+networks:
+  bal_network:
+    name: bal_network

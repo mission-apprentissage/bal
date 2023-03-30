@@ -81,12 +81,12 @@ nécessaire.
 ## Vault
 
 Il est vivement recommander de stocker toutes les variables d'environnement sensibles (ex: token) dans un vault Ansible.
-Le fichier `ansible/roles/setup/vars/main/vault.yaml` contient déjà les données jugées sensibles.
+Le fichier `vault/vault.yaml` contient déjà les données jugées sensibles.
 
 ### Création du vault
 
 Dans un premier temps, vous devez générer le mot de passe du vault. Ce mot de passe sera chiffré via GPG et pourra
-uniquement être obtenu par les personnes listées dans le fichier `ansible/roles/setup/vars/main/habilitations.yml`
+uniquement être obtenu par les personnes listées dans le fichier `vault/habilitations.yml`
 
 Pour se faire, lancez la commande suivante :
 
@@ -94,7 +94,7 @@ Pour se faire, lancez la commande suivante :
   bash scripts/vault/generate-vault-password.sh
 ```
 
-Cette commande va créer le fichier `ansible/.vault-password.gpg`, vous devez le commiter.
+Cette commande va créer le fichier `vault/.vault-password.gpg`, vous devez le commiter.
 
 Le mot de passe contenu dans ce fichier va permettre de chiffrer le ficihier `vault.yml`. Pour se
 faire, il faut lancer la commande suivante :
@@ -104,7 +104,7 @@ faire, il faut lancer la commande suivante :
 ```
 
 Le script va utiliser votre clé GPG et probablement vous demander votre passphrase. Il va ensuite chiffrer le
-fichier `ansible/roles/setup/vars/main/vault.yml`.
+fichier `vault/vault.yml`.
 
 ```yaml
 $ANSIBLE_VAULT;1.2;AES256;mnaprojectname_ansible_secret
@@ -130,9 +130,9 @@ Quand vous allez ouvrir le fichier, un mot de passe vous sera demandé. Pour l'o
 Vous pouvez également éditer directement le fichier en ligne de commande sans afficher en clair le mot de passe :
 
 ```bash
-   EDITOR=vim bash scripts/vault/edit-vault.sh ansible/roles/setup/vars/main/vault.yml
+   EDITOR=vim bash scripts/vault/edit-vault.sh vault/vault.yml
    ou
-   EDITOR="code -w" bash scripts/vault/edit-vault.sh ansible/roles/setup/vars/main/vault.yml
+   EDITOR="code -w" bash scripts/vault/edit-vault.sh vault/vault.yml
 ```
 
 ### Variables du vault
@@ -167,7 +167,7 @@ l'environnement cible.
 ### Ajout d'un utilisateur
 
 Il est possible d'ajouter ou de supprimer des habilitations en éditant le
-fichier `ansible/roles/setup/vars/main/habilitations.yml`. Tous les utilistateurs présents dans ce fichier pourront se
+fichier `vault/habilitations.yml`. Tous les utilistateurs présents dans ce fichier pourront se
 connecter aux environnements via leurs clés SSH. Ils pourront également accéder au vault et déchiffrer les backups des
 environnements si une clé GPG est fournie.
 
@@ -192,7 +192,7 @@ l'environnement.
 
 Pour supprimer une personne des habilitations, il faut :
 
-- enlever les informations renseignées à son sujet dans le fichier `ansible/roles/setup/vars/main/habilitations.yml`
+- enlever les informations renseignées à son sujet dans le fichier `vault/habilitations.yml`
 - ajouter le username de la personne dans le fichier `ansible/roles/clean/tasks/main.yml`
 
 Une fois ces fichiers mis à jour, vous devez renouveler le vault et lancer la commande de nettoyage :
@@ -221,7 +221,7 @@ Quand le script est terminé, vous pouvez aller sur l'interface
 OVH [https://www.ovh.com/manager/dedicated/#/nasha/zpool-128310/partitions](https://www.ovh.com/manager/dedicated/#/nasha/zpool-128310/partitions)
 afin de vérifier que la partition est bien créée.
 
-- Dans le fichier `ansible/env.ini`, vous devez ensuite ajouter la nom de la partition pour l'environnement :
+- Dans le fichier `/env.ini`, vous devez ensuite ajouter la nom de la partition pour l'environnement :
 
 ```
 backup_partition_name=<nom de la partition>
@@ -278,7 +278,7 @@ afin de vérifier que le firewall a été activé pour l'ip du VPS.
 
 ### Déclaration de l'environnement
 
-Le fichier `ansible/env.ini` définit les environnements de l'application. Il faut donc ajouter le nouvel environnement
+Le fichier `/env.ini` définit les environnements de l'application. Il faut donc ajouter le nouvel environnement
 dans ce fichier en renseignant les informations suivantes :
 
 ```

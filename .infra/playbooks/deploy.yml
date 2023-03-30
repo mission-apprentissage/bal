@@ -1,0 +1,24 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - "../vault/vault.yml"
+  tasks:
+    - name: creation du fichier docker compose
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "/opt/bal/docker-compose.yml"
+      with_fileglob:
+        - "../docker-compose.{{env_type}}.yml"
+
+    - name: Lancement de l'application {{env_type}}
+      docker_compose:
+        project_src: /opt/bal
+        recreate: always
+        remove_orphans: yes
+        files:
+          - docker-compose.yml
+      register: docker_compose_output
+
+    - debug:
+        var: docker_compose_output

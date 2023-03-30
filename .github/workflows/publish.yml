@@ -1,7 +1,7 @@
 name: Publish
 on:
   push:
-    branches: [feat/9-ajouter-le-monitoring]
+    branches: [xxxx]
 
 jobs:
   publish-ghcr:
@@ -19,10 +19,28 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GH_TOKEN }}
+          password: ${{ secrets.GH_FG_TOKEN }}
 
-      - name: Build the hello-docker Docker image
+      - name: Build the reverse-proxy Docker image
         run: |
-          docker build ./reverse_proxy --tag ghcr.io/mission-apprentissage/mna-bal:1.3.0
-          docker run ghcr.io/mission-apprentissage/mna-bal:1.3.0
-          docker push ghcr.io/mission-apprentissage/mna-bal:1.3.0
+          docker build ./reverse_proxy --tag ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:1.3.0 \
+          --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
+          --label "org.opencontainers.image.description=Reverse proxy bal" \
+          --label "org.opencontainers.image.licenses=MIT"
+          docker push ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:1.3.0
+
+      - name: Build the ui Docker image
+        run: |
+          docker build . -f "ui/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_ui:1.3.0 \
+          --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
+          --label "org.opencontainers.image.description=Ui bal" \
+          --label "org.opencontainers.image.licenses=MIT"
+          docker push ghcr.io/mission-apprentissage/mna_bal_ui:1.3.0
+
+      - name: Build the server Docker image
+        run: |
+          docker build . -f "server/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_server:1.3.0 \
+          --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
+          --label "org.opencontainers.image.description=Server bal" \
+          --label "org.opencontainers.image.licenses=MIT"
+          docker push ghcr.io/mission-apprentissage/mna_bal_server:1.3.0

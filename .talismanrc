@@ -1,10 +1,38 @@
 fileignoreconfig:
+- filename: .github/workflows/_deploy.yml
+  checksum: 937b3c6985c909437e9a4362eea76eccd3a946ead5bea27f24f9b0ced02df128
 - filename: .github/workflows/publish.yml
-  checksum: c822e8212bbc54c7231bc828f65b9209dc346a0cd1e121bbd5975e3500975abe
+  checksum: cf87922f9cd1d8f4bb965920800187860609408c64406991a6dfad0ab79cc6aa
+- filename: .infra/README.md
+  checksum: 46ff20cd40c93c0580c896707afadccc37486909997213c452393d8179d12a3d
+- filename: .infra/ansible/roles/setup/files/app/.overrides/common/docker-compose.common.yml
+  checksum: c2a10f20a22c2df9c97be935509f0119799be6467fe797399bd589fae2d10388
 - filename: .infra/ansible/roles/setup/files/app/.overrides/production/docker-compose.env.yml
   checksum: a0e0aee8350df735bf9e13b4d19a3ec0b2a11c742e3ed4681d2d2cc5d672994f
+- filename: .infra/ansible/roles/setup/files/app/mongodb/docker-entrypoint-initdb.d/01_create_users.js
+  checksum: f8af7aa98f4242b1c472c53f85f3d62a14a1239e7259ec0fec837ee09c7df989
+- filename: .infra/ansible/roles/setup/files/app/tools/metabase/backup-metabase.sh
+  checksum: 4243b31cd3918b3d7c739fb7469ed7c1177826648c5b8f54e821df8f749be52e
+- filename: .infra/ansible/roles/setup/tasks/configure-backup.yml
+  checksum: aa93a5ec0e3365d21334481c5f816d3f42775ab08512cf7276b66b28f8df8f86
+- filename: .infra/ansible/roles/setup/tasks/install-app.yml
+  checksum: 2c7d8cdb7af638f1f5588ac9969128dddccc0a0650a5b70af5be7711d8dfbbe7
 - filename: .infra/ansible/roles/setup/vars/main/vault.yml
   checksum: e40d1cfbe320ad9152ae23f552f16a1cf01451725292112f539285fa455f78fd
+- filename: .infra/docker-compose.production.yml
+  checksum: 88f2901eb4b3b71b55fd9b7031d02a2c9064fa55b065bfb70c80730fee206cf9
+- filename: .infra/env.ini
+  checksum: 9189052686ed21ed123d403f25b82f9a98ac7515981f6314bffbe187c90653e3
+- filename: .infra/scripts/deploy-app.sh
+  checksum: efeabc0bb607aa1ed68ed076f197461735cf2c21a09ed369965ec713d369e56c
+- filename: .infra/scripts/ovh/create-backup-partition.sh
+  checksum: 4ab5023a5bfef64b0db52158d42fd7635f2754eb3596ac5b53e085815977f1aa
+- filename: .infra/scripts/vault/generate-vault-password.sh
+  checksum: 86baa73f9c5559afc69f12d124d9895a104869cfb8fe396568f88954351a38b5
+- filename: .infra/scripts/vault/get-vault-password-client.sh
+  checksum: 4ac0001fb9e12df75becb3eec2cc41431bc036b293cdcfee3b769daf8649e5e8
+- filename: .infra/scripts/vault/renew-vault.sh
+  checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
 - filename: server/.env.test
   checksum: c0ef2f69099b6b85e1ee02f31ead22e9b7385bbb213d610fb953c0fc976709ac
 scopeconfig:
