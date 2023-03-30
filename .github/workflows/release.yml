@@ -38,6 +38,6 @@ jobs:
       - name: bump and release
         run: yarn app:release
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
