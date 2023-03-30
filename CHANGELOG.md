@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/mission-apprentissage/bal/compare/v1.4.1...v1.4.2) (2023-03-30)
+
+
+### Bug Fixes
+
+* bump env.ini ([9f43368](https://github.com/mission-apprentissage/bal/commit/9f433689e7cd4528dbbbe9b0f13b454bc6a3a97f))
+
 ## [1.4.1](https://github.com/mission-apprentissage/bal/compare/v1.4.0...v1.4.1) (2023-03-30)
 
 
