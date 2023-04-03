@@ -1,61 +1,64 @@
 fileignoreconfig:
-  - filename: .github/workflows/_deploy.yml
-    checksum: 937b3c6985c909437e9a4362eea76eccd3a946ead5bea27f24f9b0ced02df128
-  - filename: .github/workflows/publish.yml
-    checksum: cf87922f9cd1d8f4bb965920800187860609408c64406991a6dfad0ab79cc6aa
-  - filename: .github/workflows/release.yml
-    checksum: 96cdfb3f17eb6f7be3852f165c6587659570a814f879705348b7abaffc29742a
-  - filename: .infra/README.md
-    checksum: 46ff20cd40c93c0580c896707afadccc37486909997213c452393d8179d12a3d
-  - filename: .infra/ansible/roles/setup/files/app/.overrides/common/docker-compose.common.yml
-    checksum: c2a10f20a22c2df9c97be935509f0119799be6467fe797399bd589fae2d10388
-  - filename: .infra/ansible/roles/setup/files/app/.overrides/production/docker-compose.env.yml
-    checksum: a0e0aee8350df735bf9e13b4d19a3ec0b2a11c742e3ed4681d2d2cc5d672994f
-  - filename: .infra/ansible/roles/setup/files/app/mongodb/docker-entrypoint-initdb.d/01_create_users.js
-    checksum: f8af7aa98f4242b1c472c53f85f3d62a14a1239e7259ec0fec837ee09c7df989
-  - filename: .infra/ansible/roles/setup/files/app/tools/metabase/backup-metabase.sh
-    checksum: 4243b31cd3918b3d7c739fb7469ed7c1177826648c5b8f54e821df8f749be52e
-  - filename: .infra/ansible/roles/setup/tasks/configure-backup.yml
-    checksum: aa93a5ec0e3365d21334481c5f816d3f42775ab08512cf7276b66b28f8df8f86
-  - filename: .infra/ansible/roles/setup/tasks/install-app.yml
-    checksum: 2c7d8cdb7af638f1f5588ac9969128dddccc0a0650a5b70af5be7711d8dfbbe7
-  - filename: .infra/ansible/roles/setup/vars/main/vault.yml
-    checksum: e40d1cfbe320ad9152ae23f552f16a1cf01451725292112f539285fa455f78fd
-  - filename: .infra/docker-compose.production.yml
-    checksum: 88f2901eb4b3b71b55fd9b7031d02a2c9064fa55b065bfb70c80730fee206cf9
-  - filename: .infra/env.ini
-    checksum: 2d1ab129d6f39a2c634312ab647a13e2cc0036fa237f0497575890ec04cd87a6
-  - filename: .infra/scripts/deploy-app.sh
-    checksum: efeabc0bb607aa1ed68ed076f197461735cf2c21a09ed369965ec713d369e56c
-  - filename: .infra/scripts/ovh/create-backup-partition.sh
-    checksum: 4ab5023a5bfef64b0db52158d42fd7635f2754eb3596ac5b53e085815977f1aa
-  - filename: .infra/scripts/vault/generate-vault-password.sh
-    checksum: 86baa73f9c5559afc69f12d124d9895a104869cfb8fe396568f88954351a38b5
-  - filename: .infra/scripts/vault/get-vault-password-client.sh
-    checksum: 4ac0001fb9e12df75becb3eec2cc41431bc036b293cdcfee3b769daf8649e5e8
-  - filename: .infra/scripts/vault/renew-vault.sh
-    checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
-  - filename: git-hooks/prepare-release.sh
-    checksum: 451afde847ac06703ffa04ea37b058d8522b60b94c891bf0979158dac5bc3610
-  - filename: server/.env.test
-    checksum: 3273a6b258bcaca7bf4e13099590cbe65a303aaa0a26709fa9dd24be46c872f4
-  - filename: "*.route.test.ts"
-    checksum: f0902a33ec3d28bad8dd85fcfff1bc5277c65d29798ea04c353b221c82a85df5
-  - filename: "*.test.ts"
-    checksum: a25b36c117e32dc0806d2d15104cbf66e2dd0b85e89a544df22ca0adb857005b
-  - filename: server/config/config.ts
-    checksum: 5b97c2c58ef9eb12063becfe44194016fd09c25ac29617de9ceba2201f2b849b
-  - filename: server/src/app.ts
-    checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
-  - filename: server/src/modules/server/index.ts
-    checksum: e9d1bc8dfc528ec8786f21af1d8ec5ecb290bb5f8b6b63275f744dc5b27673e3
-  - filename: server/src/utils/jwtUtils.ts
-    checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
+- filename: '*.route.test.ts'
+  checksum: f0902a33ec3d28bad8dd85fcfff1bc5277c65d29798ea04c353b221c82a85df5
+- filename: '*.test.ts'
+  checksum: a25b36c117e32dc0806d2d15104cbf66e2dd0b85e89a544df22ca0adb857005b
+- filename: .github/workflows/_deploy.yml
+  checksum: 937b3c6985c909437e9a4362eea76eccd3a946ead5bea27f24f9b0ced02df128
+- filename: .github/workflows/publish.yml
+  checksum: cf87922f9cd1d8f4bb965920800187860609408c64406991a6dfad0ab79cc6aa
+- filename: .github/workflows/release.yml
+  checksum: 96cdfb3f17eb6f7be3852f165c6587659570a814f879705348b7abaffc29742a
+- filename: .infra/README.md
+  checksum: 46ff20cd40c93c0580c896707afadccc37486909997213c452393d8179d12a3d
+- filename: .infra/ansible/roles/setup/files/app/.overrides/common/docker-compose.common.yml
+  checksum: c2a10f20a22c2df9c97be935509f0119799be6467fe797399bd589fae2d10388
+- filename: .infra/ansible/roles/setup/files/app/.overrides/production/docker-compose.env.yml
+  checksum: a0e0aee8350df735bf9e13b4d19a3ec0b2a11c742e3ed4681d2d2cc5d672994f
+- filename: .infra/ansible/roles/setup/files/app/mongodb/docker-entrypoint-initdb.d/01_create_users.js
+  checksum: f8af7aa98f4242b1c472c53f85f3d62a14a1239e7259ec0fec837ee09c7df989
+- filename: .infra/ansible/roles/setup/files/app/tools/metabase/backup-metabase.sh
+  checksum: 4243b31cd3918b3d7c739fb7469ed7c1177826648c5b8f54e821df8f749be52e
+- filename: .infra/ansible/roles/setup/tasks/configure-backup.yml
+  checksum: aa93a5ec0e3365d21334481c5f816d3f42775ab08512cf7276b66b28f8df8f86
+- filename: .infra/ansible/roles/setup/tasks/install-app.yml
+  checksum: 2c7d8cdb7af638f1f5588ac9969128dddccc0a0650a5b70af5be7711d8dfbbe7
+- filename: .infra/ansible/roles/setup/vars/main/vault.yml
+  checksum: e40d1cfbe320ad9152ae23f552f16a1cf01451725292112f539285fa455f78fd
+- filename: .infra/docker-compose.production.yml
+  checksum: 88f2901eb4b3b71b55fd9b7031d02a2c9064fa55b065bfb70c80730fee206cf9
+- filename: .infra/env.ini
+  checksum: 2d1ab129d6f39a2c634312ab647a13e2cc0036fa237f0497575890ec04cd87a6
+- filename: .infra/scripts/deploy-app.sh
+  checksum: efeabc0bb607aa1ed68ed076f197461735cf2c21a09ed369965ec713d369e56c
+- filename: .infra/scripts/ovh/create-backup-partition.sh
+  checksum: 4ab5023a5bfef64b0db52158d42fd7635f2754eb3596ac5b53e085815977f1aa
+- filename: .infra/scripts/vault/generate-vault-password.sh
+  checksum: 86baa73f9c5559afc69f12d124d9895a104869cfb8fe396568f88954351a38b5
+- filename: .infra/scripts/vault/get-vault-password-client.sh
+  checksum: 4ac0001fb9e12df75becb3eec2cc41431bc036b293cdcfee3b769daf8649e5e8
+- filename: .infra/scripts/vault/renew-vault.sh
+  checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
+- filename: encrypted.txt
+  checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
+- filename: git-hooks/prepare-release.sh
+  checksum: 451afde847ac06703ffa04ea37b058d8522b60b94c891bf0979158dac5bc3610
+- filename: server/.env.test
+  checksum: 3273a6b258bcaca7bf4e13099590cbe65a303aaa0a26709fa9dd24be46c872f4
+- filename: server/config/config.ts
+  checksum: 5b97c2c58ef9eb12063becfe44194016fd09c25ac29617de9ceba2201f2b849b
+- filename: server/src/app.ts
+  checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
+- filename: server/src/modules/server/index.ts
+  checksum: e9d1bc8dfc528ec8786f21af1d8ec5ecb290bb5f8b6b63275f744dc5b27673e3
+- filename: server/src/utils/jwtUtils.ts
+  checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
 scopeconfig:
-  - scope: node
+- scope: node
 custom_patterns:
-  - (?s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
+- (?s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
 allowed_patterns:
-  - key
-  - secret
+- key
+- secret
 version: "1.0"
+n: "1.0"

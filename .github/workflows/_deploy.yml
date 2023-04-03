@@ -6,10 +6,6 @@ on:
         description: The environment to deploy to
         type: string
         required: true
-      server_ip:
-        description: The targeted server
-        type: string
-        required: true
       user:
         description: The server user to connect
         type: string
@@ -24,23 +20,20 @@ on:
       SLACK_WEBHOOK:
         description: Slack webhook URL
         required: true
-    outputs:
-      status:
-        description: Whether deployment succeeded or not
-        value: ${{ jobs.deploy.outputs.status }}
+
 jobs:
   deploy:
     name: Deploy on ${{ inputs.environment }}
     runs-on: ubuntu-latest
     steps:
-      - name: Notify new deployment on Slack
-        uses: ravsamhq/notify-slack-action@v2
-        if: always()
-        with:
-          status: ${{ job.status }}
-          notification_title: "Déploiement en ${{ inputs.environment }} initié..."
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      # - name: Notify new deployment on Slack
+      #   uses: ravsamhq/notify-slack-action@v2
+      #   if: always()
+      #   with:
+      #     status: ${{ job.status }}
+      #     notification_title: "Déploiement en ${{ inputs.environment }} initié..."
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Checkout project
         uses: actions/checkout@v3
@@ -54,33 +47,41 @@ jobs:
           name: github_actions
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-          config: |
-            Host ${{inputs.server_ip}}
-              HostName ${{inputs.server_ip}}
-              User ${{inputs.user}}
-              IdentityFile ~/.ssh/github_actions
+
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          fingerprint: ${{ secrets.GPG_FINGERPRINT }}
+
+      - name: List keys
+        run: gpg -K
+
+      - name: test decrypt
+        run: gpg --decrypt encrypted.txt
 
       - name: Run playbook
         run: |
-          bash .infra/scripts/deploy-app.sh ${{ inputs.environment }}
+          bash .infra/scripts/deploy-app.sh ${{ inputs.environment }} --user ${{inputs.user}}
 
-      - name: Notify failure on Slack
-        uses: ravsamhq/notify-slack-action@v2
-        if: always()
-        with:
-          status: ${{ job.status }}
-          notification_title: "Le déploiement en ${{ inputs.environment }} a échoué"
-          notify_when: "failure"
-          mention_groups: "!channel"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      # - name: Notify failure on Slack
+      #   uses: ravsamhq/notify-slack-action@v2
+      #   if: always()
+      #   with:
+      #     status: ${{ job.status }}
+      #     notification_title: "Le déploiement en ${{ inputs.environment }} a échoué"
+      #     notify_when: "failure"
+      #     mention_groups: "!channel"
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Notify success on Slack
-        uses: ravsamhq/notify-slack-action@v2
-        if: always()
-        with:
-          status: ${{ job.status }}
-          notification_title: "Déploiement en ${{ inputs.environment }} terminé avec succès"
-          notify_when: "success"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      # - name: Notify success on Slack
+      #   uses: ravsamhq/notify-slack-action@v2
+      #   if: always()
+      #   with:
+      #     status: ${{ job.status }}
+      #     notification_title: "Déploiement en ${{ inputs.environment }} terminé avec succès"
+      #     notify_when: "success"
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
