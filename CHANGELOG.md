@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/mission-apprentissage/bal/compare/v1.5.1...v1.6.0) (2023-04-03)
+
+
+### Features
+
+* change deploy workflow ([44d7652](https://github.com/mission-apprentissage/bal/commit/44d765234623cddb6a0088e8e8c6110b2f733845))
+
 ## [1.5.1](https://github.com/mission-apprentissage/bal/compare/v1.5.0...v1.5.1) (2023-03-30)
 
 
