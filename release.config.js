@@ -22,6 +22,7 @@ const mainConfig = {
       {
         assets: [
           ".infra/env.ini",
+          ".github/workflows/_deploy.yml",
           "ui/package.json",
           "server/package.json",
           "shared/package.json",
