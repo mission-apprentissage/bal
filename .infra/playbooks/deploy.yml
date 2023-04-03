@@ -1,6 +1,7 @@
 ---
 - hosts: all
   become: true
+  gather_facts: false
   vars_files:
     - "../vault/vault.yml"
   tasks:

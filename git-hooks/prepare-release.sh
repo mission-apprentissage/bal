@@ -34,3 +34,6 @@ docker push ghcr.io/mission-apprentissage/mna_bal_server:"$next_version"
 
 sed -i "s/app_version=.*/app_version=$next_version/" ".infra/env.ini"
 echo "Bump app version in env.ini : $next_version"
+
+sed -i "s/default:.*/default:$next_version/" ".github/workflows/_deploy.yml"
+echo "Bump app version in _deploy.yml : $next_version"
