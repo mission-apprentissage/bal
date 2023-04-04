@@ -8,14 +8,6 @@ on:
         required: true
         options:
           - production
-      user:
-        description: The server user to connect
-        type: string
-        required: true
-      pwd:
-        description: The server pwd to connect
-        type: string
-        required: true
       app_version:
         description: app version
         type: string
@@ -27,6 +19,12 @@ on:
         required: true
       SSH_KNOWN_HOSTS:
         description: SSH known hosts list
+        required: true
+      USR_DEPLOY:
+        description: SSH USER TO DEPLOY
+        required: true
+      PWD_DEPLOY:
+        description: SSH PWD TO DEPLOY
         required: true
       SLACK_WEBHOOK:
         description: Slack webhook URL
@@ -59,9 +57,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
           config: |
-            Host 51.68.44.237
-              HostName 51.68.44.237
-              User ${{inputs.user}}
+            Host *
               IdentityFile ~/.ssh/github_actions
 
       - name: Create vault pwd file
@@ -69,9 +65,7 @@ jobs:
 
       - name: Run playbook
         run: |
-          SECRET_VALUE=$(cat $GITHUB_EVENT_PATH | jq -r '.inputs.pwd' )
-          echo "::add-mask::$SECRET_VALUE"
-          ansible-playbook -i ".infra/env.ini" --limit "${{ inputs.environment }}" --vault-password-file=".infra/.vault_pwd.txt" --extra-vars "app_version=${{ inputs.app_version }} ansible_sudo_pass=$SECRET_VALUE" ".infra/playbooks/deploy.yml" --user ${{inputs.user}}
+          ansible-playbook -i ".infra/env.ini" --limit "${{ inputs.environment }}" --vault-password-file=".infra/.vault_pwd.txt" --extra-vars "app_version=${{ inputs.app_version }} ansible_sudo_pass=${{ secrets.PWD_DEPLOY }}" ".infra/playbooks/deploy.yml" --user ${{ secrets.USR_DEPLOY }}
 
       - name: Notify failure on Slack
         uses: ravsamhq/notify-slack-action@v2
