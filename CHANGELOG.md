@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/mission-apprentissage/bal/compare/v1.6.2...v1.6.3) (2023-04-04)
+
+
+### Bug Fixes
+
+* add tests to release ga ([6ea36a7](https://github.com/mission-apprentissage/bal/commit/6ea36a7c700afdab9dd6c93323dd5ad2d85ceb1c))
+
 ## [1.6.2](https://github.com/mission-apprentissage/bal/compare/v1.6.1...v1.6.2) (2023-04-04)
 
 

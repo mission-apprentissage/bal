@@ -20,7 +20,7 @@ on:
         description: app version
         type: string
         required: true
-        default: 1.6.2
+        default: 1.6.3
     secrets:
       SSH_PRIVATE_KEY:
         description: SSH private key
