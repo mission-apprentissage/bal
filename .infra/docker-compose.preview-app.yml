@@ -1,0 +1,70 @@
+version: "2.4"
+services:
+  server:
+    image: "ghcr.io/mission-apprentissage/mna_bal_server:{{ app_version }}"
+    container_name: bal_server
+    restart: unless-stopped
+    mem_limit: 1g
+    networks:
+      - bal_network
+    depends_on:
+      - mongodb
+    environment:
+      - MNA_BAL_ENV=preview
+      - MNA_BAL_LOG_LEVEL=info
+      - MNA_BAL_LOG_DESTINATIONS=stdout,mongodb,slack,json
+      - MNA_BAL_PUBLIC_URL=https://bal-preview.apprentissage.beta.gouv.fr
+      - MNA_BAL_MONGODB_URI={{ vault[env_type].MNA_BAL_MONGODB_URI }}
+      - MNA_BAL_SLACK_WEBHOOK_URL={{ vault[env_type].MNA_BAL_SLACK_WEBHOOK_URL }}
+      - MNA_BAL_AUTH_PASSWORD_HASH_ROUNDS={{ vault[env_type].MNA_BAL_AUTH_PASSWORD_HASH_ROUNDS }}
+      - MNA_BAL_AUTH_USER_JWT_SECRET={{ vault[env_type].MNA_BAL_AUTH_USER_JWT_SECRET }}
+      - MNA_BAL_AUTH_ACTIVATION_JWT_SECRET={{ vault[env_type].MNA_BAL_AUTH_ACTIVATION_JWT_SECRET }}
+      - MNA_BAL_AUTH_PASSWORD_JWT_SECRET={{ vault[env_type].MNA_BAL_AUTH_PASSWORD_JWT_SECRET }}
+      - MNA_BAL_AUTH_ACTION_TOKEN_JWT_SECRET={{ vault[env_type].MNA_BAL_AUTH_ACTION_TOKEN_JWT_SECRET }}
+      # ADMIN
+      - MNA_BAL_USERS_DEFAULT_ADMIN_NAME={{ vault[env_type].MNA_BAL_USERS_DEFAULT_ADMIN_NAME }}
+      - MNA_BAL_USERS_DEFAULT_ADMIN_PASSWORD={{ vault[env_type].MNA_BAL_USERS_DEFAULT_ADMIN_PASSWORD }}
+      - MNA_BAL_USERS_DEFAULT_ADMIN_PERMISSIONS={{ vault[env_type].MNA_BAL_USERS_DEFAULT_ADMIN_PERMISSIONS }}
+      # OVH Storage
+      - MNA_BAL_OVH_STORAGE_USERNAME={{ vault.MNA_BAL_OVH_STORAGE_USERNAME }}
+      - MNA_BAL_OVH_STORAGE_PASSWORD={{ vault.MNA_BAL_OVH_STORAGE_PASSWORD }}
+      - MNA_BAL_OVH_STORAGE_TENANT_ID={{ vault.MNA_BAL_OVH_STORAGE_TENANT_ID }}
+      - MNA_BAL_OVH_STORAGE_CONTAINER_NAME={{ vault.MNA_BAL_OVH_STORAGE_CONTAINER_NAME }}
+      - MNA_BAL_OVH_STORAGE_ENCRYPTION_KEY={{ vault.MNA_BAL_OVH_STORAGE_ENCRYPTION_KEY }}
+      - MNA_BAL_OVH_STORAGE_URI={{ vault.MNA_BAL_OVH_STORAGE_URI }}
+      - MNA_BAL_API_KEY={{ vault[env_type].MNA_BAL_API_KEY }}
+      - MNA_BAL_SMTP_HOST={{ vault[env_type].MNA_BAL_SMTP_HOST }}
+      - MNA_BAL_SMTP_PORT={{ vault[env_type].MNA_BAL_SMTP_PORT }}
+      - MNA_BAL_SMTP_AUTH_USER={{ vault[env_type].MNA_BAL_SMTP_AUTH_USER }}
+      - MNA_BAL_SMTP_AUTH_PASS={{ vault[env_type].MNA_BAL_SMTP_AUTH_PASS }}
+      - MNA_BAL_API_ENTREPRISE_KEY={{ vault[env_type].MNA_BAL_API_ENTREPRISE_KEY }}
+      - MNA_BAL_SENTRY_DSN=
+      - SENTRY_AUTH_TOKEN={{ vault.SENTRY_AUTH_TOKEN }}
+      - MNA_BAL_IS_OFFLINE=false
+    volumes:
+      - /opt/bal/data/server:/data
+
+  ui:
+    image: "ghcr.io/mission-apprentissage/mna_bal_ui:{{ app_version }}"
+    container_name: bal_ui
+    restart: unless-stopped
+    mem_limit: 256m
+    networks:
+      - bal_network
+    depends_on:
+      - server
+    environment:
+      - SERVER_URI=http://server:5000
+      - NEXT_PUBLIC_SENTRY_DSN=
+    # build:
+    #   args:
+    #     - NEXT_PUBLIC_ENV=preview
+    #     - NEXT_PUBLIC_BASE_URL=https:/bal-preview.apprentissage.beta.gouv.fr
+    #     - NEXT_PUBLIC_BASE_HOST=bal-preview.apprentissage.beta.gouv.fr
+    #     - NEXT_PUBLIC_METABASE_URL=https://bal-preview.apprentissage.beta.gouv.fr
+    #     - NEXT_PUBLIC_METABASE_SECRET_KEY={{ vault[env_type].NEXT_PUBLIC_METABASE_SECRET_KEY }}
+    #     - SENTRY_AUTH_TOKEN={{ vault.SENTRY_AUTH_TOKEN }}
+
+networks:
+  bal_network:
+    name: bal_network

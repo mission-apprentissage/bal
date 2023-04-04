@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+  vars_files:
+    - "../vault/vault.yml"
+  tasks:
+    - name: creation du fichier docker compose
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "/opt/bal/docker-compose.preview-app.yml"
+      with_fileglob:
+        - "../docker-compose.preview-app.yml"
+
+    # inverse to tasks (first build then copy)
+    - name: Build local images
+      shell: "bash /opt/bal/build-branch-images.sh main pr_23"
+
+    - name: Lancement de l'application {{env_type}}
+      docker_compose:
+        project_src: /opt/bal
+        recreate: always
+        remove_orphans: yes
+        files:
+          - docker-compose.yml
+          - docker-compose.preview-app.yml
+      register: docker_compose_output
+
+    - debug:
+        var: docker_compose_output

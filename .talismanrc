@@ -25,6 +25,8 @@ fileignoreconfig:
   checksum: 2c7d8cdb7af638f1f5588ac9969128dddccc0a0650a5b70af5be7711d8dfbbe7
 - filename: .infra/ansible/roles/setup/vars/main/vault.yml
   checksum: e40d1cfbe320ad9152ae23f552f16a1cf01451725292112f539285fa455f78fd
+- filename: .infra/docker-compose.preview-app.yml
+  checksum: 71ae532c1d383cbe5f4c9f24ffd947c079146d0e5cadf9d1241f3eff8f8c4c95
 - filename: .infra/docker-compose.preview.yml
   checksum: 4c516419cede3a0c7b16a772d706d73263a4ae8c62c875c9053ba5a39862ae2d
 - filename: .infra/docker-compose.production.yml
@@ -35,6 +37,8 @@ fileignoreconfig:
   checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
 - filename: .infra/scripts/ovh/create-backup-partition.sh
   checksum: 4ab5023a5bfef64b0db52158d42fd7635f2754eb3596ac5b53e085815977f1aa
+- filename: .infra/scripts/preview-app.sh
+  checksum: e176b554782fe785e920aa8dd3f420ad02a1c9e3b96dffba98ed86b4bcd97d89
 - filename: .infra/scripts/vault/generate-vault-password.sh
   checksum: 86baa73f9c5559afc69f12d124d9895a104869cfb8fe396568f88954351a38b5
 - filename: .infra/scripts/vault/get-vault-password-client.sh
