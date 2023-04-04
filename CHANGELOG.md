@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/mission-apprentissage/bal/compare/v1.6.1...v1.6.2) (2023-04-04)
+
+
+### Bug Fixes
+
+* bump version in ga deploy ([547e708](https://github.com/mission-apprentissage/bal/commit/547e7084ee83a31ad197defd1cdc16eb26602060))
+
 ## [1.6.1](https://github.com/mission-apprentissage/bal/compare/v1.6.0...v1.6.1) (2023-04-03)
 
 
