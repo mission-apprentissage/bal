@@ -25,10 +25,12 @@ fileignoreconfig:
   checksum: 2c7d8cdb7af638f1f5588ac9969128dddccc0a0650a5b70af5be7711d8dfbbe7
 - filename: .infra/ansible/roles/setup/vars/main/vault.yml
   checksum: e40d1cfbe320ad9152ae23f552f16a1cf01451725292112f539285fa455f78fd
+- filename: .infra/docker-compose.preview.yml
+  checksum: 4c516419cede3a0c7b16a772d706d73263a4ae8c62c875c9053ba5a39862ae2d
 - filename: .infra/docker-compose.production.yml
   checksum: 88f2901eb4b3b71b55fd9b7031d02a2c9064fa55b065bfb70c80730fee206cf9
 - filename: .infra/env.ini
-  checksum: 2d1ab129d6f39a2c634312ab647a13e2cc0036fa237f0497575890ec04cd87a6
+  checksum: f6cc80fe676c53593497a8614685b2481d6521ae3571cabacfa0b3fb501af2eb
 - filename: .infra/scripts/deploy-app.sh
   checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
 - filename: .infra/scripts/ovh/create-backup-partition.sh
@@ -39,6 +41,8 @@ fileignoreconfig:
   checksum: 4ac0001fb9e12df75becb3eec2cc41431bc036b293cdcfee3b769daf8649e5e8
 - filename: .infra/scripts/vault/renew-vault.sh
   checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
+- filename: .infra/vault/vault.yml
+  checksum: 06b97b0d866e3dc51ee3b33428bc7014134b0f811c838db1d8e1bc6a5d08b13e
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
@@ -61,4 +65,3 @@ allowed_patterns:
 - key
 - secret
 version: "1.0"
-n: "1.0"
