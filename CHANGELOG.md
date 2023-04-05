@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/mission-apprentissage/bal/compare/v1.6.3...v1.7.0) (2023-04-05)
+
+
+### Features
+
+* ui base ([#21](https://github.com/mission-apprentissage/bal/issues/21)) ([6d41aa9](https://github.com/mission-apprentissage/bal/commit/6d41aa9174c9c885956f0154e2da4f4c9707eade))
+
 ## [1.6.3](https://github.com/mission-apprentissage/bal/compare/v1.6.2...v1.6.3) (2023-04-04)
 
 
