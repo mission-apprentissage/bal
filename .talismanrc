@@ -68,10 +68,10 @@ fileignoreconfig:
 - filename: server/src/utils/jwtUtils.ts
   checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
 scopeconfig:
-- scope: node
+  - scope: node
 custom_patterns:
-- (?s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
+  - (?s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
 allowed_patterns:
-- key
-- secret
+  - key
+  - secret
 version: "1.0"

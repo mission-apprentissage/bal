@@ -12,7 +12,7 @@ export const Header = () => {
         <Box
           width="100%"
           borderBottom="1px solid"
-          borderBottomColor="grey.900"
+          borderBottomColor="grey.400"
         />
       }
       align={"start"}
