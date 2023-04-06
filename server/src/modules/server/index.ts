@@ -1,20 +1,23 @@
 import fastifyAuth, { FastifyAuthFunction } from "@fastify/auth";
 import fastifyCors from "@fastify/cors";
+import fastifySecureSession from "@fastify/secure-session";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import fastify, { FastifyServerOptions } from "fastify";
 
+import { config } from "../../../config/config";
 import pJson from "../../../package.json";
+import { authRoutes } from "./auth.routes";
 import { coreRoutes } from "./core.routes";
 import { userRoutes } from "./user.routes";
+import { authValidateJWT, authValidateSession } from "./utils/auth.strategies";
 
 type FastifyServer = typeof server;
 export interface Server extends FastifyServer {
   validateJWT: FastifyAuthFunction;
+  validateSession: FastifyAuthFunction;
 }
-
-import { authValidateJWT } from "./utils/auth.strategies";
 
 export function build(opts: FastifyServerOptions = {}) {
   const app = fastify(opts);
@@ -38,7 +41,19 @@ export function build(opts: FastifyServerOptions = {}) {
     },
   });
 
-  app.decorate("validateJWT", authValidateJWT);
+  app.register(fastifySecureSession, {
+    secret: config.session.secret,
+    salt: config.session.salt,
+    cookie: {
+      path: "/",
+      httpOnly: true,
+    },
+  });
+
+  // stratégies d'authentification
+  app
+    .decorate("validateJWT", authValidateJWT)
+    .decorate("validateSession", authValidateSession);
 
   app.register(fastifyAuth);
   app.register(fastifyCors, {});
@@ -65,4 +80,5 @@ export const server = build({
 export const registerRoutes = ({ server }: { server: Server }) => {
   coreRoutes({ server });
   userRoutes({ server });
+  authRoutes({ server });
 };

@@ -13,6 +13,10 @@ export const config = {
     type: env.get("MNA_BAL_LOG_TYPE").default("console").asString(),
     level: env.get("MNA_BAL_LOG_LEVEL").default("info").asString(),
   },
+  session: {
+    secret: env.get("MNA_BAL_SESSION_SECRET").required().asString(),
+    salt: env.get("MNA_BAL_SESSION_SALT").required().asString(),
+  },
   auth: {
     user: {
       jwtSecret: env.get("MNA_BAL_AUTH_USER_JWT_SECRET").required().asString(),
@@ -26,5 +30,6 @@ export const config = {
       jwtSecret: env.get("MNA_BAL_AUTH_PASSWORD_JWT_SECRET").required().asString(),
       expiresIn: "1h",
     },
+    hashRounds: env.get("MNA_BAL_AUTH_HASH_ROUNDS").default(10).asIntPositive(),
   },
 };
