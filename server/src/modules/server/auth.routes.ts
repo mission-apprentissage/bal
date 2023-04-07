@@ -1,8 +1,16 @@
-import bcrypt from "bcrypt";
-import { SReqPostLogin, SResPostLogin } from "shared/routes/auth.routes";
+import {
+  SReqGetResetPassword,
+  SReqPostLogin,
+  SReqPostResetPassword,
+  SResPostLogin,
+} from "shared/routes/auth.routes";
 import { SResError } from "shared/routes/common.routes";
 
-import { findUser } from "../actions/users.actions";
+import {
+  resetPassword,
+  sendResetPasswordEmail,
+  verifyEmailPassword,
+} from "../actions/auth.actions";
 import { Server } from ".";
 
 export const authRoutes = ({ server }: { server: Server }) => {
@@ -23,18 +31,9 @@ export const authRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const { email, password } = request.body;
 
-      const user = await findUser({ email });
+      const user = await verifyEmailPassword(email, password);
 
       if (!user) {
-        return response.status(401).send({
-          type: "invalid_credentials",
-          message: "Identifiants incorrects.",
-        });
-      }
-
-      const match = await bcrypt.compare(password, user.password);
-
-      if (!match) {
         return response.status(401).send({
           type: "invalid_credentials",
           message: "Identifiants incorrects.",
@@ -44,6 +43,55 @@ export const authRoutes = ({ server }: { server: Server }) => {
       request.session.set("userId", user._id);
 
       return response.status(200).send(user);
+    }
+  );
+
+  server.get("/auth/logout", {}, async (request, response) => {
+    request.session.set("userId", null);
+    request.session.delete();
+
+    return response.status(200).send();
+  });
+
+  server.get(
+    "/auth/reset-password",
+    {
+      schema: {
+        querystring: SReqGetResetPassword,
+        response: {
+          401: SResError,
+        },
+      } as const,
+    },
+    async (request, response) => {
+      await sendResetPasswordEmail(request.query.email);
+      return response.status(200).send();
+    }
+  );
+
+  server.post(
+    "/auth/reset-password",
+    {
+      schema: {
+        body: SReqPostResetPassword,
+        response: {
+          401: SResError,
+        },
+      } as const,
+    },
+    async (request, response) => {
+      const { password, token } = request.body;
+
+      try {
+        await resetPassword(password, token);
+
+        return response.status(200).send();
+      } catch (error) {
+        return response.status(401).send({
+          type: "invalid_token",
+          message: "Jeton invalide",
+        });
+      }
     }
   );
 };

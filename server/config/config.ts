@@ -23,13 +23,28 @@ export const config = {
       expiresIn: "7d",
     },
     activation: {
-      jwtSecret: env.get("MNA_BAL_AUTH_ACTIVATION_JWT_SECRET").required().asString(),
+      jwtSecret: env
+        .get("MNA_BAL_AUTH_ACTIVATION_JWT_SECRET")
+        .required()
+        .asString(),
       expiresIn: "96h",
     },
     resetPasswordToken: {
-      jwtSecret: env.get("MNA_BAL_AUTH_PASSWORD_JWT_SECRET").required().asString(),
+      jwtSecret: env
+        .get("MNA_BAL_AUTH_PASSWORD_JWT_SECRET")
+        .required()
+        .asString(),
       expiresIn: "1h",
     },
     hashRounds: env.get("MNA_BAL_AUTH_HASH_ROUNDS").default(10).asIntPositive(),
+  },
+  smtp: {
+    host: env.get("MNA_BAL_SMTP_HOST").asString(),
+    port: env.get("MNA_BAL_SMTP_PORT").asString(),
+    secure: env.get("MNA_BAL_SMTP_SECURE").asBool(),
+    auth: {
+      user: env.get("MNA_BAL_SMTP_AUTH_USER").asString(),
+      pass: env.get("MNA_BAL_SMTP_AUTH_PASS").asString(),
+    },
   },
 };

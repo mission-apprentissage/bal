@@ -76,4 +76,6 @@ allowed_patterns:
   - secret
   - SECRET
   - password
+  - Password
+  - pass
 version: "1.0"

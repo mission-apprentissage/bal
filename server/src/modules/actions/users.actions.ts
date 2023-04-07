@@ -32,3 +32,14 @@ export const findUser = async (
 
   return user;
 };
+
+export const updateUser = async (user: IUser, data: Partial<IUser>) => {
+  return await getDbCollection("users").findOneAndUpdate(
+    {
+      _id: user._id,
+    },
+    {
+      $set: data,
+    }
+  );
+};
