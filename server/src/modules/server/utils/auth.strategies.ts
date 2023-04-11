@@ -47,7 +47,7 @@ export const authValidateSession: FastifyAuthFunction = async (
     throw new Error("Session manquante");
   }
 
-  const userId = request.session.get("userId");
+  const userId = request.session.userId;
 
   if (!userId) {
     throw new Error("Session invalide");

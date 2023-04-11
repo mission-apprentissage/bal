@@ -1,6 +1,7 @@
 import fastifyAuth, { FastifyAuthFunction } from "@fastify/auth";
+import fastifyCookie from "@fastify/cookie";
 import fastifyCors from "@fastify/cors";
-import fastifySecureSession from "@fastify/secure-session";
+import fastifySession from "@fastify/session";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
@@ -41,13 +42,11 @@ export function build(opts: FastifyServerOptions = {}) {
     },
   });
 
-  app.register(fastifySecureSession, {
+  app.register(fastifyCookie);
+  app.register(fastifySession, {
     secret: config.session.secret,
-    salt: config.session.salt,
-    cookie: {
-      path: "/",
-      httpOnly: true,
-    },
+    cookieName: config.session.cookieName,
+    cookie: { secure: false },
   });
 
   // stratégies d'authentification

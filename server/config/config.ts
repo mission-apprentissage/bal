@@ -15,7 +15,10 @@ export const config = {
   },
   session: {
     secret: env.get("MNA_BAL_SESSION_SECRET").required().asString(),
-    salt: env.get("MNA_BAL_SESSION_SALT").required().asString(),
+    cookieName: env
+      .get("MNA_BAL_SESSION_COOKIE_NAME")
+      .default("bal_session")
+      .asString(),
   },
   auth: {
     user: {

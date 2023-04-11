@@ -1,5 +1,6 @@
 import assert from "node:assert";
 
+import { config } from "../../config/config";
 import { createUser, findUser } from "../../src/modules/actions/users.actions";
 import { build } from "../../src/modules/server";
 import { verifyPassword } from "../../src/modules/server/utils/password.utils";
@@ -82,13 +83,15 @@ describe("Authentication", () => {
 
     const cookies = responseLogin.cookies as Cookie[];
 
-    const sessionCookie = cookies.find((cookie) => cookie.name === "session");
+    const sessionCookie = cookies.find(
+      (cookie) => cookie.name === config.session.cookieName
+    ) as Cookie;
 
     const response = await app.inject({
       method: "GET",
       url: "/api/user",
       cookies: {
-        session: sessionCookie?.value as string,
+        [sessionCookie.name]: sessionCookie.value,
       },
     });
 

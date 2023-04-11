@@ -13,6 +13,12 @@ import {
 } from "../actions/auth.actions";
 import { Server } from ".";
 
+declare module "fastify" {
+  interface Session {
+    userId?: string | null;
+  }
+}
+
 export const authRoutes = ({ server }: { server: Server }) => {
   /**
    * Récupérer l'utilisateur connecté
@@ -33,7 +39,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
 
       const user = await verifyEmailPassword(email, password);
 
-      if (!user) {
+      if (!user || !user._id) {
         return response.status(401).send({
           type: "invalid_credentials",
           message: "Identifiants incorrects.",
@@ -47,8 +53,8 @@ export const authRoutes = ({ server }: { server: Server }) => {
   );
 
   server.get("/auth/logout", {}, async (request, response) => {
-    request.session.set("userId", null);
-    request.session.delete();
+    request.session.userId = null;
+    await request.session.destroy();
 
     return response.status(200).send();
   });
