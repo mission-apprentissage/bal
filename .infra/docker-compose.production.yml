@@ -131,6 +131,19 @@ services:
     networks:
       - bal_network
 
+  clamav:
+    image: clamav/clamav:0.105.1
+    container_name: bal_clamav
+    mem_limit: 2g
+    restart: unless-stopped
+    networks:
+      - bal_network
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
+      interval: 60s
+      retries: 3
+      start_period: 120s
+
   nodeexporter:
     image: prom/node-exporter:v1.5.0
     container_name: nodeexporter

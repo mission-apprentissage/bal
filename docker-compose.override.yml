@@ -64,6 +64,11 @@ services:
       MB_SITE_LOCALE: fr
       MB_SITE_URL: http://localhost/metabase
 
+  clamav:
+    image: clamav/clamav
+    ports:
+      - 3310:3310
+
   smtp:
     image: mailhog/mailhog
     container_name: bal_smtp
