@@ -29,7 +29,6 @@
     "@fastify/swagger-ui": "1.6.0",
     "@fastify/type-provider-json-schema-to-ts": "2.2.2",
     "axios": "0.24.0",
-    "bcrypt": "5.1.0",
     "boom": "7.3.0",
     "bunyan": "1.8.15",
     "bunyan-mongodb-stream": "0.0.3",
@@ -59,7 +58,6 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
-    "@types/bcrypt": "5.0.0",
     "@types/bunyan": "1.8.8",
     "@types/bunyan-prettystream": "0.1.32",
     "@types/jsonwebtoken": "9.0.1",

@@ -1,9 +1,8 @@
 import assert from "node:assert";
 
-import { compare } from "bcrypt";
-
 import { createUser, findUser } from "../../src/modules/actions/users.actions";
 import { build } from "../../src/modules/server";
+import { verifyPassword } from "../../src/modules/server/utils/password.utils";
 import { createResetPasswordToken } from "../../src/utils/jwtUtils";
 const app = build();
 
@@ -178,7 +177,7 @@ describe("Authentication", () => {
 
     const updatedPasswordUser = await findUser({ _id: user?._id });
 
-    const match = await compare(
+    const match = verifyPassword(
       newPassword,
       updatedPasswordUser?.password as string
     );

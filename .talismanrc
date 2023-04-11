@@ -67,6 +67,18 @@ fileignoreconfig:
     checksum: e9d1bc8dfc528ec8786f21af1d8ec5ecb290bb5f8b6b63275f744dc5b27673e3
   - filename: server/src/utils/jwtUtils.ts
     checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
+  - filename: ui/app/components/Footer.tsx
+    checksum: 0467f77da9e5e2ac6086cef53ee620def51fc539c1b3efb240e29b8bb62998f2
+  - filename: ui/app/components/FooterLogo.tsx
+    checksum: 0c7cf76e0a78293e20ab70bdefa060de3fb45edb6e14b40c45fc8b80250e9d53
+  - filename: ui/app/politique-confidentialite/components/PolitiqueConfidentialite.tsx
+    checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
+  - filename: ui/app/cgu/components/Cgu.tsx
+    checksum: 3feb1e295f0c4758ff7915f10a4bc5b9855c5655947b5def17408d0a06c02e53
+  - filename: "*.mjml.ejs"
+    checksum: 9e0290e41389acecddebce27c63d2af3687ece2b8ea5ce61ab33617c74728536
+  - filename: server/src/modules/server/utils/password.utils.ts
+    checksum: e4c4531afb4213f08e07bc83c129547f752909a4cc3a0e1f25ba87ca0cadde32
 scopeconfig:
   - scope: node
 custom_patterns:

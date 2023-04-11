@@ -1,8 +1,8 @@
-import bcrypt from "bcrypt";
 import { verify } from "jsonwebtoken";
 
 import { config } from "../../../config/config";
 import { createResetPasswordToken } from "../../utils/jwtUtils";
+import { hashPassword, verifyPassword } from "../server/utils/password.utils";
 import { findUser, updateUser } from "./users.actions";
 
 export const verifyEmailPassword = async (email: string, password: string) => {
@@ -12,7 +12,7 @@ export const verifyEmailPassword = async (email: string, password: string) => {
     return;
   }
 
-  const match = await bcrypt.compare(password, user.password);
+  const match = verifyPassword(password, user.password);
 
   if (!match) {
     return;
@@ -54,7 +54,7 @@ export const resetPassword = async (password: string, token: string) => {
     throw new Error("Invalid token");
   }
 
-  const hashedPassword = await bcrypt.hash(password, config.auth.hashRounds);
+  const hashedPassword = hashPassword(password);
 
   await updateUser(user, { password: hashedPassword });
 };

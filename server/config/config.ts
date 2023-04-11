@@ -36,7 +36,10 @@ export const config = {
         .asString(),
       expiresIn: "1h",
     },
-    hashRounds: env.get("MNA_BAL_AUTH_HASH_ROUNDS").default(10).asIntPositive(),
+    hashRounds: env
+      .get("MNA_BAL_AUTH_HASH_ROUNDS")
+      .default(1000)
+      .asIntPositive(),
   },
   smtp: {
     host: env.get("MNA_BAL_SMTP_HOST").asString(),
