@@ -67,6 +67,16 @@ services:
     restart: unless-stopped
     networks:
       - bal_network
+
+  metabase:
+    image: metabase/metabase:v0.46.0
+    container_name: bal_metabase
+    mem_limit: 2g
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+    networks:
+      - bal_network
       
 networks:
   bal_network:
