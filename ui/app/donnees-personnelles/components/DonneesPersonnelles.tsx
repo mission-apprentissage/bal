@@ -68,7 +68,7 @@ const DonneesPersonnelles = () => {
           </Text>
         </Section>
         <Section id="mission-interet-public" marginTop="5w">
-          <Box color="#009081">
+          <Box color="greensoftc">
             <Text fontSize="gamma" fontWeight="700">
               Base légale
             </Text>
@@ -109,8 +109,8 @@ const DonneesPersonnelles = () => {
           </Box>
         </Section>
         {/* Block Faciliter le pilotage */}
-        <Section id="faciliter-pilotage-operationnel" mt="10w">
-          <Box color="#009099">
+        <Section id="faciliter-pilotage-operationnel" marginTop="5w">
+          <Box color="greensoftc">
             <Text fontSize="gamma" fontWeight="700" id="finalite">
               Finalité
             </Text>
@@ -148,8 +148,8 @@ const DonneesPersonnelles = () => {
         </Section>
 
         {/* Block Minimisation des données */}
-        <Section id="minimisation-donnees" mt="10w">
-          <Box color="#465F9D">
+        <Section id="minimisation-donnees" marginTop="5w">
+          <Box color="greensoftc">
             <Text fontSize="gamma" fontWeight="700">
               Données collectées
             </Text>

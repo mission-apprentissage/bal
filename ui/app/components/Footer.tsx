@@ -191,10 +191,7 @@ const Footer = () => {
                   marginRight: "0.5rem",
                 }}
               >
-                <Link
-                  href="https://beta.gouv.fr/startups/tdb-apprentissage.html"
-                  isExternal
-                >
+                <Link href="https://beta.gouv.fr/startups" isExternal>
                   À propos
                   <ExternalLinkLine
                     w={"0.55rem"}
@@ -211,8 +208,17 @@ const Footer = () => {
                   marginRight: "0.5rem",
                 }}
               >
-                <Link href="/journal-des-evolutions">
+                <Link
+                  href="https://github.com/mission-apprentissage/bal/blob/main/CHANGELOG.md"
+                  isExternal
+                >
                   Journal des évolutions
+                  <ExternalLinkLine
+                    w={"0.55rem"}
+                    h={"0.55rem"}
+                    mb={"0.125rem"}
+                    ml={1}
+                  />
                 </Link>
               </ListItem>
               <ListItem

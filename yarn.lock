@@ -1261,15 +1261,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/icons@npm:^2.0.17":
-  version: 2.0.18
-  resolution: "@chakra-ui/icons@npm:2.0.18"
+"@chakra-ui/icons@npm:2.0.17":
+  version: 2.0.17
+  resolution: "@chakra-ui/icons@npm:2.0.17"
   dependencies:
     "@chakra-ui/icon": 3.0.16
   peerDependencies:
     "@chakra-ui/system": ">=2.0.0"
     react: ">=18"
-  checksum: c3967af062f5808486cda6ce72a68e8279882f071c6ff715d4f669257280f8d8685fe8b4efe1a914d227c34446da51acc9ef4cc5ef13801cf453b27e8eabf3e9
+  checksum: cb0d6f431d162f7d8d50ee33b887bb64f490109cc077bf176bea17ddca32c926b0caaab1013f05186be52ee42f261ff9d4e7af50744a03d51de356b4470e0ee2
   languageName: node
   linkType: hard
 
@@ -1399,9 +1399,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/next-js@npm:^2.1.1":
-  version: 2.1.2
-  resolution: "@chakra-ui/next-js@npm:2.1.2"
+"@chakra-ui/next-js@npm:2.1.1":
+  version: 2.1.1
+  resolution: "@chakra-ui/next-js@npm:2.1.1"
   dependencies:
     "@emotion/cache": ^11.10.5
   peerDependencies:
@@ -1409,7 +1409,7 @@ __metadata:
     "@emotion/react": ">=11"
     next: ">=13"
     react: ">=18"
-  checksum: b7ea6c003badcf9ebef58ee99dcbdcbe87cfc2a1e87189f17bb43cb129497963026176e0aa745e1d460258e1b95df5fcb1f686f6ca1ed8b5fe58d56afa1bcb0d
+  checksum: 58e427be1bad5188cc206c08f13156ff9907c666a2a71962ba10d461231e53af598e081116d1f5752923cbdc6d00cf48bb46fc8002d17c140b527d515b23b9a3
   languageName: node
   linkType: hard
 
@@ -2476,7 +2476,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/react@npm:^11.10.6":
+"@emotion/react@npm:11.10.6":
   version: 11.10.6
   resolution: "@emotion/react@npm:11.10.6"
   dependencies:
@@ -2517,7 +2517,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/styled@npm:^11.10.6":
+"@emotion/styled@npm:11.10.6":
   version: 11.10.6
   resolution: "@emotion/styled@npm:11.10.6"
   dependencies:
@@ -7243,7 +7243,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^10.10.0":
+"framer-motion@npm:10.10.0":
   version: 10.10.0
   resolution: "framer-motion@npm:10.10.0"
   dependencies:
@@ -10271,7 +10271,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-plausible@npm:^3.7.2":
+"next-plausible@npm:3.7.2":
   version: 3.7.2
   resolution: "next-plausible@npm:3.7.2"
   peerDependencies:
@@ -10282,7 +10282,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:^13.2.4":
+"next@npm:13.2.4":
   version: 13.2.4
   resolution: "next@npm:13.2.4"
   dependencies:
@@ -13560,6 +13560,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:4.9.5":
+  version: 4.9.5
+  resolution: "typescript@npm:4.9.5"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: ee000bc26848147ad423b581bd250075662a354d84f0e06eb76d3b892328d8d4440b7487b5a83e851b12b255f55d71835b008a66cbf8f255a11e4400159237db
+  languageName: node
+  linkType: hard
+
 "typescript@npm:^4.6.4 || ^5.0.0":
   version: 5.0.2
   resolution: "typescript@npm:5.0.2"
@@ -13590,6 +13600,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@patch:typescript@4.9.5#~builtin<compat/typescript>":
+  version: 4.9.5
+  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=ad5954"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 8f6260acc86b56bfdda6004bc53f32ea548f543e8baef7071c8e34d29d292f3e375c8416556c8de10b24deef6933cd1c16a8233dc84a3dd43a13a13265d0faab
+  languageName: node
+  linkType: hard
+
 "typescript@patch:typescript@^4.6.4 || ^5.0.0#~builtin<compat/typescript>":
   version: 5.0.2
   resolution: "typescript@patch:typescript@npm%3A5.0.2#~builtin<compat/typescript>::version=5.0.2&hash=ad5954"
@@ -13613,21 +13633,21 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ui@workspace:ui"
   dependencies:
-    "@chakra-ui/icons": ^2.0.17
-    "@chakra-ui/next-js": ^2.1.1
+    "@chakra-ui/icons": 2.0.17
+    "@chakra-ui/next-js": 2.1.1
     "@chakra-ui/react": 2.5.3
-    "@emotion/react": ^11.10.6
-    "@emotion/styled": ^11.10.6
+    "@emotion/react": 11.10.6
+    "@emotion/styled": 11.10.6
     "@types/node": 18.11.18
     "@types/react": 18.0.27
     "@types/react-dom": 18.0.10
-    framer-motion: ^10.10.0
-    next: ^13.2.4
-    next-plausible: ^3.7.2
+    framer-motion: 10.10.0
+    next: 13.2.4
+    next-plausible: 3.7.2
     react: 18.2.0
     react-dom: 18.2.0
     shared: "*"
-    typescript: 4.9.4
+    typescript: 4.9.5
   languageName: unknown
   linkType: soft
 
