@@ -22,10 +22,11 @@ program
   .command("users:create")
   .description("Créer un utilisateur")
   .option("-e, --email <string>", "Email de l'utilisateur")
-  .action(async ({ email }) =>
+  .option("-p, --password <string>", "Mot de passe de l'utilisateur")
+  .action(async ({ email, password }) =>
     runScript(async () => {
       try {
-        const user = await createUser({ email });
+        const user = await createUser({ email, password });
         console.log(user);
         process.exit(0);
       } catch (error) {
