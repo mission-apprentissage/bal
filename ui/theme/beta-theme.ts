@@ -232,7 +232,7 @@ const styles = {
       fontSize: `${rootFontSizePx}px`,
       fontFamily: "Marianne, Arial",
       background: "white",
-      color: "bluefrance",
+      color: "primaryText",
     },
   },
 };

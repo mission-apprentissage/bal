@@ -33,6 +33,18 @@ export const PAGES = {
     title: "Politique de Confidentialité",
     path: "/politique-confidentialite",
   }),
+  connexion: () => ({
+    title: "Se connecter",
+    path: "/connexion",
+  }),
+  motDePasseOublie: () => ({
+    title: "Mot de passe oublié",
+    path: "/mot-de-passe-oublie",
+  }),
+  modifierMotDePasse: () => ({
+    title: "Modifier mon mot de passe",
+    path: "/modifier-mot-de-passe",
+  }),
 };
 
 interface Page {

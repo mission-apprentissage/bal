@@ -6,7 +6,7 @@ const Switch = {
       borderRight: "1px",
       borderBottom: "1px",
       borderLeft: "1px",
-      borderColor: "bluefrance",
+      bordercolor: "bluefrance.main",
       ml: "-3px",
       mt: "-3px",
 
@@ -15,7 +15,7 @@ const Switch = {
     track: {
       background: "white",
       border: "1px",
-      borderColor: "bluefrance",
+      bordercolor: "bluefrance.main",
       _checked: {
         background: "bluefrance",
       },
@@ -26,7 +26,7 @@ const Switch = {
       thumb: {
         _checked: {
           _before: {
-            color: "bluefrance",
+            color: "bluefrance.main",
             width: "var(--slider-track-height)",
             height: "var(--slider-track-height)",
             content: '"✓"',

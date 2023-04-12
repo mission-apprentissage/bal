@@ -13,7 +13,7 @@ const Link = {
     pill: {
       borderRadius: 24,
       fontSize: "zeta",
-      color: "bluefrance",
+      color: "bluefrance.main",
       px: 3,
       py: 1,
       _hover: { bg: "grey.200", textDecoration: "none" },

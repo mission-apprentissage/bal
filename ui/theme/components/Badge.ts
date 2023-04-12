@@ -123,7 +123,7 @@ const Badge = {
     signed: {
       ...commonStatusBadgeStyle,
       bg: "#E3E3FD",
-      color: "bluefrance",
+      color: "bluefrance.main",
     },
     save: {
       ...commonStatusBadgeStyle,
@@ -136,7 +136,7 @@ const Badge = {
     purple: {
       ...commonStatusBadgeStyle,
       bg: "#E3E3FD",
-      color: "bluefrance",
+      color: "bluefrance.main",
     },
     grey: {
       ...commonStatusBadgeStyle,

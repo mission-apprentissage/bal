@@ -12,12 +12,12 @@ export const Table = {
         tr: {
           fontSize: "zeta",
           color: "grey.800",
-          borderColor: "bluefrance",
+          bordercolor: "bluefrance.main",
           "&:nth-of-type(odd)": {
             backgroundColor: "grey.100",
           },
           _hover: {
-            color: "bluefrance",
+            color: "bluefrance.main",
             backgroundColor: "grey.200",
             cursor: "pointer",
           },
@@ -33,15 +33,15 @@ export const Table = {
         paddingY: "3w",
         letterSpacing: "0px",
         borderBottom: "2px solid",
-        borderBottomColor: "bluefrance",
+        borderBottomcolor: "bluefrance.main",
       },
       tbody: {
         tr: {
           fontSize: "zeta",
           color: "grey.800",
-          borderColor: "bluefrance",
+          bordercolor: "bluefrance.main",
           _hover: {
-            color: "bluefrance",
+            color: "bluefrance.main",
             backgroundColor: "grey.200",
             cursor: "pointer",
           },

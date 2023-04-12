@@ -79,6 +79,12 @@ fileignoreconfig:
     checksum: 9e0290e41389acecddebce27c63d2af3687ece2b8ea5ce61ab33617c74728536
   - filename: server/src/modules/server/utils/password.utils.ts
     checksum: e4c4531afb4213f08e07bc83c129547f752909a4cc3a0e1f25ba87ca0cadde32
+  - filename: ui/app/auth/connexion/page.tsx
+    checksum: dc9ca3eb6ef33cfeb8f0f5f0e4e53df6aee43a876efa6fde450ab42effe64f94
+  - filename: ui/app/auth/mot-de-passe-oublie/page.tsx
+    checksum: 0ba4627fdcf5ee2d2230c06582e124333a65d4be293e2b11fb8fcd019c09eb57
+  - filename: ui/app/components/breadcrumb/Breadcrumb.tsx
+    checksum: c8a647325f6337637ed5a66346ed20905bc27388c4aa2b6509c798ccc15ecc49
 scopeconfig:
   - scope: node
 custom_patterns:
