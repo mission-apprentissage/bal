@@ -1,0 +1,32 @@
+name: Remove preview
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  deploy:
+    name: Remove Preview ${{ github.event.pull_request.number }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          name: github_actions
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+          config: |
+            Host *
+              IdentityFile ~/.ssh/github_actions
+
+      - name: Create vault pwd file
+        run: echo ${{ secrets.VAULT_PWD }} > .infra/.vault_pwd.txt
+
+      - name: Run playbook
+        run: |
+          ansible-playbook -i ".infra/env.ini" --limit preview --vault-password-file=".infra/.vault_pwd.txt" --extra-vars "pr_number=${{ github.event.pull_request.number }} git_revision=${{ github.event.pull_request.head.ref }} status=close ansible_sudo_pass=${{ secrets.PWD_DEPLOY }}" ".infra/playbooks/preview.yml" --user ${{ secrets.USR_DEPLOY }}

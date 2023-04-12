@@ -1,3 +1,6 @@
+install:
+	yarn install
+
 start:
 	docker-compose up --build --force-recreate
 

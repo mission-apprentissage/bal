@@ -5,10 +5,14 @@ fileignoreconfig:
   checksum: a25b36c117e32dc0806d2d15104cbf66e2dd0b85e89a544df22ca0adb857005b
 - filename: .github/workflows/_deploy.yml
   checksum: ede576e2f5dfef9b31e127aec3f757e5b7ad0c5f78214d796ad30da1c2f2e46a
+- filename: .github/workflows/preview.yml
+  checksum: d6756220b370ca680476b8008d2639fcb11a81165dcc78564d3248bef68ec3ea
 - filename: .github/workflows/publish.yml
   checksum: cf87922f9cd1d8f4bb965920800187860609408c64406991a6dfad0ab79cc6aa
 - filename: .github/workflows/release.yml
   checksum: 96cdfb3f17eb6f7be3852f165c6587659570a814f879705348b7abaffc29742a
+- filename: .github/workflows/remove-preview.yml
+  checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/README.md
   checksum: 46ff20cd40c93c0580c896707afadccc37486909997213c452393d8179d12a3d
 - filename: .infra/ansible/roles/setup/files/app/.overrides/common/docker-compose.common.yml

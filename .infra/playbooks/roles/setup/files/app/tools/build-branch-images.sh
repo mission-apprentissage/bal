@@ -6,6 +6,7 @@ readonly PROJECT_DIR="/opt/bal"
 readonly REPO_DIR="/opt/bal/repository"
 readonly BRANCH=${1:?"Merci de préciser le nom de la branche (ex. master)"}; shift;
 readonly LOCAL_VERSION=${1:?"Merci de préciser la version local (ex. 33)"}; shift;
+readonly PREVIEW_STATUS=${1:?"Merci de préciser si la preview est ouverte ou fermée (open/close)"}; shift;
 
 function update_repository() {
     echo "Mise à jour du repository..."
@@ -52,10 +53,16 @@ function reload_containers() {
 echo "****************************"
 echo "[$(date +'%Y-%m-%d_%H%M%S')] Running ${BASH_SOURCE[0]} $*"
 echo "****************************"
-update_repository
-build_images
 
-sed "s/LOCAL_VERSION/$LOCAL_VERSION/g" /opt/bal/docker-compose.preview-app.yml > /opt/bal/docker-compose.pr-"$LOCAL_VERSION".yml
+if [ "$PREVIEW_STATUS" == "open" ]; then
+    update_repository
+    build_images
+    sed "s/LOCAL_VERSION/$LOCAL_VERSION/g" /opt/bal/docker-compose.preview-app.yml > /opt/bal/docker-compose.pr-"$LOCAL_VERSION".yml
+fi
+
+if [ "$PREVIEW_STATUS" == "close" ]; then
+  rm "/opt/bal/docker-compose.pr-$LOCAL_VERSION.yml"
+fi
 
 reload_containers
 clean_docker
