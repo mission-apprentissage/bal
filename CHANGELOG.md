@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/mission-apprentissage/bal/compare/v1.7.0...v1.8.0) (2023-04-12)
+
+
+### Features
+
+* **infra:** add preview mecanism  ([#33](https://github.com/mission-apprentissage/bal/issues/33)) ([e7fa177](https://github.com/mission-apprentissage/bal/commit/e7fa177f14f8e740bfb65c139470371dd7905a0e))
+
 # [1.7.0](https://github.com/mission-apprentissage/bal/compare/v1.6.3...v1.7.0) (2023-04-05)
 
 
