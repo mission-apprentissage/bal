@@ -52,18 +52,15 @@ services:
     environment:
       - SERVER_URI=http://server:5000
       - NEXT_PUBLIC_SENTRY_DSN=
+      - NEXT_PUBLIC_ENV=dev
+      - NEXT_PUBLIC_BASE_HOST=localhost
+      - NEXT_PUBLIC_METABASE_URL=https://localhost/metabase
+      - NEXT_PUBLIC_METABASE_SECRET_KEY=
     volumes:
       - ./:/app/:z
     build:
       context: .
       dockerfile: ui/Dockerfile.dev
-      args:
-        - NEXT_PUBLIC_ENV=dev
-        - NEXT_PUBLIC_BASE_URL=http://localhost
-        - NEXT_PUBLIC_BASE_HOST=localhost
-        - NEXT_PUBLIC_METABASE_URL=https://localhost/metabase
-        - NEXT_PUBLIC_METABASE_SECRET_KEY=
-        - SKIP_PREFLIGHT_CHECK=true
 
   server:
     image: bal_server
@@ -99,7 +96,8 @@ services:
     mem_limit: 2g
     restart: unless-stopped
     depends_on:
-      - repo_modules
+      repo_modules:
+        condition: service_completed_successfully
     ports:
       - "127.0.0.1:27017:27017"
     networks:

@@ -66,15 +66,11 @@ services:
       - LETSENCRYPT_HOST=LOCAL_VERSION.bal-preview.apprentissage.beta.gouv.fr
       - LETSENCRYPT_EMAIL=misson.apprentissage.devops@gmail.com
       - SERVER_URI=http://server:5000
+      - NEXT_PUBLIC_ENV=preview
       - NEXT_PUBLIC_SENTRY_DSN=
-    # build:
-    #   args:
-    #     - NEXT_PUBLIC_ENV=preview
-    #     - NEXT_PUBLIC_BASE_URL=https:/bal-preview.apprentissage.beta.gouv.fr
-    #     - NEXT_PUBLIC_BASE_HOST=bal-preview.apprentissage.beta.gouv.fr
-    #     - NEXT_PUBLIC_METABASE_URL=https://bal-preview.apprentissage.beta.gouv.fr
-    #     - NEXT_PUBLIC_METABASE_SECRET_KEY={{ vault[env_type].NEXT_PUBLIC_METABASE_SECRET_KEY }}
-    #     - SENTRY_AUTH_TOKEN={{ vault.SENTRY_AUTH_TOKEN }}
+      - NEXT_PUBLIC_BASE_HOST=LOCAL_VERSION.bal-preview.apprentissage.beta.gouv.fr
+      - NEXT_PUBLIC_METABASE_URL=https://LOCAL_VERSION.bal-preview.apprentissage.beta.gouv.fr/metabase
+      - NEXT_PUBLIC_METABASE_SECRET_KEY={{ vault[env_type].NEXT_PUBLIC_METABASE_SECRET_KEY }}
 
 
 networks:

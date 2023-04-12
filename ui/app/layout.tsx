@@ -26,7 +26,7 @@ const RootLayout: FC<Props> = ({ children }) => {
         <PlausibleProvider
           trackLocalhost={false}
           enabled={tracking.current}
-          domain="bal.apprentissage.beta.gouv.fr"
+          domain={`${process.env.NEXT_PUBLIC_BASE_HOST}`}
         />
       </head>
       <body>
