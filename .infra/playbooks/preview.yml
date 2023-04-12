@@ -12,19 +12,9 @@
       with_fileglob:
         - "../docker-compose.preview-app.yml"
 
-    # inverse to tasks (first build then copy)
     - name: Build local images
-      shell: "bash /opt/bal/build-branch-images.sh main pr_23"
-
-    - name: Lancement de l'application {{env_type}}
-      docker_compose:
-        project_src: /opt/bal
-        recreate: always
-        remove_orphans: yes
-        files:
-          - docker-compose.yml
-          - docker-compose.preview-app.yml
-      register: docker_compose_output
+      shell: "bash /opt/bal/tools/build-branch-images.sh {{ git_revision }} {{ pr_number }}"
+      register: results
 
     - debug:
-        var: docker_compose_output
+        var: results.stdout

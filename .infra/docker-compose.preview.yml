@@ -1,7 +1,7 @@
 version: "2.4"
 services:
   reverse_proxy:
-    image: "ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:{{ reverse_proxy_version }}"
+    image: "nginxproxy/nginx-proxy"
     container_name: bal_reverse_proxy
     restart: unless-stopped
     mem_limit: 256m
@@ -10,26 +10,27 @@ services:
       - "443:443"
     networks:
       - bal_network
-    environment:
-      - SERVER_NAME={{dns_name}}
-      - NGINX_ALWAYS_TLS_REDIRECT=true
-      - PROXY_SSL_CERT=/ssl/fullchain.pem
-      - PROXY_SSL_CERT_KEY=/ssl/privkey.pem
-      - PARANOIA=1
-      - ANOMALY_INBOUND=5
-      - ANOMALY_OUTBOUND=4
-      - REPORTING_LEVEL=4
-      - DNS_SERVER=127.0.0.11
-      - PROXY=1
-      - SERVERNAME=localhost
-      - ACCESSLOG=/data/access.log
-      - ERRORLOG=/data/error.log
-      - LOGLEVEL=warn
-      - NGINX_ALWAYS_TLS_REDIRECT=false
-      - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
     volumes:
-      - /opt/bal/data/nginx:/data
-      - /opt/bal/data/ssl:/ssl:ro
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    restart: unless-stopped
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - DEFAULT_EMAIL=misson.apprentissage.devops@gmail.com
+    volumes_from:
+      - reverse_proxy
+    networks:
+      - bal_network
 
   mongodb:
     image: mongo:6.0.2-focal
@@ -38,12 +39,11 @@ services:
     mem_limit: 2g
     networks:
       - bal_network
-    command: mongod --auth
+    # command: mongod --auth
+    ports:
+      - "127.0.0.1:27017:27017"
     volumes:
       - /opt/bal/data/mongodb/db:/data/db
-      - /opt/bal/data/mongodb/configdb:/data/configdb
-      - /opt/bal/data/mongodb/backups:/data/backups-legacy
-      - /opt/bal/configs/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
 
   metabase:
     image: metabase/metabase:v0.46.0
@@ -75,6 +75,13 @@ services:
       interval: 60s
       retries: 3
       start_period: 120s
+
+volumes:
+  conf:
+  vhost:
+  html:
+  certs:
+  acme:
 
 networks:
   bal_network:

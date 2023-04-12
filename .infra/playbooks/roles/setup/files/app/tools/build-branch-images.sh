@@ -2,9 +2,10 @@
 set -euo pipefail
 #Needs to be run as sudo
 
+readonly PROJECT_DIR="/opt/bal"
 readonly REPO_DIR="/opt/bal/repository"
 readonly BRANCH=${1:?"Merci de préciser le nom de la branche (ex. master)"}; shift;
-readonly LOCAL_VERSION=${1:?"Merci de préciser la version local (ex. pr_33)"}; shift;
+readonly LOCAL_VERSION=${1:?"Merci de préciser la version local (ex. 33)"}; shift;
 
 function update_repository() {
     echo "Mise à jour du repository..."
@@ -17,7 +18,7 @@ function update_repository() {
 }
 
 function build_images() {
-    echo "Mise à jour du repository..."
+    echo "Build local images..."
 
     cd "${REPO_DIR}"
     docker build . -f "ui/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$LOCAL_VERSION" \
@@ -36,13 +37,25 @@ function clean_docker() {
     docker system prune -f --filter "until=360h"
 }
 
+function reload_containers() {
+    echo "Rechargement des conteneurs ..."
+
+    cd "${PROJECT_DIR}"
+    /usr/local/bin/docker-compose \
+      -f "docker-compose.yml" \
+      $(for file in $(ls docker-compose.pr-*.yml); do echo -n "-f $file "; done)  \
+      --project-name bal \
+      up -d --force-recreate --remove-orphans --renew-anon-volumes $*
+    cd -
+}
+
 echo "****************************"
 echo "[$(date +'%Y-%m-%d_%H%M%S')] Running ${BASH_SOURCE[0]} $*"
 echo "****************************"
 update_repository
 build_images
 
-sed -i "s/ghcr.io/mission-apprentissage/mna_bal_ui:.*/ghcr.io/mission-apprentissage/mna_bal_ui:$LOCAL_VERSION/" "/opt/bal/docker-compose.preview-app.yml"
-sed -i "s/ghcr.io/mission-apprentissage/mna_bal_server:.*/ghcr.io/mission-apprentissage/mna_bal_server:$LOCAL_VERSION/" "/opt/bal/docker-compose.preview-app.yml"
+sed "s/LOCAL_VERSION/$LOCAL_VERSION/g" /opt/bal/docker-compose.preview-app.yml > /opt/bal/docker-compose.pr-"$LOCAL_VERSION".yml
 
+reload_containers
 clean_docker

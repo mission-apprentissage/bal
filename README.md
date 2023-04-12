@@ -10,7 +10,6 @@
 Pour lancer l'application :
 
 ```sh
-make install
 make start
 ```
 
