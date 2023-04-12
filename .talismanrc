@@ -5,10 +5,14 @@ fileignoreconfig:
   checksum: a25b36c117e32dc0806d2d15104cbf66e2dd0b85e89a544df22ca0adb857005b
 - filename: .github/workflows/_deploy.yml
   checksum: ede576e2f5dfef9b31e127aec3f757e5b7ad0c5f78214d796ad30da1c2f2e46a
+- filename: .github/workflows/preview.yml
+  checksum: d6756220b370ca680476b8008d2639fcb11a81165dcc78564d3248bef68ec3ea
 - filename: .github/workflows/publish.yml
   checksum: cf87922f9cd1d8f4bb965920800187860609408c64406991a6dfad0ab79cc6aa
 - filename: .github/workflows/release.yml
   checksum: 96cdfb3f17eb6f7be3852f165c6587659570a814f879705348b7abaffc29742a
+- filename: .github/workflows/remove-preview.yml
+  checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/README.md
   checksum: 46ff20cd40c93c0580c896707afadccc37486909997213c452393d8179d12a3d
 - filename: .infra/ansible/roles/setup/files/app/.overrides/common/docker-compose.common.yml
@@ -25,20 +29,30 @@ fileignoreconfig:
   checksum: 2c7d8cdb7af638f1f5588ac9969128dddccc0a0650a5b70af5be7711d8dfbbe7
 - filename: .infra/ansible/roles/setup/vars/main/vault.yml
   checksum: e40d1cfbe320ad9152ae23f552f16a1cf01451725292112f539285fa455f78fd
+- filename: .infra/docker-compose.preview-33.yml
+  checksum: d4a2b70da835529d9f90d5a563fecfc3f3ad7782d4d442b049028ed570dc11c2
+- filename: .infra/docker-compose.preview-app.yml
+  checksum: 81b9884b6a6602e5bb324ca8ad51cda5250a3f0ef8e2a7035465b3ceeb7abb6d
+- filename: .infra/docker-compose.preview.yml
+  checksum: 5ce03c6b1352a8edbbdbfb51a17221b533fa735923e135bbbe989f6f4005d971
 - filename: .infra/docker-compose.production.yml
   checksum: 88f2901eb4b3b71b55fd9b7031d02a2c9064fa55b065bfb70c80730fee206cf9
 - filename: .infra/env.ini
-  checksum: 2d1ab129d6f39a2c634312ab647a13e2cc0036fa237f0497575890ec04cd87a6
+  checksum: 6524e49b84e30dbd214e15cbcb0fd5923b2d399ba03e26aa0641b3a6ea7a0e04
 - filename: .infra/scripts/deploy-app.sh
   checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
 - filename: .infra/scripts/ovh/create-backup-partition.sh
   checksum: 4ab5023a5bfef64b0db52158d42fd7635f2754eb3596ac5b53e085815977f1aa
+- filename: .infra/scripts/preview-app.sh
+  checksum: e176b554782fe785e920aa8dd3f420ad02a1c9e3b96dffba98ed86b4bcd97d89
 - filename: .infra/scripts/vault/generate-vault-password.sh
   checksum: 86baa73f9c5559afc69f12d124d9895a104869cfb8fe396568f88954351a38b5
 - filename: .infra/scripts/vault/get-vault-password-client.sh
   checksum: 4ac0001fb9e12df75becb3eec2cc41431bc036b293cdcfee3b769daf8649e5e8
 - filename: .infra/scripts/vault/renew-vault.sh
   checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
+- filename: .infra/vault/vault.yml
+  checksum: 06b97b0d866e3dc51ee3b33428bc7014134b0f811c838db1d8e1bc6a5d08b13e
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
@@ -61,4 +75,3 @@ allowed_patterns:
 - key
 - secret
 version: "1.0"
-n: "1.0"

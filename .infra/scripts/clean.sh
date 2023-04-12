@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly ENV_FILTER=${1:?"Merci de préciser un ou plusieurs environnements (ex. recette ou production)"}
 shift
 

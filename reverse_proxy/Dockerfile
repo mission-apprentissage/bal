@@ -1,28 +1,28 @@
-ARG NGINX_VERSION="1.20.2"
+ARG NGINX_VERSION="1.22.1"
 FROM nginx:${NGINX_VERSION} as nginxModules
 
-ARG HEADERS_MORE_VERSION="v0.33"
+ARG HEADERS_MORE_VERSION="v0.34"
 
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-        automake \
-        cmake \
-        doxygen \
-        g++ \
-        git \
-        libcurl4-gnutls-dev \
-        libgeoip-dev \
-        liblua5.3-dev \
-        libpcre++-dev \
-        libtool \
-        libxml2-dev \
-        make \
-        ruby \
-        pkg-config \
-        zlib1g-dev; \
-     apt-get clean; \
-     rm -rf /var/lib/apt/lists/*
+    automake \
+    cmake \
+    doxygen \
+    g++ \
+    git \
+    libcurl4-gnutls-dev \
+    libgeoip-dev \
+    liblua5.3-dev \
+    libpcre++-dev \
+    libtool \
+    libxml2-dev \
+    make \
+    ruby \
+    pkg-config \
+    zlib1g-dev; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /sources
 
@@ -38,7 +38,7 @@ RUN set -eux; \
     cp objs/ngx_http_headers_more_filter_module.so /etc/nginx/modules/;
 
 
-FROM owasp/modsecurity-crs:3.3.2-nginx
+FROM owasp/modsecurity-crs:3.3.4-nginx-202303180303
 
 RUN apt-get update \
     && apt-get install -y logrotate

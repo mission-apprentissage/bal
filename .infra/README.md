@@ -305,7 +305,6 @@ dans ce fichier en renseignant les informations suivantes :
 dns_name=<nom de l'application>.mnaDNSBASE
 host_name=<nom de la mahcine (ex: mna-catalogue-production)>
 update_sshd_config=true
-git_revision=master
 env_type=production
 
 ```

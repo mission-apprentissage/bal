@@ -1,7 +1,7 @@
 export default async function Home() {
   return (
     <main>
-      <div>Hello world</div>
+      <div>Hello world - preview</div>
     </main>
   );
 }

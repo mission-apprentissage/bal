@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+  vars_files:
+    - "../vault/vault.yml"
+  tasks:
+    - name: creation du fichier docker compose
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "/opt/bal/docker-compose.preview-app.yml"
+      with_fileglob:
+        - "../docker-compose.preview-app.yml"
+
+    - name: Build local images
+      shell: "bash /opt/bal/tools/build-branch-images.sh {{ git_revision }} {{ pr_number }} {{ status }}"
+      register: results
+
+    - debug:
+        var: results.stdout
