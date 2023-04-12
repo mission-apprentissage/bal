@@ -83,9 +83,9 @@ nécessaire.
 
 Pour pousser les images Docker de l'application (Reverse Proxy et App) sur le registre GitHub (https://ghcr.io/mission-apprentissage/), vous pouvez utiliser le script "push-image" :
 
-\`\`\`
+```bash
 bash scripts/push-image.sh
-\`\`\`
+```
 
 Le script vous demandera si vous souhaitez créer et pousser les images pour "Reverse Proxy" et "App". Pour chaque image, il vous proposera automatiquement la prochaine version patch selon le versioning sémantique, mais vous pourrez également saisir une version personnalisée si vous le souhaitez.
 

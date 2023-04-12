@@ -34,8 +34,8 @@ function build_images() {
 }
 
 function clean_docker() {
-    echo "Removing dangling data built two weeks ago..."
-    docker system prune -f --filter "until=360h"
+    echo "Removing dangling data built"
+    docker system prune -f --filter "until=60h"
 }
 
 function reload_containers() {
