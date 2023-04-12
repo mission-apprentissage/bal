@@ -151,10 +151,7 @@ const Footer = () => {
                   marginRight: "0.5rem",
                 }}
               >
-                <Link
-                  href="/stats"
-                  onClick={() => plausible("clic_statistiques")}
-                >
+                <Link href="/" onClick={() => plausible("clic_statistiques")}>
                   Statistiques
                 </Link>
               </ListItem>
