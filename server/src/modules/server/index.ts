@@ -46,7 +46,7 @@ export function build(opts: FastifyServerOptions = {}) {
   app.register(fastifySession, {
     secret: config.session.secret,
     cookieName: config.session.cookieName,
-    cookie: { secure: false },
+    cookie: config.session.cookie,
   });
 
   // stratégies d'authentification

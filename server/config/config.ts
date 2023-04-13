@@ -19,6 +19,12 @@ export const config = {
       .get("MNA_BAL_SESSION_COOKIE_NAME")
       .default("bal_session")
       .asString(),
+    cookie: {
+      maxAge: 30 * 24 * 3600000,
+      httpOnly: true,
+      sameSite: "lax" as const,
+      secure: true,
+    },
   },
   auth: {
     user: {
