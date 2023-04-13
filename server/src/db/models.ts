@@ -1,3 +1,4 @@
+import sessionsModelDescriptor from "shared/models/session.model";
 import usersModelDescriptor from "shared/models/user.model";
 
 export interface IModelDescriptor {
@@ -6,4 +7,7 @@ export interface IModelDescriptor {
   collectionName: string;
 }
 
-export const modelDescriptors: IModelDescriptor[] = [usersModelDescriptor];
+export const modelDescriptors: IModelDescriptor[] = [
+  usersModelDescriptor,
+  sessionsModelDescriptor,
+];

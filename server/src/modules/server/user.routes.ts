@@ -22,7 +22,7 @@ export const userRoutes = ({ server }: { server: Server }) => {
       preHandler: server.auth([server.validateJWT, server.validateSession]),
     },
     async (request, response) => {
-      return response.status(200).send(request.authenticatedUser);
+      return response.status(200).send(request.user);
     }
   );
 

@@ -1,6 +1,7 @@
 import assert from "node:assert";
 
 import { config } from "../../config/config";
+import { getSession } from "../../src/modules/actions/sessions.actions";
 import { createUser, findUser } from "../../src/modules/actions/users.actions";
 import { build } from "../../src/modules/server";
 import { verifyPassword } from "../../src/modules/server/utils/password.utils";
@@ -66,7 +67,7 @@ describe("Authentication", () => {
     assert.equal(responseIncorrectPassword.statusCode, 401);
   });
 
-  it("should identify user using session after signing in", async () => {
+  it("should identify user and create session in db after signing in", async () => {
     const user = await createUser({
       email: "email@exemple.fr",
       password: "my-password",
@@ -82,10 +83,12 @@ describe("Authentication", () => {
     });
 
     const cookies = responseLogin.cookies as Cookie[];
-
     const sessionCookie = cookies.find(
       (cookie) => cookie.name === config.session.cookieName
     ) as Cookie;
+
+    const session = await getSession({ token: sessionCookie.value });
+    assert.equal(session?.token, sessionCookie.value);
 
     const response = await app.inject({
       method: "GET",
@@ -102,7 +105,7 @@ describe("Authentication", () => {
     assert.ok(response.json().token);
   });
 
-  it("should not identify user using session after signing out", async () => {
+  it("should not identify user using session and delete in database after signing out", async () => {
     const user = await createUser({
       email: "email@example.fr",
       password: "my-password",
@@ -118,24 +121,31 @@ describe("Authentication", () => {
     });
 
     let cookies = responseLogin.cookies as Cookie[];
-    let sessionCookie = cookies.find((cookie) => cookie.name === "session");
+    let sessionCookie = cookies.find(
+      (cookie) => cookie.name === config.session.cookieName
+    ) as Cookie;
 
     const responseLogout = await app.inject({
       method: "GET",
       url: "/api/auth/logout",
       cookies: {
-        session: sessionCookie?.value as string,
+        [sessionCookie.name]: sessionCookie.value,
       },
     });
 
+    const session = await getSession({ token: sessionCookie.value });
+    assert.equal(session, null);
+
     cookies = responseLogout.cookies as Cookie[];
-    sessionCookie = cookies.find((cookie) => cookie.name === "session");
+    sessionCookie = cookies.find(
+      (cookie) => cookie.name === config.session.cookieName
+    ) as Cookie;
 
     const response = await app.inject({
       method: "GET",
       url: "/api/user",
       cookies: {
-        session: sessionCookie?.value as string,
+        [sessionCookie.name]: sessionCookie?.value as string,
       },
     });
 

@@ -1,4 +1,4 @@
-import jwt, { SignOptions } from "jsonwebtoken";
+import jwt, { SignOptions, verify } from "jsonwebtoken";
 import { IUser } from "shared/models/user.model";
 
 import { config } from "../../config/config";
@@ -58,4 +58,8 @@ export const createUserToken = (
     is_admin: user.is_admin,
   };
   return createToken("user", user.email, { payload, ...options });
+};
+
+export const decodeToken = (token: string, type: TokenType = "user") => {
+  return verify(token, config.auth[type].jwtSecret);
 };
