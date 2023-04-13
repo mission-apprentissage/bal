@@ -12,7 +12,7 @@ export const Header = () => {
         <Box
           width="100%"
           borderBottom="1px solid"
-          borderBottomColor="grey.900"
+          borderBottomColor="grey.400"
         />
       }
       align={"start"}
@@ -20,7 +20,7 @@ export const Header = () => {
     >
       <HStack as={Container} py={2} maxWidth={"container.xl"}>
         <HStack as={Link} spacing={10} align="center" href="/">
-          <Img src="/logo_gouvernement.svg" />
+          <Img src="/images/logo_gouvernement.svg" />
           <Heading as={"h1"} size={"md"}>
             BAL
           </Heading>

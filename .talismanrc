@@ -32,11 +32,11 @@ fileignoreconfig:
 - filename: .infra/docker-compose.preview-33.yml
   checksum: d4a2b70da835529d9f90d5a563fecfc3f3ad7782d4d442b049028ed570dc11c2
 - filename: .infra/docker-compose.preview-app.yml
-  checksum: 81b9884b6a6602e5bb324ca8ad51cda5250a3f0ef8e2a7035465b3ceeb7abb6d
+  checksum: 57b5f3b141d262f56746e39c3c73042c4a795c983f78a3c56058d3f3e23703f8
 - filename: .infra/docker-compose.preview.yml
   checksum: 5ce03c6b1352a8edbbdbfb51a17221b533fa735923e135bbbe989f6f4005d971
 - filename: .infra/docker-compose.production.yml
-  checksum: 88f2901eb4b3b71b55fd9b7031d02a2c9064fa55b065bfb70c80730fee206cf9
+  checksum: dc4aa51763a18a75da84768e01024d0a724ff0f3c8912b97c6bcf49407d1cd9d
 - filename: .infra/env.ini
   checksum: 6524e49b84e30dbd214e15cbcb0fd5923b2d399ba03e26aa0641b3a6ea7a0e04
 - filename: .infra/scripts/deploy-app.sh

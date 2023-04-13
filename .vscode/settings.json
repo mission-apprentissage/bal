@@ -33,5 +33,7 @@
     "**/node_modules": true
   },
   "javascript.preferences.importModuleSpecifier": "relative",
-  "typescript.preferences.importModuleSpecifier": "relative"
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
