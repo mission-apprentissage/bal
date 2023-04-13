@@ -7,7 +7,6 @@ import fastifySwaggerUi from "@fastify/swagger-ui";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import fastify, { FastifySchema, FastifyServerOptions } from "fastify";
 
-import { config } from "../../../config/config";
 import pJson from "../../../package.json";
 import { authRoutes } from "./auth.routes";
 import { coreRoutes } from "./core.routes";
@@ -49,11 +48,6 @@ export function build(opts: FastifyServerOptions = {}) {
   });
 
   app.register(fastifyCookie);
-  app.register(fastifySession, {
-    secret: config.session.secret,
-    cookieName: config.session.cookieName,
-    cookie: config.session.cookie,
-  });
 
   // stratégies d'authentification
   app

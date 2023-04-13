@@ -2682,16 +2682,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/session@npm:10.2.1":
-  version: 10.2.1
-  resolution: "@fastify/session@npm:10.2.1"
-  dependencies:
-    fastify-plugin: ^4.0.0
-    safe-stable-stringify: ^2.3.1
-  checksum: b1fc515e8f0704afcca69c7350bff20c18c0f2ad23ea7e6ca86c56f48c372673ce92b2446f0bfdda61d8bdad130469c0adf959f02e8b6c6d540374e0e693768c
-  languageName: node
-  linkType: hard
-
 "@fastify/static@npm:^6.0.0":
   version: 6.9.0
   resolution: "@fastify/static@npm:6.9.0"
@@ -12432,7 +12422,6 @@ __metadata:
     "@fastify/auth": 4.2.0
     "@fastify/cookie": 8.3.0
     "@fastify/cors": 8.2.0
-    "@fastify/session": 10.2.1
     "@fastify/swagger": 8.3.1
     "@fastify/swagger-ui": 1.6.0
     "@fastify/type-provider-json-schema-to-ts": 2.2.2

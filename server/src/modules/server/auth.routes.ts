@@ -47,7 +47,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
       await createSession({ token });
 
       return response
-        .setCookie(config.session.cookieName, token)
+        .setCookie(config.session.cookieName, token, config.session.cookie)
         .status(200)
         .send(user);
     }
@@ -70,9 +70,6 @@ export const authRoutes = ({ server }: { server: Server }) => {
     {
       schema: {
         querystring: SReqGetResetPassword,
-        response: {
-          401: SResError,
-        },
       } as const,
     },
     async (request, response) => {
