@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/mission-apprentissage/bal/compare/v1.8.0...v1.9.0) (2023-04-13)
+
+
+### Features
+
+* pages support ([#29](https://github.com/mission-apprentissage/bal/issues/29)) ([0ec6e83](https://github.com/mission-apprentissage/bal/commit/0ec6e83d8ed2ae505788ac034276f43135fc0a1e))
+
 # [1.8.0](https://github.com/mission-apprentissage/bal/compare/v1.7.0...v1.8.0) (2023-04-12)
 
 
