@@ -58,7 +58,7 @@ fileignoreconfig:
   - filename: git-hooks/prepare-release.sh
     checksum: 451afde847ac06703ffa04ea37b058d8522b60b94c891bf0979158dac5bc3610
   - filename: server/.env.test
-    checksum: 3273a6b258bcaca7bf4e13099590cbe65a303aaa0a26709fa9dd24be46c872f4
+    checksum: f8002c31e942ba470a66b1cdcd2126c92953eaf6cdb65658055996e5a40dcbee
   - filename: server/config/config.ts
     checksum: 5b97c2c58ef9eb12063becfe44194016fd09c25ac29617de9ceba2201f2b849b
   - filename: server/src/app.ts

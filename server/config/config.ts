@@ -20,10 +20,16 @@ export const config = {
       .default("bal_session")
       .asString(),
     cookie: {
-      maxAge: 30 * 24 * 3600000,
-      httpOnly: true,
+      maxAge: env
+        .get("MNA_BAL_SESSION_COOKIE_MAX_AGE")
+        .default(30 * 24 * 3600000)
+        .asInt(),
+      httpOnly: env
+        .get("MNA_BAL_SESSION_COOKIE_HTTP_ONLY")
+        .default("true")
+        .asBool(),
       sameSite: "lax" as const,
-      secure: true,
+      secure: env.get("MNA_BAL_SESSION_COOKIE_SECURE").default("true").asBool(),
     },
   },
   auth: {
