@@ -66,3 +66,7 @@ fi
 
 reload_containers
 clean_docker
+
+if [ "$PREVIEW_STATUS" == "open" ]; then
+    docker exec bal_server_"$LOCAL_VERSION" yarn --silent cli "seed:preview"
+fi
