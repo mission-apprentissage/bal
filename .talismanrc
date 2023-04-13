@@ -1,93 +1,105 @@
 fileignoreconfig:
-  - filename: "*.route.test.ts"
-    checksum: f0902a33ec3d28bad8dd85fcfff1bc5277c65d29798ea04c353b221c82a85df5
-  - filename: "*.test.ts"
-    checksum: a25b36c117e32dc0806d2d15104cbf66e2dd0b85e89a544df22ca0adb857005b
-  - filename: .github/workflows/_deploy.yml
-    checksum: ede576e2f5dfef9b31e127aec3f757e5b7ad0c5f78214d796ad30da1c2f2e46a
-  - filename: .github/workflows/preview.yml
-    checksum: d6756220b370ca680476b8008d2639fcb11a81165dcc78564d3248bef68ec3ea
-  - filename: .github/workflows/publish.yml
-    checksum: cf87922f9cd1d8f4bb965920800187860609408c64406991a6dfad0ab79cc6aa
-  - filename: .github/workflows/release.yml
-    checksum: 96cdfb3f17eb6f7be3852f165c6587659570a814f879705348b7abaffc29742a
-  - filename: .github/workflows/remove-preview.yml
-    checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
-  - filename: .infra/README.md
-    checksum: 46ff20cd40c93c0580c896707afadccc37486909997213c452393d8179d12a3d
-  - filename: .infra/ansible/roles/setup/files/app/.overrides/common/docker-compose.common.yml
-    checksum: c2a10f20a22c2df9c97be935509f0119799be6467fe797399bd589fae2d10388
-  - filename: .infra/ansible/roles/setup/files/app/.overrides/production/docker-compose.env.yml
-    checksum: a0e0aee8350df735bf9e13b4d19a3ec0b2a11c742e3ed4681d2d2cc5d672994f
-  - filename: .infra/ansible/roles/setup/files/app/mongodb/docker-entrypoint-initdb.d/01_create_users.js
-    checksum: f8af7aa98f4242b1c472c53f85f3d62a14a1239e7259ec0fec837ee09c7df989
-  - filename: .infra/ansible/roles/setup/files/app/tools/metabase/backup-metabase.sh
-    checksum: 4243b31cd3918b3d7c739fb7469ed7c1177826648c5b8f54e821df8f749be52e
-  - filename: .infra/ansible/roles/setup/tasks/configure-backup.yml
-    checksum: aa93a5ec0e3365d21334481c5f816d3f42775ab08512cf7276b66b28f8df8f86
-  - filename: .infra/ansible/roles/setup/tasks/install-app.yml
-    checksum: 2c7d8cdb7af638f1f5588ac9969128dddccc0a0650a5b70af5be7711d8dfbbe7
-  - filename: .infra/ansible/roles/setup/vars/main/vault.yml
-    checksum: e40d1cfbe320ad9152ae23f552f16a1cf01451725292112f539285fa455f78fd
-  - filename: .infra/docker-compose.preview-33.yml
-    checksum: d4a2b70da835529d9f90d5a563fecfc3f3ad7782d4d442b049028ed570dc11c2
-  - filename: .infra/docker-compose.preview-app.yml
-    checksum: 57b5f3b141d262f56746e39c3c73042c4a795c983f78a3c56058d3f3e23703f8
-  - filename: .infra/docker-compose.preview.yml
-    checksum: 5ce03c6b1352a8edbbdbfb51a17221b533fa735923e135bbbe989f6f4005d971
-  - filename: .infra/docker-compose.production.yml
-    checksum: dc4aa51763a18a75da84768e01024d0a724ff0f3c8912b97c6bcf49407d1cd9d
-  - filename: .infra/env.ini
-    checksum: 6524e49b84e30dbd214e15cbcb0fd5923b2d399ba03e26aa0641b3a6ea7a0e04
-  - filename: .infra/scripts/deploy-app.sh
-    checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
-  - filename: .infra/scripts/ovh/create-backup-partition.sh
-    checksum: 4ab5023a5bfef64b0db52158d42fd7635f2754eb3596ac5b53e085815977f1aa
-  - filename: .infra/scripts/preview-app.sh
-    checksum: e176b554782fe785e920aa8dd3f420ad02a1c9e3b96dffba98ed86b4bcd97d89
-  - filename: .infra/scripts/vault/generate-vault-password.sh
-    checksum: 86baa73f9c5559afc69f12d124d9895a104869cfb8fe396568f88954351a38b5
-  - filename: .infra/scripts/vault/get-vault-password-client.sh
-    checksum: 4ac0001fb9e12df75becb3eec2cc41431bc036b293cdcfee3b769daf8649e5e8
-  - filename: .infra/scripts/vault/renew-vault.sh
-    checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
-  - filename: .infra/vault/vault.yml
-    checksum: 06b97b0d866e3dc51ee3b33428bc7014134b0f811c838db1d8e1bc6a5d08b13e
-  - filename: encrypted.txt
-    checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
-  - filename: git-hooks/prepare-release.sh
-    checksum: 451afde847ac06703ffa04ea37b058d8522b60b94c891bf0979158dac5bc3610
-  - filename: server/.env.test
-    checksum: f8002c31e942ba470a66b1cdcd2126c92953eaf6cdb65658055996e5a40dcbee
-  - filename: server/config/config.ts
-    checksum: 5b97c2c58ef9eb12063becfe44194016fd09c25ac29617de9ceba2201f2b849b
-  - filename: server/src/app.ts
-    checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
-  - filename: server/src/modules/server/index.ts
-    checksum: e9d1bc8dfc528ec8786f21af1d8ec5ecb290bb5f8b6b63275f744dc5b27673e3
-  - filename: server/src/utils/jwtUtils.ts
-    checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
-  - filename: ui/app/components/Footer.tsx
-    checksum: 0467f77da9e5e2ac6086cef53ee620def51fc539c1b3efb240e29b8bb62998f2
-  - filename: ui/app/components/FooterLogo.tsx
-    checksum: 0c7cf76e0a78293e20ab70bdefa060de3fb45edb6e14b40c45fc8b80250e9d53
-  - filename: ui/app/politique-confidentialite/components/PolitiqueConfidentialite.tsx
-    checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
-  - filename: ui/app/cgu/components/Cgu.tsx
-    checksum: 3feb1e295f0c4758ff7915f10a4bc5b9855c5655947b5def17408d0a06c02e53
-  - filename: "*.mjml.ejs"
-    checksum: 9e0290e41389acecddebce27c63d2af3687ece2b8ea5ce61ab33617c74728536
-  - filename: server/src/modules/server/utils/password.utils.ts
-    checksum: e4c4531afb4213f08e07bc83c129547f752909a4cc3a0e1f25ba87ca0cadde32
-  - filename: ui/app/auth/connexion/page.tsx
-    checksum: dc9ca3eb6ef33cfeb8f0f5f0e4e53df6aee43a876efa6fde450ab42effe64f94
-  - filename: ui/app/auth/mot-de-passe-oublie/page.tsx
-    checksum: 0ba4627fdcf5ee2d2230c06582e124333a65d4be293e2b11fb8fcd019c09eb57
-  - filename: ui/app/components/breadcrumb/Breadcrumb.tsx
-    checksum: c8a647325f6337637ed5a66346ed20905bc27388c4aa2b6509c798ccc15ecc49
-  - filename: ui/app/auth/modifier-mot-de-passe/page.tsx
-    checksum: f6e44cbee7ba781129c86e1d21755fb3817c696b2be1c8b40a6e081fa6178c64
+- filename: '*.mjml.ejs'
+  checksum: 9e0290e41389acecddebce27c63d2af3687ece2b8ea5ce61ab33617c74728536
+- filename: '*.route.test.ts'
+  checksum: f0902a33ec3d28bad8dd85fcfff1bc5277c65d29798ea04c353b221c82a85df5
+- filename: '*.test.ts'
+  checksum: a25b36c117e32dc0806d2d15104cbf66e2dd0b85e89a544df22ca0adb857005b
+- filename: .github/workflows/_deploy.yml
+  checksum: ede576e2f5dfef9b31e127aec3f757e5b7ad0c5f78214d796ad30da1c2f2e46a
+- filename: .github/workflows/preview.yml
+  checksum: d6756220b370ca680476b8008d2639fcb11a81165dcc78564d3248bef68ec3ea
+- filename: .github/workflows/publish.yml
+  checksum: cf87922f9cd1d8f4bb965920800187860609408c64406991a6dfad0ab79cc6aa
+- filename: .github/workflows/release.yml
+  checksum: 96cdfb3f17eb6f7be3852f165c6587659570a814f879705348b7abaffc29742a
+- filename: .github/workflows/remove-preview.yml
+  checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
+- filename: .infra/README.md
+  checksum: 46ff20cd40c93c0580c896707afadccc37486909997213c452393d8179d12a3d
+- filename: .infra/ansible/roles/setup/files/app/.overrides/common/docker-compose.common.yml
+  checksum: c2a10f20a22c2df9c97be935509f0119799be6467fe797399bd589fae2d10388
+- filename: .infra/ansible/roles/setup/files/app/.overrides/production/docker-compose.env.yml
+  checksum: a0e0aee8350df735bf9e13b4d19a3ec0b2a11c742e3ed4681d2d2cc5d672994f
+- filename: .infra/ansible/roles/setup/files/app/mongodb/docker-entrypoint-initdb.d/01_create_users.js
+  checksum: f8af7aa98f4242b1c472c53f85f3d62a14a1239e7259ec0fec837ee09c7df989
+- filename: .infra/ansible/roles/setup/files/app/tools/metabase/backup-metabase.sh
+  checksum: 4243b31cd3918b3d7c739fb7469ed7c1177826648c5b8f54e821df8f749be52e
+- filename: .infra/ansible/roles/setup/tasks/configure-backup.yml
+  checksum: aa93a5ec0e3365d21334481c5f816d3f42775ab08512cf7276b66b28f8df8f86
+- filename: .infra/ansible/roles/setup/tasks/install-app.yml
+  checksum: 2c7d8cdb7af638f1f5588ac9969128dddccc0a0650a5b70af5be7711d8dfbbe7
+- filename: .infra/ansible/roles/setup/vars/main/vault.yml
+  checksum: e40d1cfbe320ad9152ae23f552f16a1cf01451725292112f539285fa455f78fd
+- filename: .infra/docker-compose.preview-33.yml
+  checksum: d4a2b70da835529d9f90d5a563fecfc3f3ad7782d4d442b049028ed570dc11c2
+- filename: .infra/docker-compose.preview-app.yml
+  checksum: 57b5f3b141d262f56746e39c3c73042c4a795c983f78a3c56058d3f3e23703f8
+- filename: .infra/docker-compose.preview.yml
+  checksum: 5ce03c6b1352a8edbbdbfb51a17221b533fa735923e135bbbe989f6f4005d971
+- filename: .infra/docker-compose.production.yml
+  checksum: dc4aa51763a18a75da84768e01024d0a724ff0f3c8912b97c6bcf49407d1cd9d
+- filename: .infra/env.ini
+  checksum: 6524e49b84e30dbd214e15cbcb0fd5923b2d399ba03e26aa0641b3a6ea7a0e04
+- filename: .infra/scripts/deploy-app.sh
+  checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
+- filename: .infra/scripts/ovh/create-backup-partition.sh
+  checksum: 4ab5023a5bfef64b0db52158d42fd7635f2754eb3596ac5b53e085815977f1aa
+- filename: .infra/scripts/preview-app.sh
+  checksum: e176b554782fe785e920aa8dd3f420ad02a1c9e3b96dffba98ed86b4bcd97d89
+- filename: .infra/scripts/vault/generate-vault-password.sh
+  checksum: 86baa73f9c5559afc69f12d124d9895a104869cfb8fe396568f88954351a38b5
+- filename: .infra/scripts/vault/get-vault-password-client.sh
+  checksum: 4ac0001fb9e12df75becb3eec2cc41431bc036b293cdcfee3b769daf8649e5e8
+- filename: .infra/scripts/vault/renew-vault.sh
+  checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
+- filename: .infra/vault/vault.yml
+  checksum: 78bf2e9bf6be5738dd600ef6350c1a8f30868cfa54a9fabb36a3d932f0b2915a
+- filename: encrypted.txt
+  checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
+- filename: git-hooks/prepare-release.sh
+  checksum: 451afde847ac06703ffa04ea37b058d8522b60b94c891bf0979158dac5bc3610
+- filename: server/.env.test
+  checksum: f8002c31e942ba470a66b1cdcd2126c92953eaf6cdb65658055996e5a40dcbee
+- filename: server/config/config.ts
+  checksum: 5b97c2c58ef9eb12063becfe44194016fd09c25ac29617de9ceba2201f2b849b
+- filename: server/src/app.ts
+  checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
+- filename: server/src/modules/server/index.ts
+  checksum: e9d1bc8dfc528ec8786f21af1d8ec5ecb290bb5f8b6b63275f744dc5b27673e3
+- filename: server/src/modules/server/utils/password.utils.ts
+  checksum: e4c4531afb4213f08e07bc83c129547f752909a4cc3a0e1f25ba87ca0cadde32
+- filename: server/src/utils/jwtUtils.ts
+  checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
+- filename: ui/app/auth/connexion/page.tsx
+  checksum: dc9ca3eb6ef33cfeb8f0f5f0e4e53df6aee43a876efa6fde450ab42effe64f94
+- filename: ui/app/auth/modifier-mot-de-passe/page.tsx
+  checksum: f6e44cbee7ba781129c86e1d21755fb3817c696b2be1c8b40a6e081fa6178c64
+- filename: ui/app/auth/mot-de-passe-oublie/page.tsx
+  checksum: 0ba4627fdcf5ee2d2230c06582e124333a65d4be293e2b11fb8fcd019c09eb57
+- filename: ui/app/cgu/components/Cgu.tsx
+  checksum: 3feb1e295f0c4758ff7915f10a4bc5b9855c5655947b5def17408d0a06c02e53
+- filename: ui/app/components/Footer.tsx
+  checksum: 0467f77da9e5e2ac6086cef53ee620def51fc539c1b3efb240e29b8bb62998f2
+- filename: ui/app/components/FooterLogo.tsx
+  checksum: 0c7cf76e0a78293e20ab70bdefa060de3fb45edb6e14b40c45fc8b80250e9d53
+- filename: ui/app/components/breadcrumb/Breadcrumb.tsx
+  checksum: c8a647325f6337637ed5a66346ed20905bc27388c4aa2b6509c798ccc15ecc49
+- filename: ui/app/politique-confidentialite/components/PolitiqueConfidentialite.tsx
+  checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
 scopeconfig:
+- scope: node
+custom_patterns:
+- (?s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
+allowed_patterns:
+- key
+- secret
+- SECRET
+- password
+- Password
+- pass
+version: "1.0"
+fig:
   - scope: node
 custom_patterns:
   - (?s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}
