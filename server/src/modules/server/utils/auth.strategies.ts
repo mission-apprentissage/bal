@@ -5,6 +5,7 @@ import { IUser } from "shared/models/user.model";
 
 import { config } from "../../../../config/config";
 import { decodeToken } from "../../../utils/jwtUtils";
+import { getSession } from "../../actions/sessions.actions";
 import { findUser } from "../../actions/users.actions";
 
 declare module "fastify" {
@@ -45,17 +46,19 @@ export const authValidateSession: FastifyAuthFunction = async (
   request,
   _reply
 ) => {
-  if (!request.session) {
-    throw new Error("Session manquante");
-  }
-
-  const token = request.cookies[config.session.cookieName];
+  const token = request.cookies?.[config.session.cookieName];
 
   if (!token) {
     throw new Error("Session invalide");
   }
 
   try {
+    const session = await getSession({ token });
+
+    if (!session) {
+      throw new Error("Session invalide");
+    }
+
     const { email } = decodeToken(token) as JwtPayload;
 
     const user = await findUser({ email });
