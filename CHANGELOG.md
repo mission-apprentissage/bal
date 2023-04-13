@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/mission-apprentissage/bal/compare/v1.9.0...v1.10.0) (2023-04-13)
+
+
+### Features
+
+* authentification ([#30](https://github.com/mission-apprentissage/bal/issues/30)) ([489139d](https://github.com/mission-apprentissage/bal/commit/489139d18f180391bd36c57d035c184e8944e3d5))
+
 # [1.9.0](https://github.com/mission-apprentissage/bal/compare/v1.8.0...v1.9.0) (2023-04-13)
 
 
