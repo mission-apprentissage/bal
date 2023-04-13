@@ -61,8 +61,12 @@ if [ "$PREVIEW_STATUS" == "open" ]; then
 fi
 
 if [ "$PREVIEW_STATUS" == "close" ]; then
-  rm "/opt/bal/docker-compose.pr-$LOCAL_VERSION.yml"
+    rm "/opt/bal/docker-compose.pr-$LOCAL_VERSION.yml"
 fi
 
 reload_containers
 clean_docker
+
+if [ "$PREVIEW_STATUS" == "open" ]; then
+    docker exec bal_server_"$LOCAL_VERSION" yarn cli "seed:preview"
+fi

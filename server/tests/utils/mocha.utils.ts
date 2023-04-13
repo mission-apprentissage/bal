@@ -1,4 +1,8 @@
-import { startAndConnectMongodb, stopMongodb } from "./mongo.utils";
+import {
+  clearAllCollections,
+  startAndConnectMongodb,
+  stopMongodb,
+} from "./mongo.utils";
 
 // connect to mongodb and create indexes before running tests
 export const mochaGlobalSetup = async () => {
@@ -8,4 +12,10 @@ export const mochaGlobalSetup = async () => {
 // close mongo connection when all tests have been run
 export const mochaGlobalTeardown = async () => {
   await stopMongodb();
+};
+
+export const mochaHooks = {
+  afterEach: async () => {
+    await clearAllCollections();
+  },
 };

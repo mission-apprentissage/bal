@@ -114,3 +114,4 @@ src/**/*.css.map
 
 
 next.config.js
+.talismanrc

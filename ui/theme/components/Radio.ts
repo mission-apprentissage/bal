@@ -5,13 +5,13 @@ const Radio = {
       borderColor: "#161616",
       border: "1px",
       _checked: {
-        color: "bluefrance",
+        color: "bluefrance.main",
         p: "1px",
         background: "white",
-        borderColor: "bluefrance",
+        bordercolor: "bluefrance.main",
         _hover: {
           background: "white",
-          borderColor: "bluefrance",
+          bordercolor: "bluefrance.main",
         },
       },
     },

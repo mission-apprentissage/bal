@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
 import { FC, useRef } from "react";
 
+import { AuthContextProvider } from "../context/AuthContext";
 import { theme } from "../theme/theme";
 import Footer from "./components/Footer";
 import { Header } from "./components/Header";
@@ -32,11 +33,13 @@ const RootLayout: FC<Props> = ({ children }) => {
       <body>
         <CacheProvider>
           <ChakraProvider theme={theme}>
-            <Header />
-            <Box minH={"40vh"}>
-              <Section my={8}>{children}</Section>
-            </Box>
-            <Footer />
+            <AuthContextProvider>
+              <Header />
+              <Box minH={"40vh"}>
+                <Section my={8}>{children}</Section>
+              </Box>
+              <Footer />
+            </AuthContextProvider>
           </ChakraProvider>
         </CacheProvider>
       </body>

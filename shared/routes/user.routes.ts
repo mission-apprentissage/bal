@@ -6,8 +6,9 @@ export const SReqPostUser = {
   type: "object",
   properties: {
     email: { type: "string", format: "email" },
+    password: { type: "string" },
   },
-  required: ["email"],
+  required: ["email", "password"],
 } as const;
 
 export type IReqPostUser = FromSchema<typeof SReqPostUser>;
@@ -23,5 +24,4 @@ export const SReqHeadersUser = {
   properties: {
     Authorization: { type: "string" },
   },
-  required: ["Authorization"],
 };

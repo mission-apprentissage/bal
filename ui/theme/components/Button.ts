@@ -23,7 +23,7 @@ const Button = {
     },
     primary: {
       ...baseStyle,
-      background: "bluefrance",
+      background: "bluefrance.main",
       color: "white",
       _hover: {
         background: "bluefrance_hover",
@@ -37,7 +37,7 @@ const Button = {
     ["primary-dark"]: {
       ...baseStyle,
       background: "#9a9aff",
-      color: "bluefrance",
+      color: "bluefrance.main",
       _hover: {
         background: "#8585f6",
       },
@@ -48,7 +48,7 @@ const Button = {
     },
     ["select-primary"]: {
       ...baseStyle,
-      color: "bluefrance",
+      color: "bluefrance.main",
       border: "none",
       fontWeight: "700",
       fontSize: "gamma",
@@ -69,15 +69,15 @@ const Button = {
       _active: {
         background: "#f2f2f9",
         border: "solid 1px",
-        borderColor: "bluefrance",
+        bordercolor: "bluefrance.main",
       },
     },
     secondary: {
       ...baseStyle,
       border: "solid 1px",
       background: "transparent",
-      borderColor: "bluefrance",
-      color: "bluefrance",
+      bordercolor: "bluefrance.main",
+      color: "bluefrance.main",
       _hover: {
         background: "grey.100",
       },
@@ -91,7 +91,7 @@ const Button = {
     },
     link: {
       ...baseStyle,
-      color: "bluefrance",
+      color: "bluefrance.main",
       border: "none",
       borderRadius: "40px",
       padding: "3v",
@@ -102,7 +102,7 @@ const Button = {
     },
     badge: {
       ...baseStyle,
-      color: "bluefrance",
+      color: "bluefrance.main",
       backgroundColor: "#E3E3FD",
       height: "30px",
       borderRadius: "40px",
@@ -114,7 +114,7 @@ const Button = {
     badgeSelected: {
       ...baseStyle,
       color: "white",
-      backgroundColor: "bluefrance",
+      backgroundcolor: "bluefrance.main",
       height: "30px",
       borderRadius: "40px",
       fontSize: "zeta",

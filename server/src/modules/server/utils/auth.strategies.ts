@@ -12,20 +12,18 @@ declare module "fastify" {
   }
 }
 
-export const authValidateJWT: FastifyAuthFunction = async (
-  request,
-  _reply,
-  done
-) => {
+// ne pas utiliser done() pour les fonctions async
+
+export const authValidateJWT: FastifyAuthFunction = async (request, _reply) => {
   let token: string | undefined = request.raw.headers["authorization"];
   if (!token) {
-    return done(new Error("Jeton manquant"));
+    throw new Error("Jeton manquant");
   }
 
   if (token.startsWith("Bearer ")) {
     token = token.substring(7, token.length);
   } else {
-    return done(new Error("Jeton invalide"));
+    throw new Error("Jeton invalide");
   }
 
   try {
@@ -36,9 +34,34 @@ export const authValidateJWT: FastifyAuthFunction = async (
     if (user) {
       request.authenticatedUser = user;
     }
-
-    return done();
   } catch (error) {
-    return done(new Error("Jeton invalide"));
+    throw new Error("Jeton invalide");
+  }
+};
+
+export const authValidateSession: FastifyAuthFunction = async (
+  request,
+  _reply
+) => {
+  if (!request.session) {
+    throw new Error("Session manquante");
+  }
+
+  const userId = request.session.userId;
+
+  if (!userId) {
+    throw new Error("Session invalide");
+  }
+
+  try {
+    const user = await findUser({
+      _id: new ObjectId(userId),
+    });
+
+    if (user) {
+      request.authenticatedUser = user;
+    }
+  } catch (error) {
+    throw new Error("Session invalide");
   }
 };

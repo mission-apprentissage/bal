@@ -11,9 +11,10 @@ export const SUser = {
   properties: {
     _id: { type: "string" },
     email: { type: "string" },
+    password: { type: "string" },
     token: { type: "string" },
   },
-  required: ["email"],
+  required: ["email", "password"],
 } as const;
 
 export interface IUser extends FromSchema<typeof SUser> {}

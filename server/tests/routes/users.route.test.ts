@@ -6,8 +6,11 @@ import { build } from "../../src/modules/server";
 const app = build();
 
 describe("Users routes", () => {
-  it("should get the current user", async () => {
-    const user = await createUser({ email: "connected@exemple.fr" });
+  it("should get the current user with authorization token", async () => {
+    const user = await createUser({
+      email: "connected@exemple.fr",
+      password: "my-password",
+    });
 
     const response = await app.inject({
       method: "GET",
@@ -27,7 +30,7 @@ describe("Users routes", () => {
     const response = await app.inject({
       method: "POST",
       url: "/api/user",
-      payload: { email: "email@exemple.fr" },
+      payload: { email: "email@exemple.fr", password: "my-password" },
     });
 
     const user = await findUser({

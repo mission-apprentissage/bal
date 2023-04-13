@@ -7,6 +7,7 @@ import {
   connectToMongodb,
 } from "../../utils/mongodb";
 import { createUser } from "../actions/users.actions";
+import { seedPreview } from "./seed/seed-preview";
 const program = new Command();
 
 type IJob = () => Promise<void>;
@@ -22,11 +23,26 @@ program
   .command("users:create")
   .description("Créer un utilisateur")
   .option("-e, --email <string>", "Email de l'utilisateur")
-  .action(async ({ email }) =>
+  .option("-p, --password <string>", "Mot de passe de l'utilisateur")
+  .action(async ({ email, password }) =>
     runScript(async () => {
       try {
-        const user = await createUser({ email });
-        console.log(user);
+        await createUser({ email, password });
+        process.exit(0);
+      } catch (error) {
+        console.error(error);
+        process.exit(1);
+      }
+    })
+  );
+
+program
+  .command("seed:preview")
+  .description("Seed preview env")
+  .action(async () =>
+    runScript(async () => {
+      try {
+        await seedPreview();
         process.exit(0);
       } catch (error) {
         console.error(error);

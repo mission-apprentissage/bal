@@ -1,4 +1,6 @@
 fileignoreconfig:
+- filename: '*.mjml.ejs'
+  checksum: 9e0290e41389acecddebce27c63d2af3687ece2b8ea5ce61ab33617c74728536
 - filename: '*.route.test.ts'
   checksum: f0902a33ec3d28bad8dd85fcfff1bc5277c65d29798ea04c353b221c82a85df5
 - filename: '*.test.ts'
@@ -52,21 +54,41 @@ fileignoreconfig:
 - filename: .infra/scripts/vault/renew-vault.sh
   checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
 - filename: .infra/vault/vault.yml
-  checksum: 06b97b0d866e3dc51ee3b33428bc7014134b0f811c838db1d8e1bc6a5d08b13e
+  checksum: 78bf2e9bf6be5738dd600ef6350c1a8f30868cfa54a9fabb36a3d932f0b2915a
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
   checksum: 451afde847ac06703ffa04ea37b058d8522b60b94c891bf0979158dac5bc3610
 - filename: server/.env.test
-  checksum: 3273a6b258bcaca7bf4e13099590cbe65a303aaa0a26709fa9dd24be46c872f4
+  checksum: f8002c31e942ba470a66b1cdcd2126c92953eaf6cdb65658055996e5a40dcbee
 - filename: server/config/config.ts
   checksum: 5b97c2c58ef9eb12063becfe44194016fd09c25ac29617de9ceba2201f2b849b
 - filename: server/src/app.ts
   checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
+- filename: server/src/modules/data/seed/seed-preview.ts
+  checksum: d31eed5cc72366ee9a9b50a27d5a727a0bdc49de43282dac8cb1d7e3ee86d3da
 - filename: server/src/modules/server/index.ts
   checksum: e9d1bc8dfc528ec8786f21af1d8ec5ecb290bb5f8b6b63275f744dc5b27673e3
+- filename: server/src/modules/server/utils/password.utils.ts
+  checksum: e4c4531afb4213f08e07bc83c129547f752909a4cc3a0e1f25ba87ca0cadde32
 - filename: server/src/utils/jwtUtils.ts
   checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
+- filename: ui/app/auth/connexion/page.tsx
+  checksum: dc9ca3eb6ef33cfeb8f0f5f0e4e53df6aee43a876efa6fde450ab42effe64f94
+- filename: ui/app/auth/modifier-mot-de-passe/page.tsx
+  checksum: f6e44cbee7ba781129c86e1d21755fb3817c696b2be1c8b40a6e081fa6178c64
+- filename: ui/app/auth/mot-de-passe-oublie/page.tsx
+  checksum: 0ba4627fdcf5ee2d2230c06582e124333a65d4be293e2b11fb8fcd019c09eb57
+- filename: ui/app/cgu/components/Cgu.tsx
+  checksum: 3feb1e295f0c4758ff7915f10a4bc5b9855c5655947b5def17408d0a06c02e53
+- filename: ui/app/components/Footer.tsx
+  checksum: 0467f77da9e5e2ac6086cef53ee620def51fc539c1b3efb240e29b8bb62998f2
+- filename: ui/app/components/FooterLogo.tsx
+  checksum: 0c7cf76e0a78293e20ab70bdefa060de3fb45edb6e14b40c45fc8b80250e9d53
+- filename: ui/app/components/breadcrumb/Breadcrumb.tsx
+  checksum: c8a647325f6337637ed5a66346ed20905bc27388c4aa2b6509c798ccc15ecc49
+- filename: ui/app/politique-confidentialite/components/PolitiqueConfidentialite.tsx
+  checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
 scopeconfig:
 - scope: node
 custom_patterns:
@@ -74,4 +96,8 @@ custom_patterns:
 allowed_patterns:
 - key
 - secret
+- SECRET
+- password
+- Password
+- pass
 version: "1.0"

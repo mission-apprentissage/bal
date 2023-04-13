@@ -39,3 +39,5 @@ jobs:
           message: |
             # :rocket: Prévisualisation 
             ## https://${{ github.event.pull_request.number }}.bal-preview.apprentissage.beta.gouv.fr/
+          comment_tag: execution
+          mode: recreate

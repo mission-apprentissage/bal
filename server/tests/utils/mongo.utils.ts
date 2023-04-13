@@ -3,6 +3,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import {
   closeMongodbConnection,
   connectToMongodb,
+  getDatabase,
 } from "../../src/utils/mongodb";
 
 let mongoInMemory: MongoMemoryServer;
@@ -16,4 +17,9 @@ export const startAndConnectMongodb = async () => {
 export const stopMongodb = async () => {
   await closeMongodbConnection();
   await mongoInMemory.stop();
+};
+
+export const clearAllCollections = async () => {
+  const collections = await getDatabase().collections();
+  return Promise.all(collections.map((c) => c.deleteMany({})));
 };
