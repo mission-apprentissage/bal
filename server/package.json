@@ -37,6 +37,7 @@
     "bunyan-slack": "0.0.10",
     "cli": "1.0.1",
     "commander": "10.0.0",
+    "company-email-validator": "^1.0.9",
     "csv-parse": "5.3.5",
     "dotenv": "16.0.3",
     "env-var": "7.1.1",
