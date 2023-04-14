@@ -84,7 +84,9 @@ export const collectionExistInDb = (
  */
 const convertSchemaToMongoSchema = (schema: unknown) => {
   let replacedTypes = JSON.parse(
-    JSON.stringify(schema).replaceAll("type", "bsonType")
+    JSON.stringify(schema)
+      .replaceAll("type", "bsonType")
+      .replaceAll("boolean", "bool")
   );
 
   // remplacer _id de "string" à "objectId"
@@ -105,8 +107,8 @@ const convertSchemaToMongoSchema = (schema: unknown) => {
  * @param {*} modelDescriptors
  */
 export const configureDbSchemaValidation = async (
-    modelDescriptors: IModelDescriptor[]
-  ) => {
+  modelDescriptors: IModelDescriptor[]
+) => {
   const db = getDatabase();
   ensureInitialization();
 
