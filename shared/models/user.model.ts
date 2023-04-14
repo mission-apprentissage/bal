@@ -12,6 +12,7 @@ export const SUser = {
     _id: { type: "string" },
     email: { type: "string" },
     password: { type: "string" },
+    isAdmin: { type: "boolean" },
     token: { type: "string" },
   },
   required: ["email", "password"],
