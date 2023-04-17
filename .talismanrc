@@ -34,7 +34,7 @@ fileignoreconfig:
 - filename: .infra/docker-compose.preview-33.yml
   checksum: d4a2b70da835529d9f90d5a563fecfc3f3ad7782d4d442b049028ed570dc11c2
 - filename: .infra/docker-compose.preview-app.yml
-  checksum: 57b5f3b141d262f56746e39c3c73042c4a795c983f78a3c56058d3f3e23703f8
+  checksum: 326c115247509eb15691de597454b2a6f39efcd479544b24ba365e4da611a37b
 - filename: .infra/docker-compose.preview.yml
   checksum: 5ce03c6b1352a8edbbdbfb51a17221b533fa735923e135bbbe989f6f4005d971
 - filename: .infra/docker-compose.production.yml
@@ -54,15 +54,15 @@ fileignoreconfig:
 - filename: .infra/scripts/vault/renew-vault.sh
   checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
 - filename: .infra/vault/vault.yml
-  checksum: 78bf2e9bf6be5738dd600ef6350c1a8f30868cfa54a9fabb36a3d932f0b2915a
+  checksum: 139ef2191c4fa1ed280e789ecccb3292a5e45701f4ae70f09aa4fbadf734c469
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
   checksum: 451afde847ac06703ffa04ea37b058d8522b60b94c891bf0979158dac5bc3610
 - filename: server/.env.test
-  checksum: f8002c31e942ba470a66b1cdcd2126c92953eaf6cdb65658055996e5a40dcbee
+  checksum: 68fc7926024e738b490a087f38737b9fff8df4dc784236f2b24c3d2365c5558c
 - filename: server/config/config.ts
-  checksum: 5b97c2c58ef9eb12063becfe44194016fd09c25ac29617de9ceba2201f2b849b
+  checksum: 87a4f2e3ba7dcfba4b4c040e25cde0163bbf89606b95e52cdbc5c6348b5e910a
 - filename: server/src/app.ts
   checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
 - filename: server/src/modules/data/seed/seed-preview.ts

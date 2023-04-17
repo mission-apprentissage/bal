@@ -5255,6 +5255,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"company-email-validator@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "company-email-validator@npm:1.0.9"
+  dependencies:
+    email-validator: ^2.0.4
+  checksum: 5d9bad55c9daf6ad00899c2a5d331dcdda92a2d730a8e9a4e2bd40d69ffab9b442355874080bea52eb3c29b7681fb10ce9a99275485acb904bccfcef55c3854d
+  languageName: node
+  linkType: hard
+
 "compare-func@npm:^2.0.0":
   version: 2.0.0
   resolution: "compare-func@npm:2.0.0"
@@ -5617,7 +5626,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.10.4":
+"dayjs@npm:1.11.7, dayjs@npm:^1.10.4":
   version: 1.11.7
   resolution: "dayjs@npm:1.11.7"
   checksum: 5003a7c1dd9ed51385beb658231c3548700b82d3548c0cfbe549d85f2d08e90e972510282b7506941452c58d32136d6362f009c77ca55381a09c704e9f177ebb
@@ -5929,6 +5938,13 @@ __metadata:
   dependencies:
     safe-buffer: ^5.0.1
   checksum: 207f9ab1c2669b8e65540bce29506134613dd5f122cccf1e6a560f4d63f2732d427d938f8481df175505aad94583bcb32c688737bb39a6df0625f903d6d93c03
+  languageName: node
+  linkType: hard
+
+"email-validator@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "email-validator@npm:2.0.4"
+  checksum: e702fee24e1b9efb7e6a84abb309bebdb4ddde137fdb99a61e24bd82ac0b605be34e191b1c4d04fbc855be7b94cad967f932a456c0def2240303881f4e388f2d
   languageName: node
   linkType: hard
 
@@ -12438,8 +12454,10 @@ __metadata:
     chalk: 4.1.2
     cli: 1.0.1
     commander: 10.0.0
+    company-email-validator: ^1.0.9
     cross-env: 7.0.3
     csv-parse: 5.3.5
+    dayjs: 1.11.7
     dotenv: 16.0.3
     env-var: 7.1.1
     fastify: 4.12.0

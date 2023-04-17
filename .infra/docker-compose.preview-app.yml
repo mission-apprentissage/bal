@@ -48,6 +48,12 @@ services:
       - MNA_BAL_SENTRY_DSN=
       - SENTRY_AUTH_TOKEN={{ vault.SENTRY_AUTH_TOKEN }}
       - MNA_BAL_IS_OFFLINE=false
+      - MNA_BAL_AKTO_GRANT_TYPE={{ vault.MNA_BAL_AKTO_GRANT_TYPE }}
+      - MNA_BAL_AKTO_CLIENT_ID={{ vault.MNA_BAL_AKTO_CLIENT_ID }}
+      - MNA_BAL_AKTO_CLIENT_SECRET={{ vault.MNA_BAL_AKTO_CLIENT_SECRET }}
+      - MNA_BAL_AKTO_SCOPE={{ vault.MNA_BAL_AKTO_SCOPE }}
+      - MNA_BAL_TEST_USER_NAME={{ vault[env_type].MNA_BAL_TEST_USER_NAME }}
+      - MNA_BAL_TEST_USER_PWD={{ vault[env_type].MNA_BAL_TEST_USER_PWD }}
     volumes:
       - /opt/bal/data/server:/data
 

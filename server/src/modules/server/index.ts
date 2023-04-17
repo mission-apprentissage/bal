@@ -2,15 +2,16 @@ import fastifyAuth, { FastifyAuthFunction } from "@fastify/auth";
 import fastifyCookie from "@fastify/cookie";
 import fastifyCors from "@fastify/cors";
 import fastifySession from "@fastify/session";
-import fastifySwagger from "@fastify/swagger";
+import fastifySwagger, { JSONObject } from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
-import fastify, { FastifyServerOptions } from "fastify";
+import fastify, { FastifySchema, FastifyServerOptions } from "fastify";
 
 import { config } from "../../../config/config";
 import pJson from "../../../package.json";
 import { authRoutes } from "./auth.routes";
 import { coreRoutes } from "./core.routes";
+import { organisationRoutes } from "./organisation.routes";
 import { userRoutes } from "./user.routes";
 import { authValidateJWT, authValidateSession } from "./utils/auth.strategies";
 
@@ -26,18 +27,23 @@ export function build(opts: FastifyServerOptions = {}) {
   app.register(fastifySwagger, {
     swagger: {
       info: {
-        title: "Documentation BAL",
+        title: "API documentation BAL",
         version: pJson.version,
       },
       consumes: ["application/json"],
       produces: ["application/json"],
+    },
+    transform: ({ schema, url }) => {
+      const transformedSchema = { ...schema } as FastifySchema;
+      if (url.startsWith('/api/auth') || url.startsWith('/api/user')) transformedSchema.hide = true;
+      return { schema: transformedSchema as JSONObject,url }
     },
   });
 
   app.register(fastifySwaggerUi, {
     routePrefix: "/api/documentation",
     uiConfig: {
-      docExpansion: "full",
+      docExpansion: "list",
       deepLinking: false,
     },
   });
@@ -80,4 +86,5 @@ export const registerRoutes = ({ server }: { server: Server }) => {
   coreRoutes({ server });
   userRoutes({ server });
   authRoutes({ server });
+  organisationRoutes({ server });
 };

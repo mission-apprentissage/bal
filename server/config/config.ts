@@ -65,4 +65,14 @@ export const config = {
       pass: env.get("MNA_BAL_SMTP_AUTH_PASS").asString(),
     },
   },
+  akto: {
+    grantType: env.get("MNA_BAL_AKTO_GRANT_TYPE").default("").asString(),
+    clientId: env.get("MNA_BAL_AKTO_CLIENT_ID").default("").asString(),
+    clientSecret: env.get("MNA_BAL_AKTO_CLIENT_SECRET").default("").asString(),
+    scope: env.get("MNA_BAL_AKTO_SCOPE").default("").asString(),
+  },
+  tests: {
+    testUserName: env.get("MNA_BAL_TEST_USER_NAME").default("").asString(),
+    testUserPwd: env.get("MNA_BAL_TEST_USER_PWD").default("").asString(),
+  },
 };
