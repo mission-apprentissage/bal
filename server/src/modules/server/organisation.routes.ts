@@ -16,6 +16,8 @@ export const organisationRoutes = ({ server }: { server: Server }) => {
         response: { 200: SResPostOrganisationValidation },
         headers: SReqHeadersOrganisation,
       } as const,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      preHandler: server.auth([server.validateJWT]) as any,
     },
     async (request, response) => {
       try {
