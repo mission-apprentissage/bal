@@ -5626,7 +5626,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.10.4":
+"dayjs@npm:1.11.7, dayjs@npm:^1.10.4":
   version: 1.11.7
   resolution: "dayjs@npm:1.11.7"
   checksum: 5003a7c1dd9ed51385beb658231c3548700b82d3548c0cfbe549d85f2d08e90e972510282b7506941452c58d32136d6362f009c77ca55381a09c704e9f177ebb
@@ -12457,6 +12457,7 @@ __metadata:
     company-email-validator: ^1.0.9
     cross-env: 7.0.3
     csv-parse: 5.3.5
+    dayjs: 1.11.7
     dotenv: 16.0.3
     env-var: 7.1.1
     fastify: 4.12.0

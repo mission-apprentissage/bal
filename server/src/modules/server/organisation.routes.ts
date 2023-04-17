@@ -21,9 +21,9 @@ export const organisationRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       try {
-        const { email } = request.body;
-        const is_valid = await validation(email);
-        return response.status(200).send({ is_valid });
+        const { email, siret } = request.body;
+        const res = await validation({ email, siret });
+        return response.status(200).send(res);
       } catch (error) {
         response.log.error(error);
       }
