@@ -74,5 +74,7 @@ export const config = {
   tests: {
     testUserName: env.get("MNA_BAL_TEST_USER_NAME").default("").asString(),
     testUserPwd: env.get("MNA_BAL_TEST_USER_PWD").default("").asString(),
+    testAdminName: env.get("MNA_BAL_TEST_ADMIN_NAME").default("").asString(),
+    testAdminPwd: env.get("MNA_BAL_TEST_ADMIN_PWD").default("").asString(),
   },
 };
