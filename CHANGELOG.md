@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/mission-apprentissage/bal/compare/v1.10.0...v1.11.0) (2023-04-17)
+
+
+### Features
+
+* add organisation verification ([#35](https://github.com/mission-apprentissage/bal/issues/35)) ([650b057](https://github.com/mission-apprentissage/bal/commit/650b0572ce24d5abf1ada872c7f24184e9145dcd))
+
 # [1.10.0](https://github.com/mission-apprentissage/bal/compare/v1.9.0...v1.10.0) (2023-04-13)
 
 
