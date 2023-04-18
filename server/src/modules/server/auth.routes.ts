@@ -2,11 +2,12 @@ import {
   SReqGetResetPassword,
   SReqPostLogin,
   SReqPostResetPassword,
+  SResGetSession,
   SResPostLogin,
 } from "shared/routes/auth.routes";
 import { SResError } from "shared/routes/common.routes";
 // TODO TO MOVE
-import { SReqHeadersUser, SResGetUser } from "shared/routes/user.routes";
+import { SReqHeadersUser } from "shared/routes/user.routes";
 
 import { config } from "../../../config/config";
 import { createUserTokenSimple } from "../../utils/jwtUtils";
@@ -26,7 +27,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
     "/auth/session",
     {
       schema: {
-        response: { 200: SResGetUser },
+        response: { 200: SResGetSession },
         headers: SReqHeadersUser,
       } as const,
       preHandler: server.auth([server.validateSession, server.validateJWT]),

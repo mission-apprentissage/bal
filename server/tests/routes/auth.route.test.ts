@@ -34,7 +34,7 @@ describe("Authentication", () => {
     assert.equal(response.statusCode, 200);
     assert.equal(response.json()._id, user?._id);
     assert.equal(response.json().email, user?.email);
-    assert.ok(response.json().password);
+    assert.equal(response.json().password, undefined);
     assert.ok(response.json().apiKey);
   });
 
@@ -101,7 +101,7 @@ describe("Authentication", () => {
     assert.equal(response.statusCode, 200);
     assert.equal(response.json()._id, user?._id);
     assert.equal(response.json().email, user?.email);
-    assert.ok(response.json().password);
+    assert.equal(response.json().password, undefined);
     assert.ok(response.json().apiKey);
   });
 

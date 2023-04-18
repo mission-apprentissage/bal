@@ -1,7 +1,5 @@
 import { FromSchema } from "json-schema-to-ts";
 
-import { IUser, SUser } from "../models/user.model";
-
 export const SReqPostUser = {
   type: "object",
   properties: {
@@ -13,11 +11,22 @@ export const SReqPostUser = {
 
 export type IReqPostUser = FromSchema<typeof SReqPostUser>;
 
-export const SResGetUser = SUser;
-export const SResPostUser = SUser;
+export const SResGetUser = {
+  type: "object",
+  properties: {
+    _id: { type: "string" },
+    email: { type: "string" },
+    isAdmin: { type: "boolean" },
+    apiKey: { type: "string" },
+  },
+  required: ["email", "apiKey"],
+  additionalProperties: false,
+} as const;
 
-export interface IResGetUser extends IUser {}
-export interface IResPostUser extends IUser {}
+export const SResPostUser = SResGetUser;
+
+export type IResGetUser = FromSchema<typeof SResGetUser>;
+export type IResPostUser = FromSchema<typeof SResPostUser>;
 
 export const SReqHeadersUser = {
   type: "object",

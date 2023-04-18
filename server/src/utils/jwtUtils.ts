@@ -1,8 +1,12 @@
 import jwt, { SignOptions, verify } from "jsonwebtoken";
-import { IUser } from "shared/models/user.model";
 
 import { config } from "../../config/config";
 
+interface ICreateUserToken {
+  _id: string;
+  email: string;
+  isAdmin?: boolean;
+}
 interface ICreateTokenOptions {
   secret?: string;
   expiresIn?: string;
@@ -50,12 +54,12 @@ export function createUserTokenSimple(options = {}) {
 }
 
 export const createUserToken = (
-  user: IUser,
+  user: ICreateUserToken,
   options: ICreateTokenOptions = {}
 ) => {
   const payload = {
     id: user._id,
-    is_admin: user.is_admin,
+    isAdmin: user.isAdmin,
   };
   return createToken("user", user.email, { payload, ...options });
 };
