@@ -93,7 +93,7 @@ services:
     depends_on:
       - server
     environment:
-      - SERVER_URI=http://server:5000
+      - NEXT_SERVER_URI=http://server:5000
       - NEXT_PUBLIC_SENTRY_DSN=
       - NEXT_PUBLIC_ENV=production
       - NEXT_PUBLIC_BASE_HOST=bal.apprentissage.beta.gouv.fr
