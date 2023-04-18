@@ -7,14 +7,14 @@ import { hashPassword } from "../server/utils/password.utils";
 
 export const createUser = async (data: IUser) => {
   const _id = new ObjectId();
-  const token = createUserToken({ ...data, _id: _id.toString() });
+  const apiKey = createUserToken({ ...data, _id: _id.toString() });
 
   const password = hashPassword(data.password);
 
   const { insertedId: userId } = await getDbCollection("users").insertOne({
     ...data,
     _id,
-    token,
+    apiKey,
     password,
   });
 

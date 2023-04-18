@@ -102,4 +102,5 @@ allowed_patterns:
 - password
 - Password
 - pass
+- apiKey
 version: "1.0"

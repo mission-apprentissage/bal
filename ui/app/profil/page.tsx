@@ -16,8 +16,8 @@ const ProfilPage = () => {
   const toast = useToast();
 
   const handleClick = () => {
-    if (user?.token) {
-      navigator.clipboard.writeText(user?.token);
+    if (user?.apiKey) {
+      navigator.clipboard.writeText(user?.apiKey);
       toast({
         title: "Jeton API copié dans le presse-papier.",
         status: "success",
@@ -33,7 +33,7 @@ const ProfilPage = () => {
     <Box>
       <Text>Jeton API</Text>
       <InputGroup size="md" mt={4}>
-        <Input pr="5rem" type="text" defaultValue={user.token} readOnly />
+        <Input pr="5rem" type="text" defaultValue={user.apiKey} readOnly />
         <InputRightElement width="5rem">
           <Button h="1.75rem" size="sm" onClick={handleClick}>
             Copier

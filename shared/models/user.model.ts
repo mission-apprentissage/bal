@@ -13,7 +13,7 @@ export const SUser = {
     email: { type: "string" },
     password: { type: "string" },
     isAdmin: { type: "boolean" },
-    token: { type: "string" },
+    apiKey: { type: "string" },
   },
   required: ["email", "password"],
 } as const;
