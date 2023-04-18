@@ -87,6 +87,8 @@ fileignoreconfig:
   checksum: 0c7cf76e0a78293e20ab70bdefa060de3fb45edb6e14b40c45fc8b80250e9d53
 - filename: ui/app/components/breadcrumb/Breadcrumb.tsx
   checksum: c8a647325f6337637ed5a66346ed20905bc27388c4aa2b6509c798ccc15ecc49
+- filename: ui/app/page.tsx
+  checksum: cf3565db17a647af14d4fc45d519ce3a76e27c2358be9c6e8c5ae66786563040
 - filename: ui/app/politique-confidentialite/components/PolitiqueConfidentialite.tsx
   checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
 scopeconfig:

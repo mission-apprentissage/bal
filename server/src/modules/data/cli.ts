@@ -24,10 +24,11 @@ program
   .description("Créer un utilisateur")
   .option("-e, --email <string>", "Email de l'utilisateur")
   .option("-p, --password <string>", "Mot de passe de l'utilisateur")
-  .action(async ({ email, password }) =>
+  .option("-a, --admin", "administrateur")
+  .action(async ({ email, password, admin = false }) =>
     runScript(async () => {
       try {
-        await createUser({ email, password });
+        await createUser({ email, password, isAdmin: admin });
         process.exit(0);
       } catch (error) {
         console.error(error);

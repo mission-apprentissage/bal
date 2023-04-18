@@ -1,4 +1,5 @@
 import "./globals.css";
+import "react-notion-x/src/styles.css";
 
 import { headers } from "next/headers";
 import { PropsWithChildren } from "react";
