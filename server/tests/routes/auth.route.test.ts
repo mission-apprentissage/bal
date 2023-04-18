@@ -120,8 +120,8 @@ describe("Authentication", () => {
       },
     });
 
-    const cookies = responseLogin.cookies as Cookie[];
-    const sessionCookie = cookies.find(
+    let cookies = responseLogin.cookies as Cookie[];
+    let sessionCookie = cookies.find(
       (cookie) => cookie.name === config.session.cookieName
     ) as Cookie;
 
@@ -133,8 +133,13 @@ describe("Authentication", () => {
       },
     });
 
+    cookies = responseLogout.cookies as Cookie[];
+    sessionCookie = cookies.find(
+      (cookie) => cookie.name === config.session.cookieName
+    ) as Cookie;
+
     assert.equal(responseLogout.statusCode, 200);
-    assert.equal(responseLogout.cookies.length, 0);
+    assert.equal(sessionCookie.value, "");
 
     const session = await getSession({ token: sessionCookie.value });
     assert.equal(session, null);

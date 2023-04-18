@@ -54,6 +54,8 @@ services:
       - MNA_BAL_AKTO_SCOPE={{ vault.MNA_BAL_AKTO_SCOPE }}
       - MNA_BAL_TEST_USER_NAME={{ vault[env_type].MNA_BAL_TEST_USER_NAME }}
       - MNA_BAL_TEST_USER_PWD={{ vault[env_type].MNA_BAL_TEST_USER_PWD }}
+      - MNA_BAL_TEST_ADMIN_NAME={{ vault[env_type].MNA_BAL_TEST_ADMIN_NAME }}
+      - MNA_BAL_TEST_ADMIN_PWD={{ vault[env_type].MNA_BAL_TEST_ADMIN_PWD }}
     volumes:
       - /opt/bal/data/server:/data
 

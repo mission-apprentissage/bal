@@ -1,50 +1,37 @@
-"use client";
 import "./globals.css";
 
-import { CacheProvider } from "@chakra-ui/next-js";
-import { Box, ChakraProvider } from "@chakra-ui/react";
-import { useSearchParams } from "next/navigation";
-import PlausibleProvider from "next-plausible";
-import { FC, useRef } from "react";
+import { headers } from "next/headers";
+import { PropsWithChildren } from "react";
 
+import { IUser } from "../../shared/models/user.model";
 import { AuthContextProvider } from "../context/AuthContext";
-import { theme } from "../theme/theme";
-import Footer from "./components/Footer";
-import { Header } from "./components/Header";
-import Section from "./components/section/Section";
 
-interface Props {
-  children: React.ReactNode;
+async function getSession() {
+  const response = await fetch(`${process.env.SERVER_URI}/api/auth/session`, {
+    headers: {
+      cookie: headers().get("cookie") ?? "",
+    },
+  });
+
+  const session: IUser = await response.json();
+
+  if (!response.ok || session.error) {
+    return;
+  }
+
+  return session;
 }
 
-const RootLayout: FC<Props> = ({ children }) => {
-  const searchParams = useSearchParams();
-  const tracking = useRef(searchParams.get("notracking") !== "true");
+export default async function RootLayout({ children }: PropsWithChildren) {
+  const session = await getSession();
 
   return (
     <html lang="fr">
-      <head>
-        <PlausibleProvider
-          trackLocalhost={false}
-          enabled={tracking.current}
-          domain={`${process.env.NEXT_PUBLIC_BASE_HOST}`}
-        />
-      </head>
       <body>
-        <CacheProvider>
-          <ChakraProvider theme={theme}>
-            <AuthContextProvider>
-              <Header />
-              <Box minH={"40vh"}>
-                <Section my={8}>{children}</Section>
-              </Box>
-              <Footer />
-            </AuthContextProvider>
-          </ChakraProvider>
-        </CacheProvider>
+        <AuthContextProvider initialUser={session}>
+          {children}
+        </AuthContextProvider>
       </body>
     </html>
   );
-};
-
-export default RootLayout;
+}

@@ -29,6 +29,7 @@ export const config = {
         .default("true")
         .asBool(),
       sameSite: "lax" as const,
+      path: "/",
       secure: env.get("MNA_BAL_SESSION_COOKIE_SECURE").default("true").asBool(),
     },
   },
@@ -74,5 +75,7 @@ export const config = {
   tests: {
     testUserName: env.get("MNA_BAL_TEST_USER_NAME").default("").asString(),
     testUserPwd: env.get("MNA_BAL_TEST_USER_PWD").default("").asString(),
+    testAdminName: env.get("MNA_BAL_TEST_ADMIN_NAME").default("").asString(),
+    testAdminPwd: env.get("MNA_BAL_TEST_ADMIN_PWD").default("").asString(),
   },
 };

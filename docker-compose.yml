@@ -43,7 +43,7 @@ services:
   ui:
     image: bal_ui
     container_name: bal_ui
-    mem_limit: 1g
+    mem_limit: 2g
     stdin_open: true
     networks:
       - bal_network
