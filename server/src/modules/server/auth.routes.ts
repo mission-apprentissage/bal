@@ -67,7 +67,11 @@ export const authRoutes = ({ server }: { server: Server }) => {
       await createSession({ token });
 
       return response
-        .setCookie(config.session.cookieName, token, config.session.cookie)
+        .setCookie(config.session.cookieName, token, {
+          ...config.session.cookie,
+          path: "/",
+          domain: "localhost",
+        })
         .status(200)
         .send(user);
     }
@@ -79,7 +83,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
     if (token) {
       await deleteSession({ token });
 
-      return response.status(200).send();
+      return response.status(200).send(); // TODO clear cookie
     }
 
     return response.status(200).send();

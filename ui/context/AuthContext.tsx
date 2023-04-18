@@ -1,14 +1,13 @@
+"use client";
 import {
   createContext,
   FC,
   PropsWithChildren,
   useContext,
-  useEffect,
   useState,
 } from "react";
 
 import { IUser } from "../../shared/models/user.model";
-import { api } from "../utils/api.utils";
 
 interface IAuthContext {
   user?: IUser;
@@ -20,21 +19,10 @@ export const AuthContext = createContext<IAuthContext>({
   setUser: () => {},
 });
 
-export const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [user, setUser] = useState<IUser>();
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const response = await api.get("/auth/session");
-        setUser(response.data);
-      } catch (error) {
-        return;
-      }
-    };
-
-    getUser();
-  }, []);
+export const AuthContextProvider: FC<
+  PropsWithChildren<{ session: IUser | null }>
+> = ({ session, children }) => {
+  const [user, setUser] = useState<IUser | undefined>(session as IUser);
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
