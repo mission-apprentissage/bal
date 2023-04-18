@@ -29,7 +29,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
         response: { 200: SResGetUser },
         headers: SReqHeadersUser,
       } as const,
-      preHandler: server.auth([server.validateSession]),
+      preHandler: server.auth([server.validateSession, server.validateJWT]),
     },
     async (request, response) => {
       return response.status(200).send(request.user);
@@ -78,7 +78,10 @@ export const authRoutes = ({ server }: { server: Server }) => {
     if (token) {
       await deleteSession({ token });
 
-      return response.clearCookie(config.session.cookieName).status(200).send();
+      return response
+        .clearCookie(config.session.cookieName, config.session.cookie)
+        .status(200)
+        .send();
     }
 
     return response.status(200).send();
