@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/mission-apprentissage/bal/compare/v1.13.0...v1.14.0) (2023-04-18)
+
+
+### Features
+
+* add notion page as cms ([#44](https://github.com/mission-apprentissage/bal/issues/44)) ([ae90544](https://github.com/mission-apprentissage/bal/commit/ae90544388cb07c5f784cff17ad4d1f80091a8ec))
+
 # [1.13.0](https://github.com/mission-apprentissage/bal/compare/v1.12.0...v1.13.0) (2023-04-18)
 
 
