@@ -5,23 +5,40 @@ import {
   SResPostLogin,
 } from "shared/routes/auth.routes";
 import { SResError } from "shared/routes/common.routes";
+// TODO TO MOVE 
+import { SReqHeadersUser, SResGetUser } from "shared/routes/user.routes";
 
+import { config } from "../../../config/config";
+import { createUserTokenSimple } from "../../utils/jwtUtils";
 import {
   resetPassword,
   sendResetPasswordEmail,
   verifyEmailPassword,
 } from "../actions/auth.actions";
+import { createSession, deleteSession } from "../actions/sessions.actions";
 import { Server } from ".";
 
-declare module "fastify" {
-  interface Session {
-    userId?: string | null;
-  }
-}
-
 export const authRoutes = ({ server }: { server: Server }) => {
-  /**
+
+    /**
    * Récupérer l'utilisateur connecté
+   */
+    server.get(
+      "/auth/session",
+      {
+        schema: {
+          response: { 200: SResGetUser },
+          headers: SReqHeadersUser,
+        } as const,
+        preHandler: server.auth([server.validateJWT, server.validateSession]),
+      },
+      async (request, response) => {
+        return response.status(200).send(request.user);
+      }
+    );
+
+  /**
+   * Login
    */
   server.post(
     "/auth/login",
@@ -46,15 +63,24 @@ export const authRoutes = ({ server }: { server: Server }) => {
         });
       }
 
-      request.session.set("userId", user._id);
+      const token = createUserTokenSimple({ payload: { email: user.email } });
+      await createSession({ token });
 
-      return response.status(200).send(user);
+      return response
+        .setCookie(config.session.cookieName, token, config.session.cookie)
+        .status(200)
+        .send(user);
     }
   );
 
   server.get("/auth/logout", {}, async (request, response) => {
-    request.session.userId = null;
-    await request.session.destroy();
+    const token = request.cookies[config.session.cookieName];
+
+    if (token) {
+      await deleteSession({ token });
+
+      return response.status(200).send();
+    }
 
     return response.status(200).send();
   });
@@ -64,9 +90,6 @@ export const authRoutes = ({ server }: { server: Server }) => {
     {
       schema: {
         querystring: SReqGetResetPassword,
-        response: {
-          401: SResError,
-        },
       } as const,
     },
     async (request, response) => {

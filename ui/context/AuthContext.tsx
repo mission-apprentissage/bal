@@ -26,7 +26,7 @@ export const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const response = await api.get("user");
+        const response = await api.get("/auth/session");
         setUser(response.data);
       } catch (error) {
         return;

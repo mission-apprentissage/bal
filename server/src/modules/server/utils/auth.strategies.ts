@@ -1,14 +1,16 @@
 import { FastifyAuthFunction } from "@fastify/auth";
-import { JwtPayload, verify } from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 import { IUser } from "shared/models/user.model";
 
 import { config } from "../../../../config/config";
+import { decodeToken } from "../../../utils/jwtUtils";
+import { getSession } from "../../actions/sessions.actions";
 import { findUser } from "../../actions/users.actions";
 
 declare module "fastify" {
   export interface FastifyRequest {
-    authenticatedUser?: IUser;
+    user?: IUser;
   }
 }
 
@@ -27,13 +29,14 @@ export const authValidateJWT: FastifyAuthFunction = async (request, _reply) => {
   }
 
   try {
-    const decoded = verify(token, config.auth.user.jwtSecret) as JwtPayload;
+    const { id } = decodeToken(token) as JwtPayload;
+    const user = await findUser({ _id: new ObjectId(id) });
 
-    const user = await findUser({ _id: new ObjectId(decoded.id) });
-
-    if (user) {
-      request.authenticatedUser = user;
+    if (!user) {
+      throw new Error("Jeton invalide");
     }
+
+    request.user = user;
   } catch (error) {
     throw new Error("Jeton invalide");
   }
@@ -43,24 +46,28 @@ export const authValidateSession: FastifyAuthFunction = async (
   request,
   _reply
 ) => {
-  if (!request.session) {
-    throw new Error("Session manquante");
-  }
+  const token = request.cookies?.[config.session.cookieName];
 
-  const userId = request.session.userId;
-
-  if (!userId) {
+  if (!token) {
     throw new Error("Session invalide");
   }
 
   try {
-    const user = await findUser({
-      _id: new ObjectId(userId),
-    });
+    const session = await getSession({ token });
 
-    if (user) {
-      request.authenticatedUser = user;
+    if (!session) {
+      throw new Error("Session invalide");
     }
+
+    const { email } = decodeToken(token) as JwtPayload;
+
+    const user = await findUser({ email });
+
+    if (!user) {
+      throw new Error("Session invalide");
+    }
+
+    request.user = user;
   } catch (error) {
     throw new Error("Session invalide");
   }
