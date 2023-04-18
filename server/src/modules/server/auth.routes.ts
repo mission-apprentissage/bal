@@ -5,6 +5,8 @@ import {
   SResPostLogin,
 } from "shared/routes/auth.routes";
 import { SResError } from "shared/routes/common.routes";
+// TODO TO MOVE 
+import { SReqHeadersUser, SResGetUser } from "shared/routes/user.routes";
 
 import { config } from "../../../config/config";
 import { createUserTokenSimple } from "../../utils/jwtUtils";
@@ -17,8 +19,26 @@ import { createSession, deleteSession } from "../actions/sessions.actions";
 import { Server } from ".";
 
 export const authRoutes = ({ server }: { server: Server }) => {
-  /**
+
+    /**
    * Récupérer l'utilisateur connecté
+   */
+    server.get(
+      "/auth/session",
+      {
+        schema: {
+          response: { 200: SResGetUser },
+          headers: SReqHeadersUser,
+        } as const,
+        preHandler: server.auth([server.validateJWT, server.validateSession]),
+      },
+      async (request, response) => {
+        return response.status(200).send(request.user);
+      }
+    );
+
+  /**
+   * Login
    */
   server.post(
     "/auth/login",

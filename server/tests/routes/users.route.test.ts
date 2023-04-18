@@ -14,7 +14,7 @@ describe("Users routes", () => {
 
     const response = await app.inject({
       method: "GET",
-      url: "/api/user",
+      url: "/api/auth/session",
       headers: {
         ["Authorization"]: `Bearer ${user?.token}`,
       },
@@ -29,7 +29,7 @@ describe("Users routes", () => {
   it("should create a user", async () => {
     const response = await app.inject({
       method: "POST",
-      url: "/api/user",
+      url: "/api/admin/user",
       payload: { email: "email@exemple.fr", password: "my-password" },
     });
 

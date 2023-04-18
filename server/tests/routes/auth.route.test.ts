@@ -92,7 +92,7 @@ describe("Authentication", () => {
 
     const response = await app.inject({
       method: "GET",
-      url: "/api/user",
+      url: "/api/auth/session",
       cookies: {
         [sessionCookie.name]: sessionCookie.value,
       },
@@ -141,7 +141,7 @@ describe("Authentication", () => {
 
     const response = await app.inject({
       method: "GET",
-      url: "/api/user",
+      url: "/api/auth/session",
       cookies: {
         [sessionCookie.name]: sessionCookie?.value as string,
       },
