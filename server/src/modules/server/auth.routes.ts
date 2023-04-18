@@ -29,7 +29,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
         response: { 200: SResGetUser },
         headers: SReqHeadersUser,
       } as const,
-      preHandler: server.auth([server.validateJWT, server.validateSession]),
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       return response.status(200).send(request.user);

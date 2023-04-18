@@ -1,3 +1,5 @@
+import { FromSchema } from "json-schema-to-ts";
+
 export const SResError = {
   type: "object",
   properties: {
@@ -6,3 +8,5 @@ export const SResError = {
   },
   required: ["type", "message"],
 } as const;
+
+export type IResError = FromSchema<typeof SResError>;

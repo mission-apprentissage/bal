@@ -1,33 +1,36 @@
 import "./globals.css";
 
 import { headers } from "next/headers";
+import { PropsWithChildren } from "react";
 
 import { IUser } from "../../shared/models/user.model";
 import { AuthContextProvider } from "../context/AuthContext";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-async function getSession(cookie: string): Promise<IUser | null> {
+async function getSession() {
   const response = await fetch(`${process.env.SERVER_URI}/api/auth/session`, {
     headers: {
-      cookie,
+      cookie: headers().get("cookie") ?? "",
     },
   });
 
-  const session = await response.json();
+  const session: IUser = await response.json();
 
-  return Object.keys(session).length > 0 && !session.error ? session : null;
+  if (!response.ok || session.error) {
+    return;
+  }
+
+  return session;
 }
 
-export default async function RootLayout({ children }: Props) {
-  const session = await getSession(headers().get("cookie") ?? "");
+export default async function RootLayout({ children }: PropsWithChildren) {
+  const session = await getSession();
 
   return (
     <html lang="fr">
       <body>
-        <AuthContextProvider session={session}>{children}</AuthContextProvider>
+        <AuthContextProvider initialUser={session}>
+          {children}
+        </AuthContextProvider>
       </body>
     </html>
   );

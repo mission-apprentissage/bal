@@ -19,10 +19,12 @@ export const AuthContext = createContext<IAuthContext>({
   setUser: () => {},
 });
 
-export const AuthContextProvider: FC<
-  PropsWithChildren<{ session: IUser | null }>
-> = ({ session, children }) => {
-  const [user, setUser] = useState<IUser | undefined>(session as IUser);
+interface Props extends PropsWithChildren {
+  initialUser?: IUser;
+}
+
+export const AuthContextProvider: FC<Props> = ({ initialUser, children }) => {
+  const [user, setUser] = useState<IUser | undefined>(initialUser);
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
