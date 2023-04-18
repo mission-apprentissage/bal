@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/mission-apprentissage/bal/compare/v1.11.0...v1.12.0) (2023-04-18)
+
+
+### Features
+
+* sessions in db ([#37](https://github.com/mission-apprentissage/bal/issues/37)) ([1735b01](https://github.com/mission-apprentissage/bal/commit/1735b016224cb7bdef27610311ad4ee333d7f070))
+
 # [1.11.0](https://github.com/mission-apprentissage/bal/compare/v1.10.0...v1.11.0) (2023-04-17)
 
 
