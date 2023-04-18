@@ -5,7 +5,7 @@ import {
   SResPostLogin,
 } from "shared/routes/auth.routes";
 import { SResError } from "shared/routes/common.routes";
-// TODO TO MOVE 
+// TODO TO MOVE
 import { SReqHeadersUser, SResGetUser } from "shared/routes/user.routes";
 
 import { config } from "../../../config/config";
@@ -19,23 +19,22 @@ import { createSession, deleteSession } from "../actions/sessions.actions";
 import { Server } from ".";
 
 export const authRoutes = ({ server }: { server: Server }) => {
-
-    /**
+  /**
    * Récupérer l'utilisateur connecté
    */
-    server.get(
-      "/auth/session",
-      {
-        schema: {
-          response: { 200: SResGetUser },
-          headers: SReqHeadersUser,
-        } as const,
-        preHandler: server.auth([server.validateJWT, server.validateSession]),
-      },
-      async (request, response) => {
-        return response.status(200).send(request.user);
-      }
-    );
+  server.get(
+    "/auth/session",
+    {
+      schema: {
+        response: { 200: SResGetUser },
+        headers: SReqHeadersUser,
+      } as const,
+      preHandler: server.auth([server.validateJWT, server.validateSession]),
+    },
+    async (request, response) => {
+      return response.status(200).send(request.user);
+    }
+  );
 
   /**
    * Login
@@ -67,11 +66,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
       await createSession({ token });
 
       return response
-        .setCookie(config.session.cookieName, token, {
-          ...config.session.cookie,
-          path: "/",
-          domain: "localhost",
-        })
+        .setCookie(config.session.cookieName, token, config.session.cookie)
         .status(200)
         .send(user);
     }
@@ -83,7 +78,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
     if (token) {
       await deleteSession({ token });
 
-      return response.status(200).send(); // TODO clear cookie
+      return response.clearCookie(config.session.cookieName).status(200).send();
     }
 
     return response.status(200).send();

@@ -29,6 +29,7 @@ export const config = {
         .default("true")
         .asBool(),
       sameSite: "lax" as const,
+      path: "/",
       secure: env.get("MNA_BAL_SESSION_COOKIE_SECURE").default("true").asBool(),
     },
   },
