@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/mission-apprentissage/bal/compare/v1.12.0...v1.13.0) (2023-04-18)
+
+
+### Features
+
+* admin page ([#42](https://github.com/mission-apprentissage/bal/issues/42)) ([9f0c39d](https://github.com/mission-apprentissage/bal/commit/9f0c39d8dbf7c26154d80d17fbfdf4a1e2da078d))
+
 # [1.12.0](https://github.com/mission-apprentissage/bal/compare/v1.11.0...v1.12.0) (2023-04-18)
 
 
