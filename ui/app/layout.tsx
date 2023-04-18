@@ -8,11 +8,14 @@ import { IUser } from "../../shared/models/user.model";
 import { AuthContextProvider } from "../context/AuthContext";
 
 async function getSession() {
-  const response = await fetch(`${process.env.SERVER_URI}/api/auth/session`, {
-    headers: {
-      cookie: headers().get("cookie") ?? "",
-    },
-  });
+  const response = await fetch(
+    `${process.env.NEXT_SERVER_URI}/api/auth/session`,
+    {
+      headers: {
+        cookie: headers().get("cookie") ?? "",
+      },
+    }
+  );
 
   const session: IUser = await response.json();
 
