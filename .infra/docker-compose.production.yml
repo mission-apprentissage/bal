@@ -80,6 +80,7 @@ services:
       - MNA_BAL_AKTO_CLIENT_ID={{ vault.MNA_BAL_AKTO_CLIENT_ID }}
       - MNA_BAL_AKTO_CLIENT_SECRET={{ vault.MNA_BAL_AKTO_CLIENT_SECRET }}
       - MNA_BAL_AKTO_SCOPE={{ vault.MNA_BAL_AKTO_SCOPE }}
+      - MNA_BAL_CLAMAV_URI=clamav:3310
     volumes:
       - /opt/bal/data/server:/data
 

@@ -54,15 +54,15 @@ fileignoreconfig:
 - filename: .infra/scripts/vault/renew-vault.sh
   checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
 - filename: .infra/vault/vault.yml
-  checksum: 7203ec8153026357bc296f5f7a58e14082cf16b6d79de7da6228c98a5fc3a81f
+  checksum: cc7e67175810257791f1ed996a2bef5446f5854dd8b56c9ef8a398fc4f4ef0e0
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
   checksum: 451afde847ac06703ffa04ea37b058d8522b60b94c891bf0979158dac5bc3610
 - filename: server/.env.test
-  checksum: 9f686cd77615da9c242aae3be5d2088408ede8a891ff1f29fe18097dbaef8562
+  checksum: 71f201b6106941e3ef9acfd0d65342dae8c3e2a3f9314756144edd0404a87793
 - filename: server/config/config.ts
-  checksum: c7487215e82c1c77054a699a7f2ff7993789de1dde45927443ff686565f4aeb4
+  checksum: c01f11442ce930e39f73301c1577efff14cbf93523b18fd3edd9726548374cc1
 - filename: server/src/app.ts
   checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
 - filename: server/src/modules/data/seed/seed-preview.ts
@@ -71,6 +71,8 @@ fileignoreconfig:
   checksum: e9d1bc8dfc528ec8786f21af1d8ec5ecb290bb5f8b6b63275f744dc5b27673e3
 - filename: server/src/modules/server/utils/password.utils.ts
   checksum: e4c4531afb4213f08e07bc83c129547f752909a4cc3a0e1f25ba87ca0cadde32
+- filename: server/src/utils/cryptoUtils.ts
+  checksum: fe751e7d39f384ae9a9fe8cb6afb8b0cbb0f9c5457d82fb0dbc692be22b529d9
 - filename: server/src/utils/jwtUtils.ts
   checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
 - filename: ui/app/auth/connexion/page.tsx

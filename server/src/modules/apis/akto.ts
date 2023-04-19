@@ -2,8 +2,8 @@ import axios from "axios"
 import dayjs from "dayjs"
 import querystring from "querystring"
 
-import { config } from "../../../../config/config"
-import { ApiError } from "../../../utils/apiUtils"
+import { config } from "../../../config/config"
+import { ApiError } from "../../utils/apiUtils"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let token = {} as any;
