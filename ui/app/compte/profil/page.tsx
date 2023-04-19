@@ -9,7 +9,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../../context/AuthContext";
 
 const ProfilPage = () => {
   const { user } = useAuth();

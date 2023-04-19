@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Container,
   Flex,
   Heading,
@@ -9,23 +8,15 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
 
 import Link from "../../components/link/Link";
 import { useAuth } from "../../context/AuthContext";
 import { AccountFill } from "../../theme/icons/AccountFill";
-import { api } from "../../utils/api.utils";
+import LoggedIn from "./LoggedIn";
 import { Nav } from "./Nav";
 
 export const Header = () => {
-  const { user, setUser } = useAuth();
-  const { push } = useRouter();
-
-  const handleLogout = async () => {
-    await api.get("/auth/logout");
-    setUser();
-    push("/");
-  };
+  const { user } = useAuth();
 
   return (
     <VStack
@@ -57,19 +48,7 @@ export const Header = () => {
               </Text>
             </Link>
           ) : (
-            <Button
-              onClick={handleLogout}
-              borderRadius={24}
-              fontSize="zeta"
-              color="bluefrance.main"
-              px={3}
-              py={1}
-            >
-              <Text lineHeight={6}>
-                <AccountFill boxSize={5} mr={2} />
-                Deconnexion
-              </Text>
-            </Button>
+            <LoggedIn user={user} />
           )}
         </Flex>
       </HStack>
