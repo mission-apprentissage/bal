@@ -16,14 +16,14 @@ describe("Users routes", () => {
       method: "GET",
       url: "/api/auth/session",
       headers: {
-        ["Authorization"]: `Bearer ${user?.token}`,
+        ["Authorization"]: `Bearer ${user?.apiKey}`,
       },
     });
 
     assert.equal(response.statusCode, 200);
     assert.equal(response.json()._id, user?._id);
     assert.equal(response.json().email, "connected@exemple.fr");
-    assert.ok(response.json().token);
+    assert.equal(response.json().password, undefined);
   });
 
   it("should create a user", async () => {
@@ -40,6 +40,6 @@ describe("Users routes", () => {
     assert.equal(response.statusCode, 200);
     assert.equal(response.json()._id, user?._id);
     assert.equal(response.json().email, "email@exemple.fr");
-    assert.ok(response.json().token);
+    assert.equal(response.json().password, undefined);
   });
 });

@@ -1,7 +1,7 @@
 "use client";
 import { Box, Text } from "@chakra-ui/react";
 
-const AdminPage = () => {
+const AdminImportPage = () => {
   return (
     <Box>
       <Text>Espace admin</Text>
@@ -9,4 +9,4 @@ const AdminPage = () => {
   );
 };
 
-export default AdminPage;
+export default AdminImportPage;

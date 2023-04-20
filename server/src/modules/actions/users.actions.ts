@@ -5,16 +5,22 @@ import { createUserToken } from "../../utils/jwtUtils";
 import { getDbCollection } from "../../utils/mongodb";
 import { hashPassword } from "../server/utils/password.utils";
 
-export const createUser = async (data: IUser) => {
+type ICreateUser = {
+  email: string;
+  password: string;
+  isAdmin?: boolean;
+};
+
+export const createUser = async (data: ICreateUser) => {
   const _id = new ObjectId();
-  const token = createUserToken({ ...data, _id: _id.toString() });
+  const apiKey = createUserToken({ ...data, _id: _id.toString() });
 
   const password = hashPassword(data.password);
 
   const { insertedId: userId } = await getDbCollection("users").insertOne({
     ...data,
     _id,
-    token,
+    apiKey,
     password,
   });
 

@@ -1,6 +1,13 @@
 import { FromSchema } from "json-schema-to-ts";
 
-import { IUser, SUser } from "../models/user.model";
+import { SResGetUser } from "./user.routes";
+
+/**
+ * Session
+ */
+export const SResGetSession = SResGetUser;
+
+export type IResGetSession = FromSchema<typeof SResGetSession>;
 
 /**
  * Login
@@ -16,9 +23,8 @@ export const SReqPostLogin = {
 
 export type IReqPostLogin = FromSchema<typeof SReqPostLogin>;
 
-export const SResPostLogin = SUser;
-
-export interface IResPostLogin extends IUser {}
+export const SResPostLogin = SResGetSession;
+export type IResPostLogin = FromSchema<typeof SResPostLogin>;
 
 /**
  * Reset password
