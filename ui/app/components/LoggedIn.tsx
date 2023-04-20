@@ -6,22 +6,20 @@ import {
   MenuButton,
   MenuDivider,
   MenuGroup,
-  MenuItem as ChakraMenuItem,
   MenuItem,
   MenuList,
   Text,
 } from "@chakra-ui/react";
+import NavLink from "next/link";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 
 import { IUser } from "../../../shared/models/user.model";
-import Link from "../../components/link/Link";
 import { useAuth } from "../../context/AuthContext";
 import { Settings } from "../../theme/icons/Settings";
 import { Settings4Fill } from "../../theme/icons/Settings4Fill";
 import UserFill from "../../theme/icons/UserFill";
 import { api } from "../../utils/api.utils";
-
 interface Props {
   user: IUser;
 }
@@ -58,7 +56,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
         <MenuList>
           <MenuItem
             href="/compte/profil"
-            as={Link}
+            as={NavLink}
             icon={<Settings4Fill boxSize={4} color="bluefrance.main" />}
           >
             Mon compte
@@ -66,8 +64,8 @@ const LoggedIn: FC<Props> = ({ user }) => {
           {user.isAdmin && (
             <MenuGroup title="Administration">
               <MenuItem
-                as={Link}
                 href="/admin/import"
+                as={NavLink}
                 icon={<Settings boxSize={4} color="bluefrance.main" />}
               >
                 Import de fichier
@@ -75,7 +73,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
             </MenuGroup>
           )}
           <MenuDivider />
-          <ChakraMenuItem onClick={handleLogout}>Déconnexion</ChakraMenuItem>
+          <MenuItem onClick={handleLogout}>Déconnexion</MenuItem>
         </MenuList>
       </Menu>
     </Box>
