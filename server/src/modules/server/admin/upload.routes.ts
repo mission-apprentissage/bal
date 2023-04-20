@@ -4,13 +4,13 @@ import { createWriteStream } from "fs";
 import multiparty from "multiparty";
 // @ts-ignore
 import { oleoduc } from "oleoduc";
-import { SReqPostUser, SResPostUser } from "shared/routes/user.routes";
 import { PassThrough } from "stream";
 
-import { clamav } from "../../../services";
+import { config } from "../../../../config/config";
 import * as crypto from "../../../utils/cryptoUtils";
 import logger from "../../../utils/logger";
 import { deleteFromStorage, uploadToStorage } from "../../../utils/ovhUtils";
+import { createClamav } from "../../services/clamav";
 import { Server } from "..";
 
 function discard() {
@@ -90,76 +90,56 @@ function handleMultipartForm(
 // TODO to secure
 export const uploadAdminRoutes = ({ server }: { server: Server }) => {
   /**
-   * Créer un utilisateur
+   * Importer un fichier
    */
-  server.post(
-    "/admin/upload",
-    {
-      schema: {
-        body: SReqPostUser,
-        response: { 200: SResPostUser },
-      } as const,
-    },
-    async (request, response) => {
-      try {
-        handleMultipartForm(request, response, async (part) => {
-          const test = false;
-          const subId = "test"; // TODO
-          // const { test, organisme_id } = await Joi.object({
-          //   test: Joi.boolean(),
-          //   organisme_id: Joi.string().required(),
-          // }).validateAsync(req.query, { abortEarly: false });
+  server.post("/admin/upload", {}, async (request, response) => {
+    const data = await request.file({ limits: { fileSize: 10485760 } });
 
-          // const fileName = `${DateTime.now().toFormat("dd-MM-yyyy-hh:mm")}_${part.filename}`;
-          const fileName = `${part.filename}`;
-          const path = `uploads/${subId}/${fileName}`;
-          const { scanStream, getScanResults } = await clamav.getScanner();
-          const { hashStream, getHash } = crypto.checksum();
-
-          await oleoduc(
-            part,
-            scanStream,
-            hashStream,
-            crypto.isCipherAvailable() ? crypto.cipher(subId) : noop(),
-            test
-              ? noop()
-              : await uploadToStorage(path, {
-                  contentType: part.headers["content-type"],
-                })
-          );
-
-          if (part.byteCount > 10485760) {
-            throw new Error("Le fichier est trop volumineux");
-          }
-
-          const hash_fichier = await getHash();
-          const { isInfected, viruses } = await getScanResults();
-          if (isInfected) {
-            if (!test) {
-              logger.error(
-                `Uploaded file ${path} is infected by ${viruses.join(
-                  ","
-                )}. Deleting file from storage...`
-              );
-
-              await deleteFromStorage(path);
-            }
-            throw new Error("Le contenu du fichier est invalide");
-          }
-
-          console.log(hash_fichier);
-          // await addDocument(organisme_id, {
-          //   ext_fichier: part.filename.split(".").pop(),
-          //   hash_fichier,
-          //   nom_fichier: fileName,
-          //   chemin_fichier: path,
-          //   taille_fichier: test ? 0 : part.byteCount,
-          //   userEmail: req.user.email,
-          // });
-        });
-      } catch (error) {
-        response.log.error(error);
-      }
+    if (!data?.file) {
+      throw new Error("Fichier invalide");
     }
-  );
+
+    // await pipeline(data.file, fs.createWriteStream(data.filename));
+
+    const test = false;
+    const subId = "test"; // TODO
+    const { filename } = data;
+    const path = `uploads/${subId}/${filename}`;
+    console.log(data.fields);
+    const { scanStream, getScanResults } = await createClamav(
+      config.clamav.uri
+    ).getScanner();
+    const { hashStream, getHash } = crypto.checksum();
+
+    await oleoduc(
+      data.file,
+      scanStream,
+      hashStream,
+      crypto.isCipherAvailable() ? crypto.cipher(subId) : noop(),
+      test
+        ? noop()
+        : await uploadToStorage(path, {
+            contentType: data.mimetype,
+          })
+    );
+
+    const hash_fichier = await getHash();
+    const { isInfected, viruses } = await getScanResults();
+    if (isInfected) {
+      if (!test) {
+        logger.error(
+          `Uploaded file ${path} is infected by ${viruses.join(
+            ","
+          )}. Deleting file from storage...`
+        );
+
+        await deleteFromStorage(path);
+      }
+      throw new Error("Le contenu du fichier est invalide");
+    }
+
+    console.log(hash_fichier);
+
+    return response.send({ hash_fichier });
+  });
 };
