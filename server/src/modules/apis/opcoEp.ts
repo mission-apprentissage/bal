@@ -25,7 +25,7 @@ const getToken = async (token = {}) => {
 
   try {
     const response = await axios.post(
-      `https://${config.opcoEp.baseUrl}/auth/realms/partenaires-etatiques/protocol/openid-connect/token`,
+      `https://${config.opcoEp.baseAuthUrl}/auth/realms/partenaires-etatiques/protocol/openid-connect/token`,
       querystring.stringify({
         grant_type: config.opcoEp.grantType,
         client_id: config.opcoEp.clientId,
