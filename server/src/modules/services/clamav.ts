@@ -1,7 +1,6 @@
 import NodeClam from "clamscan";
 import tcpPortUsed from "tcp-port-used";
 
-// TODO Weird promise ? 
 // @ts-ignore
 let promise;
 async function getClamscan(uri: string) {

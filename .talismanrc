@@ -67,6 +67,8 @@ fileignoreconfig:
   checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
 - filename: server/src/modules/data/seed/seed-preview.ts
   checksum: c63289b52d6565490c1fd8176b68af4268602c9a0d5f31126647caf4ba354534
+- filename: server/src/modules/server/admin/upload.routes.ts
+  checksum: 6181bbebf722c704b7c86a19a3ac46d56ab0dc98efe7b0eaba230989b5a6354f
 - filename: server/src/modules/server/index.ts
   checksum: e9d1bc8dfc528ec8786f21af1d8ec5ecb290bb5f8b6b63275f744dc5b27673e3
 - filename: server/src/modules/server/utils/password.utils.ts

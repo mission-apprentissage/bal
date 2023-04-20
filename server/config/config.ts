@@ -73,7 +73,7 @@ export const config = {
     scope: env.get("MNA_BAL_AKTO_SCOPE").default("").asString(),
   },
   clamav: {
-    uri: env.get("MNA_BAL_CLAMAV_URI").default("127.0.0.1:3310").asString(),
+    uri: env.get("MNA_BAL_CLAMAV_URI").default("clamav:3310").asString(),
   },
   ovhStorage: {
     username: env.get("MNA_BAL_OVH_STORAGE_USERNAME").required().asString(),
@@ -81,8 +81,14 @@ export const config = {
     authURL: "https://auth.cloud.ovh.net/v3/auth",
     tenantId: env.get("MNA_BAL_OVH_STORAGE_TENANT_ID").required().asString(),
     region: "GRA",
-    containerName: env.get("MNA_BAL_OVH_STORAGE_CONTAINER_NAME").required().asString(),
-    encryptionKey: env.get("MNA_BAL_OVH_STORAGE_ENCRYPTION_KEY").required().asString(),
+    containerName: env
+      .get("MNA_BAL_OVH_STORAGE_CONTAINER_NAME")
+      .required()
+      .asString(),
+    encryptionKey: env
+      .get("MNA_BAL_OVH_STORAGE_ENCRYPTION_KEY")
+      .required()
+      .asString(),
     uri: env.get("MNA_BAL_OVH_STORAGE_URI").required().asString(),
   },
   tests: {

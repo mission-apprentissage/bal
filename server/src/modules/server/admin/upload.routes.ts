@@ -6,11 +6,10 @@ import multiparty from "multiparty";
 import { oleoduc } from "oleoduc";
 import { PassThrough } from "stream";
 
-import { config } from "../../../../config/config";
+import { clamav } from "../../../services";
 import * as crypto from "../../../utils/cryptoUtils";
 import logger from "../../../utils/logger";
 import { deleteFromStorage, uploadToStorage } from "../../../utils/ovhUtils";
-import { createClamav } from "../../services/clamav";
 import { Server } from "..";
 
 function discard() {
@@ -21,6 +20,7 @@ function noop() {
   return new PassThrough();
 }
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 function handleMultipartForm(
   req: any,
   res: FastifyReply,
@@ -93,29 +93,29 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
    * Importer un fichier
    */
   server.post("/admin/upload", {}, async (request, response) => {
-    const data = await request.file({ limits: { fileSize: 10485760 } });
+    const data = await request.file({
+      limits: {
+        fileSize: 10485760,
+      },
+    });
 
     if (!data?.file) {
       throw new Error("Fichier invalide");
     }
 
-    // await pipeline(data.file, fs.createWriteStream(data.filename));
-
-    const test = false;
-    const subId = "test"; // TODO
+    const test = false; // TODO TO PASS in query param
+    const documentId = "6437ebc08dd1c5cc33501536"; // TODO
     const { filename } = data;
-    const path = `uploads/${subId}/${filename}`;
-    console.log(data.fields);
-    const { scanStream, getScanResults } = await createClamav(
-      config.clamav.uri
-    ).getScanner();
+    const path = `uploads/${documentId}/${filename}`;
+
+    const { scanStream, getScanResults } = await clamav.getScanner();
     const { hashStream, getHash } = crypto.checksum();
 
     await oleoduc(
       data.file,
       scanStream,
       hashStream,
-      crypto.isCipherAvailable() ? crypto.cipher(subId) : noop(),
+      crypto.isCipherAvailable() ? crypto.cipher(documentId) : noop(), // ISSUE
       test
         ? noop()
         : await uploadToStorage(path, {
@@ -140,6 +140,6 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
 
     console.log(hash_fichier);
 
-    return response.send({ hash_fichier });
+    return response.send({});
   });
 };
