@@ -1,15 +1,22 @@
-import companyEmailValidator from "company-email-validator"
+import companyEmailValidator from "company-email-validator";
 import { IResOrganisationValidation } from "shared/routes/organisation.routes";
 
 import { getAktoVerification } from "../apis/akto";
+// import { getOpcoEpVerification } from "../apis/opcoEp";
 
-const isBlackListedDomains = (email: string)=>{
+const isBlackListedDomains = (email: string) => {
   return !companyEmailValidator.isCompanyEmail(email);
-}
+};
 
 // TODO WIP
-export const validation = async ({ email, siret } : { email: string, siret: string} ): Promise<IResOrganisationValidation> =>  {
-  if(isBlackListedDomains(email)) {
+export const validation = async ({
+  email,
+  siret,
+}: {
+  email: string;
+  siret: string;
+}): Promise<IResOrganisationValidation> => {
+  if (isBlackListedDomains(email)) {
     return {
       is_valid: false,
     };
@@ -20,12 +27,15 @@ export const validation = async ({ email, siret } : { email: string, siret: stri
   const siren = siret.substring(0, 9);
 
   const testAkto = await getAktoVerification(siren, email);
-  if(testAkto) {
+  if (testAkto) {
     return {
       is_valid: true,
-      on: "email"
+      on: "email",
     };
   }
+
+  // const testOpcoEp = await getOpcoEpVerification(siret, email);
+  // console.log(testOpcoEp);
 
   // return {
   //   is_valid: true,

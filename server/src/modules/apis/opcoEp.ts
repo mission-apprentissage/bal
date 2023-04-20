@@ -25,12 +25,12 @@ const getToken = async (token = {}) => {
 
   try {
     const response = await axios.post(
-      "https://login.microsoftonline.com/0285c9cb-dd17-4c1e-9621-c83e9204ad68/oauth2/v2.0/token",
+      `https://${config.opcoEp.baseUrl}/auth/realms/partenaires-etatiques/protocol/openid-connect/token`,
       querystring.stringify({
-        grant_type: config.akto.grantType,
-        client_id: config.akto.clientId,
-        client_secret: config.akto.clientSecret,
-        scope: config.akto.scope,
+        grant_type: config.opcoEp.grantType,
+        client_id: config.opcoEp.clientId,
+        client_secret: config.opcoEp.clientSecret,
+        scope: config.opcoEp.scope,
       }),
       {
         headers: {
@@ -49,29 +49,31 @@ const getToken = async (token = {}) => {
 };
 
 /**
- * @description Check Akto referential using siren & email submitted by user
- * @param {string} siren
+ * @description Check Opco Ep referential using siret & email submitted by user
+ * @param {string} siret
  * @param {string} email
  * @returns {boolean}
  */
-export const getAktoVerification = async (siren: string, email: string) => {
+export const getOpcoEpVerification = async (siret: string, email: string) => {
   token = await getToken(token);
 
   try {
     const { data } = await axios.get(
-      `https://api.akto.fr/referentiel/api/v1/Relations/Validation?email=${email}&siren=${siren}`,
+      `https://${config.opcoEp.baseUrl}/apis/referentiel-entreprise/v2/entreprises/securisation-echange?email=${email}&siret=${siret}`,
       {
         headers: {
           Authorization: `Bearer ${token.access_token}`,
+          "X-Audience-Id": "etatiques-lba",
+          "Content-Type": "application/json",
         },
       }
     );
 
-    return data.data.match;
+    return data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     throw new ApiError(
-      "Api Akto",
+      "Api Opco Ep",
       error.message,
       error.code || error.response?.status
     );
