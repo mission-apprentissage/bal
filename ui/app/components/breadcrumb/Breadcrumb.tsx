@@ -45,6 +45,10 @@ export const PAGES = {
     title: "Modifier mon mot de passe",
     path: "/modifier-mot-de-passe",
   }),
+  adminImport: () => ({
+    title: "Import de fichier",
+    path: "/admin/import",
+  }),
 };
 
 interface Page {
