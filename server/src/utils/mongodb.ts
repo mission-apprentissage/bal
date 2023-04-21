@@ -96,10 +96,22 @@ const convertSchemaToMongoSchema = (schema: unknown) => {
     properties: {
       ...replacedTypes.properties,
       _id: { bsonType: "objectId" },
+      ...(replacedTypes.properties.updated_at && {
+        updated_at: {
+          ...replacedTypes.properties.updated_at,
+          bsonType: "date",
+        },
+      }),
+      ...(replacedTypes.properties.created_at && {
+        created_at: {
+          ...replacedTypes.properties.created_at,
+          bsonType: "date",
+        },
+      }),
     },
   };
 
-  // strip example field because NON STANDARD jsonSchema
+  // strip example, format field because NON STANDARD jsonSchema
   return omitDeep(replacedTypes, ["example", "format"]);
 };
 

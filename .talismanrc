@@ -74,7 +74,7 @@ fileignoreconfig:
 - filename: server/src/modules/server/utils/password.utils.ts
   checksum: e4c4531afb4213f08e07bc83c129547f752909a4cc3a0e1f25ba87ca0cadde32
 - filename: server/src/utils/cryptoUtils.ts
-  checksum: fe751e7d39f384ae9a9fe8cb6afb8b0cbb0f9c5457d82fb0dbc692be22b529d9
+  checksum: e3e123d712465ed963965b5fa36f8d7a15364bbc7107d9d15bef2cc670483d42
 - filename: server/src/utils/jwtUtils.ts
   checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
 - filename: ui/app/auth/connexion/page.tsx

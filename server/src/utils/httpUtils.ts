@@ -3,7 +3,10 @@ import { parse as parseUrl } from "url";
 
 import logger from "./logger";
 
-export async function createRequestStream(url: string, httpOptions = {}) {
+export async function createRequestStream(
+  url: string,
+  httpOptions: https.RequestOptions = {}
+) {
   return new Promise((resolve, reject) => {
     const options = {
       ...parseUrl(url),
@@ -12,8 +15,8 @@ export async function createRequestStream(url: string, httpOptions = {}) {
     };
 
     logger.info(`Send http request [${options.method}] ${url}...`);
-    const req = https.request(options, (res: any) => {
-      if (res.statusCode >= 400) {
+    const req = https.request(options, (res) => {
+      if (!res?.statusCode || res.statusCode >= 400) {
         reject(
           new Error(`Unable to get ${url}. Status code ${res.statusCode}`)
         );

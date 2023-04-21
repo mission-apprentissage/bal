@@ -1,16 +1,13 @@
 import NodeClam from "clamscan";
 import tcpPortUsed from "tcp-port-used";
 
-// @ts-ignore
-let promise;
+let promise: Promise<NodeClam> | undefined;
 async function getClamscan(uri: string) {
-  // @ts-ignore
   if (promise) {
-    // @ts-ignore
     return promise;
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise<NodeClam>((resolve, reject) => {
     const [host, port] = uri.split(":");
     tcpPortUsed
       .waitUntilUsedOnHost(parseInt(port), host, 500, 30000)
@@ -31,8 +28,9 @@ export const createClamav = (uri: string) => {
   async function getScanner() {
     const clamscan = await getClamscan(uri);
     const scanStream = clamscan.passthrough();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const scanResults = new Promise<any>((resolve) => {
-      scanStream.on("scan-complete", (res: any) => {
+      scanStream.on("scan-complete", (res) => {
         resolve(res);
       });
     });

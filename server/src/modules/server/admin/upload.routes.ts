@@ -1,145 +1,154 @@
-import { EventEmitter } from "events";
-import { FastifyReply } from "fastify";
-import { createWriteStream } from "fs";
-import multiparty from "multiparty";
+import { MultipartFile } from "@fastify/multipart";
+import { ObjectId } from "mongodb";
 // @ts-ignore
 import { oleoduc } from "oleoduc";
+import { IUser } from "shared/models/user.model";
+import { SResError } from "shared/routes/common.routes";
+import {
+  SReqQueryPostAdminUpload,
+  SResPostAdminUpload,
+} from "shared/routes/upload.routes";
 import { PassThrough } from "stream";
 
+import { FILE_SIZE_LIMIT } from "../../../../../shared/constants";
 import { clamav } from "../../../services";
 import * as crypto from "../../../utils/cryptoUtils";
 import logger from "../../../utils/logger";
 import { deleteFromStorage, uploadToStorage } from "../../../utils/ovhUtils";
+import { createDocument } from "../../actions/uploads.actions";
 import { Server } from "..";
 
-function discard() {
-  return createWriteStream("/dev/null");
-}
+const testMode = process.env.MNA_BAL_ENV === "test";
 
 function noop() {
   return new PassThrough();
 }
 
-// eslint-disable-next-line unused-imports/no-unused-vars
-function handleMultipartForm(
-  req: any,
-  res: FastifyReply,
-  callback: (part: any) => Promise<any>
-) {
-  const form = new multiparty.Form();
-  const formEvents = new EventEmitter();
-  // 'close' event is fired just after the form has been read but before file is scanned and uploaded to storage.
-  // So instead of using form.on('close',...) we use a custom event to end response when everything is finished
-  formEvents.on("terminated", async (e) => {
-    if (e) {
-      logger.error(e);
-      return res.status(400).send({
-        error:
-          e.message === "Le fichier est trop volumineux"
-            ? "Le fichier est trop volumineux"
-            : "Le contenu du fichier est invalide",
-      });
-    }
+const validateFile = (file: MultipartFile) => {
+  if (
+    file.mimetype !==
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
+    file.mimetype !== "application/vnd.ms-excel" &&
+    file.mimetype !== "text/csv"
+  ) {
+    return false;
+  }
 
-    return res.status(200).send({
-      // documents,
-    });
-  });
+  if (
+    !file.filename.endsWith(".xlsx") &&
+    !file.filename.endsWith(".xls") &&
+    !file.filename.endsWith(".csv")
+  ) {
+    return false;
+  }
 
-  form.on("error", () => {
-    return res
-      .status(400)
-      .send({ error: "Le contenu du fichier est invalide" });
-  });
-  form.on("part", async (part) => {
-    if (
-      part.headers["content-type"] !==
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
-      part.headers["content-type"] !== "application/vnd.ms-excel" &&
-      part.headers["content-type"] !== "text/csv"
-    ) {
-      form.emit("error", new Error("Le fichier n'est pas au bon format"));
-      return part.pipe(discard());
-    }
-
-    if (
-      !part.filename.endsWith(".xlsx") &&
-      !part.filename.endsWith(".xls") &&
-      !part.filename.endsWith(".csv")
-    ) {
-      form.emit("error", new Error("Le fichier n'est pas au bon format"));
-      return part.pipe(discard());
-    }
-
-    callback(part)
-      .then(() => {
-        // @ts-ignore
-        if (!form.bytesExpected || form.bytesReceived === form.bytesExpected) {
-          formEvents.emit("terminated");
-        }
-        part.resume();
-      })
-      .catch((e: any) => {
-        formEvents.emit("terminated", e);
-      });
-  });
-
-  form.parse(req);
-}
+  return true;
+};
 
 // TODO to secure
 export const uploadAdminRoutes = ({ server }: { server: Server }) => {
   /**
    * Importer un fichier
    */
-  server.post("/admin/upload", {}, async (request, response) => {
-    const data = await request.file({
-      limits: {
-        fileSize: 10485760,
-      },
-    });
+  server.post(
+    "/admin/upload",
+    {
+      schema: {
+        querystring: SReqQueryPostAdminUpload,
+        response: {
+          200: SResPostAdminUpload,
+          401: SResError,
+        },
+      } as const,
+      preHandler: server.auth([
+        server.validateJWT,
+        server.validateSession,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ]) as any,
+    },
+    async (request, response) => {
+      const data = await request.file({
+        limits: {
+          fileSize: FILE_SIZE_LIMIT,
+        },
+      });
 
-    if (!data?.file) {
-      throw new Error("Fichier invalide");
-    }
-
-    const test = false; // TODO TO PASS in query param
-    const documentId = "6437ebc08dd1c5cc33501536"; // TODO
-    const { filename } = data;
-    const path = `uploads/${documentId}/${filename}`;
-
-    const { scanStream, getScanResults } = await clamav.getScanner();
-    const { hashStream, getHash } = crypto.checksum();
-
-    await oleoduc(
-      data.file,
-      scanStream,
-      hashStream,
-      crypto.isCipherAvailable() ? crypto.cipher(documentId) : noop(), // ISSUE
-      test
-        ? noop()
-        : await uploadToStorage(path, {
-            contentType: data.mimetype,
-          })
-    );
-
-    const hash_fichier = await getHash();
-    const { isInfected, viruses } = await getScanResults();
-    if (isInfected) {
-      if (!test) {
-        logger.error(
-          `Uploaded file ${path} is infected by ${viruses.join(
-            ","
-          )}. Deleting file from storage...`
-        );
-
-        await deleteFromStorage(path);
+      if (!data || !validateFile(data)) {
+        return response.status(401).send({
+          type: "invalid_file",
+          message: "Le fichier n'est pas au bon format",
+        });
       }
-      throw new Error("Le contenu du fichier est invalide");
+
+      const documentId = new ObjectId();
+      const documentHash = crypto.generateKey();
+      const path = `uploads/${documentId}/${data.filename}`;
+
+      const { scanStream, getScanResults } = await clamav.getScanner();
+      const { hashStream, getHash } = crypto.checksum();
+
+      await oleoduc(
+        data.file,
+        scanStream,
+        hashStream,
+        crypto.isCipherAvailable() ? crypto.cipher(documentHash) : noop(), // ISSUE
+        testMode
+          ? noop()
+          : await uploadToStorage(path, {
+              contentType: data.mimetype,
+            })
+      );
+
+      const hash_fichier = await getHash();
+      const { isInfected, viruses } = await getScanResults();
+
+      if (isInfected) {
+        if (!test) {
+          const listViruses = viruses.join(",");
+          logger.error(
+            `Uploaded file ${path} is infected by ${listViruses}. Deleting file from storage...`
+          );
+
+          await deleteFromStorage(path);
+        }
+        return response.status(401).send({
+          type: "invalid_file",
+          message: "Le contenu du fichier est invalide",
+        });
+      }
+
+      const fileSize = parseInt(request.headers["content-length"] ?? "0");
+      console.log(fileSize);
+      const { _id: userId } = request.user as IUser;
+      try {
+        const document = await createDocument({
+          _id: documentId,
+          type_document: request.query.type_document,
+          ext_fichier: data.filename.split(".").pop(),
+          nom_fichier: data.filename,
+          chemin_fichier: path,
+          taille_fichier: fileSize,
+          hash_secret: documentHash,
+          hash_fichier,
+          confirm: true,
+          added_by: userId.toString(),
+          updated_at: new Date(),
+          created_at: new Date(),
+        });
+
+        if (!document) {
+          return response.status(401).send({
+            type: "invalid_file",
+            message: "Impossible de stocker de le fichier",
+          });
+        }
+
+        // @ts-ignore TODO: fix
+        return response.status(200).send(document);
+      } catch (error) {
+        console.log(error);
+        console.log(JSON.stringify(error));
+      }
     }
-
-    console.log(hash_fichier);
-
-    return response.send({});
-  });
+  );
 };
