@@ -68,6 +68,8 @@ services:
     container_name: bal_clamav
     mem_limit: 2g
     restart: unless-stopped
+    ports:
+      - 3310:3310
     networks:
       - bal_network
     healthcheck:

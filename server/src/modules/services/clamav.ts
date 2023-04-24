@@ -8,10 +8,12 @@ async function getClamscan(uri: string) {
   }
 
   return new Promise<NodeClam>((resolve, reject) => {
+    console.log(uri);
     const [host, port] = uri.split(":");
     tcpPortUsed
       .waitUntilUsedOnHost(parseInt(port), host, 500, 30000)
       .then(() => {
+        console.log("OK Clamav");
         const clamscan = new NodeClam().init({
           clamdscan: {
             host,
