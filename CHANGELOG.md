@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/mission-apprentissage/bal/compare/v1.18.1...v1.19.0) (2023-04-24)
+
+
+### Features
+
+* add models doc_content, orga, person ([#54](https://github.com/mission-apprentissage/bal/issues/54)) ([ac5a669](https://github.com/mission-apprentissage/bal/commit/ac5a66940d91d21e1df166dbf40644be11462c72))
+
 ## [1.18.1](https://github.com/mission-apprentissage/bal/compare/v1.18.0...v1.18.1) (2023-04-24)
 
 
