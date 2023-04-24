@@ -1,3 +1,10 @@
+## [1.18.1](https://github.com/mission-apprentissage/bal/compare/v1.18.0...v1.18.1) (2023-04-24)
+
+
+### Bug Fixes
+
+* respect db naming format ([#53](https://github.com/mission-apprentissage/bal/issues/53)) ([f5b5433](https://github.com/mission-apprentissage/bal/commit/f5b5433d8a68f8ab08f0fc195cf33c9863b1d335))
+
 # [1.18.0](https://github.com/mission-apprentissage/bal/compare/v1.17.0...v1.18.0) (2023-04-24)
 
 
