@@ -21,8 +21,8 @@ const ProfilPage = () => {
   const toast = useToast();
 
   const handleClick = () => {
-    if (user?.apiKey) {
-      navigator.clipboard.writeText(user?.apiKey);
+    if (apiKey) {
+      navigator.clipboard.writeText(apiKey);
       toast({
         title: "Jeton API copié dans le presse-papier.",
         status: "success",
