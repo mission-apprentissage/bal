@@ -17,9 +17,8 @@ export const SResGetUser = {
     _id: { type: "string" },
     email: { type: "string" },
     isAdmin: { type: "boolean" },
-    apiKey: { type: "string" },
   },
-  required: ["email", "apiKey"],
+  required: ["email"],
   additionalProperties: false,
 } as const;
 
@@ -34,3 +33,14 @@ export const SReqHeadersUser = {
     Authorization: { type: "string" },
   },
 };
+
+export const SResGetGenerateApiKey = {
+  type: "object",
+  properties: {
+    apiKey: { type: "string" },
+  },
+  required: ["apiKey"],
+  additionalProperties: false,
+} as const;
+
+export type IResGetGenerateApiKey = FromSchema<typeof SResGetGenerateApiKey>;

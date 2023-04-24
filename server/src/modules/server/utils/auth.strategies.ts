@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { IUser } from "shared/models/user.model";
 
 import { config } from "../../../../config/config";
+import { compareKeys } from "../../../utils/cryptoUtils";
 import { decodeToken } from "../../../utils/jwtUtils";
 import { getSession } from "../../actions/sessions.actions";
 import { findUser } from "../../actions/users.actions";
@@ -29,10 +30,11 @@ export const authValidateJWT: FastifyAuthFunction = async (request, _reply) => {
   }
 
   try {
-    const { id } = decodeToken(token) as JwtPayload;
-    const user = await findUser({ _id: new ObjectId(id) });
+    const { _id, apiKey } = decodeToken(token) as JwtPayload;
 
-    if (!user) {
+    const user = await findUser({ _id: new ObjectId(_id) });
+
+    if (!user || !compareKeys(user.apiKey, apiKey)) {
       throw new Error("Jeton invalide");
     }
 
