@@ -1,7 +1,7 @@
 import companyEmailValidator from "company-email-validator"
 import { IResOrganisationValidation } from "shared/routes/organisation.routes";
 
-import { getAktoVerification } from "../common/apis/akto";
+import { getAktoVerification } from "../apis/akto";
 
 const isBlackListedDomains = (email: string)=>{
   return !companyEmailValidator.isCompanyEmail(email);

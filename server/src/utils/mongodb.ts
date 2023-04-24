@@ -87,6 +87,7 @@ const convertSchemaToMongoSchema = (schema: unknown) => {
     JSON.stringify(schema)
       .replaceAll("type", "bsonType")
       .replaceAll("boolean", "bool")
+      .replaceAll("integer", "int")
   );
 
   // remplacer _id de "string" à "objectId"
@@ -95,11 +96,23 @@ const convertSchemaToMongoSchema = (schema: unknown) => {
     properties: {
       ...replacedTypes.properties,
       _id: { bsonType: "objectId" },
+      ...(replacedTypes.properties.updated_at && {
+        updated_at: {
+          ...replacedTypes.properties.updated_at,
+          bsonType: "date",
+        },
+      }),
+      ...(replacedTypes.properties.created_at && {
+        created_at: {
+          ...replacedTypes.properties.created_at,
+          bsonType: "date",
+        },
+      }),
     },
   };
 
-  // strip example field because NON STANDARD jsonSchema
-  return omitDeep(replacedTypes, ["example"]);
+  // strip example, format field because NON STANDARD jsonSchema
+  return omitDeep(replacedTypes, ["example", "format"]);
 };
 
 /**
@@ -111,7 +124,6 @@ export const configureDbSchemaValidation = async (
 ) => {
   const db = getDatabase();
   ensureInitialization();
-
   await Promise.all(
     modelDescriptors.map(async ({ collectionName, schema }) => {
       await createCollectionIfDoesNotExist(collectionName);
@@ -122,17 +134,21 @@ export const configureDbSchemaValidation = async (
 
       const convertedSchema = convertSchemaToMongoSchema(schema);
 
-      await db.command({
-        collMod: collectionName,
-        validationLevel: "strict",
-        validationAction: "error",
-        validator: {
-          $jsonSchema: {
-            title: `${collectionName} validation schema`,
-            ...convertedSchema,
+      try {
+        await db.command({
+          collMod: collectionName,
+          validationLevel: "strict",
+          validationAction: "error",
+          validator: {
+            $jsonSchema: {
+              title: `${collectionName} validation schema`,
+              ...convertedSchema,
+            },
           },
-        },
-      });
+        });
+      } catch (error) {
+        console.error(error);
+      }
     })
   );
 };
