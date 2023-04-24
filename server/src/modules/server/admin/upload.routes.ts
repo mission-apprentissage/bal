@@ -10,7 +10,7 @@ import {
 } from "shared/routes/upload.routes";
 import { PassThrough } from "stream";
 
-import { FILE_SIZE_LIMIT } from "../../../../../shared/constants";
+import { FILE_SIZE_LIMIT } from "../../../../../shared/constants/index";
 import { clamav } from "../../../services";
 import * as crypto from "../../../utils/cryptoUtils";
 import logger from "../../../utils/logger";
