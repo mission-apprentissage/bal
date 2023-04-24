@@ -118,7 +118,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       }
 
       const fileSize = parseInt(request.headers["content-length"] ?? "0");
-      console.log(fileSize);
+
       const { _id: userId } = request.user as IUser;
       try {
         const document = await createDocument({
