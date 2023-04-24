@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/mission-apprentissage/bal/compare/v1.17.0...v1.18.0) (2023-04-24)
+
+
+### Features
+
+* api versioning ([#52](https://github.com/mission-apprentissage/bal/issues/52)) ([4ee5a5d](https://github.com/mission-apprentissage/bal/commit/4ee5a5dc84eeb8204fb6c1800c69d9afb51fc602))
+
 # [1.17.0](https://github.com/mission-apprentissage/bal/compare/v1.16.0...v1.17.0) (2023-04-24)
 
 
