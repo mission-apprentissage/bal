@@ -23,6 +23,12 @@ export const SPerson = {
     nom: { type: "string", description: "Le nom de la personne" },
     prenom: { type: "string", description: "Le prénom de la personne" },
     organisation_id: { type: "string" },
+    sirets: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
     updated_at: {
       type: "string",
       format: "date-time",

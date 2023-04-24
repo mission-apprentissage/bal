@@ -1,6 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
-const collectionName = "persons";
+const collectionName = "documentContents";
 
 const indexes = () => {
   return [[{ document_id: 1 }, { document_id: "document_id" }]];
