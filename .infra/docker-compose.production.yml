@@ -82,6 +82,7 @@ services:
       - MNA_BAL_AKTO_SCOPE={{ vault.MNA_BAL_AKTO_SCOPE }}
       - MNA_BAL_CLAMAV_URI=clamav:3310
       - MNA_BAL_OPCO_EP_GRANT_TYPE={{ vault[env_type].MNA_BAL_OPCO_EP_GRANT_TYPE }}
+      - MNA_BAL_OPCO_EP_AUTH_URL_BASE={{ vault[env_type].MNA_BAL_OPCO_EP_AUTH_URL_BASE }}
       - MNA_BAL_OPCO_EP_URL_BASE={{ vault[env_type].MNA_BAL_OPCO_EP_URL_BASE }}
       - MNA_BAL_OPCO_EP_CLIENT_ID={{ vault[env_type].MNA_BAL_OPCO_EP_CLIENT_ID }}
       - MNA_BAL_OPCO_EP_CLIENT_SECRET={{ vault[env_type].MNA_BAL_OPCO_EP_CLIENT_SECRET }}
