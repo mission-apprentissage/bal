@@ -36,7 +36,11 @@ export function build(opts: FastifyServerOptions = {}) {
     },
     transform: ({ schema, url }) => {
       const transformedSchema = { ...schema } as FastifySchema;
-      if (url.startsWith("/api/auth") || url.startsWith("/api/user"))
+      if (
+        url.startsWith("/api/auth") ||
+        url.startsWith("/api/user") ||
+        url.startsWith("/api/admin")
+      )
         transformedSchema.hide = true;
       return { schema: transformedSchema as JSONObject, url };
     },

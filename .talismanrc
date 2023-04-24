@@ -54,17 +54,21 @@ fileignoreconfig:
 - filename: .infra/scripts/vault/renew-vault.sh
   checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
 - filename: .infra/vault/vault.yml
-  checksum: 0df1c1e74fcbd5092f25144519ec4224216946344771766895dfb4d5ad9446cd
+  checksum: cde8a9e62c2819cc9f80364678cff28f627feabb705e9af0bda304903f7bc9bf
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
   checksum: 451afde847ac06703ffa04ea37b058d8522b60b94c891bf0979158dac5bc3610
 - filename: server/.env.test
-  checksum: 71f201b6106941e3ef9acfd0d65342dae8c3e2a3f9314756144edd0404a87793
+  checksum: 7d87327d57c06f974fbd0f8b2c426c10f75d62fd66f23c225389ebd9d0a28bf9
 - filename: server/config/config.ts
   checksum: c01f11442ce930e39f73301c1577efff14cbf93523b18fd3edd9726548374cc1
 - filename: server/src/app.ts
   checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
+- filename: server/src/modules/actions/organisation.actions.ts
+  checksum: 321ded7dbfda62fd68c7a3f8f7702b495204c618bb5cf347d1754273458488d1
+- filename: server/src/modules/actions/users.actions.ts
+  checksum: dec754c2aa978bc61d75d53a1d3f65c4ff49a9a0f37b6302532b1c343d9adb25
 - filename: server/src/modules/data/seed/seed-preview.ts
   checksum: c63289b52d6565490c1fd8176b68af4268602c9a0d5f31126647caf4ba354534
 - filename: server/src/modules/server/admin/upload.routes.ts
@@ -95,8 +99,6 @@ fileignoreconfig:
   checksum: cf217ab807836c31825bae1ee0dff9848f685c574b688c3427261fe065b749fc
 - filename: ui/app/politique-confidentialite/components/PolitiqueConfidentialite.tsx
   checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
-- filename: server/src/modules/actions/users.actions.ts
-  checksum: dec754c2aa978bc61d75d53a1d3f65c4ff49a9a0f37b6302532b1c343d9adb25
 scopeconfig:
 - scope: node
 custom_patterns:

@@ -72,6 +72,20 @@ export const config = {
     clientSecret: env.get("MNA_BAL_AKTO_CLIENT_SECRET").default("").asString(),
     scope: env.get("MNA_BAL_AKTO_SCOPE").default("").asString(),
   },
+  opcoEp: {
+    grantType: env.get("MNA_BAL_OPCO_EP_GRANT_TYPE").default("").asString(),
+    baseAuthUrl: env
+      .get("MNA_BAL_OPCO_EP_AUTH_URL_BASE")
+      .default("")
+      .asString(),
+    baseUrl: env.get("MNA_BAL_OPCO_EP_URL_BASE").default("").asString(),
+    clientId: env.get("MNA_BAL_OPCO_EP_CLIENT_ID").default("").asString(),
+    clientSecret: env
+      .get("MNA_BAL_OPCO_EP_CLIENT_SECRET")
+      .default("")
+      .asString(),
+    scope: env.get("MNA_BAL_OPCO_EP_SCOPE").default("").asString(),
+  },
   clamav: {
     uri: env.get("MNA_BAL_CLAMAV_URI").default("clamav:3310").asString(),
   },
