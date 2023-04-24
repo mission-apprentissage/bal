@@ -17,7 +17,7 @@ import { AxiosError } from "axios";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { FILE_SIZE_LIMIT } from "../../../../shared/constants";
+import { FILE_SIZE_LIMIT } from "../../../../shared/constants/index";
 import { IStatus } from "../../../../shared/routes/auth.routes";
 import { IResError } from "../../../../shared/routes/common.routes";
 import {

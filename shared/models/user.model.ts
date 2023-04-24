@@ -3,7 +3,7 @@ import { FromSchema } from "json-schema-to-ts";
 const collectionName = "users";
 
 const indexes = () => {
-  return [[{ name: 1 }, { name: "name" }]];
+  return [[{ email: 1 }, { unique: true }]];
 };
 
 export const SUser = {
