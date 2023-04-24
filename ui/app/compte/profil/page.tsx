@@ -39,7 +39,7 @@ const ProfilPage = () => {
         AxiosResponse<IResGetGenerateApiKey>
       >("/user/generate-api-key");
 
-      setApiKey(response.data.apiKey);
+      setApiKey(response.data.api_key);
     } catch (error) {
       console.error(error);
       toast({

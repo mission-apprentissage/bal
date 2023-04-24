@@ -61,7 +61,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
           >
             Mon compte
           </MenuItem>
-          {user.isAdmin && (
+          {user.is_admin && (
             <MenuGroup title="Administration">
               <MenuItem
                 href="/admin/import"

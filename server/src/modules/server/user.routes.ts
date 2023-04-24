@@ -24,9 +24,9 @@ export const userRoutes = ({ server }: { server: Server }) => {
           throw new Error("User not found");
         }
 
-        const key = await generateApiKey(request.user);
+        const api_key = await generateApiKey(request.user);
 
-        return response.status(200).send({ apiKey: key });
+        return response.status(200).send({ api_key });
       } catch (error) {
         response.log.error(error);
       }

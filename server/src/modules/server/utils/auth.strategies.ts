@@ -30,11 +30,11 @@ export const authValidateJWT: FastifyAuthFunction = async (request, _reply) => {
   }
 
   try {
-    const { _id, apiKey } = decodeToken(token) as JwtPayload;
+    const { _id, api_key } = decodeToken(token) as JwtPayload;
 
     const user = await findUser({ _id: new ObjectId(_id) });
 
-    if (!user || !compareKeys(user.apiKey, apiKey)) {
+    if (!user || !compareKeys(user.api_key, api_key)) {
       throw new Error("Jeton invalide");
     }
 

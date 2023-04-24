@@ -28,7 +28,7 @@ program
   .action(async ({ email, password, admin = false }) =>
     runScript(async () => {
       try {
-        await createUser({ email, password, isAdmin: admin });
+        await createUser({ email, password, is_admin: admin });
         process.exit(0);
       } catch (error) {
         console.error(error);
