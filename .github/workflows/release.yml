@@ -40,7 +40,7 @@ jobs:
           password: ${{ secrets.GH_FG_TOKEN }}
 
       - name: Run yarn Install
-        run: yarn install
+        run: yarn install &> /dev/null
 
       - name: bump and release
         run: yarn app:release

@@ -14,7 +14,6 @@ export const userRoutes = ({ server }: { server: Server }) => {
         response: { 200: SResGetGenerateApiKey },
       } as const,
       preHandler: server.auth([
-        server.validateJWT,
         server.validateSession,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ]) as any,
