@@ -43,8 +43,13 @@ const getToken = async (token = {}) => {
       ...response.data,
       expire: dayjs().add(response.data.expires_in - 10, "s"),
     };
-  } catch (error) {
-    return error;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    throw new ApiError(
+      "Api Opco Ep token",
+      error.message,
+      error.code || error.response?.status
+    );
   }
 };
 
