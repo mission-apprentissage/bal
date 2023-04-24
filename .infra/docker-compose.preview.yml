@@ -64,12 +64,10 @@ services:
       - bal_network
 
   clamav:
-    image: clamav/clamav:0.105.1
+    image: clamav/clamav:latest
     container_name: bal_clamav
     mem_limit: 2g
     restart: unless-stopped
-    ports:
-      - 3310:3310
     networks:
       - bal_network
     healthcheck:
