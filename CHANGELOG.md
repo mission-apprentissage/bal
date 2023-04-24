@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/mission-apprentissage/bal/compare/v1.14.0...v1.15.0) (2023-04-24)
+
+
+### Features
+
+* add back file upload ([#45](https://github.com/mission-apprentissage/bal/issues/45)) ([7c57336](https://github.com/mission-apprentissage/bal/commit/7c5733614628b585fa2c202d4275d359538354ec))
+
 # [1.14.0](https://github.com/mission-apprentissage/bal/compare/v1.13.0...v1.14.0) (2023-04-18)
 
 
