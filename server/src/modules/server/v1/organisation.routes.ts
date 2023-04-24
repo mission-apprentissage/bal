@@ -2,10 +2,10 @@ import {
   SReqHeadersOrganisation,
   SReqPostOrganisationValidation,
   SResPostOrganisationValidation,
-} from "shared/routes/organisation.routes";
+} from "shared/routes/v1/organisation.routes";
 
-import { validation } from "../actions/organisation.actions";
-import { Server } from ".";
+import { validation } from "../../actions/organisation.actions";
+import { Server } from "..";
 
 export const organisationRoutes = ({ server }: { server: Server }) => {
   server.post(
