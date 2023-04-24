@@ -15,7 +15,7 @@ import { clamav } from "../../../services";
 import * as crypto from "../../../utils/cryptoUtils";
 import logger from "../../../utils/logger";
 import { deleteFromStorage, uploadToStorage } from "../../../utils/ovhUtils";
-import { createDocument } from "../../actions/uploads.actions";
+import { createDocument } from "../../actions/documents.actions";
 import { Server } from "..";
 
 const testMode = process.env.MNA_BAL_ENV === "test";

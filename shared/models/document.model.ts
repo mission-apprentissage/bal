@@ -1,12 +1,12 @@
 import { FromSchema } from "json-schema-to-ts";
 
-const collectionName = "uploads";
+const collectionName = "documents";
 
 const indexes = () => {
   return [];
 };
 
-export const SUpload = {
+export const SDocument = {
   type: "object",
   properties: {
     _id: {
@@ -73,9 +73,9 @@ export const SUpload = {
   ],
 } as const;
 
-export interface IUpload
+export interface IDocument
   extends FromSchema<
-    typeof SUpload,
+    typeof SDocument,
     {
       deserialize: [
         {
@@ -89,4 +89,4 @@ export interface IUpload
     }
   > {}
 
-export default { schema: SUpload, indexes, collectionName };
+export default { schema: SDocument, indexes, collectionName };
