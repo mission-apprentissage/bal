@@ -17,6 +17,7 @@ export const validation = async ({
   siret: string;
 }): Promise<IResOrganisationValidation> => {
   if (isBlackListedDomains(email)) {
+    // TODO TO MOVE AFTER (sepcial cases : toto@gmail.com fait bien parti de l'roganisation XXX)
     return {
       is_valid: false,
     };
@@ -35,7 +36,18 @@ export const validation = async ({
   }
 
   const testOpcoEp = await getOpcoEpVerification(siret, email);
-  console.log(testOpcoEp);
+  if (testOpcoEp.codeRetour === 1) {
+    return {
+      is_valid: true,
+      on: "email",
+    };
+  }
+  if (testOpcoEp.codeRetour === 2) {
+    return {
+      is_valid: true,
+      on: "domain",
+    };
+  }
   //   1-	SIRET et courriel connus
   // {
   //     "codeRetour": 1,
@@ -59,11 +71,6 @@ export const validation = async ({
   //     "codeRetour": 4,
   //     "detailRetour": "Siret inconnu"
   // }
-
-  // return {
-  //   is_valid: true,
-  //   on: "domain"
-  // };
 
   return {
     is_valid: false,
