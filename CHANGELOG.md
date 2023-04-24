@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/mission-apprentissage/bal/compare/v1.15.0...v1.16.0) (2023-04-24)
+
+
+### Features
+
+* improve api key ([#48](https://github.com/mission-apprentissage/bal/issues/48)) ([1679cc4](https://github.com/mission-apprentissage/bal/commit/1679cc41e7dca35ee42037e1f77d4288be35cdf7))
+
 # [1.15.0](https://github.com/mission-apprentissage/bal/compare/v1.14.0...v1.15.0) (2023-04-24)
 
 
