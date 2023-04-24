@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/mission-apprentissage/bal/compare/v1.16.0...v1.17.0) (2023-04-24)
+
+
+### Features
+
+* add opcoEp varification api  ([#50](https://github.com/mission-apprentissage/bal/issues/50)) ([673ca0f](https://github.com/mission-apprentissage/bal/commit/673ca0f22396dea7a566aeb98405ca711e4f600d))
+
 # [1.16.0](https://github.com/mission-apprentissage/bal/compare/v1.15.0...v1.16.0) (2023-04-24)
 
 
