@@ -95,6 +95,8 @@ fileignoreconfig:
   checksum: cf217ab807836c31825bae1ee0dff9848f685c574b688c3427261fe065b749fc
 - filename: ui/app/politique-confidentialite/components/PolitiqueConfidentialite.tsx
   checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
+- filename: server/src/modules/actions/users.actions.ts
+  checksum: dec754c2aa978bc61d75d53a1d3f65c4ff49a9a0f37b6302532b1c343d9adb25
 scopeconfig:
 - scope: node
 custom_patterns:
@@ -107,4 +109,5 @@ allowed_patterns:
 - Password
 - pass
 - apiKey
+- ApiKey
 version: "1.0"

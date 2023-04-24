@@ -13,6 +13,7 @@ import { userAdminRoutes } from "./admin/user.routes";
 import { authRoutes } from "./auth.routes";
 import { coreRoutes } from "./core.routes";
 import { organisationRoutes } from "./organisation.routes";
+import { userRoutes } from "./user.routes";
 import { authValidateJWT, authValidateSession } from "./utils/auth.strategies";
 
 type FastifyServer = typeof server;
@@ -82,6 +83,7 @@ export const server = build({
 export const registerRoutes = ({ server }: { server: Server }) => {
   coreRoutes({ server });
   authRoutes({ server });
+  userRoutes({ server });
   organisationRoutes({ server });
 
   userAdminRoutes({ server });

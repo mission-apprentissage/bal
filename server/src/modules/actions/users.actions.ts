@@ -1,7 +1,8 @@
 import { Filter, FindOptions, ObjectId } from "mongodb";
 import { IUser } from "shared/models/user.model";
 
-import { createUserToken } from "../../utils/jwtUtils";
+import { generateKey, generateSecretHash } from "../../utils/cryptoUtils";
+import { createUserToken, createUserTokenSimple } from "../../utils/jwtUtils";
 import { getDbCollection } from "../../utils/mongodb";
 import { hashPassword } from "../server/utils/password.utils";
 
@@ -47,4 +48,15 @@ export const updateUser = async (user: IUser, data: Partial<IUser>) => {
       $set: data,
     }
   );
+};
+
+export const generateApiKey = async (user: IUser) => {
+  const apiKey = generateKey();
+  const secretHash = generateSecretHash(apiKey);
+
+  await updateUser(user, { apiKey: secretHash });
+
+  const token = createUserTokenSimple({ payload: { _id: user._id, apiKey } });
+
+  return token;
 };

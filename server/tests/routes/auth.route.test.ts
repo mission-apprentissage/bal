@@ -35,7 +35,7 @@ describe("Authentication", () => {
     assert.equal(response.json()._id, user?._id);
     assert.equal(response.json().email, user?.email);
     assert.equal(response.json().password, undefined);
-    assert.ok(response.json().apiKey);
+    assert.equal(response.json().apiKey, undefined);
   });
 
   it("should not sign user in with invalid credentials", async () => {
@@ -102,7 +102,7 @@ describe("Authentication", () => {
     assert.equal(response.json()._id, user?._id);
     assert.equal(response.json().email, user?.email);
     assert.equal(response.json().password, undefined);
-    assert.ok(response.json().apiKey);
+    assert.equal(response.json().apiKey, undefined);
   });
 
   it("should not identify user using session and delete in database after signing out", async () => {

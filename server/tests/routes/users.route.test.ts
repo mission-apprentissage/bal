@@ -1,22 +1,30 @@
 import assert from "node:assert";
 
-import { createUser, findUser } from "../../src/modules/actions/users.actions";
+import { IUser } from "shared/models/user.model";
+
+import {
+  createUser,
+  findUser,
+  generateApiKey,
+} from "../../src/modules/actions/users.actions";
 import { build } from "../../src/modules/server";
 
 const app = build();
 
 describe("Users routes", () => {
   it("should get the current user with authorization token", async () => {
-    const user = await createUser({
+    const user = (await createUser({
       email: "connected@exemple.fr",
       password: "my-password",
-    });
+    })) as IUser;
+
+    const token = await generateApiKey(user);
 
     const response = await app.inject({
       method: "GET",
       url: "/api/auth/session",
       headers: {
-        ["Authorization"]: `Bearer ${user?.apiKey}`,
+        ["Authorization"]: `Bearer ${token}`,
       },
     });
 
@@ -24,6 +32,7 @@ describe("Users routes", () => {
     assert.equal(response.json()._id, user?._id);
     assert.equal(response.json().email, "connected@exemple.fr");
     assert.equal(response.json().password, undefined);
+    assert.equal(response.json().apiKey, undefined);
   });
 
   it("should create a user", async () => {
