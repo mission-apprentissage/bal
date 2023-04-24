@@ -12,9 +12,9 @@ import { uploadAdminRoutes } from "./admin/upload.routes";
 import { userAdminRoutes } from "./admin/user.routes";
 import { authRoutes } from "./auth.routes";
 import { coreRoutes } from "./core.routes";
-import { organisationRoutes } from "./organisation.routes";
 import { userRoutes } from "./user.routes";
 import { authValidateJWT, authValidateSession } from "./utils/auth.strategies";
+import { organisationRoutes } from "./v1/organisation.routes";
 
 type FastifyServer = typeof server;
 export interface Server extends FastifyServer {
@@ -70,6 +70,12 @@ export function build(opts: FastifyServerOptions = {}) {
     },
     { prefix: "/api" }
   );
+  app.register(
+    async (instance) => {
+      registerV1Routes({ server: instance as Server });
+    },
+    { prefix: "/api/v1" }
+  );
 
   return app;
 }
@@ -84,12 +90,16 @@ export const server = build({
   },
 }).withTypeProvider<JsonSchemaToTsProvider>();
 
-export const registerRoutes = ({ server }: { server: Server }) => {
+type RegisterRoutes = (opts: { server: Server }) => void;
+
+export const registerRoutes: RegisterRoutes = ({ server }) => {
   coreRoutes({ server });
   authRoutes({ server });
   userRoutes({ server });
-  organisationRoutes({ server });
-
   userAdminRoutes({ server });
   uploadAdminRoutes({ server });
+};
+
+export const registerV1Routes: RegisterRoutes = ({ server }) => {
+  organisationRoutes({ server });
 };

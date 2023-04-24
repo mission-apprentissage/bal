@@ -1,5 +1,5 @@
 import companyEmailValidator from "company-email-validator";
-import { IResOrganisationValidation } from "shared/routes/organisation.routes";
+import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
 import { getAktoVerification } from "../apis/akto";
 import { getOpcoEpVerification } from "../apis/opcoEp";
