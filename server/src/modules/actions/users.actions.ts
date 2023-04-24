@@ -2,26 +2,24 @@ import { Filter, FindOptions, ObjectId } from "mongodb";
 import { IUser } from "shared/models/user.model";
 
 import { generateKey, generateSecretHash } from "../../utils/cryptoUtils";
-import { createUserToken, createUserTokenSimple } from "../../utils/jwtUtils";
+import { createUserTokenSimple } from "../../utils/jwtUtils";
 import { getDbCollection } from "../../utils/mongodb";
 import { hashPassword } from "../server/utils/password.utils";
 
 type ICreateUser = {
   email: string;
   password: string;
-  isAdmin?: boolean;
+  is_admin?: boolean;
 };
 
 export const createUser = async (data: ICreateUser) => {
   const _id = new ObjectId();
-  const apiKey = createUserToken({ ...data, _id: _id.toString() });
 
   const password = hashPassword(data.password);
 
   const { insertedId: userId } = await getDbCollection("users").insertOne({
     ...data,
     _id,
-    apiKey,
     password,
   });
 
@@ -51,12 +49,14 @@ export const updateUser = async (user: IUser, data: Partial<IUser>) => {
 };
 
 export const generateApiKey = async (user: IUser) => {
-  const apiKey = generateKey();
-  const secretHash = generateSecretHash(apiKey);
+  const generatedKey = generateKey();
+  const secretHash = generateSecretHash(generatedKey);
 
-  await updateUser(user, { apiKey: secretHash });
+  await updateUser(user, { api_key: secretHash });
 
-  const token = createUserTokenSimple({ payload: { _id: user._id, apiKey } });
+  const token = createUserTokenSimple({
+    payload: { _id: user._id, api_key: generatedKey },
+  });
 
   return token;
 };

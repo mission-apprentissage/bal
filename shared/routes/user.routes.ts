@@ -16,7 +16,7 @@ export const SResGetUser = {
   properties: {
     _id: { type: "string" },
     email: { type: "string" },
-    isAdmin: { type: "boolean" },
+    is_admin: { type: "boolean" },
   },
   required: ["email"],
   additionalProperties: false,
@@ -37,9 +37,9 @@ export const SReqHeadersUser = {
 export const SResGetGenerateApiKey = {
   type: "object",
   properties: {
-    apiKey: { type: "string" },
+    api_key: { type: "string" },
   },
-  required: ["apiKey"],
+  required: ["api_key"],
   additionalProperties: false,
 } as const;
 

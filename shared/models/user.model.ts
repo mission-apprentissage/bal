@@ -12,10 +12,10 @@ export const SUser = {
     _id: { type: "string" },
     email: { type: "string" },
     password: { type: "string" },
-    isAdmin: { type: "boolean" },
-    apiKey: { type: "string" },
+    is_admin: { type: "boolean" },
+    api_key: { type: "string" },
   },
-  required: ["_id", "email", "password", "apiKey"],
+  required: ["_id", "email", "password"],
 } as const;
 
 export interface IUser extends FromSchema<typeof SUser> {}

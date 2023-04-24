@@ -5,7 +5,7 @@ import { config } from "../../config/config";
 interface ICreateUserToken {
   _id: string;
   email: string;
-  isAdmin?: boolean;
+  is_admin?: boolean;
 }
 interface ICreateTokenOptions {
   secret?: string;
@@ -59,7 +59,7 @@ export const createUserToken = (
 ) => {
   const payload = {
     id: user._id,
-    isAdmin: user.isAdmin,
+    is_admin: user.is_admin,
   };
   return createToken("user", user.email, { payload, ...options });
 };

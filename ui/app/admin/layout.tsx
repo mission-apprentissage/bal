@@ -8,7 +8,7 @@ const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
   const { user } = useAuth();
   const { push } = useRouter();
 
-  if (!user?.isAdmin) {
+  if (!user?.is_admin) {
     push("/auth/connexion");
     return null;
   }

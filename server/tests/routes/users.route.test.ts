@@ -32,7 +32,7 @@ describe("Users routes", () => {
     assert.equal(response.json()._id, user?._id);
     assert.equal(response.json().email, "connected@exemple.fr");
     assert.equal(response.json().password, undefined);
-    assert.equal(response.json().apiKey, undefined);
+    assert.equal(response.json().api_key, undefined);
   });
 
   it("should create a user", async () => {
