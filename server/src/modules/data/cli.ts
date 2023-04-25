@@ -7,7 +7,7 @@ import {
   connectToMongodb,
 } from "../../utils/mongodb";
 import { createUser } from "../actions/users.actions";
-import { seedPreview } from "./seed/seed-preview";
+import { seedTest } from "./seed/seedTest";
 const program = new Command();
 
 type IJob = () => Promise<void>;
@@ -38,12 +38,12 @@ program
   );
 
 program
-  .command("seed:preview")
-  .description("Seed preview env")
+  .command("seed:test")
+  .description("Seed test env")
   .action(async () =>
     runScript(async () => {
       try {
-        await seedPreview();
+        await seedTest();
         process.exit(0);
       } catch (error) {
         console.error(error);
