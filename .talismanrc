@@ -40,7 +40,7 @@ fileignoreconfig:
 - filename: .infra/docker-compose.production.yml
   checksum: b3d9a440fadecad833eeaeeebe30c81429cd6f267eddb6e796a0e65985510928
 - filename: .infra/docker-compose.recette.yml
-  checksum: 5bd4ee3a7e8b0fe77d2ac12d0a6129b78f1ea1f6e08e72cd4a2e3db13b046bc2
+  checksum: 167c236977d05715c63e66fdc0c3438735b1f83c375248c1e0dcf37f297535b7
 - filename: .infra/env.ini
   checksum: 5520677b7d08ed863981b5e7484d46ebb67a6d8c069ef453b55525c2944dcaa4
 - filename: .infra/scripts/deploy-app.sh
