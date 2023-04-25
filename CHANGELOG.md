@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/mission-apprentissage/bal/compare/v1.20.0...v1.21.0) (2023-04-25)
+
+
+### Features
+
+* deca handler ([#58](https://github.com/mission-apprentissage/bal/issues/58)) ([899b77e](https://github.com/mission-apprentissage/bal/commit/899b77ec4ab627432ef64617901803a1e8849fe9))
+
 # [1.20.0](https://github.com/mission-apprentissage/bal/compare/v1.19.0...v1.20.0) (2023-04-25)
 
 
