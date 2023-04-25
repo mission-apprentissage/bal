@@ -1,3 +1,5 @@
+import { IncomingMessage } from "node:http";
+
 import https from "https";
 import { parse as parseUrl } from "url";
 
@@ -7,7 +9,7 @@ export async function createRequestStream(
   url: string,
   httpOptions: https.RequestOptions = {}
 ) {
-  return new Promise((resolve, reject) => {
+  return new Promise<IncomingMessage>((resolve, reject) => {
     const options = {
       ...parseUrl(url),
       method: "GET",

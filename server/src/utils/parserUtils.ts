@@ -4,7 +4,11 @@ import XLSX from "xlsx";
 
 const readXLSXData = (
   data: unknown,
-  readOpt = { codepage: 65001, cellDates: true, dateNF: "dd/MM/yyyy" }
+  readOpt: XLSX.ParsingOptions = {
+    codepage: 65001,
+    cellDates: true,
+    dateNF: "dd/MM/yyyy",
+  }
 ) => {
   const workbook = XLSX.read(data, readOpt);
   return { sheet_name_list: workbook.SheetNames, workbook };
@@ -12,8 +16,8 @@ const readXLSXData = (
 
 export const getJsonFromXlsxData = (
   data: unknown,
-  opt: { raw: boolean } = { raw: false },
-  readOpt: { codepage: number; cellDates: boolean; dateNF: string } = {
+  opt: XLSX.Sheet2JSONOpts = { raw: false },
+  readOpt: XLSX.ParsingOptions = {
     codepage: 65001,
     cellDates: true,
     dateNF: "dd/MM/yyyy",
@@ -35,7 +39,7 @@ export const getJsonFromCsvFile = (fileInputName: string, delimiter = ";") => {
   return csvToJson.getJsonFromCsv(fileInputName);
 };
 
-export const getJsonFromCsvData = (data: string, delimiter = ";") => {
+export const getJsonFromCsvData = <T>(data: string, delimiter = ";"): T[] => {
   csvToJson.fieldDelimiter(delimiter);
   return csvToJson.latin1Encoding().csvStringToJson(data);
 };

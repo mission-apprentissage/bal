@@ -11,7 +11,7 @@ export const SDocumentContent = {
   properties: {
     _id: { type: "string" },
     document_id: { type: "string" },
-    content_line: {
+    content: {
       type: "object",
     },
     updated_at: {

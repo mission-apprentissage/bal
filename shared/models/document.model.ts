@@ -67,6 +67,7 @@ export const SDocument = {
     "nom_fichier",
     "chemin_fichier",
     "taille_fichier",
+    "hash_secret",
     "hash_fichier",
     "added_by",
     "created_at",
