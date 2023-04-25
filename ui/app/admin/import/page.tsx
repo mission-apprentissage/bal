@@ -21,8 +21,8 @@ import { FILE_SIZE_LIMIT } from "../../../../shared/constants/index";
 import { IStatus } from "../../../../shared/routes/auth.routes";
 import { IResError } from "../../../../shared/routes/common.routes";
 import {
+  DOCUMENT_TYPES,
   IReqQueryPostAdminUpload,
-  UPLOAD_TYPES,
 } from "../../../../shared/routes/upload.routes";
 import { AlertRounded } from "../../../theme/icons/AlertRounded";
 import { api } from "../../../utils/api.utils";
@@ -90,11 +90,11 @@ const AdminImportPage = () => {
                   {...register("type_document", {
                     required: "Obligatoire",
                     validate: (value) => {
-                      return value && UPLOAD_TYPES.includes(value);
+                      return value && DOCUMENT_TYPES.includes(value);
                     },
                   })}
                 >
-                  {UPLOAD_TYPES.map((type) => (
+                  {DOCUMENT_TYPES.map((type) => (
                     <option key={type}>{type}</option>
                   ))}
                 </Select>

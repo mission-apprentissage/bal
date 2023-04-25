@@ -1,5 +1,5 @@
+import documentsModelDescriptor from "shared/models/document.model";
 import sessionsModelDescriptor from "shared/models/session.model";
-import uploadsModelDescriptor from "shared/models/uploads.model";
 import usersModelDescriptor from "shared/models/user.model";
 
 export interface IModelDescriptor {
@@ -11,5 +11,5 @@ export interface IModelDescriptor {
 export const modelDescriptors: IModelDescriptor[] = [
   usersModelDescriptor,
   sessionsModelDescriptor,
-  uploadsModelDescriptor,
+  documentsModelDescriptor,
 ];

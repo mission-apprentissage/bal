@@ -1,15 +1,13 @@
 import { FromSchema } from "json-schema-to-ts";
 
-import { IUpload } from "../models/uploads.model";
-
-export const UPLOAD_TYPES = ["DECA", "other"];
+export const DOCUMENT_TYPES = ["DECA", "other"];
 
 export const SReqQueryPostAdminUpload = {
   type: "object",
   properties: {
     type_document: {
       type: "string",
-      enum: UPLOAD_TYPES,
+      enum: DOCUMENT_TYPES,
     },
   },
   required: ["type"],
@@ -67,4 +65,4 @@ export const SResPostAdminUpload = {
   additionalProperties: false,
 } as const;
 
-export type IResPostAdminUpload = IUpload;
+export type IResPostAdminUpload = FromSchema<typeof SResPostAdminUpload>;
