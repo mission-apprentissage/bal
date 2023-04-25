@@ -64,6 +64,8 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       ]) as any,
     },
     async (request, response) => {
+      const { type_document } = request.query;
+
       const data = await request.file({
         limits: {
           fileSize: FILE_SIZE_LIMIT,
@@ -120,7 +122,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       try {
         const document = await createDocument({
           _id: documentId,
-          type_document: request.query.type_document,
+          type_document,
           ext_fichier: data.filename.split(".").pop(),
           nom_fichier: data.filename,
           chemin_fichier: path,

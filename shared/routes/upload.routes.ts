@@ -10,7 +10,7 @@ export const SReqQueryPostAdminUpload = {
       enum: DOCUMENT_TYPES,
     },
   },
-  required: ["type"],
+  required: ["type_document"],
 } as const;
 
 export type IReqQueryPostAdminUpload = FromSchema<
