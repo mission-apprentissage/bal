@@ -11,8 +11,8 @@ function main() {
   env_ip="$(grep "\[${ENV_NAME}\]" -A 1 "${INFRA_DIR}/env.ini" | tail -1)"
 
   cd "${MODULE_DIR}"
-  yarn --silent install
-  yarn --silent cli createFirewall "${env_ip}" "$@"
+  yarn install
+  yarn cli createFirewall "${env_ip}" "$@"
   cd - >/dev/null
 }
 
