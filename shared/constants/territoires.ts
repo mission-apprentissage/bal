@@ -101,10 +101,11 @@ export const REGIONS = [
   },
 ];
 
-export const REGIONS_BY_ID = REGIONS.reduce((acc: any, region) => {
+export const REGIONS_BY_ID = REGIONS.reduce((acc, region) => {
   acc[region.code] = region;
   return acc;
-}, {});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+}, {} as any);
 
 export const DEPARTEMENTS = [
   {
@@ -1521,13 +1522,11 @@ export const DEPARTEMENTS = [
   },
 ];
 
-export const DEPARTEMENTS_BY_ID = DEPARTEMENTS.reduce(
-  (acc: any, departement) => {
-    acc[departement.code] = departement;
-    return acc;
-  },
-  {}
-);
+export const DEPARTEMENTS_BY_ID = DEPARTEMENTS.reduce((acc, departement) => {
+  acc[departement.code] = departement;
+  return acc;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+}, {} as any);
 
 /**
  * TODO Rationaliser / construire le référentiel des académies
@@ -1568,6 +1567,7 @@ export const ACADEMIES = {
 };
 
 export const ACADEMIES_BY_ID = Object.values(ACADEMIES).reduce(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (acc: any, academie) => {
     acc[academie.code] = academie;
     return acc;

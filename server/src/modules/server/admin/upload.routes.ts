@@ -8,21 +8,18 @@ import {
   SReqQueryPostAdminUpload,
   SResPostAdminUpload,
 } from "shared/routes/upload.routes";
-import { PassThrough } from "stream";
 
 import { FILE_SIZE_LIMIT } from "../../../../../shared/constants/index";
 import { clamav } from "../../../services";
 import * as crypto from "../../../utils/cryptoUtils";
 import logger from "../../../utils/logger";
 import { deleteFromStorage, uploadToStorage } from "../../../utils/ovhUtils";
+import { handleDecaFileContent } from "../../actions/deca.actions";
 import { createDocument } from "../../actions/documents.actions";
 import { Server } from "..";
+import { noop } from "../utils/upload.utils";
 
 const testMode = process.env.MNA_BAL_ENV === "test";
-
-function noop() {
-  return new PassThrough();
-}
 
 const validateFile = (file: MultipartFile) => {
   if (
@@ -67,6 +64,8 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       ]) as any,
     },
     async (request, response) => {
+      const { type_document } = request.query;
+
       const data = await request.file({
         limits: {
           fileSize: FILE_SIZE_LIMIT,
@@ -123,7 +122,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       try {
         const document = await createDocument({
           _id: documentId,
-          type_document: request.query.type_document,
+          type_document,
           ext_fichier: data.filename.split(".").pop(),
           nom_fichier: data.filename,
           chemin_fichier: path,
@@ -142,6 +141,8 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
             message: "Impossible de stocker de le fichier",
           });
         }
+
+        await handleDecaFileContent(document);
 
         // @ts-ignore TODO: fix
         return response.status(200).send(document);

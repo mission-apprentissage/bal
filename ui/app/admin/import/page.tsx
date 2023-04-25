@@ -44,14 +44,17 @@ const AdminImportPage = () => {
     setValue,
   } = useForm<FormValues>();
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async ({
+    file,
+    type_document,
+  }) => {
     setIsSubmitting(true);
     try {
       const formData = new FormData();
-      formData.append("file", data.file);
+      formData.append("file", file);
 
       await api.post("/admin/upload", formData, {
-        params: { type: data.type_document },
+        params: { type_document },
       });
 
       setStatus({ error: false, message: "Fichier importé avec succès." });

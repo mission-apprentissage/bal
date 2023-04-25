@@ -4,7 +4,7 @@ fileignoreconfig:
 - filename: '*.route.test.ts'
   checksum: f0902a33ec3d28bad8dd85fcfff1bc5277c65d29798ea04c353b221c82a85df5
 - filename: '*.test.ts'
-  checksum: a25b36c117e32dc0806d2d15104cbf66e2dd0b85e89a544df22ca0adb857005b
+  checksum: 41e30c8e885eea871ce137395f2aa6e2d38363a0beef2517b82830c35778b081
 - filename: .github/workflows/_deploy.yml
   checksum: ede576e2f5dfef9b31e127aec3f757e5b7ad0c5f78214d796ad30da1c2f2e46a
 - filename: .github/workflows/preview.yml
@@ -81,6 +81,8 @@ fileignoreconfig:
   checksum: e3e123d712465ed963965b5fa36f8d7a15364bbc7107d9d15bef2cc670483d42
 - filename: server/src/utils/jwtUtils.ts
   checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
+- filename: server/tests/data/DECA_Extraction MIA-Fake.csv
+  checksum: 1c636fe39fedecc8e6bf1b08fe4db680f30c0b5d0cbebc4d8f8a7cc9c2e886ca
 - filename: ui/app/auth/connexion/page.tsx
   checksum: dc9ca3eb6ef33cfeb8f0f5f0e4e53df6aee43a876efa6fde450ab42effe64f94
 - filename: ui/app/auth/modifier-mot-de-passe/page.tsx
