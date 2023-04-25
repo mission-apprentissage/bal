@@ -7,7 +7,7 @@ import {
   connectToMongodb,
 } from "../../utils/mongodb";
 import { createUser } from "../actions/users.actions";
-import { seedTest } from "./seed/seedTest";
+import { seedTest } from "./seed/seed-test";
 const program = new Command();
 
 type IJob = () => Promise<void>;

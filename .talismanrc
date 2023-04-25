@@ -56,7 +56,7 @@ fileignoreconfig:
 - filename: .infra/scripts/vault/renew-vault.sh
   checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
 - filename: .infra/vault/vault.yml
-  checksum: 8f039bf353a171beff6a41d00f1e779a08c0633dfc39a723af2209a7ce7488d5
+  checksum: 068ba7407e1f382cad54176f2307073f403ce45f1c7892aee3afd76bb5a21dd4
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
