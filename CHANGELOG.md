@@ -1,3 +1,11 @@
+# [1.20.0](https://github.com/mission-apprentissage/bal/compare/v1.19.0...v1.20.0) (2023-04-25)
+
+
+### Features
+
+* **ui:** confirmation message upload ([#55](https://github.com/mission-apprentissage/bal/issues/55)) ([c721af4](https://github.com/mission-apprentissage/bal/commit/c721af43ed259606c3b05fc25ac133d47c5f694a))
+* upload -> document ([#57](https://github.com/mission-apprentissage/bal/issues/57)) ([e79ec6f](https://github.com/mission-apprentissage/bal/commit/e79ec6f6c0fb97a51aeca56a0c4b3f17e1d7c329))
+
 # [1.19.0](https://github.com/mission-apprentissage/bal/compare/v1.18.1...v1.19.0) (2023-04-24)
 
 
