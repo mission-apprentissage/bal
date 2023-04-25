@@ -1,3 +1,10 @@
+# [1.22.0](https://github.com/mission-apprentissage/bal/compare/v1.21.0...v1.22.0) (2023-04-25)
+
+
+### Features
+
+* add recette ([#62](https://github.com/mission-apprentissage/bal/issues/62)) ([1ac5da4](https://github.com/mission-apprentissage/bal/commit/1ac5da41c40db7da1121aa4863c77938e72c8d81))
+
 # [1.21.0](https://github.com/mission-apprentissage/bal/compare/v1.20.0...v1.21.0) (2023-04-25)
 
 
