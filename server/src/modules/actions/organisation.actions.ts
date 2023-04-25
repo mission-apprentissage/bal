@@ -1,12 +1,8 @@
-import companyEmailValidator from "company-email-validator";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
 import { getAktoVerification } from "../apis/akto";
 import { getOpcoEpVerification } from "../apis/opcoEp";
-
-const isBlackListedDomains = (email: string) => {
-  return !companyEmailValidator.isCompanyEmail(email);
-};
+import { getDecaVerification } from "./deca.actions";
 
 // TODO WIP
 export const validation = async ({
@@ -16,14 +12,11 @@ export const validation = async ({
   email: string;
   siret: string;
 }): Promise<IResOrganisationValidation> => {
-  if (isBlackListedDomains(email)) {
-    // TODO TO MOVE AFTER (sepcial cases : toto@gmail.com fait bien parti de l'roganisation XXX)
-    return {
-      is_valid: false,
-    };
-  }
+  const testDeca = getDecaVerification(siret, email);
 
-  // const [user,domain] = email.split('@');
+  if (testDeca) {
+    return testDeca;
+  }
 
   const siren = siret.substring(0, 9);
 
