@@ -81,6 +81,8 @@ fileignoreconfig:
   checksum: e3e123d712465ed963965b5fa36f8d7a15364bbc7107d9d15bef2cc670483d42
 - filename: server/src/utils/jwtUtils.ts
   checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
+- filename: server/tests/data/DECA_Extraction MIA-Fake.csv
+  checksum: c9139a508a569085778e9fdf3886cd53800d0de4fc3d0ccddafe42cdef768f9e
 - filename: ui/app/auth/connexion/page.tsx
   checksum: dc9ca3eb6ef33cfeb8f0f5f0e4e53df6aee43a876efa6fde450ab42effe64f94
 - filename: ui/app/auth/modifier-mot-de-passe/page.tsx
