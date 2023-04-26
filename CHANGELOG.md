@@ -1,3 +1,10 @@
+## [1.24.1](https://github.com/mission-apprentissage/bal/compare/v1.24.0...v1.24.1) (2023-04-26)
+
+
+### Bug Fixes
+
+* **ui:** metadata ([#69](https://github.com/mission-apprentissage/bal/issues/69)) ([c11edcc](https://github.com/mission-apprentissage/bal/commit/c11edcc21ed22d947154f61e29e024a55e21d7fc))
+
 # [1.24.0](https://github.com/mission-apprentissage/bal/compare/v1.23.0...v1.24.0) (2023-04-26)
 
 
