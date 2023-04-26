@@ -64,6 +64,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
           {user.is_admin && (
             <MenuGroup title="Administration">
               <MenuItem
+                data-id="menuitem:importfile"
                 href="/admin/import"
                 as={NavLink}
                 icon={<Settings boxSize={4} color="bluefrance.main" />}

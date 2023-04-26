@@ -5,3 +5,4 @@ dist
 build
 .infra
 release.config.js
+cypress
