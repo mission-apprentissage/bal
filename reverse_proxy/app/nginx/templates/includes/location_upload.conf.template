@@ -1,5 +1,5 @@
 location /api/admin/upload {
-    client_max_body_size    10M;
+    client_max_body_size    30M;
     set $upstream http://server:5000;
     include includes/proxy.conf;
 }
