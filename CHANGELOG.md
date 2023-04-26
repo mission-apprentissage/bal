@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/mission-apprentissage/bal/compare/v1.23.0...v1.24.0) (2023-04-26)
+
+
+### Features
+
+* add base cypress with chrome recorder ([#68](https://github.com/mission-apprentissage/bal/issues/68)) ([59d3ca7](https://github.com/mission-apprentissage/bal/commit/59d3ca781c6cc6e2809a44292a0b3878bb19d869))
+
 # [1.23.0](https://github.com/mission-apprentissage/bal/compare/v1.22.0...v1.23.0) (2023-04-26)
 
 
