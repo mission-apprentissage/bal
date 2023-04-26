@@ -17,6 +17,7 @@ export const SResGetUser = {
     _id: { type: "string" },
     email: { type: "string" },
     is_admin: { type: "boolean" },
+    api_key_used_at: { type: "string", format: "date-time" },
   },
   required: ["email"],
   additionalProperties: false,
