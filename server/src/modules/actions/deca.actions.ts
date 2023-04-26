@@ -1,14 +1,19 @@
+import companyEmailValidator from "company-email-validator";
 // @ts-ignore
 import { accumulateData, oleoduc, writeData } from "oleoduc";
 import { SIRET_REGEX } from "shared/constants";
 import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
+import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
 import * as crypto from "../../utils/cryptoUtils";
 import { getFromStorage } from "../../utils/ovhUtils";
 import { getJsonFromCsvData } from "../../utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
-import { createDocumentContent } from "./documentContent.actions";
+import {
+  createDocumentContent,
+  findDocumentContent,
+} from "./documentContent.actions";
 
 interface ContentLine {
   SIRET: string;
@@ -87,4 +92,72 @@ export const handleDecaFileContent = async (document: IDocument) => {
   // Create or update person
 
   return documentContents;
+};
+
+export const getDecaVerification = async (
+  siret: string,
+  email: string
+): Promise<IResOrganisationValidation> => {
+  let is_valid = false;
+  const isBlacklisted = !companyEmailValidator.isCompanyEmail(email);
+  const [_user, domain] = email.split("@");
+  const siren = siret.substring(0, 9);
+
+  // check siret / email
+  is_valid = !!(await findDocumentContent({
+    "content.siret": siret,
+    "content.emails": email,
+  }));
+
+  if (is_valid) {
+    return {
+      is_valid: true,
+      on: "email",
+    };
+  }
+
+  // check siret / domain
+  if (!isBlacklisted) {
+    is_valid = !!(await findDocumentContent({
+      "content.siret": siret,
+      "content.emails": { $regex: `.*@${domain}` },
+    }));
+
+    if (is_valid) {
+      return {
+        is_valid: true,
+        on: "domain",
+      };
+    }
+  }
+
+  // check siren / email
+  is_valid = !!(await findDocumentContent({
+    "content.siret": { $regex: `^${siren}` },
+    "content.emails": email,
+  }));
+
+  if (is_valid) {
+    return {
+      is_valid: true,
+      on: "email",
+    };
+  }
+
+  // check siren / domain
+  if (!isBlacklisted) {
+    is_valid = !!(await findDocumentContent({
+      "content.siret": { $regex: `^${siren}` },
+      "content.emails": { $regex: `.*@${domain}` },
+    }));
+
+    if (is_valid) {
+      return {
+        is_valid: true,
+        on: "domain",
+      };
+    }
+  }
+
+  return { is_valid };
 };

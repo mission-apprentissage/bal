@@ -4,7 +4,7 @@ fileignoreconfig:
 - filename: '*.route.test.ts'
   checksum: f0902a33ec3d28bad8dd85fcfff1bc5277c65d29798ea04c353b221c82a85df5
 - filename: '*.test.ts'
-  checksum: 41e30c8e885eea871ce137395f2aa6e2d38363a0beef2517b82830c35778b081
+  checksum: 92a99e20599aca8867a759cccd40705bcad363c4513cd5f1d1540f707f1edb22
 - filename: .github/workflows/_deploy.yml
   checksum: ede576e2f5dfef9b31e127aec3f757e5b7ad0c5f78214d796ad30da1c2f2e46a
 - filename: .github/workflows/preview.yml
