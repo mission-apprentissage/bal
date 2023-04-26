@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/mission-apprentissage/bal/compare/v1.24.1...v1.25.0) (2023-04-26)
+
+
+### Features
+
+* up vault ([d249c45](https://github.com/mission-apprentissage/bal/commit/d249c4593d81b59b46c5f3fcda8ce2c125048351))
+
 ## [1.24.1](https://github.com/mission-apprentissage/bal/compare/v1.24.0...v1.24.1) (2023-04-26)
 
 
