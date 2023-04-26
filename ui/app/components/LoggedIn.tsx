@@ -14,14 +14,14 @@ import NavLink from "next/link";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 
-import { IUser } from "../../../shared/models/user.model";
+import { IResGetSession } from "../../../shared/routes/auth.routes";
 import { useAuth } from "../../context/AuthContext";
 import { Settings } from "../../theme/icons/Settings";
 import { Settings4Fill } from "../../theme/icons/Settings4Fill";
 import UserFill from "../../theme/icons/UserFill";
 import { api } from "../../utils/api.utils";
 interface Props {
-  user: IUser;
+  user: IResGetSession;
 }
 
 const LoggedIn: FC<Props> = ({ user }) => {

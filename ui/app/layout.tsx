@@ -4,7 +4,7 @@ import "react-notion-x/src/styles.css";
 import { headers } from "next/headers";
 import { PropsWithChildren } from "react";
 
-import { IUser } from "../../shared/models/user.model";
+import { IResGetSession } from "../../shared/routes/auth.routes";
 import { AuthContextProvider } from "../context/AuthContext";
 
 async function getSession() {
@@ -17,7 +17,7 @@ async function getSession() {
     }
   );
 
-  const session: IUser = await response.json();
+  const session: IResGetSession = await response.json();
 
   if (!response.ok || session.error) {
     return;

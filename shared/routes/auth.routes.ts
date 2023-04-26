@@ -7,7 +7,9 @@ import { SResGetUser } from "./user.routes";
  */
 export const SResGetSession = SResGetUser;
 
-export type IResGetSession = FromSchema<typeof SResGetSession>;
+export type IResGetSession = FromSchema<typeof SResGetSession> & {
+  error: string;
+};
 
 /**
  * Login
