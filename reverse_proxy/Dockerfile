@@ -1,5 +1,5 @@
 ARG NGINX_VERSION="1.22.1"
-FROM nginx:${NGINX_VERSION} as nginxModules
+FROM --platform=linux/amd64 nginx:${NGINX_VERSION} as nginxModules
 
 ARG HEADERS_MORE_VERSION="v0.34"
 
@@ -38,7 +38,7 @@ RUN set -eux; \
     cp objs/ngx_http_headers_more_filter_module.so /etc/nginx/modules/;
 
 
-FROM owasp/modsecurity-crs:3.3.4-nginx-202303180303
+FROM --platform=linux/amd64 owasp/modsecurity-crs:3.3.4-nginx-202303180303
 
 RUN apt-get update \
     && apt-get install -y logrotate
