@@ -1,9 +1,10 @@
 {
     "title": "canSeeUploadPage",
+    "selectorAttribute": "data-id",
     "steps": [
         {
             "type": "setViewport",
-            "width": 1381,
+            "width": 2064,
             "height": 992,
             "deviceScaleFactor": 1,
             "isMobile": false,
@@ -35,8 +36,8 @@
                     "pierce/#menu-button-\\:Rlab5femH1\\:"
                 ]
             ],
-            "offsetX": 120.5,
-            "offsetY": 20
+            "offsetY": 22,
+            "offsetX": 161
         },
         {
             "type": "change",
