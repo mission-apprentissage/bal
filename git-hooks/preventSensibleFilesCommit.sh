@@ -7,7 +7,8 @@ exception="(package.json|custom-environment-variables.json|example.json"
 exception="$exception|manifest.json|settings.json|zapatosconfig.json"
 exception="$exception|DECA_Extraction MIA-Fake.csv"
 exception="$exception|eslintrc.json|app.json|tsconfig.json"
-exception="$exception)$"
+exception="$exception"
+exception="$exception)$|cypress/(.*).json"
 
 files=$(git diff --cached --name-only | grep -v -E "$exception" | grep -E "$sensible_files_pattern")
 if [ -z "$files" ]; then

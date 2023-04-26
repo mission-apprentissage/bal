@@ -1,0 +1,62 @@
+{
+    "title": "canSeeUploadPage",
+    "steps": [
+        {
+            "type": "setViewport",
+            "width": 1381,
+            "height": 992,
+            "deviceScaleFactor": 1,
+            "isMobile": false,
+            "hasTouch": false,
+            "isLandscape": false
+        },
+        {
+            "type": "navigate",
+            "url": "https://bal-recette.apprentissage.beta.gouv.fr/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://bal-recette.apprentissage.beta.gouv.fr/",
+                    "title": ""
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#menu-button-\\:Rlab5femH1\\:"
+                ],
+                [
+                    "xpath///*[@id=\"menu-button-:Rlab5femH1:\"]"
+                ],
+                [
+                    "pierce/#menu-button-\\:Rlab5femH1\\:"
+                ]
+            ],
+            "offsetX": 120.5,
+            "offsetY": 20
+        },
+        {
+            "type": "change",
+            "target": "main",
+            "frame": [],
+            "selectors": [
+                [
+                    "aria/Import de fichier"
+                ],
+                [
+                    "#menu-list-:r1:-menuitem-:r3:"
+                ],
+                [
+                    "xpath///*[@id=\"menu-list-:Rlab5femH1:-menuitem-:R9allab5fem:\"]"
+                ],
+                [
+                    "pierce/#menu-list-\\:Rlab5femH1\\:-menuitem-\\:R9allab5fem\\:"
+                ]
+            ],
+            "value": "Import de fichier"
+        }
+    ]
+}
