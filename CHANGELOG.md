@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/mission-apprentissage/bal/compare/v1.22.0...v1.23.0) (2023-04-26)
+
+
+### Features
+
+* verification deca ([#63](https://github.com/mission-apprentissage/bal/issues/63)) ([86fbcdd](https://github.com/mission-apprentissage/bal/commit/86fbcdd420e1e6a13c2ec1701f99754402c0146d))
+
 # [1.22.0](https://github.com/mission-apprentissage/bal/compare/v1.21.0...v1.22.0) (2023-04-25)
 
 
