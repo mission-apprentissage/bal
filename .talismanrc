@@ -42,7 +42,7 @@ fileignoreconfig:
 - filename: .infra/docker-compose.recette.yml
   checksum: 167c236977d05715c63e66fdc0c3438735b1f83c375248c1e0dcf37f297535b7
 - filename: .infra/env.ini
-  checksum: 23efc694090840d84b545a6bdb7dde8dc57a3aeeee94b1d881275738160d879f
+  checksum: 5471c76dcd74de164745c09352166c5d1f71460d5b7a33184fa166f6a46bb77a
 - filename: .infra/scripts/deploy-app.sh
   checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
 - filename: .infra/scripts/ovh/create-backup-partition.sh
