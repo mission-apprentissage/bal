@@ -1,4 +1,4 @@
-import { Filter, FindOptions, ObjectId } from "mongodb";
+import { Filter, FindOptions, ObjectId, UpdateFilter } from "mongodb";
 import { IUser } from "shared/models/user.model";
 
 import { generateKey, generateSecretHash } from "../../utils/cryptoUtils";
@@ -37,13 +37,18 @@ export const findUser = async (
   return user;
 };
 
-export const updateUser = async (user: IUser, data: Partial<IUser>) => {
+export const updateUser = async (
+  user: IUser,
+  data: Partial<IUser>,
+  updateFilter: UpdateFilter<IUser> = {}
+) => {
   return await getDbCollection("users").findOneAndUpdate(
     {
       _id: user._id,
     },
     {
       $set: data,
+      ...updateFilter,
     }
   );
 };
@@ -52,7 +57,11 @@ export const generateApiKey = async (user: IUser) => {
   const generatedKey = generateKey();
   const secretHash = generateSecretHash(generatedKey);
 
-  await updateUser(user, { api_key: secretHash });
+  await updateUser(
+    user,
+    { api_key: secretHash },
+    { $unset: { api_key_used_at: true } }
+  );
 
   const token = createUserTokenSimple({
     payload: { _id: user._id, api_key: generatedKey },

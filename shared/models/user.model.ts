@@ -14,10 +14,29 @@ export const SUser = {
     password: { type: "string" },
     is_admin: { type: "boolean" },
     api_key: { type: "string" },
+    api_key_used_at: {
+      type: "string",
+      format: "date-time",
+      description: "Date de denière utilisation de la clé api",
+    },
   },
   required: ["_id", "email", "password"],
 } as const;
 
-export interface IUser extends FromSchema<typeof SUser> {}
+export interface IUser
+  extends FromSchema<
+    typeof SUser,
+    {
+      deserialize: [
+        {
+          pattern: {
+            type: "string";
+            format: "date-time";
+          };
+          output: Date | string;
+        }
+      ];
+    }
+  > {}
 
 export default { schema: SUser, indexes, collectionName };

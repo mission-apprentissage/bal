@@ -1,7 +1,4 @@
-import {
-  SReqPostUser,
-  SResPostUser,
-} from "shared/routes/user.routes";
+import { SReqPostUser, SResPostUser } from "shared/routes/user.routes";
 
 import { createUser } from "../../actions/users.actions";
 import { Server } from "..";
@@ -27,6 +24,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
           throw new Error("User not created");
         }
 
+        // @ts-ignore TODO fix type
         return response.status(200).send(user);
       } catch (error) {
         response.log.error(error);

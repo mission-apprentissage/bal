@@ -20,6 +20,10 @@ describe("Users routes", () => {
 
     const token = await generateApiKey(user);
 
+    const userWithToken = await findUser({ _id: user._id });
+
+    assert.equal(userWithToken?.api_key_used_at, undefined);
+
     const response = await app.inject({
       method: "GET",
       url: "/api/auth/session",
@@ -33,6 +37,7 @@ describe("Users routes", () => {
     assert.equal(response.json().email, "connected@exemple.fr");
     assert.equal(response.json().password, undefined);
     assert.equal(response.json().api_key, undefined);
+    assert.ok(response.json().api_key_used_at);
   });
 
   it("should create a user", async () => {

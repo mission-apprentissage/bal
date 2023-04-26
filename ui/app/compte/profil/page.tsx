@@ -9,6 +9,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { AxiosResponse } from "axios";
+import { format, parseISO } from "date-fns";
+import fr from "date-fns/locale/fr";
 import { useState } from "react";
 
 import { IResGetGenerateApiKey } from "../../../../shared/routes/user.routes";
@@ -71,6 +73,23 @@ const ProfilPage = () => {
           )}
         </InputRightElement>
       </InputGroup>
+      {!apiKey && (
+        <Text mt={4}>
+          {user.api_key_used_at ? (
+            <>
+              {`Dernière utilisation le ${format(
+                parseISO(user.api_key_used_at),
+                "PPP à p",
+                {
+                  locale: fr,
+                }
+              )}`}
+            </>
+          ) : (
+            <>Ce jeton n'a pas encore été utilisée</>
+          )}
+        </Text>
+      )}
 
       <Box mt={4}>
         {!apiKey ? (

@@ -66,10 +66,13 @@ export const authRoutes = ({ server }: { server: Server }) => {
       const token = createUserTokenSimple({ payload: { email: user.email } });
       await createSession({ token });
 
-      return response
-        .setCookie(config.session.cookieName, token, config.session.cookie)
-        .status(200)
-        .send(user);
+      return (
+        response
+          .setCookie(config.session.cookieName, token, config.session.cookie)
+          .status(200)
+          // @ts-ignore TODO fix type
+          .send(user)
+      );
     }
   );
 

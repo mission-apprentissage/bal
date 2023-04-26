@@ -1,8 +1,18 @@
-import { CollectionInfo, MongoClient } from "mongodb";
+import { JSONSchema7 } from "json-schema";
+import { CollectionInfo, CreateCollectionOptions, MongoClient } from "mongodb";
 import omitDeep from "omit-deep";
 
 import { IModelDescriptor } from "../db/models";
 import logger from "./logger";
+
+interface JSONSchema7WithBSONType extends Omit<JSONSchema7, "properties"> {
+  bsonType?: string;
+  properties?: {
+    [key: string]: JSONSchema7WithBSONType;
+  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
 
 /** @type {MongoClient} */
 let mongodbClient: MongoClient;
@@ -82,37 +92,42 @@ export const collectionExistInDb = (
 /**
  * Conversion du schema pour le format mongoDB
  */
-const convertSchemaToMongoSchema = (schema: unknown) => {
-  let replacedTypes = JSON.parse(
-    JSON.stringify(schema)
+const convertSchemaToMongoSchema = (
+  schema: JSONSchema7
+): CreateCollectionOptions["validator"] => {
+  let convertedSchema = replaceDateProperties(schema);
+  convertedSchema = JSON.parse(
+    JSON.stringify(convertedSchema)
       .replaceAll("type", "bsonType")
       .replaceAll("boolean", "bool")
       .replaceAll("integer", "int")
   );
 
-  // remplacer _id de "string" à "objectId"
-  replacedTypes = {
-    ...replacedTypes,
-    properties: {
-      ...replacedTypes.properties,
-      _id: { bsonType: "objectId" },
-      ...(replacedTypes.properties.updated_at && {
-        updated_at: {
-          ...replacedTypes.properties.updated_at,
-          bsonType: "date",
-        },
-      }),
-      ...(replacedTypes.properties.created_at && {
-        created_at: {
-          ...replacedTypes.properties.created_at,
-          bsonType: "date",
-        },
-      }),
-    },
-  };
+  if (convertedSchema.properties) {
+    // remplacer _id de "string" à "objectId"
+    convertedSchema["properties"]["_id"] = { bsonType: "objectId" };
+  }
 
   // strip example, format field because NON STANDARD jsonSchema
-  return omitDeep(replacedTypes, ["example", "format"]);
+  return omitDeep(convertedSchema, ["example", "format"]);
+};
+
+const replaceDateProperties = (schema: JSONSchema7) => {
+  const properties: JSONSchema7WithBSONType = {};
+
+  if (!schema.properties) {
+    return schema;
+  }
+
+  Object.entries(schema.properties).map(([key, value]) => {
+    const property = value as JSONSchema7;
+
+    if (property.format === "date-time") {
+      properties[key] = { ...property, bsonType: "date" };
+    }
+  });
+
+  return { ...schema, properties };
 };
 
 /**

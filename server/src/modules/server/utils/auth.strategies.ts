@@ -7,7 +7,7 @@ import { config } from "../../../../config/config";
 import { compareKeys } from "../../../utils/cryptoUtils";
 import { decodeToken } from "../../../utils/jwtUtils";
 import { getSession } from "../../actions/sessions.actions";
-import { findUser } from "../../actions/users.actions";
+import { findUser, updateUser } from "../../actions/users.actions";
 
 declare module "fastify" {
   export interface FastifyRequest {
@@ -38,7 +38,10 @@ export const authValidateJWT: FastifyAuthFunction = async (request, _reply) => {
       throw new Error("Jeton invalide");
     }
 
-    request.user = user;
+    const api_key_used_at = new Date();
+
+    await updateUser(user, { api_key_used_at });
+    request.user = { ...user, api_key_used_at };
   } catch (error) {
     throw new Error("Jeton invalide");
   }
