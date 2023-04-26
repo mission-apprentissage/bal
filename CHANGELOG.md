@@ -1,3 +1,10 @@
+## [1.26.2](https://github.com/mission-apprentissage/bal/compare/v1.26.1...v1.26.2) (2023-04-26)
+
+
+### Bug Fixes
+
+* cosmetic ([4f7b2ce](https://github.com/mission-apprentissage/bal/commit/4f7b2ce0ac6ed37adbb8e0b59fd6d78484977307))
+
 ## [1.26.1](https://github.com/mission-apprentissage/bal/compare/v1.26.0...v1.26.1) (2023-04-26)
 
 
