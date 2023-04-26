@@ -8,6 +8,7 @@ on:
         required: true
         options:
           - production
+          - recette
       app_version:
         description: app version
         type: string
