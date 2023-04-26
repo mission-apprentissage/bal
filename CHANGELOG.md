@@ -1,3 +1,10 @@
+## [1.26.1](https://github.com/mission-apprentissage/bal/compare/v1.26.0...v1.26.1) (2023-04-26)
+
+
+### Bug Fixes
+
+* file size ([cd5c1de](https://github.com/mission-apprentissage/bal/commit/cd5c1de28098e63adfcb448f91c2cd4417521c71))
+
 # [1.26.0](https://github.com/mission-apprentissage/bal/compare/v1.25.0...v1.26.0) (2023-04-26)
 
 
