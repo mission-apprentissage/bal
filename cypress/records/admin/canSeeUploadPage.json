@@ -44,16 +44,16 @@
             "frame": [],
             "selectors": [
                 [
+                    "[data-id='menuitem\\:importfile']"
+                ],
+                [
+                    "xpath///*[@data-id=\"menuitem:importfile\"]"
+                ],
+                [
+                    "pierce/[data-id='menuitem\\:importfile']"
+                ],
+                [
                     "aria/Import de fichier"
-                ],
-                [
-                    "#menu-list-:r1:-menuitem-:r3:"
-                ],
-                [
-                    "xpath///*[@id=\"menu-list-:Rlab5femH1:-menuitem-:R9allab5fem:\"]"
-                ],
-                [
-                    "pierce/#menu-list-\\:Rlab5femH1\\:-menuitem-\\:R9allab5fem\\:"
                 ]
             ],
             "value": "Import de fichier"
