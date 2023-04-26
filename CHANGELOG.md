@@ -1,3 +1,10 @@
+# [1.26.0](https://github.com/mission-apprentissage/bal/compare/v1.25.0...v1.26.0) (2023-04-26)
+
+
+### Features
+
+* last used date api key ([#67](https://github.com/mission-apprentissage/bal/issues/67)) ([f0ef853](https://github.com/mission-apprentissage/bal/commit/f0ef8538e2feb21100318e9fc4e4c40e242b0655))
+
 # [1.25.0](https://github.com/mission-apprentissage/bal/compare/v1.24.1...v1.25.0) (2023-04-26)
 
 
