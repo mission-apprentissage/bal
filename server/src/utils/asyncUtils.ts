@@ -15,3 +15,7 @@ export function timeout(promise: Promise<any>, millis: number) {
   // @ts-ignore
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timeout));
 }
+
+export async function sleep(durationMs: number): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, durationMs));
+}

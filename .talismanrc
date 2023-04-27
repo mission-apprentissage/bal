@@ -34,7 +34,7 @@ fileignoreconfig:
 - filename: .infra/docker-compose.preview-33.yml
   checksum: d4a2b70da835529d9f90d5a563fecfc3f3ad7782d4d442b049028ed570dc11c2
 - filename: .infra/docker-compose.preview-app.yml
-  checksum: ae03c74d003560b36b0b226a957389717202c99fae496a5407b9d616fcb8fba7
+  checksum: 8cc3c65035bb1e302c49996bdf98232a5d74d56b5ac2c48fbfa9b384481128b6
 - filename: .infra/docker-compose.preview.yml
   checksum: 5ce03c6b1352a8edbbdbfb51a17221b533fa735923e135bbbe989f6f4005d971
 - filename: .infra/docker-compose.production.yml

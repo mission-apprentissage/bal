@@ -3589,6 +3589,60 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/match-sorter-utils@npm:8.8.4":
+  version: 8.8.4
+  resolution: "@tanstack/match-sorter-utils@npm:8.8.4"
+  dependencies:
+    remove-accents: 0.4.2
+  checksum: d005f500754f52ef94966cbbe4217f26e7e3c07291faa2578b06bca9a5abe01689569994c37a1d01c6e783addf5ffbb28fa82eba7961d36eabf43ec43d1e496b
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-core@npm:4.29.5":
+  version: 4.29.5
+  resolution: "@tanstack/query-core@npm:4.29.5"
+  checksum: 367176beccd78e959c74e69e96497b626dd1c139398501eb7a04cf92215edf262665c3e7bb59df68320779d49893d3153a3b41e750b9046655b45cfe44691b36
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:4.29.5":
+  version: 4.29.5
+  resolution: "@tanstack/react-query@npm:4.29.5"
+  dependencies:
+    "@tanstack/query-core": 4.29.5
+    use-sync-external-store: ^1.2.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-native: "*"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: de45573900810b37216aa8d6599cae5ea43602eaada9fd2224f57ff7ab1de10b3f2e681e7fdb993ee1519ed8ffc7e6e07d6bf3ad1b9da4136b1ae78ca19f31f6
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-table@npm:8.8.5":
+  version: 8.8.5
+  resolution: "@tanstack/react-table@npm:8.8.5"
+  dependencies:
+    "@tanstack/table-core": 8.8.5
+  peerDependencies:
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: 6c396b1a175699b8ebca56e81230194b03d94df5a83bde542a643363dfa40065e8fa795ef57bb8d540134d717538c420d7013e3d3cf7b8a93a0680d0d6192765
+  languageName: node
+  linkType: hard
+
+"@tanstack/table-core@npm:8.8.5":
+  version: 8.8.5
+  resolution: "@tanstack/table-core@npm:8.8.5"
+  checksum: 7bbf00635e57294dd5bd12d82efb273d3b68c47b905a1d7f2fdabe83d9c10314e67d24f918b570ba8fecf80a120008359c52682cdd917d9de26eeece31c43a7d
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
@@ -4666,6 +4720,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios-cache-interceptor@npm:1.0.1":
+  version: 1.0.1
+  resolution: "axios-cache-interceptor@npm:1.0.1"
+  dependencies:
+    cache-parser: ^1.2.4
+    fast-defer: ^1.1.7
+    object-code: ^1.2.4
+  peerDependencies:
+    axios: ^1
+  checksum: f004940ee2fd2260237ba0c943acdf03811b9265041d40b57ff49435d2c7bc170902de97c2e7330f229a8dd5babbbef5c5e2ad31541cf36d5b6b5dceef23ec74
+  languageName: node
+  linkType: hard
+
 "axios@npm:0.24.0, axios@npm:^0.24.0":
   version: 0.24.0
   resolution: "axios@npm:0.24.0"
@@ -5039,6 +5106,13 @@ __metadata:
     tar: ^6.1.11
     unique-filename: ^2.0.0
   checksum: d91409e6e57d7d9a3a25e5dcc589c84e75b178ae8ea7de05cbf6b783f77a5fae938f6e8fda6f5257ed70000be27a681e1e44829251bfffe4c10216002f8f14e6
+  languageName: node
+  linkType: hard
+
+"cache-parser@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "cache-parser@npm:1.2.4"
+  checksum: de9fc4ab7af318109f1e53474e674d43997bc7b8676157e4f28e7dc60fda2f434ee138aa9d9abb9f849c55e73202ee74865afaa4e00298de70c4326510680c19
   languageName: node
   linkType: hard
 
@@ -7452,6 +7526,13 @@ __metadata:
   version: 3.1.3
   resolution: "fast-deep-equal@npm:3.1.3"
   checksum: e21a9d8d84f53493b6aa15efc9cfd53dd5b714a1f23f67fb5dc8f574af80df889b3bce25dc081887c6d25457cce704e636395333abad896ccdec03abaf1f3f9d
+  languageName: node
+  linkType: hard
+
+"fast-defer@npm:^1.1.7":
+  version: 1.1.7
+  resolution: "fast-defer@npm:1.1.7"
+  checksum: c0f816fe3f83ca7e12c56a6631c6819a50349fb7e1931cec88e883168b523c65605e6e0df32c8fba6c341860c29ecc6fe2531ba8a418d27d31da6544ad1bf45b
   languageName: node
   linkType: hard
 
@@ -11830,6 +11911,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"object-code@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "object-code@npm:1.2.4"
+  checksum: b5dd65c81793705c996cacaea4009287d88629add24e70f8a610d58747fea6d19196e43bf32e134aab582dc1f3ba4867cbacaf84e1d194b70126cd33689c8d5b
+  languageName: node
+  linkType: hard
+
 "object-inspect@npm:^1.12.2, object-inspect@npm:^1.9.0":
   version: 1.12.3
   resolution: "object-inspect@npm:1.12.3"
@@ -13372,6 +13460,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"remove-accents@npm:0.4.2":
+  version: 0.4.2
+  resolution: "remove-accents@npm:0.4.2"
+  checksum: 84a6988555dea24115e2d1954db99509588d43fe55a1590f0b5894802776f7b488b3151c37ceb9e4f4b646f26b80b7325dcea2fae58bc3865df146e1fa606711
+  languageName: node
+  linkType: hard
+
 "repeat-string@npm:^1.0.0":
   version: 1.6.1
   resolution: "repeat-string@npm:1.6.1"
@@ -13886,6 +13981,7 @@ __metadata:
     "@types/omit-deep": 0.3.0
     "@types/tcp-port-used": ^1.0.1
     axios: 0.24.0
+    axios-cache-interceptor: 1.0.1
     boom: 7.3.0
     bunyan: 1.8.15
     bunyan-mongodb-stream: 0.0.3
@@ -15349,6 +15445,9 @@ __metadata:
     "@chakra-ui/react": 2.5.3
     "@emotion/react": 11.10.6
     "@emotion/styled": 11.10.6
+    "@tanstack/match-sorter-utils": 8.8.4
+    "@tanstack/react-query": 4.29.5
+    "@tanstack/react-table": 8.8.5
     "@types/node": 18.11.18
     "@types/react": 18.0.27
     "@types/react-dom": 18.0.10
@@ -15565,6 +15664,15 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 925d1922f9853e516eaad526b6fed1be38008073067274f0ecc3f56b17bb8ab63480140dd7c271f94150027c996cea4efe83d3e3525e8f3eda22055f6a39220b
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "use-sync-external-store@npm:1.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 5c639e0f8da3521d605f59ce5be9e094ca772bd44a4ce7322b055a6f58eeed8dda3c94cabd90c7a41fb6fa852210092008afe48f7038792fd47501f33299116a
   languageName: node
   linkType: hard
 

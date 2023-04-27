@@ -14,6 +14,7 @@ import {
   createDocumentContent,
   findDocumentContent,
 } from "./documentContent.actions";
+import { updateDocument } from "./documents.actions";
 
 interface ContentLine {
   SIRET: string;
@@ -47,6 +48,30 @@ export const parseContentLine = (
   return { siret, emails };
 };
 
+const updateImportProgress = async (
+  _id: string,
+  currentLine: number,
+  totalLines: number,
+  currentProgress: number
+) => {
+  const step_precent = 2; // every 2%
+  const currentPercent = (currentLine * 100) / totalLines;
+  if (currentPercent - currentProgress < step_precent) {
+    // Do not update
+    return currentProgress;
+  }
+  currentProgress = currentPercent;
+  await updateDocument(
+    { _id },
+    {
+      $set: {
+        import_progress: currentProgress,
+      },
+    }
+  );
+  return currentPercent;
+};
+
 export const handleDecaFileContent = async (document: IDocument) => {
   const stream = await getFromStorage(document.chemin_fichier);
 
@@ -70,8 +95,26 @@ export const handleDecaFileContent = async (document: IDocument) => {
 
   let documentContents: IDocumentContent[] = [];
 
-  for (const line of content) {
+  await updateDocument(
+    { _id: document._id },
+    {
+      $set: {
+        lines_count: content.length,
+        import_progress: 0,
+      },
+    }
+  );
+
+  let currentProgress = 0;
+  for (const [lineNumber, line] of content.entries()) {
     const contentLine = parseContentLine(line);
+
+    currentProgress = await updateImportProgress(
+      document._id,
+      lineNumber,
+      content.length,
+      currentProgress
+    );
 
     if (!contentLine) {
       continue;
@@ -88,6 +131,15 @@ export const handleDecaFileContent = async (document: IDocument) => {
 
     documentContents = [...documentContents, documentContent];
   }
+
+  await updateDocument(
+    { _id: document._id },
+    {
+      $set: {
+        import_progress: 100,
+      },
+    }
+  );
 
   // Create or update person
 

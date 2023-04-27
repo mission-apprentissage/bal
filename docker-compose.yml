@@ -90,6 +90,30 @@ services:
       context: .
       dockerfile: server/Dockerfile.dev
 
+  processor:
+    image: bal_server
+    container_name: bal_processor
+    command: ["yarn", "cli", "processor"]
+    mem_limit: 2g
+    restart: unless-stopped
+    networks:
+      - bal_network
+    depends_on:
+      - mongodb
+      - clamav
+    environment:
+      - MNA_BAL_MONGODB_URI=mongodb://mongodb:27017/mna-bal?retryWrites=true&w=majority
+      - MNA_BAL_ENV=dev
+      - MNA_BAL_LOG_LEVEL=debug
+      - MNA_BAL_LOG_DESTINATIONS=stdout,mongodb
+      - MNA_BAL_SENTRY_DSN=
+    volumes:
+      - ./:/app/:z
+      - bal_server_data:/data:z
+    build:
+      context: .
+      dockerfile: server/Dockerfile.dev
+
   mongodb:
     image: mongo:6.0.2-focal
     container_name: bal_mongodb

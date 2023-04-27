@@ -14,8 +14,8 @@ import { clamav } from "../../../services";
 import * as crypto from "../../../utils/cryptoUtils";
 import logger from "../../../utils/logger";
 import { deleteFromStorage, uploadToStorage } from "../../../utils/ovhUtils";
-import { handleDecaFileContent } from "../../actions/deca.actions";
 import { createDocument } from "../../actions/documents.actions";
+import { processDocument } from "../../apis/processor";
 import { Server } from "..";
 import { noop } from "../utils/upload.utils";
 
@@ -129,7 +129,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           taille_fichier: fileSize,
           hash_secret: documentHash,
           hash_fichier,
-          confirm: true,
+          import_progress: -1,
           added_by: userId.toString(),
           updated_at: new Date(),
           created_at: new Date(),
@@ -142,7 +142,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           });
         }
 
-        await handleDecaFileContent(document);
+        await processDocument(document);
 
         // @ts-ignore TODO: fix
         return response.status(200).send(document);

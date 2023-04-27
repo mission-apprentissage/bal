@@ -42,9 +42,13 @@ export const SDocument = {
       type: "string",
       description: "Checksum fichier",
     },
-    confirm: {
-      type: "boolean",
-      description: "Le document est confirmé par l'utilisateur",
+    import_progress: {
+      type: "number",
+      description: "Progress percentage (-1 not started)",
+    },
+    lines_count: {
+      type: "integer",
+      description: "Number of lines",
     },
     added_by: {
       type: "string",

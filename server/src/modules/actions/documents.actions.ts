@@ -1,4 +1,10 @@
-import { Filter, FindOptions, ObjectId } from "mongodb";
+import {
+  Filter,
+  FindOneAndUpdateOptions,
+  FindOptions,
+  ObjectId,
+  UpdateFilter,
+} from "mongodb";
 import { IDocument } from "shared/models/document.model";
 
 import { getDbCollection } from "../../utils/mongodb";
@@ -20,4 +26,20 @@ export const findDocument = async (
   options?: FindOptions<IDocument>
 ) => {
   return await getDbCollection("documents").findOne<IDocument>(filter, options);
+};
+
+export const updateDocument = async (
+  filter: Filter<IDocument>,
+  update: UpdateFilter<IDocument>,
+  options?: FindOneAndUpdateOptions
+) => {
+  const updated = await getDbCollection("documents").findOneAndUpdate(
+    filter,
+    update,
+    {
+      ...options,
+      returnDocument: "after",
+    }
+  );
+  return updated.value as IDocument | null;
 };

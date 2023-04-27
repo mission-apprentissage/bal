@@ -4,6 +4,11 @@ import querystring from "querystring";
 
 import { config } from "../../../config/config";
 import { ApiError } from "../../utils/apiUtils";
+import getApiClient from "./client";
+
+const axiosClient = getApiClient({
+  baseURL: `https://${config.opcoEp.baseUrl}`,
+});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let token = {} as any;
@@ -63,8 +68,8 @@ export const getOpcoEpVerification = async (siret: string, email: string) => {
   token = await getToken(token);
 
   try {
-    const { data } = await axios.get(
-      `https://${config.opcoEp.baseUrl}/apis/referentiel-entreprise/v2/entreprises/securisation-echange?email=${email}&siret=${siret}`,
+    const { data } = await axiosClient.get(
+      `/apis/referentiel-entreprise/v2/entreprises/securisation-echange?email=${email}&siret=${siret}`,
       {
         headers: {
           Authorization: `Bearer ${token.access_token}`,

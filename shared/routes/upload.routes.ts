@@ -1,6 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
-export const DOCUMENT_TYPES = ["DECA", "other"];
+export const DOCUMENT_TYPES = ["DECA"];
 
 export const SReqQueryPostAdminUpload = {
   type: "object",
@@ -39,8 +39,8 @@ export const SResPostAdminUpload = {
       type: "integer",
     },
     // dont send hash_secret, hash_fichier
-    confirm: {
-      type: "boolean",
+    import_progress: {
+      type: "number",
     },
     added_by: {
       type: "string",

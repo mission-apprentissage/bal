@@ -7,6 +7,7 @@ import {
   connectToMongodb,
 } from "../../utils/mongodb";
 import { createUser } from "../actions/users.actions";
+import { processor } from "./processor/processor";
 import { seedTest } from "./seed/seed-test";
 const program = new Command();
 
@@ -49,6 +50,15 @@ program
         console.error(error);
         process.exit(1);
       }
+    })
+  );
+
+program
+  .command("processor")
+  .description("Run processor")
+  .action(async () =>
+    runScript(async () => {
+      await processor();
     })
   );
 
