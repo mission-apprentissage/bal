@@ -1,13 +1,13 @@
 import {
+  IResPostLogin,
   SReqGetResetPassword,
+  SReqHeadersAuthorization,
   SReqPostLogin,
   SReqPostResetPassword,
   SResGetSession,
   SResPostLogin,
 } from "shared/routes/auth.routes";
 import { SResError } from "shared/routes/common.routes";
-// TODO TO MOVE
-import { SReqHeadersUser } from "shared/routes/user.routes";
 
 import { config } from "../../../config/config";
 import { createUserTokenSimple } from "../../utils/jwtUtils";
@@ -28,7 +28,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
     {
       schema: {
         response: { 200: SResGetSession },
-        headers: SReqHeadersUser,
+        headers: SReqHeadersAuthorization,
       } as const,
       preHandler: server.auth([server.validateSession, server.validateJWT]),
     },
@@ -66,13 +66,10 @@ export const authRoutes = ({ server }: { server: Server }) => {
       const token = createUserTokenSimple({ payload: { email: user.email } });
       await createSession({ token });
 
-      return (
-        response
-          .setCookie(config.session.cookieName, token, config.session.cookie)
-          .status(200)
-          // @ts-ignore TODO fix type
-          .send(user)
-      );
+      return response
+        .setCookie(config.session.cookieName, token, config.session.cookie)
+        .status(200)
+        .send(user as IResPostLogin);
     }
   );
 

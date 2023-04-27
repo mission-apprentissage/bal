@@ -97,11 +97,11 @@ const AdminImportPage = () => {
                   required:
                     "Obligatoire: Vous devez choisir le type de fichier que vous souhaitez importer",
                   validate: (value) => {
-                    return value && DOCUMENT_TYPES.includes(value);
+                    return value && value in DOCUMENT_TYPES;
                   },
                 })}
               >
-                {DOCUMENT_TYPES.map((type) => (
+                {Object.values(DOCUMENT_TYPES).map((type) => (
                   <option key={type}>{type}</option>
                 ))}
               </Select>

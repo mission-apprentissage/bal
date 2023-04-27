@@ -1,25 +1,16 @@
 import { MultipartFile } from "@fastify/multipart";
-import { ObjectId } from "mongodb";
-// @ts-ignore
-import { oleoduc } from "oleoduc";
-import { IUser } from "shared/models/user.model";
 import { SResError } from "shared/routes/common.routes";
 import {
+  IResPostAdminUpload,
   SReqQueryPostAdminUpload,
   SResPostAdminUpload,
 } from "shared/routes/upload.routes";
 
 import { FILE_SIZE_LIMIT } from "../../../../../shared/constants/index";
-import { clamav } from "../../../services";
-import * as crypto from "../../../utils/cryptoUtils";
-import logger from "../../../utils/logger";
-import { deleteFromStorage, uploadToStorage } from "../../../utils/ovhUtils";
-import { createDocument } from "../../actions/documents.actions";
+import { uploadDocument } from "../../actions/documents.actions";
 import { processDocument } from "../../apis/processor";
 import { Server } from "..";
-import { noop } from "../utils/upload.utils";
-
-const testMode = process.env.MNA_BAL_ENV === "test";
+import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 const validateFile = (file: MultipartFile) => {
   if (
@@ -42,7 +33,6 @@ const validateFile = (file: MultipartFile) => {
   return true;
 };
 
-// TODO to secure
 export const uploadAdminRoutes = ({ server }: { server: Server }) => {
   /**
    * Importer un fichier
@@ -57,14 +47,15 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           401: SResError,
         },
       } as const,
-      preHandler: server.auth([
-        server.validateJWT,
-        server.validateSession,
+      preHandler: [
+        server.auth([server.validateJWT, server.validateSession]),
+        ensureUserIsAdmin,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      ] as any,
     },
     async (request, response) => {
       const { type_document } = request.query;
+      const fileSize = parseInt(request.headers["content-length"] ?? "0");
 
       const data = await request.file({
         limits: {
@@ -72,83 +63,34 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         },
       });
 
-      if (!data || !validateFile(data)) {
+      if (!request.user || !data || !validateFile(data)) {
         return response.status(401).send({
           type: "invalid_file",
           message: "Le fichier n'est pas au bon format",
         });
       }
 
-      const documentId = new ObjectId();
-      const documentHash = crypto.generateKey();
-      const path = `uploads/${documentId}/${data.filename}`;
-
-      const { scanStream, getScanResults } = await clamav.getScanner();
-      const { hashStream, getHash } = crypto.checksum();
-
-      await oleoduc(
-        data.file,
-        scanStream,
-        hashStream,
-        crypto.isCipherAvailable() ? crypto.cipher(documentHash) : noop(), // ISSUE
-        testMode
-          ? noop()
-          : await uploadToStorage(path, {
-              contentType: data.mimetype,
-            })
-      );
-
-      const hash_fichier = await getHash();
-      const { isInfected, viruses } = await getScanResults();
-
-      if (isInfected) {
-        if (!test) {
-          const listViruses = viruses.join(",");
-          logger.error(
-            `Uploaded file ${path} is infected by ${listViruses}. Deleting file from storage...`
-          );
-
-          await deleteFromStorage(path);
-        }
-        return response.status(401).send({
-          type: "invalid_file",
-          message: "Le contenu du fichier est invalide",
-        });
-      }
-
-      const fileSize = parseInt(request.headers["content-length"] ?? "0");
-
-      const { _id: userId } = request.user as IUser;
       try {
-        const document = await createDocument({
-          _id: documentId,
+        const document = await uploadDocument(request.user, data, {
           type_document,
-          ext_fichier: data.filename.split(".").pop(),
-          nom_fichier: data.filename,
-          chemin_fichier: path,
-          taille_fichier: fileSize,
-          hash_secret: documentHash,
-          hash_fichier,
-          import_progress: -1,
-          added_by: userId.toString(),
-          updated_at: new Date(),
-          created_at: new Date(),
+          fileSize,
         });
 
         if (!document) {
-          return response.status(401).send({
-            type: "invalid_file",
-            message: "Impossible de stocker de le fichier",
-          });
+          throw new Error("Impossible de stocker de le fichier");
         }
 
         await processDocument(document);
 
-        // @ts-ignore TODO: fix
-        return response.status(200).send(document);
+        return response
+          .status(200)
+          .send(document as unknown as IResPostAdminUpload);
       } catch (error) {
-        console.log(error);
-        console.log(JSON.stringify(error));
+        const { message } = error as Error;
+        return response.status(401).send({
+          type: "invalid_file",
+          message,
+        });
       }
     }
   );
