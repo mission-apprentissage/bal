@@ -2,5 +2,8 @@
   "recursive": true,
   "exit": true,
   "timeout": 5000,
-  "require": ["tests/utils/mocha.utils.ts"]
+  "require": [
+    "dotenv/config",
+    "tests/utils/mocha.utils.ts"
+  ]
 }
