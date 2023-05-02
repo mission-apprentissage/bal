@@ -1,3 +1,10 @@
+# [1.28.0](https://github.com/mission-apprentissage/bal/compare/v1.27.0...v1.28.0) (2023-05-02)
+
+
+### Features
+
+* secure admin routes, clean todo, ts  ([#76](https://github.com/mission-apprentissage/bal/issues/76)) ([5b0a40d](https://github.com/mission-apprentissage/bal/commit/5b0a40d8f64540a8fecc9c2b90b23d26aaa0a0ff))
+
 # [1.27.0](https://github.com/mission-apprentissage/bal/compare/v1.26.2...v1.27.0) (2023-05-02)
 
 
