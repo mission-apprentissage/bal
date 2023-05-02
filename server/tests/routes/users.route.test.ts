@@ -40,11 +40,22 @@ describe("Users routes", () => {
     assert.ok(response.json().api_key_used_at);
   });
 
-  it("should create a user", async () => {
+  it("should allow admin to create a user", async () => {
+    const admin = (await createUser({
+      email: "admin@exemple.fr",
+      password: "my-password",
+      is_admin: true,
+    })) as IUser;
+
+    const token = await generateApiKey(admin);
+
     const response = await app.inject({
       method: "POST",
       url: "/api/admin/user",
       payload: { email: "email@exemple.fr", password: "my-password" },
+      headers: {
+        ["Authorization"]: `Bearer ${token}`,
+      },
     });
 
     const user = await findUser({
@@ -55,5 +66,25 @@ describe("Users routes", () => {
     assert.equal(response.json()._id, user?._id);
     assert.equal(response.json().email, "email@exemple.fr");
     assert.equal(response.json().password, undefined);
+  });
+
+  it("should not allow non-admin to create a user", async () => {
+    const user = (await createUser({
+      email: "user@exemple.fr",
+      password: "my-password",
+    })) as IUser;
+
+    const token = await generateApiKey(user);
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/api/admin/user",
+      payload: { email: "email@exemple.fr", password: "my-password" },
+      headers: {
+        ["Authorization"]: `Bearer ${token}`,
+      },
+    });
+
+    assert.equal(response.statusCode, 401);
   });
 });

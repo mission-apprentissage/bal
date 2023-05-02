@@ -28,13 +28,6 @@ export const SResPostUser = SResGetUser;
 export type IResGetUser = FromSchema<typeof SResGetUser>;
 export type IResPostUser = FromSchema<typeof SResPostUser>;
 
-export const SReqHeadersUser = {
-  type: "object",
-  properties: {
-    Authorization: { type: "string" },
-  },
-};
-
 export const SResGetGenerateApiKey = {
   type: "object",
   properties: {

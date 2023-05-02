@@ -1,13 +1,15 @@
 import { FromSchema } from "json-schema-to-ts";
 
-export const DOCUMENT_TYPES = ["DECA"];
+export enum DOCUMENT_TYPES {
+  DECA = "DECA",
+}
 
 export const SReqQueryPostAdminUpload = {
   type: "object",
   properties: {
     type_document: {
       type: "string",
-      enum: DOCUMENT_TYPES,
+      enum: Object.values(DOCUMENT_TYPES),
     },
   },
   required: ["type_document"],
@@ -47,9 +49,11 @@ export const SResPostAdminUpload = {
     },
     updated_at: {
       type: "string",
+      format: "date-time",
     },
     created_at: {
       type: "string",
+      format: "date-time",
     },
   },
   required: [
@@ -59,7 +63,6 @@ export const SResPostAdminUpload = {
     "chemin_fichier",
     "taille_fichier",
     "added_by",
-    "updated_at",
     "created_at",
   ],
   additionalProperties: false,

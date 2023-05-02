@@ -5,10 +5,18 @@ import { SResGetUser } from "./user.routes";
 /**
  * Session
  */
+
+export const SReqHeadersAuthorization = {
+  type: "object",
+  properties: {
+    Authorization: { type: "string" },
+  },
+};
+
 export const SResGetSession = SResGetUser;
 
 export type IResGetSession = FromSchema<typeof SResGetSession> & {
-  error: string;
+  error?: string;
 };
 
 /**
