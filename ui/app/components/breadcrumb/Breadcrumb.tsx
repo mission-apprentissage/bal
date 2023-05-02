@@ -45,9 +45,13 @@ export const PAGES = {
     title: "Modifier mon mot de passe",
     path: "/modifier-mot-de-passe",
   }),
+  adminFichier: () => ({
+    title: "Fichier source",
+    path: "/admin/fichier",
+  }),
   adminImport: () => ({
     title: "Import de fichier",
-    path: "/admin/import",
+    path: "/admin/fichier/import",
   }),
 };
 

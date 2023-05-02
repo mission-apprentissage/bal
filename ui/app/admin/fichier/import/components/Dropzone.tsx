@@ -5,16 +5,15 @@ import {
   Input,
   List,
   ListItem,
-  Spinner,
   Text,
 } from "@chakra-ui/react";
 import { FC, useMemo, useState } from "react";
 import { DropEvent, DropzoneOptions, useDropzone } from "react-dropzone";
 
-import { Bin } from "../../../../theme/icons/Bin";
-import { DownloadLine } from "../../../../theme/icons/DownloadLine";
-import { File } from "../../../../theme/icons/File";
-import { formatBytes } from "../../../../utils/file.utils";
+import { Bin } from "../../../../../theme/icons/Bin";
+import { DownloadLine } from "../../../../../theme/icons/DownloadLine";
+import { File } from "../../../../../theme/icons/File";
+import { formatBytes } from "../../../../../utils/file.utils";
 
 const baseStyle = {
   flex: 1,
@@ -35,10 +34,10 @@ const activeStyle = {
 
 interface Props {
   options: DropzoneOptions;
-  isLoading: boolean;
+  isDisabled: boolean;
 }
 
-export const Dropzone: FC<Props> = ({ options, isLoading }) => {
+export const Dropzone: FC<Props> = ({ options, isDisabled }) => {
   const [files, setFiles] = useState<File[]>([]);
 
   const onDrop: DropzoneOptions["onDrop"] = (
@@ -74,40 +73,35 @@ export const Dropzone: FC<Props> = ({ options, isLoading }) => {
   return (
     <Box {...getRootProps({ style })} minH="200px">
       {files.length ? (
-        isLoading ? (
-          <Box textAlign="center" flex="1" flexDirection="column">
-            <Spinner />
-            {/* <Text mt={2}>{lastMessage}</Text> */}
-          </Box>
-        ) : (
-          <List>
-            {files.map((file) => {
-              return (
-                <ListItem
-                  key={file.name}
-                  borderBottom="solid 1px"
-                  borderColor="dgalt"
-                  pb={3}
-                >
-                  <HStack>
-                    <File boxSize="5" color="bluefrance" />
-                    <Box flexGrow={1}>
-                      <Text>
-                        {file.name} - {formatBytes(file.size)}
-                      </Text>
-                    </Box>
+        <List w="full">
+          {files.map((file) => {
+            return (
+              <ListItem
+                key={file.name}
+                borderBottom="solid 1px"
+                borderColor="dgalt"
+                pb={3}
+              >
+                <HStack>
+                  <File boxSize="5" color="bluefrance.main" />
+                  <Box flexGrow={1}>
+                    <Text>
+                      {file.name} - {formatBytes(file.size)}
+                    </Text>
+                  </Box>
+                  {!isDisabled && (
                     <Bin
                       boxSize="5"
                       color="redmarianne"
                       cursor="pointer"
                       onClick={() => handleDelete(file)}
                     />
-                  </HStack>
-                </ListItem>
-              );
-            })}
-          </List>
-        )
+                  )}
+                </HStack>
+              </ListItem>
+            );
+          })}
+        </List>
       ) : (
         <>
           <Input {...inputProps} />

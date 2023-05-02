@@ -64,12 +64,12 @@ const LoggedIn: FC<Props> = ({ user }) => {
           {user.is_admin && (
             <MenuGroup title="Administration">
               <MenuItem
-                data-id="menuitem:importfile"
-                href="/admin/import"
+                data-id="menuitem:admin:manage-files"
+                href="/admin/fichier"
                 as={NavLink}
                 icon={<Settings boxSize={4} color="bluefrance.main" />}
               >
-                Import de fichier
+                Gestion des fichiers
               </MenuItem>
             </MenuGroup>
           )}

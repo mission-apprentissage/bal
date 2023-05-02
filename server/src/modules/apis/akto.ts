@@ -4,6 +4,11 @@ import querystring from "querystring";
 
 import { config } from "../../../config/config";
 import { ApiError } from "../../utils/apiUtils";
+import getApiClient from "./client";
+
+const axiosClient = getApiClient({
+  baseURL: "https://api.akto.fr/referentiel/api/v1",
+});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let token = {} as any;
@@ -58,8 +63,8 @@ export const getAktoVerification = async (siren: string, email: string) => {
   token = await getToken(token);
 
   try {
-    const { data } = await axios.get(
-      `https://api.akto.fr/referentiel/api/v1/Relations/Validation?email=${email}&siren=${siren}`,
+    const { data } = await axiosClient.get(
+      `/Relations/Validation?email=${email}&siren=${siren}`,
       {
         headers: {
           Authorization: `Bearer ${token.access_token}`,

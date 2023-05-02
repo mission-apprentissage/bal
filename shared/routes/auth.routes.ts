@@ -51,7 +51,6 @@ export const SReqPostResetPassword = {
 } as const;
 
 export type IReqPostResetPassword = FromSchema<typeof SReqPostResetPassword>;
-
 export interface IStatus {
   error?: boolean;
   message?: string;
