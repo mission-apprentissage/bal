@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/mission-apprentissage/bal/compare/v1.26.2...v1.27.0) (2023-05-02)
+
+
+### Features
+
+* add processor container ([#75](https://github.com/mission-apprentissage/bal/issues/75)) ([4945d5d](https://github.com/mission-apprentissage/bal/commit/4945d5d1991268c6de5e691f45b6e31ed3cde050))
+
 ## [1.26.2](https://github.com/mission-apprentissage/bal/compare/v1.26.1...v1.26.2) (2023-04-26)
 
 
