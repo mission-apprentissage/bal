@@ -1,5 +1,8 @@
+import { Filter, FindOptions, ObjectId, UpdateFilter } from "mongodb";
+import { IOrganisation } from "shared/models/organisation.model";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
+import { getDbCollection } from "../../utils/mongodb";
 import { getAktoVerification } from "../apis/akto";
 import { getOpcoEpVerification } from "../apis/opcoEp";
 import { getDecaVerification } from "./deca.actions";
@@ -68,4 +71,62 @@ export const validation = async ({
   return {
     is_valid: false,
   };
+};
+
+// type ICreateOrganisation = {
+//   nom: string;
+// };
+// TODO ICreateOrganisation
+export const createOrganisation = async (data: any) => {
+  const _id = new ObjectId();
+
+  const { insertedId: organisationId } = await getDbCollection(
+    "organisations"
+  ).insertOne({
+    ...data,
+    _id,
+  });
+
+  return organisationId;
+};
+
+export const findOrganisation = async (
+  filter: Filter<IOrganisation>,
+  options?: FindOptions
+) => {
+  const organisation = await getDbCollection(
+    "organisations"
+  ).findOne<IOrganisation>(filter, options);
+
+  return organisation;
+};
+
+export const findOrganisationBySiret = async (
+  siret: string,
+  options?: FindOptions
+) => {
+  const organisation = await getDbCollection(
+    "organisations"
+  ).findOne<IOrganisation>(
+    { "organisation.etablissements.siret": siret },
+    options
+  );
+
+  return organisation;
+};
+
+export const updatePerson = async (
+  organisation: IOrganisation,
+  data: Partial<IOrganisation>,
+  updateFilter: UpdateFilter<IOrganisation> = {}
+) => {
+  return await getDbCollection("organisations").findOneAndUpdate(
+    {
+      _id: organisation._id,
+    },
+    {
+      $set: data,
+      ...updateFilter,
+    }
+  );
 };

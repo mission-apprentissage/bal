@@ -28,6 +28,21 @@ export const SPerson = {
       items: {
         type: "string",
       },
+      description:
+        "Liste de sirets recensé (sécurisation qualité de la donnée)",
+    },
+    event_ids: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
+    _meta: {
+      type: "object",
+      properties: {
+        source: { type: "string" },
+      },
+      additionalProperties: true,
     },
     updated_at: {
       type: "string",

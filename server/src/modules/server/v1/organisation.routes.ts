@@ -4,7 +4,7 @@ import {
   SResPostOrganisationValidation,
 } from "shared/routes/v1/organisation.routes";
 
-import { validation } from "../../actions/organisation.actions";
+import { validation } from "../../actions/organisations.actions";
 import { Server } from "..";
 
 export const organisationRoutes = ({ server }: { server: Server }) => {

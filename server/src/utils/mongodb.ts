@@ -147,7 +147,7 @@ export const configureDbSchemaValidation = async (
         return;
       }
 
-      const convertedSchema = convertSchemaToMongoSchema(schema);
+      const convertedSchema = convertSchemaToMongoSchema(schema as JSONSchema7);
 
       try {
         await db.command({

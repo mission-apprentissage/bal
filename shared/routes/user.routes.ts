@@ -5,8 +5,9 @@ export const SReqPostUser = {
   properties: {
     email: { type: "string", format: "email" },
     password: { type: "string" },
+    organisation_id: { type: "string" },
   },
-  required: ["email", "password"],
+  required: ["email", "password", "organisation_id"],
 } as const;
 
 export type IReqPostUser = FromSchema<typeof SReqPostUser>;

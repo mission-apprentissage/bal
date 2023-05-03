@@ -2,7 +2,7 @@ fileignoreconfig:
 - filename: '*.mjml.ejs'
   checksum: 9e0290e41389acecddebce27c63d2af3687ece2b8ea5ce61ab33617c74728536
 - filename: '*.route.test.ts'
-  checksum: 13089bab185e23aa0d8b0b887642561de7619edd3ca58261b1f73f174a365930
+  checksum: c0944edc51d1394bd9d5f9a1a8aaf8cf817b7bc7928cf428d2292a1d293b2198
 - filename: '*.test.ts'
   checksum: f870d8d29433a962542bbb313b61e1273fdf1023457010b2f5425c480b16c7b5
 - filename: .github/workflows/_deploy.yml

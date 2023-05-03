@@ -5,20 +5,32 @@ import { generateKey, generateSecretHash } from "../../utils/cryptoUtils";
 import { createUserTokenSimple } from "../../utils/jwtUtils";
 import { getDbCollection } from "../../utils/mongodb";
 import { hashPassword } from "../server/utils/password.utils";
+import { createPerson } from "./persons.actions";
 
 type ICreateUser = {
   email: string;
   password: string;
+  organisation_id: string;
   is_admin?: boolean;
 };
 
-export const createUser = async (data: ICreateUser) => {
+export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
+  const person = await createPerson({
+    email: data.email,
+    organisation_id,
+    _meta: { source: "bal" },
+  });
+  if (!person) {
+    throw new Error("Can't create person");
+  }
+
   const _id = new ObjectId();
 
   const password = hashPassword(data.password);
 
   const { insertedId: userId } = await getDbCollection("users").insertOne({
     ...data,
+    person_id: person._id,
     _id,
     password,
   });

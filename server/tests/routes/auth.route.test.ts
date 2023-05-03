@@ -20,6 +20,7 @@ describe("Authentication", () => {
     const user = await createUser({
       email: "email@exemple.fr",
       password: "my-password",
+      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const response = await app.inject({
@@ -42,6 +43,7 @@ describe("Authentication", () => {
     const user = await createUser({
       email: "email@exemple.fr",
       password: "my-password",
+      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const responseIncorrectEmail = await app.inject({
@@ -71,6 +73,7 @@ describe("Authentication", () => {
     const user = await createUser({
       email: "email@exemple.fr",
       password: "my-password",
+      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const responseLogin = await app.inject({
@@ -109,6 +112,7 @@ describe("Authentication", () => {
     const user = await createUser({
       email: "email@example.fr",
       password: "my-password",
+      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const responseLogin = await app.inject({
@@ -159,6 +163,7 @@ describe("Authentication", () => {
     const user = await createUser({
       email: "email@exemple.fr",
       password: "my-password",
+      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const response = await app.inject({
@@ -176,6 +181,7 @@ describe("Authentication", () => {
     const user = await createUser({
       email: "email@exemple.fr",
       password: "my-password",
+      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const token = createResetPasswordToken(user?.email as string);

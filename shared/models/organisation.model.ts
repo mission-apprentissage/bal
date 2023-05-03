@@ -33,7 +33,13 @@ export const SOrganisation = {
         },
       },
     },
-    _meta: { type: "object", additionalProperties: true }, // UAI
+    _meta: {
+      type: "object",
+      properties: {
+        source: { type: "string" },
+      },
+      additionalProperties: true,
+    }, // exemple UAI
     updated_at: {
       type: "string",
       format: "date-time",
