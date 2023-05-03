@@ -9,6 +9,9 @@ export const Nav = () => {
       <NavLink href="/" segment={null}>
         Accueil
       </NavLink>
+      <NavLink href="/usage" segment="usage">
+        API
+      </NavLink>
     </HStack>
   );
 };
