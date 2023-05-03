@@ -96,9 +96,11 @@ const UsageVerificationPage = () => {
               <Heading size="sm" mb={2}>
                 Réponse
               </Heading>
-              <pre>
-                <p>{JSON.stringify(responseData, null, "\t")}</p>
-              </pre>
+              <Box mt={2} p={2} bgColor="grey.100">
+                <pre>
+                  <p>{JSON.stringify(responseData, null, "\t")}</p>
+                </pre>
+              </Box>
             </Box>
           )}
         </form>
