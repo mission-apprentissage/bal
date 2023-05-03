@@ -2,7 +2,9 @@ import { verify } from "jsonwebtoken";
 
 import { config } from "../../../config/config";
 import { createResetPasswordToken } from "../../utils/jwtUtils";
+import logger from "../../utils/logger";
 import { hashPassword, verifyPassword } from "../server/utils/password.utils";
+import { sendEmail } from "../services/mailer/mailer";
 import { findUser, updateUser } from "./users.actions";
 
 export const verifyEmailPassword = async (email: string, password: string) => {
@@ -25,20 +27,21 @@ export const sendResetPasswordEmail = async (email: string) => {
   const user = await findUser({ email });
 
   if (!user) {
+    logger.warn({ email }, "forgot-password: missing user");
     return;
   }
 
   const token = createResetPasswordToken(user.email);
 
-  // TODO: use a template
-  //   await getMailer().sendMail({
-  //     to: email,
-  //     subject: "Réinitialisation de votre mot de passe",
-  //     text: "Réinitialisation de votre mot de passe",
-  //     html: `<a href="/modifier-mot-de-passe?token=${token}">Réinitialise</a>`,
-  //   });
-
-  return token;
+  await sendEmail(user.email, "reset_password", {
+    recipient: {
+      civility: user.civility,
+      prenom: user.prenom,
+      nom: user.nom,
+      email: user.email,
+    },
+    resetPasswordToken: token,
+  });
 };
 
 export const resetPassword = async (password: string, token: string) => {

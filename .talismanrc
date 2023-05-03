@@ -64,7 +64,7 @@ fileignoreconfig:
 - filename: server/.env.test
   checksum: 7d87327d57c06f974fbd0f8b2c426c10f75d62fd66f23c225389ebd9d0a28bf9
 - filename: server/config/config.ts
-  checksum: c01f11442ce930e39f73301c1577efff14cbf93523b18fd3edd9726548374cc1
+  checksum: dee90e5b9ea1162aaffc204bd46a7801f8abba89fddd3f7077990321299ff3bf
 - filename: server/src/app.ts
   checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
 - filename: server/src/modules/actions/organisation.actions.ts
