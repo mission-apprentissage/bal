@@ -155,6 +155,19 @@ services:
       interval: 60s
       retries: 3
       start_period: 120s
+  
+  smtp:
+    image: axllent/mailpit:v1.5.5
+    container_name: bal_smtp
+    mem_limit: 128m
+    ports:
+      - 1025:1025
+    networks:
+      - bal_network
+    volumes:
+      - /opt/bal/data/smtp:/data
+    environment:
+      - MP_DATA_FILE=/data/mailpit.db
 
   nodeexporter:
     image: prom/node-exporter:v1.5.0
