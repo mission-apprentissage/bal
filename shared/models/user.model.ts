@@ -11,6 +11,13 @@ export const SUser = {
   properties: {
     _id: { type: "string" },
     email: { type: "string" },
+    civility: {
+      type: "string",
+      description: "civilité",
+      enum: ["Madame", "Monsieur"],
+    },
+    nom: { type: "string", description: "Le nom de la personne" },
+    prenom: { type: "string", description: "Le prénom de la personne" },
     password: { type: "string" },
     is_admin: { type: "boolean" },
     api_key: { type: "string" },

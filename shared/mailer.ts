@@ -3,9 +3,9 @@
 export type TemplatePayloads = {
   reset_password: {
     recipient: {
-      civility?: string;
-      nom?: string;
-      prenom?: string;
+      civility?: "Madame" | "Monsieur" | undefined;
+      nom?: string | undefined;
+      prenom?: string | undefined;
       email: string;
     };
     resetPasswordToken: string;

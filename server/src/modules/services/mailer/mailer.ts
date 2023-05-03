@@ -29,6 +29,7 @@ export function createMailerService(
 ) {
   async function sendEmailMessage(
     to: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     template: { subject: string; templateFile: string; data: any }
   ) {
     const { subject, data } = template;
@@ -42,6 +43,7 @@ export function createMailerService(
         help: "https://mission-apprentissage.gitbook.io/general/les-services-en-devenir/accompagner-les-futurs-apprentis", // TODO [metier/tech]
         unsubscribe: getPublicUrl(`/api/emails/${data.token}/unsubscribe`),
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     })) as any;
 
     return messageId;
@@ -63,7 +65,7 @@ export async function sendEmail<T extends TemplateName>(
     templateFile: path.join(
       // @ts-ignore
       __dirname(import.meta.url),
-      `emails/${template}.mjml.ejs`
+      `../src/modules/services/mailer/emails/${template}.mjml.ejs`
     ),
     data: payload,
   });
@@ -78,7 +80,7 @@ export function getEmailInfos<T extends TemplateName>(
     templateFile: path.join(
       // @ts-ignore
       __dirname(import.meta.url),
-      `emails/${template}.mjml.ejs`
+      `../src/modules/services/mailer/emails/${template}.mjml.ejs`
     ),
     data: payload,
   };
