@@ -5,60 +5,61 @@ import { v4 as uuidv4 } from "uuid";
 import { mailer } from "../../services";
 // import { generateHtml } from "../../utils/emailsUtils";
 import logger from "../../utils/logger";
+import { getDbCollection } from "../../utils/mongodb";
 // import { getEmailInfos } from "../services/mailer/mailer";
 
-// function addEmail(
-//   userEmail: string,
-//   token: string,
-//   templateName: string,
-//   payload: any
-// ) {
-//   return usersMigrationDb().findOneAndUpdate(
-//     { email: userEmail },
-//     {
-//       // @ts-ignore
-//       $push: {
-//         emails: {
-//           token,
-//           templateName,
-//           payload,
-//           sendDates: [new Date()],
-//         },
-//       },
-//     },
-//     { returnDocument: "after" }
-//   );
-// }
+function addEmail(
+  person_id: string,
+  token: string,
+  templateName: string,
+  payload: any
+) {
+  return getDbCollection("events").findOneAndUpdate(
+    { person_id, type: "bal_emails" },
+    {
+      // @ts-ignore
+      $push: {
+        "payload.emails": {
+          token,
+          templateName,
+          payload,
+          sendDates: [new Date()],
+        },
+      },
+    },
+    { returnDocument: "after", upsert: true }
+  );
+}
 
-// function addEmailMessageId(token, messageId) {
-//   return usersMigrationDb().findOneAndUpdate(
-//     { "emails.token": token },
-//     {
-//       $addToSet: {
-//         "emails.$.messageIds": messageId,
-//       },
-//       $unset: {
-//         "emails.$.error": 1,
-//       },
-//     },
-//     { returnDocument: "after" }
-//   );
-// }
+function addEmailMessageId(token, messageId) {
+  return getDbCollection("events").findOneAndUpdate(
+    { "payload.emails.token": token, type: "bal_emails" },
+    {
+      $addToSet: {
+        "payload.emails.$.messageIds": messageId,
+      },
+      $unset: {
+        "payload.emails.$.error": 1,
+      },
+    },
+    { returnDocument: "after" }
+  );
+}
 
-// function addEmailError(token, e) {
-//   return usersMigrationDb().findOneAndUpdate(
-//     { "emails.token": token },
-//     {
-//       $set: {
-//         "emails.$.error": {
-//           type: "fatal",
-//           message: e.message,
-//         },
-//       },
-//     },
-//     { returnDocument: "after" }
-//   );
-// }
+function addEmailError(token, e) {
+  return getDbCollection("events").findOneAndUpdate(
+    { "payload.emails.token": token, type: "bal_emails" },
+    {
+      $set: {
+        "payload.emails.$.error": {
+          type: "fatal",
+          message: e.message,
+        },
+      },
+    },
+    { returnDocument: "after" }
+  );
+}
 
 // export async function markEmailAsDelivered(messageId) {
 //   return usersMigrationDb().findOneAndUpdate(
@@ -128,7 +129,7 @@ import logger from "../../utils/logger";
 
 // version intermédiaire qui prend le template en paramètre (constuit et vérifié au préalable avec TS)
 export async function sendStoredEmail<T extends TemplateName>(
-  recipient: string,
+  person_id: string,
   templateName: T,
   payload: TemplatePayloads[T],
   template: any
@@ -136,12 +137,14 @@ export async function sendStoredEmail<T extends TemplateName>(
   const emailToken = uuidv4();
   try {
     template.data.token = emailToken;
-    // await addEmail(recipient, emailToken, templateName, payload);
-    // const messageId = await mailer.sendEmailMessage(recipient, template);
-    await mailer.sendEmailMessage(recipient, template);
-    // await addEmailMessageId(emailToken, messageId);
+    await addEmail(person_id, emailToken, templateName, payload);
+    const messageId = await mailer.sendEmailMessage(
+      payload.recipient.email,
+      template
+    );
+    await addEmailMessageId(emailToken, messageId);
   } catch (err: any) {
     logger.error({ err, template: templateName }, "error sending email");
-    // await addEmailError(emailToken, err);
+    await addEmailError(emailToken, err);
   }
 }

@@ -1,19 +1,21 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { SBalEmailsPayload } from "./bal_emails.event";
+
 const collectionName = "events";
 
 const indexes = () => {
-  return [];
+  return [[{ person_id: 1 }], [{ "payload.emails.token": 1 }, {}]];
 };
 
 export const SEvent = {
   type: "object",
   properties: {
     _id: { type: "string" },
-    type: { type: "string", enum: ["email"] },
+    person_id: { type: "string" },
+    type: { type: "string", enum: ["bal_emails"] },
     payload: {
-      type: "object",
-      additionalProperties: true,
+      anyOf: [SBalEmailsPayload],
     },
   },
 } as const;

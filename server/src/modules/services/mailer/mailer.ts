@@ -55,12 +55,12 @@ export function createMailerService(
 }
 
 export async function sendEmail<T extends TemplateName>(
-  recipient: string,
+  person_id: string,
   template: T,
   payload: TemplatePayloads[T]
 ): Promise<void> {
   // identifiant email car stocké en BDD et possibilité de le consulter via navigateur
-  await sendStoredEmail(recipient, template, payload, {
+  await sendStoredEmail(person_id, template, payload, {
     subject: templatesTitleFuncs[template](payload),
     templateFile: path.join(
       // @ts-ignore

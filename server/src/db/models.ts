@@ -1,6 +1,6 @@
 import documentsModelDescriptor from "shared/models/document.model";
 import documentContentsModelDescriptor from "shared/models/documentContent.model";
-import eventsModelDescriptor from "shared/models/event.model";
+import eventsModelDescriptor from "shared/models/events/event.model";
 import organisationsModelDescriptor from "shared/models/organisation.model";
 import personsModelDescriptor from "shared/models/person.model";
 import sessionsModelDescriptor from "shared/models/session.model";
