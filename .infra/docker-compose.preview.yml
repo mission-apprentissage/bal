@@ -76,6 +76,24 @@ services:
       retries: 3
       start_period: 120s
 
+  smtp:
+    image: axllent/mailpit:v1.5.5
+    container_name: bal_smtp
+    mem_limit: 128m
+    ports:
+      - 1025:1025
+    networks:
+      - bal_network
+    volumes:
+      - /opt/bal/data/smtp:/data
+    environment:
+      - MP_DATA_FILE=/data/mailpit.db
+      - VIRTUAL_HOST=bal-preview.apprentissage.beta.gouv.fr
+      - VIRTUAL_PATH=/smtp
+      - VIRTUAL_PORT=8025
+      - LETSENCRYPT_HOST=bal-preview.apprentissage.beta.gouv.fr
+      - LETSENCRYPT_EMAIL=misson.apprentissage.devops@gmail.com
+
 volumes:
   conf:
   vhost:
