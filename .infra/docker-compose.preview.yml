@@ -86,8 +86,10 @@ services:
       - bal_network
     volumes:
       - /opt/bal/data/smtp:/data
+      - /opt/bal/config/mailpit/auth:/auth
     environment:
       - MP_DATA_FILE=/data/mailpit.db
+      - MP_UI_AUTH_FILE=/auth
       - VIRTUAL_HOST=smtp.bal-preview.apprentissage.beta.gouv.fr
       - VIRTUAL_PATH=/
       - VIRTUAL_PORT=8025

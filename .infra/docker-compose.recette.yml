@@ -166,8 +166,10 @@ services:
       - bal_network
     volumes:
       - /opt/bal/data/smtp:/data
+      - /opt/bal/config/mailpit/auth:/auth
     environment:
       - MP_DATA_FILE=/data/mailpit.db
+      - MP_UI_AUTH_FILE=/auth
 
   nodeexporter:
     image: prom/node-exporter:v1.5.0
