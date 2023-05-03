@@ -8,8 +8,8 @@ const UsagePage = () => {
   return (
     <Container maxWidth={"container.xl"}>
       <HStack spacing={4}>
-        <NavLink href="/usage/verification" segment="verification">
-          Vérification
+        <NavLink href="/usage/validation" segment="validation">
+          Validation
         </NavLink>
       </HStack>
     </Container>

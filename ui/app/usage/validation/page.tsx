@@ -5,6 +5,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Heading,
   Input,
   InputGroup,
 } from "@chakra-ui/react";
@@ -12,12 +13,17 @@ import { AxiosError } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { IReqPostOrganisationValidation } from "../../../../shared/routes/v1/organisation.routes";
+import {
+  IReqPostOrganisationValidation,
+  IResOrganisationValidation,
+} from "../../../../shared/routes/v1/organisation.routes";
 import { api } from "../../../utils/api.utils";
 
 const UsageVerificationPage = () => {
-  const [responseData, setResponseData] =
+  const [requestData, setRequestData] =
     useState<IReqPostOrganisationValidation>();
+  const [responseData, setResponseData] =
+    useState<IResOrganisationValidation>();
   const {
     register,
     handleSubmit,
@@ -26,11 +32,12 @@ const UsageVerificationPage = () => {
 
   const onSubmit = async (data: IReqPostOrganisationValidation) => {
     try {
+      setRequestData(data);
       const response = await api.post("/v1/organisation/validation", data);
 
       setResponseData(response.data);
     } catch (error) {
-      const axiosError = error as AxiosError<IReqPostOrganisationValidation>;
+      const axiosError = error as AxiosError<IResOrganisationValidation>;
       setResponseData(axiosError.response?.data);
       console.error(error);
     }
@@ -39,6 +46,9 @@ const UsageVerificationPage = () => {
   return (
     <>
       <Box>
+        <Heading size="md" mb={2}>
+          POST /v1/organisation/validation
+        </Heading>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl isInvalid={!!errors.email} mb={5}>
             <FormLabel>Email</FormLabel>
@@ -69,8 +79,23 @@ const UsageVerificationPage = () => {
             Envoyer
           </Button>
 
+          {requestData && (
+            <Box mt={4}>
+              <Heading size="sm" mb={2}>
+                Requête
+              </Heading>
+              <Box mt={2} p={2} bgColor="grey.100">
+                <pre>
+                  <p>{JSON.stringify(requestData, null, "\t")}</p>
+                </pre>
+              </Box>
+            </Box>
+          )}
           {responseData && (
-            <Box mt={4} p={2} bgColor="grey.100">
+            <Box mt={4}>
+              <Heading size="sm" mb={2}>
+                Réponse
+              </Heading>
               <pre>
                 <p>{JSON.stringify(responseData, null, "\t")}</p>
               </pre>
