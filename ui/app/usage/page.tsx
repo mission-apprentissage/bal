@@ -1,18 +1,27 @@
 "use client";
-import { Container, HStack } from "@chakra-ui/react";
 
-import { NavLink } from "../components/NavLink";
+import { Heading, Link, ListItem, UnorderedList } from "@chakra-ui/react";
+import NextLink from "next/link";
 
-// TODO layout
+import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
+
 const UsagePage = () => {
   return (
-    <Container maxWidth={"container.xl"}>
-      <HStack spacing={4}>
-        <NavLink href="/usage/validation" segment="validation">
-          Validation
-        </NavLink>
-      </HStack>
-    </Container>
+    <>
+      <Breadcrumb pages={[PAGES.homepage(), PAGES.usageApi()]} />
+
+      <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
+        Usage API
+      </Heading>
+
+      <UnorderedList>
+        <ListItem>
+          <Link href="/usage/validation" as={NextLink}>
+            Validation
+          </Link>
+        </ListItem>
+      </UnorderedList>
+    </>
   );
 };
 

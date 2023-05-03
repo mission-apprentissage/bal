@@ -18,6 +18,7 @@ import {
   IResOrganisationValidation,
 } from "../../../../shared/routes/v1/organisation.routes";
 import { api } from "../../../utils/api.utils";
+import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 
 const UsageVerificationPage = () => {
   const [requestData, setRequestData] =
@@ -45,10 +46,13 @@ const UsageVerificationPage = () => {
 
   return (
     <>
+      <Breadcrumb pages={[PAGES.homepage(), PAGES.usageApi()]} />
+
+      <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
+        POST /v1/organisation/validation
+      </Heading>
+
       <Box>
-        <Heading size="md" mb={2}>
-          POST /v1/organisation/validation
-        </Heading>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl isInvalid={!!errors.email} mb={5}>
             <FormLabel>Email</FormLabel>
