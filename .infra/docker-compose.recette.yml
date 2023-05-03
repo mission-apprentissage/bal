@@ -166,7 +166,7 @@ services:
       - bal_network
     volumes:
       - /opt/bal/data/smtp:/data
-      - /opt/bal/config/mailpit/auth:/auth
+      - /opt/bal/configs/mailpit/auth:/auth
     environment:
       - MP_DATA_FILE=/data/mailpit.db
       - MP_UI_AUTH_FILE=/auth
