@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . .
 
 RUN yarn plugin import workspace-tools
-RUN yarn workspaces focus ui 
+RUN yarn workspaces focus ui &> /dev/null
 
 # Rebuild the source code only when needed
 FROM node:18-alpine AS builder

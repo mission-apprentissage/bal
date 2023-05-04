@@ -42,8 +42,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GH_FG_TOKEN }}
 
-      # - name: Run yarn Install
-      #   run: yarn install &> /dev/null
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - run: git checkout HEAD^
 
       - name: bump and release
         run: npx semantic-release
