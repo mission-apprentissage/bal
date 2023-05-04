@@ -12,6 +12,7 @@ export const SUser = {
     _id: { type: "string" },
     email: { type: "string" },
     password: { type: "string" },
+    person_id: { type: "string" },
     is_admin: { type: "boolean" },
     api_key: { type: "string" },
     api_key_used_at: {
@@ -20,7 +21,7 @@ export const SUser = {
       description: "Date de denière utilisation de la clé api",
     },
   },
-  required: ["_id", "email", "password"],
+  required: ["_id", "email", "password", "person_id"],
 } as const;
 
 export interface IUser

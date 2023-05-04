@@ -4,6 +4,9 @@ install:
 start:
 	docker-compose up --build --force-recreate
 
+seed:
+	yarn --cwd server cli seed
+
 stop:
 	docker-compose stop
 

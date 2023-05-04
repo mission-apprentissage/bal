@@ -161,7 +161,7 @@ services:
       start_period: 120s
   
   smtp:
-    image: mailhog/mailhog
+    image: axllent/mailpit:v1.5.5
     container_name: bal_smtp
     mem_limit: 128m
     ports:
@@ -169,11 +169,9 @@ services:
     networks:
       - bal_network
     environment:
-      - MH_UI_WEB_PATH=smtp
-      - MH_STORAGE=mongodb
-      - MH_MONGO_URI=mongodb:27017
-      - MH_MONGO_DB=mna-bal
-      - MH_MONGO_COLLECTION=mailhog
+      - MP_DATA_FILE=/data/mailpit.db
+    volumes:
+      - bal_smtp_data:/data
     depends_on:
       - mongodb
 
@@ -190,6 +188,10 @@ volumes:
   bal_server_data:
     driver: local
     name: bal_server_data
+  bal_smtp_data:
+    driver: local
+    name: bal_smtp_data
+
 
 networks:
   bal_network:

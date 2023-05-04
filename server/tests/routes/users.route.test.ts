@@ -16,6 +16,7 @@ describe("Users routes", () => {
     const user = (await createUser({
       email: "connected@exemple.fr",
       password: "my-password",
+      organisation_id: "64520f65d7726475fd54b3b7",
     })) as IUser;
 
     const token = await generateApiKey(user);
@@ -44,6 +45,7 @@ describe("Users routes", () => {
     const admin = (await createUser({
       email: "admin@exemple.fr",
       password: "my-password",
+      organisation_id: "64520f65d7726475fd54b3b7",
       is_admin: true,
     })) as IUser;
 
@@ -52,7 +54,11 @@ describe("Users routes", () => {
     const response = await app.inject({
       method: "POST",
       url: "/api/admin/user",
-      payload: { email: "email@exemple.fr", password: "my-password" },
+      payload: {
+        email: "email@exemple.fr",
+        password: "my-password",
+        organisation_id: "64520f65d7726475fd54b3b7",
+      },
       headers: {
         ["Authorization"]: `Bearer ${token}`,
       },
@@ -72,6 +78,7 @@ describe("Users routes", () => {
     const user = (await createUser({
       email: "user@exemple.fr",
       password: "my-password",
+      organisation_id: "64520f65d7726475fd54b3b7",
     })) as IUser;
 
     const token = await generateApiKey(user);
@@ -79,7 +86,11 @@ describe("Users routes", () => {
     const response = await app.inject({
       method: "POST",
       url: "/api/admin/user",
-      payload: { email: "email@exemple.fr", password: "my-password" },
+      payload: {
+        email: "email@exemple.fr",
+        password: "my-password",
+        organisation_id: "64520f65d7726475fd54b3b7",
+      },
       headers: {
         ["Authorization"]: `Bearer ${token}`,
       },

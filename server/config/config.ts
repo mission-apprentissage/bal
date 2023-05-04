@@ -6,6 +6,14 @@ export const config = {
   appName: env.get("APP_NAME").default("BAL").asString(),
   env: env.get("MNA_BAL_ENV").required().asString(),
   publicUrl: env.get("MNA_BAL_PUBLIC_URL").required().asString(),
+  email: env
+    .get("MNA_BAL_EMAIL")
+    .default("contact@apprentissage.beta.gouv.fr")
+    .asString(),
+  email_from: env
+    .get("MNA_BAL_EMAIL_FROM")
+    .default("Boîte aux lettres")
+    .asString(),
   mongodb: {
     uri: env.get("MNA_BAL_MONGODB_URI").required().asString(),
   },
@@ -65,6 +73,7 @@ export const config = {
     host: env.get("MNA_BAL_SMTP_HOST").asString(),
     port: env.get("MNA_BAL_SMTP_PORT").asString(),
     secure: env.get("MNA_BAL_SMTP_SECURE").asBool(),
+    webhookKey: env.get("MNA_BAL_SMTP_WEBHOOK_KEY").default("").asString(),
     auth: {
       user: env.get("MNA_BAL_SMTP_AUTH_USER").asString(),
       pass: env.get("MNA_BAL_SMTP_AUTH_PASS").asString(),

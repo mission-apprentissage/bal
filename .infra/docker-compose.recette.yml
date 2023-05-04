@@ -70,6 +70,7 @@ services:
       - MNA_BAL_API_KEY={{ vault[env_type].MNA_BAL_API_KEY }}
       - MNA_BAL_SMTP_HOST={{ vault[env_type].MNA_BAL_SMTP_HOST }}
       - MNA_BAL_SMTP_PORT={{ vault[env_type].MNA_BAL_SMTP_PORT }}
+      - MNA_BAL_SMTP_WEBHOOK_KEY={{ vault[env_type].MNA_BAL_SMTP_WEBHOOK_KEY }}
       - MNA_BAL_SMTP_AUTH_USER={{ vault[env_type].MNA_BAL_SMTP_AUTH_USER }}
       - MNA_BAL_SMTP_AUTH_PASS={{ vault[env_type].MNA_BAL_SMTP_AUTH_PASS }}
       - MNA_BAL_API_ENTREPRISE_KEY={{ vault[env_type].MNA_BAL_API_ENTREPRISE_KEY }}
@@ -155,6 +156,21 @@ services:
       interval: 60s
       retries: 3
       start_period: 120s
+  
+  smtp:
+    image: axllent/mailpit:v1.5.5
+    container_name: bal_smtp
+    mem_limit: 128m
+    ports:
+      - 1025:1025
+    networks:
+      - bal_network
+    volumes:
+      - /opt/bal/data/smtp:/data
+      - /opt/bal/configs/mailpit/auth:/auth
+    environment:
+      - MP_DATA_FILE=/data/mailpit.db
+      - MP_UI_AUTH_FILE=/auth
 
   nodeexporter:
     image: prom/node-exporter:v1.5.0

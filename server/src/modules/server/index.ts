@@ -12,14 +12,20 @@ import { uploadAdminRoutes } from "./admin/upload.routes";
 import { userAdminRoutes } from "./admin/user.routes";
 import { authRoutes } from "./auth.routes";
 import { coreRoutes } from "./core.routes";
+import { emailsRoutes } from "./emails.routes";
 import { userRoutes } from "./user.routes";
-import { authValidateJWT, authValidateSession } from "./utils/auth.strategies";
+import {
+  authValidateJWT,
+  authValidateSession,
+  authWebHookKey,
+} from "./utils/auth.strategies";
 import { organisationRoutes } from "./v1/organisation.routes";
 
 type FastifyServer = typeof server;
 export interface Server extends FastifyServer {
   validateJWT: FastifyAuthFunction;
   validateSession: FastifyAuthFunction;
+  validateWebHookKey: FastifyAuthFunction;
 }
 
 export function build(opts: FastifyServerOptions = {}) {
@@ -59,7 +65,8 @@ export function build(opts: FastifyServerOptions = {}) {
   // stratégies d'authentification
   app
     .decorate("validateJWT", authValidateJWT)
-    .decorate("validateSession", authValidateSession);
+    .decorate("validateSession", authValidateSession)
+    .decorate("validateWebHookKey", authWebHookKey);
 
   app.register(fastifyMultipart);
   app.register(fastifyAuth);
@@ -96,6 +103,7 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
   coreRoutes({ server });
   authRoutes({ server });
   userRoutes({ server });
+  emailsRoutes({ server });
   userAdminRoutes({ server });
   uploadAdminRoutes({ server });
 };

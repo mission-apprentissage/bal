@@ -9,7 +9,7 @@ const indexes = () => {
 export const SOrganisation = {
   type: "object",
   properties: {
-    _id: { type: "string" },
+    _id: { type: "string", format: "ObjectId" },
     nom: { type: "string", description: "Nom de l'organisation" },
     email_domains: {
       type: "array",
@@ -33,7 +33,13 @@ export const SOrganisation = {
         },
       },
     },
-    _meta: { type: "object", additionalProperties: true }, // UAI
+    _meta: {
+      type: "object",
+      properties: {
+        source: { type: "string" },
+      },
+      additionalProperties: true,
+    }, // exemple UAI
     updated_at: {
       type: "string",
       format: "date-time",
@@ -49,5 +55,20 @@ export const SOrganisation = {
 } as const;
 
 export interface IOrganisation extends FromSchema<typeof SOrganisation> {}
+// export interface IOrganisation
+//   extends FromSchema<
+//     typeof SOrganisation,
+//     {
+//       deserialize: [
+//         {
+//           pattern: {
+//             type: "string";
+//             format: "ObjectId";
+//           };
+//           output: ObjectId;
+//         }
+//       ];
+//     }
+//   > {}
 
 export default { schema: SOrganisation, indexes, collectionName };

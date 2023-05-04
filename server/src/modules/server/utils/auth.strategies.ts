@@ -77,3 +77,14 @@ export const authValidateSession: FastifyAuthFunction = async (
     throw new Error("Session invalide");
   }
 };
+
+export const authWebHookKey: FastifyAuthFunction = async (request, _reply) => {
+  const { webhookKey } = request.query as { webhookKey: string | undefined };
+  if (!webhookKey) {
+    throw new Error("Clé manquante");
+  }
+
+  if (config.smtp.webhookKey !== webhookKey) {
+    throw new Error("Not authorised");
+  }
+};

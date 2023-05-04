@@ -8,7 +8,7 @@ import {
 } from "../../utils/mongodb";
 import { createUser } from "../actions/users.actions";
 import { processor } from "./processor/processor";
-import { seedTest } from "./seed/seed-test";
+import { seed } from "./seed/seed";
 const program = new Command();
 
 type IJob = () => Promise<void>;
@@ -25,11 +25,17 @@ program
   .description("Créer un utilisateur")
   .option("-e, --email <string>", "Email de l'utilisateur")
   .option("-p, --password <string>", "Mot de passe de l'utilisateur")
+  .option("-oId, --organisationId <string>", "Organisation Id")
   .option("-a, --admin", "administrateur")
-  .action(async ({ email, password, admin = false }) =>
+  .action(async ({ email, password, organisationId, admin = false }) =>
     runScript(async () => {
       try {
-        await createUser({ email, password, is_admin: admin });
+        await createUser({
+          email,
+          password,
+          is_admin: admin,
+          organisation_id: organisationId,
+        });
         process.exit(0);
       } catch (error) {
         console.error(error);
@@ -39,12 +45,12 @@ program
   );
 
 program
-  .command("seed:test")
-  .description("Seed test env")
+  .command("seed")
+  .description("Seed env")
   .action(async () =>
     runScript(async () => {
       try {
-        await seedTest();
+        await seed();
         process.exit(0);
       } catch (error) {
         console.error(error);

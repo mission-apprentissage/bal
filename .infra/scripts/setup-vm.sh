@@ -12,6 +12,7 @@ function setup() {
     ansible_become_default="--ask-become-pass"
   fi
 
+  export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES 
   ansible-galaxy install patrickjahns.promtail
   ansible-galaxy install geerlingguy.docker
   ansible-galaxy collection install community.general
