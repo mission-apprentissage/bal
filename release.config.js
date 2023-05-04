@@ -15,6 +15,7 @@ const mainConfig = {
       "@semantic-release/exec",
       {
         prepareCmd: "./git-hooks/prepare-release.sh ${nextRelease.version}",
+        publishCmd: "git checkout -- package.json",
       },
     ],
     [
@@ -35,12 +36,12 @@ const mainConfig = {
       },
     ],
     "@semantic-release/github",
-    [
-      "@semantic-release/exec",
-      {
-        publishCmd: "git checkout -- package.json",
-      },
-    ],
+    // [
+    //   "@semantic-release/exec",
+    //   {
+    //     publishCmd: "git checkout -- package.json",
+    //   },
+    // ],
     [
       "semantic-release-slack-bot",
       {

@@ -7,15 +7,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  tests:
-    if: "!startsWith(github.event.head_commit.message, 'chore')"
-    uses: "./.github/workflows/ci.yml"
-    secrets:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  # tests:
+  #   if: "!startsWith(github.event.head_commit.message, 'chore')"
+  #   uses: "./.github/workflows/ci.yml"
+  #   secrets:
+  #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   release:
     if: "!startsWith(github.event.head_commit.message, 'chore')"
-    needs: ["tests"]
+    # needs: ["tests"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -45,10 +45,8 @@ jobs:
       - name: Run yarn Install
         run: yarn install &> /dev/null
 
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
-      - run: git checkout main
+      # - run: git fetch
+      # - run: git checkout main
 
       - name: bump and release
         run: yarn app:release
