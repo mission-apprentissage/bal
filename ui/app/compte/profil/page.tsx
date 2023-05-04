@@ -14,11 +14,13 @@ import fr from "date-fns/locale/fr";
 import { useState } from "react";
 
 import { IResGetGenerateApiKey } from "../../../../shared/routes/user.routes";
+import { Dialog } from "../../../components/dialog/Dialog";
 import { useAuth } from "../../../context/AuthContext";
 import { api } from "../../../utils/api.utils";
 
 const ProfilPage = () => {
   const { user } = useAuth();
+  const [isGenerateTokenOpen, setIsGenerateTokenOpen] = useState(false);
   const [apiKey, setApiKey] = useState<string | undefined>();
   const toast = useToast();
 
@@ -50,6 +52,8 @@ const ProfilPage = () => {
         duration: 4000,
         isClosable: true,
       });
+    } finally {
+      setIsGenerateTokenOpen(false);
     }
   };
 
@@ -93,9 +97,32 @@ const ProfilPage = () => {
 
       <Box mt={4}>
         {!apiKey ? (
-          <Button variant="primary" onClick={generateApiKey}>
-            Générer un nouveau jeton
-          </Button>
+          <>
+            <Dialog
+              title="Générer un nouveau jeton API"
+              modalProps={{
+                onClose: () => setIsGenerateTokenOpen(false),
+                isOpen: isGenerateTokenOpen,
+              }}
+              cancelButtonProps={{
+                onClick: () => setIsGenerateTokenOpen(false),
+              }}
+              proceedButtonProps={{
+                onClick: generateApiKey,
+              }}
+            >
+              <Text>
+                Êtes-vous sûr de vouloir générer un nouveau jeton API ? Le jeton
+                existant ne sera plus utilisable.
+              </Text>
+            </Dialog>
+            <Button
+              variant="primary"
+              onClick={() => setIsGenerateTokenOpen(true)}
+            >
+              Générer un nouveau jeton API
+            </Button>
+          </>
         ) : (
           <Text>
             Ce jeton n'est visible qu'une fois, il est recommandé de le stocker

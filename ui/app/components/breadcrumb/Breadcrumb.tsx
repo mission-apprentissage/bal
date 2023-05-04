@@ -53,6 +53,18 @@ export const PAGES = {
     title: "Import de fichier",
     path: "/admin/fichier/import",
   }),
+  usageApi: () => ({
+    title: "API",
+    path: "/usage",
+  }),
+  usageApiValidation: () => ({
+    title: "Vérification appartenance",
+    path: "/usage/validation",
+  }),
+  usageApiHealthcheck: () => ({
+    title: "Healthcheck",
+    path: "/usage/healthcheck",
+  }),
 };
 
 interface Page {

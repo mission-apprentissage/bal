@@ -9,22 +9,26 @@ import { IResGetSession } from "../../shared/routes/auth.routes";
 import { AuthContextProvider } from "../context/AuthContext";
 
 async function getSession() {
-  const response = await fetch(
-    `${process.env.NEXT_SERVER_URI}/api/auth/session`,
-    {
-      headers: {
-        cookie: headers().get("cookie") ?? "",
-      },
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_SERVER_URI}/api/auth/session`,
+      {
+        headers: {
+          cookie: headers().get("cookie") ?? "",
+        },
+      }
+    );
+
+    const session: IResGetSession = await response.json();
+
+    if (!response.ok || session.error) {
+      return;
     }
-  );
 
-  const session: IResGetSession = await response.json();
-
-  if (!response.ok || session.error) {
+    return session;
+  } catch (error) {
     return;
   }
-
-  return session;
 }
 
 export const metadata: Metadata = {

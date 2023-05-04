@@ -29,12 +29,11 @@ export const documentRoutes = ({ server }: { server: FastifyServer }) => {
           throw new Error("Processor > /document: Can't find document");
         }
 
-        await handleDecaFileContent(document);
-
-        // @ts-ignore TODO fix type
-        return response.status(200).send({
+        response.status(200).send({
           started: true,
         });
+
+        await handleDecaFileContent(document);
       } catch (error) {
         response.log.error(error);
       }
