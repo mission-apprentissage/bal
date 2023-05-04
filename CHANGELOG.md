@@ -1,3 +1,10 @@
+# [1.29.0](https://github.com/mission-apprentissage/bal/compare/v1.28.0...v1.29.0) (2023-05-04)
+
+
+### Features
+
+* improve api key usage ([#77](https://github.com/mission-apprentissage/bal/issues/77)) ([bb8673c](https://github.com/mission-apprentissage/bal/commit/bb8673cea05d50480c35a77021fc8afe5965b4c9))
+
 # [1.28.0](https://github.com/mission-apprentissage/bal/compare/v1.27.0...v1.28.0) (2023-05-02)
 
 
