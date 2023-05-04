@@ -34,7 +34,12 @@ const mainConfig = {
           "chore(release): bump ${nextRelease.version}",
       },
     ],
-    "@semantic-release/github",
+    [
+      "@semantic-release/github",
+      {
+        lables: ["semantic-release/github"],
+      },
+    ],
     [
       "@semantic-release/exec",
       {
