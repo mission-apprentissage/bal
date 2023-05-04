@@ -5,7 +5,11 @@ import { SBalEmailsPayload } from "./bal_emails.event";
 const collectionName = "events";
 
 const indexes = () => {
-  return [[{ person_id: 1 }], [{ "payload.emails.token": 1 }, {}]];
+  return [
+    [{ person_id: 1 }],
+    [{ "payload.emails.token": 1 }, {}],
+    [{ type: 1 }],
+  ];
 };
 
 export const SEvent = {
@@ -18,6 +22,7 @@ export const SEvent = {
       anyOf: [SBalEmailsPayload],
     },
   },
+  required: ["person_id", "type", "payload"],
 } as const;
 
 export interface IEvent extends FromSchema<typeof SEvent> {}
