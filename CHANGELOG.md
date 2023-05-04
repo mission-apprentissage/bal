@@ -1,3 +1,10 @@
+# [1.30.0](https://github.com/mission-apprentissage/bal/compare/v1.29.0...v1.30.0) (2023-05-04)
+
+
+### Features
+
+* add email mecanism ([#79](https://github.com/mission-apprentissage/bal/issues/79)) ([bf64e2e](https://github.com/mission-apprentissage/bal/commit/bf64e2e61d465a537ca18eef186139f3ee672fb9))
+
 # [1.29.0](https://github.com/mission-apprentissage/bal/compare/v1.28.0...v1.29.0) (2023-05-04)
 
 
