@@ -73,6 +73,7 @@ export const config = {
     host: env.get("MNA_BAL_SMTP_HOST").asString(),
     port: env.get("MNA_BAL_SMTP_PORT").asString(),
     secure: env.get("MNA_BAL_SMTP_SECURE").asBool(),
+    webhookKey: env.get("MNA_BAL_SMTP_WEBHOOK_KEY").default("").asString(),
     auth: {
       user: env.get("MNA_BAL_SMTP_AUTH_USER").asString(),
       pass: env.get("MNA_BAL_SMTP_AUTH_PASS").asString(),

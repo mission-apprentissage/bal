@@ -13,10 +13,11 @@ function addEmail(
   person_id: string,
   token: string,
   templateName: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any
 ) {
   return getDbCollection("events").findOneAndUpdate(
-    { person_id, type: "bal_emails" },
+    { person_id, name: "bal_emails" },
     {
       // @ts-ignore
       $push: {
@@ -34,7 +35,7 @@ function addEmail(
 
 function addEmailMessageId(token, messageId) {
   return getDbCollection("events").findOneAndUpdate(
-    { "payload.emails.token": token, type: "bal_emails" },
+    { "payload.emails.token": token, name: "bal_emails" },
     {
       $addToSet: {
         "payload.emails.$.messageIds": messageId,
@@ -49,11 +50,11 @@ function addEmailMessageId(token, messageId) {
 
 function addEmailError(token, e) {
   return getDbCollection("events").findOneAndUpdate(
-    { "payload.emails.token": token, type: "bal_emails" },
+    { "payload.emails.token": token, name: "bal_emails" },
     {
       $set: {
         "payload.emails.$.error": {
-          type: "fatal",
+          err_type: "fatal",
           message: e.message,
         },
       },
@@ -64,7 +65,7 @@ function addEmailError(token, e) {
 
 export async function markEmailAsDelivered(messageId) {
   return getDbCollection("events").findOneAndUpdate(
-    { type: "bal_emails", "payload.emails.messageIds": messageId },
+    { name: "bal_emails", "payload.emails.messageIds": messageId },
     {
       $unset: {
         "payload.emails.$.error": 1,
@@ -76,11 +77,11 @@ export async function markEmailAsDelivered(messageId) {
 
 export async function markEmailAsFailed(messageId, type) {
   return getDbCollection("events").findOneAndUpdate(
-    { type: "bal_emails", "payload.emails.messageIds": messageId },
+    { name: "bal_emails", "payload.emails.messageIds": messageId },
     {
       $set: {
         "payload.emails.$.error": {
-          type,
+          err_type: type,
         },
       },
     },
@@ -90,7 +91,7 @@ export async function markEmailAsFailed(messageId, type) {
 
 export async function markEmailAsOpened(token) {
   return getDbCollection("events").findOneAndUpdate(
-    { "payload.emails.token": token, type: "bal_emails" },
+    { "payload.emails.token": token, name: "bal_emails" },
     {
       $set: {
         "payload.emails.$.openDate": new Date(),
@@ -108,7 +109,7 @@ export async function unsubscribeUser(id) {
         { "payload.emails.token": id },
         { "payload.emails.payload.recipient.email": id },
       ],
-      type: "bal_emails",
+      name: "bal_emails",
     },
     {
       $set: {
@@ -122,7 +123,7 @@ export async function unsubscribeUser(id) {
 export async function renderEmail(token: string) {
   const event = await getDbCollection("events").findOne<IEvent>({
     "payload.emails.token": token,
-    type: "bal_emails",
+    name: "bal_emails",
   });
   if (!event) {
     return;
@@ -132,6 +133,7 @@ export async function renderEmail(token: string) {
   ) as IBalEmail;
   return generateHtml(
     payload.recipient.email,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getEmailInfos(templateName as TemplateName, payload as any)
   );
 }
@@ -139,7 +141,7 @@ export async function renderEmail(token: string) {
 export async function checkIfEmailExists(token) {
   const count = await getDbCollection("events").countDocuments({
     "payload.emails.token": token,
-    type: "bal_emails",
+    name: "bal_emails",
   });
   return count > 0;
 }
@@ -149,6 +151,7 @@ export async function sendStoredEmail<T extends TemplateName>(
   person_id: string,
   templateName: T,
   payload: TemplatePayloads[T],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   template: any
 ): Promise<void> {
   const emailToken = uuidv4();

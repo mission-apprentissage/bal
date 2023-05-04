@@ -8,7 +8,7 @@ const indexes = () => {
   return [
     [{ person_id: 1 }],
     [{ "payload.emails.token": 1 }, {}],
-    [{ type: 1 }],
+    [{ name: 1 }],
   ];
 };
 
@@ -17,12 +17,12 @@ export const SEvent = {
   properties: {
     _id: { type: "string" },
     person_id: { type: "string" },
-    type: { type: "string", enum: ["bal_emails"] },
+    name: { type: "string", enum: ["bal_emails"] },
     payload: {
       anyOf: [SBalEmailsPayload],
     },
   },
-  required: ["person_id", "type", "payload"],
+  required: ["person_id", "name", "payload"],
 } as const;
 
 export interface IEvent extends FromSchema<typeof SEvent> {}

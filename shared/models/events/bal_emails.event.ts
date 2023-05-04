@@ -42,7 +42,7 @@ export const SBalEmail = {
       items: {
         type: "object",
         properties: {
-          type: {
+          err_type: {
             type: "string",
             enum: [
               "fatal",
