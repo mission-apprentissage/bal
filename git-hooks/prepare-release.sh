@@ -40,4 +40,4 @@ echo "Bump app version in _deploy.yml : $next_version"
 
 # ## Concurrency mode 
 git fetch
-git checkout main
+git pull

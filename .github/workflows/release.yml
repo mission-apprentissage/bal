@@ -43,7 +43,7 @@ jobs:
           password: ${{ secrets.GH_FG_TOKEN }}
 
       - run: git fetch
-      - run: git checkout main
+      - run: git pull
 
       - name: bump and release
         run: yarn app:release
