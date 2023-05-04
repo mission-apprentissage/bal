@@ -73,11 +73,8 @@ export const validation = async ({
   };
 };
 
-// type ICreateOrganisation = {
-//   nom: string;
-// };
-// TODO ICreateOrganisation
-export const createOrganisation = async (data: any) => {
+interface ICreateOrganisation extends Omit<IOrganisation, "_id"> {}
+export const createOrganisation = async (data: ICreateOrganisation) => {
   const _id = new ObjectId();
 
   const { insertedId: organisationId } = await getDbCollection(

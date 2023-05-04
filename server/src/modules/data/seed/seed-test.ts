@@ -11,12 +11,14 @@ export const seedTest = async () => {
       "preview.bal.apprentissage.beta.gouv.fr",
       "test.fr",
     ],
-    etablissements: {
-      nom: "Dinum",
-      siret: "13002526500013", // Siret Dinum
-      is_hq: true,
-      is_close: false,
-    },
+    etablissements: [
+      {
+        nom: "Dinum",
+        siret: "13002526500013", // Siret Dinum
+        is_hq: true,
+        is_close: false,
+      },
+    ],
   });
   await createUser({
     email: config.tests.testUserName,
