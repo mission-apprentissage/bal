@@ -23,7 +23,7 @@ export const seed = async () => {
       etablissements: [
         {
           nom: "Dinum",
-          siret: "13002526500013", // Siret Dinum
+          siret: "13002526500013", // Siret Dinum!
           is_hq: true,
           is_close: false,
         },
