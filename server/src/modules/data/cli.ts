@@ -25,7 +25,7 @@ program
   .description("Créer un utilisateur")
   .option("-e, --email <string>", "Email de l'utilisateur")
   .option("-p, --password <string>", "Mot de passe de l'utilisateur")
-  .option("-oId, --organismeId <string>", "Organisme Id")
+  .option("-oId, --organisationId <string>", "Organisation Id")
   .option("-a, --admin", "administrateur")
   .action(async ({ email, password, organismeId, admin = false }) =>
     runScript(async () => {
