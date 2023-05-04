@@ -38,7 +38,7 @@ echo "Bump app version in env.ini : $next_version"
 sed -i "s/default:.*/default: $next_version/" ".github/workflows/_deploy.yml"
 echo "Bump app version in _deploy.yml : $next_version"
 
-## Concurrency mode 
-git fetch
-git checkout main
-git reset --hard origin/main
+# ## Concurrency mode 
+# git fetch
+# git checkout main
+# git reset --hard origin/main
