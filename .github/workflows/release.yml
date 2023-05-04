@@ -7,15 +7,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  # tests:
-  #   if: "!startsWith(github.event.head_commit.message, 'chore')"
-  #   uses: "./.github/workflows/ci.yml"
-  #   secrets:
-  #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  tests:
+    if: "!startsWith(github.event.head_commit.message, 'chore')"
+    uses: "./.github/workflows/ci.yml"
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   release:
     if: "!startsWith(github.event.head_commit.message, 'chore')"
-    # needs: ["tests"]
+    needs: ["tests"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -42,8 +42,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GH_FG_TOKEN }}
 
-      - name: Run yarn Install
-        run: yarn &> /dev/null
+      # - name: Run yarn Install
+      #   run: yarn &> /dev/null
       # - name: Install release dependencies
       #   run: yarn add @commitlint/cli @commitlint/config-conventional @semantic-release/changelog @semantic-release/exec @semantic-release/git semantic-release semantic-release-slack-bot
 
@@ -51,7 +51,7 @@ jobs:
       - run: git checkout main
 
       - name: bump and release
-        run: npx semantic-release
+        run: yarn app:release
         env:
           GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}
