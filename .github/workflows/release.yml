@@ -4,6 +4,12 @@ on:
     branches: [main]
     paths-ignore:
       - "CHANGELOG.md"
+      - ".github/workflows/_deploy.yml"
+      - ".infra/env.ini"
+      - "package.json"
+      - "server/package.json"
+      - "shared/package.json"
+      - "ui/package.json"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
