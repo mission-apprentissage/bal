@@ -43,13 +43,15 @@ jobs:
           password: ${{ secrets.GH_FG_TOKEN }}
 
       - name: Run yarn Install
-        run: yarn install &> /dev/null
+        run: yarn &> /dev/null
+      # - name: Install release dependencies
+      #   run: yarn add @commitlint/cli @commitlint/config-conventional @semantic-release/changelog @semantic-release/exec @semantic-release/git semantic-release semantic-release-slack-bot
 
-      # - run: git fetch
-      # - run: git checkout main
+      - run: git fetch
+      - run: git checkout main
 
       - name: bump and release
-        run: yarn app:release
+        run: npx semantic-release
         env:
           GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}
