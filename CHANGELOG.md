@@ -1,3 +1,15 @@
+## [1.30.1](https://github.com/mission-apprentissage/bal/compare/v1.30.0...v1.30.1) (2023-05-04)
+
+
+### Bug Fixes
+
+* concurrency cosmetics ([166cb01](https://github.com/mission-apprentissage/bal/commit/166cb019a311ef234b9ea6a62f2f32fe9276bfe9))
+* concurrency pull ([c8a6e1d](https://github.com/mission-apprentissage/bal/commit/c8a6e1d16649744ee3abc40b8b37b5fb7855f746))
+* cosmestic ([ea4f936](https://github.com/mission-apprentissage/bal/commit/ea4f93609106433dfa19d4d3058ebb34a5e0b0e7))
+* cosmetic ([e448c23](https://github.com/mission-apprentissage/bal/commit/e448c23a0787e490c386bfe59399cba8ce3edfee))
+* test concurrency ([35aa3de](https://github.com/mission-apprentissage/bal/commit/35aa3de2b2bcbdd0d2a5ec53ac90fc4dab50bdd7))
+* test concurrency ([7b49f26](https://github.com/mission-apprentissage/bal/commit/7b49f2619716130344beeb0e2c9fc9a71994c895))
+
 # [1.30.0](https://github.com/mission-apprentissage/bal/compare/v1.29.0...v1.30.0) (2023-05-04)
 
 
