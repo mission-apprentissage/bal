@@ -1,3 +1,11 @@
+## [1.30.7](https://github.com/mission-apprentissage/bal/compare/v1.30.6...v1.30.7) (2023-05-04)
+
+
+### Bug Fixes
+
+* concurrent run ([56d8882](https://github.com/mission-apprentissage/bal/commit/56d88829e0135c70126c3078ad3fa58e7be44cb1))
+* first run ([c58e99b](https://github.com/mission-apprentissage/bal/commit/c58e99b87b2853c6467ff4abaeb770ad53b7bd65))
+
 ## [1.30.6](https://github.com/mission-apprentissage/bal/compare/v1.30.5...v1.30.6) (2023-05-04)
 
 
