@@ -42,11 +42,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GH_FG_TOKEN }}
 
-      - name: Run yarn Install
-        run: yarn install &> /dev/null
+      # - name: Run yarn Install
+      #   run: yarn install &> /dev/null
 
       - name: bump and release
-        run: yarn app:release
+        run: npx semantic-release
         env:
           GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}
