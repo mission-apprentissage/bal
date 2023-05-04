@@ -1,28 +1,16 @@
 "use client";
 
-import { Heading, Link, ListItem, UnorderedList } from "@chakra-ui/react";
-import NextLink from "next/link";
+import { useRouter } from "next/navigation";
 
-import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
+import { PAGES } from "../components/breadcrumb/Breadcrumb";
 
 const UsagePage = () => {
-  return (
-    <>
-      <Breadcrumb pages={[PAGES.homepage(), PAGES.usageApi()]} />
+  const { push } = useRouter();
 
-      <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
-        Usage API
-      </Heading>
+  // redirect to first tab
+  push(PAGES.usageApiValidation().path);
 
-      <UnorderedList>
-        <ListItem>
-          <Link href="/usage/validation" as={NextLink}>
-            Validation
-          </Link>
-        </ListItem>
-      </UnorderedList>
-    </>
-  );
+  return null;
 };
 
 export default UsagePage;

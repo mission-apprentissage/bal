@@ -58,8 +58,12 @@ export const PAGES = {
     path: "/usage",
   }),
   usageApiValidation: () => ({
-    title: "Validation",
+    title: "Vérification appartenance",
     path: "/usage/validation",
+  }),
+  usageApiHealthcheck: () => ({
+    title: "Healthcheck",
+    path: "/usage/healthcheck",
   }),
 };
 
