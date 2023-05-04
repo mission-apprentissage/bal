@@ -27,14 +27,14 @@ program
   .option("-p, --password <string>", "Mot de passe de l'utilisateur")
   .option("-oId, --organisationId <string>", "Organisation Id")
   .option("-a, --admin", "administrateur")
-  .action(async ({ email, password, organismeId, admin = false }) =>
+  .action(async ({ email, password, organisationId, admin = false }) =>
     runScript(async () => {
       try {
         await createUser({
           email,
           password,
           is_admin: admin,
-          organisation_id: organismeId,
+          organisation_id: organisationId,
         });
         process.exit(0);
       } catch (error) {
