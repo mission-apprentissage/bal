@@ -1,3 +1,18 @@
+## [1.30.2](https://github.com/mission-apprentissage/bal/compare/v1.30.1...v1.30.2) (2023-05-04)
+
+
+### Bug Fixes
+
+* another test ([513080a](https://github.com/mission-apprentissage/bal/commit/513080a1e34fc03b9a5310d085688a59e730d7e7))
+* concurrency ([7ebbeda](https://github.com/mission-apprentissage/bal/commit/7ebbeda5ef7647bbd39f6b8f93b5ab7f3d58fd25))
+* concurrent release ([8a25499](https://github.com/mission-apprentissage/bal/commit/8a254998bb92c9a5de524daabf8b549661383e79))
+* cosmetic ([81304c2](https://github.com/mission-apprentissage/bal/commit/81304c2f24e7ce704bfa34efc0b5c5e3e07ede48))
+* issue revert ([5cd2d5f](https://github.com/mission-apprentissage/bal/commit/5cd2d5f319ea04b8d131515f81d926dfc3d2497f))
+* looking for mistake ([c0b580f](https://github.com/mission-apprentissage/bal/commit/c0b580fd393da26f6a862a2b6b9d8746c4e02023))
+* partially revert ([09c23d1](https://github.com/mission-apprentissage/bal/commit/09c23d11122b67e78518b7600bcb91990869a8fa))
+* release stupidy ([bd70f94](https://github.com/mission-apprentissage/bal/commit/bd70f940d10a8420ebd26e1e345f259c48f00c51))
+* speed up a bit release ([2269ce3](https://github.com/mission-apprentissage/bal/commit/2269ce36d2b98d4c9ea9b0875c8e60607e22eeea))
+
 ## [1.30.1](https://github.com/mission-apprentissage/bal/compare/v1.30.0...v1.30.1) (2023-05-04)
 
 
