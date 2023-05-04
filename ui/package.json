@@ -1,6 +1,6 @@
 {
   "name": "ui",
-  "version": "1.30.3",
+  "version": "1.30.4",
   "private": true,
   "scripts": {
     "dev": "NEXT_PUBLIC_VERSION=$npm_package_version next dev",
