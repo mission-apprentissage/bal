@@ -1,3 +1,10 @@
+## [1.30.9](https://github.com/mission-apprentissage/bal/compare/v1.30.8...v1.30.9) (2023-05-05)
+
+
+### Bug Fixes
+
+* core test ([adb9e8b](https://github.com/mission-apprentissage/bal/commit/adb9e8b4b582885e6e4f37d69b036fc713ce57fc))
+
 ## [1.30.8](https://github.com/mission-apprentissage/bal/compare/v1.30.7...v1.30.8) (2023-05-04)
 
 
