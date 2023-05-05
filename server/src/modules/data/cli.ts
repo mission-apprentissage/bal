@@ -46,7 +46,7 @@ program
 
 program
   .command("seed")
-  .description("Seed env data")
+  .description("Seed env ")
   .action(async () =>
     runScript(async () => {
       try {

@@ -53,7 +53,7 @@ jobs:
       - run: git fetch --all
 
       - run: |
-          if echo ${{ github.event.head_commit.message }} | grep -c "chore(release)"
+          if echo ${{ github.event.head_commit.message }} | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
           then
             echo "Cache hit - skipping dependency installation"
             git pull
