@@ -4,7 +4,7 @@
 
 sensible_files_pattern="\.(csv|xls|xls(x?)|json|env)$"
 exception="(package.json|custom-environment-variables.json|example.json"
-exception="$exception|manifest.json|settings.json|zapatosconfig.json"
+exception="$exception|manifest.json|settings.json|zapatosconfig.json|package-lock.json"
 exception="$exception|DECA_Extraction MIA-Fake.csv"
 exception="$exception|eslintrc.json|app.json|tsconfig.json|.mocharc.json"
 exception="$exception"

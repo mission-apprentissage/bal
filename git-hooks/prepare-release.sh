@@ -39,6 +39,14 @@ sed -i "s/default:.*/default: $next_version/" ".github/workflows/_deploy.yml"
 echo "Bump app version in _deploy.yml : $next_version"
 
 # ## Concurrency mode 
-git add .
+git add  CHANGELOG.md \
+ CHANGELOG.md \
+ .github/workflows/_deploy.yml \
+ .infra/env.ini \
+ package.json \
+ server/package.json \
+ shared/package.json \
+ ui/package.json
 git commit -m "chore(release): bump $next_version [skip ci]"
 git merge --no-edit 
+# git push origin main

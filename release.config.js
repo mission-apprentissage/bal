@@ -19,23 +19,23 @@ const mainConfig = {
         publishCmd: "git checkout -- package.json",
       },
     ],
-    [
-      "@semantic-release/git",
-      {
-        assets: [
-          ".infra/env.ini",
-          ".github/workflows/_deploy.yml",
-          "ui/package.json",
-          "server/package.json",
-          "shared/package.json",
-          "CHANGELOG.md",
-          "package.json",
-        ],
-        message:
-          // eslint-disable-next-line no-template-curly-in-string
-          "chore(release): bump ${nextRelease.version} [skip ci]",
-      },
-    ],
+    // [
+    //   "@semantic-release/git",
+    //   {
+    //     assets: [
+    //       ".infra/env.ini",
+    //       ".github/workflows/_deploy.yml",
+    //       "ui/package.json",
+    //       "server/package.json",
+    //       "shared/package.json",
+    //       "CHANGELOG.md",
+    //       "package.json",
+    //     ],
+    //     message:
+    //       // eslint-disable-next-line no-template-curly-in-string
+    //       "chore(release): bump ${nextRelease.version} [skip ci]",
+    //   },
+    // ],
     "@semantic-release/github",
     // [
     //   "semantic-release-slack-bot",

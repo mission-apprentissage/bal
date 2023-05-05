@@ -51,7 +51,16 @@ jobs:
           password: ${{ secrets.GH_FG_TOKEN }}
 
       - run: git fetch --all
-      # - run: git pull
+
+      - run: |
+          if echo ${{ github.event.head_commit.message }} | grep -c "chore(release)"
+          then
+            echo "Cache hit - skipping dependency installation"
+            git pull
+          else
+            echo "skip pull"
+          fi
+        shell: bash
 
       - name: bump and release
         run: npx antoinebigard-semantic-release
