@@ -50,11 +50,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GH_FG_TOKEN }}
 
-      - run: git fetch
-      - run: git pull
+      # - run: git fetch
+      # - run: git pull
 
       - name: bump and release
-        run: yarn app:release
+        run: npx antoinebigard-semantic-release
+        # run: yarn app:release
         env:
           GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}

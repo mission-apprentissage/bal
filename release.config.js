@@ -1,6 +1,7 @@
 const mainConfig = {
   branches: ["main"],
   repositoryUrl: "https://github.com/mission-apprentissage/bal.git",
+  allowOutdatedBranch: true,
   plugins: [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
@@ -32,7 +33,7 @@ const mainConfig = {
         ],
         message:
           // eslint-disable-next-line no-template-curly-in-string
-          "chore(release): bump ${nextRelease.version}",
+          "chore(release): bump ${nextRelease.version} [skip ci]",
       },
     ],
     "@semantic-release/github",
