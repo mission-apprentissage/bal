@@ -1,7 +1,6 @@
 #!/bin/sh
 
 next_version="${1}"
-tk="${2}"
 
 cd ./ui
 npm version ${next_version}
@@ -50,6 +49,4 @@ git add  CHANGELOG.md \
  ui/package.json
 git commit -m "chore(release): bump $next_version [skip ci]"
 git merge --no-edit 
-echo $GH_TOKEN
-echo $tk
-git push https://$GH_TOKEN@github.com/mission-apprentissage/bal.git
+git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git HEAD:main 
