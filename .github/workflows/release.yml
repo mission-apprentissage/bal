@@ -57,8 +57,8 @@ jobs:
       - run: |
           if echo $(git log origin/main -1 --pretty=%B) | grep -c "chore(release): "
           then
-            git config --global pull.rebase true
-            git rebase
+            git pull --rebase
+            git push
           else
             echo "skip pull"
           fi
