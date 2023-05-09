@@ -1,3 +1,10 @@
+## [1.30.22](https://github.com/mission-apprentissage/bal/compare/v1.30.21...v1.30.22) (2023-05-09)
+
+
+### Bug Fixes
+
+* remove temporary migration script ([2d144f4](https://github.com/mission-apprentissage/bal/commit/2d144f4ebdc33a16c6f03afd5844f8bd8cd51dcf))
+
 ## [1.30.21](https://github.com/mission-apprentissage/bal/compare/v1.30.20...v1.30.21) (2023-05-09)
 
 
