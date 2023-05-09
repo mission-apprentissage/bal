@@ -13,7 +13,7 @@ Pour lancer l'application :
 make start
 ```
 
-Cette commande démarre les containers définis dans le fichier `docker-compose.yml` et `docker-compose.override.yml`
+Cette commande démarre les containers définis dans le fichier `docker-compose.yml`
 
 L'application est ensuite accessible à l'url [http://localhost](http://localhost)
 
