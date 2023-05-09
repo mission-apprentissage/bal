@@ -1,3 +1,10 @@
+## [1.30.23](https://github.com/mission-apprentissage/bal/compare/v1.30.22...v1.30.23) (2023-05-09)
+
+
+### Bug Fixes
+
+* concurrent flow ([57f0e39](https://github.com/mission-apprentissage/bal/commit/57f0e398535a41eb07d5fb3e428b27b24646e297))
+
 ## [1.30.22](https://github.com/mission-apprentissage/bal/compare/v1.30.21...v1.30.22) (2023-05-09)
 
 
