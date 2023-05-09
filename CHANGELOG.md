@@ -1,3 +1,10 @@
+## [1.30.21](https://github.com/mission-apprentissage/bal/compare/v1.30.20...v1.30.21) (2023-05-09)
+
+
+### Bug Fixes
+
+* synthax error find by siret ([d8e9d4b](https://github.com/mission-apprentissage/bal/commit/d8e9d4bd71a3488c8cd2ac32d7a6581ceff59684))
+
 ## [1.30.20](https://github.com/mission-apprentissage/bal/compare/v1.30.19...v1.30.20) (2023-05-09)
 
 
