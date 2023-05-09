@@ -7,6 +7,7 @@ import {
   connectToMongodb,
 } from "../../utils/mongodb";
 import { createUser } from "../actions/users.actions";
+import { migration1 } from "./migrations/migration-1";
 import { processor } from "./processor/processor";
 import { seed } from "./seed/seed";
 const program = new Command();
@@ -58,6 +59,18 @@ program
       }
     })
   );
+
+program.command("migration").action(async () =>
+  runScript(async () => {
+    try {
+      await migration1();
+      process.exit(0);
+    } catch (error) {
+      console.error(error);
+      process.exit(1);
+    }
+  })
+);
 
 program
   .command("processor")
