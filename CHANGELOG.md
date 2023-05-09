@@ -1,3 +1,10 @@
+## [1.30.26](https://github.com/mission-apprentissage/bal/compare/v1.30.25...v1.30.26) (2023-05-09)
+
+
+### Bug Fixes
+
+* concc ([5eec1bd](https://github.com/mission-apprentissage/bal/commit/5eec1bdc7bc9df6b73194dc9b94c83e067d5129b))
+
 ## [1.30.25](https://github.com/mission-apprentissage/bal/compare/v1.30.24...v1.30.25) (2023-05-09)
 
 
