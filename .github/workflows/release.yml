@@ -58,11 +58,13 @@ jobs:
           if echo $(git log origin/main -1 --pretty=%B) | grep -c "chore(release): "
           then
             git pull --rebase
-            git push
+            git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git HEAD:main --force
           else
             echo "skip pull"
           fi
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
 
       - name: bump and release
         run: npx antoinebigard-semantic-release
