@@ -36,7 +36,7 @@ export const migration1 = async () => {
   if (config.env === "production") {
     const users = (await getDbCollection("users").find()) as any;
     for (const user of users) {
-      const { insertedId: personId } = await await getDbCollection(
+      const { insertedId: personId } = await getDbCollection(
         "persons"
       ).insertOne({
         email: user.email,
