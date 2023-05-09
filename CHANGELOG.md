@@ -1,3 +1,10 @@
+## [1.30.20](https://github.com/mission-apprentissage/bal/compare/v1.30.19...v1.30.20) (2023-05-09)
+
+
+### Bug Fixes
+
+* missing to array ([42657d8](https://github.com/mission-apprentissage/bal/commit/42657d84b7086be04cc37ddef17669813b0c14f8))
+
 ## [1.30.19](https://github.com/mission-apprentissage/bal/compare/v1.30.18...v1.30.19) (2023-05-09)
 
 
