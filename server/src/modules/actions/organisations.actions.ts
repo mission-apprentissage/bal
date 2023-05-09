@@ -15,9 +15,9 @@ export const validation = async ({
   email: string;
   siret: string;
 }): Promise<IResOrganisationValidation> => {
-  const testDeca = getDecaVerification(siret, email);
+  const testDeca = await getDecaVerification(siret, email);
 
-  if (testDeca) {
+  if (testDeca.is_valid) {
     return testDeca;
   }
 
