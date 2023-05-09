@@ -1,3 +1,10 @@
+## [1.30.18](https://github.com/mission-apprentissage/bal/compare/v1.30.17...v1.30.18) (2023-05-09)
+
+
+### Bug Fixes
+
+* validation opco ([#84](https://github.com/mission-apprentissage/bal/issues/84)) ([eef5f1b](https://github.com/mission-apprentissage/bal/commit/eef5f1bb418c03df465d9397d4e70624e902fca3))
+
 ## [1.30.17](https://github.com/mission-apprentissage/bal/compare/v1.30.16...v1.30.17) (2023-05-09)
 
 
