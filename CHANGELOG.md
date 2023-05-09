@@ -1,3 +1,10 @@
+## [1.30.19](https://github.com/mission-apprentissage/bal/compare/v1.30.18...v1.30.19) (2023-05-09)
+
+
+### Bug Fixes
+
+* migration dirty ([#85](https://github.com/mission-apprentissage/bal/issues/85)) ([1cb47f9](https://github.com/mission-apprentissage/bal/commit/1cb47f94188ecdba6a8a4cfbccbc9f0cc6d44cb0))
+
 ## [1.30.18](https://github.com/mission-apprentissage/bal/compare/v1.30.17...v1.30.18) (2023-05-09)
 
 
