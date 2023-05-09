@@ -77,6 +77,7 @@ export const generateApiKey = async (user: IUser) => {
 
   const token = createUserTokenSimple({
     payload: { _id: user._id, api_key: generatedKey },
+    expiresIn: "365d",
   });
 
   return token;

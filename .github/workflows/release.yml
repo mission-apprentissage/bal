@@ -53,10 +53,11 @@ jobs:
       - run: git fetch --all
 
       # if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
+      # git pull --rebase
       - run: |
           if echo $(git log origin/main -1 --pretty=%B) | grep -c "chore(release): "
           then
-            git pull --rebase
+            git merge --ff-only origin/main
           else
             echo "skip pull"
           fi
