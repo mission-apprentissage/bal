@@ -104,10 +104,7 @@ export const findOrganisationBySiret = async (
 ) => {
   const organisation = await getDbCollection(
     "organisations"
-  ).findOne<IOrganisation>(
-    { "organisation.etablissements.siret": siret },
-    options
-  );
+  ).findOne<IOrganisation>({ "etablissements.siret": siret }, options);
 
   return organisation;
 };
