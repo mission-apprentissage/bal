@@ -12,7 +12,7 @@ fileignoreconfig:
 - filename: .github/workflows/publish.yml
   checksum: cf87922f9cd1d8f4bb965920800187860609408c64406991a6dfad0ab79cc6aa
 - filename: .github/workflows/release.yml
-  checksum: 587b9a1736ad44d9c015f202f2d1af13141ab0809805635ac138afdd1f56fdcf
+  checksum: 54445107c377b61448570a2d4f44f7391782df5ee0d5fe019ecbe79caa1e83b8
 - filename: .github/workflows/remove-preview.yml
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/README.md
