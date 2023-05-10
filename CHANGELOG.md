@@ -1,3 +1,10 @@
+## [1.30.28](https://github.com/mission-apprentissage/bal/compare/v1.30.27...v1.30.28) (2023-05-10)
+
+
+### Bug Fixes
+
+* cc flow ([351b048](https://github.com/mission-apprentissage/bal/commit/351b048929eec0f37140716a07f64263dd774bfc))
+
 ## [1.30.27](https://github.com/mission-apprentissage/bal/compare/v1.30.26...v1.30.27) (2023-05-09)
 
 
