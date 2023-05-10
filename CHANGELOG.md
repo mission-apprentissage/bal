@@ -1,3 +1,12 @@
+## [1.30.41](https://github.com/mission-apprentissage/bal/compare/v1.30.40...v1.30.41) (2023-05-10)
+
+
+### Bug Fixes
+
+* final test cc flow ([0eb4b8a](https://github.com/mission-apprentissage/bal/commit/0eb4b8add0fe70c18af06614edf307294e961fc9))
+* rm token ep ([cb0973c](https://github.com/mission-apprentissage/bal/commit/cb0973c0c44bf49f489aaf374e66f66f46782707))
+* trigger ga ([794243c](https://github.com/mission-apprentissage/bal/commit/794243c3b6ba4b3a690fce3ca3e84bff20479569))
+
 ## [1.30.40](https://github.com/mission-apprentissage/bal/compare/v1.30.39...v1.30.40) (2023-05-10)
 
 
