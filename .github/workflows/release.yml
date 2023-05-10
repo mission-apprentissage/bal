@@ -53,9 +53,10 @@ jobs:
       - run: git fetch --all
 
       # if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
+      # if echo $(git log origin/main -1 --pretty=%B) | grep -c "chore(release): "
       # git pull --rebase git merge --no-edit --ff-only
       - run: |
-          if echo $(git log origin/main -1 --pretty=%B) | grep -c "chore(release): "
+          if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
           then
             git commit --allow-empty -m "Empty-Commit"
             git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git HEAD:main --force
