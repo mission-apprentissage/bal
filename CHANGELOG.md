@@ -1,3 +1,10 @@
+## [1.30.39](https://github.com/mission-apprentissage/bal/compare/v1.30.38...v1.30.39) (2023-05-10)
+
+
+### Bug Fixes
+
+* shared global token variable ([040f641](https://github.com/mission-apprentissage/bal/commit/040f64132c581a4a542373831c44a679de61ab0c))
+
 ## [1.30.38](https://github.com/mission-apprentissage/bal/compare/v1.30.37...v1.30.38) (2023-05-10)
 
 
