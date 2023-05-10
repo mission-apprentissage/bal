@@ -236,3 +236,4 @@ Le workflow principal est définie dans `/.github/workflows/yarn-ci.yml` et se c
 - Lancer le linter
 - Exécuter les tests unitaires.
 ,
+,
