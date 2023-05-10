@@ -235,3 +235,4 @@ Le workflow principal est définie dans `/.github/workflows/yarn-ci.yml` et se c
 - Vérifier l'installation des dépendances
 - Lancer le linter
 - Exécuter les tests unitaires.
+,
