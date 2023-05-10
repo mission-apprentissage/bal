@@ -1,3 +1,10 @@
+## [1.30.38](https://github.com/mission-apprentissage/bal/compare/v1.30.37...v1.30.38) (2023-05-10)
+
+
+### Bug Fixes
+
+* env opcoep recette ([47a39db](https://github.com/mission-apprentissage/bal/commit/47a39db9e81cb513934850036d278e1ffbf6cd88))
+
 ## [1.30.37](https://github.com/mission-apprentissage/bal/compare/v1.30.36...v1.30.37) (2023-05-10)
 
 
