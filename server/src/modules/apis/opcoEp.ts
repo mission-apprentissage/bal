@@ -11,7 +11,7 @@ const axiosClient = getApiClient({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let token_ep = {} as any;
+// let token_ep = {} as any;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isTokenValid = (token: any) => dayjs().isAfter(dayjs(token.expire));
@@ -65,7 +65,7 @@ const getToken = async (token = {}) => {
  * @returns {boolean}
  */
 export const getOpcoEpVerification = async (siret: string, email: string) => {
-  token_ep = await getToken(token_ep);
+  const token_ep = await getToken();
 
   try {
     const { data } = await axiosClient.get(
