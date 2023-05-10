@@ -57,8 +57,9 @@ jobs:
       # git pull --rebase git merge --no-edit --ff-only // HEAD:main --force
       #       git merge --no-edit
       # git commit --allow-empty -m "Empty-Commit"
+      # if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
       - run: |
-          if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
+          if echo $(git log origin/main -1 --pretty=%B) | grep -c "chore(release): "
           then
             git config --global user.email $USER_EMAIL
             git config --global user.name $USER_NAME
