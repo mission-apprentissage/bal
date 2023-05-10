@@ -57,7 +57,7 @@ jobs:
       - run: |
           if echo $(git log origin/main -1 --pretty=%B) | grep -c "chore(release): "
           then
-            git merge --no-edit
+            git merge --no-edit 
             git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git HEAD:main --force
           else
             echo "skip pull"
