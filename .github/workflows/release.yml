@@ -2,14 +2,6 @@ name: Release version
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - "CHANGELOG.md"
-      - ".github/workflows/_deploy.yml"
-      - ".infra/env.ini"
-      - "package.json"
-      - "server/package.json"
-      - "shared/package.json"
-      - "ui/package.json"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -52,22 +44,16 @@ jobs:
 
       - run: git fetch --all
 
-      # if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
-      # if echo $(git log origin/main -1 --pretty=%B) | grep -c "chore(release): "
-      # git pull --rebase git merge --no-edit --ff-only // HEAD:main --force
-      #       git merge --no-edit
-      # git commit --allow-empty -m "Empty-Commit"
-      # if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
       - run: |
           if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
           then
             git config --global user.email $USER_EMAIL
             git config --global user.name $USER_NAME
             git merge --no-edit
-            echo "," >> DEV.md
-            git add  DEV.md
-            git commit --allow-empty -m "concurrent-commit-force-release"
-            git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git main
+            echo "," >> ui/README.md
+            git add  README.md
+            git commit -m "fix: concurrent-commit-force-release [skip ci]"
+            git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git main --force
           else
             echo "skip pull"
           fi
@@ -79,7 +65,6 @@ jobs:
 
       - name: bump and release
         run: npx antoinebigard-semantic-release
-        # run: yarn app:release
         env:
           GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}

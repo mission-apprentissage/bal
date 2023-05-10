@@ -12,7 +12,7 @@ fileignoreconfig:
 - filename: .github/workflows/publish.yml
   checksum: cf87922f9cd1d8f4bb965920800187860609408c64406991a6dfad0ab79cc6aa
 - filename: .github/workflows/release.yml
-  checksum: 229d4569fb7bce39b491b6185cd3ee37dc93e467a7ca397662ce032ec36198b6
+  checksum: 763593fac0f0d7456d095e6df3570795aca98d2bb579aae61a5b3500c3e4787b
 - filename: .github/workflows/remove-preview.yml
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/README.md
@@ -56,7 +56,7 @@ fileignoreconfig:
 - filename: .infra/scripts/vault/renew-vault.sh
   checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
 - filename: .infra/vault/vault.yml
-  checksum: d93c1e32cef19c73b702da036af81f85739ba999e333d1be3f356ad7c4e49d53
+  checksum: 299672888d1881aa268abf5d8407b9174df5c2848476fbaf68c8dd56694cac99
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
