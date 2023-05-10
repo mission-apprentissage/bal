@@ -58,6 +58,8 @@ jobs:
       - run: |
           if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
           then
+            git config --global user.email $USER_EMAIL
+            git config --global user.name $USER_NAME
             git commit --allow-empty -m "Empty-Commit"
             git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git HEAD:main --force
           else
@@ -66,6 +68,8 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
+          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+          USER_NAME: ${{ secrets.USER_NAME }}
 
       - name: bump and release
         run: npx antoinebigard-semantic-release
