@@ -11,8 +11,8 @@ import React, { forwardRef, RefObject, useMemo } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { IMask, IMaskMixin } from "react-imask";
 
-import { IoArrowBackward, IoArrowForward } from "@/theme/components/icons";
-
+import { IoArrowBackward } from "../../theme/icons/IoArrowBackward";
+import { IoArrowForward } from "../../theme/icons/IoArrowForward";
 import { InputWrapper } from "./InputWrapper";
 
 registerLocale("fr", fr);
@@ -137,14 +137,9 @@ const DateInputIn = (props) => {
       closeOnScroll={true}
       renderCustomHeader={CustomHeader}
       customInput={<CustomDateInput {...props} value={value} />}
-      onChange={(date, event) => {
-        if (!date) return;
-        const value = DateTime.fromJSDate(date)
-          .setLocale("fr-FR")
-          .toUTC()
-          .toISO();
-        onChange();
-      }}
+      onChange={(date) =>
+        onChange(DateTime.fromJSDate(date).setLocale("fr-FR").toUTC().toISO())
+      }
       fixedHeight
     />
   );
