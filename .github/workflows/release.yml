@@ -59,11 +59,14 @@ jobs:
       # git commit --allow-empty -m "Empty-Commit"
       # if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
       - run: |
-          if echo $(git log origin/main -1 --pretty=%B) | grep -c "chore(release): "
+          if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
           then
             git config --global user.email $USER_EMAIL
             git config --global user.name $USER_NAME
-            git pull --rebase
+            git merge --no-edit
+            echo "," >> DEV.md
+            git add  DEV.md
+            git commit --allow-empty -m "concurrent-commit-force-release"
             git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git main
           else
             echo "skip pull"
