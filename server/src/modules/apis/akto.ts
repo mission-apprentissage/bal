@@ -11,7 +11,7 @@ const axiosClient = getApiClient({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let token = {} as any;
+let token_akto = {} as any;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isTokenValid = (token: any) => dayjs().isAfter(dayjs(token.expire));
@@ -60,14 +60,14 @@ const getToken = async (token = {}) => {
  * @returns {boolean}
  */
 export const getAktoVerification = async (siren: string, email: string) => {
-  token = await getToken(token);
+  token_akto = await getToken(token_akto);
 
   try {
     const { data } = await axiosClient.get(
       `/Relations/Validation?email=${email}&siren=${siren}`,
       {
         headers: {
-          Authorization: `Bearer ${token.access_token}`,
+          Authorization: `Bearer ${token_akto.access_token}`,
         },
       }
     );

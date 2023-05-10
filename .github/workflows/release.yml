@@ -50,8 +50,8 @@ jobs:
             git config --global user.email $USER_EMAIL
             git config --global user.name $USER_NAME
             git merge --no-edit
-            echo "," >> ui/README.md
-            git add  README.md
+            echo "," >> DEV.md
+            git add DEV.md
             git commit -m "fix: concurrent-commit-force-release [skip ci]"
             git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git main --force
           else

@@ -11,7 +11,7 @@ const axiosClient = getApiClient({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let token = {} as any;
+let token_ep = {} as any;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isTokenValid = (token: any) => dayjs().isAfter(dayjs(token.expire));
@@ -65,14 +65,14 @@ const getToken = async (token = {}) => {
  * @returns {boolean}
  */
 export const getOpcoEpVerification = async (siret: string, email: string) => {
-  token = await getToken(token);
+  token_ep = await getToken(token_ep);
 
   try {
     const { data } = await axiosClient.get(
       `/apis/referentiel-entreprise/v2/entreprises/securisation-echange?email=${email}&siret=${siret}`,
       {
         headers: {
-          Authorization: `Bearer ${token.access_token}`,
+          Authorization: `Bearer ${token_ep.access_token}`,
           "X-Audience-Id": "etatiques-lba",
           "Content-Type": "application/json",
         },
