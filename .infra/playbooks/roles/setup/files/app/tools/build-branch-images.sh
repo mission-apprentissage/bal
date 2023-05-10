@@ -22,6 +22,7 @@ function build_images() {
     echo "Build local images..."
 
     cd "${REPO_DIR}"
+    docker build . --tag deps_installer:local
     docker build . -f "ui/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$LOCAL_VERSION" \
               --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
               --label "org.opencontainers.image.description=Ui bal" \
