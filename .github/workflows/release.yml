@@ -55,13 +55,14 @@ jobs:
       # if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
       # if echo $(git log origin/main -1 --pretty=%B) | grep -c "chore(release): "
       # git pull --rebase git merge --no-edit --ff-only // HEAD:main --force
+      #       git merge --no-edit
+      # git commit --allow-empty -m "Empty-Commit"
       - run: |
           if echo $(git log origin/main -1 --pretty=%B) | grep -c "Merge remote-tracking branch 'refs/remotes/origin/main'"
           then
             git config --global user.email $USER_EMAIL
             git config --global user.name $USER_NAME
-            git merge --no-edit
-            git commit --allow-empty -m "Empty-Commit"
+            git pull --rebase
             git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git main
           else
             echo "skip pull"

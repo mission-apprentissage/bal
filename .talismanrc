@@ -60,7 +60,7 @@ fileignoreconfig:
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
-  checksum: cedf466fbc7a734d6cd267e8555acda6a364115b15afca8cf96223d16d56384b
+  checksum: 6b3f6df5ce466087bbef64dd4bdf04a064aa1d49c464d93af04627632ccbab4d
 - filename: server/.env.test
   checksum: e4ea3dab786fb54c0949caf1320abdad0ae50c80ca077f976454b4adad79ee45
 - filename: server/config/config.ts
