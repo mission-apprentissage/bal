@@ -48,5 +48,5 @@ git add  CHANGELOG.md \
  shared/package.json \
  ui/package.json
 git commit -m "chore(release): bump $next_version [skip ci]"
-# git merge --no-edit 
+git merge --no-edit 
 git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git HEAD:main --force
