@@ -1,3 +1,10 @@
+## [1.30.35](https://github.com/mission-apprentissage/bal/compare/v1.30.34...v1.30.35) (2023-05-10)
+
+
+### Bug Fixes
+
+* last try ([cac489c](https://github.com/mission-apprentissage/bal/commit/cac489ce63015fa4eec79dd2bbff195f55a8b417))
+
 ## [1.30.34](https://github.com/mission-apprentissage/bal/compare/v1.30.33...v1.30.34) (2023-05-10)
 
 
