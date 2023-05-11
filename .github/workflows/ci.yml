@@ -42,11 +42,10 @@ jobs:
             tar zxf node_modules.tar.gz
           else
             echo "node_modules.tar.gz does not exist"
+            yarn plugin import workspace-tools
+            yarn workspaces focus --all
           fi
         shell: bash
-
-      - run: yarn plugin import workspace-tools
-      - run: yarn workspaces focus --all
 
       - run: make ci
 

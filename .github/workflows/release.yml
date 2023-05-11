@@ -71,6 +71,10 @@ jobs:
 
       - run: tar zxf node_modules.tar.gz
 
+      - run: ls -l
+      - run: ls -l ui
+      - run: ls -l server
+
       - name: bump and release
         run: npx antoinebigard-semantic-release
         env:
