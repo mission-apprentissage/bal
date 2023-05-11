@@ -44,9 +44,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - run: ls -l
-      - run: ls -l ui
-
       # - run: tar zxf node_modules.tar.gz
 
       - name: Login to GitHub Container Registry
