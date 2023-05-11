@@ -16,7 +16,7 @@ export const SReqPostEmailsWebHook = {
     event: { type: "string" }, //https://developers.sendinblue.com/docs/transactional-webhooks
     "message-id": { type: "string" },
   },
-  required: ["event", "message"],
+  required: ["event", "message-id"],
 } as const;
 
 export type IReqPostEmailsWebHook = FromSchema<typeof SReqPostEmailsWebHook>;

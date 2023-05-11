@@ -1,5 +1,4 @@
 import axios from "axios";
-import dayjs from "dayjs";
 import querystring from "querystring";
 
 import { config } from "../../../config/config";
@@ -10,24 +9,12 @@ const axiosClient = getApiClient({
   baseURL: `https://${config.opcoEp.baseUrl}`,
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// let token_ep = {} as any;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isTokenValid = (token: any) => dayjs().isAfter(dayjs(token.expire));
-
 /**
  * @description get auth token from gateway
  * @param {*} token
  * @returns {object} token data
  */
-const getToken = async (token = {}) => {
-  const isValid = isTokenValid(token);
-
-  if (isValid) {
-    return token;
-  }
-
+const getToken = async () => {
   try {
     const response = await axios.post(
       `https://${config.opcoEp.baseAuthUrl}/auth/realms/partenaires-etatiques/protocol/openid-connect/token`,
@@ -44,10 +31,7 @@ const getToken = async (token = {}) => {
       }
     );
 
-    return {
-      ...response.data,
-      expire: dayjs().add(response.data.expires_in - 10, "s"),
-    };
+    return response.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     throw new ApiError(

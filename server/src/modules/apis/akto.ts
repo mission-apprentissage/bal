@@ -1,5 +1,4 @@
 import axios from "axios";
-import dayjs from "dayjs";
 import querystring from "querystring";
 
 import { config } from "../../../config/config";
@@ -10,24 +9,12 @@ const axiosClient = getApiClient({
   baseURL: "https://api.akto.fr/referentiel/api/v1",
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let token_akto = {} as any;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isTokenValid = (token: any) => dayjs().isAfter(dayjs(token.expire));
-
 /**
  * @description get auth token from gateway
  * @param {*} token
  * @returns {object} token data
  */
-const getToken = async (token = {}) => {
-  const isValid = isTokenValid(token);
-
-  if (isValid) {
-    return token;
-  }
-
+const getToken = async () => {
   try {
     const response = await axios.post(
       "https://login.microsoftonline.com/0285c9cb-dd17-4c1e-9621-c83e9204ad68/oauth2/v2.0/token",
@@ -44,12 +31,14 @@ const getToken = async (token = {}) => {
       }
     );
 
-    return {
-      ...response.data,
-      expire: dayjs().add(response.data.expires_in - 10, "s"),
-    };
-  } catch (error) {
-    return error;
+    return response.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    throw new ApiError(
+      "Api Akto token",
+      error.message,
+      error.code || error.response?.status
+    );
   }
 };
 
@@ -60,7 +49,7 @@ const getToken = async (token = {}) => {
  * @returns {boolean}
  */
 export const getAktoVerification = async (siren: string, email: string) => {
-  token_akto = await getToken(token_akto);
+  const token_akto = await getToken();
 
   try {
     const { data } = await axiosClient.get(
