@@ -1,3 +1,10 @@
+## [1.30.63](https://github.com/mission-apprentissage/bal/compare/v1.30.62...v1.30.63) (2023-05-11)
+
+
+### Bug Fixes
+
+* concurrent-commit-force-release [skip ci] ([71019e3](https://github.com/mission-apprentissage/bal/commit/71019e38c0b9b4dcb0a2e9538020d6713380324c))
+
 ## [1.30.62](https://github.com/mission-apprentissage/bal/compare/v1.30.61...v1.30.62) (2023-05-11)
 
 
