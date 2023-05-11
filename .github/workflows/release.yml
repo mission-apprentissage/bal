@@ -54,13 +54,12 @@ jobs:
 
       - run: git fetch --all
 
-      # git commit --allow-empty -m "fix: concurrent-commit-force-release [skip ci]"
       - run: |
           if echo $(git log origin/main -1 --pretty=%B) | grep -c "chore(release): bump "
           then
             git config --global user.email $USER_EMAIL
             git config --global user.name $USER_NAME
-            git merge --no-edit
+            git merge --no-edit -m "Merge remote-tracking branch 'refs/remotes/origin/main' [skip ci]"
             git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git main --force
           else
             echo "skip pull"
