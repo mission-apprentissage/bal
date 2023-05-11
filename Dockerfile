@@ -7,9 +7,9 @@ WORKDIR /app
 ADD node_modules.tar.gz /app/
 COPY . .
 # RUN ls -l node_modules.tar.gz
-RUN tar zxvf node_modules.tar.gz
+RUN tar zxf node_modules.tar.gz
 # RUN ls -l node_modules
 # ARG CACHEBUST=9
 # RUN yarn plugin import workspace-tools
 # RUN yarn workspaces focus --all &> /dev/null
-RUN yarn install --prefer-offline &> /dev/null
+RUN yarn install &> /dev/null
