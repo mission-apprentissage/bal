@@ -7,7 +7,7 @@
 # RUN yarn workspaces focus server &> /dev/null
 
 # Rebuild the source code only when needed
-FROM deps_installer:local AS builder
+FROM ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest AS builder
 WORKDIR /app
 
 # COPY --from=deps /app/. .

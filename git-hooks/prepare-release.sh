@@ -10,7 +10,7 @@ cd ../shared
 npm version ${next_version}
 
 cd ..
-DOCKER_BUILDKIT=0 docker build . --tag deps_installer:local
+# DOCKER_BUILDKIT=0 docker build . --tag deps_installer:local
 echo "Création des images docker (docker build)"
 echo "Build ui:$next_version ..."
 docker build . -f "ui/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$next_version" \

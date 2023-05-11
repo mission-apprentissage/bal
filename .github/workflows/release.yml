@@ -12,6 +12,7 @@ jobs:
     uses: "./.github/workflows/ci.yml"
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      GH_FG_TOKEN: ${{ secrets.GH_FG_TOKEN }}
 
   release:
     if: "!startsWith(github.event.head_commit.message, 'chore')"
@@ -39,7 +40,6 @@ jobs:
             ui/node_modules
             server/node_modules
             yarn.lock
-            node_modules.tar.gz
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
