@@ -49,5 +49,5 @@ git add  CHANGELOG.md \
  shared/package.json \
  ui/package.json
 git commit -m "chore(release): bump $next_version [skip ci]"
-git merge --no-edit 
+git merge --no-edit -m "Merge remote-tracking branch 'refs/remotes/origin/main' [skip ci]"
 git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git main --force
