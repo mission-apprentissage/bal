@@ -1,3 +1,10 @@
+## [1.30.69](https://github.com/mission-apprentissage/bal/compare/v1.30.68...v1.30.69) (2023-05-11)
+
+
+### Bug Fixes
+
+* healthcheck message ([68cc15f](https://github.com/mission-apprentissage/bal/commit/68cc15f806cb34ab09454c014cbaf235ff43650c))
+
 ## [1.30.68](https://github.com/mission-apprentissage/bal/compare/v1.30.67...v1.30.68) (2023-05-11)
 
 
