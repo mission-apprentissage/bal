@@ -153,3 +153,4 @@ sdk/lib
 .history/
 
 .vault_pwd.txt
+node_modules.tar.gz
