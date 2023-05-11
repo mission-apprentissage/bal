@@ -44,7 +44,7 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       const html = await renderEmail(request.params.token);
-      response
+      return response
         .header("Content-Type", "text/html")
         .status(200)
         .send(Buffer.from(html as string));
@@ -63,7 +63,7 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
 
       markEmailAsOpened(token);
 
-      response
+      return response
         .header("Content-Type", "image/gif")
         .status(200)
         .send(
@@ -94,7 +94,7 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
 
       await unsubscribeUser(token);
 
-      response
+      return response
         .header("Content-Type", "text/html")
         .status(200)
         .send(
