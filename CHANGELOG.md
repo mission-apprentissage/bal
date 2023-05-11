@@ -1,3 +1,10 @@
+## [1.30.42](https://github.com/mission-apprentissage/bal/compare/v1.30.41...v1.30.42) (2023-05-11)
+
+
+### Bug Fixes
+
+* apis token + brevo webhook ([5d61cda](https://github.com/mission-apprentissage/bal/commit/5d61cda7c1cc4a39d08d0c6865fb8678cbf4d44e))
+
 ## [1.30.41](https://github.com/mission-apprentissage/bal/compare/v1.30.40...v1.30.41) (2023-05-10)
 
 
