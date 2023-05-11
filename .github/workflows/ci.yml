@@ -29,35 +29,36 @@ jobs:
         with:
           path: |
             node_modules
+            ui/node_modules
+            server/node_modules
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            node_modules.tar.gz
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
 
       - run: ls -l
+      - run: ls -l ui
 
       - run: |
-          if [ -e node_modules.tar.gz ]
+          if [ ! -d node_modules ]
           then
-            tar zxf node_modules.tar.gz
-          else
-            echo "node_modules.tar.gz does not exist"
             yarn plugin import workspace-tools
             yarn workspaces focus --all
+          else
+            echo "no install required"
           fi
         shell: bash
 
       - run: make ci
 
-      - run: |
-          if [ ! -e node_modules.tar.gz ]
-          then
-            tar -czf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules yarn.lock
-          else
-            echo "node_modules.tar.gz already exists"
-          fi
-        shell: bash
+      # - run: |
+      #     if [ ! -e node_modules.tar.gz ]
+      #     then
+      #       tar -czf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules yarn.lock
+      #     else
+      #       echo "node_modules.tar.gz already exists"
+      #     fi
+      #   shell: bash
 
       - run: make coverage
 

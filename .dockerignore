@@ -3,5 +3,4 @@
 .git/
 .infra
 .vscode
-**/node_modules
 **/dist
