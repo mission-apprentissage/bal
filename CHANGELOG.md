@@ -1,3 +1,10 @@
+## [1.30.47](https://github.com/mission-apprentissage/bal/compare/v1.30.46...v1.30.47) (2023-05-11)
+
+
+### Bug Fixes
+
+* test tar ball deps ([4cbdca8](https://github.com/mission-apprentissage/bal/commit/4cbdca84fa830b7adff61dc21b9a7c1dc05a16b2))
+
 ## [1.30.46](https://github.com/mission-apprentissage/bal/compare/v1.30.45...v1.30.46) (2023-05-11)
 
 
