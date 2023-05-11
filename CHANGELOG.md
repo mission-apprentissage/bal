@@ -1,3 +1,10 @@
+## [1.30.66](https://github.com/mission-apprentissage/bal/compare/v1.30.65...v1.30.66) (2023-05-11)
+
+
+### Bug Fixes
+
+* docker ignore yarn.lock ([3c7009e](https://github.com/mission-apprentissage/bal/commit/3c7009eca57a5c2c474b9b4597eeb9b5845ff06c))
+
 ## [1.30.65](https://github.com/mission-apprentissage/bal/compare/v1.30.64...v1.30.65) (2023-05-11)
 
 
