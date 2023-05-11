@@ -20,7 +20,7 @@ export const coreRoutes = ({ server }: { server: Server }) => {
     { schema: { response: { 200: SResGetHealthCheck } } },
     async (request, response) => {
       response.status(200).send({
-        name: "BAL Apprentissage API",
+        name: "BAL Apprentissage API !!",
         version: packageJson.version,
         env: config.env,
       });
