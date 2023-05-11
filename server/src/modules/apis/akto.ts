@@ -5,8 +5,11 @@ import { config } from "../../../config/config";
 import { ApiError } from "../../utils/apiUtils";
 import getApiClient from "./client";
 
+export const AKTO_API_BASE_URL = "https://api.akto.fr/referentiel/api/v1";
+export const AKTO_AUTH_BASE_URL = "https://login.microsoftonline.com";
+
 const axiosClient = getApiClient({
-  baseURL: "https://api.akto.fr/referentiel/api/v1",
+  baseURL: AKTO_API_BASE_URL,
 });
 
 /**
@@ -17,7 +20,7 @@ const axiosClient = getApiClient({
 const getToken = async () => {
   try {
     const response = await axios.post(
-      "https://login.microsoftonline.com/0285c9cb-dd17-4c1e-9621-c83e9204ad68/oauth2/v2.0/token",
+      `${AKTO_AUTH_BASE_URL}/0285c9cb-dd17-4c1e-9621-c83e9204ad68/oauth2/v2.0/token`,
       querystring.stringify({
         grant_type: config.akto.grantType,
         client_id: config.akto.clientId,
