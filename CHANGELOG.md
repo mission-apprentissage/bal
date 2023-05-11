@@ -1,3 +1,10 @@
+## [1.30.48](https://github.com/mission-apprentissage/bal/compare/v1.30.47...v1.30.48) (2023-05-11)
+
+
+### Bug Fixes
+
+* test tarball ([649dad6](https://github.com/mission-apprentissage/bal/commit/649dad63321829dee496dff841a21a6a066cdf8a))
+
 ## [1.30.47](https://github.com/mission-apprentissage/bal/compare/v1.30.46...v1.30.47) (2023-05-11)
 
 
