@@ -28,6 +28,7 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: |
+            node_modules
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
             node_modules.tar.gz
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
