@@ -39,12 +39,11 @@ jobs:
             ui/node_modules
             server/node_modules
             yarn.lock
+            node_modules.tar.gz
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-
-      # - run: tar zxf node_modules.tar.gz
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2

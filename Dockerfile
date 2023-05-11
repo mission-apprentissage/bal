@@ -8,12 +8,12 @@ WORKDIR /app
 COPY . .
 # RUN ls -l
 # RUN ls -l node_modules.tar.gz
-# RUN tar zxf node_modules.tar.gz
-# RUN rm node_modules.tar.gz
+RUN tar zxf node_modules.tar.gz
+RUN rm node_modules.tar.gz
 RUN ls -l
 RUN ls -l ui
 # ARG CACHEBUST=9
-RUN yarn plugin import workspace-tools
-RUN yarn workspaces focus --all 
+# RUN yarn plugin import workspace-tools
+# RUN yarn workspaces focus --all 
 # &> /dev/null
 # RUN yarn install
