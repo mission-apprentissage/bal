@@ -10,7 +10,7 @@ cd ../shared
 npm version ${next_version}
 
 cd ..
-tar -czvf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules
+tar -czvf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules \&\> /dev/null
 docker build . --tag deps_installer:local
 echo "Création des images docker (docker build)"
 echo "Build ui:$next_version ..."

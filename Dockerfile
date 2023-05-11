@@ -12,3 +12,4 @@ RUN tar zxvf node_modules.tar.gz
 # ARG CACHEBUST=9
 # RUN yarn plugin import workspace-tools
 # RUN yarn workspaces focus --all &> /dev/null
+RUN yarn install --prefer-offline &> /dev/null
