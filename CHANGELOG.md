@@ -1,3 +1,10 @@
+## [1.30.61](https://github.com/mission-apprentissage/bal/compare/v1.30.60...v1.30.61) (2023-05-11)
+
+
+### Bug Fixes
+
+* should be fast ([1fde7f6](https://github.com/mission-apprentissage/bal/commit/1fde7f6b51910a51690e8138ce98c4def70d7e63))
+
 ## [1.30.60](https://github.com/mission-apprentissage/bal/compare/v1.30.59...v1.30.60) (2023-05-11)
 
 
