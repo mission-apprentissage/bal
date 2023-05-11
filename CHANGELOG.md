@@ -1,3 +1,10 @@
+## [1.30.65](https://github.com/mission-apprentissage/bal/compare/v1.30.64...v1.30.65) (2023-05-11)
+
+
+### Bug Fixes
+
+* files releases ([85fe196](https://github.com/mission-apprentissage/bal/commit/85fe1962eec4ddd8b2f7dcc67eda87f07b0d391e))
+
 ## [1.30.64](https://github.com/mission-apprentissage/bal/compare/v1.30.63...v1.30.64) (2023-05-11)
 
 
