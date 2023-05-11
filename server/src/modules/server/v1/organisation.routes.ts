@@ -29,6 +29,7 @@ export const organisationRoutes = ({ server }: { server: Server }) => {
         return response.status(200).send(res);
       } catch (error) {
         response.log.error(error);
+        throw new Error("Someting went wrong");
       }
     }
   );
