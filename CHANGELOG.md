@@ -1,3 +1,10 @@
+## [1.30.43](https://github.com/mission-apprentissage/bal/compare/v1.30.42...v1.30.43) (2023-05-11)
+
+
+### Bug Fixes
+
+* missing returns ([2405fe8](https://github.com/mission-apprentissage/bal/commit/2405fe8473a1763c20e18215be32afef76620bac))
+
 ## [1.30.42](https://github.com/mission-apprentissage/bal/compare/v1.30.41...v1.30.42) (2023-05-11)
 
 
