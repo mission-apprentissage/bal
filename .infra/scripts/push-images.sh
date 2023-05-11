@@ -81,6 +81,7 @@ echo "Logged!"
 echo "Création des images docker locales (docker build)"
 
 if [ ! -z "$new_app_version" ]; then
+  docker build . --tag deps_installer:local
   echo "Build ui:$new_app_version ..."
   docker build . -f "ui/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$new_app_version" \
   --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \

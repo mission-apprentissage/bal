@@ -85,6 +85,8 @@ fileignoreconfig:
   checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
 - filename: server/tests/data/DECA_Extraction MIA-Fake.csv
   checksum: 1c636fe39fedecc8e6bf1b08fe4db680f30c0b5d0cbebc4d8f8a7cc9c2e886ca
+- filename: ui/Dockerfile
+  checksum: 94ede8d5696f72b3885533f32af0f07ccffe79f82fd5f13fee421f4716545480
 - filename: ui/app/auth/connexion/page.tsx
   checksum: dc9ca3eb6ef33cfeb8f0f5f0e4e53df6aee43a876efa6fde450ab42effe64f94
 - filename: ui/app/auth/modifier-mot-de-passe/page.tsx

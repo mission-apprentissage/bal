@@ -1,16 +1,16 @@
-FROM node:18-alpine AS deps
-RUN apk add --no-cache libc6-compat
-WORKDIR /app
-COPY . .
+# FROM node:18-alpine AS deps
+# RUN apk add --no-cache libc6-compat
+# WORKDIR /app
+# COPY . .
 
-RUN yarn plugin import workspace-tools
-RUN yarn workspaces focus server &> /dev/null
+# RUN yarn plugin import workspace-tools
+# RUN yarn workspaces focus server &> /dev/null
 
 # Rebuild the source code only when needed
-FROM node:18-alpine AS builder
+FROM deps_installer:local AS builder
 WORKDIR /app
 
-COPY --from=deps /app/. .
+# COPY --from=deps /app/. .
 
 RUN yarn --cwd server build
 
