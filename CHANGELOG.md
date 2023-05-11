@@ -1,3 +1,10 @@
+## [1.30.46](https://github.com/mission-apprentissage/bal/compare/v1.30.45...v1.30.46) (2023-05-11)
+
+
+### Bug Fixes
+
+* deps installer all deps ([fa81f33](https://github.com/mission-apprentissage/bal/commit/fa81f33e278332561dfa741be829a2e3c53e454a))
+
 ## [1.30.45](https://github.com/mission-apprentissage/bal/compare/v1.30.44...v1.30.45) (2023-05-11)
 
 
