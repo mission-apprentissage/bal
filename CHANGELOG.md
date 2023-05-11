@@ -1,3 +1,10 @@
+## [1.30.70](https://github.com/mission-apprentissage/bal/compare/v1.30.69...v1.30.70) (2023-05-11)
+
+
+### Bug Fixes
+
+* re-enable coverage ([77bc56c](https://github.com/mission-apprentissage/bal/commit/77bc56c6488831a4ea9fba95adbf552a30a1d4e9))
+
 ## [1.30.69](https://github.com/mission-apprentissage/bal/compare/v1.30.68...v1.30.69) (2023-05-11)
 
 
