@@ -6,4 +6,4 @@ COPY . .
 
 ARG CACHEBUST=9
 RUN yarn plugin import workspace-tools
-RUN yarn workspaces focus --all --production &> /dev/null
+RUN yarn workspaces focus --all &> /dev/null
