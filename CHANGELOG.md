@@ -1,3 +1,10 @@
+## [1.30.45](https://github.com/mission-apprentissage/bal/compare/v1.30.44...v1.30.45) (2023-05-11)
+
+
+### Bug Fixes
+
+* test speed up release time ([5a1970d](https://github.com/mission-apprentissage/bal/commit/5a1970d62a51f9a840f5ed14287aad620e9c4f68))
+
 ## [1.30.44](https://github.com/mission-apprentissage/bal/compare/v1.30.43...v1.30.44) (2023-05-11)
 
 
