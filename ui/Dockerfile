@@ -13,6 +13,7 @@ FROM ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest AS builder
 WORKDIR /app
 
 # COPY --from=deps /app/. .
+COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry

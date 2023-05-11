@@ -11,6 +11,7 @@ FROM ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest AS builder
 WORKDIR /app
 
 # COPY --from=deps /app/. .
+COPY . .
 
 RUN yarn --cwd server build
 
