@@ -38,6 +38,7 @@ jobs:
             node_modules
             ui/node_modules
             server/node_modules
+            yarn.lock
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
