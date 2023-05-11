@@ -1,3 +1,10 @@
+## [1.30.68](https://github.com/mission-apprentissage/bal/compare/v1.30.67...v1.30.68) (2023-05-11)
+
+
+### Bug Fixes
+
+* remove empty concurrent commit ([681b75c](https://github.com/mission-apprentissage/bal/commit/681b75c3bc50055bd56b7acb53ef4cfa3f9f1515))
+
 ## [1.30.67](https://github.com/mission-apprentissage/bal/compare/v1.30.66...v1.30.67) (2023-05-11)
 
 
