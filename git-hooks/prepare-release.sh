@@ -10,8 +10,8 @@ cd ../shared
 npm version ${next_version}
 
 cd ..
-tar -czf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules
-docker build . --tag deps_installer:local
+# tar -czf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules
+DOCKER_BUILDKIT=0 docker build . --tag deps_installer:local
 echo "Création des images docker (docker build)"
 echo "Build ui:$next_version ..."
 docker build . -f "ui/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$next_version" \

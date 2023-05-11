@@ -21,14 +21,32 @@ jobs:
         with:
           node-version: 18
 
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
       - uses: actions/cache@v3
         with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          path: |
+            "**/node_modules"
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            node_modules.tar.gz
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-
+            ${{ runner.os }}-yarn-
+
+      - run: ls -l
 
       - run: make ci
+
+      - run: |
+          if [ ! -e node_modules.tar.gz ]
+          then
+            tar -czf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules
+          else
+            echo "node_modules.tar.gz already exists"
+          fi
+        shell: bash
 
       - run: make coverage
 

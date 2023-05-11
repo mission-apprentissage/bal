@@ -28,12 +28,19 @@ jobs:
         with:
           node-version: 18
 
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
       - uses: actions/cache@v3
         with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          path: |
+            "**/node_modules"
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+            node_modules.tar.gz
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-
+            ${{ runner.os }}-yarn-
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -60,6 +67,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_NAME: ${{ secrets.USER_NAME }}
+
+      - run: ls -l
+
+      - run: tar zxf node_modules.tar.gz
 
       - name: bump and release
         run: npx antoinebigard-semantic-release
