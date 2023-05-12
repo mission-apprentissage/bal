@@ -53,6 +53,10 @@ export const PAGES = {
     title: "Import de fichier",
     path: "/admin/fichier/import",
   }),
+  adminUsers: () => ({
+    title: "Utilisateurs",
+    path: "/admin/users",
+  }),
   usageApi: () => ({
     title: "API",
     path: "/usage",

@@ -64,6 +64,14 @@ const LoggedIn: FC<Props> = ({ user }) => {
           {user.is_admin && (
             <MenuGroup title="Administration">
               <MenuItem
+                data-id="menuitem:admin:users"
+                href="/admin/users"
+                as={NavLink}
+                icon={<Settings boxSize={4} color="bluefrance.main" />}
+              >
+                Utilisateurs
+              </MenuItem>
+              <MenuItem
                 data-id="menuitem:admin:manage-files"
                 href="/admin/fichier"
                 as={NavLink}
