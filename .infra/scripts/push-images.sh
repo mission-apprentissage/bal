@@ -81,14 +81,13 @@ echo "Logged!"
 echo "Création des images docker locales (docker build)"
 
 if [ ! -z "$new_app_version" ]; then
-  docker build . --tag deps_installer:local
   echo "Build ui:$new_app_version ..."
-  docker build . -f "ui/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$new_app_version" \
+  docker build . -f "ui/Dockerfile" --build-arg DEPS_CONTEXT=local --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$new_app_version" \
   --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
   --label "org.opencontainers.image.description=Ui bal" \
   --label "org.opencontainers.image.licenses=MIT"
   echo "Building server:$new_app_version ..."
-  docker build . -f "server/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_server:"$new_app_version" \
+  docker build . -f "server/Dockerfile" --build-arg DEPS_CONTEXT=local --tag ghcr.io/mission-apprentissage/mna_bal_server:"$new_app_version" \
             --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
             --label "org.opencontainers.image.description=Server bal" \
             --label "org.opencontainers.image.licenses=MIT"

@@ -46,7 +46,7 @@ const UsageVerificationPage = () => {
   return (
     <>
       <Heading as="h3" fontSize="lg" mb={[3, 6]}>
-        POST /v1/organisation/validation
+        POST api/v1/organisation/validation
       </Heading>
 
       <Box>

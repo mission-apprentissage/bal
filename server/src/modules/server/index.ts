@@ -44,6 +44,7 @@ export function build(opts: FastifyServerOptions = {}) {
       const transformedSchema = { ...schema } as FastifySchema;
       if (
         url.startsWith("/api/auth") ||
+        url.startsWith("/api/emails") ||
         url.startsWith("/api/user") ||
         url.startsWith("/api/admin")
       )

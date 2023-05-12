@@ -16,7 +16,7 @@ const UsageHealthcheckPage = () => {
   return (
     <>
       <Heading as="h3" fontSize="lg" mb={[3, 6]}>
-        POST /healthcheck
+        POST api/healthcheck
       </Heading>
 
       {responseData && (

@@ -85,8 +85,12 @@ fileignoreconfig:
   checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
 - filename: server/tests/data/DECA_Extraction MIA-Fake.csv
   checksum: 1c636fe39fedecc8e6bf1b08fe4db680f30c0b5d0cbebc4d8f8a7cc9c2e886ca
+- filename: server/tests/data/akto.ts
+  checksum: 573464801f84a37b522e4e21b0f9536fd318fa2e018f739296fbe3c769269e89
+- filename: server/tests/data/opcoEp.ts
+  checksum: 8d1f421390c62fce249bf9efa7bb0688c6c9aa97375dd83d45f28c7d2246bf42
 - filename: ui/Dockerfile
-  checksum: 94ede8d5696f72b3885533f32af0f07ccffe79f82fd5f13fee421f4716545480
+  checksum: 2eb89b135a7f55f39ba6781b377b5e58948e8e1686be9a22257b10b8245c42f0
 - filename: ui/app/auth/connexion/page.tsx
   checksum: dc9ca3eb6ef33cfeb8f0f5f0e4e53df6aee43a876efa6fde450ab42effe64f94
 - filename: ui/app/auth/modifier-mot-de-passe/page.tsx
@@ -107,10 +111,6 @@ fileignoreconfig:
   checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
 - filename: ui/app/usage/verification/page.tsx
   checksum: 3bcde7fc38236a4b6bf921ffc94ed471344054036b9b9e8d8ffd32283608544d
-- filename: server/tests/data/akto.ts
-  checksum: 573464801f84a37b522e4e21b0f9536fd318fa2e018f739296fbe3c769269e89
-- filename: server/tests/data/opcoEp.ts
-  checksum: 8d1f421390c62fce249bf9efa7bb0688c6c9aa97375dd83d45f28c7d2246bf42
 scopeconfig:
 - scope: node
 custom_patterns:

@@ -1,19 +1,25 @@
-# # Install dependencies only when needed
-# FROM node:18-alpine AS deps
-# # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-# RUN apk add --no-cache libc6-compat
-# WORKDIR /app
-# COPY . .
+ARG DEPS_CONTEXT=release
 
-# RUN yarn plugin import workspace-tools
-# RUN yarn workspaces focus ui &> /dev/null
+FROM ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest as deps_installer-release
+WORKDIR /app
+COPY . .
+
+# Install dependencies only when needed
+FROM node:18-alpine as deps_installer-local
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+COPY . .
+
+RUN yarn plugin import workspace-tools
+RUN yarn workspaces focus ui &> /dev/null
 
 # Rebuild the source code only when needed
-FROM ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest AS builder
+FROM deps_installer-${DEPS_CONTEXT} AS builder
 WORKDIR /app
 
 # COPY --from=deps /app/. .
-COPY . .
+# COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
