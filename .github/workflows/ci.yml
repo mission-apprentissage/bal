@@ -60,7 +60,7 @@ jobs:
         shell: bash
 
       - run: |
-          if [ -d node_modules ] && [ ! -e .mna_bal_deps_installer_build ] && [ "$build" = true ]
+          if [ -d node_modules ] && [ ! -e .mna_bal_deps_installer_build ] && [ "$build" = "true" ]
           then
               tar -czf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules yarn.lock
               docker build . --tag ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest \
