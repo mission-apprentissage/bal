@@ -1,3 +1,16 @@
+# [1.31.0](https://github.com/mission-apprentissage/bal/compare/v1.30.70...v1.31.0) (2023-05-12)
+
+
+### Bug Fixes
+
+* ga wkf ([f7347cb](https://github.com/mission-apprentissage/bal/commit/f7347cb7c51d8616bc84d23f8a875fc42c2ab1b4))
+* rm ([955eb84](https://github.com/mission-apprentissage/bal/commit/955eb843449448b8f97faf7a5fd3732c020c7c5b))
+
+
+### Features
+
+* inputs ([#81](https://github.com/mission-apprentissage/bal/issues/81)) ([31b7600](https://github.com/mission-apprentissage/bal/commit/31b7600aa0d0a1dd1c3d1455d0ab9a08beef6381))
+
 ## [1.30.70](https://github.com/mission-apprentissage/bal/compare/v1.30.69...v1.30.70) (2023-05-11)
 
 

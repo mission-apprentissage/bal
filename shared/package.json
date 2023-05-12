@@ -1,6 +1,6 @@
 {
   "name": "shared",
-  "version": "1.30.70",
+  "version": "1.31.0",
   "main": "./index.ts",
   "types": "./index.ts",
   "author": "mna",
