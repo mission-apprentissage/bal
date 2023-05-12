@@ -7,6 +7,8 @@ on:
         required: true
       GH_FG_TOKEN:
         required: true
+      BUILD_DOCKER_IF_NEEDED:
+        required: false
     outputs:
       status:
         description: Whether deployment succeeded or not
@@ -51,16 +53,23 @@ jobs:
           then
             yarn plugin import workspace-tools
             yarn workspaces focus --all
-            tar -czf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules yarn.lock
-            docker build . --tag ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest \
-            --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
-            --label "org.opencontainers.image.description=Ui bal" \
-            --label "org.opencontainers.image.licenses=MIT"
-            docker push ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest
+            if [ "$BUILD" = true ]
+            then
+              tar -czf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules yarn.lock
+              docker build . --tag ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest \
+              --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
+              --label "org.opencontainers.image.description=Ui bal" \
+              --label "org.opencontainers.image.licenses=MIT"
+              docker push ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest
+            else
+              echo "no build required"
+            fi
           else
             echo "no install required"
           fi
         shell: bash
+        with:
+          build: ${{ secrets.BUILD_DOCKER_IF_NEEDED }}
 
       - run: make ci
 
