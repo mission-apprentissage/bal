@@ -69,7 +69,7 @@ describe("Users routes", () => {
     });
 
     assert.equal(response.statusCode, 200);
-    assert.equal(response.json()._id, user?._id);
+    assert.equal(response.json()._id, user?._id.toString());
     assert.equal(response.json().email, "email@exemple.fr");
     assert.equal(response.json().password, undefined);
   });
