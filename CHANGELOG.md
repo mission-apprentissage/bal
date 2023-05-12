@@ -1,3 +1,10 @@
+## [1.31.1](https://github.com/mission-apprentissage/bal/compare/v1.31.0...v1.31.1) (2023-05-12)
+
+
+### Bug Fixes
+
+* revert and add dockerfile preview ([724fcec](https://github.com/mission-apprentissage/bal/commit/724fcecb7e4f87a37449fee9d6db5828dbdbb876))
+
 # [1.31.0](https://github.com/mission-apprentissage/bal/compare/v1.30.70...v1.31.0) (2023-05-12)
 
 

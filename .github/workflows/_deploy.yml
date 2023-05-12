@@ -13,7 +13,7 @@ on:
         description: app version
         type: string
         required: true
-        default: 1.31.0
+        default: 1.31.1
     secrets:
       SSH_PRIVATE_KEY:
         description: SSH private key
