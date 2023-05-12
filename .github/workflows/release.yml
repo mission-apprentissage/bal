@@ -41,10 +41,11 @@ jobs:
             ui/node_modules
             server/node_modules
             yarn.lock
+            .mna_bal_deps_installer_build
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
