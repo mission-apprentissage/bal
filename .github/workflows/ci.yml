@@ -29,6 +29,9 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
 
+      - run: echo ${{ hashFiles('**/yarn.lock') }}
+      - run: echo ${{ hashFiles('yarn.lock') }}
+
       - uses: actions/cache@v3
         with:
           path: |
