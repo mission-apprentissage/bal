@@ -91,6 +91,8 @@ fileignoreconfig:
   checksum: 8d1f421390c62fce249bf9efa7bb0688c6c9aa97375dd83d45f28c7d2246bf42
 - filename: ui/Dockerfile
   checksum: 2eb89b135a7f55f39ba6781b377b5e58948e8e1686be9a22257b10b8245c42f0
+- filename: ui/Dockerfile.preview
+  checksum: 03cd37123382c0779373482a2e362c991164ba294fff77a2989cc7d2ca2816cc
 - filename: ui/app/auth/connexion/page.tsx
   checksum: dc9ca3eb6ef33cfeb8f0f5f0e4e53df6aee43a876efa6fde450ab42effe64f94
 - filename: ui/app/auth/modifier-mot-de-passe/page.tsx
