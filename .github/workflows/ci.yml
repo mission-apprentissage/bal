@@ -68,7 +68,7 @@ jobs:
             echo "no install required"
           fi
         shell: bash
-        with:
+        env:
           build: ${{ secrets.BUILD_DOCKER_IF_NEEDED }}
 
       - run: make ci
