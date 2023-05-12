@@ -2,7 +2,7 @@ fileignoreconfig:
 - filename: '*.mjml.ejs'
   checksum: 9e0290e41389acecddebce27c63d2af3687ece2b8ea5ce61ab33617c74728536
 - filename: '*.route.test.ts'
-  checksum: aba902897c7b0605e19213b81e4b0afb40fa98de16ea35bce031d9c7ca9b10fb
+  checksum: 0456ea5e9e6ee400039ef2294933ca75f64708d05f0de19f115d3401f1a3b93c
 - filename: '*.test.ts'
   checksum: f870d8d29433a962542bbb313b61e1273fdf1023457010b2f5425c480b16c7b5
 - filename: .github/workflows/_deploy.yml
@@ -62,7 +62,7 @@ fileignoreconfig:
 - filename: git-hooks/prepare-release.sh
   checksum: 6b3f6df5ce466087bbef64dd4bdf04a064aa1d49c464d93af04627632ccbab4d
 - filename: server/.env.test
-  checksum: e4ea3dab786fb54c0949caf1320abdad0ae50c80ca077f976454b4adad79ee45
+  checksum: 7df7b9cccc051413dceaed2d59f4a1c7b9bee3e387ea568134f68972431878c3
 - filename: server/config/config.ts
   checksum: dee90e5b9ea1162aaffc204bd46a7801f8abba89fddd3f7077990321299ff3bf
 - filename: server/src/app.ts
@@ -107,6 +107,10 @@ fileignoreconfig:
   checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
 - filename: ui/app/usage/verification/page.tsx
   checksum: 3bcde7fc38236a4b6bf921ffc94ed471344054036b9b9e8d8ffd32283608544d
+- filename: server/tests/data/akto.ts
+  checksum: 573464801f84a37b522e4e21b0f9536fd318fa2e018f739296fbe3c769269e89
+- filename: server/tests/data/opcoEp.ts
+  checksum: 8d1f421390c62fce249bf9efa7bb0688c6c9aa97375dd83d45f28c7d2246bf42
 scopeconfig:
 - scope: node
 custom_patterns:

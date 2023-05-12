@@ -4,10 +4,13 @@ import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes
 
 import { getDbCollection } from "../../utils/mongodb";
 import { getAktoVerification } from "../apis/akto";
-import { getOpcoEpVerification } from "../apis/opcoEp";
+import {
+  getOpcoEpVerification,
+  OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE,
+  OPCO_EP_CODE_RETOUR_EMAIL_TROUVE,
+} from "../apis/opcoEp";
 import { getDecaVerification } from "./deca.actions";
 
-// TODO WIP
 export const validation = async ({
   email,
   siret,
@@ -22,7 +25,6 @@ export const validation = async ({
   }
 
   const siren = siret.substring(0, 9);
-
   const testAkto = await getAktoVerification(siren, email);
   if (testAkto) {
     return {
@@ -32,41 +34,19 @@ export const validation = async ({
   }
 
   const testOpcoEp = await getOpcoEpVerification(siret, email);
-  if (testOpcoEp.codeRetour === 1) {
+  if (testOpcoEp.codeRetour === OPCO_EP_CODE_RETOUR_EMAIL_TROUVE) {
     return {
       is_valid: true,
       on: "email",
     };
   }
-  if (testOpcoEp.codeRetour === 2) {
+
+  if (testOpcoEp.codeRetour === OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE) {
     return {
       is_valid: true,
       on: "domain",
     };
   }
-  //   1-	SIRET et courriel connus
-  // {
-  //     "codeRetour": 1,
-  //     "detailRetour": "Email trouvé"
-  // }
-
-  // 2-	SIRET connu et domaine courriel connu
-  // {
-  //     "codeRetour": 2,
-  //     "detailRetour": "Domaine identique"
-  // }
-
-  // 3-	SIRET connu et domaine courriel inconnu
-  // {
-  //     "codeRetour": 3,
-  //     "detailRetour": "Email ou domaine inconnu"
-  // }
-
-  // 4-	SIRET inconnu
-  // {
-  //     "codeRetour": 4,
-  //     "detailRetour": "Siret inconnu"
-  // }
 
   return {
     is_valid: false,
