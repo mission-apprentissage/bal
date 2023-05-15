@@ -5,6 +5,19 @@
   vars_files:
     - "../vault/vault.yml"
   tasks:
+    - name: copy env file
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "/opt/bal/.env_server"
+      with_fileglob:
+        - "../.env_server"
+    - name: copy ui env file
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "/opt/bal/.env_ui"
+      with_fileglob:
+        - "../.env_ui"
+
     - name: creation du fichier docker compose
       ansible.builtin.template:
         src: "{{ item }}"

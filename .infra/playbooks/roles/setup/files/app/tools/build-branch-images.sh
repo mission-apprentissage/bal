@@ -57,6 +57,8 @@ echo "****************************"
 if [ "$PREVIEW_STATUS" == "open" ]; then
     update_repository
     build_images
+    sed "s/LOCAL_VERSION/$LOCAL_VERSION/g" /opt/bal/.env_server > /opt/bal/.env_server
+    sed "s/LOCAL_VERSION/$LOCAL_VERSION/g" /opt/bal/.env_ui > /opt/bal/.env_ui
     sed "s/LOCAL_VERSION/$LOCAL_VERSION/g" /opt/bal/docker-compose.preview-app.yml > /opt/bal/docker-compose.pr-"$LOCAL_VERSION".yml
 fi
 

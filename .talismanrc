@@ -15,6 +15,10 @@ fileignoreconfig:
   checksum: 763593fac0f0d7456d095e6df3570795aca98d2bb579aae61a5b3500c3e4787b
 - filename: .github/workflows/remove-preview.yml
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
+- filename: .infra/.env_server
+  checksum: 806f85ad3c4b4d91c5a52a84fd2a808be8617e265cf9568625b3a61b27876a4c
+- filename: .infra/.env_ui
+  checksum: 0dd94c954d75fd19bbe669eef8238c703d9fb8bea4025358071f9fae6140ac85
 - filename: .infra/README.md
   checksum: 46ff20cd40c93c0580c896707afadccc37486909997213c452393d8179d12a3d
 - filename: .infra/ansible/roles/setup/files/app/.overrides/common/docker-compose.common.yml
@@ -56,7 +60,7 @@ fileignoreconfig:
 - filename: .infra/scripts/vault/renew-vault.sh
   checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
 - filename: .infra/vault/vault.yml
-  checksum: 299672888d1881aa268abf5d8407b9174df5c2848476fbaf68c8dd56694cac99
+  checksum: 7d70629f0d5a0a39287c1f7bdbf0730dea38c845797dba1576974300df327474
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh

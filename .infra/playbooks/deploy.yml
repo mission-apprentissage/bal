@@ -5,12 +5,45 @@
   vars_files:
     - "../vault/vault.yml"
   tasks:
+    - name: copy server env file
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "/opt/bal/.env_server"
+      with_fileglob:
+        - "../.env_server"
+
+    - name: copy ui env file
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "/opt/bal/.env_ui"
+      with_fileglob:
+        - "../.env_ui"
+
     - name: creation du fichier docker compose
       ansible.builtin.template:
         src: "{{ item }}"
         dest: "/opt/bal/docker-compose.yml"
       with_fileglob:
-        - "../docker-compose.{{env_type}}.yml"
+        - "../docker-compose.yml"
+
+    - name: creation du fichier docker compose
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "/opt/bal/docker-compose.recette.yml"
+      with_fileglob:
+        - "../docker-compose.recette.yml"
+      when: env_type == 'recette'
+
+    - name: Lancement de l'application {{env_type}}
+      docker_compose:
+        project_src: /opt/bal
+        recreate: always
+        remove_orphans: yes
+        files:
+          - docker-compose.yml
+          - docker-compose.recette.yml
+      register: docker_compose_output
+      when: env_type == 'recette'
 
     - name: Lancement de l'application {{env_type}}
       docker_compose:
@@ -20,6 +53,7 @@
         files:
           - docker-compose.yml
       register: docker_compose_output
+      when: env_type == 'production'
 
     - debug:
         var: docker_compose_output
