@@ -1,3 +1,10 @@
+## [1.31.3](https://github.com/mission-apprentissage/bal/compare/v1.31.2...v1.31.3) (2023-05-15)
+
+
+### Bug Fixes
+
+* images names ([fe92b5b](https://github.com/mission-apprentissage/bal/commit/fe92b5bc152b007a5825ea4dd3c0cae251c87931))
+
 ## [1.31.2](https://github.com/mission-apprentissage/bal/compare/v1.31.1...v1.31.2) (2023-05-15)
 
 
