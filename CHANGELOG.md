@@ -1,3 +1,10 @@
+## [1.31.5](https://github.com/mission-apprentissage/bal/compare/v1.31.4...v1.31.5) (2023-05-15)
+
+
+### Bug Fixes
+
+* a bit of infra restructure ([44ea96b](https://github.com/mission-apprentissage/bal/commit/44ea96b59da8437bbaf9a6c4c32f66d71ef63d9b))
+
 ## [1.31.4](https://github.com/mission-apprentissage/bal/compare/v1.31.3...v1.31.4) (2023-05-15)
 
 
