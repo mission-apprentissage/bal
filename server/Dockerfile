@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 
 # Rebuild the source code only when needed
-FROM deps_installer AS builder
+FROM deps_installer-release AS builder
 WORKDIR /app
 
 # COPY --from=deps /app/. .

@@ -9,7 +9,7 @@ RUN yarn plugin import workspace-tools
 RUN yarn workspaces focus ui &> /dev/null
 
 # Rebuild the source code only when needed
-FROM deps_installer AS builder
+FROM deps_installer-local AS builder
 WORKDIR /app
 
 # COPY --from=deps /app/. .
