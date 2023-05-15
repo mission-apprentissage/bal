@@ -1,3 +1,10 @@
+## [1.31.4](https://github.com/mission-apprentissage/bal/compare/v1.31.3...v1.31.4) (2023-05-15)
+
+
+### Bug Fixes
+
+* rebuild ([c2886be](https://github.com/mission-apprentissage/bal/commit/c2886bed0096963894fa949289d934d2000238b4))
+
 ## [1.31.3](https://github.com/mission-apprentissage/bal/compare/v1.31.2...v1.31.3) (2023-05-15)
 
 
