@@ -48,9 +48,29 @@
   when: ctop.stat.exists == False
   shell: "wget https://github.com/bcicen/ctop/releases/download/v0.7.1/ctop-0.7.1-linux-amd64 -O /usr/local/bin/ctop && chmod +x /usr/local/bin/ctop"
 
+- name: Installation node 18
+  shell: "curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -"
+  when: env_type == 'preview'
+- name: apt-key yarn
+  shell: "curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -"
+  when: env_type == 'preview'
+
 - name: Installation des packages apt
   apt:
     name: ["vim", "htop", "jq", "git", "python3-pip", "python3-docker"]
+
+- name: Installation nodejs
+  apt:
+    name: ["nodejs"]
+  when: env_type == 'preview'
+
+- name: Installation yarn
+  shell: "npm install -g yarn --force"
+  when: env_type == 'preview'
+
+- name: Set yarn version
+  shell: "yarn set version berry"
+  when: env_type == 'preview'
 
 - name: "install docker-compose"
   pip:

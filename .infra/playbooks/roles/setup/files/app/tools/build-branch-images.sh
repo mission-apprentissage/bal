@@ -36,11 +36,11 @@ function build_images() {
     echo "Build local images..."
 
     cd "${REPO_DIR}"
-    docker build . --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$LOCAL_VERSION" \
+    docker build . -f "ui/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$LOCAL_VERSION" \
               --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
               --label "org.opencontainers.image.description=Ui bal" \
               --label "org.opencontainers.image.licenses=MIT"
-     docker build . --tag ghcr.io/mission-apprentissage/mna_bal_server:"$LOCAL_VERSION" \
+     docker build . -f "server/Dockerfile" --tag ghcr.io/mission-apprentissage/mna_bal_server:"$LOCAL_VERSION" \
               --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
               --label "org.opencontainers.image.description=Server bal" \
               --label "org.opencontainers.image.licenses=MIT"
