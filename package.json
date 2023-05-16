@@ -2,7 +2,7 @@
   "name": "mna-bal",
   "description": "[MNA] BAL",
   "repository": "https://github.com/mission-apprentissage/bal.git",
-  "version": "1.31.5",
+  "version": "1.31.6",
   "author": "MNA",
   "license": "MIT",
   "private": true,

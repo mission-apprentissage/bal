@@ -1,3 +1,10 @@
+## [1.31.6](https://github.com/mission-apprentissage/bal/compare/v1.31.5...v1.31.6) (2023-05-16)
+
+
+### Bug Fixes
+
+* flow with local cached images ([85be490](https://github.com/mission-apprentissage/bal/commit/85be4900b40f06edfa413013878da56a38e81086))
+
 ## [1.31.5](https://github.com/mission-apprentissage/bal/compare/v1.31.4...v1.31.5) (2023-05-15)
 
 
