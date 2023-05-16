@@ -1,3 +1,10 @@
+## [1.31.7](https://github.com/mission-apprentissage/bal/compare/v1.31.6...v1.31.7) (2023-05-16)
+
+
+### Bug Fixes
+
+* dockerignore dist ([582c505](https://github.com/mission-apprentissage/bal/commit/582c505e14c86de308b1cd8d5bdd0af7c85ac695))
+
 ## [1.31.6](https://github.com/mission-apprentissage/bal/compare/v1.31.5...v1.31.6) (2023-05-16)
 
 
