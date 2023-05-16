@@ -38,6 +38,7 @@ jobs:
           yarn plugin import workspace-tools
           yarn workspaces focus --all &> /dev/null
           sed -i '/**\/node_modules/d' .dockerignore
+          sed -i '/**\/dist/d' .dockerignore
           sed -i '/yarn\.lock/d' .dockerignore
           docker build . -f "./Dockerfile.cache" --tag mna_bal_deps_installer:local \
           --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
@@ -45,9 +46,3 @@ jobs:
           mkdir -p /tmp/.build
           docker save -o /tmp/.build/mna_bal_deps_installer.tar mna_bal_deps_installer:local
         shell: bash
-
-      # - name: load
-      #   if: ${{ contains(steps.should-cache.outputs.build, 'no') }}
-      #   run: |
-      #     docker load -i /tmp/.build/mna_bal_deps_installer.tar
-      #   shell: bash

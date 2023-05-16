@@ -40,40 +40,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
 
-      # - name: Login to GitHub Container Registry
-      #   uses: docker/login-action@v2
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GH_FG_TOKEN }}
-
-      # - run: |
-      #     if [ ! -d node_modules ]
-      #     then
-      #       yarn plugin import workspace-tools
-      #       yarn workspaces focus --all
-      #     else
-      #       echo "no install required"
-      #     fi
-      #   shell: bash
-
-      # - run: |
-      #     if [ -d node_modules ] && [ ! -e .mna_bal_deps_installer_build ] && [ "$build" = "true" ]
-      #     then
-      #         tar -czf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules yarn.lock
-      #         docker build . --tag ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest \
-      #         --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
-      #         --label "org.opencontainers.image.description=Ui bal" \
-      #         --label "org.opencontainers.image.licenses=MIT"
-      #         docker push ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest
-      #         echo "ok" > .mna_bal_deps_installer_build
-      #     else
-      #       echo "no build required"
-      #     fi
-      #   shell: bash
-      #   env:
-      #     build: ${{ secrets.BUILD_DOCKER_IF_NEEDED }}
-
       - run: make ci
 
       - run: make coverage
