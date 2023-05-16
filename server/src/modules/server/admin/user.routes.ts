@@ -1,10 +1,12 @@
 import {
+  IResGetUsers,
   IResPostUser,
   SReqPostUser,
+  SResGetUsers,
   SResPostUser,
 } from "shared/routes/user.routes";
 
-import { createUser } from "../../actions/users.actions";
+import { createUser, findUsers } from "../../actions/users.actions";
 import { Server } from "..";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
@@ -34,6 +36,29 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
         }
 
         return response.status(200).send(user as IResPostUser);
+      } catch (error) {
+        response.log.error(error);
+      }
+    }
+  );
+
+  server.get(
+    "/admin/users",
+    {
+      schema: {
+        response: { 200: SResGetUsers },
+      } as const,
+      preHandler: [
+        server.auth([server.validateJWT, server.validateSession]),
+        ensureUserIsAdmin,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ] as any,
+    },
+    async (request, response) => {
+      try {
+        const users = await findUsers();
+
+        return response.status(200).send(users as IResGetUsers);
       } catch (error) {
         response.log.error(error);
       }

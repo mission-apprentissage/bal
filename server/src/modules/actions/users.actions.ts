@@ -40,6 +40,12 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   return user;
 };
 
+export const findUsers = async () => {
+  const users = await getDbCollection("users").find<IUser>({}).toArray();
+
+  return users;
+};
+
 export const findUser = async (
   filter: Filter<IUser>,
   options?: FindOptions

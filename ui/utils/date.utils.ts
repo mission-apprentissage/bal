@@ -1,3 +1,6 @@
+import { format, parseISO } from "date-fns";
+import fr from "date-fns/locale/fr";
+
 export const prettyPrintDate = (date: string) => {
   const event = new Date(date);
   const options = {
@@ -9,4 +12,10 @@ export const prettyPrintDate = (date: string) => {
   };
 
   return event.toLocaleDateString("fr-FR", options);
+};
+
+export const formatDate = (date: string, dateFormat = "dd/MM/yyyy") => {
+  return format(parseISO(date), dateFormat, {
+    locale: fr,
+  });
 };
