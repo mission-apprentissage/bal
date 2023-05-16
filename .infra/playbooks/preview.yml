@@ -5,12 +5,13 @@
   vars_files:
     - "../vault/vault.yml"
   tasks:
-    - name: copy env file
+    - name: copy server env file
       ansible.builtin.template:
         src: "{{ item }}"
         dest: "/opt/bal/.env_server"
       with_fileglob:
         - "../.env_server"
+
     - name: copy ui env file
       ansible.builtin.template:
         src: "{{ item }}"
@@ -25,7 +26,7 @@
       with_fileglob:
         - "../docker-compose.preview-app.yml"
 
-    - name: Build local images
+    - name: Build local images {{ pr_number }}
       shell: "bash /opt/bal/tools/build-branch-images.sh {{ git_revision }} {{ pr_number }} {{ status }}"
       register: results
 
