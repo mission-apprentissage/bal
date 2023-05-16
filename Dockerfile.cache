@@ -1,0 +1,11 @@
+FROM node:18-alpine as deps_installer
+
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+COPY . .
+
+RUN yarn plugin import workspace-tools
+RUN yarn workspaces focus --all &> /dev/null
+
