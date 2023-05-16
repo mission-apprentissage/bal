@@ -1,3 +1,10 @@
+## [1.31.8](https://github.com/mission-apprentissage/bal/compare/v1.31.7...v1.31.8) (2023-05-16)
+
+
+### Bug Fixes
+
+* cleaning useless dockerfile ([fb3f43a](https://github.com/mission-apprentissage/bal/commit/fb3f43a5e5e94d62cab5a923b6ba90b913630914))
+
 ## [1.31.7](https://github.com/mission-apprentissage/bal/compare/v1.31.6...v1.31.7) (2023-05-16)
 
 
