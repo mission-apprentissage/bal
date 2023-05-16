@@ -2,6 +2,9 @@ name: Preview
 on:
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}
+
 jobs:
   deploy:
     name: Deploy Preview ${{ github.event.pull_request.number }}
