@@ -1,13 +1,13 @@
-FROM ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest as deps_installer-release
-WORKDIR /app
-COPY . .
+# FROM ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest as deps_installer-release
+# WORKDIR /app
+# COPY . .
 
 # Rebuild the source code only when needed
-FROM deps_installer-release AS builder
+FROM mna_bal_deps_installer:local AS builder
 WORKDIR /app
 
 # COPY --from=deps /app/. .
-# COPY . .
+COPY . .
 
 RUN yarn --cwd server build
 

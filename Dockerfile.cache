@@ -6,6 +6,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN yarn plugin import workspace-tools
-RUN yarn workspaces focus --all &> /dev/null
+# RUN yarn plugin import workspace-tools
+# RUN yarn workspaces focus --all &> /dev/null
 

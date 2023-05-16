@@ -15,7 +15,10 @@ on:
         value: ${{ jobs.deploy.outputs.status }}
   pull_request:
 jobs:
+  caching:
+    uses: "./.github/workflows/caching.yml"
   tests:
+    needs: ["caching"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -25,10 +28,6 @@ jobs:
         with:
           node-version: 18
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-
       - uses: actions/cache@v3
         with:
           path: |
@@ -36,45 +35,44 @@ jobs:
             ui/node_modules
             server/node_modules
             yarn.lock
-            .mna_bal_deps_installer_build
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+            /tmp/.build
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+            ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GH_FG_TOKEN }}
+      # - name: Login to GitHub Container Registry
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GH_FG_TOKEN }}
 
-      - run: |
-          if [ ! -d node_modules ]
-          then
-            yarn plugin import workspace-tools
-            yarn workspaces focus --all
-          else
-            echo "no install required"
-          fi
-        shell: bash
+      # - run: |
+      #     if [ ! -d node_modules ]
+      #     then
+      #       yarn plugin import workspace-tools
+      #       yarn workspaces focus --all
+      #     else
+      #       echo "no install required"
+      #     fi
+      #   shell: bash
 
-      - run: |
-          if [ -d node_modules ] && [ ! -e .mna_bal_deps_installer_build ] && [ "$build" = "true" ]
-          then
-              tar -czf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules yarn.lock
-              docker build . --tag ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest \
-              --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
-              --label "org.opencontainers.image.description=Ui bal" \
-              --label "org.opencontainers.image.licenses=MIT"
-              docker push ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest
-              echo "ok" > .mna_bal_deps_installer_build
-          else
-            echo "no build required"
-          fi
-        shell: bash
-        env:
-          build: ${{ secrets.BUILD_DOCKER_IF_NEEDED }}
+      # - run: |
+      #     if [ -d node_modules ] && [ ! -e .mna_bal_deps_installer_build ] && [ "$build" = "true" ]
+      #     then
+      #         tar -czf node_modules.tar.gz ./node_modules ./ui/node_modules ./server/node_modules yarn.lock
+      #         docker build . --tag ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest \
+      #         --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
+      #         --label "org.opencontainers.image.description=Ui bal" \
+      #         --label "org.opencontainers.image.licenses=MIT"
+      #         docker push ghcr.io/mission-apprentissage/mna_bal_deps_installer:latest
+      #         echo "ok" > .mna_bal_deps_installer_build
+      #     else
+      #       echo "no build required"
+      #     fi
+      #   shell: bash
+      #   env:
+      #     build: ${{ secrets.BUILD_DOCKER_IF_NEEDED }}
 
       - run: make ci
 

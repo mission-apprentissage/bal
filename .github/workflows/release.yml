@@ -30,10 +30,6 @@ jobs:
         with:
           node-version: 18
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-
       - uses: actions/cache@v3
         with:
           path: |
@@ -41,11 +37,15 @@ jobs:
             ui/node_modules
             server/node_modules
             yarn.lock
-            .mna_bal_deps_installer_build
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+            /tmp/.build
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+            ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
+
+      - name: load mna_bal_deps_installer
+        run: |
+          docker load -i /tmp/.build/mna_bal_deps_installer.tar
+        shell: bash
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
