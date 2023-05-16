@@ -40,9 +40,7 @@ jobs:
           sed -i '/**\/node_modules/d' .dockerignore
           sed -i '/**\/dist/d' .dockerignore
           sed -i '/yarn\.lock/d' .dockerignore
-          docker build . -f "./Dockerfile.cache" --tag mna_bal_deps_installer:local \
-          --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
-          --label "org.opencontainers.image.licenses=MIT"
+          docker build . --tag mna_bal_deps_installer:local
           mkdir -p /tmp/.build
           docker save -o /tmp/.build/mna_bal_deps_installer.tar mna_bal_deps_installer:local
         shell: bash
