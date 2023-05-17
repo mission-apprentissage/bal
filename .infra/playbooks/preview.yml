@@ -34,5 +34,5 @@
     #     msg: "{{ item }}"
     #   loop: "{{ results.stdout_lines }}"
     - debug:
-        msg: "{{ item }}"
+        var: "{{ item }}"
       loop: "{{ results.stderr_lines }}"
