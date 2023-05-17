@@ -1,8 +1,12 @@
-import "dotenv/config";
+import { config, up } from "migrate-mongo";
+import { MongoClient } from "mongodb";
+import path from "path";
 
-const config = {
+import { __dirname } from "../../../utils/esmUtils";
+
+const myConfig = {
   mongodb: {
-    url: process.env.MNA_BAL_MONGODB_URI,
+    url: process.env.MNA_BAL_MONGODB_URI as string,
 
     // in URL
     databaseName: "",
@@ -16,7 +20,7 @@ const config = {
   },
 
   // The migrations dir, can be an relative or absolute path. Only edit this when really necessary.
-  migrationsDir: "./src/db/migrations",
+  migrationsDir: path.join(__dirname(import.meta.url), "../../db/migrations"),
 
   // The mongodb collection where the applied changes are stored. Only edit this when really necessary.
   changelogCollectionName: "migrations",
@@ -32,4 +36,11 @@ const config = {
   moduleSystem: "esm",
 };
 
-export default config;
+// @ts-ignore
+config.set(myConfig);
+
+export async function migrations(client: MongoClient) {
+  // then, use the API as you normally would, eg:
+  // @ts-ignore
+  await up(client.db(), client);
+}

@@ -86,5 +86,5 @@ clean_docker
 
 if [ "$PREVIEW_STATUS" == "open" ]; then
     docker exec bal_server_"$LOCAL_VERSION" yarn cli "seed"
-    # docker exec bal_server_"$LOCAL_VERSION" yarn migration:up
+    docker exec bal_server_"$LOCAL_VERSION" yarn cli "migrations:up"
 fi

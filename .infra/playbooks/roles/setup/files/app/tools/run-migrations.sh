@@ -6,7 +6,7 @@ readonly LOG_FILEPATH="/var/log/data-jobs/run-migrations_$(date +'%Y-%m-%d_%H%M%
 
 run_migrations(){
     echo "Application des migrations mongoDb ..."
-    docker exec bal_server bash -c "yarn migration:up" 2>&1 | tee ${LOG_FILEPATH}
+    docker exec bal_server bash -c "yarn cli migrations:up" 2>&1 | tee ${LOG_FILEPATH}
 } 
 
 run_migrations
