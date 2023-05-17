@@ -31,4 +31,5 @@
       register: results
 
     - debug:
-        var: results.stdout
+        msg: "{{ item }}"
+      loop: "{{ results.stdout_lines }}"
