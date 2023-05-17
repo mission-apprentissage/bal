@@ -30,9 +30,9 @@
       shell: "bash /opt/bal/tools/build-branch-images.sh {{ git_revision }} {{ pr_number }} {{ status }}"
       register: results
 
-    - debug:
-        msg: "{{ item }}"
-      loop: "{{ results.stdout_lines }}"
+    # - debug:
+    #     msg: "{{ item }}"
+    #   loop: "{{ results.stdout_lines }}"
     - debug:
         msg: "{{ item }}"
       loop: "{{ results.stderr_lines }}"
