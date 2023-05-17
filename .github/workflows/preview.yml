@@ -35,7 +35,8 @@ jobs:
       - name: Create vault pwd file
         run: echo ${{ secrets.VAULT_PWD }} > .infra/.vault_pwd.txt
 
-      - run: ls -l /usr/bin/python3
+      - name: LS
+        run: ls -l /usr/bin/python3
 
       - name: Run playbook
         run: |
