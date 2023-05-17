@@ -1,4 +1,5 @@
 import { Command } from "commander";
+import { MongoClient } from "mongodb";
 
 import { config } from "../../../config/config";
 import { modelDescriptors } from "../../db/models";
@@ -7,17 +8,18 @@ import {
   connectToMongodb,
 } from "../../utils/mongodb";
 import { createUser } from "../actions/users.actions";
+import { create, up } from "./migrations/migrations";
 import { processor } from "./processor/processor";
 import { seed } from "./seed/seed";
 const program = new Command();
 
-type IJob = () => Promise<void>;
+type IJob = (mongoClient: MongoClient) => Promise<void>;
 
 export const runScript = async (job: IJob) => {
-  await connectToMongodb(config.mongodb.uri);
+  const client = await connectToMongodb(config.mongodb.uri);
   await configureDbSchemaValidation(modelDescriptors);
 
-  await job();
+  await job(client);
 };
 
 program
@@ -65,6 +67,37 @@ program
   .action(async () =>
     runScript(async () => {
       await processor();
+    })
+  );
+
+program
+  .command("migrations:up")
+  .description("Run migrations up")
+  .action(async () =>
+    runScript(async (client) => {
+      try {
+        await up(client);
+        process.exit(0);
+      } catch (error) {
+        console.error(error);
+        process.exit(1);
+      }
+    })
+  );
+
+program
+  .command("migrations:create")
+  .description("Run migrations create")
+  .option("-d, --description <string>", "description")
+  .action(async ({ description }) =>
+    runScript(async () => {
+      try {
+        await create(description);
+        process.exit(0);
+      } catch (error) {
+        console.error(error);
+        process.exit(1);
+      }
     })
   );
 

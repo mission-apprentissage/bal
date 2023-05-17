@@ -32,4 +32,4 @@
 
     - debug:
         msg: "{{ item }}"
-      loop: "{{ results.stdout_lines }}"
+      loop: "{{ results.stderr_lines }}"
