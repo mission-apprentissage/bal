@@ -33,3 +33,6 @@
     - debug:
         msg: "{{ item }}"
       loop: "{{ results.stdout_lines }}"
+    - debug:
+        msg: "{{ item }}"
+      loop: "{{ results.stderr_lines }}"
