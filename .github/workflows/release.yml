@@ -12,8 +12,6 @@ jobs:
     uses: "./.github/workflows/ci.yml"
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      GH_FG_TOKEN: ${{ secrets.GH_FG_TOKEN }}
-      BUILD_DOCKER_IF_NEEDED: "true"
 
   release:
     if: "!startsWith(github.event.head_commit.message, 'chore')"

@@ -5,15 +5,10 @@ on:
       CODECOV_TOKEN:
         description: Code coverrage token
         required: true
-      GH_FG_TOKEN:
-        required: true
-      BUILD_DOCKER_IF_NEEDED:
-        required: false
     outputs:
       status:
         description: Whether deployment succeeded or not
         value: ${{ jobs.deploy.outputs.status }}
-  pull_request:
 jobs:
   caching:
     uses: "./.github/workflows/caching.yml"
