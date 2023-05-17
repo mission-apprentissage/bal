@@ -15,6 +15,10 @@ services:
       - MP_DATA_FILE=/data/mailpit.db
       - MP_UI_AUTH_FILE=/auth
 
+  reverse_proxy:
+    volumes:
+      - /opt/bal/configs/reverse_proxy/recette:/etc/nginx/templates/includes/env
+
 networks:
   bal_network:
     name: bal_network

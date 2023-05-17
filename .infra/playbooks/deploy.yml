@@ -58,9 +58,9 @@
     - debug:
         var: docker_compose_output
 
-    - name: migrations
-      shell: "sudo bash /opt/bal/tools/run-migrations.sh"
-      register: results
-    - debug:
-        msg: "{{ item }}"
-      loop: "{{ results.stdout_lines }}"
+    # - name: migrations
+    #   shell: "sudo bash /opt/bal/tools/run-migrations.sh"
+    #   register: results
+    # - debug:
+    #     msg: "{{ item }}"
+    #   loop: "{{ results.stdout_lines }}"
