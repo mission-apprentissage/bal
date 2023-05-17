@@ -29,12 +29,12 @@ const UserList = () => {
         is_admin: {
           size: 100,
           header: () => "Administrateur",
-          cell: ({ getValue }) => (getValue() ? "Oui" : "Non"),
+          cell: ({ getValue }: any) => (getValue() ? "Oui" : "Non"),
         },
         api_key_used_at: {
           size: 100,
           header: () => "Dernière utilisation API",
-          cell: ({ getValue }) =>
+          cell: ({ getValue }: any) =>
             getValue() ? formatDate(getValue(), "PPP à p") : "Jamais",
         },
       }}
