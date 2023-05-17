@@ -1,3 +1,10 @@
+# [1.32.0](https://github.com/mission-apprentissage/bal/compare/v1.31.8...v1.32.0) (2023-05-17)
+
+
+### Features
+
+* migrate-mongo ([#105](https://github.com/mission-apprentissage/bal/issues/105)) ([a6cc4f1](https://github.com/mission-apprentissage/bal/commit/a6cc4f1b1f276b9f20690793282fe64eaa45e93d))
+
 ## [1.31.8](https://github.com/mission-apprentissage/bal/compare/v1.31.7...v1.31.8) (2023-05-16)
 
 
