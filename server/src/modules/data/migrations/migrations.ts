@@ -1,4 +1,4 @@
-import { config, up } from "migrate-mongo";
+import { config, create as mcreate, status, up as mup } from "migrate-mongo";
 import { MongoClient } from "mongodb";
 import path from "path";
 
@@ -36,11 +36,21 @@ const myConfig = {
   moduleSystem: "esm",
 };
 
-// @ts-ignore
-config.set(myConfig);
-
-export async function migrations(client: MongoClient) {
-  // then, use the API as you normally would, eg:
+export async function up(client: MongoClient) {
   // @ts-ignore
-  await up(client.db(), client);
+  config.set(myConfig);
+
+  // @ts-ignore
+  const migrationStatus = await status(client.db());
+  migrationStatus.forEach(({ fileName, appliedAt }) =>
+    console.log(fileName, ":", appliedAt)
+  );
+  // @ts-ignore
+  await mup(client.db(), client);
+}
+export async function create(description: string) {
+  // @ts-ignore
+  config.set({ ...myConfig, migrationsDir: "src/db/migrations" });
+  const fileName = await mcreate(description);
+  console.log("Created:", fileName);
 }

@@ -8,7 +8,7 @@ import {
   connectToMongodb,
 } from "../../utils/mongodb";
 import { createUser } from "../actions/users.actions";
-import { migrations } from "./migrations/up";
+import { create, up } from "./migrations/migrations";
 import { processor } from "./processor/processor";
 import { seed } from "./seed/seed";
 const program = new Command();
@@ -76,7 +76,23 @@ program
   .action(async () =>
     runScript(async (client) => {
       try {
-        await migrations(client);
+        await up(client);
+        process.exit(0);
+      } catch (error) {
+        console.error(error);
+        process.exit(1);
+      }
+    })
+  );
+
+program
+  .command("migrations:create")
+  .description("Run migrations create")
+  .option("-d, --description <string>", "description")
+  .action(async ({ description }) =>
+    runScript(async () => {
+      try {
+        await create(description);
         process.exit(0);
       } catch (error) {
         console.error(error);
