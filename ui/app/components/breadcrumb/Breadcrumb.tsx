@@ -45,6 +45,10 @@ export const PAGES = {
     title: "Modifier mon mot de passe",
     path: "/modifier-mot-de-passe",
   }),
+  compteProfil: () => ({
+    title: "Mon profil",
+    path: "/compte/profil",
+  }),
   adminFichier: () => ({
     title: "Fichier source",
     path: "/admin/fichier",
@@ -55,7 +59,27 @@ export const PAGES = {
   }),
   adminUsers: () => ({
     title: "Utilisateurs",
-    path: "/admin/users",
+    path: "/admin/utilisateurs",
+  }),
+  adminUserView: (id: string) => ({
+    title: "Fiche utilisateur",
+    path: `/admin/utilisateur/${id}`,
+  }),
+  adminPersons: () => ({
+    title: "Personnes",
+    path: "/admin/personnes",
+  }),
+  adminViewPerson: (id: string) => ({
+    title: "Fiche personne",
+    path: `/admin/personnes/${id}`,
+  }),
+  adminOrganisations: () => ({
+    title: "Organisations",
+    path: "/admin/organisations",
+  }),
+  adminViewOrganisation: (id: string) => ({
+    title: "Fiche organisation",
+    path: `/admin/organisations/${id}`,
   }),
   usageApi: () => ({
     title: "API",

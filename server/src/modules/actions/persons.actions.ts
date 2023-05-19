@@ -1,4 +1,4 @@
-import { Filter, FindOptions, ObjectId, UpdateFilter } from "mongodb";
+import { Filter, ObjectId, UpdateFilter } from "mongodb";
 import { IPerson } from "shared/models/person.model";
 
 import { getDbCollection } from "../../utils/mongodb";
@@ -8,6 +8,21 @@ type ICreatePerson = {
   organisation_id: string;
   _meta: unknown;
 };
+
+const DEFAULT_LOOKUP = {
+  from: "organisations",
+  let: { organisationId: { $toObjectId: "$organisation_id" } },
+  pipeline: [
+    {
+      $match: {
+        $expr: { $eq: ["$_id", "$$organisationId"] },
+      },
+    },
+  ],
+  as: "organisation",
+};
+
+const DEFAULT_UNWIND = "$organisation";
 
 export const createPerson = async (data: ICreatePerson) => {
   const _id = new ObjectId();
@@ -22,16 +37,40 @@ export const createPerson = async (data: ICreatePerson) => {
   return person;
 };
 
-export const findPerson = async (
-  filter: Filter<IPerson>,
-  options?: FindOptions
-) => {
-  const person = await getDbCollection("persons").findOne<IPerson>(
-    filter,
-    options
-  );
+export const findPerson = async (filter: Filter<IPerson>) => {
+  const person = await getDbCollection("persons")
+    .aggregate<IPerson>([
+      {
+        $match: filter,
+      },
+      {
+        $lookup: DEFAULT_LOOKUP,
+      },
+      {
+        $unwind: DEFAULT_UNWIND,
+      },
+    ])
+    .next();
 
   return person;
+};
+
+export const findPersons = async () => {
+  const persons = await getDbCollection("persons")
+    .aggregate<IPerson>([
+      {
+        $match: { _id: { $exists: true } },
+      },
+      {
+        $lookup: DEFAULT_LOOKUP,
+      },
+      {
+        $unwind: DEFAULT_UNWIND,
+      },
+    ])
+    .toArray();
+
+  return persons;
 };
 
 export const updatePerson = async (

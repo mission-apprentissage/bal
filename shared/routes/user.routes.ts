@@ -1,5 +1,7 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { SPerson } from "../models/person.model";
+
 export const SReqPostUser = {
   type: "object",
   properties: {
@@ -19,6 +21,7 @@ export const SResGetUser = {
     email: { type: "string" },
     is_admin: { type: "boolean" },
     api_key_used_at: { type: "string", format: "date-time" },
+    person: SPerson,
   },
   required: ["email"],
   additionalProperties: false,
