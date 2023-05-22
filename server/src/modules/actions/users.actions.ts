@@ -21,13 +21,18 @@ const DEFAULT_LOOKUP = {
   as: "person",
 };
 
-const DEFAULT_UNWIND = "$person";
+const DEFAULT_UNWIND = {
+  path: "$person",
+  preserveNullAndEmptyArrays: true,
+};
+
 export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   const person = await createPerson({
     email: data.email,
     organisation_id,
     _meta: { source: "bal" },
   });
+
   if (!person) {
     throw new Error("Can't create person");
   }
@@ -77,8 +82,6 @@ export const findUser = async (filter: Filter<IUser>) => {
       },
     ])
     .next();
-
-  console.log({ user });
 
   return user;
 };

@@ -22,7 +22,10 @@ const DEFAULT_LOOKUP = {
   as: "organisation",
 };
 
-const DEFAULT_UNWIND = "$organisation";
+const DEFAULT_UNWIND = {
+  path: "$organisation",
+  preserveNullAndEmptyArrays: true,
+};
 
 export const createPerson = async (data: ICreatePerson) => {
   const _id = new ObjectId();
