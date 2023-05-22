@@ -7,6 +7,7 @@ import Table from "../../../../components/table/Table";
 import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";
 import { api } from "../../../../utils/api.utils";
 import { formatDate } from "../../../../utils/date.utils";
+import { getPersonDisplayName } from "../../personnes/persons.format";
 
 const UserList = () => {
   const [users, setUsers] = useState<IResGetUsers>([]);
@@ -26,15 +27,15 @@ const UserList = () => {
       data={users || []}
       columns={{
         email: {
-          size: 100,
+          id: "email",
           header: () => "Email",
+          cell: ({ row }) => row.original.email,
         },
         person: {
-          size: 100,
+          id: "person",
           header: () => "Personne",
-          cell: ({ getValue }) => {
-            const person = getValue();
-
+          cell: ({ row }) => {
+            const { person } = row.original;
             if (!person) return null;
 
             return (
@@ -44,25 +45,28 @@ const UserList = () => {
                 flexGrow={1}
               >
                 <Text isTruncated maxWidth={400}>
-                  {person?.nom ?? person?._id}
+                  {getPersonDisplayName(person)}
                 </Text>
               </Text>
             );
           },
         },
         is_admin: {
-          size: 100,
+          id: "is_admin",
           header: () => "Administrateur",
-          cell: ({ getValue }: any) => (getValue() ? "Oui" : "Non"),
+          cell: ({ row }) => (row.original.is_admin ? "Oui" : "Non"),
         },
         api_key_used_at: {
-          size: 100,
+          id: "api_key_used_at",
           header: () => "Dernière utilisation API",
-          cell: ({ getValue }: any) =>
-            getValue() ? formatDate(getValue(), "PPP à p") : "Jamais",
+          cell: ({ row }) => {
+            const date = row.original.api_key_used_at;
+            return date ? formatDate(date, "PPP à p") : "Jamais";
+          },
         },
         actions: {
           size: 25,
+          id: "actions",
           header: () => "",
           cell: ({ row }) => (
             <Link href={`/admin/utilisateurs/${row.original._id}`}>

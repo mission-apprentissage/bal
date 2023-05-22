@@ -26,6 +26,7 @@ const PersonList = () => {
       data={persons || []}
       columns={{
         name: {
+          id: "name",
           size: 100,
           header: () => "Nom complet",
           cell: ({ row }) => {
@@ -34,21 +35,28 @@ const PersonList = () => {
           },
         },
         email: {
+          id: "email",
           size: 100,
           header: () => "Email",
         },
         civility: {
+          id: "civility",
           size: 100,
           header: () => "Civilité",
         },
         organisation_id: {
+          id: "organisation_id",
           size: 100,
           header: () => "Organisation",
           cell: ({ row }) => {
-            const { nom, _id } = row.original.organisation;
-            return row.original.organisation ? (
-              <Text as={Link} href={PAGES.adminViewOrganisation(_id).path}>
-                {nom}
+            const { organisation } = row.original;
+
+            return organisation ? (
+              <Text
+                as={Link}
+                href={PAGES.adminViewOrganisation(organisation._id).path}
+              >
+                {organisation.nom}
               </Text>
             ) : (
               ""
@@ -56,11 +64,13 @@ const PersonList = () => {
           },
         },
         source: {
+          id: "source",
           size: 100,
           header: () => "Source",
-          cell: ({ row }) => row.original._meta.source,
+          cell: ({ row }) => row.original._meta?.source ?? "",
         },
         actions: {
+          id: "actions",
           size: 25,
           header: () => "",
           cell: ({ row }) => (

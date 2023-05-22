@@ -1,29 +1,21 @@
 import { Box, HStack, VStack } from "@chakra-ui/react";
-import get from "lodash.get";
 import React from "react";
 
+interface Props<TData> {
+  title?: string;
+  data: TData;
+  rows: {
+    [key: string]: {
+      header?: () => React.ReactNode;
+      cell?: (data: TData) => React.ReactNode;
+    };
+  };
+}
 /**
  * A handy component to display a list of key/value pairs
  * largely inspired by @tanstack/react-table
- *
- * @param {*} param0
- * @returns
  */
-const InfoDetails = ({
-  title,
-  rows,
-  data,
-}: {
-  title?: string;
-  rows: Record<
-    any,
-    {
-      header?: () => any;
-      cell?: ({ value }: { value: any; original: any }) => any;
-    }
-  >;
-  data: any;
-}) => {
+const InfoDetails = <TData,>({ title, rows, data }: Props<TData>) => {
   return (
     <>
       {title && (
@@ -32,12 +24,15 @@ const InfoDetails = ({
         </Box>
       )}
       {Object.entries(rows).map(([key, { header, cell }]) => {
-        const value = get(data, key);
+        const dataKey = key as keyof TData;
+        const value = data[dataKey];
+
         return (
           <VStack key={key} gap={6} alignItems="baseline">
             <HStack mb={4} alignItems="baseline">
-              <Box w="300px">{header ? header() : key} </Box>
-              <div>{cell ? cell({ value, original: data }) : value}</div>
+              <Box w="300px">{header?.() ?? key} </Box>
+              {/* @ts-ignore */}
+              <div>{cell?.(data) ?? value}</div>
             </HStack>
           </VStack>
         );

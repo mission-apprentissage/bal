@@ -1,37 +1,75 @@
-import { Box, Button, Divider, HStack, Text } from "@chakra-ui/react";
+import { Box, BoxProps, Button, Divider, HStack, Text } from "@chakra-ui/react";
 import {
+  AccessorFn,
+  CellContext,
+  ColumnDefTemplate,
   createColumnHelper,
+  DeepKeys,
   flexRender,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  OnChangeFn,
+  PaginationState,
+  Row,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 
-export default function Table({
+interface Props<TData> extends BoxProps {
+  data: TData[];
+  onRowClick?: (rowId: string) => void;
+  columns: {
+    [key: string]: {
+      id: string;
+      header?: () => React.ReactNode;
+      cell?: ColumnDefTemplate<CellContext<TData, unknown>>;
+      size?: number;
+    };
+  };
+  renderSubComponent?: (row: { row: Row<TData> }) => React.ReactNode;
+  getRowCanExpand?: (row: Row<TData>) => boolean;
+  searchValue?: string;
+  onCountItemsChange?: (count: number) => void;
+  // pagination
+  manualPagination?: boolean;
+  onPaginationChange?: OnChangeFn<PaginationState>;
+  pagination?: PaginationState;
+  // sorting
+  manualSorting?: boolean;
+  enableSorting?: boolean;
+  onSortingChange?: OnChangeFn<SortingState>;
+  sorting?: SortingState;
+  pageSizes?: number[];
+  pageCount?: number;
+}
+
+const Table = <TData extends object>({
   data: defaultData,
-  onRowClick = undefined,
+  onRowClick,
   columns: columnsDef,
-  renderSubComponent = undefined,
-  getRowCanExpand = undefined,
+  renderSubComponent,
+  getRowCanExpand,
   searchValue,
   onCountItemsChange,
   // pagination
   manualPagination = false,
-  onPaginationChange = null,
-  pagination = undefined,
+  onPaginationChange,
+  pagination,
   // sorting
   manualSorting = false,
-  enableSorting = undefined,
-  onSortingChange = null,
-  sorting = undefined,
+  enableSorting,
+  onSortingChange,
+  sorting,
   pageSizes = [5, 10, 20, 30, 40, 50],
+  pageCount,
   ...props
-}: any) {
-  const data: any[] = useMemo(() => defaultData, [defaultData]); // TODO TO CHECK RE-RENDERER WITH [defaultData] instead of []
+}: Props<TData>) => {
+  const data: TData[] = useMemo(() => defaultData, [defaultData]); // TODO TO CHECK RE-RENDERER WITH [defaultData] instead of []
+  console.log({ defaultData, data });
 
   const [globalFilter, setGlobalFilter] = useState(searchValue);
   const countItems = useRef(data.length);
@@ -43,11 +81,14 @@ export default function Table({
     }
   }, [data.length, onCountItemsChange, searchValue]);
 
-  const columnHelper = createColumnHelper();
+  const columnHelper = createColumnHelper<TData>();
 
   const columns = Object.keys(columnsDef).map((key) => {
-    return columnHelper.accessor(key as any, columnsDef[key]);
+    const dataKey = key as AccessorFn<TData, unknown> | DeepKeys<TData>;
+    return columnHelper.accessor(dataKey, columnsDef[key]);
   });
+
+  console.log({ columns });
 
   const table = useReactTable({
     data,
@@ -55,41 +96,12 @@ export default function Table({
     getRowCanExpand,
     // pagination
     manualPagination,
-    pageCount: pagination?.total || data?.length,
-    ...(onPaginationChange
-      ? {
-          onPaginationChange: (updater: any) => {
-            const oldState = table.getState();
-            const newState = updater(oldState.pagination);
-            onPaginationChange({
-              page: newState.pageIndex + 1,
-              limit: newState.pageSize,
-            });
-          },
-        }
-      : {}),
+    pageCount: pageCount ?? -1,
+    onPaginationChange,
     // sorting
     enableSorting,
     manualSorting,
     onSortingChange,
-    ...(onSortingChange
-      ? {
-          onSortingChange: (updater: any) => {
-            const oldState = table.getState();
-            const newState = updater(oldState.sorting);
-            // weird behaviour: sometimes newState is empty so we rollback to oldState
-            newState.length > 0
-              ? onSortingChange({
-                  field: newState[0].id,
-                  direction: newState[0].desc ? "-1" : "1",
-                })
-              : onSortingChange({
-                  field: oldState.sorting[0].id,
-                  direction: oldState.sorting[0].desc ? "1" : "-1",
-                });
-          },
-        }
-      : {}),
     // general
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
@@ -99,23 +111,15 @@ export default function Table({
     onGlobalFilterChange: setGlobalFilter,
     state: {
       globalFilter,
-      ...(pagination
-        ? {
-            pagination: {
-              pageSize: pagination?.limit || 10,
-              pageIndex: (pagination?.page || 1) - 1,
-            },
-          }
-        : {}),
-      ...(sorting ? { sorting } : {}),
+      pagination,
+      sorting,
     },
-    // initialState: {},
   });
 
   useEffect(() => {
     if (countItems.current !== table.getPrePaginationRowModel().rows.length) {
       countItems.current = table.getPrePaginationRowModel().rows.length;
-      onCountItemsChange(countItems.current);
+      onCountItemsChange?.(countItems.current);
     }
   }, [onCountItemsChange, table]);
 
@@ -176,7 +180,7 @@ export default function Table({
           ))}
         </Box>
         <Box as="tbody">
-          {table.getRowModel().rows.map((row, j) => {
+          {table.getCoreRowModel().rows.map((row, j) => {
             return (
               <Fragment key={row.id}>
                 <Box
@@ -213,7 +217,6 @@ export default function Table({
       </Box>
       {data.length > 5 && (
         <>
-          {" "}
           <Divider my={2} />
           <HStack spacing={3} justifyContent="space-between">
             <HStack spacing={3}>
@@ -285,7 +288,7 @@ export default function Table({
                     table.setPageSize(Number(e.target.value));
                   }}
                 >
-                  {pageSizes.map((pageSize: string) => (
+                  {pageSizes.map((pageSize) => (
                     <option key={pageSize} value={pageSize}>
                       Voir par {pageSize}
                     </option>
@@ -298,4 +301,6 @@ export default function Table({
       )}
     </div>
   );
-}
+};
+
+export default Table;

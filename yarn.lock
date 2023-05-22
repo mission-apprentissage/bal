@@ -4037,15 +4037,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.get@npm:4.4.7":
-  version: 4.4.7
-  resolution: "@types/lodash.get@npm:4.4.7"
-  dependencies:
-    "@types/lodash": "*"
-  checksum: 0dbf1960606e4707c34e8ffbe97ffaad0e47fc5df7a6e24ea6e4fe5838d2468aa13360f38815c77b06e3c9932631ae15662b4139036a69ee16aeb54827a21405
-  languageName: node
-  linkType: hard
-
 "@types/lodash.mergewith@npm:4.6.7":
   version: 4.6.7
   resolution: "@types/lodash.mergewith@npm:4.6.7"
@@ -11267,7 +11258,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.get@npm:4.4.2, lodash.get@npm:^4.4.2":
+"lodash.get@npm:^4.4.2":
   version: 4.4.2
   resolution: "lodash.get@npm:4.4.2"
   checksum: e403047ddb03181c9d0e92df9556570e2b67e0f0a930fcbbbd779370972368f5568e914f913e93f3b08f6d492abc71e14d4e9b7a18916c31fa04bd2306efe545
@@ -17639,7 +17630,6 @@ __metadata:
     "@tanstack/match-sorter-utils": 8.8.4
     "@tanstack/react-query": 4.29.5
     "@tanstack/react-table": 8.9.1
-    "@types/lodash.get": 4.4.7
     "@types/lodash.range": 3.2.7
     "@types/node": 18.11.18
     "@types/react": 18.0.27
@@ -17649,7 +17639,6 @@ __metadata:
     chakra-ui-markdown-renderer: 4.1.0
     date-fns: 2.29.3
     framer-motion: 10.10.0
-    lodash.get: 4.4.2
     lodash.range: 3.2.0
     next: 13.4.1
     next-plausible: 3.7.2

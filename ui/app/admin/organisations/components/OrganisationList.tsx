@@ -24,15 +24,18 @@ const OrganisationList = () => {
       data={organisations || []}
       columns={{
         nom: {
+          id: "nom",
           size: 100,
           header: () => "Nom",
         },
         email_domains: {
+          id: "email_domains",
           size: 100,
           header: () => "Domaines",
-          cell: ({ row }) => row.original.email_domains.join(", "),
+          cell: ({ row }) => row.original.email_domains?.join(", ") ?? "",
         },
         actions: {
+          id: "actions",
           size: 25,
           header: () => "",
           cell: ({ row }) => (

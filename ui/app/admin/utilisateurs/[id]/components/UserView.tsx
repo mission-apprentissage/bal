@@ -10,6 +10,7 @@ import { formatDate } from "../../../../../utils/date.utils";
 import Breadcrumb, {
   PAGES,
 } from "../../../../components/breadcrumb/Breadcrumb";
+import { getPersonDisplayName } from "../../../personnes/persons.format";
 
 interface Props {
   user: IResGetUser;
@@ -40,22 +41,22 @@ const UserView: FC<Props> = ({ user }) => {
           },
           person: {
             header: () => "Personne",
-            cell: ({ value }) => {
-              if (!value) return null;
+            cell: ({ person }) => {
+              if (!person) return null;
 
               return (
-                <Text as={Link} href={PAGES.adminViewPerson(value._id).path}>
-                  {value?.nom || value?.prenom
-                    ? `${value?.nom ?? ""} ${value?.prenom ?? ""}`
-                    : value._id}
+                <Text as={Link} href={PAGES.adminViewPerson(person._id).path}>
+                  {getPersonDisplayName(person)}
                 </Text>
               );
             },
           },
           api_key_used_at: {
             header: () => "Dernière utilisation API",
-            cell: ({ value }) => {
-              return value ? formatDate(value, "PPP à p") : "Jamais";
+            cell: ({ api_key_used_at }) => {
+              return api_key_used_at
+                ? formatDate(api_key_used_at, "PPP à p")
+                : "Jamais";
             },
           },
         }}

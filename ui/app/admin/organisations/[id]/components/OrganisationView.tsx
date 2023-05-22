@@ -39,10 +39,10 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
           },
           email_domains: {
             header: () => "Domaines",
-            cell: ({ value }) => {
+            cell: ({ email_domains }) => {
               return (
                 <UnorderedList>
-                  {value.map((domain: string) => (
+                  {email_domains?.map((domain: string) => (
                     <ListItem key={domain}>{domain}</ListItem>
                   ))}
                 </UnorderedList>
@@ -61,19 +61,23 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
         data={organisation.etablissements ?? []}
         columns={{
           nom: {
+            id: "nom",
             size: 100,
             header: () => "Nom",
           },
           siret: {
+            id: "siret",
             size: 100,
             header: () => "Siret",
           },
           is_hq: {
+            id: "is_hq",
             size: 100,
             header: () => "Siège social",
             cell: ({ getValue }) => (getValue() ? "Oui" : "Non"),
           },
           is_close: {
+            id: "is_close",
             size: 100,
             header: () => "Fermé",
             cell: ({ getValue }) => (getValue() ? "Oui" : "Non"),

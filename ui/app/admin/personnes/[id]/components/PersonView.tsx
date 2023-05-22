@@ -45,13 +45,13 @@ const PersonView: FC<Props> = ({ person }) => {
           },
           organisation: {
             header: () => "Organisation",
-            cell: ({ value }) => {
-              return value ? (
+            cell: ({ organisation }) => {
+              return organisation ? (
                 <Text
                   as={Link}
-                  href={PAGES.adminViewOrganisation(value._id).path}
+                  href={PAGES.adminViewOrganisation(organisation._id).path}
                 >
-                  {value.nom}
+                  {organisation.nom}
                 </Text>
               ) : (
                 ""
@@ -60,14 +60,14 @@ const PersonView: FC<Props> = ({ person }) => {
           },
           sirets: {
             header: () => "Sirets",
-            cell: ({ value }) => {
-              return value?.join(", ") ?? "";
+            cell: ({ sirets }) => {
+              return sirets?.join(", ") ?? "";
             },
           },
           _meta: {
             header: () => "Meta",
-            cell: ({ value }) => {
-              return <pre>{JSON.stringify(value, null, "  ")}</pre>;
+            cell: ({ _meta }) => {
+              return <pre>{JSON.stringify(_meta, null, "  ")}</pre>;
             },
           },
         }}

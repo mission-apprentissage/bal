@@ -1,3 +1,8 @@
+interface Link {
+  linkText: string;
+  href: string;
+}
+
 export const replaceLinks = (str: string) => {
   const regex = /(\[(.*?)\])(\((.*?)\))/gim;
   let m = regex.exec(str);
@@ -6,7 +11,7 @@ export const replaceLinks = (str: string) => {
     return [str];
   }
   try {
-    const parseResults: any[] = [];
+    const parseResults: Array<string | Link> = [];
     let currentPos = 0;
     while (m !== null) {
       // This is necessary to avoid infinite loops with zero-width matches
