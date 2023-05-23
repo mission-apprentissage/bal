@@ -51,6 +51,10 @@ const UserView: FC<Props> = ({ user }) => {
               );
             },
           },
+          is_admin: {
+            header: () => "Administrateur",
+            cell: ({ is_admin }) => (is_admin ? "Oui" : "Non"),
+          },
           api_key_used_at: {
             header: () => "Dernière utilisation API",
             cell: ({ api_key_used_at }) => {

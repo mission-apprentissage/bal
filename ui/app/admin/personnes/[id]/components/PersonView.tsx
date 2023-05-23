@@ -40,6 +40,9 @@ const PersonView: FC<Props> = ({ person }) => {
           prenom: {
             header: () => "Prénom",
           },
+          email: {
+            header: () => "Email",
+          },
           civility: {
             header: () => "Civilite",
           },

@@ -6,8 +6,18 @@ const collectionName = "persons";
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ email: 1 }, { unique: true }],
-  [{ email: "text", nom: "text", prenom: "text" }, {}],
-  [{ organisation_id: 1 }, {}],
+  [
+    { email: "text", nom: "text", prenom: "text", sirets: "text" },
+    {
+      name: "email_nom_prenom_sirets_text",
+      default_language: "french",
+      collation: {
+        locale: "simple",
+        strength: 1,
+      },
+    },
+  ],
+  [{ organisation_id: 1 }, { name: "organisation_id" }],
 ];
 
 export const SPerson = {

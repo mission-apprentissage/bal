@@ -1,4 +1,6 @@
-import { ObjectId } from "mongodb";
+import { Filter, ObjectId } from "mongodb";
+import { IPerson } from "shared/models/person.model";
+import { SReqParamsSearchPagination } from "shared/routes/common.routes";
 import {
   IResGetPerson,
   SResGetPerson,
@@ -15,6 +17,7 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
     {
       schema: {
         response: { 200: SResGetPersons },
+        querystring: SReqParamsSearchPagination,
       } as const,
       preHandler: [
         server.auth([server.validateJWT, server.validateSession]),
@@ -24,9 +27,15 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       try {
-        const persons = await findPersons();
+        const filter: Filter<IPerson> = {};
 
-        console.log(persons);
+        const { q = "" } = request.query;
+
+        if (q) {
+          filter.$text = { $search: q };
+        }
+
+        const persons = await findPersons(filter);
 
         return response.status(200).send(persons);
       } catch (error) {

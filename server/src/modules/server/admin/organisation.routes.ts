@@ -1,4 +1,6 @@
-import { ObjectId } from "mongodb";
+import { Filter, ObjectId } from "mongodb";
+import { IOrganisation } from "shared/models/organisation.model";
+import { SReqParamsSearchPagination } from "shared/routes/common.routes";
 import {
   IResGetOrganisation,
   SResGetOrganisation,
@@ -18,6 +20,7 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
     {
       schema: {
         response: { 200: SResGetOrganisations },
+        querystring: SReqParamsSearchPagination,
       } as const,
       preHandler: [
         server.auth([server.validateJWT, server.validateSession]),
@@ -27,7 +30,15 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       try {
-        const organisations = await findOrganisations();
+        const filter: Filter<IOrganisation> = {};
+
+        const { q } = request.query;
+
+        if (q) {
+          filter.$text = { $search: q };
+        }
+
+        const organisations = await findOrganisations(filter);
 
         return response.status(200).send(organisations);
       } catch (error) {

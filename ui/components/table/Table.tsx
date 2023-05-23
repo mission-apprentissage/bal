@@ -69,7 +69,6 @@ const Table = <TData extends object>({
   ...props
 }: Props<TData>) => {
   const data: TData[] = useMemo(() => defaultData, [defaultData]); // TODO TO CHECK RE-RENDERER WITH [defaultData] instead of []
-  console.log({ defaultData, data });
 
   const [globalFilter, setGlobalFilter] = useState(searchValue);
   const countItems = useRef(data.length);
@@ -87,8 +86,6 @@ const Table = <TData extends object>({
     const dataKey = key as AccessorFn<TData, unknown> | DeepKeys<TData>;
     return columnHelper.accessor(dataKey, columnsDef[key]);
   });
-
-  console.log({ columns });
 
   const table = useReactTable({
     data,

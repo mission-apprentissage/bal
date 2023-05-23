@@ -53,9 +53,12 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   return user;
 };
 
-export const findUsers = async () => {
+export const findUsers = async (filter: Filter<IUser>) => {
   const users = await getDbCollection("users")
     .aggregate<IUser>([
+      {
+        $match: filter,
+      },
       {
         $lookup: DEFAULT_LOOKUP,
       },

@@ -58,11 +58,11 @@ export const findPerson = async (filter: Filter<IPerson>) => {
   return person;
 };
 
-export const findPersons = async () => {
+export const findPersons = async (filter: Filter<IPerson>) => {
   const persons = await getDbCollection("persons")
     .aggregate<IPerson>([
       {
-        $match: { _id: { $exists: true } },
+        $match: filter,
       },
       {
         $lookup: DEFAULT_LOOKUP,
