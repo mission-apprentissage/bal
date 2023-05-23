@@ -5441,7 +5441,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bson@npm:^4.7.0":
+"bson@npm:^4.7.0, bson@npm:^4.7.2":
   version: 4.7.2
   resolution: "bson@npm:4.7.2"
   dependencies:
@@ -12984,7 +12984,43 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:5.5.0, mongodb@npm:^5.3.0":
+"mongodb@npm:4.16.0":
+  version: 4.16.0
+  resolution: "mongodb@npm:4.16.0"
+  dependencies:
+    "@aws-sdk/credential-providers": ^3.186.0
+    bson: ^4.7.2
+    mongodb-connection-string-url: ^2.5.4
+    saslprep: ^1.0.3
+    socks: ^2.7.1
+  dependenciesMeta:
+    "@aws-sdk/credential-providers":
+      optional: true
+    saslprep:
+      optional: true
+  checksum: f0b1347739cc362b82b3aabc7e7d4d74bc7a344ed1bbafd6f92681bcab440f6cc618ffa0438d41d2789cb34818f3b09d4c78f517b42160ebae55bf2c96f13953
+  languageName: node
+  linkType: hard
+
+"mongodb@npm:^4.13.0, mongodb@npm:^4.4.1":
+  version: 4.14.0
+  resolution: "mongodb@npm:4.14.0"
+  dependencies:
+    "@aws-sdk/credential-providers": ^3.186.0
+    bson: ^4.7.0
+    mongodb-connection-string-url: ^2.5.4
+    saslprep: ^1.0.3
+    socks: ^2.7.1
+  dependenciesMeta:
+    "@aws-sdk/credential-providers":
+      optional: true
+    saslprep:
+      optional: true
+  checksum: ab3b8f27e99fab4ea0c163067158ad360a161edf9ebf74368b9b561da7b75d23c09282d530cb4e2fac32ea30eae29620e861d837d334ddbdfa50d57240c1bd8e
+  languageName: node
+  linkType: hard
+
+"mongodb@npm:^5.3.0":
   version: 5.5.0
   resolution: "mongodb@npm:5.5.0"
   dependencies:
@@ -13007,24 +13043,6 @@ __metadata:
     snappy:
       optional: true
   checksum: fafb75195d605767cf7269aa82a1f4704c3357240d0fef7296d55e83eab592158844988af3b94165769459ff1b2a0af2fc49bc44c9bbabd10d6ddc319668a0e0
-  languageName: node
-  linkType: hard
-
-"mongodb@npm:^4.13.0, mongodb@npm:^4.4.1":
-  version: 4.14.0
-  resolution: "mongodb@npm:4.14.0"
-  dependencies:
-    "@aws-sdk/credential-providers": ^3.186.0
-    bson: ^4.7.0
-    mongodb-connection-string-url: ^2.5.4
-    saslprep: ^1.0.3
-    socks: ^2.7.1
-  dependenciesMeta:
-    "@aws-sdk/credential-providers":
-      optional: true
-    saslprep:
-      optional: true
-  checksum: ab3b8f27e99fab4ea0c163067158ad360a161edf9ebf74368b9b561da7b75d23c09282d530cb4e2fac32ea30eae29620e861d837d334ddbdfa50d57240c1bd8e
   languageName: node
   linkType: hard
 
@@ -16134,7 +16152,7 @@ __metadata:
   resolution: "shared@workspace:shared"
   dependencies:
     json-schema-to-ts: 2.8.0
-    mongodb: 5.5.0
+    mongodb: 4.16.0
     react: 18.2.0
   languageName: unknown
   linkType: soft
