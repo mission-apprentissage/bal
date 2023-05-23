@@ -1,14 +1,14 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { IModelDescriptor } from "./common";
+
 const collectionName = "persons";
 
-const indexes = () => {
-  return [
-    [{ email: 1 }, { unique: true }],
-    [{ email: "text", nom: "text", prenom: "text" }, {}],
-    [{ organisation_id: 1 }, {}],
-  ];
-};
+const indexes: IModelDescriptor["indexes"] = [
+  [{ email: 1 }, { unique: true }],
+  [{ email: "text", nom: "text", prenom: "text" }, {}],
+  [{ organisation_id: 1 }, {}],
+];
 
 export const SPerson = {
   type: "object",

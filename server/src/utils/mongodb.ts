@@ -1,8 +1,9 @@
 import { JSONSchema7 } from "json-schema";
 import { CollectionInfo, CreateCollectionOptions, MongoClient } from "mongodb";
 import omitDeep from "omit-deep";
+import { IModelDescriptor } from "shared/models/common";
 
-import { IModelDescriptor } from "../db/models";
+import { modelDescriptors } from "../db/models";
 import logger from "./logger";
 
 interface JSONSchema7WithBSONType extends Omit<JSONSchema7, "properties"> {
@@ -52,6 +53,10 @@ export const getDatabase = () => {
 export const getDbCollection = (name: string) => {
   ensureInitialization();
   return mongodbClient.db().collection(name);
+};
+
+export const getCollectionList = () => {
+  return mongodbClient.db().listCollections().toArray();
 };
 
 export const getDbCollectionIndexes = async (name: string) => {
@@ -186,3 +191,38 @@ export async function clearCollection(name: string) {
   ensureInitialization();
   await getDatabase().collection(name).deleteMany({});
 }
+
+export const createIndexes = async () => {
+  for (const descriptor of modelDescriptors) {
+    if (!descriptor.indexes) {
+      return;
+    }
+    logger.info(`Create indexes for collection ${descriptor.collectionName}`);
+    await Promise.all(
+      descriptor.indexes.map(async ([index, options]) => {
+        try {
+          await getDbCollection(descriptor.collectionName).createIndex(
+            index,
+            options
+          );
+        } catch (err) {
+          console.error(
+            `Error creating indexes for ${descriptor.collectionName}: ${err}`
+          );
+        }
+      })
+    );
+  }
+};
+
+export const dropIndexes = async () => {
+  const collections = (await getCollectionList()).map(
+    (collection) => collection.name
+  );
+  for (const descriptor of modelDescriptors) {
+    logger.info(`Drop indexes for collection ${descriptor.collectionName}`);
+    if (collections.includes(descriptor.collectionName)) {
+      await getDbCollection(descriptor.collectionName).dropIndexes();
+    }
+  }
+};

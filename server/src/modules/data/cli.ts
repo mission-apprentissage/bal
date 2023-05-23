@@ -8,6 +8,7 @@ import {
   connectToMongodb,
 } from "../../utils/mongodb";
 import { createUser } from "../actions/users.actions";
+import { recreateIndexes } from "./migrations/indexes";
 import { create, up } from "./migrations/migrations";
 import { processor } from "./processor/processor";
 import { seed } from "./seed/seed";
@@ -93,6 +94,22 @@ program
     runScript(async () => {
       try {
         await create(description);
+        process.exit(0);
+      } catch (error) {
+        console.error(error);
+        process.exit(1);
+      }
+    })
+  );
+
+program
+  .command("indexes:recreate")
+  .description("Drop and recreate indexes")
+  .option("-d, --drop", "Drop indexes before recreating them")
+  .action(async ({ drop }) =>
+    runScript(async () => {
+      try {
+        await recreateIndexes({ drop });
         process.exit(0);
       } catch (error) {
         console.error(error);
