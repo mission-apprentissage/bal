@@ -86,7 +86,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
                 as={NavLink}
                 icon={<Settings boxSize={4} color="bluefrance.main" />}
               >
-                Gestion des organsations
+                Gestion des organisations
               </MenuItem>
               <MenuItem
                 data-id="menuitem:admin:manage-files"

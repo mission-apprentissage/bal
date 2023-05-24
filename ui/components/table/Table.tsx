@@ -17,7 +17,9 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
+
+import { StyledTable } from "./table.styled";
 
 interface Props<TData> extends BoxProps {
   data: TData[];
@@ -48,7 +50,7 @@ interface Props<TData> extends BoxProps {
 }
 
 const Table = <TData extends object>({
-  data: defaultData,
+  data,
   onRowClick,
   columns: columnsDef,
   renderSubComponent,
@@ -68,8 +70,6 @@ const Table = <TData extends object>({
   pageCount,
   ...props
 }: Props<TData>) => {
-  const data: TData[] = useMemo(() => defaultData, [defaultData]); // TODO TO CHECK RE-RENDERER WITH [defaultData] instead of []
-
   const [globalFilter, setGlobalFilter] = useState(searchValue);
   const countItems = useRef(data.length);
 
@@ -120,10 +120,12 @@ const Table = <TData extends object>({
     }
   }, [onCountItemsChange, table]);
 
-  if (table.getPrePaginationRowModel().rows.length === 0) return null;
+  if (pagination && table.getPrePaginationRowModel().rows.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="flex flex-col">
+    <StyledTable className="flex flex-col">
       <Box as="table" flex={1} fontSize="delta" w="100%" {...props}>
         <Box as="thead">
           {table.getHeaderGroups().map((headerGroup, key) => (
@@ -296,7 +298,7 @@ const Table = <TData extends object>({
           </HStack>
         </>
       )}
-    </div>
+    </StyledTable>
   );
 };
 

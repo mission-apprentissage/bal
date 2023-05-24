@@ -233,18 +233,6 @@ const styles = {
       fontFamily: "Marianne, Arial",
       background: "white",
       color: "primaryText",
-      transition: "background-color 0.2s",
-      lineHeight: "base",
-    },
-    "*::placeholder": {
-      color: "grey.400",
-    },
-    "*, *::before, &::after": {
-      borderColor: "grey.200",
-      wordWrap: "break-word",
-    },
-    a: {
-      color: "bluefrance.main !important",
     },
   },
 };

@@ -1,6 +1,8 @@
 import { Box, HStack, VStack } from "@chakra-ui/react";
 import React from "react";
 
+import { StyledInfoDetails } from "./infoDetails.styled";
+
 interface Props<TData> {
   title?: string;
   data: TData;
@@ -17,7 +19,7 @@ interface Props<TData> {
  */
 const InfoDetails = <TData,>({ title, rows, data }: Props<TData>) => {
   return (
-    <>
+    <StyledInfoDetails>
       {title && (
         <Box as="h2" fontSize="xl" fontWeight="semibold" mb={4}>
           {title}
@@ -37,7 +39,7 @@ const InfoDetails = <TData,>({ title, rows, data }: Props<TData>) => {
           </VStack>
         );
       })}
-    </>
+    </StyledInfoDetails>
   );
 };
 
