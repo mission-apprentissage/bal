@@ -8,7 +8,6 @@
   "private": true,
   "dependencies": {
     "json-schema-to-ts": "2.8.0",
-    "mongodb": "4.16.0",
     "react": "18.2.0"
   }
 }

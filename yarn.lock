@@ -5441,7 +5441,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bson@npm:^4.7.0, bson@npm:^4.7.2":
+"bson@npm:^4.7.0":
   version: 4.7.2
   resolution: "bson@npm:4.7.2"
   dependencies:
@@ -6910,6 +6910,13 @@ __metadata:
   version: 1.0.0
   resolution: "delegates@npm:1.0.0"
   checksum: a51744d9b53c164ba9c0492471a1a2ffa0b6727451bdc89e31627fdf4adda9d51277cfcbfb20f0a6f08ccb3c436f341df3e92631a3440226d93a8971724771fd
+  languageName: node
+  linkType: hard
+
+"denque@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "denque@npm:2.1.0"
+  checksum: 1d4ae1d05e59ac3a3481e7b478293f4b4c813819342273f3d5b826c7ffa9753c520919ba264f377e09108d24ec6cf0ec0ac729a5686cbb8f32d797126c5dae74
   languageName: node
   linkType: hard
 
@@ -12984,12 +12991,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:4.16.0":
-  version: 4.16.0
-  resolution: "mongodb@npm:4.16.0"
+"mongodb@npm:4.11.0":
+  version: 4.11.0
+  resolution: "mongodb@npm:4.11.0"
   dependencies:
     "@aws-sdk/credential-providers": ^3.186.0
-    bson: ^4.7.2
+    bson: ^4.7.0
+    denque: ^2.1.0
     mongodb-connection-string-url: ^2.5.4
     saslprep: ^1.0.3
     socks: ^2.7.1
@@ -12998,7 +13006,7 @@ __metadata:
       optional: true
     saslprep:
       optional: true
-  checksum: f0b1347739cc362b82b3aabc7e7d4d74bc7a344ed1bbafd6f92681bcab440f6cc618ffa0438d41d2789cb34818f3b09d4c78f517b42160ebae55bf2c96f13953
+  checksum: 3080c2f58dc712ca6d0a34b0f4101c3ca66fbf86360b2a5ea2b64a9f757b4a0d7b77851688657fc3240ac748ddcd69c21ec2f7c785f10cb7d41e00e863f415ec
   languageName: node
   linkType: hard
 
@@ -16097,6 +16105,7 @@ __metadata:
     migrate-mongo: 9.0.0
     mjml: 4.14.1
     mocha: 10.2.0
+    mongodb: 4.11.0
     mongodb-memory-server: 8.12.1
     multiparty: 4.2.3
     nock: 13.2.4
@@ -16152,7 +16161,6 @@ __metadata:
   resolution: "shared@workspace:shared"
   dependencies:
     json-schema-to-ts: 2.8.0
-    mongodb: 4.16.0
     react: 18.2.0
   languageName: unknown
   linkType: soft
