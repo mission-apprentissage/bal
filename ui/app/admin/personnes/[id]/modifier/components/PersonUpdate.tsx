@@ -9,7 +9,6 @@ import {
   Heading,
   Input,
   Select,
-  Text,
   Textarea,
 } from "@chakra-ui/react";
 import Link from "next/link";
@@ -21,7 +20,6 @@ import {
   IReqPatchPerson,
   IResGetPerson,
 } from "../../../../../../../shared/routes/person.routes";
-import InfoDetails from "../../../../../../components/infoDetails/InfoDetails";
 import { api } from "../../../../../../utils/api.utils";
 import Breadcrumb, {
   PAGES,
@@ -37,6 +35,7 @@ interface FormData extends Omit<IReqPatchPerson, "sirets"> {
 
 const PersonUpdate: FC<Props> = ({ person }) => {
   const { push } = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -46,22 +45,20 @@ const PersonUpdate: FC<Props> = ({ person }) => {
       nom: person.nom,
       prenom: person.prenom,
       civility: person.civility,
+      email: person.email,
       sirets: person.sirets?.join("\n") ?? "",
     },
   });
 
   const onSubmit = async (data: FormData) => {
-    console.log({ data, sirets: data.sirets?.split("\n") });
     const formattedData = {
       ...data,
       sirets: data.sirets?.split("\n"),
     };
+
     try {
-      const { data: updatedPerson } = await api.patch(
-        `/admin/persons/${person._id}`,
-        formattedData
-      );
-      console.log({ updatedPerson });
+      await api.patch(`/admin/persons/${person._id}`, formattedData);
+
       push(PAGES.adminViewPerson(person._id).path);
     } catch (error) {
       console.error(error);
@@ -69,7 +66,7 @@ const PersonUpdate: FC<Props> = ({ person }) => {
   };
 
   return (
-    <>
+    <Box w={{ base: "100%", md: "50%" }}>
       <Breadcrumb
         pages={[
           PAGES.homepage(),
@@ -82,17 +79,17 @@ const PersonUpdate: FC<Props> = ({ person }) => {
       </Heading>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl isInvalid={!!errors.email} mb={5}>
+        <FormControl isInvalid={!!errors.nom} mb={5}>
           <FormLabel>Nom</FormLabel>
           <Input {...register("nom")} />
           <FormErrorMessage>{errors.nom?.message}</FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={!!errors.email} mb={5}>
+        <FormControl isInvalid={!!errors.prenom} mb={5}>
           <FormLabel>Prénom</FormLabel>
           <Input {...register("prenom")} />
           <FormErrorMessage>{errors.prenom?.message}</FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={!!errors.email} mb={5}>
+        <FormControl isInvalid={!!errors.civility} mb={5}>
           <FormLabel>Civilité</FormLabel>
           <Select
             isInvalid={!!errors.civility}
@@ -105,12 +102,17 @@ const PersonUpdate: FC<Props> = ({ person }) => {
           <FormErrorMessage>{errors.civility?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.email} mb={5}>
+          <FormLabel>Email</FormLabel>
+          <Input {...register("email")} />
+          <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={!!errors.sirets} mb={5}>
           <FormLabel>SIRETS</FormLabel>
           <Textarea {...register("sirets")} />
           <FormErrorMessage>{errors.sirets?.message}</FormErrorMessage>
         </FormControl>
 
-        <Box paddingTop={10}>
+        <Box paddingTop={5}>
           <Button
             as={Link}
             href={PAGES.adminViewPerson(person._id).path}
@@ -125,54 +127,7 @@ const PersonUpdate: FC<Props> = ({ person }) => {
           </Button>
         </Box>
       </form>
-      <InfoDetails
-        data={person}
-        rows={{
-          _id: {
-            header: () => "Identifiant",
-          },
-          nom: {
-            header: () => "Nom",
-          },
-          prenom: {
-            header: () => "Prénom",
-          },
-          email: {
-            header: () => "Email",
-          },
-          civility: {
-            header: () => "Civilite",
-          },
-          organisation: {
-            header: () => "Organisation",
-            cell: ({ organisation }) => {
-              return organisation ? (
-                <Text
-                  as={Link}
-                  href={PAGES.adminViewOrganisation(organisation._id).path}
-                >
-                  {organisation.nom}
-                </Text>
-              ) : (
-                ""
-              );
-            },
-          },
-          sirets: {
-            header: () => "Sirets",
-            cell: ({ sirets }) => {
-              return sirets?.join(", ") ?? "";
-            },
-          },
-          _meta: {
-            header: () => "Meta",
-            cell: ({ _meta }) => {
-              return <pre>{JSON.stringify(_meta, null, "  ")}</pre>;
-            },
-          },
-        }}
-      />
-    </>
+    </Box>
   );
 };
 

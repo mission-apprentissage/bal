@@ -3,6 +3,7 @@ import { IOrganisation } from "shared/models/organisation.model";
 import { SReqParamsSearchPagination } from "shared/routes/common.routes";
 import {
   IResGetOrganisation,
+  SReqPatchOrganisation,
   SResGetOrganisation,
   SResGetOrganisations,
 } from "shared/routes/organisation.routes";
@@ -10,6 +11,7 @@ import {
 import {
   findOrganisation,
   findOrganisations,
+  updateOrganisation,
 } from "../../actions/organisations.actions";
 import { Server } from "..";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
@@ -71,6 +73,42 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
         });
 
         return response.status(200).send(organisation as IResGetOrganisation);
+      } catch (error) {
+        response.log.error(error);
+      }
+    }
+  );
+
+  server.patch(
+    "/admin/organisations/:id",
+    {
+      schema: {
+        body: SReqPatchOrganisation,
+        params: {
+          type: "object",
+          properties: { id: { type: "string" } },
+          required: ["id"],
+        },
+      } as const,
+      preHandler: [
+        server.auth([server.validateJWT, server.validateSession]),
+        ensureUserIsAdmin,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ] as any,
+    },
+    async (request, response) => {
+      try {
+        const organisation = await findOrganisation({
+          _id: new ObjectId(request.params.id),
+        });
+
+        if (!organisation) {
+          return response.status(404).send();
+        }
+
+        await updateOrganisation(organisation, request.body);
+
+        return response.status(200).send();
       } catch (error) {
         response.log.error(error);
       }

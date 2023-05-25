@@ -85,6 +85,10 @@ export const PAGES = {
     title: "Fiche organisation",
     path: `/admin/organisations/${id}`,
   }),
+  adminUpdateOrganisation: (id: string) => ({
+    title: "Modifier une organisation",
+    path: `/admin/organisations/${id}/modifier`,
+  }),
   usageApi: () => ({
     title: "API",
     path: "/usage",

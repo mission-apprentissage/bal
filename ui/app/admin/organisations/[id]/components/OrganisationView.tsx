@@ -1,6 +1,13 @@
 "use client";
 
-import { Heading, ListItem, UnorderedList } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  ListItem,
+  UnorderedList,
+} from "@chakra-ui/react";
+import Link from "next/link";
 import { FC } from "react";
 
 import { IResGetOrganisation } from "../../../../../../shared/routes/organisation.routes";
@@ -84,6 +91,16 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
           },
         }}
       />
+
+      <Box paddingTop={10}>
+        <Button
+          as={Link}
+          href={PAGES.adminUpdateOrganisation(organisation._id).path}
+          variant="outline"
+        >
+          Modifier
+        </Button>
+      </Box>
     </>
   );
 };

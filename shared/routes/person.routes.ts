@@ -58,6 +58,7 @@ export const SReqPatchPerson = {
       type: "string",
       enum: ["Madame", "Monsieur"],
     },
+    email: { type: "string" },
     sirets: {
       type: "array",
       items: {

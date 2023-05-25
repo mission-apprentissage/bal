@@ -122,6 +122,11 @@ const Button = {
         background: "bluefrance_hover",
       },
     },
+    outline: {
+      ...baseStyle,
+      color: "bluefrance.main",
+      borderColor: "bluefrance.main",
+    },
   },
 };
 
