@@ -1,16 +1,15 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { IModelDescriptor } from "../common";
 import { SBalEmailsPayload } from "./bal_emails.event";
 
 const collectionName = "events";
 
-const indexes = () => {
-  return [
-    [{ person_id: 1 }],
-    [{ "payload.emails.token": 1 }, {}],
-    [{ name: 1 }],
-  ];
-};
+const indexes: IModelDescriptor["indexes"] = [
+  [{ person_id: 1 }, {}],
+  [{ "payload.emails.token": 1 }, {}],
+  [{ name: 1 }, {}],
+];
 
 export const SEvent = {
   type: "object",

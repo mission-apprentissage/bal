@@ -1,4 +1,4 @@
-import { Filter, FindOptions, ObjectId, UpdateFilter } from "mongodb";
+import { Filter, ObjectId, UpdateFilter } from "mongodb";
 import { IUser } from "shared/models/user.model";
 
 import { generateKey, generateSecretHash } from "../../utils/cryptoUtils";
@@ -14,12 +14,25 @@ type ICreateUser = {
   is_admin?: boolean;
 };
 
+const DEFAULT_LOOKUP = {
+  from: "persons",
+  localField: "person_id",
+  foreignField: "_id",
+  as: "person",
+};
+
+const DEFAULT_UNWIND = {
+  path: "$person",
+  preserveNullAndEmptyArrays: true,
+};
+
 export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   const person = await createPerson({
     email: data.email,
     organisation_id,
     _meta: { source: "bal" },
   });
+
   if (!person) {
     throw new Error("Can't create person");
   }
@@ -40,11 +53,38 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   return user;
 };
 
-export const findUser = async (
-  filter: Filter<IUser>,
-  options?: FindOptions
-) => {
-  const user = await getDbCollection("users").findOne<IUser>(filter, options);
+export const findUsers = async (filter: Filter<IUser>) => {
+  const users = await getDbCollection("users")
+    .aggregate<IUser>([
+      {
+        $match: filter,
+      },
+      {
+        $lookup: DEFAULT_LOOKUP,
+      },
+      {
+        $unwind: DEFAULT_UNWIND,
+      },
+    ])
+    .toArray();
+
+  return users;
+};
+
+export const findUser = async (filter: Filter<IUser>) => {
+  const user = await getDbCollection("users")
+    .aggregate<IUser>([
+      {
+        $match: filter,
+      },
+      {
+        $lookup: DEFAULT_LOOKUP,
+      },
+      {
+        $unwind: DEFAULT_UNWIND,
+      },
+    ])
+    .next();
 
   return user;
 };

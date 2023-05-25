@@ -67,6 +67,18 @@ export const createOrganisation = async (data: ICreateOrganisation) => {
   return organisationId;
 };
 
+export const findOrganisations = async (filter: Filter<IOrganisation> = {}) => {
+  const organisations = await getDbCollection("organisations")
+    .aggregate<IOrganisation>([
+      {
+        $match: filter,
+      },
+    ])
+    .toArray();
+
+  return organisations;
+};
+
 export const findOrganisation = async (
   filter: Filter<IOrganisation>,
   options?: FindOptions

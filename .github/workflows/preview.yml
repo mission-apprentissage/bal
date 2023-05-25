@@ -35,6 +35,9 @@ jobs:
       - name: Create vault pwd file
         run: echo ${{ secrets.VAULT_PWD }} > .infra/.vault_pwd.txt
 
+      - name: LS
+        run: ls -l /usr/bin/python3
+
       - name: Run playbook
         run: |
           ansible-playbook -i ".infra/env.ini" --limit preview --vault-password-file=".infra/.vault_pwd.txt" --extra-vars "pr_number=${{ github.event.pull_request.number }} git_revision=${{ github.event.pull_request.head.ref }} status=open ansible_sudo_pass=${{ secrets.PWD_DEPLOY }}" ".infra/playbooks/preview.yml" --user ${{ secrets.USR_DEPLOY }}

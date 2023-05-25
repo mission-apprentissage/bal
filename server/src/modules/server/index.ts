@@ -8,6 +8,8 @@ import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts
 import fastify, { FastifySchema, FastifyServerOptions } from "fastify";
 
 import pJson from "../../../package.json";
+import { organisationAdminRoutes } from "./admin/organisation.routes";
+import { personAdminRoutes } from "./admin/person.routes";
 import { uploadAdminRoutes } from "./admin/upload.routes";
 import { userAdminRoutes } from "./admin/user.routes";
 import { authRoutes } from "./auth.routes";
@@ -106,6 +108,8 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
   userRoutes({ server });
   emailsRoutes({ server });
   userAdminRoutes({ server });
+  personAdminRoutes({ server });
+  organisationAdminRoutes({ server });
   uploadAdminRoutes({ server });
 };
 

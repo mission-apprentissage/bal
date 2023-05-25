@@ -10,3 +10,12 @@ export const SResError = {
 } as const;
 
 export type IResError = FromSchema<typeof SResError>;
+
+export const SReqParamsSearchPagination = {
+  type: "object",
+  properties: {
+    page: { type: "number" },
+    limit: { type: "number" },
+    q: { type: "string" },
+  },
+} as const;

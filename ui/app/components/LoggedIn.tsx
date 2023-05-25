@@ -20,6 +20,7 @@ import { Settings } from "../../theme/icons/Settings";
 import { Settings4Fill } from "../../theme/icons/Settings4Fill";
 import UserFill from "../../theme/icons/UserFill";
 import { api } from "../../utils/api.utils";
+import { PAGES } from "./breadcrumb/Breadcrumb";
 interface Props {
   user: IResGetSession;
 }
@@ -55,7 +56,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
         </MenuButton>
         <MenuList>
           <MenuItem
-            href="/compte/profil"
+            href={PAGES.compteProfil().path}
             as={NavLink}
             icon={<Settings4Fill boxSize={4} color="bluefrance.main" />}
           >
@@ -64,8 +65,32 @@ const LoggedIn: FC<Props> = ({ user }) => {
           {user.is_admin && (
             <MenuGroup title="Administration">
               <MenuItem
+                data-id="menuitem:admin:users"
+                href={PAGES.adminUsers().path}
+                as={NavLink}
+                icon={<Settings boxSize={4} color="bluefrance.main" />}
+              >
+                Gestion des utilisateurs
+              </MenuItem>
+              <MenuItem
+                data-id="menuitem:admin:persons"
+                href={PAGES.adminPersons().path}
+                as={NavLink}
+                icon={<Settings boxSize={4} color="bluefrance.main" />}
+              >
+                Gestion des personnes
+              </MenuItem>
+              <MenuItem
+                data-id="menuitem:admin:organisations"
+                href={PAGES.adminOrganisations().path}
+                as={NavLink}
+                icon={<Settings boxSize={4} color="bluefrance.main" />}
+              >
+                Gestion des organisations
+              </MenuItem>
+              <MenuItem
                 data-id="menuitem:admin:manage-files"
-                href="/admin/fichier"
+                href={PAGES.adminFichier().path}
                 as={NavLink}
                 icon={<Settings boxSize={4} color="bluefrance.main" />}
               >

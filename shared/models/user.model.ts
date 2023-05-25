@@ -1,10 +1,25 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { IModelDescriptor } from "./common";
+
 const collectionName = "users";
 
-const indexes = () => {
-  return [[{ email: 1 }, { unique: true }]];
-};
+const indexes: IModelDescriptor["indexes"] = [
+  [{ email: 1 }, { unique: true }],
+  [
+    {
+      email: "text",
+    },
+    {
+      name: "email_text",
+      default_language: "french",
+      collation: {
+        locale: "simple",
+        strength: 1,
+      },
+    },
+  ],
+];
 
 export const SUser = {
   type: "object",

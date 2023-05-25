@@ -1,10 +1,27 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { IModelDescriptor } from "./common";
+
 const collectionName = "organisations";
 
-const indexes = () => {
-  return [];
-};
+const indexes: IModelDescriptor["indexes"] = [
+  [
+    {
+      nom: "text",
+      email_domains: "text",
+      "etablissements.nom": "text",
+      "etablissements.siret": "text",
+    },
+    {
+      name: "nom_domains_etabnom_etabsiret_text",
+      default_language: "french",
+      collation: {
+        locale: "simple",
+        strength: 1,
+      },
+    },
+  ],
+];
 
 export const SOrganisation = {
   type: "object",

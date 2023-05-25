@@ -1,10 +1,12 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { IModelDescriptor } from "./common";
+
 const collectionName = "documentContents";
 
-const indexes = () => {
-  return [[{ document_id: 1 }, { document_id: "document_id" }]];
-};
+const indexes: IModelDescriptor["indexes"] = [
+  [{ document_id: 1 }, { name: "document_id" }],
+];
 
 export const SDocumentContent = {
   type: "object",
