@@ -73,6 +73,10 @@ export const PAGES = {
     title: "Fiche personne",
     path: `/admin/personnes/${id}`,
   }),
+  adminUpdatePerson: (id: string) => ({
+    title: "Modifier une personne",
+    path: `/admin/personnes/${id}/modifier`,
+  }),
   adminOrganisations: () => ({
     title: "Organisations",
     path: "/admin/organisations",
