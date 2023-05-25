@@ -1,3 +1,10 @@
+# [1.33.0](https://github.com/mission-apprentissage/bal/compare/v1.32.0...v1.33.0) (2023-05-25)
+
+
+### Features
+
+* admin users ([#106](https://github.com/mission-apprentissage/bal/issues/106)) ([6092be5](https://github.com/mission-apprentissage/bal/commit/6092be58a433f6b28e37cb6012ff09d9c2778225))
+
 # [1.32.0](https://github.com/mission-apprentissage/bal/compare/v1.31.8...v1.32.0) (2023-05-17)
 
 
