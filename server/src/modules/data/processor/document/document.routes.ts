@@ -4,8 +4,10 @@ import {
   SResPostProcessorDocument,
 } from "shared/processor/document.routes";
 
-import { handleDecaFileContent } from "../../../actions/deca.actions";
-import { findDocument } from "../../../actions/documents.actions";
+import {
+  findDocument,
+  handleDocumentFileContent,
+} from "../../../actions/documents.actions";
 import { FastifyServer } from "../processor";
 
 export const documentRoutes = ({ server }: { server: FastifyServer }) => {
@@ -33,7 +35,7 @@ export const documentRoutes = ({ server }: { server: FastifyServer }) => {
           started: true,
         });
 
-        await handleDecaFileContent(document);
+        await handleDocumentFileContent(document);
       } catch (error) {
         response.log.error(error);
       }

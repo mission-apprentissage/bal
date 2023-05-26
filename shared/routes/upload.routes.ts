@@ -2,6 +2,7 @@ import { FromSchema } from "json-schema-to-ts";
 
 export enum DOCUMENT_TYPES {
   DECA = "DECA",
+  VOEUX_PARCOURSUP_MAI_2023 = "Voeux Parcoursup Mai 2023",
 }
 
 export const SReqQueryPostAdminUpload = {

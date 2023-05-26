@@ -10,6 +10,7 @@ import {
 import { oleoduc } from "oleoduc";
 import { IDocument } from "shared/models/document.model";
 import { IUser } from "shared/models/user.model";
+import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
 import { config } from "../../../config/config";
 import { clamav } from "../../services";
@@ -18,6 +19,7 @@ import logger from "../../utils/logger";
 import { getDbCollection } from "../../utils/mongodb";
 import { deleteFromStorage, uploadToStorage } from "../../utils/ovhUtils";
 import { noop } from "../server/utils/upload.utils";
+import { handleDecaFileContent } from "./deca.actions";
 
 const testMode = config.env === "test";
 
@@ -115,4 +117,18 @@ export const uploadDocument = async (
   });
 
   return document;
+};
+
+export const handleDocumentFileContent = async (document: IDocument) => {
+  switch (document.type_document) {
+    case DOCUMENT_TYPES.DECA:
+      await handleDecaFileContent(document);
+      break;
+    case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
+      // TODO handle Voeux Parcoursup Mai 2023
+      break;
+
+    default:
+      break;
+  }
 };
