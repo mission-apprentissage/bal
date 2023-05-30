@@ -48,3 +48,24 @@ export const SResGetPersons = {
 } as const;
 
 export type IResGetPersons = FromSchema<typeof SResGetPersons>;
+
+export const SReqPatchPerson = {
+  type: "object",
+  properties: {
+    nom: { type: "string" },
+    prenom: { type: "string" },
+    civility: {
+      type: "string",
+      enum: ["Madame", "Monsieur"],
+    },
+    email: { type: "string" },
+    sirets: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
+  },
+} as const;
+
+export type IReqPatchPerson = FromSchema<typeof SReqPatchPerson>;

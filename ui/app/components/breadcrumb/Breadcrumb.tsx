@@ -73,6 +73,10 @@ export const PAGES = {
     title: "Fiche personne",
     path: `/admin/personnes/${id}`,
   }),
+  adminUpdatePerson: (id: string) => ({
+    title: "Modifier une personne",
+    path: `/admin/personnes/${id}/modifier`,
+  }),
   adminOrganisations: () => ({
     title: "Organisations",
     path: "/admin/organisations",
@@ -80,6 +84,10 @@ export const PAGES = {
   adminViewOrganisation: (id: string) => ({
     title: "Fiche organisation",
     path: `/admin/organisations/${id}`,
+  }),
+  adminUpdateOrganisation: (id: string) => ({
+    title: "Modifier une organisation",
+    path: `/admin/organisations/${id}/modifier`,
   }),
   usageApi: () => ({
     title: "API",

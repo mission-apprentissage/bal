@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -75,6 +75,15 @@ const PersonView: FC<Props> = ({ person }) => {
           },
         }}
       />
+      <Box paddingTop={10}>
+        <Button
+          as={Link}
+          href={PAGES.adminUpdatePerson(person._id).path}
+          variant="outline"
+        >
+          Modifier
+        </Button>
+      </Box>
     </>
   );
 };
