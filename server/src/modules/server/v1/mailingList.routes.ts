@@ -1,5 +1,6 @@
 import { SReqGetMailingList } from "shared/routes/v1/mailingList.routes";
 
+import { createMailingList } from "../../actions/mailingLists.actions";
 import { Server } from "..";
 
 export const mailingListRoutes = ({ server }: { server: Server }) => {
@@ -19,9 +20,11 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       try {
         const { source } = request.query;
 
-        // TODO process mailing list
+        const file = await createMailingList(source);
 
-        return response.status(200).send({ source });
+        // todo async processing
+
+        return response.status(200).send(file);
       } catch (error) {
         response.log.error(error);
         throw new Error("Someting went wrong");
