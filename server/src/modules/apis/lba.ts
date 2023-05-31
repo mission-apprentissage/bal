@@ -12,7 +12,7 @@ const executeWithRateLimiting = apiRateLimiter("processor", {
   client: getApiClient(
     {
       baseURL: "https://labonnealternance-develop.apprentissage.beta.gouv.fr",
-      timeout: 15000,
+      timeout: 0, // no timeout
     },
     { cache: false }
   ),
