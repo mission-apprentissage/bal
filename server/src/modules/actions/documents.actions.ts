@@ -6,9 +6,10 @@ import {
   ObjectId,
   UpdateFilter,
 } from "mongodb";
+import { accumulateData, oleoduc, writeData } from "oleoduc";
 // @ts-ignore
-import { oleoduc } from "oleoduc";
 import { IDocument } from "shared/models/document.model";
+import { IDocumentContent } from "shared/models/documentContent.model";
 import { IUser } from "shared/models/user.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
@@ -17,9 +18,16 @@ import { clamav } from "../../services";
 import * as crypto from "../../utils/cryptoUtils";
 import logger from "../../utils/logger";
 import { getDbCollection } from "../../utils/mongodb";
-import { deleteFromStorage, uploadToStorage } from "../../utils/ovhUtils";
+import {
+  deleteFromStorage,
+  getFromStorage,
+  uploadToStorage,
+} from "../../utils/ovhUtils";
+import { getJsonFromCsvData } from "../../utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
 import { handleDecaFileContent } from "./deca.actions";
+import { createDocumentContent } from "./documentContent.actions";
+import { handleVoeuxParcoursupFileContent } from "./mailingLists.actions";
 
 const testMode = config.env === "test";
 
@@ -119,13 +127,125 @@ export const uploadDocument = async (
   return document;
 };
 
+export const extractDocumentContent = async (
+  document: IDocument,
+  delimiter = ","
+) => {
+  const stream = await getFromStorage(document.chemin_fichier);
+
+  let content: unknown[] = [];
+
+  await oleoduc(
+    stream,
+    crypto.isCipherAvailable() ? crypto.decipher(document.hash_secret) : noop(),
+    accumulateData(
+      (acc: Uint8Array, value: ArrayBuffer) => {
+        return Buffer.concat([acc, Buffer.from(value)]);
+      },
+      { accumulator: Buffer.from(new Uint8Array()) }
+    ),
+    writeData(async (data: Buffer) => {
+      if (document.ext_fichier === "csv") {
+        content = getJsonFromCsvData(data.toString(), delimiter);
+      }
+    })
+  );
+
+  return content;
+};
+
+export const updateImportProgress = async (
+  _id: string,
+  currentLine: number,
+  totalLines: number,
+  currentProgress: number
+) => {
+  const step_precent = 2; // every 2%
+  const currentPercent = (currentLine * 100) / totalLines;
+  if (currentPercent - currentProgress < step_precent) {
+    // Do not update
+    return currentProgress;
+  }
+  currentProgress = currentPercent;
+  await updateDocument(
+    { _id },
+    {
+      $set: {
+        import_progress: currentProgress,
+      },
+    }
+  );
+  return currentPercent;
+};
+
+export const importDocumentContent = async <
+  TFileLine = unknown,
+  TContentLine = unknown
+>(
+  document: IDocument,
+  content: TFileLine[],
+  formatter: (line: TFileLine) => TContentLine
+) => {
+  let documentContents: IDocumentContent[] = [];
+
+  await updateDocument(
+    { _id: document._id },
+    {
+      $set: {
+        lines_count: content.length,
+        import_progress: 0,
+      },
+    }
+  );
+
+  let currentProgress = 0;
+  for (const [lineNumber, line] of content.entries()) {
+    const contentLine = formatter(line);
+
+    currentProgress = await updateImportProgress(
+      document._id,
+      lineNumber,
+      content.length,
+      currentProgress
+    );
+
+    if (!contentLine) {
+      continue;
+    }
+
+    const documentContent = await createDocumentContent({
+      content: contentLine,
+      document_id: document._id.toString(),
+      updated_at: new Date(),
+      created_at: new Date(),
+    });
+
+    if (!documentContent) continue;
+
+    documentContents = [...documentContents, documentContent];
+  }
+
+  await updateDocument(
+    { _id: document._id },
+    {
+      $set: {
+        import_progress: 100,
+      },
+    }
+  );
+
+  // Create or update person
+
+  return documentContents;
+};
+
 export const handleDocumentFileContent = async (document: IDocument) => {
   switch (document.type_document) {
     case DOCUMENT_TYPES.DECA:
       await handleDecaFileContent(document);
       break;
     case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
-      // TODO handle Voeux Parcoursup Mai 2023
+      await handleVoeuxParcoursupFileContent(document);
       break;
 
     default:

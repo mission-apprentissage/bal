@@ -1,3 +1,4 @@
+import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
@@ -6,7 +7,36 @@ import {
   getTrainingLinks,
   LIMIT_TRAINING_LINKS_PER_REQUEST,
 } from "../apis/lba";
-import { findDocument } from "./documents.actions";
+import {
+  extractDocumentContent,
+  findDocument,
+  importDocumentContent,
+} from "./documents.actions";
+
+interface ContentLine {
+  email: string;
+  mef: string;
+  cfd: string;
+  code_postal: string;
+  uai: string;
+  rncp: string;
+  cle_ministere_educatif: string;
+}
+
+export const handleVoeuxParcoursupFileContent = async (document: IDocument) => {
+  const content = (await extractDocumentContent(
+    document,
+    "|"
+  )) as ContentLine[];
+
+  const documentContents = await importDocumentContent(
+    document,
+    content,
+    (line) => line
+  );
+
+  return documentContents;
+};
 
 export const createMailingList = (source: DOCUMENT_TYPES) => {
   // TODO : create file
