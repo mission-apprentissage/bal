@@ -5,9 +5,9 @@ import getApiClient from "./client";
 
 export const LIMIT_TRAINING_LINKS_PER_REQUEST = 100;
 
-const executeWithRateLimiting = apiRateLimiter("processor", {
+const executeWithRateLimiting = apiRateLimiter("mailingList", {
   //2 requests per second
-  nbRequests: 2,
+  nbRequests: 3,
   durationInSeconds: 1,
   client: getApiClient(
     {
@@ -26,17 +26,30 @@ interface Data {
   uai?: string;
   rncp?: string;
   cle_ministere_educatif?: string;
+  email?: string;
+}
+
+export interface TrainingLink {
+  id: string;
+  lien_prdv: string;
+  lien_lba: string;
 }
 
 export const getTrainingLinks = async (data: Data[]) => {
   return executeWithRateLimiting(async (client: AxiosInstance) => {
+    console.log(`Request fired with ${data.length} items`);
     try {
-      const { data: links, ...rest } = await client.post(
+      const { data: links } = await client.post<TrainingLink[]>(
         `/api/trainingLinks`,
         data
       );
-      console.log({ links, rest });
-      return links;
+      console.log(`Request success with ${links.length} items`);
+
+      // TODO: add attributes from data
+      return links.map((link) => {
+        const wish = data.find((d) => d.id === link.id);
+        return { ...link, email: wish?.email ?? "" };
+      });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log({ error });

@@ -71,9 +71,11 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       }
 
       try {
-        const document = await uploadDocument(request.user, data, {
+        const document = await uploadDocument(request.user, data.file, {
           type_document,
           fileSize,
+          filename: data.filename,
+          mimetype: data.mimetype,
         });
 
         if (!document) {

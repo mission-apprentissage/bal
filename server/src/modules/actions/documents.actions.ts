@@ -1,4 +1,3 @@
-import { MultipartFile } from "@fastify/multipart";
 import {
   Filter,
   FindOneAndUpdateOptions,
@@ -12,6 +11,7 @@ import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
 import { IUser } from "shared/models/user.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
+import { Readable } from "stream";
 
 import { config } from "../../../config/config";
 import { clamav } from "../../services";
@@ -68,29 +68,31 @@ export const updateDocument = async (
 interface IUploadDocumentOptions {
   type_document: string;
   fileSize: number;
+  filename: string;
+  mimetype: string;
 }
 
 export const uploadDocument = async (
   user: IUser,
-  data: MultipartFile,
+  stream: Readable,
   options: IUploadDocumentOptions
 ) => {
   const documentId = new ObjectId();
   const documentHash = crypto.generateKey();
-  const path = `uploads/${documentId}/${data.filename}`;
+  const path = `uploads/${documentId}/${options.filename}`;
 
   const { scanStream, getScanResults } = await clamav.getScanner();
   const { hashStream, getHash } = crypto.checksum();
 
   await oleoduc(
-    data.file,
+    stream,
     scanStream,
     hashStream,
     crypto.isCipherAvailable() ? crypto.cipher(documentHash) : noop(), // ISSUE
     testMode
       ? noop()
       : await uploadToStorage(path, {
-          contentType: data.mimetype,
+          contentType: options.mimetype,
         })
   );
 
@@ -112,8 +114,8 @@ export const uploadDocument = async (
   const document = await createDocument({
     _id: documentId,
     type_document: options.type_document,
-    ext_fichier: data.filename.split(".").pop(),
-    nom_fichier: data.filename,
+    ext_fichier: options.filename.split(".").pop(),
+    nom_fichier: options.filename,
     chemin_fichier: path,
     taille_fichier: options.fileSize,
     hash_secret: documentHash,

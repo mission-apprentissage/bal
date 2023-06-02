@@ -27,7 +27,7 @@ const ListeDiffusionPage = () => {
   } = useForm<IReqGetMailingList>();
 
   const onSubmit = async (data: IReqGetMailingList) => {
-    await api.get("/v1/mailing-list", { params: data });
+    await api.post("/v1/mailing-list", { source: data.source });
 
     toast({
       title:

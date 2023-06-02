@@ -1,8 +1,10 @@
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import fastify, { FastifyServerOptions } from "fastify";
 
+import createGlobalServices from "../../../services";
 import logger from "../../../utils/logger";
 import { documentRoutes } from "./document/document.routes";
+import { mailingListRoutes } from "./mailingList/mailingList.routes";
 
 export type FastifyServer = typeof server;
 
@@ -33,12 +35,14 @@ type RegisterRoutes = (opts: { server: FastifyServer }) => void;
 
 export const registerRoutes: RegisterRoutes = ({ server }) => {
   documentRoutes({ server });
+  mailingListRoutes({ server });
 };
 
 export const processor = async () => {
   try {
     logger.info("Processor start");
 
+    await createGlobalServices();
     server.listen({ port: 6000, host: "0.0.0.0" }, function (err) {
       if (err) {
         console.log(err);

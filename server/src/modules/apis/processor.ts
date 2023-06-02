@@ -1,5 +1,6 @@
 import { AxiosInstance } from "axios";
 import { IDocument } from "shared/models/document.model";
+import { IMailingList } from "shared/models/mailingList.model";
 
 import { config } from "../../../config/config";
 import { ApiError, apiRateLimiter } from "../../utils/apiUtils";
@@ -26,6 +27,25 @@ export const processDocument = async (document: IDocument) => {
     try {
       const { data } = await client.post(`/document`, {
         document_id: document._id,
+      });
+
+      return data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      throw new ApiError(
+        "Api Processor",
+        `${error.message}`,
+        error.code || error.response?.status
+      );
+    }
+  });
+};
+
+export const processMailingList = async (mailingList: IMailingList) => {
+  return executeWithRateLimiting(async (client: AxiosInstance) => {
+    try {
+      const { data } = await client.post(`/mailing-list`, {
+        mailing_list_id: mailingList._id,
       });
 
       return data;
