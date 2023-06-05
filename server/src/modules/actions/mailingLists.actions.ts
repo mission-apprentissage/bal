@@ -198,7 +198,7 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
 /**
  * Ne gère pas l'ordre des colonnes, les attributs doivent être dans le même ordre pour chaque ligne
  */
-export const generateCsvFromJson = <T = object>(
+export const generateCsvFromJson = <T extends object>(
   items: T[],
   options?: {
     withHeader?: boolean;
