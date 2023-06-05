@@ -1,6 +1,10 @@
 import { ObjectId } from "mongodb";
 import { IUser } from "shared/models/user.model";
-import { SReqGetMailingList } from "shared/routes/v1/mailingList.routes";
+import {
+  IResGetMailingLists,
+  SReqGetMailingList,
+  SResGetMailingLists,
+} from "shared/routes/v1/mailingList.routes";
 
 import { getFromStorage } from "../../../utils/ovhUtils";
 import {
@@ -54,6 +58,11 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/mailing-lists",
     {
+      schema: {
+        response: {
+          200: SResGetMailingLists,
+        },
+      } as const,
       preHandler: server.auth([
         server.validateJWT,
         server.validateSession,
@@ -68,7 +77,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           user_id: user._id.toString(),
         });
 
-        return response.status(200).send(mailingLists);
+        return response.status(200).send(mailingLists as IResGetMailingLists);
       } catch (error) {
         response.log.error(error);
         throw new Error("Someting went wrong");
