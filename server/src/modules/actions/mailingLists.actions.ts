@@ -1,4 +1,4 @@
-import { Filter, FindOptions, ObjectId, UpdateFilter } from "mongodb";
+import { Filter, ObjectId, UpdateFilter } from "mongodb";
 import { IDocument } from "shared/models/document.model";
 import { IMailingList } from "shared/models/mailingList.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
@@ -28,6 +28,24 @@ interface ContentLine {
   cle_ministere_educatif: string;
 }
 
+const DEFAULT_LOOKUP = {
+  from: "documents",
+  let: { documentId: { $toObjectId: "$document_id" } },
+  pipeline: [
+    {
+      $match: {
+        $expr: { $eq: ["$_id", "$$documentId"] },
+      },
+    },
+  ],
+  as: "document",
+};
+
+const DEFAULT_UNWIND = {
+  path: "$document",
+  preserveNullAndEmptyArrays: true,
+};
+
 /**
  * CRUD
  */
@@ -42,11 +60,38 @@ export const createMailingList = async (data: ICreateMailingList) => {
   return findMailingList({ _id });
 };
 
-export const findMailingList = async (
-  filter: Filter<IMailingList>,
-  options?: FindOptions
-) => {
-  return getDbCollection("mailingLists").findOne<IMailingList>(filter, options);
+export const findMailingList = async (filter: Filter<IMailingList>) => {
+  return getDbCollection("mailingLists")
+    .aggregate<IMailingList>([
+      {
+        $match: filter,
+      },
+      {
+        $lookup: DEFAULT_LOOKUP,
+      },
+      {
+        $unwind: DEFAULT_UNWIND,
+      },
+    ])
+    .next();
+};
+
+export const findMailingLists = async (filter: Filter<IMailingList>) => {
+  const users = await getDbCollection("mailingLists")
+    .aggregate<IMailingList>([
+      {
+        $match: filter,
+      },
+      {
+        $lookup: DEFAULT_LOOKUP,
+      },
+      {
+        $unwind: DEFAULT_UNWIND,
+      },
+    ])
+    .toArray();
+
+  return users;
 };
 
 export const updateMailingList = async (

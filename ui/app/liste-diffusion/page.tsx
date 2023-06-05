@@ -10,15 +10,32 @@ import {
   Select,
   useToast,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
+import {
+  IMailingList,
+  MAILING_LIST_STATUS,
+} from "../../../shared/models/mailingList.model";
 import { DOCUMENT_TYPES } from "../../../shared/routes/upload.routes";
 import { IReqGetMailingList } from "../../../shared/routes/v1/mailingList.routes";
+import Table from "../../components/table/Table";
+import { DownloadLine } from "../../theme/icons/DownloadLine";
 import { api } from "../../utils/api.utils";
+import { formatDate } from "../../utils/date.utils";
 import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
 
 const ListeDiffusionPage = () => {
   const toast = useToast();
+
+  const { data: mailingLists, refetch } = useQuery<IMailingList[]>({
+    queryKey: ["mailingLists"],
+    queryFn: async () => {
+      const { data } = await api.get("/v1/mailing-lists");
+
+      return data;
+    },
+  });
 
   const {
     handleSubmit,
@@ -28,6 +45,7 @@ const ListeDiffusionPage = () => {
 
   const onSubmit = async (data: IReqGetMailingList) => {
     await api.post("/v1/mailing-list", { source: data.source });
+    await refetch();
 
     toast({
       title:
@@ -38,7 +56,6 @@ const ListeDiffusionPage = () => {
     });
   };
 
-  console.log(errors);
   return (
     <>
       <Breadcrumb pages={[PAGES.homepage(), PAGES.listeDiffusion()]} />
@@ -86,6 +103,67 @@ const ListeDiffusionPage = () => {
             </Button>
           </HStack>
         </form>
+      </Box>
+
+      <Box>
+        <Table
+          mt={4}
+          data={mailingLists || []}
+          columns={{
+            source: {
+              id: "source",
+              size: 100,
+              header: () => "Source",
+            },
+            status: {
+              id: "status",
+              size: 100,
+              header: () => "Statut",
+              cell: ({ row }) => {
+                return {
+                  pending: "En cours de génération",
+                  finished: "Terminé",
+                }[row.original.status];
+              },
+            },
+            date: {
+              id: "date",
+              size: 100,
+              header: () => "Date de génération",
+              cell: ({ row }) => {
+                return (
+                  row.original.created_at &&
+                  formatDate(row.original.created_at, "dd/MM/yyyy à HH:mm")
+                );
+              },
+            },
+
+            actions: {
+              id: "actions",
+              size: 25,
+              header: () => "Télécharger",
+              cell: ({ row }) => {
+                if (
+                  row.original.status !== MAILING_LIST_STATUS.FINISHED ||
+                  !row.original.document_id
+                ) {
+                  return null;
+                }
+
+                return (
+                  <a
+                    href={`/api/v1/mailing-lists/${row.original._id}/download`}
+                    title="Télécharger le fichier"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <DownloadLine w="1w" />
+                  </a>
+                );
+              },
+            },
+          }}
+        />
       </Box>
     </>
   );

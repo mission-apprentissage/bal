@@ -1,6 +1,7 @@
 import { FromSchema } from "json-schema-to-ts";
 
 import { IModelDescriptor } from "./common";
+import { SDocument } from "./document.model";
 
 const collectionName = "mailingLists";
 
@@ -17,6 +18,7 @@ export const SMailingList = {
       type: "string",
       description: "Fichier liste de diffusion",
     },
+    document: SDocument,
     status: {
       type: "string",
     },
@@ -36,6 +38,11 @@ export const SMailingList = {
   },
   required: ["_id", "source", "status"],
 } as const;
+
+export enum MAILING_LIST_STATUS {
+  PENDING = "pending",
+  FINISHED = "finished",
+}
 
 export interface IMailingList extends FromSchema<typeof SMailingList> {}
 
