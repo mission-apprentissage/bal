@@ -247,6 +247,7 @@ export const handleDocumentFileContent = async (document: IDocument) => {
       await handleDecaFileContent(document);
       break;
     case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
+    case DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023:
       await handleVoeuxParcoursupFileContent(document);
       break;
 

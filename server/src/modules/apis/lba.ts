@@ -41,11 +41,14 @@ export const getTrainingLinks = async (data: Data[]) => {
     try {
       const { data: links } = await client.post<TrainingLink[]>(
         `/api/trainingLinks`,
-        data
+        // remove email from data
+        data.map(({ email: _, ...rest }) => ({
+          ...rest,
+        }))
       );
       console.log(`Request success with ${links.length} items`);
 
-      // TODO: add attributes from data
+      // columns to add in the response from data
       return links.map((link) => {
         const wish = data.find((d) => d.id === link.id);
         return { ...link, email: wish?.email ?? "" };

@@ -19,11 +19,13 @@ import {
 import { findUser } from "./users.actions";
 
 interface ContentLine {
-  email: string;
-  mef: string;
+  // Lignes affelnet et parcoursup
+  mail_responsable_1: string;
+  mail_responsable_2: string;
+  code_mef: string;
   cfd: string;
   code_postal: string;
-  uai: string;
+  code_uai_etab_accueil: string;
   rncp: string;
   cle_ministere_educatif: string;
 }
@@ -117,9 +119,8 @@ export const updateMailingList = async (
 export const handleVoeuxParcoursupFileContent = async (document: IDocument) => {
   const content = (await extractDocumentContent(
     document,
-    "|"
+    ";"
   )) as ContentLine[];
-
   const documentContents = await importDocumentContent(
     document,
     content,
@@ -136,6 +137,7 @@ export const createMailingListFile = async (mailingList: IMailingList) => {
 
   switch (mailingList.source) {
     case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
+    case DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023:
       return handleVoeuxParcoursupMai2023(mailingList);
 
     default:
@@ -147,7 +149,7 @@ export const createMailingListFile = async (mailingList: IMailingList) => {
 
 const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
   const document = await findDocument({
-    type_document: DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023,
+    type_document: mailingList.source,
   });
 
   if (!document) throw new Error("Document not found");
@@ -179,6 +181,10 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
         uai: dc.content?.code_uai_etab_accueil ?? "",
         cfd: dc.content?.cfd ?? "", // pas présent dans le fichier
         rncp: dc.content?.rncp ?? "", // pas présent dans le fichier
+        email:
+          dc.content?.mail_responsable_1 ??
+          dc.content?.mail_responsable_2 ??
+          "",
       }));
 
       trainingLinksPromises = [
@@ -223,7 +229,7 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
     type_document: `mailing-list-${DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023}`,
     fileSize: stream.readableLength,
     filename: `mailing-list-${mailingList._id.toString()}-${
-      DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023
+      mailingList.source
     }.csv`,
     mimetype: "text/csv",
   });
