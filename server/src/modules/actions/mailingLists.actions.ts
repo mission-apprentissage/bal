@@ -173,12 +173,12 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
       // TODO: vérifier le nom des colonnes
       const data = wishes?.map((dc) => ({
         id: dc._id.toString(),
-        mef: dc.content?.mef as string,
-        cfd: dc.content?.cfd as string,
-        code_postal: dc.content?.code_postal as string,
-        uai: dc.content?.uai as string,
-        rncp: dc.content?.rncp as string,
-        cle_ministere_educatif: dc.content?.cle_ministere_educatif as string,
+        cle_ministere_educatif: dc.content?.cle_ministere_educatif ?? "",
+        mef: dc.content?.code_mef ?? "",
+        code_postal: dc.content?.code_postal ?? "",
+        uai: dc.content?.code_uai_etab_accueil ?? "",
+        cfd: dc.content?.cfd ?? "", // pas présent dans le fichier
+        rncp: dc.content?.rncp ?? "", // pas présent dans le fichier
       }));
 
       trainingLinksPromises = [

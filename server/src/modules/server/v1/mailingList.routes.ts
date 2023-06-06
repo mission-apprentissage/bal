@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { oleoduc } from "oleoduc";
 import { IUser } from "shared/models/user.model";
 import {
   IResGetMailingLists,
@@ -6,6 +7,7 @@ import {
   SResGetMailingLists,
 } from "shared/routes/v1/mailingList.routes";
 
+import * as crypto from "../../../utils/cryptoUtils";
 import { getFromStorage } from "../../../utils/ovhUtils";
 import {
   createMailingList,
@@ -14,6 +16,7 @@ import {
 } from "../../actions/mailingLists.actions";
 import { processMailingList } from "../../apis/processor";
 import { Server } from "..";
+import { noop } from "../utils/upload.utils";
 
 export const mailingListRoutes = ({ server }: { server: Server }) => {
   server.post(
@@ -126,13 +129,18 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           mailingList.document.chemin_fichier
         );
 
-        response.header("Content-Type", "application/octet-stream");
-        response.header(
-          "Content-Disposition",
-          `attachment; filename="${mailingList.document.nom_fichier}"`
-        );
+        response.raw.writeHead(200, {
+          "Content-Type": "application/octet-stream",
+          "Content-Disposition": `attachment; filename="${mailingList.document.nom_fichier}"`,
+        });
 
-        return response.send(stream);
+        await oleoduc(
+          stream,
+          crypto.isCipherAvailable()
+            ? crypto.decipher(mailingList.document.hash_secret)
+            : noop(),
+          response.raw
+        );
       } catch (error) {
         response.log.error(error);
         throw new Error("Someting went wrong");
