@@ -56,11 +56,11 @@ fileignoreconfig:
 - filename: .infra/scripts/vault/generate-vault-password.sh
   checksum: 86baa73f9c5559afc69f12d124d9895a104869cfb8fe396568f88954351a38b5
 - filename: .infra/scripts/vault/get-vault-password-client.sh
-  checksum: 4ac0001fb9e12df75becb3eec2cc41431bc036b293cdcfee3b769daf8649e5e8
+  checksum: 2f9ee595c44c45fd3b735e9b5f4aa58494532ac97e606c957fa96df98bf14fc5
 - filename: .infra/scripts/vault/renew-vault.sh
   checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
 - filename: .infra/vault/vault.yml
-  checksum: 7d70629f0d5a0a39287c1f7bdbf0730dea38c845797dba1576974300df327474
+  checksum: cc13cab6ae9e6c9387eec4af1ca9d9cfaa1a47f6ad0a6a86fe865f2ec19be428
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
