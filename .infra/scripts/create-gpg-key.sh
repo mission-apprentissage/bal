@@ -6,6 +6,8 @@ readonly GPG_LASTNAME=${2:?"Merci de préciser votre nom"}
 readonly GPG_EMAIL=${3:?"Merci de préciser votre adresse email"}
 readonly GPG_FULLNAME="${GPG_FIRSTNAME} ${GPG_LASTNAME}"
 
+export GPG_TTY=$(tty)
+
 # Generate GPG key with predefined values
 # This command will create a master key (certification)
 # and a subkey with encryption capability
