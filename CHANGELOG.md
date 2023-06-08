@@ -1,3 +1,10 @@
+## [1.33.1](https://github.com/mission-apprentissage/bal/compare/v1.33.0...v1.33.1) (2023-06-08)
+
+
+### Bug Fixes
+
+* gpg Inappropriate ioctl for device ([#119](https://github.com/mission-apprentissage/bal/issues/119)) ([6d3112c](https://github.com/mission-apprentissage/bal/commit/6d3112c6a6482fe786dad6c363fdeac03938aec3))
+
 # [1.33.0](https://github.com/mission-apprentissage/bal/compare/v1.32.0...v1.33.0) (2023-05-25)
 
 
