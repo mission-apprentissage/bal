@@ -46,6 +46,9 @@ export const SResPostAdminUpload = {
     import_progress: {
       type: "number",
     },
+    lines_count: {
+      type: "number",
+    },
     added_by: {
       type: "string",
     },
@@ -70,4 +73,24 @@ export const SResPostAdminUpload = {
   additionalProperties: false,
 } as const;
 
+export const SResGetDocuments = {
+  type: "array",
+  items: SResPostAdminUpload,
+} as const;
+
 export type IResPostAdminUpload = FromSchema<typeof SResPostAdminUpload>;
+
+export type IResGetDocuments = FromSchema<
+  typeof SResGetDocuments,
+  {
+    deserialize: [
+      {
+        pattern: {
+          type: "string";
+          format: "date-time";
+        };
+        output: Date;
+      }
+    ];
+  }
+>;

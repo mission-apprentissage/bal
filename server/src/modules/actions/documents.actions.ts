@@ -50,6 +50,17 @@ export const findDocument = async (
   return await getDbCollection("documents").findOne<IDocument>(filter, options);
 };
 
+export const findDocuments = async (
+  filter: Filter<IDocument>,
+  options?: FindOptions<IDocument>
+) => {
+  const documents = await getDbCollection("documents")
+    .find<IDocument>(filter, options)
+    .toArray();
+
+  return documents;
+};
+
 export const updateDocument = async (
   filter: Filter<IDocument>,
   update: UpdateFilter<IDocument>,

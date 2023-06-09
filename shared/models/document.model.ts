@@ -88,7 +88,7 @@ export interface IDocument
             type: "string";
             format: "date-time";
           };
-          output: Date;
+          output: Date | string;
         }
       ];
     }
