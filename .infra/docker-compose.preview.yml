@@ -4,7 +4,10 @@ services:
     image: "nginxproxy/nginx-proxy"
     container_name: bal_reverse_proxy
     restart: unless-stopped
-    mem_limit: 256m
+    deploy:
+      resources:
+        limits:
+          memory: 256m
     ports:
       - "80:80"
       - "443:443"
@@ -36,7 +39,10 @@ services:
     image: mongo:6.0.2-focal
     container_name: bal_mongodb
     restart: unless-stopped
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     networks:
       - bal_network
     # command: mongod --auth
@@ -48,7 +54,10 @@ services:
   metabase:
     image: metabase/metabase:v0.46.0
     container_name: bal_metabase
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     volumes:
       - /opt/bal/data/metabase:/data/metabase
       - /opt/bal/backups/metabase:/data/backups
@@ -66,7 +75,10 @@ services:
   clamav:
     image: clamav/clamav:latest
     container_name: bal_clamav
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     restart: unless-stopped
     networks:
       - bal_network
@@ -79,7 +91,10 @@ services:
   smtp:
     image: axllent/mailpit:v1.5.5
     container_name: bal_smtp
-    mem_limit: 128m
+    deploy:
+      resources:
+        limits:
+          memory: 128m
     ports:
       - 1025:1025
     networks:

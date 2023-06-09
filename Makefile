@@ -2,13 +2,13 @@ install:
 	yarn
 
 start:
-	docker-compose up --build --force-recreate
+	docker compose up --build -d
 
 seed:
 	yarn --cwd server cli seed
 
 stop:
-	docker-compose stop
+	docker compose stop
 
 lint:
 	yarn lint
@@ -20,7 +20,7 @@ coverage:
 	yarn --cwd server test:coverage
 
 clean:
-	docker-compose kill && docker system prune --force --volumes
+	docker compose kill; docker system prune --force --volumes
 
 typecheck:
 	yarn --cwd server typecheck && yarn --cwd ui typecheck

@@ -11,7 +11,10 @@ services:
   reverse_proxy:
     image: bal_reverse_proxy
     container_name: bal_reverse_proxy
-    mem_limit: 256m
+    deploy:
+      resources:
+        limits:
+          memory: 256m
     restart: unless-stopped
     ports:
       - 80:80
@@ -43,7 +46,10 @@ services:
   ui:
     image: bal_ui
     container_name: bal_ui
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     stdin_open: true
     networks:
       - bal_network
@@ -66,7 +72,10 @@ services:
     image: bal_server
     container_name: bal_server
     restart: "no"
-    mem_limit: 1g
+    deploy:
+      resources:
+        limits:
+          memory: 1g
     networks:
       - bal_network
     depends_on:
@@ -94,7 +103,10 @@ services:
     image: bal_server
     container_name: bal_processor
     command: ["yarn", "cli", "processor"]
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     restart: unless-stopped
     networks:
       - bal_network
@@ -117,7 +129,10 @@ services:
   mongodb:
     image: mongo:6.0.2-focal
     container_name: bal_mongodb
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     restart: unless-stopped
     depends_on:
       repo_modules:
@@ -132,7 +147,10 @@ services:
   metabase:
     image: metabase/metabase:v0.46.0
     container_name: bal_metabase
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     depends_on:
       - mongodb
     restart: unless-stopped
@@ -150,7 +168,10 @@ services:
   clamav:
     image: clamav/clamav:latest
     container_name: bal_clamav
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     restart: unless-stopped
     networks:
       - bal_network
@@ -163,7 +184,10 @@ services:
   smtp:
     image: axllent/mailpit:v1.5.5
     container_name: bal_smtp
-    mem_limit: 128m
+    deploy:
+      resources:
+        limits:
+          memory: 128m
     ports:
       - 1025:1025
     networks:
