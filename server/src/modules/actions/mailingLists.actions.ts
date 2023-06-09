@@ -157,7 +157,8 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
   const batchSize = LIMIT_TRAINING_LINKS_PER_REQUEST;
   let skip = 0;
   let hasMore = true;
-  let trainingLinksPromises: Promise<TrainingLink[]>[] = [];
+  // let trainingLinksPromises: Promise<TrainingLink[]>[] = [];
+  let trainingLinksResults: TrainingLink[] = [];
 
   while (hasMore) {
     try {
@@ -187,9 +188,13 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
           "",
       }));
 
-      trainingLinksPromises = [
-        ...trainingLinksPromises,
-        getTrainingLinks(data),
+      // trainingLinksPromises = [
+      //   ...trainingLinksPromises,
+      //   getTrainingLinks(data),
+      // ];
+      trainingLinksResults = [
+        ...trainingLinksResults,
+        await getTrainingLinks(data),
       ];
 
       // Check if there are more documents to retrieve
@@ -208,7 +213,7 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
     }
   }
 
-  const trainingLinksResults = await Promise.all(trainingLinksPromises);
+  // const trainingLinksResults = await Promise.all(trainingLinksPromises);
   const trainingLinks = trainingLinksResults.flat();
 
   const csvContent = generateCsvFromJson(trainingLinks, {

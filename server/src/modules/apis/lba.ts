@@ -6,9 +6,10 @@ import getApiClient from "./client";
 export const LIMIT_TRAINING_LINKS_PER_REQUEST = 100;
 
 const executeWithRateLimiting = apiRateLimiter("mailingList", {
-  //2 requests per second
+  //3 requests per second
   nbRequests: 3,
   durationInSeconds: 1,
+  maxQueueSize: LIMIT_TRAINING_LINKS_PER_REQUEST,
   client: getApiClient(
     {
       baseURL: "https://labonnealternance-develop.apprentissage.beta.gouv.fr",

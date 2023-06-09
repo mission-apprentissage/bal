@@ -67,8 +67,7 @@
     "*.{ts,js,tsx}": [
       "eslint .",
       "prettier ./ui ./server"
-    ],
-    "*.{md,json,html}": "prettier ./ui ./server ./shared"
+    ]
   },
   "packageManager": "yarn@3.3.1"
 }

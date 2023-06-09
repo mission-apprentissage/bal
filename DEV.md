@@ -30,7 +30,7 @@ Ce projet est organisé de la manière suivante :
 
 =======
 
-### Varaibles d'environnement
+### Variables d'environnement
 
 Avant de démarrer la stack il vous faut copier et renommer les fichier suivant :
 
