@@ -44,6 +44,20 @@ export enum MAILING_LIST_STATUS {
   FINISHED = "finished",
 }
 
-export interface IMailingList extends FromSchema<typeof SMailingList> {}
+export interface IMailingList
+  extends FromSchema<
+    typeof SMailingList,
+    {
+      deserialize: [
+        {
+          pattern: {
+            type: "string";
+            format: "date-time";
+          };
+          output: Date | string;
+        }
+      ];
+    }
+  > {}
 
 export default { schema: SMailingList, indexes, collectionName };

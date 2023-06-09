@@ -133,7 +133,10 @@ const ListeDiffusionPage = () => {
               cell: ({ row }) => {
                 return (
                   row.original.created_at &&
-                  formatDate(row.original.created_at, "dd/MM/yyyy à HH:mm")
+                  formatDate(
+                    row.original.created_at as string,
+                    "dd/MM/yyyy à HH:mm"
+                  )
                 );
               },
             },
