@@ -24,7 +24,14 @@
 ## Prérequis
 
 Contient l'ensemble des données sensibles nécessaires à la mise en place de
-l'application. Ce projet utilise Ansible 2.7+ pour configurer et déployer l'application.
+l'application.
+
+- Ansible 2.7+: `brew install ansible`
+- sshpass
+  ```
+  brew tap esolitos/ipa
+  brew install esolitos/ipa/sshpass
+  ```
 
 **Fichier disponible seulement aux personnes habilitées**
 
@@ -290,8 +297,12 @@ générer un jeton d'api. Vous devez donc avoir un compte OVH ayant le droit de 
 Apprentissage. Une fois authentifié, le script utilisera automatiquement ce jeton.
 
 Quand le script est terminé, vous pouvez aller sur l'interface
-OVH [https://www.ovh.com/manager/dedicated/#/configuration/ip?tab=ip](https://www.ovh.com/manager/dedicated/#/configuration/ip?tab=ip)
+OVH [https://www.ovh.com/manager/#/dedicated/ip](https://www.ovh.com/manager/#/dedicated/ip)
 afin de vérifier que le firewall a été activé pour l'ip du VPS.
+
+### Création du domaine name
+
+Créer un domain name pour le nouvel environment https://admin.alwaysdata.com/record/?domain=69636 `bal-<nom de l'environnement>.apprentissage.beta.gouv.fr`
 
 ### Déclaration de l'environnement
 
@@ -299,18 +310,19 @@ Le fichier `/env.ini` définit les environnements de l'application. Il faut donc
 dans ce fichier en renseignant les informations suivantes :
 
 ```
-[<nom de l'environnemnt>]
+[<nom de l'environnement>]
 <IP>
-[<nom de l'environnemnt>:vars]
-dns_name=<nom de l'application>.mnaDNSBASE
-host_name=<nom de la mahcine (ex: mna-catalogue-production)>
+[<nom de l'environnement>:vars]
+dns_name=bal-<nom de l'environnement>.apprentissage.beta.gouv.fr
+host_name=bal-<nom de l'environnement>
 update_sshd_config=true
-env_type=production
-
+env_type=recette
 ```
 
 Pour information, vous pouvez obtenir l'adresse ip du vps en consultant les emails de
 service : https://www.ovh.com/manager/dedicated/#/useraccount/emails
+
+Editer le vault pour créer les env-vars liés à ce nouvel environnement (cf: [Edition du vault](#edition-du-vault))
 
 ### Configuration de l'environnement
 
@@ -336,21 +348,11 @@ ssh <nom_utilisateur>@<ip>
 Enfin pour des questions de sécurité, vous devez supprimer l'utilisateur `ubuntu` :
 
 ```
-bash scripts/clean.sh <nom_environnement> --user <nom_utilisateur>
+bash scripts/clean.sh <nom_environnement> --user <votre_nom_utilisateur>  --extra-vars "username=ubuntu"
 ```
 
-## Tester les playbook Ansible
+### Deploiement de l'environnement
 
-Il est possible de tester le playbook Ansible en utilisant Vagrant 2.2+ et VirtualBox 5+. Une fois ces deux outils
-installés, il faut lancer la commande :
-
-```sh
-bash ansible/test/run-playbook-tests.sh
 ```
-
-Ce script va créer une machine virtuelle dans VirtualBox et exécuter le playbook sur cette VM. Il est ensuite possible
-de se connecter à la machine via la commande :
-
-```sh
-bash ansible/test/connect-to-vm.sh
+bash scripts/deploy-app.sh <nom_environnement> --user <nom_utilisateur>
 ```
