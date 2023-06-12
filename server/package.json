@@ -59,7 +59,7 @@
     "oleoduc": "0.8.0",
     "omit-deep": "0.3.0",
     "rate-limiter-flexible": "2.3.6",
-    "shared": "*",
+    "shared": "workspace:*",
     "stream-transform": "3.2.2",
     "tcp-port-used": "1.0.2",
     "ts-node": "10.9.1",

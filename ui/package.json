@@ -38,7 +38,7 @@
     "react-markdown": "8.0.7",
     "react-notion-x": "6.16.0",
     "react-phone-input-2": "2.15.1",
-    "shared": "*",
+    "shared": "workspace:*",
     "typescript": "4.9.5",
     "yup": "1.1.1"
   },
