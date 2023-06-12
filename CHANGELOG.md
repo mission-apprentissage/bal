@@ -1,3 +1,10 @@
+# [1.34.0](https://github.com/mission-apprentissage/bal/compare/v1.33.1...v1.34.0) (2023-06-12)
+
+
+### Features
+
+* liste diffusion v0 ([#118](https://github.com/mission-apprentissage/bal/issues/118)) ([e372db4](https://github.com/mission-apprentissage/bal/commit/e372db4b179e0081d881e6f4ed5e9b4a3b69b59c))
+
 ## [1.33.1](https://github.com/mission-apprentissage/bal/compare/v1.33.0...v1.33.1) (2023-06-08)
 
 
