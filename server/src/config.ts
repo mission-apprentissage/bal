@@ -79,6 +79,12 @@ const config = {
       pass: env.get("MNA_BAL_SMTP_AUTH_PASS").asString(),
     },
   },
+  lba: {
+    baseURL: env
+      .get("MNA_BAL_LBA_BASE_URL")
+      .default("https://labonnealternance-develop.apprentissage.beta.gouv.fr")
+      .asString(),
+  },
   akto: {
     grantType: env.get("MNA_BAL_AKTO_GRANT_TYPE").default("").asString(),
     clientId: env.get("MNA_BAL_AKTO_CLIENT_ID").default("").asString(),

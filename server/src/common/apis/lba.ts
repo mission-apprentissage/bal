@@ -1,5 +1,7 @@
 import { AxiosInstance } from "axios";
 
+import config from "@/config";
+
 import { ApiError, apiRateLimiter } from "../../utils/apiUtils";
 import getApiClient from "./client";
 
@@ -12,7 +14,7 @@ const executeWithRateLimiting = apiRateLimiter("mailingList", {
   maxQueueSize: LIMIT_TRAINING_LINKS_PER_REQUEST,
   client: getApiClient(
     {
-      baseURL: "https://labonnealternance-develop.apprentissage.beta.gouv.fr",
+      baseURL: config.lba.baseURL,
       timeout: 0, // no timeout
     },
     { cache: false }
