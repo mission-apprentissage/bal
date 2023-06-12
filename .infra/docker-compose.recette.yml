@@ -1,4 +1,5 @@
-version: "2.4"
+version: "3.8"
+
 services:
   smtp:
     image: axllent/mailpit:v1.5.5
