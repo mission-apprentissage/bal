@@ -5,6 +5,13 @@
   vars_files:
     - "../vault/vault.yml"
   tasks:
+    - name: copy docker env file
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "/opt/bal/.env_docker_compose"
+      with_fileglob:
+        - "../.env_docker_compose"
+
     - name: copy server env file
       ansible.builtin.template:
         src: "{{ item }}"
@@ -19,14 +26,14 @@
       with_fileglob:
         - "../.env_ui"
 
-    - name: creation du fichier docker compose
+    - name: copy du fichier docker compose
       ansible.builtin.template:
         src: "{{ item }}"
         dest: "/opt/bal/docker-compose.yml"
       with_fileglob:
         - "../docker-compose.yml"
 
-    - name: creation du fichier docker compose
+    - name: copy du fichier recette docker compose
       ansible.builtin.template:
         src: "{{ item }}"
         dest: "/opt/bal/docker-compose.recette.yml"
@@ -37,14 +44,14 @@
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/bal
-        cmd: "sudo docker compose -f docker-compose.yml -f docker-compose.recette.yml up -d --prune"
+        cmd: "sudo docker compose -f docker-compose.yml -f docker-compose.recette.yml --env-file .env_docker_compose up -d"
       register: docker_compose_output
       when: env_type == 'recette'
 
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/bal
-        cmd: "sudo docker compose -f docker-compose.yml up -d --prune"
+        cmd: "sudo docker compose -f docker-compose.yml --env-file .env_docker_compose up -d"
       register: docker_compose_output
       when: env_type == 'production'
 
