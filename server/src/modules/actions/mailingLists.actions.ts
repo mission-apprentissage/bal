@@ -5,6 +5,7 @@ import { IMailingList } from "shared/models/mailingList.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { Readable } from "stream";
 
+import logger from "@/common/logger";
 import { getDbCollection } from "@/utils/mongodbUtils";
 
 import {
@@ -23,7 +24,6 @@ import {
   importDocumentContent,
   uploadFile,
 } from "./documents.actions";
-// import { findUser } from "./users.actions";
 
 interface ContentLine {
   // Lignes affelnet et parcoursup
@@ -124,6 +124,7 @@ export const updateMailingList = async (
  */
 
 export const handleVoeuxParcoursupFileContent = async (document: IDocument) => {
+  logger.info("import wishes started");
   const content = (await extractDocumentContent(
     document,
     ";"
@@ -210,7 +211,7 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
         skip += batchSize;
       } else {
         hasMore = false;
-        console.log("All documents retrieved");
+        logger.info("All documents retrieved");
       }
     } catch (err) {
       await updateMailingList(mailingList, {
