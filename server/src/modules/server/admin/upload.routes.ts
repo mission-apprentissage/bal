@@ -9,8 +9,8 @@ import {
 } from "shared/routes/upload.routes";
 
 import { FILE_SIZE_LIMIT } from "../../../../../shared/constants/index";
+import { processDocument } from "../../../common/apis/processor";
 import { findDocuments, uploadDocument } from "../../actions/documents.actions";
-import { processDocument } from "../../apis/processor";
 import { Server } from "..";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 

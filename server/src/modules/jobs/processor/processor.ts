@@ -1,8 +1,9 @@
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import fastify, { FastifyServerOptions } from "fastify";
 
-import createGlobalServices from "../../../services";
-import logger from "../../../utils/logger";
+import logger from "@/common/logger";
+import createGlobalServices from "@/services";
+
 import { documentRoutes } from "./document/document.routes";
 import { mailingListRoutes } from "./mailingList/mailingList.routes";
 

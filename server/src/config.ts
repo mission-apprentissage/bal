@@ -2,7 +2,7 @@ import "dotenv/config";
 
 import env from "env-var";
 
-export const config = {
+const config = {
   appName: env.get("APP_NAME").default("BAL").asString(),
   env: env.get("MNA_BAL_ENV").required().asString(),
   publicUrl: env.get("MNA_BAL_PUBLIC_URL").required().asString(),
@@ -125,3 +125,5 @@ export const config = {
     testAdminPwd: env.get("MNA_BAL_TEST_ADMIN_PWD").default("").asString(),
   },
 };
+
+export default config;

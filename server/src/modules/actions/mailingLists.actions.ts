@@ -4,12 +4,13 @@ import { IMailingList } from "shared/models/mailingList.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { Readable } from "stream";
 
-import { getDbCollection } from "../../utils/mongodb";
+import { getDbCollection } from "@/utils/mongodbUtils";
+
 import {
   getTrainingLinks,
   LIMIT_TRAINING_LINKS_PER_REQUEST,
   TrainingLink,
-} from "../apis/lba";
+} from "../../common/apis/lba";
 import {
   extractDocumentContent,
   findDocument,

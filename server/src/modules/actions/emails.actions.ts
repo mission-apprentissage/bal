@@ -3,11 +3,11 @@ import { IBalEmail } from "shared/models/events/bal_emails.event";
 import { IEvent } from "shared/models/events/event.model";
 import { v4 as uuidv4 } from "uuid";
 
-import { mailer } from "../../services";
-import { generateHtml } from "../../utils/emailsUtils";
-import logger from "../../utils/logger";
-import { getDbCollection } from "../../utils/mongodb";
-import { getEmailInfos } from "../services/mailer/mailer";
+import logger from "@/common/logger";
+import { getEmailInfos } from "@/common/services/mailer/mailer";
+import { mailer } from "@/services";
+import { generateHtml } from "@/utils/emailsUtils";
+import { getDbCollection } from "@/utils/mongodbUtils";
 
 function addEmail(
   person_id: string,

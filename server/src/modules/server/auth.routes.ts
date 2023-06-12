@@ -9,7 +9,8 @@ import {
 } from "shared/routes/auth.routes";
 import { SResError } from "shared/routes/common.routes";
 
-import { config } from "../../../config/config";
+import config from "@/config";
+
 import { createUserTokenSimple } from "../../utils/jwtUtils";
 import {
   resetPassword,

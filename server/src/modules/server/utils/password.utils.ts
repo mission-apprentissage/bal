@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-import { config } from "../../../../config/config";
+import config from "@/config";
 
 export const generateSalt = () => {
   return crypto.randomBytes(16).toString("hex");

@@ -3,7 +3,7 @@ import { IncomingMessage } from "node:http";
 import https from "https";
 import { parse as parseUrl } from "url";
 
-import logger from "./logger";
+import logger from "@/common/logger";
 
 export async function createRequestStream(
   url: string,

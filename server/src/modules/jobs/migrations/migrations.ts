@@ -1,8 +1,8 @@
 import { config, create as mcreate, status, up as mup } from "migrate-mongo";
-import { MongoClient } from "mongodb";
 import path from "path";
 
-import { __dirname } from "../../../utils/esmUtils";
+import { __dirname } from "@/utils/esmUtils";
+import { getMongodbClient } from "@/utils/mongodbUtils";
 
 const myConfig = {
   mongodb: {
@@ -36,9 +36,11 @@ const myConfig = {
   moduleSystem: "esm",
 };
 
-export async function up(client: MongoClient) {
+export async function up() {
   // @ts-ignore
   config.set(myConfig);
+
+  const client = getMongodbClient();
 
   // @ts-ignore
   const migrationStatus = await status(client.db());

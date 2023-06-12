@@ -7,6 +7,7 @@ import {
   SResGetMailingLists,
 } from "shared/routes/v1/mailingList.routes";
 
+import { processMailingList } from "../../../common/apis/processor";
 import * as crypto from "../../../utils/cryptoUtils";
 import { getFromStorage } from "../../../utils/ovhUtils";
 import {
@@ -14,7 +15,6 @@ import {
   findMailingList,
   findMailingLists,
 } from "../../actions/mailingLists.actions";
-import { processMailingList } from "../../apis/processor";
 import { Server } from "..";
 import { noop } from "../utils/upload.utils";
 

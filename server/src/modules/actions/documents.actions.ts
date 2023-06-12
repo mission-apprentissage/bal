@@ -13,11 +13,12 @@ import { IUser } from "shared/models/user.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { Readable } from "stream";
 
-import { config } from "../../../config/config";
-import { clamav } from "../../services";
-import * as crypto from "../../utils/cryptoUtils";
-import logger from "../../utils/logger";
-import { getDbCollection } from "../../utils/mongodb";
+import logger from "@/common/logger";
+import config from "@/config";
+import { clamav } from "@/services";
+import * as crypto from "@/utils/cryptoUtils";
+import { getDbCollection } from "@/utils/mongodbUtils";
+
 import {
   deleteFromStorage,
   getFromStorage,

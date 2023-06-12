@@ -2,7 +2,8 @@ import { AxiosInstance } from "axios";
 import { IDocument } from "shared/models/document.model";
 import { IMailingList } from "shared/models/mailingList.model";
 
-import { config } from "../../../config/config";
+import config from "@/config";
+
 import { ApiError, apiRateLimiter } from "../../utils/apiUtils";
 import getApiClient from "./client";
 

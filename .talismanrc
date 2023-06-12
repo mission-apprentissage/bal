@@ -82,7 +82,7 @@ fileignoreconfig:
 - filename: server/src/modules/server/index.ts
   checksum: e9d1bc8dfc528ec8786f21af1d8ec5ecb290bb5f8b6b63275f744dc5b27673e3
 - filename: server/src/modules/server/utils/password.utils.ts
-  checksum: e4c4531afb4213f08e07bc83c129547f752909a4cc3a0e1f25ba87ca0cadde32
+  checksum: 740439c7594c8ddcaff9011b2f0ddf0344c3794eb0f721e0d03afde3c60e61a5
 - filename: server/src/utils/cryptoUtils.ts
   checksum: e3e123d712465ed963965b5fa36f8d7a15364bbc7107d9d15bef2cc670483d42
 - filename: server/src/utils/jwtUtils.ts

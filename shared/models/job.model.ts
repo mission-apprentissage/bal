@@ -2,11 +2,11 @@ import { FromSchema } from "json-schema-to-ts";
 
 import { IModelDescriptor } from "./common";
 
-const collectionName = "tasks";
+const collectionName = "jobs";
 
 const indexes: IModelDescriptor["indexes"] = [];
 
-export const STask = {
+export const SJob = {
   type: "object",
   properties: {
     _id: { type: "string" },
@@ -25,7 +25,7 @@ export const STask = {
     // },
     status: {
       type: "string",
-      description: "Statut courant de la tâche",
+      description: "Statut courant du job",
       enum: ["pending", "started", "running", "finished", "blocked", "errored"],
     },
     payload: {
@@ -61,7 +61,7 @@ export const STask = {
   required: ["_id", "name", "status", "started_at"],
 } as const;
 
-export enum TASK_STATUS_LIST {
+export enum JOB_STATUS_LIST {
   PENDING = "pending",
   FINISHED = "finished",
   STARTED = "started",
@@ -70,9 +70,9 @@ export enum TASK_STATUS_LIST {
   ERRORED = "errored",
 }
 
-export interface ITask
+export interface IJob
   extends FromSchema<
-    typeof STask,
+    typeof SJob,
     {
       deserialize: [
         {
@@ -86,4 +86,4 @@ export interface ITask
     }
   > {}
 
-export default { schema: STask, indexes, collectionName };
+export default { schema: SJob, indexes, collectionName };

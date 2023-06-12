@@ -3,8 +3,9 @@ import { CollectionInfo, CreateCollectionOptions, MongoClient } from "mongodb";
 import omitDeep from "omit-deep";
 import { IModelDescriptor } from "shared/models/common";
 
+import logger from "@/common/logger";
+
 import { modelDescriptors } from "../db/models";
-import logger from "./logger";
 
 interface JSONSchema7WithBSONType extends Omit<JSONSchema7, "properties"> {
   bsonType?: string;
@@ -39,6 +40,8 @@ export const connectToMongodb = async (uri: string) => {
 
   return client;
 };
+
+export const getMongodbClient = () => mongodbClient;
 
 export const closeMongodbConnection = () => {
   ensureInitialization();
