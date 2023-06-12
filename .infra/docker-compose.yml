@@ -1,10 +1,19 @@
 version: "3.8"
 
+# The following variables define reusable configurations for deployment, providing consistent and predefined 
+# behaviors for updating, rolling back, and restarting services.
+
+x-deploy-default: &deploy-default
+  update_config:
+    failure_action: rollback
+  rollback_config:
+    parallelism: 0
+
 services:
   reverse_proxy:
     image: "${registry?}/mission-apprentissage/mna_bal_reverse_proxy:${reverse_proxy_version?}"
-    restart: unless-stopped
     deploy:
+      <<: *x-deploy-default
       resources:
         limits:
           memory: 256m
@@ -36,8 +45,8 @@ services:
 
   server:
     image: "${registry?}/mission-apprentissage/mna_bal_server:${app_version?}"
-    restart: unless-stopped
     deploy:
+      <<: *x-deploy-default
       resources:
         limits:
           memory: 1g
@@ -51,8 +60,8 @@ services:
 
   processor:
     image: "${registry?}/mission-apprentissage/mna_bal_server:${app_version?}"
-    restart: unless-stopped
     deploy:
+      <<: *x-deploy-default
       resources:
         limits:
           memory: 1g
@@ -67,8 +76,8 @@ services:
 
   ui:
     image: "${registry?}/mission-apprentissage/mna_bal_ui:${app_version?}"
-    restart: unless-stopped
     deploy:
+      <<: *x-deploy-default
       resources:
         limits:
           memory: 256m
@@ -78,8 +87,8 @@ services:
 
   mongodb:
     image: mongo:6.0.2-focal
-    restart: unless-stopped
     deploy:
+      <<: *x-deploy-default
       resources:
         limits:
           memory: 2g
@@ -95,6 +104,7 @@ services:
   metabase:
     image: metabase/metabase:v0.46.0
     deploy:
+      <<: *x-deploy-default
       resources:
         limits:
           memory: 2g
@@ -108,17 +118,16 @@ services:
       MB_DB_FILE: /data/metabase/metabase.db
       MB_SITE_LOCALE: fr
       MB_SITE_URL: https://bal.apprentissage.beta.gouv.fr/metabase
-    restart: always
     networks:
       - bal_network
 
   clamav:
     image: clamav/clamav:latest
     deploy:
+      <<: *x-deploy-default
       resources:
         limits:
           memory: 2g
-    restart: unless-stopped
     networks:
       - bal_network
     healthcheck:
@@ -129,8 +138,9 @@ services:
 
   nodeexporter:
     image: prom/node-exporter:v1.5.0
-    restart: unless-stopped
     hostname: bal-production
+    deploy:
+      <<: *x-deploy-default
     command:
       - '--path.procfs=/host/proc'
       - '--path.rootfs=/rootfs'
@@ -145,7 +155,8 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.46.0
-    restart: unless-stopped
+    deploy:
+      <<: *x-deploy-default
     hostname: bal-production
     privileged: true
     devices:

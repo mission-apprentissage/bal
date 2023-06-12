@@ -7,6 +7,10 @@ services:
       resources:
         limits:
           memory: 128m
+      update_config:
+        failure_action: rollback
+      rollback_config:
+        parallelism: 0
     ports:
       - 1025:1025
     networks:
