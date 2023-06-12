@@ -1,23 +1,24 @@
-import { Filter, ObjectId, UpdateFilter } from "mongodb";
+import { Filter, UpdateFilter } from "mongodb";
 import { IDocument } from "shared/models/document.model";
 import { IMailingList } from "shared/models/mailingList.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
-import { Readable } from "stream";
 
+// import { Readable } from "stream";
 import { getDbCollection } from "@/utils/mongodbUtils";
 
 import {
   getTrainingLinks,
   LIMIT_TRAINING_LINKS_PER_REQUEST,
-  TrainingLink,
+  // TrainingLink,
 } from "../../common/apis/lba";
 import {
+  createEmptyDocument,
   extractDocumentContent,
   findDocument,
   importDocumentContent,
-  uploadDocument,
+  // uploadDocument,
 } from "./documents.actions";
-import { findUser } from "./users.actions";
+// import { findUser } from "./users.actions";
 
 interface ContentLine {
   // Lignes affelnet et parcoursup
@@ -123,7 +124,7 @@ export const handleVoeuxParcoursupFileContent = async (document: IDocument) => {
     ";"
   )) as ContentLine[];
   const documentContents = await importDocumentContent(
-    document,
+    document._id,
     content,
     (line) => line
   );
@@ -158,8 +159,17 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
   const batchSize = LIMIT_TRAINING_LINKS_PER_REQUEST;
   let skip = 0;
   let hasMore = true;
-  // let trainingLinksPromises: Promise<TrainingLink[]>[] = [];
-  let trainingLinksResults: TrainingLink[] = [];
+  // let trainingLinksResults: TrainingLink[] = [];
+
+  const outputDocumentId = await createEmptyDocument({
+    type_document: `mailing-list-${DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023}`,
+    filename: `mailing-list-${mailingList._id.toString()}-${
+      mailingList.source
+    }.csv`,
+    mimetype: "text/csv",
+  });
+
+  console.log(outputDocumentId);
 
   while (hasMore) {
     try {
@@ -189,14 +199,16 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
           "",
       }));
 
-      // trainingLinksPromises = [
-      //   ...trainingLinksPromises,
-      //   getTrainingLinks(data),
+      // trainingLinksResults = [
+      //   ...trainingLinksResults,
+      //   await getTrainingLinks(data),
       // ];
-      trainingLinksResults = [
-        ...trainingLinksResults,
-        await getTrainingLinks(data),
-      ];
+
+      const tmp = await getTrainingLinks(data);
+      const tmpContent = tmp.flat();
+
+      // const documentContents =
+      await importDocumentContent(outputDocumentId, tmpContent, (line) => line);
 
       // Check if there are more documents to retrieve
       if (wishes.length === batchSize) {
@@ -214,42 +226,41 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
     }
   }
 
-  // const trainingLinksResults = await Promise.all(trainingLinksPromises);
-  const trainingLinks = trainingLinksResults.flat();
+  // const trainingLinks = trainingLinksResults.flat();
 
-  const csvContent = generateCsvFromJson(trainingLinks, {
-    withHeader: true,
-  });
+  // const csvContent = generateCsvFromJson(trainingLinks, {
+  //   withHeader: true,
+  // });
 
-  const stream = new Readable();
-  stream.push(csvContent);
-  stream.push(null);
+  // const stream = new Readable();
+  // stream.push(csvContent);
+  // stream.push(null);
 
-  const user = await findUser({ _id: new ObjectId(mailingList.user_id) });
+  // const user = await findUser({ _id: new ObjectId(mailingList.user_id) });
 
-  if (!user) {
-    throw new Error("User not found");
-  }
+  // if (!user) {
+  //   throw new Error("User not found");
+  // }
 
-  const mailingListDocument = await uploadDocument(user, stream, {
-    type_document: `mailing-list-${DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023}`,
-    fileSize: stream.readableLength,
-    filename: `mailing-list-${mailingList._id.toString()}-${
-      mailingList.source
-    }.csv`,
-    mimetype: "text/csv",
-  });
+  // const mailingListDocument = await uploadDocument(user, stream, {
+  //   type_document: `mailing-list-${DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023}`,
+  //   fileSize: stream.readableLength,
+  //   filename: `mailing-list-${mailingList._id.toString()}-${
+  //     mailingList.source
+  //   }.csv`,
+  //   mimetype: "text/csv",
+  // });
 
-  if (!mailingListDocument) {
-    throw new Error("Error uploading mailing list document");
-  }
+  // if (!mailingListDocument) {
+  //   throw new Error("Error uploading mailing list document");
+  // }
 
-  await updateMailingList(mailingList, {
-    document_id: mailingListDocument._id.toString(),
-    status: "finished",
-  });
+  // await updateMailingList(mailingList, {
+  //   document_id: mailingListDocument._id.toString(),
+  //   status: "finished",
+  // });
 
-  return mailingListDocument;
+  // return mailingListDocument;
 };
 
 /**

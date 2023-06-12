@@ -1,4 +1,5 @@
 import { FromSchema } from "json-schema-to-ts";
+import { ObjectId } from "mongodb";
 
 import { IModelDescriptor } from "./common";
 
@@ -11,6 +12,7 @@ export const SDocument = {
   properties: {
     _id: {
       type: "string",
+      format: "ObjectId",
       description: "Identifiant du document",
     },
     type_document: {
@@ -89,6 +91,13 @@ export interface IDocument
             format: "date-time";
           };
           output: Date | string;
+        },
+        {
+          pattern: {
+            type: "string";
+            format: "ObjectId";
+          };
+          output: ObjectId;
         }
       ];
     }

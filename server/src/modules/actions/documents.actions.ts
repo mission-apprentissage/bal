@@ -79,10 +79,32 @@ export const updateDocument = async (
 };
 interface IUploadDocumentOptions {
   type_document: string;
-  fileSize: number;
+  fileSize?: number;
   filename: string;
   mimetype: string;
 }
+
+export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
+  const documentId = new ObjectId();
+  const documentHash = crypto.generateKey();
+  const path = `uploads/${documentId}/${options.filename}`;
+
+  await createDocument({
+    _id: documentId,
+    type_document: options.type_document,
+    ext_fichier: options.filename.split(".").pop(),
+    nom_fichier: options.filename,
+    chemin_fichier: path,
+    taille_fichier: 0,
+    hash_secret: documentHash,
+    hash_fichier: "",
+    confirm: true,
+    added_by: new ObjectId().toString(),
+    updated_at: new Date(),
+    created_at: new Date(),
+  });
+  return documentId;
+};
 
 export const uploadDocument = async (
   user: IUser,
@@ -196,14 +218,14 @@ export const importDocumentContent = async <
   TFileLine = unknown,
   TContentLine = unknown
 >(
-  document: IDocument,
+  documentId: ObjectId,
   content: TFileLine[],
   formatter: (line: TFileLine) => TContentLine
 ) => {
   let documentContents: IDocumentContent[] = [];
 
   await updateDocument(
-    { _id: document._id },
+    { _id: documentId },
     {
       $set: {
         lines_count: content.length,
@@ -217,7 +239,7 @@ export const importDocumentContent = async <
     const contentLine = formatter(line);
 
     currentProgress = await updateImportProgress(
-      document._id,
+      documentId.toString(),
       lineNumber,
       content.length,
       currentProgress
@@ -229,7 +251,7 @@ export const importDocumentContent = async <
 
     const documentContent = await createDocumentContent({
       content: contentLine,
-      document_id: document._id.toString(),
+      document_id: documentId.toString(),
       updated_at: new Date(),
       created_at: new Date(),
     });
@@ -240,7 +262,7 @@ export const importDocumentContent = async <
   }
 
   await updateDocument(
-    { _id: document._id },
+    { _id: documentId },
     {
       $set: {
         import_progress: 100,

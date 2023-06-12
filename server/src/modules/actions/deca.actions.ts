@@ -49,7 +49,7 @@ export const handleDecaFileContent = async (document: IDocument) => {
   )) as ContentLine[];
 
   const documentContents = await importDocumentContent(
-    document,
+    document._id,
     content,
     parseContentLine
   );
