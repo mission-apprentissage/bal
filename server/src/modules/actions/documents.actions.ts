@@ -1,4 +1,3 @@
-import { MultipartFile } from "@fastify/multipart";
 import {
   Filter,
   FindOneAndUpdateOptions,
@@ -6,18 +5,29 @@ import {
   ObjectId,
   UpdateFilter,
 } from "mongodb";
+import { accumulateData, oleoduc, writeData } from "oleoduc";
 // @ts-ignore
-import { oleoduc } from "oleoduc";
 import { IDocument } from "shared/models/document.model";
-import { IUser } from "shared/models/user.model";
+import { IDocumentContent } from "shared/models/documentContent.model";
+import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
+import { Readable } from "stream";
 
-import { config } from "../../../config/config";
-import { clamav } from "../../services";
-import * as crypto from "../../utils/cryptoUtils";
-import logger from "../../utils/logger";
-import { getDbCollection } from "../../utils/mongodb";
-import { deleteFromStorage, uploadToStorage } from "../../utils/ovhUtils";
+import logger from "@/common/logger";
+import config from "@/config";
+import { clamav } from "@/services";
+import * as crypto from "@/utils/cryptoUtils";
+import { getDbCollection } from "@/utils/mongodbUtils";
+
+import {
+  deleteFromStorage,
+  getFromStorage,
+  uploadToStorage,
+} from "../../utils/ovhUtils";
+import { getJsonFromCsvData } from "../../utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
+import { handleDecaFileContent } from "./deca.actions";
+import { createDocumentContent } from "./documentContent.actions";
+import { handleVoeuxParcoursupFileContent } from "./mailingLists.actions";
 
 const testMode = config.env === "test";
 
@@ -40,6 +50,17 @@ export const findDocument = async (
   return await getDbCollection("documents").findOne<IDocument>(filter, options);
 };
 
+export const findDocuments = async (
+  filter: Filter<IDocument>,
+  options?: FindOptions<IDocument>
+) => {
+  const documents = await getDbCollection("documents")
+    .find<IDocument>(filter, options)
+    .toArray();
+
+  return documents;
+};
+
 export const updateDocument = async (
   filter: Filter<IDocument>,
   update: UpdateFilter<IDocument>,
@@ -56,31 +77,68 @@ export const updateDocument = async (
   return updated.value as IDocument | null;
 };
 interface IUploadDocumentOptions {
-  type_document: string;
-  fileSize: number;
+  type_document?: string;
+  fileSize?: number;
+  filename?: string;
+  mimetype?: string;
+  createDocumentDb?: boolean;
 }
 
-export const uploadDocument = async (
-  user: IUser,
-  data: MultipartFile,
-  options: IUploadDocumentOptions
-) => {
+export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
   const documentId = new ObjectId();
   const documentHash = crypto.generateKey();
-  const path = `uploads/${documentId}/${data.filename}`;
+  const path = `uploads/${documentId}/${options.filename}`;
+
+  if (!options.filename) {
+    throw new Error("Missing filename");
+  }
+
+  await createDocument({
+    _id: documentId,
+    type_document: options.type_document,
+    ext_fichier: options.filename.split(".").pop(),
+    nom_fichier: options.filename,
+    chemin_fichier: path,
+    taille_fichier: 0,
+    hash_secret: documentHash,
+    hash_fichier: "",
+    confirm: true,
+    added_by: new ObjectId().toString(),
+    updated_at: new Date(),
+    created_at: new Date(),
+  });
+  return documentId;
+};
+
+export const uploadFile = async (
+  added_by: string,
+  stream: Readable,
+  documentId: ObjectId,
+  options: IUploadDocumentOptions
+) => {
+  const doc = await findDocument({ _id: documentId });
+  if (!doc) {
+    throw new Error("Impossible de trouver le document");
+  }
+  const documentHash = doc.hash_secret || crypto.generateKey();
+  const path = doc.chemin_fichier;
 
   const { scanStream, getScanResults } = await clamav.getScanner();
   const { hashStream, getHash } = crypto.checksum();
 
+  if (!options.mimetype) {
+    throw new Error("Missing mimetype");
+  }
+
   await oleoduc(
-    data.file,
+    stream,
     scanStream,
     hashStream,
     crypto.isCipherAvailable() ? crypto.cipher(documentHash) : noop(), // ISSUE
     testMode
       ? noop()
       : await uploadToStorage(path, {
-          contentType: data.mimetype,
+          contentType: options.mimetype,
         })
   );
 
@@ -99,20 +157,152 @@ export const uploadDocument = async (
     throw new Error("Le contenu du fichier est invalide");
   }
 
-  const document = await createDocument({
-    _id: documentId,
-    type_document: options.type_document,
-    ext_fichier: data.filename.split(".").pop(),
-    nom_fichier: data.filename,
-    chemin_fichier: path,
-    taille_fichier: options.fileSize,
-    hash_secret: documentHash,
-    hash_fichier,
-    confirm: true,
-    added_by: user._id.toString(),
-    updated_at: new Date(),
-    created_at: new Date(),
-  });
+  if (options.createDocumentDb) {
+    if (!options.filename) {
+      throw new Error("Missing filename");
+    }
+    await createDocument({
+      _id: documentId,
+      type_document: options.type_document,
+      ext_fichier: options.filename.split(".").pop(),
+      nom_fichier: options.filename,
+      chemin_fichier: path,
+      taille_fichier: options.fileSize,
+      hash_secret: documentHash,
+      hash_fichier,
+      confirm: true,
+      added_by,
+      updated_at: new Date(),
+      created_at: new Date(),
+    });
+  }
 
-  return document;
+  return documentId;
+};
+
+export const extractDocumentContent = async (
+  document: IDocument,
+  delimiter = ","
+) => {
+  const stream = await getFromStorage(document.chemin_fichier);
+
+  let content: unknown[] = [];
+
+  await oleoduc(
+    stream,
+    crypto.isCipherAvailable() ? crypto.decipher(document.hash_secret) : noop(),
+    accumulateData(
+      (acc: Uint8Array, value: ArrayBuffer) => {
+        return Buffer.concat([acc, Buffer.from(value)]);
+      },
+      { accumulator: Buffer.from(new Uint8Array()) }
+    ),
+    writeData(async (data: Buffer) => {
+      if (document.ext_fichier === "csv") {
+        content = getJsonFromCsvData(data.toString(), delimiter);
+      }
+    })
+  );
+
+  return content;
+};
+
+export const updateImportProgress = async (
+  _id: string,
+  currentLine: number,
+  totalLines: number,
+  currentProgress: number
+) => {
+  const step_precent = 2; // every 2%
+  const currentPercent = (currentLine * 100) / totalLines;
+  if (currentPercent - currentProgress < step_precent) {
+    // Do not update
+    return currentProgress;
+  }
+  currentProgress = currentPercent;
+  await updateDocument(
+    { _id },
+    {
+      $set: {
+        import_progress: currentProgress,
+      },
+    }
+  );
+  return currentPercent;
+};
+
+export const importDocumentContent = async <
+  TFileLine = unknown,
+  TContentLine = unknown
+>(
+  documentId: ObjectId,
+  content: TFileLine[],
+  formatter: (line: TFileLine) => TContentLine
+) => {
+  let documentContents: IDocumentContent[] = [];
+
+  await updateDocument(
+    { _id: documentId },
+    {
+      $set: {
+        lines_count: content.length,
+        import_progress: 0,
+      },
+    }
+  );
+
+  let currentProgress = 0;
+  for (const [lineNumber, line] of content.entries()) {
+    const contentLine = formatter(line);
+
+    currentProgress = await updateImportProgress(
+      documentId.toString(),
+      lineNumber,
+      content.length,
+      currentProgress
+    );
+
+    if (!contentLine) {
+      continue;
+    }
+
+    const documentContent = await createDocumentContent({
+      content: contentLine,
+      document_id: documentId.toString(),
+      updated_at: new Date(),
+      created_at: new Date(),
+    });
+
+    if (!documentContent) continue;
+
+    documentContents = [...documentContents, documentContent];
+  }
+
+  await updateDocument(
+    { _id: documentId },
+    {
+      $set: {
+        import_progress: 100,
+      },
+    }
+  );
+
+  // Create or update person
+
+  return documentContents;
+};
+
+export const handleDocumentFileContent = async (document: IDocument) => {
+  switch (document.type_document) {
+    case DOCUMENT_TYPES.DECA:
+      await handleDecaFileContent(document);
+      break;
+    case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
+    case DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023:
+      await handleVoeuxParcoursupFileContent(document);
+      break;
+
+    default:
+      break;
+  }
 };

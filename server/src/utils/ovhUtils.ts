@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
-import { config } from "../../config/config";
+import config from "@/config";
+
 import { createRequestStream, createUploadStream } from "./httpUtils";
 
 interface Options {

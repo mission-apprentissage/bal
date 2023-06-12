@@ -11106,6 +11106,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lil-http-terminator@npm:1.2.3":
+  version: 1.2.3
+  resolution: "lil-http-terminator@npm:1.2.3"
+  checksum: d270fbb60556c3151f4259c22c1346e39adf2f80c4030ec62bfc73deef5d7fc386fa1104e3816467e5166e44c5cfa10b64f0191bb86d86cf4b874baeb6c1823b
+  languageName: node
+  linkType: hard
+
 "lilconfig@npm:^2.0.5":
   version: 2.0.6
   resolution: "lilconfig@npm:2.0.6"
@@ -16099,6 +16106,7 @@ __metadata:
     json-schema: 0.4.0
     json2csv: 6.0.0-alpha.2
     jsonwebtoken: 9.0.0
+    lil-http-terminator: 1.2.3
     lodash: 4.17.21
     lodash-es: 4.17.21
     luxon: 2.3.0

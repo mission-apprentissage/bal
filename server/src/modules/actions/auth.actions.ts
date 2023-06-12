@@ -1,10 +1,11 @@
 import { verify } from "jsonwebtoken";
 
-import { config } from "../../../config/config";
-import { createResetPasswordToken } from "../../utils/jwtUtils";
-import logger from "../../utils/logger";
+import logger from "@/common/logger";
+import { sendEmail } from "@/common/services/mailer/mailer";
+import config from "@/config";
+import { createResetPasswordToken } from "@/utils/jwtUtils";
+
 import { hashPassword, verifyPassword } from "../server/utils/password.utils";
-import { sendEmail } from "../services/mailer/mailer";
 import { findPerson } from "./persons.actions";
 import { findUser, updateUser } from "./users.actions";
 

@@ -1,7 +1,7 @@
 import ejs from "ejs";
 import mjml from "mjml";
 
-import { config } from "../../config/config";
+import config from "@/config";
 
 export function getPublicUrl(path: string) {
   return `${config.publicUrl}${path}`;

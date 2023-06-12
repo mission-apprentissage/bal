@@ -2,7 +2,7 @@ install:
 	yarn
 
 start:
-	docker-compose up --build --force-recreate
+	docker-compose up --build --force-recreate -d
 
 seed:
 	yarn --cwd server cli seed

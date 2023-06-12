@@ -21,6 +21,7 @@ import {
   authValidateSession,
   authWebHookKey,
 } from "./utils/auth.strategies";
+import { mailingListRoutes } from "./v1/mailingList.routes";
 import { organisationRoutes } from "./v1/organisation.routes";
 
 type FastifyServer = typeof server;
@@ -115,4 +116,5 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
 
 export const registerV1Routes: RegisterRoutes = ({ server }) => {
   organisationRoutes({ server });
+  mailingListRoutes({ server });
 };

@@ -9,10 +9,11 @@ import {
   TemplateTitleFuncs,
 } from "shared/mailer";
 
-import { config } from "../../../../config/config";
+import config from "@/config";
+
+import { sendStoredEmail } from "../../../modules/actions/emails.actions";
 import { generateHtml, getPublicUrl } from "../../../utils/emailsUtils";
 import { __dirname } from "../../../utils/esmUtils";
-import { sendStoredEmail } from "../../actions/emails.actions";
 
 function createTransporter(smtp: SMTPTransport) {
   const needsAuthentication = !!smtp.auth.user;
@@ -65,7 +66,7 @@ export async function sendEmail<T extends TemplateName>(
     templateFile: path.join(
       // @ts-ignore
       __dirname(import.meta.url),
-      `../src/modules/services/mailer/emails/${template}.mjml.ejs`
+      `../src/common/services/mailer/emails/${template}.mjml.ejs`
     ),
     data: payload,
   });
@@ -80,7 +81,7 @@ export function getEmailInfos<T extends TemplateName>(
     templateFile: path.join(
       // @ts-ignore
       __dirname(import.meta.url),
-      `../src/modules/services/mailer/emails/${template}.mjml.ejs`
+      `../src/common/services/mailer/emails/${template}.mjml.ejs`
     ),
     data: payload,
   };

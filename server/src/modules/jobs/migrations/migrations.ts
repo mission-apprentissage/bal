@@ -1,8 +1,8 @@
 import { config, create as mcreate, status, up as mup } from "migrate-mongo";
-import { MongoClient } from "mongodb";
 import path from "path";
 
-import { __dirname } from "../../../utils/esmUtils";
+import { __dirname } from "@/utils/esmUtils";
+import { getMongodbClient } from "@/utils/mongodbUtils";
 
 const myConfig = {
   mongodb: {
@@ -20,7 +20,7 @@ const myConfig = {
   },
 
   // The migrations dir, can be an relative or absolute path. Only edit this when really necessary.
-  migrationsDir: path.join(__dirname(import.meta.url), "../../db/migrations"),
+  migrationsDir: path.join(__dirname(import.meta.url), "./db/migrations"),
 
   // The mongodb collection where the applied changes are stored. Only edit this when really necessary.
   changelogCollectionName: "migrations",
@@ -36,9 +36,11 @@ const myConfig = {
   moduleSystem: "esm",
 };
 
-export async function up(client: MongoClient) {
+export async function up() {
   // @ts-ignore
   config.set(myConfig);
+
+  const client = getMongodbClient();
 
   // @ts-ignore
   const migrationStatus = await status(client.db());

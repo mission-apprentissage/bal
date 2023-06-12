@@ -1,7 +1,10 @@
 import { FromSchema } from "json-schema-to-ts";
+import { ObjectId } from "mongodb";
 
 export enum DOCUMENT_TYPES {
   DECA = "DECA",
+  VOEUX_PARCOURSUP_MAI_2023 = "Voeux Parcoursup Mai 2023",
+  VOEUX_AFFELNET_MAI_2023 = "Voeux Affelnet Mai 2023",
 }
 
 export const SReqQueryPostAdminUpload = {
@@ -24,6 +27,7 @@ export const SResPostAdminUpload = {
   properties: {
     _id: {
       type: "string",
+      format: "ObjectId",
     },
     type_document: {
       type: "string",
@@ -42,6 +46,9 @@ export const SResPostAdminUpload = {
     },
     // dont send hash_secret, hash_fichier
     import_progress: {
+      type: "number",
+    },
+    lines_count: {
       type: "number",
     },
     added_by: {
@@ -68,4 +75,31 @@ export const SResPostAdminUpload = {
   additionalProperties: false,
 } as const;
 
+export const SResGetDocuments = {
+  type: "array",
+  items: SResPostAdminUpload,
+} as const;
+
 export type IResPostAdminUpload = FromSchema<typeof SResPostAdminUpload>;
+
+export type IResGetDocuments = FromSchema<
+  typeof SResGetDocuments,
+  {
+    deserialize: [
+      {
+        pattern: {
+          type: "string";
+          format: "date-time";
+        };
+        output: Date;
+      },
+      {
+        pattern: {
+          type: "string";
+          format: "ObjectId";
+        };
+        output: ObjectId;
+      }
+    ];
+  }
+>;

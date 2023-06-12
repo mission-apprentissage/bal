@@ -1,6 +1,6 @@
 import jwt, { SignOptions, verify } from "jsonwebtoken";
 
-import { config } from "../../config/config";
+import config from "@/config";
 
 interface ICreateUserToken {
   _id: string;

@@ -1,5 +1,6 @@
+import config from "@/config";
+
 import { SResGetHealthCheck } from "../../../../shared/routes/core.routes";
-import { config } from "../../../config/config";
 import packageJson from "../../../package.json";
 import { Server } from ".";
 
