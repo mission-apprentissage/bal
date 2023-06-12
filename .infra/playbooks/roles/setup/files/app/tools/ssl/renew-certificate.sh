@@ -10,7 +10,7 @@ start_reverse_proxy() {
 }
 
 stop_reverse_proxy() {
-  bash /opt/bal/tools/stop-containers.sh bal_reverse_proxy --no-deps reverse_proxy
+  bash /opt/bal/tools/stop-containers.sh $(docker ps -q -f name=bal_reverse_proxy --latest) --no-deps reverse_proxy
 }
 
 renew_certificate() {
