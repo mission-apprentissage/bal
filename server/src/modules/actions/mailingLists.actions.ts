@@ -1,22 +1,27 @@
-import { Filter, UpdateFilter } from "mongodb";
+import { Parser } from "json2csv";
+import { Filter, ObjectId, UpdateFilter } from "mongodb";
 import { IDocument } from "shared/models/document.model";
 import { IMailingList } from "shared/models/mailingList.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
+import { Readable } from "stream";
 
-// import { Readable } from "stream";
 import { getDbCollection } from "@/utils/mongodbUtils";
 
 import {
   getTrainingLinks,
   LIMIT_TRAINING_LINKS_PER_REQUEST,
-  // TrainingLink,
+  TrainingLink,
 } from "../../common/apis/lba";
+import {
+  deleteDocumentContent,
+  findDocumentContents,
+} from "./documentContent.actions";
 import {
   createEmptyDocument,
   extractDocumentContent,
   findDocument,
   importDocumentContent,
-  // uploadDocument,
+  uploadFile,
 } from "./documents.actions";
 // import { findUser } from "./users.actions";
 
@@ -132,7 +137,7 @@ export const handleVoeuxParcoursupFileContent = async (document: IDocument) => {
   return documentContents;
 };
 
-export const createMailingListFile = async (mailingList: IMailingList) => {
+export const processMailingList = async (mailingList: IMailingList) => {
   if (!mailingList) {
     throw new Error("Error creating mailing list");
   }
@@ -159,17 +164,13 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
   const batchSize = LIMIT_TRAINING_LINKS_PER_REQUEST;
   let skip = 0;
   let hasMore = true;
-  // let trainingLinksResults: TrainingLink[] = [];
 
   const outputDocumentId = await createEmptyDocument({
     type_document: `mailing-list-${DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023}`,
     filename: `mailing-list-${mailingList._id.toString()}-${
       mailingList.source
     }.csv`,
-    mimetype: "text/csv",
   });
-
-  console.log(outputDocumentId);
 
   while (hasMore) {
     try {
@@ -199,15 +200,9 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
           "",
       }));
 
-      // trainingLinksResults = [
-      //   ...trainingLinksResults,
-      //   await getTrainingLinks(data),
-      // ];
-
-      const tmp = await getTrainingLinks(data);
+      const tmp = (await getTrainingLinks(data)) as TrainingLink[];
       const tmpContent = tmp.flat();
 
-      // const documentContents =
       await importDocumentContent(outputDocumentId, tmpContent, (line) => line);
 
       // Check if there are more documents to retrieve
@@ -226,67 +221,45 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
     }
   }
 
-  // const trainingLinks = trainingLinksResults.flat();
-
-  // const csvContent = generateCsvFromJson(trainingLinks, {
-  //   withHeader: true,
-  // });
-
-  // const stream = new Readable();
-  // stream.push(csvContent);
-  // stream.push(null);
-
-  // const user = await findUser({ _id: new ObjectId(mailingList.user_id) });
-
-  // if (!user) {
-  //   throw new Error("User not found");
-  // }
-
-  // const mailingListDocument = await uploadDocument(user, stream, {
-  //   type_document: `mailing-list-${DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023}`,
-  //   fileSize: stream.readableLength,
-  //   filename: `mailing-list-${mailingList._id.toString()}-${
-  //     mailingList.source
-  //   }.csv`,
-  //   mimetype: "text/csv",
-  // });
-
-  // if (!mailingListDocument) {
-  //   throw new Error("Error uploading mailing list document");
-  // }
-
-  // await updateMailingList(mailingList, {
-  //   document_id: mailingListDocument._id.toString(),
-  //   status: "finished",
-  // });
-
-  // return mailingListDocument;
+  await updateMailingList(mailingList, {
+    document_id: outputDocumentId.toString(),
+    status: "finished",
+  });
 };
 
-/**
- * Ne gère pas l'ordre des colonnes, les attributs doivent être dans le même ordre pour chaque ligne
- */
-export const generateCsvFromJson = <T extends object>(
-  items: T[],
-  options?: {
-    withHeader?: boolean;
-  }
-) => {
-  const replacer = (_key: string, value: string) =>
-    value === null ? "" : value;
-  const header = Object.keys(items[0]);
-  let csv: string[] = [];
+export const createMailingListFile = async (documentId: string) => {
+  const documentContents = (
+    await findDocumentContents(
+      {
+        document_id: documentId,
+      },
+      { projection: { _id: 0, content: 1 } }
+    )
+  ).map(
+    ({
+      // @ts-ignore
+      content,
+    }) => content
+  );
 
-  if (options?.withHeader) {
-    csv = [header.join(",")];
-  }
+  console.log(documentContents);
+  const json2csvParser = new Parser({
+    // @ts-ignore
+    fields: Object.keys(documentContents[0]),
+    delimiter: ";",
+    withBOM: true,
+  });
+  const csvContent = await json2csvParser.parse(documentContents);
 
-  return [
-    ...csv,
-    ...items.map((row) =>
-      header
-        .map((fieldName) => JSON.stringify(row[fieldName], replacer))
-        .join(",")
-    ),
-  ].join("\n");
+  const stream = new Readable();
+  stream.push(csvContent);
+  stream.push(null);
+
+  await uploadFile("createMailingListFile", stream, new ObjectId(documentId), {
+    mimetype: "text/csv",
+  });
+
+  await deleteDocumentContent({
+    document_id: documentId,
+  });
 };

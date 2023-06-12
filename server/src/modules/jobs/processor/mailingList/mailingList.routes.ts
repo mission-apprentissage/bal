@@ -5,8 +5,8 @@ import {
 } from "shared/processor/mailingList.routes";
 
 import {
-  createMailingListFile,
   findMailingList,
+  processMailingList,
 } from "../../../actions/mailingLists.actions";
 import { FastifyServer } from "../processor";
 
@@ -36,7 +36,7 @@ export const mailingListRoutes = ({ server }: { server: FastifyServer }) => {
           started: true,
         });
 
-        await createMailingListFile(mailingList);
+        await processMailingList(mailingList);
       } catch (error) {
         response.log.error(error);
       }

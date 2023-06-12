@@ -9,7 +9,6 @@ import { accumulateData, oleoduc, writeData } from "oleoduc";
 // @ts-ignore
 import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
-import { IUser } from "shared/models/user.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { Readable } from "stream";
 
@@ -78,16 +77,21 @@ export const updateDocument = async (
   return updated.value as IDocument | null;
 };
 interface IUploadDocumentOptions {
-  type_document: string;
+  type_document?: string;
   fileSize?: number;
-  filename: string;
-  mimetype: string;
+  filename?: string;
+  mimetype?: string;
+  createDocumentDb?: boolean;
 }
 
 export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
   const documentId = new ObjectId();
   const documentHash = crypto.generateKey();
   const path = `uploads/${documentId}/${options.filename}`;
+
+  if (!options.filename) {
+    throw new Error("Missing filename");
+  }
 
   await createDocument({
     _id: documentId,
@@ -106,17 +110,25 @@ export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
   return documentId;
 };
 
-export const uploadDocument = async (
-  user: IUser,
+export const uploadFile = async (
+  added_by: string,
   stream: Readable,
+  documentId: ObjectId,
   options: IUploadDocumentOptions
 ) => {
-  const documentId = new ObjectId();
-  const documentHash = crypto.generateKey();
-  const path = `uploads/${documentId}/${options.filename}`;
+  const doc = await findDocument({ _id: documentId });
+  if (!doc) {
+    throw new Error("Impossible de trouver le document");
+  }
+  const documentHash = doc.hash_secret || crypto.generateKey();
+  const path = doc.chemin_fichier;
 
   const { scanStream, getScanResults } = await clamav.getScanner();
   const { hashStream, getHash } = crypto.checksum();
+
+  if (!options.mimetype) {
+    throw new Error("Missing mimetype");
+  }
 
   await oleoduc(
     stream,
@@ -145,22 +157,27 @@ export const uploadDocument = async (
     throw new Error("Le contenu du fichier est invalide");
   }
 
-  const document = await createDocument({
-    _id: documentId,
-    type_document: options.type_document,
-    ext_fichier: options.filename.split(".").pop(),
-    nom_fichier: options.filename,
-    chemin_fichier: path,
-    taille_fichier: options.fileSize,
-    hash_secret: documentHash,
-    hash_fichier,
-    confirm: true,
-    added_by: user._id.toString(),
-    updated_at: new Date(),
-    created_at: new Date(),
-  });
+  if (options.createDocumentDb) {
+    if (!options.filename) {
+      throw new Error("Missing filename");
+    }
+    await createDocument({
+      _id: documentId,
+      type_document: options.type_document,
+      ext_fichier: options.filename.split(".").pop(),
+      nom_fichier: options.filename,
+      chemin_fichier: path,
+      taille_fichier: options.fileSize,
+      hash_secret: documentHash,
+      hash_fichier,
+      confirm: true,
+      added_by,
+      updated_at: new Date(),
+      created_at: new Date(),
+    });
+  }
 
-  return document;
+  return documentId;
 };
 
 export const extractDocumentContent = async (

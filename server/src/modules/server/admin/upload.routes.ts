@@ -10,7 +10,12 @@ import {
 
 import { FILE_SIZE_LIMIT } from "../../../../../shared/constants/index";
 import { processDocument } from "../../../common/apis/processor";
-import { findDocuments, uploadDocument } from "../../actions/documents.actions";
+import {
+  createEmptyDocument,
+  findDocument,
+  findDocuments,
+  uploadFile,
+} from "../../actions/documents.actions";
 import { Server } from "..";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
@@ -73,18 +78,25 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       }
 
       try {
-        const document = await uploadDocument(request.user, data.file, {
+        const documentId = await createEmptyDocument({
           type_document,
           fileSize,
           filename: data.filename,
-          mimetype: data.mimetype,
         });
 
-        if (!document) {
+        if (!documentId) {
           throw new Error("Impossible de stocker de le fichier");
         }
 
-        await processDocument(document);
+        const added_by = request.user._id.toString();
+
+        await uploadFile(added_by, data.file, documentId, {
+          mimetype: data.mimetype,
+        });
+
+        await processDocument(documentId.toString());
+
+        const document = await findDocument({ _id: documentId });
 
         return response
           .status(200)

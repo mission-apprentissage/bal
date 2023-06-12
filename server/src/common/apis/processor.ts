@@ -1,5 +1,4 @@
 import { AxiosInstance } from "axios";
-import { IDocument } from "shared/models/document.model";
 import { IMailingList } from "shared/models/mailingList.model";
 
 import config from "@/config";
@@ -23,11 +22,11 @@ const executeWithRateLimiting = apiRateLimiter("processor", {
  * @description process document
  * @param {ICreateDocument} document
  */
-export const processDocument = async (document: IDocument) => {
+export const processDocument = async (documentId: string) => {
   return executeWithRateLimiting(async (client: AxiosInstance) => {
     try {
       const { data } = await client.post(`/document`, {
-        document_id: document._id,
+        document_id: documentId,
       });
 
       return data;

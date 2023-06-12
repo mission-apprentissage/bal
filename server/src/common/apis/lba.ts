@@ -50,8 +50,8 @@ export const getTrainingLinks = async (data: Data[]) => {
       console.log(`Request success with ${links.length} items`);
 
       // columns to add in the response from data
-      return links.map((link) => {
-        const wish = data.find((d) => d.id === link.id);
+      return links.map(({ id, ...link }) => {
+        const wish = data.find((d) => d.id === id);
         return { ...link, email: wish?.email ?? "" };
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

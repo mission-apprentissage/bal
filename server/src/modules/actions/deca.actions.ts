@@ -4,7 +4,7 @@ import { SIRET_REGEX } from "shared/constants";
 import { IDocument } from "shared/models/document.model";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
-import { findDocumentContent } from "./documentContent.actions";
+import { findOneDocumentContent } from "./documentContent.actions";
 import {
   extractDocumentContent,
   importDocumentContent,
@@ -69,7 +69,7 @@ export const getDecaVerification = async (
   const siren = siret.substring(0, 9);
 
   // check siret / email
-  is_valid = !!(await findDocumentContent({
+  is_valid = !!(await findOneDocumentContent({
     "content.siret": siret,
     "content.emails": email,
   }));
@@ -83,7 +83,7 @@ export const getDecaVerification = async (
 
   // check siret / domain
   if (!isBlacklisted) {
-    is_valid = !!(await findDocumentContent({
+    is_valid = !!(await findOneDocumentContent({
       "content.siret": siret,
       "content.emails": { $regex: `.*@${domain}` },
     }));
@@ -97,7 +97,7 @@ export const getDecaVerification = async (
   }
 
   // check siren / email
-  is_valid = !!(await findDocumentContent({
+  is_valid = !!(await findOneDocumentContent({
     "content.siret": { $regex: `^${siren}` },
     "content.emails": email,
   }));
@@ -111,7 +111,7 @@ export const getDecaVerification = async (
 
   // check siren / domain
   if (!isBlacklisted) {
-    is_valid = !!(await findDocumentContent({
+    is_valid = !!(await findOneDocumentContent({
       "content.siret": { $regex: `^${siren}` },
       "content.emails": { $regex: `.*@${domain}` },
     }));

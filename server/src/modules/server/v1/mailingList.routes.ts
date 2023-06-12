@@ -1,3 +1,5 @@
+import { IncomingMessage } from "node:http";
+
 import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
 import { IUser } from "shared/models/user.model";
@@ -6,12 +8,14 @@ import {
   SReqGetMailingList,
   SResGetMailingLists,
 } from "shared/routes/v1/mailingList.routes";
+import { Readable } from "stream";
 
 import { processMailingList } from "../../../common/apis/processor";
 import * as crypto from "../../../utils/cryptoUtils";
 import { getFromStorage } from "../../../utils/ovhUtils";
 import {
   createMailingList,
+  createMailingListFile,
   findMailingList,
   findMailingLists,
 } from "../../actions/mailingLists.actions";
@@ -125,9 +129,22 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           return response.status(403).send({ message: "Forbidden" });
         }
 
-        const stream = await getFromStorage(
-          mailingList.document.chemin_fichier
-        );
+        let stream: IncomingMessage | Readable;
+        let fileNotFound = false;
+        try {
+          stream = await getFromStorage(mailingList.document.chemin_fichier);
+        } catch (error: any) {
+          if (error.message.includes("Status code 404")) {
+            fileNotFound = true;
+          } else {
+            throw new Error(error.message);
+          }
+        }
+
+        if (fileNotFound) {
+          await createMailingListFile(mailingList.document_id || "");
+          stream = await getFromStorage(mailingList.document.chemin_fichier);
+        }
 
         response.raw.writeHead(200, {
           "Content-Type": "application/octet-stream",
@@ -135,6 +152,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         });
 
         await oleoduc(
+          // @ts-ignore
           stream,
           crypto.isCipherAvailable()
             ? crypto.decipher(mailingList.document.hash_secret)
