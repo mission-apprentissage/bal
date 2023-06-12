@@ -199,6 +199,10 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
           dc.content?.mail_responsable_1 ??
           dc.content?.mail_responsable_2 ??
           "",
+        nom_eleve: dc.content?.nom_eleve ?? "",
+        prenom_eleve: `${dc.content?.prenom_1} ${dc.content?.prenom_2}`,
+        libelle_etab_accueil: dc.content?.libelle_etab_accueil ?? "",
+        libelle_formation: dc.content?.libelle_formation ?? "",
       }));
 
       const tmp = (await getTrainingLinks(data)) as TrainingLink[];
@@ -229,6 +233,7 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
 };
 
 export const createMailingListFile = async (documentId: string) => {
+  // TODO GROUP BY
   const documentContents = (
     await findDocumentContents(
       {
@@ -243,7 +248,6 @@ export const createMailingListFile = async (documentId: string) => {
     }) => content
   );
 
-  console.log(documentContents);
   const json2csvParser = new Parser({
     // @ts-ignore
     fields: Object.keys(documentContents[0]),
