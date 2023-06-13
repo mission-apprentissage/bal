@@ -5,10 +5,7 @@ import { IDocument } from "shared/models/document.model";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
 import { findOneDocumentContent } from "./documentContent.actions";
-import {
-  extractDocumentContent,
-  importDocumentContent,
-} from "./documents.actions";
+import { extractDocumentContent } from "./documents.actions";
 
 interface ContentLine {
   SIRET: string;
@@ -43,20 +40,17 @@ export const parseContentLine = (
 };
 
 export const handleDecaFileContent = async (document: IDocument) => {
-  const content = (await extractDocumentContent(
-    document,
-    "|"
-  )) as ContentLine[];
+  await extractDocumentContent(document, "|");
 
-  const documentContents = await importDocumentContent(
-    document._id,
-    content,
-    parseContentLine
-  );
+  // const documentContents = await importDocumentContent(
+  //   document._id,
+  //   content,
+  //   parseContentLine
+  // );
 
-  // Create or update person
+  // // Create or update person
 
-  return documentContents;
+  // return documentContents;
 };
 
 export const getDecaVerification = async (

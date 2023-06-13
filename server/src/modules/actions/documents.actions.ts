@@ -5,7 +5,7 @@ import {
   ObjectId,
   UpdateFilter,
 } from "mongodb";
-import { accumulateData, oleoduc, writeData } from "oleoduc";
+import { oleoduc, writeData } from "oleoduc";
 // @ts-ignore
 import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
@@ -23,7 +23,7 @@ import {
   getFromStorage,
   uploadToStorage,
 } from "../../utils/ovhUtils";
-import { getJsonFromCsvData } from "../../utils/parserUtils";
+import { parseCsv } from "../../utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
 import { handleDecaFileContent } from "./deca.actions";
 import { createDocumentContent } from "./documentContent.actions";
@@ -99,7 +99,8 @@ export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
     ext_fichier: options.filename.split(".").pop(),
     nom_fichier: options.filename,
     chemin_fichier: path,
-    taille_fichier: 0,
+    taille_fichier: options.fileSize || 0,
+    import_progress: 0,
     hash_secret: documentHash,
     hash_fichier: "",
     confirm: true,
@@ -113,7 +114,7 @@ export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
 export const uploadFile = async (
   added_by: string,
   stream: Readable,
-  documentId: ObjectId,
+  documentId: ObjectId = new ObjectId(),
   options: IUploadDocumentOptions
 ) => {
   const doc = await findDocument({ _id: documentId });
@@ -167,6 +168,7 @@ export const uploadFile = async (
       ext_fichier: options.filename.split(".").pop(),
       nom_fichier: options.filename,
       chemin_fichier: path,
+      import_progress: 0,
       taille_fichier: options.fileSize,
       hash_secret: documentHash,
       hash_fichier,
@@ -182,39 +184,65 @@ export const uploadFile = async (
 
 export const extractDocumentContent = async (
   document: IDocument,
-  delimiter = ","
+  delimiter = ";"
 ) => {
   const stream = await getFromStorage(document.chemin_fichier);
 
-  let content: unknown[] = [];
+  // eslint-disable-next-line prefer-const
 
+  logger.info("conversion csv to json started");
+  await updateDocument(
+    { _id: document._id },
+    {
+      $set: {
+        lines_count: 0,
+        import_progress: 0,
+      },
+    }
+  );
+
+  let importedLines = 0;
+  let importedLength = 0;
+  let currentProgress = 0;
   await oleoduc(
     stream,
     crypto.isCipherAvailable() ? crypto.decipher(document.hash_secret) : noop(),
-    accumulateData(
-      (acc: Uint8Array, value: ArrayBuffer) => {
-        return Buffer.concat([acc, Buffer.from(value)]);
-      },
-      { accumulator: Buffer.from(new Uint8Array()) }
-    ),
-    writeData(async (data: Buffer) => {
-      if (document.ext_fichier === "csv") {
-        content = getJsonFromCsvData(data.toString(), delimiter);
-      }
+    parseCsv({
+      delimiter,
+    }),
+    writeData(async (json) => {
+      importedLength += Buffer.byteLength(JSON.stringify(json));
+      importedLines += 1;
+      currentProgress = await updateImportProgress(
+        document._id,
+        importedLines,
+        importedLength,
+        document.taille_fichier,
+        currentProgress
+      );
+      await importDocumentContent(document._id, [json], (line) => line);
     })
   );
-
-  return content;
+  await updateDocument(
+    { _id: document._id },
+    {
+      $set: {
+        import_progress: 100,
+      },
+    }
+  );
+  logger.info("conversion csv to json ended");
 };
 
 export const updateImportProgress = async (
-  _id: string,
-  currentLine: number,
-  totalLines: number,
+  _id: ObjectId,
+  importedLines: number,
+  importedLength: number,
+  totalLength: number,
   currentProgress: number
 ) => {
   const step_precent = 2; // every 2%
-  const currentPercent = (currentLine * 100) / totalLines;
+  const currentPercent = (importedLength * 100) / totalLength;
   if (currentPercent - currentProgress < step_precent) {
     // Do not update
     return currentProgress;
@@ -224,6 +252,7 @@ export const updateImportProgress = async (
     { _id },
     {
       $set: {
+        lines_count: importedLines,
         import_progress: currentProgress,
       },
     }
@@ -241,26 +270,8 @@ export const importDocumentContent = async <
 ) => {
   let documentContents: IDocumentContent[] = [];
 
-  await updateDocument(
-    { _id: documentId },
-    {
-      $set: {
-        lines_count: content.length,
-        import_progress: 0,
-      },
-    }
-  );
-
-  let currentProgress = 0;
-  for (const [lineNumber, line] of content.entries()) {
+  for (const [_lineNumber, line] of content.entries()) {
     const contentLine = formatter(line);
-
-    currentProgress = await updateImportProgress(
-      documentId.toString(),
-      lineNumber,
-      content.length,
-      currentProgress
-    );
 
     if (!contentLine) {
       continue;
@@ -277,15 +288,6 @@ export const importDocumentContent = async <
 
     documentContents = [...documentContents, documentContent];
   }
-
-  await updateDocument(
-    { _id: documentId },
-    {
-      $set: {
-        import_progress: 100,
-      },
-    }
-  );
 
   // Create or update person
 

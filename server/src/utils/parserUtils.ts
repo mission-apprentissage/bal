@@ -1,5 +1,7 @@
 // @ts-ignore
 import csvToJson from "convert-csv-to-json";
+import { parse } from "csv-parse";
+import { isEmpty, pickBy } from "lodash-es";
 import XLSX from "xlsx";
 
 const readXLSXData = (
@@ -43,3 +45,17 @@ export const getJsonFromCsvData = <T>(data: string, delimiter = ";"): T[] => {
   csvToJson.fieldDelimiter(delimiter);
   return csvToJson.latin1Encoding().csvStringToJson(data);
 };
+
+export function parseCsv(options = {}) {
+  return parse({
+    trim: true,
+    delimiter: ";",
+    columns: true,
+    on_record: (record) => {
+      return pickBy(record, (v) => {
+        return !isEmpty(v) && v.trim().length;
+      });
+    },
+    ...options,
+  });
+}

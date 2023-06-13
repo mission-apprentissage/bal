@@ -25,18 +25,6 @@ import {
   uploadFile,
 } from "./documents.actions";
 
-interface ContentLine {
-  // Lignes affelnet et parcoursup
-  mail_responsable_1: string;
-  mail_responsable_2: string;
-  code_mef: string;
-  cfd: string;
-  code_postal: string;
-  code_uai_etab_accueil: string;
-  rncp: string;
-  cle_ministere_educatif: string;
-}
-
 const DEFAULT_LOOKUP = {
   from: "documents",
   let: { documentId: { $toObjectId: "$document_id" } },
@@ -124,18 +112,15 @@ export const updateMailingList = async (
  */
 
 export const handleVoeuxParcoursupFileContent = async (document: IDocument) => {
-  logger.info("import wishes started");
-  const content = (await extractDocumentContent(
-    document,
-    ";"
-  )) as ContentLine[];
-  const documentContents = await importDocumentContent(
-    document._id,
-    content,
-    (line) => line
-  );
+  logger.info("extract wishes started");
+  await extractDocumentContent(document);
+  // const documentContents = await importDocumentContent(
+  //   document._id,
+  //   content,
+  //   (line) => line
+  // );
 
-  return documentContents;
+  // return documentContents;
 };
 
 export const processMailingList = async (mailingList: IMailingList) => {
