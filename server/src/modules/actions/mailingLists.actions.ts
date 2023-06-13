@@ -8,6 +8,7 @@ import { IMailingList } from "shared/models/mailingList.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
 import logger from "@/common/logger";
+import * as crypto from "@/utils/cryptoUtils";
 import { getDbCollection } from "@/utils/mongodbUtils";
 
 import {
@@ -16,7 +17,7 @@ import {
   TrainingLink,
 } from "../../common/apis/lba";
 import { uploadToStorage } from "../../utils/ovhUtils";
-import { deleteDocumentContent } from "./documentContent.actions";
+import { noop } from "../server/utils/upload.utils";
 import {
   createEmptyDocument,
   extractDocumentContent,
@@ -297,12 +298,13 @@ export const createMailingListFile = async (document: any) => {
       },
     }),
     parser,
+    crypto.isCipherAvailable() ? crypto.cipher(document.hash_secret) : noop(),
     await uploadToStorage(document.chemin_fichier, {
       contentType: "text/csv",
     })
   );
 
-  await deleteDocumentContent({
-    document_id: document._id.toString(),
-  });
+  // await deleteDocumentContent({
+  //   document_id: document._id.toString(),
+  // });
 };

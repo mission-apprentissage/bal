@@ -89,9 +89,10 @@ const ListeDiffusionPage = () => {
                   },
                 })}
               >
-                {Object.values(DOCUMENT_TYPES).map((type) => (
+                {/* {Object.values(DOCUMENT_TYPES).map((type) => (
                   <option key={type}>{type}</option>
-                ))}
+                ))} */}
+                <option>Voeux Affelnet Mai 2023</option>
               </Select>
               <FormErrorMessage>{errors.source?.message}</FormErrorMessage>
             </FormControl>

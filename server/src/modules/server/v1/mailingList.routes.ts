@@ -12,7 +12,7 @@ import { Readable } from "stream";
 
 import { processMailingList } from "../../../common/apis/processor";
 import logger from "../../../common/logger";
-// import * as crypto from "../../../utils/cryptoUtils";
+import * as crypto from "../../../utils/cryptoUtils";
 import { getFromStorage } from "../../../utils/ovhUtils";
 import {
   createMailingList,
@@ -21,7 +21,7 @@ import {
   findMailingLists,
 } from "../../actions/mailingLists.actions";
 import { Server } from "..";
-// import { noop } from "../utils/upload.utils";
+import { noop } from "../utils/upload.utils";
 
 export const mailingListRoutes = ({ server }: { server: Server }) => {
   server.post(
@@ -156,9 +156,9 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         await oleoduc(
           // @ts-ignore
           stream,
-          // crypto.isCipherAvailable() && !fileNotFound
-          //   ? crypto.decipher(mailingList.document.hash_secret)
-          //   : noop(),
+          crypto.isCipherAvailable()
+            ? crypto.decipher(mailingList.document.hash_secret)
+            : noop(),
           response.raw
         );
       } catch (error) {
