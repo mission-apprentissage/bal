@@ -1,3 +1,10 @@
+## [1.34.3](https://github.com/mission-apprentissage/bal/compare/v1.34.2...v1.34.3) (2023-06-13)
+
+
+### Bug Fixes
+
+* re-enable cipher ([ba0130b](https://github.com/mission-apprentissage/bal/commit/ba0130bf993526ac1cb15c80b824797a79966b49))
+
 ## [1.34.2](https://github.com/mission-apprentissage/bal/compare/v1.34.1...v1.34.2) (2023-06-13)
 
 
