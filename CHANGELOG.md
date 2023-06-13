@@ -1,3 +1,10 @@
+## [1.34.2](https://github.com/mission-apprentissage/bal/compare/v1.34.1...v1.34.2) (2023-06-13)
+
+
+### Bug Fixes
+
+* generate mailing list ([06e46f8](https://github.com/mission-apprentissage/bal/commit/06e46f8625aad5e6f98fa51addccb21cac51d13e))
+
 ## [1.34.1](https://github.com/mission-apprentissage/bal/compare/v1.34.0...v1.34.1) (2023-06-13)
 
 
