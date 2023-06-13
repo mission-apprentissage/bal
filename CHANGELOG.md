@@ -1,3 +1,10 @@
+## [1.34.4](https://github.com/mission-apprentissage/bal/compare/v1.34.3...v1.34.4) (2023-06-13)
+
+
+### Bug Fixes
+
+* upgrade file size to 60MB ([7fa153e](https://github.com/mission-apprentissage/bal/commit/7fa153e49b8c48d00dbd7568c9a02b7d41f1e824))
+
 ## [1.34.3](https://github.com/mission-apprentissage/bal/compare/v1.34.2...v1.34.3) (2023-06-13)
 
 
