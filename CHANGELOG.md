@@ -1,3 +1,10 @@
+## [1.34.1](https://github.com/mission-apprentissage/bal/compare/v1.34.0...v1.34.1) (2023-06-13)
+
+
+### Bug Fixes
+
+* extract csv and add to db as stream ([4245a08](https://github.com/mission-apprentissage/bal/commit/4245a089cb69ac6ca56a94fb75029893d44805d7))
+
 # [1.34.0](https://github.com/mission-apprentissage/bal/compare/v1.33.1...v1.34.0) (2023-06-12)
 
 
