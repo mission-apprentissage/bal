@@ -10,7 +10,6 @@ services:
       - ./:/app/:z
 
   reverse_proxy:
-    image: bal_reverse_proxy
     ports:
       - 80:80
       - 443:443
@@ -24,19 +23,15 @@ services:
       - DNS_SERVER=127.0.0.11
       - PROXY=1
       - SERVERNAME=localhost
-      - ACCESSLOG=/data/access.log
-      - ERRORLOG=/data/error.log
       - LOGLEVEL=warn
       - NGINX_ALWAYS_TLS_REDIRECT=false
       - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
     volumes:
       - bal_nginx_data:/data:z
-      - ./reverse_proxy/dev/includes:/etc/nginx/templates/includes/env
     build:
       context: reverse_proxy
 
   ui:
-    image: bal_ui
     stdin_open: true
     networks:
       - bal_network
@@ -54,7 +49,6 @@ services:
       dockerfile: ui/Dockerfile.dev
 
   server:
-    image: bal_server
     networks:
       - bal_network
     depends_on:
@@ -79,7 +73,6 @@ services:
       dockerfile: server/Dockerfile.dev
 
   processor:
-    image: bal_processor
     command: ["yarn", "cli", "processor"]
     deploy:
       resources:

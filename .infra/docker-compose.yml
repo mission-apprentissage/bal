@@ -13,7 +13,7 @@ services:
   reverse_proxy:
     image: "${registry?}/mission-apprentissage/mna_bal_reverse_proxy:${reverse_proxy_version?}"
     deploy:
-      <<: *x-deploy-default
+      <<: *deploy-default
       resources:
         limits:
           memory: 256m
@@ -34,19 +34,23 @@ services:
       - DNS_SERVER=127.0.0.11
       - PROXY=1
       - SERVERNAME=localhost
-      - ACCESSLOG=/data/access.log
-      - ERRORLOG=/data/error.log
       - LOGLEVEL=warn
       - NGINX_ALWAYS_TLS_REDIRECT=false
       - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
     volumes:
       - /opt/bal/data/nginx:/data
       - /opt/bal/data/ssl:/ssl:ro
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: nginx
+        fluentd-async: "true"
 
   server:
     image: "${registry?}/mission-apprentissage/mna_bal_server:${app_version?}"
     deploy:
-      <<: *x-deploy-default
+      <<: *deploy-default
       resources:
         limits:
           memory: 1g
@@ -57,11 +61,17 @@ services:
     env_file: .env_server
     volumes:
       - /opt/bal/data/server:/data
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: server
+        fluentd-async: "true"
 
   processor:
     image: "${registry?}/mission-apprentissage/mna_bal_server:${app_version?}"
     deploy:
-      <<: *x-deploy-default
+      <<: *deploy-default
       resources:
         limits:
           memory: 1g
@@ -73,22 +83,34 @@ services:
     env_file: .env_server
     volumes:
       - /opt/bal/data/server:/data
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: processor
+        fluentd-async: "true"
 
   ui:
     image: "${registry?}/mission-apprentissage/mna_bal_ui:${app_version?}"
     deploy:
-      <<: *x-deploy-default
+      <<: *deploy-default
       resources:
         limits:
           memory: 256m
     networks:
       - bal_network
     env_file: .env_ui
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: ui
+        fluentd-async: "true"
 
   mongodb:
     image: mongo:6.0.2-focal
     deploy:
-      <<: *x-deploy-default
+      <<: *deploy-default
       resources:
         limits:
           memory: 2g
@@ -100,11 +122,17 @@ services:
       - /opt/bal/data/mongodb/configdb:/data/configdb
       - /opt/bal/data/mongodb/backups:/data/backups-legacy
       - /opt/bal/configs/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: mongodb
+        fluentd-async: "true"
 
   metabase:
     image: metabase/metabase:v0.46.0
     deploy:
-      <<: *x-deploy-default
+      <<: *deploy-default
       resources:
         limits:
           memory: 2g
@@ -120,11 +148,17 @@ services:
       MB_SITE_URL: https://bal.apprentissage.beta.gouv.fr/metabase
     networks:
       - bal_network
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: metabase
+        fluentd-async: "true"
 
   clamav:
     image: clamav/clamav:latest
     deploy:
-      <<: *x-deploy-default
+      <<: *deploy-default
       resources:
         limits:
           memory: 2g
@@ -135,12 +169,18 @@ services:
       interval: 60s
       retries: 3
       start_period: 120s
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: clamav
+        fluentd-async: "true"
 
   nodeexporter:
     image: prom/node-exporter:v1.5.0
-    hostname: bal-production
+    hostname: {{host_name}}
     deploy:
-      <<: *x-deploy-default
+      <<: *deploy-default
     command:
       - '--path.procfs=/host/proc'
       - '--path.rootfs=/rootfs'
@@ -156,7 +196,7 @@ services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.46.0
     deploy:
-      <<: *x-deploy-default
+      <<: *deploy-default
     hostname: bal-production
     privileged: true
     devices:
@@ -169,6 +209,15 @@ services:
       - /dev/disk/:/dev/disk:ro
     networks:
       - bal_network
+
+  fluentd:
+    image: fluent/fluentd:v1.16
+    volumes:
+      - /opt/bal/configs/fluentd/conf:/fluentd/etc
+      - /opt/bal/data/fluentd:/var/log/fluent
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
 
 networks:
   bal_network:
