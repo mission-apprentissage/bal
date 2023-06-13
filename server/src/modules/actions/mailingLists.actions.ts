@@ -1,9 +1,11 @@
-import { Parser } from "json2csv";
-import { Filter, ObjectId, UpdateFilter } from "mongodb";
+import { Transform } from "node:stream";
+import { pipeline } from "node:stream/promises";
+
+import { stringify } from "csv-stringify";
+import { Filter, UpdateFilter } from "mongodb";
 import { IDocument } from "shared/models/document.model";
 import { IMailingList } from "shared/models/mailingList.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
-import { Readable } from "stream";
 
 import logger from "@/common/logger";
 import { getDbCollection } from "@/utils/mongodbUtils";
@@ -13,16 +15,13 @@ import {
   LIMIT_TRAINING_LINKS_PER_REQUEST,
   TrainingLink,
 } from "../../common/apis/lba";
-import {
-  deleteDocumentContent,
-  findDocumentContents,
-} from "./documentContent.actions";
+import { uploadToStorage } from "../../utils/ovhUtils";
+import { deleteDocumentContent } from "./documentContent.actions";
 import {
   createEmptyDocument,
   extractDocumentContent,
   findDocument,
   importDocumentContent,
-  uploadFile,
 } from "./documents.actions";
 
 const DEFAULT_LOOKUP = {
@@ -185,7 +184,11 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
           dc.content?.mail_responsable_2 ??
           "",
         nom_eleve: dc.content?.nom_eleve ?? "",
-        prenom_eleve: `${dc.content?.prenom_1} ${dc.content?.prenom_2}`,
+        prenom_eleve: [
+          dc.content?.prenom_1 ?? "",
+          dc.content?.prenom_2 ?? "",
+          dc.content?.prenom_3 ?? "",
+        ].join(" "),
         libelle_etab_accueil: dc.content?.libelle_etab_accueil ?? "",
         libelle_formation: dc.content?.libelle_formation ?? "",
       }));
@@ -217,39 +220,89 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
   });
 };
 
-export const createMailingListFile = async (documentId: string) => {
-  // TODO GROUP BY
-  const documentContents = (
-    await findDocumentContents(
-      {
-        document_id: documentId,
+async function* getLine(cursor) {
+  let currentLine = {
+    email: null,
+    nom_eleve: null,
+    prenom_eleve: null,
+    wishes: [] as any[],
+  };
+  for await (const {
+    content: { email, nom_eleve, prenom_eleve, ...rest },
+  } of cursor) {
+    if (currentLine.email !== null && email !== currentLine.email) {
+      yield currentLine;
+      currentLine = {
+        email: null,
+        nom_eleve: null,
+        prenom_eleve: null,
+        wishes: [],
+      };
+    }
+
+    currentLine.email = email;
+    currentLine.nom_eleve = nom_eleve;
+    currentLine.prenom_eleve = prenom_eleve;
+    currentLine.wishes.push(rest);
+  }
+
+  if (currentLine.email !== null) yield currentLine;
+}
+
+export const createMailingListFile = async (document: any) => {
+  const documentContents = await getDbCollection("documentContents").find(
+    {
+      document_id: document._id.toString(),
+    },
+    {
+      projection: { _id: 0, content: 1 },
+      sort: {
+        "content.email": 1,
       },
-      { projection: { _id: 0, content: 1 } }
-    )
-  ).map(
-    ({
-      // @ts-ignore
-      content,
-    }) => content
+    }
   );
 
-  const json2csvParser = new Parser({
-    // @ts-ignore
-    fields: Object.keys(documentContents[0]),
-    delimiter: ";",
-    withBOM: true,
+  const parser = stringify({
+    header: true,
   });
-  const csvContent = await json2csvParser.parse(documentContents);
 
-  const stream = new Readable();
-  stream.push(csvContent);
-  stream.push(null);
+  let progress = 0;
 
-  await uploadFile("createMailingListFile", stream, new ObjectId(documentId), {
-    mimetype: "text/csv",
-  });
+  await pipeline(
+    getLine(documentContents),
+    new Transform({
+      readableObjectMode: true,
+      writableObjectMode: true,
+      transform(line, _encoding, callback) {
+        if (progress % 100 === 0) console.log(progress);
+        progress++;
+        const keys = [
+          "lien_prdv",
+          "lien_lba",
+          "libelle_etab_accueil",
+          "libelle_formation",
+        ];
+        const flat = {
+          email: line.email,
+          nom_eleve: line.nom_eleve,
+          prenom_eleve: line.prenom_eleve,
+        };
+        for (let i = 0; i < 10; i++) {
+          for (const key of keys) {
+            flat[`${key}_${i + 1}`] = line.wishes[i]?.[key] ?? "";
+          }
+        }
+
+        callback(null, flat);
+      },
+    }),
+    parser,
+    await uploadToStorage(document.chemin_fichier, {
+      contentType: "text/csv",
+    })
+  );
 
   await deleteDocumentContent({
-    document_id: documentId,
+    document_id: document._id.toString(),
   });
 };
