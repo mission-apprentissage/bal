@@ -12,6 +12,7 @@
     state: directory
   with_items:
     - certbot
+    - clamav
     - fluentd
     - metabase
     - mongodb

@@ -175,6 +175,8 @@ services:
         fluentd-address: localhost:24224
         tag: clamav
         fluentd-async: "true"
+    volumes:
+      - /opt/bal/data/clamav:/var/lib/clamav
 
   nodeexporter:
     image: prom/node-exporter:v1.5.0
