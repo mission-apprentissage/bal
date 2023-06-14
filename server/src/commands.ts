@@ -23,16 +23,13 @@ program
   .command("start")
   .description("Démarre le serveur HTTP")
   .action(async () => {
-    logger.warn("starting application");
-    const httpServer = server.listen(
-      { port: 5000, host: "0.0.0.0" },
-      function (err) {
-        if (err) {
-          console.log(err);
-          process.exit(1);
-        }
+    server.listen({ port: 5000, host: "0.0.0.0" }, function (err) {
+      logger.info(`Server ready and listening on port ${5000}`);
+      if (err) {
+        console.log(err);
+        process.exit(1);
       }
-    );
+    });
 
     let shutdownInProgress = false;
     ["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
@@ -45,7 +42,7 @@ program
           shutdownInProgress = true;
           logger.warn(`application shutting down (signal=${signal})`);
           await HttpTerminator({
-            server: httpServer,
+            server: server.server,
             maxWaitTimeout: 50_000,
             logger: logger,
           }).terminate();

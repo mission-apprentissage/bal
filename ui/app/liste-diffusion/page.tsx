@@ -20,6 +20,7 @@ import {
 import { DOCUMENT_TYPES } from "../../../shared/routes/upload.routes";
 import { IReqGetMailingList } from "../../../shared/routes/v1/mailingList.routes";
 import Table from "../../components/table/Table";
+import { Bin } from "../../theme/icons/Bin";
 import { DownloadLine } from "../../theme/icons/DownloadLine";
 import { api } from "../../utils/api.utils";
 import { formatDate } from "../../utils/date.utils";
@@ -56,6 +57,12 @@ const ListeDiffusionPage = () => {
     });
   };
 
+  const onDeleteMailingList = async (mailingList_id: string) => {
+    await api.delete(`/v1/mailing-list/${mailingList_id}`);
+    if (typeof window !== "undefined" && window.location)
+      window.location.reload();
+  };
+
   return (
     <>
       <Breadcrumb pages={[PAGES.homepage(), PAGES.listeDiffusion()]} />
@@ -78,11 +85,6 @@ const ListeDiffusionPage = () => {
                 {...register("source", {
                   required: "Obligatoire: Vous devez choisir la source",
                   validate: (value) => {
-                    console.log({
-                      value,
-                      in: Object.values(DOCUMENT_TYPES).includes(value),
-                      DOCUMENT_TYPES,
-                    });
                     return (
                       value && Object.values(DOCUMENT_TYPES).includes(value)
                     );
@@ -145,7 +147,7 @@ const ListeDiffusionPage = () => {
             actions: {
               id: "actions",
               size: 25,
-              header: () => "Télécharger",
+              header: () => "Actions",
               cell: ({ row }) => {
                 if (
                   row.original.status !== MAILING_LIST_STATUS.FINISHED ||
@@ -155,14 +157,24 @@ const ListeDiffusionPage = () => {
                 }
 
                 return (
-                  <a
-                    href={`/api/v1/mailing-lists/${row.original._id}/download`}
-                    title="Télécharger le fichier"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <DownloadLine w="1w" />
-                  </a>
+                  <HStack spacing={4}>
+                    <a
+                      href={`/api/v1/mailing-lists/${row.original._id}/download`}
+                      title="Télécharger le fichier"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <DownloadLine w="1w" />
+                    </a>
+                    <Bin
+                      boxSize="5"
+                      color="redmarianne"
+                      cursor="pointer"
+                      onClick={() =>
+                        onDeleteMailingList(row.original._id.toString())
+                      }
+                    />
+                  </HStack>
                 );
               },
             },

@@ -26,7 +26,10 @@ import {
 import { parseCsv } from "../../utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
 import { handleDecaFileContent } from "./deca.actions";
-import { createDocumentContent } from "./documentContent.actions";
+import {
+  createDocumentContent,
+  deleteDocumentContent,
+} from "./documentContent.actions";
 import { handleVoeuxParcoursupFileContent } from "./mailingLists.actions";
 
 const testMode = config.env === "test";
@@ -93,7 +96,7 @@ export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
     throw new Error("Missing filename");
   }
 
-  await createDocument({
+  const doucument = await createDocument({
     _id: documentId,
     type_document: options.type_document,
     ext_fichier: options.filename.split(".").pop(),
@@ -108,7 +111,7 @@ export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
     updated_at: new Date(),
     created_at: new Date(),
   });
-  return documentId;
+  return doucument as IDocument;
 };
 
 export const uploadFile = async (
@@ -220,7 +223,7 @@ export const extractDocumentContent = async (
         document.taille_fichier,
         currentProgress
       );
-      await importDocumentContent(document._id, [json], (line) => line);
+      await importDocumentContent(document, [json], (line) => line);
     })
   );
   await updateDocument(
@@ -264,7 +267,7 @@ export const importDocumentContent = async <
   TFileLine = unknown,
   TContentLine = unknown
 >(
-  documentId: ObjectId,
+  document: IDocument,
   content: TFileLine[],
   formatter: (line: TFileLine) => TContentLine
 ) => {
@@ -279,7 +282,8 @@ export const importDocumentContent = async <
 
     const documentContent = await createDocumentContent({
       content: contentLine,
-      document_id: documentId.toString(),
+      document_id: document._id.toString(),
+      type_document: document.type_document,
       updated_at: new Date(),
       created_at: new Date(),
     });
@@ -292,6 +296,18 @@ export const importDocumentContent = async <
   // Create or update person
 
   return documentContents;
+};
+
+export const deleteDocumentById = async (documentId: ObjectId) => {
+  const document = await findDocument({ _id: documentId });
+  if (!document) {
+    throw new Error("Impossible de trouver le document");
+  }
+  await deleteFromStorage(document.chemin_fichier);
+  await deleteDocumentContent({
+    document_id: document._id.toString(),
+  });
+  await getDbCollection("documents").deleteOne({ _id: document._id });
 };
 
 export const handleDocumentFileContent = async (document: IDocument) => {

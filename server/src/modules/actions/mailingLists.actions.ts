@@ -2,7 +2,7 @@ import { Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 
 import { stringify } from "csv-stringify";
-import { Filter, UpdateFilter } from "mongodb";
+import { Filter, ObjectId, UpdateFilter } from "mongodb";
 import { IDocument } from "shared/models/document.model";
 import { IMailingList } from "shared/models/mailingList.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
@@ -20,6 +20,7 @@ import { uploadToStorage } from "../../utils/ovhUtils";
 import { noop } from "../server/utils/upload.utils";
 import {
   createEmptyDocument,
+  deleteDocumentById,
   extractDocumentContent,
   findDocument,
   importDocumentContent,
@@ -114,11 +115,6 @@ export const updateMailingList = async (
 export const handleVoeuxParcoursupFileContent = async (document: IDocument) => {
   logger.info("extract wishes started");
   await extractDocumentContent(document);
-  // const documentContents = await importDocumentContent(
-  //   document._id,
-  //   content,
-  //   (line) => line
-  // );
 
   // return documentContents;
 };
@@ -151,7 +147,7 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
   let skip = 0;
   let hasMore = true;
 
-  const outputDocumentId = await createEmptyDocument({
+  const outputDocument = await createEmptyDocument({
     type_document: `mailing-list-${DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023}`,
     filename: `mailing-list-${mailingList._id.toString()}-${
       mailingList.source
@@ -189,7 +185,9 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
           dc.content?.prenom_1 ?? "",
           dc.content?.prenom_2 ?? "",
           dc.content?.prenom_3 ?? "",
-        ].join(" "),
+        ]
+          .join(" ")
+          .trim(),
         libelle_etab_accueil: dc.content?.libelle_etab_accueil ?? "",
         libelle_formation: dc.content?.libelle_formation ?? "",
       }));
@@ -197,7 +195,7 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
       const tmp = (await getTrainingLinks(data)) as TrainingLink[];
       const tmpContent = tmp.flat();
 
-      await importDocumentContent(outputDocumentId, tmpContent, (line) => line);
+      await importDocumentContent(outputDocument, tmpContent, (line) => line);
 
       // Check if there are more documents to retrieve
       if (wishes.length === batchSize) {
@@ -216,7 +214,7 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
   }
 
   await updateMailingList(mailingList, {
-    document_id: outputDocumentId.toString(),
+    document_id: outputDocument._id.toString(),
     status: "finished",
   });
 };
@@ -254,6 +252,11 @@ export const createMailingListFile = async (document: any) => {
   const documentContents = await getDbCollection("documentContents").find(
     {
       document_id: document._id.toString(),
+      "content.email": {
+        $ne: "",
+        $regex:
+          /^(?:[a-zA-Z0-9])([-_0-9a-zA-Z]+(\.[-_0-9a-zA-Z]+)*|^"([\001-\010\013\014\016-\037!#-[\]-\177]|\\[\001-011\013\014\016-\177])*")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}\.?$/,
+      },
     },
     {
       projection: { _id: 0, content: 1 },
@@ -265,6 +268,8 @@ export const createMailingListFile = async (document: any) => {
 
   const parser = stringify({
     header: true,
+    delimiter: ";",
+    bom: true,
   });
 
   let progress = 0;
@@ -307,4 +312,9 @@ export const createMailingListFile = async (document: any) => {
   // await deleteDocumentContent({
   //   document_id: document._id.toString(),
   // });
+};
+
+export const deleteMailingList = async (mailingList: IMailingList) => {
+  await deleteDocumentById(new ObjectId(mailingList.document_id));
+  await getDbCollection("mailingLists").deleteOne({ _id: mailingList._id });
 };

@@ -6,6 +6,7 @@ const collectionName = "documentContents";
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ document_id: 1 }, { name: "document_id" }],
+  [{ type_document: 1 }, { name: "type_document" }],
 ];
 
 export const SDocumentContent = {
@@ -15,6 +16,10 @@ export const SDocumentContent = {
     document_id: { type: "string" },
     content: {
       type: "object",
+    },
+    type_document: {
+      type: "string",
+      description: "Le type de document (exemple: DECA, etc..)",
     },
     updated_at: {
       type: "string",
