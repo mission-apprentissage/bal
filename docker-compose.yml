@@ -27,7 +27,7 @@ services:
       - NGINX_ALWAYS_TLS_REDIRECT=false
       - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
     volumes:
-      - bal_nginx_data:/data:z
+      - bal_nginx_data:/data
     build:
       context: reverse_proxy
 
@@ -67,7 +67,7 @@ services:
       - MNA_BAL_SENTRY_DSN=
     volumes:
       - ./:/app/:z
-      - bal_server_data:/data:z
+      - bal_server_data:/data
     build:
       context: .
       dockerfile: server/Dockerfile.dev
@@ -92,7 +92,7 @@ services:
       - MNA_BAL_SENTRY_DSN=
     volumes:
       - ./:/app/:z
-      - bal_server_data:/data:z
+      - bal_server_data:/data
     build:
       context: .
       dockerfile: server/Dockerfile.dev
