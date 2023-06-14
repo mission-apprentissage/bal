@@ -1,3 +1,10 @@
+## [1.34.5](https://github.com/mission-apprentissage/bal/compare/v1.34.4...v1.34.5) (2023-06-14)
+
+
+### Bug Fixes
+
+* lba campaign affelnet ([#136](https://github.com/mission-apprentissage/bal/issues/136)) ([ee17315](https://github.com/mission-apprentissage/bal/commit/ee173156ce3af86205ddf59728c4e4634bbfa2d1))
+
 ## [1.34.4](https://github.com/mission-apprentissage/bal/compare/v1.34.3...v1.34.4) (2023-06-13)
 
 
