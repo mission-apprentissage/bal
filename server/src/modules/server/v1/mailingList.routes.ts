@@ -17,6 +17,7 @@ import { getFromStorage } from "../../../utils/ovhUtils";
 import {
   createMailingList,
   createMailingListFile,
+  deleteMailingList,
   findMailingList,
   findMailingLists,
 } from "../../actions/mailingLists.actions";
@@ -161,6 +162,48 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
             : noop(),
           response.raw
         );
+      } catch (error) {
+        response.log.error(error);
+        throw new Error("Someting went wrong");
+      }
+    }
+  );
+
+  server.delete(
+    "/mailing-list/:id",
+    {
+      schema: {
+        params: {
+          type: "object",
+          properties: { id: { type: "string" } },
+          required: ["id"],
+        },
+      } as const,
+      preHandler: server.auth([
+        server.validateJWT,
+        server.validateSession,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ]) as any,
+    },
+    async (request, response) => {
+      try {
+        const { user } = request;
+        const { id } = request.params;
+
+        const mailingList = await findMailingList({
+          _id: new ObjectId(id),
+        });
+
+        if (
+          !mailingList?.document ||
+          user?._id.toString() !== mailingList?.user_id
+        ) {
+          return response.status(403).send({ message: "Forbidden" });
+        }
+
+        await deleteMailingList(mailingList);
+
+        return response.status(200).send({ success: true });
       } catch (error) {
         response.log.error(error);
         throw new Error("Someting went wrong");

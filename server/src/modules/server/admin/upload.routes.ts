@@ -1,4 +1,5 @@
 import { MultipartFile } from "@fastify/multipart";
+import { ObjectId } from "mongodb";
 import { SResError } from "shared/routes/common.routes";
 import {
   IResGetDocuments,
@@ -12,7 +13,7 @@ import { FILE_SIZE_LIMIT } from "../../../../../shared/constants/index";
 import { processDocument } from "../../../common/apis/processor";
 import {
   createEmptyDocument,
-  findDocument,
+  deleteDocumentById,
   findDocuments,
   uploadFile,
 } from "../../actions/documents.actions";
@@ -78,25 +79,23 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       }
 
       try {
-        const documentId = await createEmptyDocument({
+        const document = await createEmptyDocument({
           type_document,
           fileSize,
           filename: data.filename,
         });
 
-        if (!documentId) {
+        if (!document) {
           throw new Error("Impossible de stocker de le fichier");
         }
 
         const added_by = request.user._id.toString();
 
-        await uploadFile(added_by, data.file, documentId, {
+        await uploadFile(added_by, data.file, document._id, {
           mimetype: data.mimetype,
         });
 
-        await processDocument(documentId.toString());
-
-        const document = await findDocument({ _id: documentId });
+        await processDocument(document._id.toString());
 
         return response
           .status(200)
@@ -136,6 +135,33 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       } catch (error) {
         response.log.error(error);
         throw new Error("Someting went wrong");
+      }
+    }
+  );
+
+  server.delete(
+    "/admin/document/:id",
+    {
+      schema: {
+        params: {
+          type: "object",
+          properties: { id: { type: "string" } },
+          required: ["id"],
+        },
+      } as const,
+      preHandler: [
+        server.auth([server.validateJWT, server.validateSession]),
+        ensureUserIsAdmin,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ] as any,
+    },
+    async (request, response) => {
+      try {
+        await deleteDocumentById(new ObjectId(request.params.id));
+
+        return response.status(200).send({ success: true });
+      } catch (error) {
+        response.log.error(error);
       }
     }
   );

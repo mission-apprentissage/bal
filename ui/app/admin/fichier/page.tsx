@@ -6,6 +6,7 @@ import NavLink from "next/link";
 
 import { IDocument } from "../../../../shared/models/document.model";
 import Table from "../../../components/table/Table";
+import { Bin } from "../../../theme/icons/Bin";
 import { api } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 import { formatBytes } from "../../../utils/file.utils";
@@ -21,6 +22,10 @@ const AdminImportPage = () => {
     },
     refetchInterval: 1000,
   });
+
+  const onDeleteDocument = async (document_id: string) => {
+    await api.delete(`/admin/document/${document_id}`);
+  };
 
   return (
     <>
@@ -97,6 +102,24 @@ const AdminImportPage = () => {
                 return `En cours d'importation ${row.original.import_progress?.toPrecision(
                   2
                 )}%`;
+              },
+            },
+            actions: {
+              id: "actions",
+              size: 25,
+              header: () => "Actions",
+              cell: ({ row }) => {
+                if (row.original.import_progress !== 100) return null;
+                return (
+                  <Bin
+                    boxSize="5"
+                    color="redmarianne"
+                    cursor="pointer"
+                    onClick={() =>
+                      onDeleteDocument(row.original._id.toString())
+                    }
+                  />
+                );
               },
             },
           }}
