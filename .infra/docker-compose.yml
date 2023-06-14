@@ -212,6 +212,7 @@ services:
 
   fluentd:
     image: fluent/fluentd:v1.16
+    user: root
     volumes:
       - /opt/bal/configs/fluentd/conf:/fluentd/etc
       - /opt/bal/data/fluentd:/var/log/fluent
