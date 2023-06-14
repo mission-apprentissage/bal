@@ -7,8 +7,11 @@ x-deploy-default: &deploy-default
   update_config:
     failure_action: rollback
     parallelism: 1
+    delay: 10s
   rollback_config:
     parallelism: 0
+  restart_policy:
+    window: 5s
 
 services:
   reverse_proxy:
@@ -56,6 +59,7 @@ services:
       resources:
         limits:
           memory: 1g
+      replicas: 2
     networks:
       - bal_network
     depends_on:
@@ -69,6 +73,12 @@ services:
         fluentd-address: localhost:24224
         tag: server
         fluentd-async: "true"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:5000/api/healthcheck"]
+      interval: 10s
+      timeout: 30s
+      retries: 11
+      start_period: 10s
 
   processor:
     image: "${registry?}/mission-apprentissage/mna_bal_server:${app_version?}"
@@ -99,6 +109,7 @@ services:
       resources:
         limits:
           memory: 256m
+      replicas: 2
     networks:
       - bal_network
     env_file: .env_ui
