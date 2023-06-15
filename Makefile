@@ -2,10 +2,10 @@ install:
 	yarn
 
 start:
-	docker compose up --build -d
+	docker compose up --build -d --remove-orphans
 
 seed:
-	yarn --cwd server cli seed
+	docker compose run --rm -it server yarn cli seed
 
 stop:
 	docker compose stop

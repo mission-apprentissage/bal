@@ -45,28 +45,7 @@ suivant : https://docs.github.com/en/authentication/connecting-to-github-with-ss
 
 ### GPG
 
-Pour utiliser le projet infra, vous devez avoir une clé GPG, si ce n'est pas le cas, vous pouvez en créer une via la
-commande :
-
-```bash
- bash scripts/create-gpg-key.sh <prénom> <nom> <email>
-```
-
-Une fois terminé, le script va vous indiquer l'identifiant de votre clé GPG. Afin qu'elle puisse être utilisée au sein
-de la mission apprentissage, vous devez publier votre clé :
-
-```bash
-gpg --send-key <identifiant>
-```
-
-Il est vivement conseillé de réaliser un backup des clés publique et privée qui viennent d'être créés.
-
-```bash
-gpg --export <identifiant> > public_key.gpg
-gpg --export-secret-keys <identifiant> > private_key.gpg
-```
-
-Ces deux fichiers peuvent, par exemple, être stockés sur une clé USB.
+Veuillez suivre les instructions dans le [root README](../README.md#gpg)
 
 ## Configuration et déploiement d'un environnement
 
