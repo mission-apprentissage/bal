@@ -11,7 +11,7 @@ import {
   findOrganisation,
   findOrganisations,
 } from "../../actions/organisations.actions";
-import { Server } from "..";
+import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 export const organisationAdminRoutes = ({ server }: { server: Server }) => {
@@ -23,7 +23,7 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
         querystring: SReqParamsSearchPagination,
       } as const,
       preHandler: [
-        server.auth([server.validateJWT, server.validateSession]),
+        server.auth([server.validateSession]),
         ensureUserIsAdmin,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any,
@@ -59,7 +59,7 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
         },
       } as const,
       preHandler: [
-        server.auth([server.validateJWT, server.validateSession]),
+        server.auth([server.validateSession]),
         ensureUserIsAdmin,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any,

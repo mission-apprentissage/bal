@@ -2,8 +2,8 @@ import { verify } from "jsonwebtoken";
 
 import logger from "@/common/logger";
 import { sendEmail } from "@/common/services/mailer/mailer";
+import { createResetPasswordToken } from "@/common/utils/jwtUtils";
 import config from "@/config";
-import { createResetPasswordToken } from "@/utils/jwtUtils";
 
 import { hashPassword, verifyPassword } from "../server/utils/password.utils";
 import { findPerson } from "./persons.actions";

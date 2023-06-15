@@ -3,7 +3,7 @@ import querystring from "querystring";
 
 import config from "@/config";
 
-import { ApiError } from "../../utils/apiUtils";
+import { ApiError } from "../utils/apiUtils";
 import getApiClient from "./client";
 
 export const OPCO_EP_BASE_URL = `https://${config.opcoEp.baseUrl}`;

@@ -8,7 +8,7 @@ import {
 } from "shared/routes/person.routes";
 
 import { findPerson, findPersons } from "../../actions/persons.actions";
-import { Server } from "..";
+import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 export const personAdminRoutes = ({ server }: { server: Server }) => {
@@ -20,7 +20,7 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
         querystring: SReqParamsSearchPagination,
       } as const,
       preHandler: [
-        server.auth([server.validateJWT, server.validateSession]),
+        server.auth([server.validateSession]),
         ensureUserIsAdmin,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any,
@@ -56,7 +56,7 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
         },
       } as const,
       preHandler: [
-        server.auth([server.validateJWT, server.validateSession]),
+        server.auth([server.validateSession]),
         ensureUserIsAdmin,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any,

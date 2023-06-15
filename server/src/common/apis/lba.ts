@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios";
 
 import config from "@/config";
 
-import { ApiError, apiRateLimiter } from "../../utils/apiUtils";
+import { ApiError, apiRateLimiter } from "../utils/apiUtils";
 import getApiClient from "./client";
 
 export const LIMIT_TRAINING_LINKS_PER_REQUEST = 100;

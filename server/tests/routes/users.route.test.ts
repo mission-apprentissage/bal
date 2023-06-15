@@ -7,7 +7,7 @@ import {
   findUser,
   generateApiKey,
 } from "../../src/modules/actions/users.actions";
-import { build } from "../../src/modules/server";
+import { build } from "../../src/modules/server/server";
 
 const app = build();
 

@@ -11,14 +11,14 @@ import { SResError } from "shared/routes/common.routes";
 
 import config from "@/config";
 
-import { createUserTokenSimple } from "../../utils/jwtUtils";
+import { createUserTokenSimple } from "../../common/utils/jwtUtils";
 import {
   resetPassword,
   sendResetPasswordEmail,
   verifyEmailPassword,
 } from "../actions/auth.actions";
 import { createSession, deleteSession } from "../actions/sessions.actions";
-import { Server } from ".";
+import { Server } from "./server";
 
 export const authRoutes = ({ server }: { server: Server }) => {
   /**
@@ -31,7 +31,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
         response: { 200: SResGetSession },
         headers: SReqHeadersAuthorization,
       } as const,
-      preHandler: server.auth([server.validateSession, server.validateJWT]),
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       return response.status(200).send(request.user);

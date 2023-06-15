@@ -5,7 +5,7 @@ import {
 } from "shared/routes/v1/organisation.routes";
 
 import { validation } from "../../actions/organisations.actions";
-import { Server } from "..";
+import { Server } from "../server";
 
 export const organisationRoutes = ({ server }: { server: Server }) => {
   server.post(

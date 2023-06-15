@@ -1,12 +1,12 @@
 import { startCLI } from "@/commands";
 import logger from "@/common/logger";
-import config from "@/config";
-import { modelDescriptors } from "@/db/models";
-import createGlobalServices from "@/services";
 import {
   configureDbSchemaValidation,
   connectToMongodb,
-} from "@/utils/mongodbUtils";
+} from "@/common/utils/mongodbUtils";
+import config from "@/config";
+import { modelDescriptors } from "@/db/models";
+import createGlobalServices from "@/services";
 
 process.on("unhandledRejection", (err) =>
   logger.error(err, "unhandledRejection")

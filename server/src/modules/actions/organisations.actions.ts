@@ -2,7 +2,7 @@ import { Filter, FindOptions, ObjectId, UpdateFilter } from "mongodb";
 import { IOrganisation } from "shared/models/organisation.model";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
-import { getDbCollection } from "@/utils/mongodbUtils";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 import { getAktoVerification } from "../../common/apis/akto";
 import {

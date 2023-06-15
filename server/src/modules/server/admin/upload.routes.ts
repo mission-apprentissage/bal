@@ -17,7 +17,7 @@ import {
   findDocuments,
   uploadFile,
 } from "../../actions/documents.actions";
-import { Server } from "..";
+import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 const validateFile = (file: MultipartFile) => {
@@ -56,7 +56,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         },
       } as const,
       preHandler: [
-        server.auth([server.validateJWT, server.validateSession]),
+        server.auth([server.validateSession]),
         ensureUserIsAdmin,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any,
@@ -119,7 +119,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         },
       } as const,
       preHandler: [
-        server.auth([server.validateJWT, server.validateSession]),
+        server.auth([server.validateSession]),
         ensureUserIsAdmin,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any,
@@ -150,7 +150,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         },
       } as const,
       preHandler: [
-        server.auth([server.validateJWT, server.validateSession]),
+        server.auth([server.validateSession]),
         ensureUserIsAdmin,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any,

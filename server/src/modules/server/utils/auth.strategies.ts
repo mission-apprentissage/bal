@@ -5,8 +5,8 @@ import { IUser } from "shared/models/user.model";
 
 import config from "@/config";
 
-import { compareKeys } from "../../../utils/cryptoUtils";
-import { decodeToken } from "../../../utils/jwtUtils";
+import { compareKeys } from "../../../common/utils/cryptoUtils";
+import { decodeToken } from "../../../common/utils/jwtUtils";
 import { getSession } from "../../actions/sessions.actions";
 import { findUser, updateUser } from "../../actions/users.actions";
 

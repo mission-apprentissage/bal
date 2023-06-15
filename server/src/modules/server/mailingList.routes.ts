@@ -10,19 +10,19 @@ import {
 } from "shared/routes/v1/mailingList.routes";
 import { Readable } from "stream";
 
-import { processMailingList } from "../../../common/apis/processor";
-import logger from "../../../common/logger";
-import * as crypto from "../../../utils/cryptoUtils";
-import { getFromStorage } from "../../../utils/ovhUtils";
+import { processMailingList } from "../../common/apis/processor";
+import logger from "../../common/logger";
+import * as crypto from "../../common/utils/cryptoUtils";
+import { getFromStorage } from "../../common/utils/ovhUtils";
 import {
   createMailingList,
   createMailingListFile,
   deleteMailingList,
   findMailingList,
   findMailingLists,
-} from "../../actions/mailingLists.actions";
-import { Server } from "..";
-import { noop } from "../utils/upload.utils";
+} from "../actions/mailingLists.actions";
+import { Server } from "./server";
+import { noop } from "./utils/upload.utils";
 
 export const mailingListRoutes = ({ server }: { server: Server }) => {
   server.post(
@@ -32,7 +32,6 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         body: SReqGetMailingList,
       } as const,
       preHandler: server.auth([
-        server.validateJWT,
         server.validateSession,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ]) as any,
@@ -73,7 +72,6 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         },
       } as const,
       preHandler: server.auth([
-        server.validateJWT,
         server.validateSession,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ]) as any,
@@ -105,7 +103,6 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         },
       } as const,
       preHandler: server.auth([
-        server.validateJWT,
         server.validateSession,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ]) as any,
@@ -180,7 +177,6 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         },
       } as const,
       preHandler: server.auth([
-        server.validateJWT,
         server.validateSession,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ]) as any,

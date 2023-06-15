@@ -1,7 +1,7 @@
 import { SResGetGenerateApiKey } from "shared/routes/user.routes";
 
 import { generateApiKey } from "../actions/users.actions";
-import { Server } from ".";
+import { Server } from "./server";
 
 export const userRoutes = ({ server }: { server: Server }) => {
   /**

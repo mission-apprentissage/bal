@@ -41,13 +41,6 @@ export const parseContentLine = (
 
 export const handleDecaFileContent = async (document: IDocument) => {
   await extractDocumentContent(document, "|");
-
-  // const documentContents = await importDocumentContent(
-  //   document._id,
-  //   content,
-  //   parseContentLine
-  // );
-
   // // Create or update person
 
   // return documentContents;

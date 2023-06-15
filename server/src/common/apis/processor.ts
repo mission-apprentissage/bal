@@ -3,7 +3,7 @@ import { IMailingList } from "shared/models/mailingList.model";
 
 import config from "@/config";
 
-import { ApiError, apiRateLimiter } from "../../utils/apiUtils";
+import { ApiError, apiRateLimiter } from "../utils/apiUtils";
 import getApiClient from "./client";
 
 const executeWithRateLimiting = apiRateLimiter("processor", {

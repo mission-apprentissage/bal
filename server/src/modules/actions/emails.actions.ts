@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from "uuid";
 
 import logger from "@/common/logger";
 import { getEmailInfos } from "@/common/services/mailer/mailer";
+import { generateHtml } from "@/common/utils/emailsUtils";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
 import { mailer } from "@/services";
-import { generateHtml } from "@/utils/emailsUtils";
-import { getDbCollection } from "@/utils/mongodbUtils";
 
 function addEmail(
   person_id: string,

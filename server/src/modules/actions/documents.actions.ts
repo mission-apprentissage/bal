@@ -13,17 +13,17 @@ import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { Readable } from "stream";
 
 import logger from "@/common/logger";
+import * as crypto from "@/common/utils/cryptoUtils";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
 import config from "@/config";
 import { clamav } from "@/services";
-import * as crypto from "@/utils/cryptoUtils";
-import { getDbCollection } from "@/utils/mongodbUtils";
 
 import {
   deleteFromStorage,
   getFromStorage,
   uploadToStorage,
-} from "../../utils/ovhUtils";
-import { parseCsv } from "../../utils/parserUtils";
+} from "../../common/utils/ovhUtils";
+import { parseCsv } from "../../common/utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
 import { handleDecaFileContent } from "./deca.actions";
 import {

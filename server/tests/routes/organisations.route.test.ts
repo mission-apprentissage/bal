@@ -7,7 +7,7 @@ import {
   createUser,
   generateApiKey,
 } from "../../src/modules/actions/users.actions";
-import { build } from "../../src/modules/server";
+import { build } from "../../src/modules/server/server";
 import { aktoValid } from "../data/akto";
 import {
   opcoEpInvalid,

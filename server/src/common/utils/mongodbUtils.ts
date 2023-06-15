@@ -4,8 +4,7 @@ import omitDeep from "omit-deep";
 import { IModelDescriptor } from "shared/models/common";
 
 import logger from "@/common/logger";
-
-import { modelDescriptors } from "../db/models";
+import { modelDescriptors } from "@/db/models";
 
 interface JSONSchema7WithBSONType extends Omit<JSONSchema7, "properties"> {
   bsonType?: string;

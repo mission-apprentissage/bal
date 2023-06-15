@@ -15,13 +15,13 @@ import { userAdminRoutes } from "./admin/user.routes";
 import { authRoutes } from "./auth.routes";
 import { coreRoutes } from "./core.routes";
 import { emailsRoutes } from "./emails.routes";
+import { mailingListRoutes } from "./mailingList.routes";
 import { userRoutes } from "./user.routes";
 import {
   authValidateJWT,
   authValidateSession,
   authWebHookKey,
 } from "./utils/auth.strategies";
-import { mailingListRoutes } from "./v1/mailingList.routes";
 import { organisationRoutes } from "./v1/organisation.routes";
 
 type FastifyServer = typeof server;
@@ -45,12 +45,7 @@ export function build(opts: FastifyServerOptions = {}) {
     },
     transform: ({ schema, url }) => {
       const transformedSchema = { ...schema } as FastifySchema;
-      if (
-        url.startsWith("/api/auth") ||
-        url.startsWith("/api/emails") ||
-        url.startsWith("/api/user") ||
-        url.startsWith("/api/admin")
-      )
+      if (!url.includes("/v1") && url !== "/api/healthcheck")
         transformedSchema.hide = true;
       return { schema: transformedSchema as JSONObject, url };
     },
@@ -112,9 +107,9 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
   personAdminRoutes({ server });
   organisationAdminRoutes({ server });
   uploadAdminRoutes({ server });
+  mailingListRoutes({ server });
 };
 
 export const registerV1Routes: RegisterRoutes = ({ server }) => {
   organisationRoutes({ server });
-  mailingListRoutes({ server });
 };

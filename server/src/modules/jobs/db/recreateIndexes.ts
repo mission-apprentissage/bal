@@ -1,5 +1,5 @@
 import logger from "@/common/logger";
-import { createIndexes, dropIndexes } from "@/utils/mongodbUtils";
+import { createIndexes, dropIndexes } from "@/common/utils/mongodbUtils";
 
 export const recreateIndexes = async ({ drop } = { drop: false }) => {
   if (drop) {

@@ -4,7 +4,7 @@ import { JOB_STATUS_LIST } from "shared/models/job.model";
 import logger from "@/common/logger";
 import { createJob, updateJob } from "@/modules/actions/job.actions";
 
-import { closeMongodbConnection } from "../../utils/mongodbUtils";
+import { closeMongodbConnection } from "../../common/utils/mongodbUtils";
 
 /**
  * Wrapper pour l'exécution de jobs avec création de JobEvents en base

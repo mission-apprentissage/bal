@@ -1,4 +1,4 @@
-import { getDbCollection } from "@/utils/mongodbUtils";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 /**
  * Création d'un job

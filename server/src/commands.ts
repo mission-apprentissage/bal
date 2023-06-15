@@ -2,7 +2,9 @@ import { program } from "commander";
 import HttpTerminator from "lil-http-terminator";
 
 import logger from "@/common/logger";
+import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
 import { createUser } from "@/modules/actions/users.actions";
+import { recreateIndexes } from "@/modules/jobs/db/recreateIndexes";
 import {
   create as createMigration,
   up as upMigration,
@@ -10,10 +12,7 @@ import {
 import { processor } from "@/modules/jobs/processor/processor";
 import { runJob } from "@/modules/jobs/runJob";
 import { seed } from "@/modules/jobs/seed/seed";
-import { server } from "@/modules/server";
-import { closeMongodbConnection } from "@/utils/mongodbUtils";
-
-import { recreateIndexes } from "./modules/jobs/db/recreateIndexes";
+import { server } from "@/modules/server/server";
 
 program.configureHelp({
   sortSubcommands: true,

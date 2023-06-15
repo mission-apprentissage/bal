@@ -2,7 +2,7 @@ import config from "@/config";
 
 import { SResGetHealthCheck } from "../../../../shared/routes/core.routes";
 import packageJson from "../../../package.json";
-import { Server } from ".";
+import { Server } from "./server";
 
 export const coreRoutes = ({ server }: { server: Server }) => {
   server.get(

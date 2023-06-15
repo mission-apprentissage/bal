@@ -32,7 +32,7 @@ const ListeDiffusionPage = () => {
   const { data: mailingLists, refetch } = useQuery<IMailingList[]>({
     queryKey: ["mailingLists"],
     queryFn: async () => {
-      const { data } = await api.get("/v1/mailing-lists");
+      const { data } = await api.get("/mailing-lists");
 
       return data;
     },
@@ -45,7 +45,7 @@ const ListeDiffusionPage = () => {
   } = useForm<IReqGetMailingList>();
 
   const onSubmit = async (data: IReqGetMailingList) => {
-    await api.post("/v1/mailing-list", { source: data.source });
+    await api.post("/mailing-list", { source: data.source });
     await refetch();
 
     toast({
@@ -58,7 +58,7 @@ const ListeDiffusionPage = () => {
   };
 
   const onDeleteMailingList = async (mailingList_id: string) => {
-    await api.delete(`/v1/mailing-list/${mailingList_id}`);
+    await api.delete(`/mailing-list/${mailingList_id}`);
     if (typeof window !== "undefined" && window.location)
       window.location.reload();
   };
@@ -159,7 +159,7 @@ const ListeDiffusionPage = () => {
                 return (
                   <HStack spacing={4}>
                     <a
-                      href={`/api/v1/mailing-lists/${row.original._id}/download`}
+                      href={`/api/mailing-lists/${row.original._id}/download`}
                       title="Télécharger le fichier"
                       target="_blank"
                       rel="noopener noreferrer"
