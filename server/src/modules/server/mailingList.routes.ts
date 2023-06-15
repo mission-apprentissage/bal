@@ -10,10 +10,10 @@ import {
 } from "shared/routes/v1/mailingList.routes";
 import { Readable } from "stream";
 
-import { processMailingList } from "../../common/apis/processor";
 import logger from "../../common/logger";
 import * as crypto from "../../common/utils/cryptoUtils";
 import { getFromStorage } from "../../common/utils/ovhUtils";
+import { createJob } from "../actions/job.actions";
 import {
   createMailingList,
   createMailingListFile,
@@ -53,7 +53,12 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           throw new Error("Can't create mailing list");
         }
 
-        await processMailingList(mailingList);
+        await createJob({
+          name: "generate:mailing-list",
+          payload: {
+            mailing_list_id: mailingList._id,
+          },
+        });
 
         return response.status(200).send(mailingList);
       } catch (error) {

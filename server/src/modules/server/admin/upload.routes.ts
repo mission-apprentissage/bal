@@ -10,13 +10,13 @@ import {
 } from "shared/routes/upload.routes";
 
 import { FILE_SIZE_LIMIT } from "../../../../../shared/constants/index";
-import { processDocument } from "../../../common/apis/processor";
 import {
   createEmptyDocument,
   deleteDocumentById,
   findDocuments,
   uploadFile,
 } from "../../actions/documents.actions";
+import { createJob } from "../../actions/job.actions";
 import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
@@ -95,7 +95,12 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           mimetype: data.mimetype,
         });
 
-        await processDocument(document._id.toString());
+        await createJob({
+          name: "import:document",
+          payload: {
+            document_id: document._id,
+          },
+        });
 
         return response
           .status(200)

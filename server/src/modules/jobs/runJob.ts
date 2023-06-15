@@ -1,64 +1,51 @@
 import { formatDuration, intervalToDuration } from "date-fns";
-import { JOB_STATUS_LIST } from "shared/models/job.model";
+import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
 
 import logger from "@/common/logger";
-import { createJob, updateJob } from "@/modules/actions/job.actions";
-
-import { closeMongodbConnection } from "../../common/utils/mongodbUtils";
+import { updateJob } from "@/modules/actions/job.actions";
 
 /**
  * Wrapper pour l'exécution de jobs avec création de JobEvents en base
  * pour sauvegarder le résultat du job
  */
-export const runJob = (jobFunc: (...args: any[]) => Promise<any>) => {
-  return async function actionFunc(args: any, options: any) {
-    const startDate = new Date();
-    const jobId = await createJob({
-      name: options._name,
-      status: JOB_STATUS_LIST.STARTED,
-      started_at: startDate,
-    });
-    let error: Error | undefined = undefined;
-    let result = undefined;
+export const runJob = async (job: IJob, jobFunc: () => Promise<any>) => {
+  logger.info(`Job: ${job.name} Started`);
+  const startDate = new Date();
+  await updateJob(job._id, {
+    status: JOB_STATUS_LIST.RUNNING,
+    started_at: startDate,
+  });
+  let error: Error | undefined = undefined;
+  let result = undefined;
 
-    try {
-      result = await jobFunc(args);
-    } catch (err: any) {
-      logger.error(
-        { err, writeErrors: err.writeErrors, error: err },
-        "job error"
-      );
-      error = err?.toString();
-      await updateJob(jobId, {
-        status: JOB_STATUS_LIST.ERRORED,
-        payload: { error: err?.toString() },
-      });
-    }
-
-    const endDate = new Date();
-    const duration = formatDuration(
-      intervalToDuration({ start: startDate, end: endDate })
+  try {
+    result = await jobFunc();
+  } catch (err: any) {
+    logger.error(
+      { err, writeErrors: err.writeErrors, error: err },
+      "job error"
     );
-    await updateJob(jobId, {
-      status: error ? JOB_STATUS_LIST.ERRORED : JOB_STATUS_LIST.FINISHED,
-      payload: { duration, result, error },
-      ended_at: endDate,
+    error = err?.toString();
+    await updateJob(job._id, {
+      status: JOB_STATUS_LIST.ERRORED,
+      payload: { error: err?.toString() },
     });
+  }
 
-    if (error) {
-      logger.error(
-        error.constructor.name === "EnvVarError" ? error.message : error
-      );
-    }
+  const endDate = new Date();
+  const duration = formatDuration(
+    intervalToDuration({ start: startDate, end: endDate })
+  );
+  await updateJob(job._id, {
+    status: error ? JOB_STATUS_LIST.ERRORED : JOB_STATUS_LIST.FINISHED,
+    payload: { duration, result, error },
+    ended_at: endDate,
+  });
+  logger.info(`Job: ${job.name} Ended`);
 
-    //Waiting logger to flush all logs (MongoDB)
-    setTimeout(async () => {
-      try {
-        await closeMongodbConnection();
-      } catch (err) {
-        logger.error({ err }, "close mongodb connection error");
-      }
-      process.exit(error ? 1 : 0); // eslint-disable-line no-process-exit
-    }, 500);
-  };
+  if (error) {
+    logger.error(
+      error.constructor.name === "EnvVarError" ? error.message : error
+    );
+  }
 };

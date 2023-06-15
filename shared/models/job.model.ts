@@ -1,4 +1,5 @@
 import { FromSchema } from "json-schema-to-ts";
+import { ObjectId } from "mongodb";
 
 import { IModelDescriptor } from "./common";
 
@@ -9,9 +10,9 @@ const indexes: IModelDescriptor["indexes"] = [];
 export const SJob = {
   type: "object",
   properties: {
-    _id: { type: "string" },
+    _id: { type: "string", format: "ObjectId" },
     name: { type: "string", description: "Le nom de la tâche" },
-
+    // worker_id: { type: "string" },
     // source: {
     //   type: "string",
     // },
@@ -26,7 +27,14 @@ export const SJob = {
     status: {
       type: "string",
       description: "Statut courant du job",
-      enum: ["pending", "started", "running", "finished", "blocked", "errored"],
+      enum: [
+        "pending",
+        "will_start",
+        "running",
+        "finished",
+        "blocked",
+        "errored",
+      ],
     },
     payload: {
       type: "object",
@@ -58,14 +66,14 @@ export const SJob = {
       description: "Date d'ajout en base de données",
     },
   },
-  required: ["_id", "name", "status", "started_at"],
+  required: ["_id", "name", "status", "scheduled_at"],
 } as const;
 
 export enum JOB_STATUS_LIST {
   PENDING = "pending",
-  FINISHED = "finished",
-  STARTED = "started",
+  WILLSTART = "will_start",
   RUNNING = "running",
+  FINISHED = "finished",
   BLOCKED = "blocked",
   ERRORED = "errored",
 }
@@ -81,6 +89,13 @@ export interface IJob
             format: "date-time";
           };
           output: Date | string;
+        },
+        {
+          pattern: {
+            type: "string";
+            format: "ObjectId";
+          };
+          output: ObjectId;
         }
       ];
     }

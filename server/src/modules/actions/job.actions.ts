@@ -1,3 +1,5 @@
+import { JOB_STATUS_LIST } from "shared/models/job.model";
+
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 /**
@@ -7,17 +9,16 @@ import { getDbCollection } from "@/common/utils/mongodbUtils";
  */
 export const createJob = async ({
   name,
-  status,
   payload,
-  started_at = new Date(),
+  scheduled_at = new Date(),
 }: any) => {
   const { insertedId } = await getDbCollection("jobs").insertOne({
     name,
-    status,
+    status: JOB_STATUS_LIST.PENDING,
     ...(payload ? { payload } : {}),
-    started_at,
     updated_at: new Date(),
     created_at: new Date(),
+    scheduled_at,
   });
   return insertedId;
 };
