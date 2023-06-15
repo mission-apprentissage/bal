@@ -12,9 +12,7 @@ fi
 
 run_migrations(){
     echo "Application des migrations mongoDb ..."
-    docker exec $(docker ps -q -f name=bal_server --latest) yarn cli migrations:up 2>&1 | tee "$LOG_FILEPATH"
+    docker compose --env-file .env_docker_compose run --rm --no-deps server yarn cli migrations:up 2>&1 | tee "$LOG_FILEPATH"
 } 
 
 run_migrations
-
-

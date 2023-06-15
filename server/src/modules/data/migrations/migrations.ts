@@ -1,4 +1,9 @@
-import { config, create as mcreate, status, up as mup } from "migrate-mongo";
+import {
+  config,
+  create as mcreate,
+  status as mstatus,
+  up as mup,
+} from "migrate-mongo";
 import { MongoClient } from "mongodb";
 import path from "path";
 
@@ -40,14 +45,27 @@ export async function up(client: MongoClient) {
   // @ts-ignore
   config.set(myConfig);
 
-  // @ts-ignore
-  const migrationStatus = await status(client.db());
-  migrationStatus.forEach(({ fileName, appliedAt }) =>
-    console.log(fileName, ":", appliedAt)
-  );
+  await status(client);
+
   // @ts-ignore
   await mup(client.db(), client);
 }
+
+// Show migration status and returns number of pending migrations
+export async function status(client: MongoClient): Promise<number> {
+  // @ts-ignore
+  config.set(myConfig);
+
+  // @ts-ignore
+  const migrationStatus = await mstatus(client.db());
+  migrationStatus.forEach(({ fileName, appliedAt }) =>
+    console.log(fileName, ":", appliedAt)
+  );
+
+  return migrationStatus.filter(({ appliedAt }) => appliedAt === "PENDING")
+    .length;
+}
+
 export async function create(description: string) {
   // @ts-ignore
   config.set({ ...myConfig, migrationsDir: "src/db/migrations" });

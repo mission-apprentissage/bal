@@ -9,7 +9,7 @@ import {
 } from "../../utils/mongodb";
 import { createUser } from "../actions/users.actions";
 import { recreateIndexes } from "./migrations/indexes";
-import { create, up } from "./migrations/migrations";
+import { create, status, up } from "./migrations/migrations";
 import { processor } from "./processor/processor";
 import { seed } from "./seed/seed";
 const program = new Command();
@@ -78,6 +78,24 @@ program
     runScript(async (client) => {
       try {
         await up(client);
+        process.exit(0);
+      } catch (error) {
+        console.error(error);
+        process.exit(1);
+      }
+    })
+  );
+
+program
+  .command("migrations:status")
+  .description("Check migration status")
+  .action(async () =>
+    runScript(async (client) => {
+      try {
+        const pendingMigrations = await status(client);
+        console.log(
+          `migrations-status=${pendingMigrations === 0 ? "synced" : "pending"}`
+        );
         process.exit(0);
       } catch (error) {
         console.error(error);

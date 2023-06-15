@@ -41,15 +41,47 @@
         - "../docker-compose.recette.yml"
       when: env_type == 'recette'
 
+    - name: Récupération des images docker
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo docker compose --env-file .env_docker_compose pull"
+
+    - name: Récupération du status des migrations
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo /opt/bal/tools/migrations/migrations-status.sh"
+      register: migration_status_output
+
+    - name: "Activation du mode maintenance pour effectuer la migration"
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo /opt/bal/tools/maintenance/maintenance-on.sh"
+      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+
+    - name: "Shutdowm server"
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo docker service scale bal_server=0"
+      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+
+    - name: "Shutdowm processor"
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo docker service scale bal_processor=0"
+      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+
+    - name: Lancement des migrations
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo /opt/bal/tools/migrations/migrations-up.sh"
+      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/bal
         cmd: "sudo env $(cat .env_docker_compose | xargs) docker stack deploy -c docker-compose.yml -c docker-compose.recette.yml bal"
       register: docker_deploy_output
       when: env_type == 'recette'
-
-    - debug:
-        var: docker_deploy_output
 
     - name: Lancement de l'application {{env_type}}
       shell:
@@ -61,15 +93,14 @@
     - debug:
         var: docker_deploy_output
 
+    - name: "Désactivation du mode maintenance"
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo /opt/bal/tools/maintenance/maintenance-off.sh"
+      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+
     - name: Attente du deploiement
       shell:
         chdir: /opt/bal
         cmd: "sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock sudobmitch/docker-stack-wait bal"
       timeout: 900
-
-    - name: migrations
-      shell: "sudo bash /opt/bal/tools/run-migrations.sh"
-      register: results
-    - debug:
-        msg: "{{ item }}"
-      loop: "{{ results.stdout_lines }}"
