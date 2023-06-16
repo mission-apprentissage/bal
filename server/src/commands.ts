@@ -5,8 +5,7 @@ import logger from "@/common/logger";
 import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
 import { server } from "@/modules/server/server";
 
-import { createJob } from "./modules/actions/job.actions";
-import { processor } from "./modules/jobs/jobs";
+import { addJob, processor } from "./modules/jobs/jobs";
 
 program.configureHelp({
   sortSubcommands: true,
@@ -61,12 +60,13 @@ program
 program
   .command("users:create")
   .description("Créer un utilisateur")
-  .option("-e, --email <string>", "Email de l'utilisateur")
-  .option("-p, --password <string>", "Mot de passe de l'utilisateur")
-  .option("-oId, --organisationId <string>", "Organisation Id")
+  .requiredOption("-e, --email <string>", "Email de l'utilisateur")
+  .requiredOption("-p, --password <string>", "Mot de passe de l'utilisateur")
+  .requiredOption("-oId, --organisationId <string>", "Organisation Id")
   .option("-a, --admin", "administrateur")
-  .action(async ({ email, password, organisationId, admin = false }) => {
-    await createJob({
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ email, password, organisationId, admin = false, sync }) => {
+    await addJob({
       name: "users:create",
       payload: {
         email,
@@ -74,6 +74,7 @@ program
         is_admin: admin,
         organisation_id: organisationId,
       },
+      sync,
     });
     process.exit(0);
   });
@@ -81,31 +82,43 @@ program
 program
   .command("seed")
   .description("Seed env")
-  .action(async () => {
-    await createJob({
-      name: "seed",
-    });
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ sync }) => {
+    await addJob(
+      {
+        name: "seed",
+        sync,
+      },
+      { runningLogs: false }
+    );
     process.exit(0);
   });
 
 program
   .command("migrations:up")
   .description("Run migrations up")
-  .action(async () => {
-    await createJob({
-      name: "migrations:up",
-    });
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ sync }) => {
+    await addJob(
+      {
+        name: "migrations:up",
+        sync,
+      },
+      { runningLogs: false }
+    );
     process.exit(0);
   });
 
 program
   .command("migrations:create")
   .description("Run migrations create")
-  .option("-d, --description <string>", "description")
-  .action(async ({ description }) => {
-    await createJob({
+  .requiredOption("-d, --description <string>", "description")
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ description, sync }) => {
+    await addJob({
       name: "migrations:create",
       payload: description,
+      sync,
     });
     process.exit(0);
   });
@@ -114,10 +127,12 @@ program
   .command("indexes:recreate")
   .description("Drop and recreate indexes")
   .option("-d, --drop", "Drop indexes before recreating them")
-  .action(async ({ drop }) => {
-    await createJob({
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ drop, sync }) => {
+    await addJob({
       name: "indexes:recreate",
       payload: { drop },
+      sync,
     });
     process.exit(0);
   });

@@ -36,6 +36,7 @@ export const SJob = {
         "errored",
       ],
     },
+    sync: { type: "boolean" },
     payload: {
       type: "object",
       description: "La donnée liéé à la tâche",

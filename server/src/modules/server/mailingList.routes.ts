@@ -13,7 +13,6 @@ import { Readable } from "stream";
 import logger from "../../common/logger";
 import * as crypto from "../../common/utils/cryptoUtils";
 import { getFromStorage } from "../../common/utils/ovhUtils";
-import { createJob } from "../actions/job.actions";
 import {
   createMailingList,
   createMailingListFile,
@@ -21,6 +20,7 @@ import {
   findMailingList,
   findMailingLists,
 } from "../actions/mailingLists.actions";
+import { addJob } from "../jobs/jobs";
 import { Server } from "./server";
 import { noop } from "./utils/upload.utils";
 
@@ -52,8 +52,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         if (!mailingList) {
           throw new Error("Can't create mailing list");
         }
-
-        await createJob({
+        await addJob({
           name: "generate:mailing-list",
           payload: {
             mailing_list_id: mailingList._id,

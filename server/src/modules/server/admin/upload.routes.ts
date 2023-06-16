@@ -16,7 +16,7 @@ import {
   findDocuments,
   uploadFile,
 } from "../../actions/documents.actions";
-import { createJob } from "../../actions/job.actions";
+import { addJob } from "../../jobs/jobs";
 import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
@@ -95,7 +95,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           mimetype: data.mimetype,
         });
 
-        await createJob({
+        await addJob({
           name: "import:document",
           payload: {
             document_id: document._id,

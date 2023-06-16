@@ -12,68 +12,82 @@ import {
   findDocument,
   handleDocumentFileContent,
 } from "../actions/documents.actions";
+import { createJob } from "../actions/job.actions";
 import {
   findMailingList,
   processMailingList,
 } from "../actions/mailingLists.actions";
 import { createUser } from "../actions/users.actions";
 import { recreateIndexes } from "./db/recreateIndexes";
-import { runJob } from "./runJob";
+import { executeJob } from "./executeJob";
 import { seed } from "./seed/seed";
 
-async function executeJob(job: IJob) {
-  switch (job.name) {
-    case "seed":
-      await runJob(job, async () => {
-        await seed();
-      });
-      break;
-    case "migrations:up":
-      await runJob(job, async () => {
-        await upMigration();
-      });
-      break;
-    case "migrations:create":
-      await runJob(job, async () => {
-        await createMigration(job.payload as any);
-      });
-      break;
-    case "users:create":
-      await runJob(job, async () => {
-        await createUser(job.payload as any);
-      });
-      break;
-    case "indexes:recreate":
-      await runJob(job, async () => {
-        await recreateIndexes(job.payload as any);
-      });
-      break;
-    case "import:document":
-      await runJob(job, async () => {
-        const document = await findDocument({
-          _id: job.payload?.document_id,
-        });
-        if (!document) {
-          throw new Error("Processor > /document: Can't find document");
-        }
-        await handleDocumentFileContent(document);
-      });
-      break;
-    case "generate:mailing-list":
-      await runJob(job, async () => {
-        const mailingList = await findMailingList({
-          _id: job.payload?.mailing_list_id,
-        });
-        if (!mailingList) {
-          throw new Error("Processor > /mailing-list: Can't find mailing list");
-        }
-        await processMailingList(mailingList);
-      });
-      break;
-
-    default:
-      break;
+export async function addJob(
+  { name, payload = {}, scheduled_at = new Date(), sync = false }: any,
+  options: { runningLogs: boolean } = {
+    runningLogs: true,
   }
+) {
+  const job = await createJob({
+    name,
+    payload,
+    scheduled_at,
+    sync,
+  });
+
+  if (sync && job) {
+    return runJob(job, options);
+  }
+}
+
+async function runJob(
+  job: IJob,
+  options: { runningLogs: boolean } = {
+    runningLogs: true,
+  }
+) {
+  return executeJob(
+    job,
+    async () => {
+      switch (job.name) {
+        case "seed":
+          return seed();
+        case "users:create":
+          return createUser(job.payload as any);
+        case "indexes:recreate":
+          return recreateIndexes(job.payload as any);
+        case "migrations:up":
+          return upMigration();
+        case "migrations:create":
+          return createMigration(job.payload as any);
+        case "import:document":
+          return async () => {
+            const document = await findDocument({
+              _id: job.payload?.document_id,
+            });
+            if (!document) {
+              throw new Error("Processor > /document: Can't find document");
+            }
+            await handleDocumentFileContent(document);
+          };
+        case "generate:mailing-list":
+          return async () => {
+            const mailingList = await findMailingList({
+              _id: job.payload?.mailing_list_id,
+            });
+            if (!mailingList) {
+              throw new Error(
+                "Processor > /mailing-list: Can't find mailing list"
+              );
+            }
+            await processMailingList(mailingList);
+          };
+        default:
+          return Promise.resolve();
+      }
+    },
+    options
+  );
 }
 
 //abortSignal
@@ -87,28 +101,10 @@ export async function processor() {
 
   if (nextJob) {
     logger.info(`Process jobs queue - job ${nextJob.name} will start`);
-    await executeJob(nextJob as IJob);
+    await runJob(nextJob as IJob);
   } else {
     await sleep(60000); // 1 min
   }
 
   return processor();
 }
-
-// {
-//   name
-//   status // JOB_STATUS_LIST
-//   payload
-//   scheduled_at
-//   started_at
-//   ended_at
-//   updated_at
-//   created_at
-// }
-// export enum JOB_STATUS_LIST {
-//   PENDING = "pending",
-//   FINISHED = "finished",
-//   RUNNING = "running",
-//   BLOCKED = "blocked",
-//   ERRORED = "errored",
-// }
