@@ -22,15 +22,15 @@ jobs:
       - uses: actions/cache@v3
         id: cache
         with:
-          path: /tmp/.build
+          path: /tmp/docker_images.tgz
           key: deps-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            deps-${{ hashFiles('**/yarn.lock') }}
-            deps-
+            docker-${{ hashFiles('**/yarn.lock') }}
+            docker-
 
       - name: Build
         if: steps.cache.outputs.cache-hit == 'true'
-        run: docker load < /tmp/.build/docker_images.tar.gz
+        run: docker load < /tmp/docker_images.tgz
         shell: bash
 
       - name: Build
@@ -38,6 +38,4 @@ jobs:
         shell: bash
 
       - name: Save Image to cache
-        run: |
-          mkdir -p /tmp/.build
-          docker save bal-repo_modules bal-reverse_proxy bal-server-test | gzip > /tmp/.build/docker_images.tar.gz
+        run: docker save bal-repo_modules bal-reverse_proxy bal-server-test | gzip > /tmp/docker_images.tgz
