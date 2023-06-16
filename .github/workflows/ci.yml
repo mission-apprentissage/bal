@@ -44,6 +44,8 @@ jobs:
       - name: Creates empty env-vars ui
         run: touch .env_ui
 
+      - run: make install
+
       - run: make ci
 
       - name: Upload coverage report to Codecov
