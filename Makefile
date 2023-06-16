@@ -1,5 +1,5 @@
 ci-install:
-	docker compose build --build-arg YARN_FLAGS="--immutable"
+	docker compose build --build-arg YARN_FLAGS="--immutable" --profile test
 
 install:
 	docker compose run --no-deps --rm repo_modules
