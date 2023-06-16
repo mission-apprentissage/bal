@@ -3,7 +3,6 @@
 .git/
 .infra
 .vscode
-**/node_modules
 **/dist
 .env_server
 .env_ui

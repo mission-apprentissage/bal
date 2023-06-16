@@ -12,6 +12,10 @@ COPY .yarnrc.yml .yarnrc.yml
 COPY ui/package.json ui/package.json
 COPY server/package.json server/package.json
 COPY shared/package.json shared/package.json
+COPY node_modules node_modules
+COPY server/node_module server/node_modules
+COPY ui/node_module ui/node_modules
+COPY shared/node_module shared/node_modules
 
 ARG YARN_FLAGS
 
