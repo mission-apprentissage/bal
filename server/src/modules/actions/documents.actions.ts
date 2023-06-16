@@ -88,7 +88,7 @@ export const uploadDocument = async (
   const { isInfected, viruses } = await getScanResults();
 
   if (isInfected) {
-    if (!test) {
+    if (!testMode) {
       const listViruses = viruses.join(",");
       logger.error(
         `Uploaded file ${path} is infected by ${listViruses}. Deleting file from storage...`
