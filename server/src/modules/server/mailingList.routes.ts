@@ -6,7 +6,7 @@ import { IUser } from "shared/models/user.model";
 import {
   SReqGetMailingList,
   SResGetMailingLists,
-} from "shared/routes/v1/mailingList.routes";
+} from "shared/routes/mailingList.routes";
 import { Readable } from "stream";
 
 import logger from "../../common/logger";

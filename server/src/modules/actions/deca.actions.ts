@@ -1,6 +1,6 @@
 import companyEmailValidator from "company-email-validator";
 // @ts-ignore
-import { SIRET_REGEX } from "shared/constants";
+import { SIRET_REGEX } from "shared/constants/regex";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 

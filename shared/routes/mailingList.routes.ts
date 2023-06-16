@@ -1,7 +1,7 @@
 import { FromSchema } from "json-schema-to-ts";
 
-import { deserialize } from "../..";
-import { DOCUMENT_TYPES } from "../upload.routes";
+import { deserialize } from "..";
+import { DOCUMENT_TYPES } from "./upload.routes";
 
 export const SReqGetMailingList = {
   type: "object",
