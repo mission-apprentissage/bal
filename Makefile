@@ -22,18 +22,18 @@ lint:
 test:
 	docker compose run --rm server-test yarn test
 
-coverage:
-	docker compose run --rm server-test yarn test:coverage
+test-ci:
+	docker compose run --rm server-test --no-deps yarn test:coverage
 
 clean:
 	docker compose down; docker system prune --force --volumes
 
 typecheck-server:
-	docker compose run --rm server yarn typecheck
+	docker compose run --rm server-test --no-deps yarn typecheck
 
 typecheck-ui:
-	docker compose run --rm ui yarn typecheck
+	docker compose run --rm ui --no-deps yarn typecheck
 
 typecheck: typecheck-server typecheck-ui
 
-ci: lint coverage typecheck
+ci: lint test-ci typecheck
