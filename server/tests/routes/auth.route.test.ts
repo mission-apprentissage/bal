@@ -1,9 +1,12 @@
 import assert from "node:assert";
 
+import { afterAll, describe, it } from "vitest";
+
 import { config } from "../../config/config";
 import { getSession } from "../../src/modules/actions/sessions.actions";
 import { createUser } from "../../src/modules/actions/users.actions";
 import { build } from "../../src/modules/server";
+import { useMongo } from "../utils/mongo.utils";
 const app = build();
 
 type Cookie = {
@@ -14,6 +17,12 @@ type Cookie = {
 };
 
 describe("Authentication", () => {
+  useMongo();
+
+  afterAll(async () => {
+    await app.close();
+  });
+
   it("should sign user in with valid credentials", async () => {
     const user = await createUser({
       email: "email@exemple.fr",

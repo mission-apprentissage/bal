@@ -1,6 +1,7 @@
 import assert from "node:assert";
 
 import { IUser } from "shared/models/user.model";
+import { afterAll, describe, it } from "vitest";
 
 import {
   createUser,
@@ -8,10 +9,17 @@ import {
   generateApiKey,
 } from "../../src/modules/actions/users.actions";
 import { build } from "../../src/modules/server";
+import { useMongo } from "../utils/mongo.utils";
 
 const app = build();
 
 describe("Users routes", () => {
+  useMongo();
+
+  afterAll(async () => {
+    await app.close();
+  });
+
   it("should get the current user with authorization token", async () => {
     const user = (await createUser({
       email: "connected@exemple.fr",

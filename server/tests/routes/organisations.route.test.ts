@@ -1,7 +1,8 @@
 import assert from "node:assert";
 
 import nock from "nock";
-import { IUser } from "shared/models/user.model";
+import type { IUser } from "shared/models/user.model";
+import { afterAll, beforeEach, describe, it } from "vitest";
 
 import {
   createUser,
@@ -19,13 +20,14 @@ import {
   opcoEpTokenMock,
   opcoEpVerificationMock,
 } from "../utils/mocks/opcoEp.mock";
+import { useMongo } from "../utils/mongo.utils";
 
 const app = build();
 
 let userToken: string;
 
 describe("Organisations", () => {
-  beforeEach(async () => {
+  useMongo(async () => {
     const user = (await createUser({
       email: "connected@exemple.fr",
       password: "my-password",
@@ -33,7 +35,14 @@ describe("Organisations", () => {
     })) as IUser;
 
     userToken = await generateApiKey(user);
+  });
+
+  beforeEach(async () => {
     nock.cleanAll();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   describe("Validation Akto", () => {

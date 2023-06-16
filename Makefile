@@ -14,10 +14,10 @@ lint:
 	yarn lint
 
 test:
-	yarn --cwd server test
+	docker compose run --build --rm -it server-test yarn test
 
 coverage:
-	yarn --cwd server test:coverage
+	docker compose run --build --rm -it server-test yarn test:coverage
 
 clean:
 	docker compose kill; docker system prune --force --volumes
