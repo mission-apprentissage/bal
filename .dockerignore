@@ -7,4 +7,3 @@
 **/dist
 .env_server
 .env_ui
-yarn.lock

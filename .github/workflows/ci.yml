@@ -19,29 +19,18 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
         with:
-          node-version: 18
+          platforms: linux/amd64
 
-      - uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            ui/node_modules
-            server/node_modules
-            yarn.lock
-            /tmp/.build
-          key: ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
+      - name: Creates empty env-vars server
+        run: touch .env_server
 
-      - run: touch .env_server
-
-      - run: touch .env_ui
+      - name: Creates empty env-vars ui
+        run: touch .env_ui
 
       - run: make ci
-
-      - run: make coverage
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v3

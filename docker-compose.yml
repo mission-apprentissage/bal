@@ -3,9 +3,10 @@ version: "3.8"
 services:
   repo_modules:
     restart: "no"
+    command: ["yarn", "install"]
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     volumes:
       - ./:/app/:z
 
@@ -98,9 +99,6 @@ services:
         limits:
           memory: 2g
     restart: unless-stopped
-    depends_on:
-      repo_modules:
-        condition: service_completed_successfully
     ports:
       - "127.0.0.1:27017:27017"
     networks:
