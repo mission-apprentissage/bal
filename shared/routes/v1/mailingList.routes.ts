@@ -1,5 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { deserialize } from "../..";
 import { DOCUMENT_TYPES } from "../upload.routes";
 
 export const SReqGetMailingList = {
@@ -15,7 +16,7 @@ export type IReqGetMailingList = FromSchema<typeof SReqGetMailingList>;
 export const SResGetMailingList = {
   type: "object",
   properties: {
-    _id: { type: "string" },
+    _id: { type: "string", format: "ObjectId" },
     source: {
       type: "string",
     },
@@ -44,11 +45,12 @@ export const SResGetMailingList = {
   additionalProperties: false,
 } as const;
 
-export type IResGetMailingList = FromSchema<typeof SReqGetMailingList>;
+export type IResGetMailingList = FromSchema<
+  typeof SReqGetMailingList,
+  { deserialize: deserialize }
+>;
 
 export const SResGetMailingLists = {
   type: "array",
   items: SResGetMailingList,
 } as const;
-
-export type IResGetMailingLists = FromSchema<typeof SResGetMailingLists>;

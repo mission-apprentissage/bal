@@ -1,5 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
-import { ObjectId } from "mongodb";
+
+import { deserialize } from "..";
 
 export enum DOCUMENT_TYPES {
   DECA = "DECA",
@@ -85,21 +86,6 @@ export type IResPostAdminUpload = FromSchema<typeof SResPostAdminUpload>;
 export type IResGetDocuments = FromSchema<
   typeof SResGetDocuments,
   {
-    deserialize: [
-      {
-        pattern: {
-          type: "string";
-          format: "date-time";
-        };
-        output: Date;
-      },
-      {
-        pattern: {
-          type: "string";
-          format: "ObjectId";
-        };
-        output: ObjectId;
-      }
-    ];
+    deserialize: deserialize;
   }
 >;

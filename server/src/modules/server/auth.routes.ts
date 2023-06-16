@@ -1,5 +1,4 @@
 import {
-  IResPostLogin,
   SReqGetResetPassword,
   SReqHeadersAuthorization,
   SReqPostLogin,
@@ -70,7 +69,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
       return response
         .setCookie(config.session.cookieName, token, config.session.cookie)
         .status(200)
-        .send(user as IResPostLogin);
+        .send(user as any); //IResPostLogin
     }
   );
 

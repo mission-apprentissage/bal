@@ -1,5 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
 import { SDocument } from "./document.model";
 
@@ -10,7 +11,7 @@ const indexes: IModelDescriptor["indexes"] = [];
 export const SMailingList = {
   type: "object",
   properties: {
-    _id: { type: "string" },
+    _id: { type: "string", format: "ObjectId" },
     source: {
       type: "string",
     },
@@ -45,19 +46,6 @@ export enum MAILING_LIST_STATUS {
 }
 
 export interface IMailingList
-  extends FromSchema<
-    typeof SMailingList,
-    {
-      deserialize: [
-        {
-          pattern: {
-            type: "string";
-            format: "date-time";
-          };
-          output: Date | string;
-        }
-      ];
-    }
-  > {}
+  extends FromSchema<typeof SMailingList, { deserialize: deserialize }> {}
 
 export default { schema: SMailingList, indexes, collectionName };

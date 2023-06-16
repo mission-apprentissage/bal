@@ -1,6 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
-import { ObjectId } from "mongodb";
 
+import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
 
 const collectionName = "jobs";
@@ -80,26 +80,6 @@ export enum JOB_STATUS_LIST {
 }
 
 export interface IJob
-  extends FromSchema<
-    typeof SJob,
-    {
-      deserialize: [
-        {
-          pattern: {
-            type: "string";
-            format: "date-time";
-          };
-          output: Date | string;
-        },
-        {
-          pattern: {
-            type: "string";
-            format: "ObjectId";
-          };
-          output: ObjectId;
-        }
-      ];
-    }
-  > {}
+  extends FromSchema<typeof SJob, { deserialize: deserialize }> {}
 
 export default { schema: SJob, indexes, collectionName };

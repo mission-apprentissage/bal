@@ -1,5 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { deserialize } from "..";
 import { SPerson } from "../models/person.model";
 
 export const SReqPostUser = {
@@ -17,7 +18,7 @@ export type IReqPostUser = FromSchema<typeof SReqPostUser>;
 export const SResGetUser = {
   type: "object",
   properties: {
-    _id: { type: "string" },
+    _id: { type: "string", format: "ObjectId" },
     email: { type: "string" },
     is_admin: { type: "boolean" },
     api_key_used_at: { type: "string", format: "date-time" },
@@ -29,8 +30,18 @@ export const SResGetUser = {
 
 export const SResPostUser = SResGetUser;
 
-export type IResGetUser = FromSchema<typeof SResGetUser>;
-export type IResPostUser = FromSchema<typeof SResPostUser>;
+export type IResGetUser = FromSchema<
+  typeof SResGetUser,
+  {
+    deserialize: deserialize;
+  }
+>;
+export type IResPostUser = FromSchema<
+  typeof SResPostUser,
+  {
+    deserialize: deserialize;
+  }
+>;
 
 export const SResGetUsers = {
   type: "array",

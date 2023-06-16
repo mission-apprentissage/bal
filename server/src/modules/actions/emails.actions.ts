@@ -1,5 +1,4 @@
 import { TemplateName, TemplatePayloads } from "shared/mailer";
-import { IBalEmail } from "shared/models/events/bal_emails.event";
 import { IEvent } from "shared/models/events/event.model";
 import { v4 as uuidv4 } from "uuid";
 
@@ -130,7 +129,7 @@ export async function renderEmail(token: string) {
   }
   const { templateName, payload } = event.payload.emails.find(
     (e) => e.token === token
-  ) as IBalEmail;
+  ) as any; // IBalEmail;
   return generateHtml(
     payload.recipient.email,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

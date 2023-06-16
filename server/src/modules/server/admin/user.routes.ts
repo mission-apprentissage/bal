@@ -2,9 +2,6 @@ import { Filter, ObjectId } from "mongodb";
 import { IUser } from "shared/models/user.model";
 import { SReqParamsSearchPagination } from "shared/routes/common.routes";
 import {
-  IResGetUser,
-  IResGetUsers,
-  IResPostUser,
   SReqPostUser,
   SResGetUser,
   SResGetUsers,
@@ -40,7 +37,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
           throw new Error("User not created");
         }
 
-        return response.status(200).send(user as IResPostUser);
+        return response.status(200).send(user as any); //IResPostUser
       } catch (error) {
         response.log.error(error);
       }
@@ -72,7 +69,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
 
         const users = await findUsers(filter);
 
-        return response.status(200).send(users as IResGetUsers);
+        return response.status(200).send(users as any); //IResGetUsers
       } catch (error) {
         response.log.error(error);
       }
@@ -100,7 +97,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       try {
         const user = await findUser({ _id: new ObjectId(request.params.id) });
 
-        return response.status(200).send(user as IResGetUser);
+        return response.status(200).send(user as any); //IResGetUser
       } catch (error) {
         response.log.error(error);
       }

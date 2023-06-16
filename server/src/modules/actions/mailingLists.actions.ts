@@ -3,7 +3,6 @@ import { pipeline } from "node:stream/promises";
 
 import { stringify } from "csv-stringify";
 import { Filter, ObjectId, UpdateFilter } from "mongodb";
-import { IDocument } from "shared/models/document.model";
 import { IMailingList } from "shared/models/mailingList.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
@@ -21,7 +20,6 @@ import { noop } from "../server/utils/upload.utils";
 import {
   createEmptyDocument,
   deleteDocumentById,
-  extractDocumentContent,
   findDocument,
   importDocumentContent,
 } from "./documents.actions";
@@ -111,13 +109,6 @@ export const updateMailingList = async (
 /**
  * ACTIONS
  */
-
-export const handleVoeuxParcoursupFileContent = async (document: IDocument) => {
-  logger.info("extract wishes started");
-  await extractDocumentContent(document);
-
-  // return documentContents;
-};
 
 export const processMailingList = async (mailingList: IMailingList) => {
   if (!mailingList) {

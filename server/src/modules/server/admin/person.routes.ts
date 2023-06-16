@@ -1,11 +1,7 @@
 import { Filter, ObjectId } from "mongodb";
 import { IPerson } from "shared/models/person.model";
 import { SReqParamsSearchPagination } from "shared/routes/common.routes";
-import {
-  IResGetPerson,
-  SResGetPerson,
-  SResGetPersons,
-} from "shared/routes/person.routes";
+import { SResGetPerson, SResGetPersons } from "shared/routes/person.routes";
 
 import { findPerson, findPersons } from "../../actions/persons.actions";
 import { Server } from "../server";
@@ -37,7 +33,7 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
 
         const persons = await findPersons(filter);
 
-        return response.status(200).send(persons);
+        return response.status(200).send(persons as any);
       } catch (error) {
         response.log.error(error);
       }
@@ -68,7 +64,7 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
           _id: new ObjectId(request.params.id),
         });
 
-        return response.status(200).send(person as IResGetPerson);
+        return response.status(200).send(person as any); //IResGetPerson
       } catch (error) {
         response.log.error(error);
       }

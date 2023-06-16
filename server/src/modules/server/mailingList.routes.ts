@@ -4,7 +4,6 @@ import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
 import { IUser } from "shared/models/user.model";
 import {
-  IResGetMailingLists,
   SReqGetMailingList,
   SResGetMailingLists,
 } from "shared/routes/v1/mailingList.routes";
@@ -88,7 +87,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           user_id: user._id.toString(),
         });
 
-        return response.status(200).send(mailingLists as IResGetMailingLists);
+        return response.status(200).send(mailingLists as any);
       } catch (error) {
         response.log.error(error);
         throw new Error("Someting went wrong");

@@ -25,12 +25,11 @@ import {
 } from "../../common/utils/ovhUtils";
 import { parseCsv } from "../../common/utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
-import { handleDecaFileContent } from "./deca.actions";
+import { parseContentLine } from "./deca.actions";
 import {
   createDocumentContent,
   deleteDocumentContent,
 } from "./documentContent.actions";
-import { handleVoeuxParcoursupFileContent } from "./mailingLists.actions";
 
 const testMode = config.env === "test";
 
@@ -185,13 +184,16 @@ export const uploadFile = async (
   return documentId;
 };
 
-export const extractDocumentContent = async (
-  document: IDocument,
-  delimiter = ";"
-) => {
+export const extractDocumentContent = async ({
+  document,
+  delimiter = ";",
+  formatter = (line) => line,
+}: {
+  document: IDocument;
+  delimiter?: string;
+  formatter?: (line: any) => any;
+}) => {
   const stream = await getFromStorage(document.chemin_fichier);
-
-  // eslint-disable-next-line prefer-const
 
   logger.info("conversion csv to json started");
   await updateDocument(
@@ -223,7 +225,7 @@ export const extractDocumentContent = async (
         document.taille_fichier,
         currentProgress
       );
-      await importDocumentContent(document, [json], (line) => line);
+      await importDocumentContent(document, [json], formatter);
     })
   );
   await updateDocument(
@@ -313,11 +315,15 @@ export const deleteDocumentById = async (documentId: ObjectId) => {
 export const handleDocumentFileContent = async (document: IDocument) => {
   switch (document.type_document) {
     case DOCUMENT_TYPES.DECA:
-      await handleDecaFileContent(document);
+      await extractDocumentContent({
+        document,
+        delimiter: "|",
+        formatter: parseContentLine,
+      });
       break;
     case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
     case DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023:
-      await handleVoeuxParcoursupFileContent(document);
+      await extractDocumentContent({ document });
       break;
 
     default:

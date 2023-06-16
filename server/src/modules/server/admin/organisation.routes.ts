@@ -2,7 +2,6 @@ import { Filter, ObjectId } from "mongodb";
 import { IOrganisation } from "shared/models/organisation.model";
 import { SReqParamsSearchPagination } from "shared/routes/common.routes";
 import {
-  IResGetOrganisation,
   SResGetOrganisation,
   SResGetOrganisations,
 } from "shared/routes/organisation.routes";
@@ -40,7 +39,7 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
 
         const organisations = await findOrganisations(filter);
 
-        return response.status(200).send(organisations);
+        return response.status(200).send(organisations as any);
       } catch (error) {
         response.log.error(error);
       }
@@ -70,7 +69,7 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
           _id: new ObjectId(request.params.id),
         });
 
-        return response.status(200).send(organisation as IResGetOrganisation);
+        return response.status(200).send(organisation as any); //IResGetOrganisation
       } catch (error) {
         response.log.error(error);
       }
