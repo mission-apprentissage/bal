@@ -19,27 +19,25 @@ jobs:
         with:
           platforms: linux/amd64
 
-      # - uses: actions/cache@v3
-      #   with:
-      #     path: |
-      #       node_modules
-      #       ui/node_modules
-      #       server/node_modules
-      #       yarn.lock
-      #       /tmp/.build
-      #     key: ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
-
-      # - id: should-cache
-      #   run: |
-      #     if [ ! -d /tmp/.build ]
-      #     then
-      #       echo "build=yes" >> $GITHUB_OUTPUT
-      #     fi
-      #   shell: bash
+      - uses: actions/cache@v3
+        id: cache
+        with:
+          path: /tmp/.build
+          key: deps-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            deps-${{ hashFiles('**/yarn.lock') }}
+            deps-
 
       - name: Build
-        # if: ${{ contains(steps.should-cache.outputs.build, 'yes') }}
+        if: steps.cache.outputs.cache-hit == 'true'
+        run: docker load < /tmp/.build/docker_images.tar.gz
+        shell: bash
+
+      - name: Build
         run: make ci-install
         shell: bash
+
+      - name: Save Image to cache
+        run: |
+          mkdir -p /tmp/.build
+          docker save bal-repo_modules bal-reverse_proxy bal-server-test | gzip > /tmp/.build/docker_images.tar.gz

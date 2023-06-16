@@ -24,6 +24,20 @@ jobs:
         with:
           platforms: linux/amd64
 
+      - uses: actions/cache@v3
+        id: cache
+        with:
+          path: /tmp/.build
+          key: deps-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            deps-${{ hashFiles('**/yarn.lock') }}
+            deps-
+
+      - name: Build
+        if: steps.cache.outputs.cache-hit == 'true'
+        run: docker load < /tmp/.build/docker_images.tar.gz
+        shell: bash
+
       - name: Creates empty env-vars server
         run: touch .env_server
 
