@@ -23,16 +23,16 @@ test:
 	docker compose run --rm server-test yarn test
 
 test-ci:
-	docker compose run --rm server-test --no-deps yarn test:coverage
+	docker compose run --no-deps --rm server-test yarn test:coverage
 
 clean:
 	docker compose down; docker system prune --force --volumes
 
 typecheck-server:
-	docker compose run --rm server-test --no-deps yarn typecheck
+	docker compose run --no-deps --rm server-test yarn typecheck
 
 typecheck-ui:
-	docker compose run --rm ui --no-deps yarn typecheck
+	docker compose run --no-deps --rm ui yarn typecheck
 
 typecheck: typecheck-server typecheck-ui
 

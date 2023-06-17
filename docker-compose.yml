@@ -71,6 +71,8 @@ services:
     build:
       context: .
       dockerfile: server/Dockerfile.dev
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   processor:
     command: ["yarn", "cli", "processor"]
