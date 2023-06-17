@@ -38,7 +38,7 @@ jobs:
             docker-${{ hashFiles('**/yarn.lock') }}
             docker-
 
-      - name: Build
+      - name: Load Docker image from cache
         if: steps.cache.outputs.cache-hit == 'true'
         run: docker load < /tmp/docker_images.tgz
         shell: bash
@@ -49,9 +49,11 @@ jobs:
       - name: Creates empty env-vars ui
         run: touch .env_ui
 
-      - run: make install
+      - name: Install deps
+        run: make install
 
-      - run: make ci
+      - name: Run CI suite
+        run: make ci
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v3

@@ -26,16 +26,17 @@ jobs:
           key: deps-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             docker-${{ hashFiles('**/yarn.lock') }}
-            docker-
 
-      - name: Build
+      - name: Load Docker image from cache
         if: steps.cache.outputs.cache-hit == 'true'
         run: docker load < /tmp/docker_images.tgz
         shell: bash
 
       - name: Build
+        if: steps.cache.outputs.cache-hit != 'true'
         run: make ci-install
         shell: bash
 
       - name: Save Image to cache
+        if: steps.cache.outputs.cache-hit != 'true'
         run: docker save bal-repo_modules bal-reverse_proxy bal-server-test | gzip > /tmp/docker_images.tgz
