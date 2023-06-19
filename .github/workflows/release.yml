@@ -27,11 +27,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: "yarn"
 
       - uses: actions/cache@v3
         id: cache
         with:
           path: /tmp/docker_images.tar
+          fail-on-cache-miss: true
           key: docker-images-${{ hashFiles('**/yarn.lock') }}
 
       - name: Load Docker image from cache
@@ -62,6 +64,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_NAME: ${{ secrets.USER_NAME }}
+
+      - name: Install dependencies
+        run: yarn install --immutable
 
       - name: bump and release
         run: npx -y antoinebigard-semantic-release
