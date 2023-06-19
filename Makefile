@@ -14,7 +14,7 @@ migrations:
 	docker compose run --rm server yarn cli migrations:status
 
 stop:
-	docker compose down
+	docker compose --profile dev down
 
 lint:
 	docker compose run --no-deps --rm repo_modules yarn lint
