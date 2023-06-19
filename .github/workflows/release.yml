@@ -61,7 +61,7 @@ jobs:
           then
             git config --global user.email $USER_EMAIL
             git config --global user.name $USER_NAME
-            git merge --no-edit -m "Merge remote-tracking branch 'refs/remotes/origin/$GITHUB_REF_NAME' [skip ci]"
+            git merge --no-edit --ff -m "Merge remote-tracking branch 'origin/$GITHUB_REF_NAME' [skip ci]"
             git push --tags https://$GITHUB_TOKEN@github.com/mission-apprentissage/bal.git $GITHUB_REF_NAME --force
           else
             echo "skip pull"
