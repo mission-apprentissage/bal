@@ -20,7 +20,7 @@ else
 fi
 
 if [ ! -z "${CI:-}" ]; then
-  git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git main --force
+  git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git $GITHUB_REF_NAME --force
 else
   echo "Skipping push: Not in CI"
 fi
