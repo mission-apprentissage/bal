@@ -47,7 +47,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GH_FG_TOKEN }}
 
-      - run: git fetch --all
+      - name: Check for updates in repo
+        run: git fetch --all
 
       - run: |
           if echo $(git log origin/${{ vars.GITHUB_REF_NAME }} -1 --pretty=%B) | grep -c "chore(release): bump "
