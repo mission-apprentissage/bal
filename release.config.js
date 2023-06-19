@@ -1,5 +1,5 @@
 const mainConfig = {
-  branches: ["main", { name: "next", channel: "next", prerelease: "true" }],
+  branches: ["main", { name: "next", channel: "next", prerelease: "rc" }],
   repositoryUrl: "https://github.com/mission-apprentissage/bal.git",
   allowOutdatedBranch: true,
   plugins: [
