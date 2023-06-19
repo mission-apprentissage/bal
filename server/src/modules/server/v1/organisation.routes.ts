@@ -25,18 +25,17 @@ export const organisationRoutes = ({ server }: { server: Server }) => {
           },
         ],
       } as const,
-      preValidation: async (request, _reply) => {
-        try {
-          await ZReqPostOrganisationValidation().parseAsync(request.body);
-        } catch (error: any) {
-          throw Boom.badRequest(error);
-        }
-      },
-      preHandler: server.auth([
-        server.validateJWT,
-        server.validateSession,
+      preHandler: [
+        server.auth([server.validateJWT, server.validateSession]),
+        async (request, _reply) => {
+          try {
+            await ZReqPostOrganisationValidation().parseAsync(request.body);
+          } catch (error: any) {
+            throw Boom.badRequest(error);
+          }
+        },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      ] as any,
     },
     async (request, response) => {
       const { email, siret } = request.body as IReqPostOrganisationValidation;

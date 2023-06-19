@@ -36,7 +36,7 @@ export const extensions = {
   code_naf: () =>
     z.preprocess(
       (v: any) => (typeof v === "string" ? v.replace(".", "") : v), // parfois, le code naf contient un point
-      z.string().trim().toUpperCase().regex(CODE_NAF_REGEX, "UAI invalide") // e.g 1071D
+      z.string().trim().toUpperCase().regex(CODE_NAF_REGEX, "NAF invalide") // e.g 1071D
     ),
   iso8601Date: () =>
     z.preprocess(
