@@ -42,10 +42,6 @@ jobs:
         run: make ci-install
         shell: bash
 
-      - name: Save Image to cache
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: docker save bal-repo_modules bal-ci | gzip > /tmp/docker_images.tgz
-
       - name: Creates empty env-vars server
         run: touch .env_server
 
@@ -59,3 +55,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Save Image to cache
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: docker save bal-repo_modules bal-ci | gzip > /tmp/docker_images.tgz
