@@ -5,7 +5,7 @@ install:
 	docker compose run --no-deps --rm repo_modules
 
 start:
-	docker compose up --profile dev -d --remove-orphans
+	docker compose --profile dev up -d --remove-orphans
 
 seed:
 	docker compose run --rm server yarn cli seed
