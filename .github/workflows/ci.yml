@@ -10,10 +10,7 @@ on:
         description: Whether deployment succeeded or not
         value: ${{ jobs.deploy.outputs.status }}
 jobs:
-  caching:
-    uses: "./.github/workflows/caching.yml"
   tests:
-    needs: ["caching"]
     runs-on: ubuntu-latest
     services:
       mongodb:
@@ -33,24 +30,29 @@ jobs:
         id: cache
         with:
           path: /tmp/docker_images.tgz
-          key: deps-${{ hashFiles('**/yarn.lock') }}
+          key: docker-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             docker-${{ hashFiles('**/yarn.lock') }}
-            docker-
 
       - name: Load Docker image from cache
         if: steps.cache.outputs.cache-hit == 'true'
         run: docker load < /tmp/docker_images.tgz
         shell: bash
 
+      - name: Build Image
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: make ci-install
+        shell: bash
+
+      - name: Save Image to cache
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: docker save bal-repo_modules bal-test | gzip > /tmp/docker_images.tgz
+
       - name: Creates empty env-vars server
         run: touch .env_server
 
       - name: Creates empty env-vars ui
         run: touch .env_ui
-
-      - name: Install deps
-        run: make install
 
       - name: Run CI suite
         run: make ci

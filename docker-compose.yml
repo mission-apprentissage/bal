@@ -11,6 +11,8 @@ services:
       - ./:/app/:z
 
   reverse_proxy:
+    profiles:
+      - "dev"
     ports:
       - 80:80
       - 443:443
@@ -33,6 +35,8 @@ services:
       context: reverse_proxy
 
   ui:
+    profiles:
+      - "dev"
     stdin_open: true
     networks:
       - bal_network
@@ -41,23 +45,40 @@ services:
       - ./:/app/:z
     build:
       context: .
-      dockerfile: ui/Dockerfile.dev
+      dockerfile: Dockerfile
+    working_dir: '/app/ui'
+    expose:
+      - '3000'
+    command: ["yarn", "docker-dev"]
+    depends_on:
+      repo_modules:
+        condition: service_completed_successfully
 
   server:
+    profiles:
+      - "dev"
     networks:
       - bal_network
     depends_on:
-      - mongodb
-      - smtp
+      mongodb:
+        condition: service_healthy
+      smtp:
+        condition: service_healthy
+      repo_modules:
+        condition: service_completed_successfully
     env_file: .env_server
     volumes:
       - ./:/app/:z
       - bal_server_data:/data
+    working_dir: '/app/server'
+    expose:
+      - '5000'
+    command: ["yarn", "dev"]
     build:
       context: .
-      dockerfile: server/Dockerfile.dev
+      dockerfile: Dockerfile
   
-  server-test:
+  test:
     profiles:
       - "test"
     networks:
@@ -65,16 +86,24 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
+      repo_modules:
+        condition: service_completed_successfully
     env_file: ./server/.env.test
     volumes:
       - ./:/app/:z
-    build:
-      context: .
-      dockerfile: server/Dockerfile.dev
     extra_hosts:
       - host.docker.internal:host-gateway
+    working_dir: '/app'
+    expose:
+      - '5000'
+    command: ["yarn", "ci"]
+    build:
+      context: .
+      dockerfile: Dockerfile
 
   processor:
+    profiles:
+      - "dev"
     command: ["yarn", "cli", "processor"]
     deploy:
       resources:
@@ -83,18 +112,27 @@ services:
     restart: unless-stopped
     networks:
       - bal_network
-    depends_on:
-      - mongodb
-      - clamav
     env_file: .env_server
     volumes:
       - ./:/app/:z
       - bal_server_data:/data
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      clamav:
+        condition: service_healthy
+      repo_modules:
+        condition: service_completed_successfully
+    working_dir: '/app/server'
+    expose:
+      - '5000'
     build:
       context: .
-      dockerfile: server/Dockerfile.dev
+      dockerfile: Dockerfile
 
   mongodb:
+    profiles:
+      - "dev"
     image: mongo:6.0.2-focal
     deploy:
       resources:
@@ -115,6 +153,8 @@ services:
       start_period: 10s
 
   metabase:
+    profiles:
+      - "dev"
     image: metabase/metabase:v0.46.0
     depends_on:
       - mongodb
@@ -131,6 +171,8 @@ services:
       - bal_metabase_data:/data/backups
 
   clamav:
+    profiles:
+      - "dev"
     image: clamav/clamav:latest
     restart: unless-stopped
     networks:
@@ -142,6 +184,8 @@ services:
       start_period: 120s
   
   smtp:
+    profiles:
+      - "dev"
     image: axllent/mailpit:v1.5.5
     ports:
       - 1025:1025

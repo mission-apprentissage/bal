@@ -20,20 +20,19 @@ lint:
 	docker compose run --no-deps --rm repo_modules yarn lint
 
 test:
-	docker compose run --rm server-test yarn test
-
-test-ci:
-	docker compose run --no-deps --rm server-test yarn test:coverage
+	docker compose run --rm test yarn test:server
 
 clean:
 	docker compose down; docker system prune --force --volumes
 
 typecheck-server:
-	docker compose run --no-deps --rm server-test yarn typecheck
+	docker compose run --no-deps --rm test yarn typecheck:server
 
 typecheck-ui:
+	docker compose run --no-deps --rm ui yarn typecheck:ui
+
+typecheck:
 	docker compose run --no-deps --rm ui yarn typecheck
 
-typecheck: typecheck-server typecheck-ui
-
-ci: lint test-ci typecheck
+ci:
+	docker compose run --no-deps --rm test yarn ci
