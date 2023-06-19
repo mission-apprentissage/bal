@@ -27,7 +27,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          persist-credentials: false
 
       - uses: actions/setup-node@v3
         with:
@@ -55,11 +54,6 @@ jobs:
       - name: Check for updates in repo
         run: git fetch --all
 
-      - name: Setup git context
-        run: |
-          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
-          git config --global user.email "$USER_EMAIL"
-
       - name: Merge concurrent changes
         run: |
           if echo $(git log origin/$GITHUB_REF_NAME -1 --pretty=%B) | grep -c "chore(release): bump "
@@ -71,7 +65,6 @@ jobs:
           fi
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_NAME: ${{ secrets.USER_NAME }}
 
