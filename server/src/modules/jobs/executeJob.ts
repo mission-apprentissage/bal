@@ -34,10 +34,6 @@ export const executeJob = async (
         "job error"
       );
     error = err?.toString();
-    await updateJob(job._id, {
-      status: JOB_STATUS_LIST.ERRORED,
-      payload: { error: err?.toString() },
-    });
   }
 
   const endDate = new Date();
@@ -59,7 +55,7 @@ export const executeJob = async (
   }
 
   if (job.sync) {
-    //Waiting logger to flush all logs (MongoDB)
+    // Waiting logger to flush all logs (MongoDB)
     setTimeout(async () => {
       try {
         await closeMongodbConnection();
