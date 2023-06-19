@@ -1,11 +1,10 @@
 import companyEmailValidator from "company-email-validator";
 // @ts-ignore
-import { SIRET_REGEX } from "shared/constants";
-import { IDocument } from "shared/models/document.model";
+import { SIRET_REGEX } from "shared/constants/regex";
+import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
 import { findOneDocumentContent } from "./documentContent.actions";
-import { extractDocumentContent } from "./documents.actions";
 
 interface ContentLine {
   SIRET: string;
@@ -39,20 +38,6 @@ export const parseContentLine = (
   return { siret, emails };
 };
 
-export const handleDecaFileContent = async (document: IDocument) => {
-  await extractDocumentContent(document, "|");
-
-  // const documentContents = await importDocumentContent(
-  //   document._id,
-  //   content,
-  //   parseContentLine
-  // );
-
-  // // Create or update person
-
-  // return documentContents;
-};
-
 export const getDecaVerification = async (
   siret: string,
   email: string
@@ -64,6 +49,7 @@ export const getDecaVerification = async (
 
   // check siret / email
   is_valid = !!(await findOneDocumentContent({
+    type_document: DOCUMENT_TYPES.DECA,
     "content.siret": siret,
     "content.emails": email,
   }));
@@ -78,6 +64,7 @@ export const getDecaVerification = async (
   // check siret / domain
   if (!isBlacklisted) {
     is_valid = !!(await findOneDocumentContent({
+      type_document: DOCUMENT_TYPES.DECA,
       "content.siret": siret,
       "content.emails": { $regex: `.*@${domain}` },
     }));
@@ -92,6 +79,7 @@ export const getDecaVerification = async (
 
   // check siren / email
   is_valid = !!(await findOneDocumentContent({
+    type_document: DOCUMENT_TYPES.DECA,
     "content.siret": { $regex: `^${siren}` },
     "content.emails": email,
   }));
@@ -106,6 +94,7 @@ export const getDecaVerification = async (
   // check siren / domain
   if (!isBlacklisted) {
     is_valid = !!(await findOneDocumentContent({
+      type_document: DOCUMENT_TYPES.DECA,
       "content.siret": { $regex: `^${siren}` },
       "content.emails": { $regex: `.*@${domain}` },
     }));

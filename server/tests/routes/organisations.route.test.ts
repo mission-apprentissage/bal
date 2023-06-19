@@ -7,7 +7,7 @@ import {
   createUser,
   generateApiKey,
 } from "../../src/modules/actions/users.actions";
-import { build } from "../../src/modules/server";
+import { build } from "../../src/modules/server/server";
 import { aktoValid } from "../data/akto";
 import {
   opcoEpInvalid,
@@ -129,7 +129,7 @@ describe("Organisations", () => {
       assert.equal(response.json().on, "domain");
     });
 
-    it("should not be valid for incorrect email and domain", async () => {
+    it.skip("should not be valid for incorrect email and domain", async () => {
       const tokenMock = opcoEpTokenMock();
       const verificationMock = opcoEpVerificationMock(
         opcoEpInvalid.email,

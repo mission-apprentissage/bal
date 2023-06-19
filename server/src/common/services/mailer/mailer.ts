@@ -12,8 +12,8 @@ import {
 import config from "@/config";
 
 import { sendStoredEmail } from "../../../modules/actions/emails.actions";
-import { generateHtml, getPublicUrl } from "../../../utils/emailsUtils";
-import { __dirname } from "../../../utils/esmUtils";
+import { generateHtml, getPublicUrl } from "../../utils/emailsUtils";
+import { __dirname } from "../../utils/esmUtils";
 
 function createTransporter(smtp: SMTPTransport) {
   const needsAuthentication = !!smtp.auth.user;

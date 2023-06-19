@@ -3,25 +3,23 @@ import { pipeline } from "node:stream/promises";
 
 import { stringify } from "csv-stringify";
 import { Filter, ObjectId, UpdateFilter } from "mongodb";
-import { IDocument } from "shared/models/document.model";
 import { IMailingList } from "shared/models/mailingList.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
 import logger from "@/common/logger";
-import * as crypto from "@/utils/cryptoUtils";
-import { getDbCollection } from "@/utils/mongodbUtils";
+import * as crypto from "@/common/utils/cryptoUtils";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 import {
   getTrainingLinks,
   LIMIT_TRAINING_LINKS_PER_REQUEST,
   TrainingLink,
 } from "../../common/apis/lba";
-import { uploadToStorage } from "../../utils/ovhUtils";
+import { uploadToStorage } from "../../common/utils/ovhUtils";
 import { noop } from "../server/utils/upload.utils";
 import {
   createEmptyDocument,
   deleteDocumentById,
-  extractDocumentContent,
   findDocument,
   importDocumentContent,
 } from "./documents.actions";
@@ -111,13 +109,6 @@ export const updateMailingList = async (
 /**
  * ACTIONS
  */
-
-export const handleVoeuxParcoursupFileContent = async (document: IDocument) => {
-  logger.info("extract wishes started");
-  await extractDocumentContent(document);
-
-  // return documentContents;
-};
 
 export const processMailingList = async (mailingList: IMailingList) => {
   if (!mailingList) {

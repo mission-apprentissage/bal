@@ -87,7 +87,7 @@ const AdminImportPage = () => {
                 return (
                   row.original.created_at &&
                   formatDate(
-                    row.original.created_at as string,
+                    row.original.created_at as any,
                     "dd/MM/yyyy à HH:mm"
                   )
                 );

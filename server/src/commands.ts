@@ -2,18 +2,10 @@ import { program } from "commander";
 import HttpTerminator from "lil-http-terminator";
 
 import logger from "@/common/logger";
-import { createUser } from "@/modules/actions/users.actions";
-import {
-  create as createMigration,
-  up as upMigration,
-} from "@/modules/jobs/migrations/migrations";
-import { processor } from "@/modules/jobs/processor/processor";
-import { runJob } from "@/modules/jobs/runJob";
-import { seed } from "@/modules/jobs/seed/seed";
-import { server } from "@/modules/server";
-import { closeMongodbConnection } from "@/utils/mongodbUtils";
+import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
+import { server } from "@/modules/server/server";
 
-import { recreateIndexes } from "./modules/jobs/db/recreateIndexes";
+import { addJob, processor } from "./modules/jobs/jobs";
 
 program.configureHelp({
   sortSubcommands: true,
@@ -58,68 +50,92 @@ program
   });
 
 program
+  .command("processor")
+  .description("Run job processor")
+  .action(async () => {
+    logger.info(`Process jobs queue - start`);
+    await processor();
+  });
+
+program
   .command("users:create")
   .description("Créer un utilisateur")
-  .option("-e, --email <string>", "Email de l'utilisateur")
-  .option("-p, --password <string>", "Mot de passe de l'utilisateur")
-  .option("-oId, --organisationId <string>", "Organisation Id")
+  .requiredOption("-e, --email <string>", "Email de l'utilisateur")
+  .requiredOption("-p, --password <string>", "Mot de passe de l'utilisateur")
+  .requiredOption("-oId, --organisationId <string>", "Organisation Id")
   .option("-a, --admin", "administrateur")
-  .action(
-    runJob(async ({ email, password, organisationId, admin = false }) => {
-      await createUser({
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ email, password, organisationId, admin = false, sync }) => {
+    await addJob({
+      name: "users:create",
+      payload: {
         email,
         password,
         is_admin: admin,
         organisation_id: organisationId,
-      });
-    })
-  );
+      },
+      sync,
+    });
+    process.exit(0);
+  });
 
 program
   .command("seed")
   .description("Seed env")
-  .action(
-    runJob(async () => {
-      await seed();
-    })
-  );
-
-program
-  .command("processor")
-  .description("Run processor")
-  .action(async () => {
-    logger.warn("starting processor");
-    await processor();
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ sync }) => {
+    await addJob(
+      {
+        name: "seed",
+        sync,
+      },
+      { runningLogs: false }
+    );
+    process.exit(0);
   });
 
 program
   .command("migrations:up")
   .description("Run migrations up")
-  .action(
-    runJob(async () => {
-      await upMigration();
-    })
-  );
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ sync }) => {
+    await addJob(
+      {
+        name: "migrations:up",
+        sync,
+      },
+      { runningLogs: false }
+    );
+    process.exit(0);
+  });
 
 program
   .command("migrations:create")
   .description("Run migrations create")
-  .option("-d, --description <string>", "description")
-  .action(
-    runJob(async ({ description }) => {
-      await createMigration(description);
-    })
-  );
+  .requiredOption("-d, --description <string>", "description")
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ description, sync }) => {
+    await addJob({
+      name: "migrations:create",
+      payload: description,
+      sync,
+    });
+    process.exit(0);
+  });
 
 program
   .command("indexes:recreate")
   .description("Drop and recreate indexes")
   .option("-d, --drop", "Drop indexes before recreating them")
-  .action(
-    runJob(async ({ drop }) => {
-      await recreateIndexes({ drop });
-    })
-  );
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ drop, sync }) => {
+    await addJob({
+      name: "indexes:recreate",
+      payload: { drop },
+      sync,
+    });
+    process.exit(0);
+  });
 
 program.hook("preAction", (_, actionCommand) => {
   const command = actionCommand.name();

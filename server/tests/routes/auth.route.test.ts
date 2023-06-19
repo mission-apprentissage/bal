@@ -4,7 +4,7 @@ import config from "@/config";
 
 import { getSession } from "../../src/modules/actions/sessions.actions";
 import { createUser } from "../../src/modules/actions/users.actions";
-import { build } from "../../src/modules/server";
+import { build } from "../../src/modules/server/server";
 const app = build();
 
 type Cookie = {

@@ -1,4 +1,7 @@
-import { getDbCollection } from "@/utils/mongodbUtils";
+import { Filter, FindOptions } from "mongodb";
+import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
+
+import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 /**
  * Création d'un job
@@ -7,19 +10,27 @@ import { getDbCollection } from "@/utils/mongodbUtils";
  */
 export const createJob = async ({
   name,
-  status,
   payload,
-  started_at = new Date(),
+  scheduled_at = new Date(),
+  sync = false,
 }: any) => {
-  const { insertedId } = await getDbCollection("jobs").insertOne({
+  const { insertedId: _id } = await getDbCollection("jobs").insertOne({
     name,
-    status,
+    status: sync ? JOB_STATUS_LIST.WILLSTART : JOB_STATUS_LIST.PENDING,
     ...(payload ? { payload } : {}),
-    started_at,
     updated_at: new Date(),
     created_at: new Date(),
+    scheduled_at,
+    sync,
   });
-  return insertedId;
+  return findJob({ _id });
+};
+
+export const findJob = async (
+  filter: Filter<IJob>,
+  options?: FindOptions<IJob>
+) => {
+  return await getDbCollection("jobs").findOne<IJob>(filter, options);
 };
 
 /**

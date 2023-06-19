@@ -3,7 +3,7 @@ import querystring from "querystring";
 
 import config from "@/config";
 
-import { ApiError } from "../../utils/apiUtils";
+import { ApiError } from "../utils/apiUtils";
 import getApiClient from "./client";
 
 export const AKTO_API_BASE_URL = "https://api.akto.fr/referentiel/api/v1";

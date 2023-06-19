@@ -1,5 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
 
 const collectionName = "jobs";
@@ -9,9 +10,9 @@ const indexes: IModelDescriptor["indexes"] = [];
 export const SJob = {
   type: "object",
   properties: {
-    _id: { type: "string" },
+    _id: { type: "string", format: "ObjectId" },
     name: { type: "string", description: "Le nom de la tâche" },
-
+    // worker_id: { type: "string" },
     // source: {
     //   type: "string",
     // },
@@ -26,8 +27,16 @@ export const SJob = {
     status: {
       type: "string",
       description: "Statut courant du job",
-      enum: ["pending", "started", "running", "finished", "blocked", "errored"],
+      enum: [
+        "pending",
+        "will_start",
+        "running",
+        "finished",
+        "blocked",
+        "errored",
+      ],
     },
+    sync: { type: "boolean" },
     payload: {
       type: "object",
       description: "La donnée liéé à la tâche",
@@ -58,32 +67,19 @@ export const SJob = {
       description: "Date d'ajout en base de données",
     },
   },
-  required: ["_id", "name", "status", "started_at"],
+  required: ["_id", "name", "status", "scheduled_at"],
 } as const;
 
 export enum JOB_STATUS_LIST {
   PENDING = "pending",
-  FINISHED = "finished",
-  STARTED = "started",
+  WILLSTART = "will_start",
   RUNNING = "running",
+  FINISHED = "finished",
   BLOCKED = "blocked",
   ERRORED = "errored",
 }
 
 export interface IJob
-  extends FromSchema<
-    typeof SJob,
-    {
-      deserialize: [
-        {
-          pattern: {
-            type: "string";
-            format: "date-time";
-          };
-          output: Date | string;
-        }
-      ];
-    }
-  > {}
+  extends FromSchema<typeof SJob, { deserialize: deserialize }> {}
 
 export default { schema: SJob, indexes, collectionName };

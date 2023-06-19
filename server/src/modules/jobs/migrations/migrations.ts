@@ -1,8 +1,8 @@
 import { config, create as mcreate, status, up as mup } from "migrate-mongo";
 import path from "path";
 
-import { __dirname } from "@/utils/esmUtils";
-import { getMongodbClient } from "@/utils/mongodbUtils";
+import { __dirname } from "@/common/utils/esmUtils";
+import { getMongodbClient } from "@/common/utils/mongodbUtils";
 
 const myConfig = {
   mongodb: {

@@ -10,14 +10,14 @@ import {
 } from "shared/routes/upload.routes";
 
 import { FILE_SIZE_LIMIT } from "../../../../../shared/constants/index";
-import { processDocument } from "../../../common/apis/processor";
 import {
   createEmptyDocument,
   deleteDocumentById,
   findDocuments,
   uploadFile,
 } from "../../actions/documents.actions";
-import { Server } from "..";
+import { addJob } from "../../jobs/jobs";
+import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 const validateFile = (file: MultipartFile) => {
@@ -56,7 +56,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         },
       } as const,
       preHandler: [
-        server.auth([server.validateJWT, server.validateSession]),
+        server.auth([server.validateSession]),
         ensureUserIsAdmin,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any,
@@ -95,7 +95,12 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           mimetype: data.mimetype,
         });
 
-        await processDocument(document._id.toString());
+        await addJob({
+          name: "import:document",
+          payload: {
+            document_id: document._id,
+          },
+        });
 
         return response
           .status(200)
@@ -119,23 +124,18 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         },
       } as const,
       preHandler: [
-        server.auth([server.validateJWT, server.validateSession]),
+        server.auth([server.validateSession]),
         ensureUserIsAdmin,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any,
     },
     async (_request, response) => {
-      try {
-        const documents = (await findDocuments(
-          { import_progress: { $exists: true } },
-          { projection: { hash_secret: 0, hash_fichier: 0 } }
-        )) as IResGetDocuments;
+      const documents = (await findDocuments(
+        { import_progress: { $exists: true } },
+        { projection: { hash_secret: 0, hash_fichier: 0 } }
+      )) as IResGetDocuments;
 
-        return response.status(200).send(documents as any); // TODO
-      } catch (error) {
-        response.log.error(error);
-        throw new Error("Someting went wrong");
-      }
+      return response.status(200).send(documents as any); // TODO
     }
   );
 
@@ -150,19 +150,15 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         },
       } as const,
       preHandler: [
-        server.auth([server.validateJWT, server.validateSession]),
+        server.auth([server.validateSession]),
         ensureUserIsAdmin,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any,
     },
     async (request, response) => {
-      try {
-        await deleteDocumentById(new ObjectId(request.params.id));
+      await deleteDocumentById(new ObjectId(request.params.id));
 
-        return response.status(200).send({ success: true });
-      } catch (error) {
-        response.log.error(error);
-      }
+      return response.status(200).send({ success: true });
     }
   );
 };
