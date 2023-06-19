@@ -52,7 +52,6 @@ export const authValidateSession: FastifyAuthFunction = async (
   request,
   _reply
 ) => {
-  // TODO CHECK REFERER
   const token = request.cookies?.[config.session.cookieName];
 
   if (!token) {

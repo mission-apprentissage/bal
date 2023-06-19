@@ -7,6 +7,8 @@ import {
   ZReqPostOrganisationValidation,
 } from "shared/routes/v1/organisation.routes";
 
+import config from "@/config";
+
 import { validation } from "../../actions/organisations.actions";
 import { Server } from "../server";
 
@@ -26,7 +28,17 @@ export const organisationRoutes = ({ server }: { server: Server }) => {
         ],
       } as const,
       preHandler: [
-        server.auth([server.validateJWT, server.validateSession]),
+        server.auth([
+          async (request, _reply, ...arg) => {
+            if (
+              request.headers.referer === `${config.publicUrl}/usage/validation`
+            ) {
+              return server.validateSession(request, _reply, ...arg);
+            }
+            return server.validateJWT(request, _reply, ...arg);
+          },
+        ]),
+
         async (request, _reply) => {
           try {
             await ZReqPostOrganisationValidation().parseAsync(request.body);
