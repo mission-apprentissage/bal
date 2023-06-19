@@ -93,7 +93,7 @@ export function build(opts: FastifyServerOptions = {}) {
     }
 
     // Send error response
-    return reply.status(500).send({ message: error.message });
+    return reply.send({ message: error.message });
   });
 
   app.register(
