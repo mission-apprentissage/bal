@@ -77,7 +77,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-  
+
   test:
     profiles:
       - "test"
@@ -94,9 +94,25 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     working_dir: '/app'
-    expose:
-      - '5000'
-    command: ["yarn", "ci"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+  
+  ci:
+    profiles:
+      - "ci"
+    networks:
+      - bal_network
+    env_file: ./server/.env.test
+    volumes:
+      - ./:/app/:z
+      - /app/node_modules
+      - /app/server/node_modules
+      - /app/shared/node_modules
+      - /app/ui/node_modules
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    working_dir: '/app'
     build:
       context: .
       dockerfile: Dockerfile

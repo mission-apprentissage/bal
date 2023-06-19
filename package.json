@@ -29,7 +29,8 @@
     "typecheck": "yarn typecheck:ui && yarn typecheck:server",
     "test:server": "(cd server; yarn test)",
     "test:server:ci": "(cd server; yarn test:coverage)",
-    "ci": "yarn lint && yarn typecheck && yarn test:server:ci"
+    "ci": "yarn lint && yarn typecheck && yarn test:server:ci",
+    "test": "yarn lint && yarn typecheck && yarn test:server"
   },
   "workspaces": [
     "ui",
