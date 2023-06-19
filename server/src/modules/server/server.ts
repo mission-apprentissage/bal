@@ -78,7 +78,9 @@ export function build(opts: FastifyServerOptions = {}) {
   app.register(fastifyAuth);
   app.register(fastifyCors, {});
 
-  app.setErrorHandler(function (error, request, reply) {
+  app.setErrorHandler(function (error, _request, reply) {
+    reply.log.error(error);
+
     // @ts-ignore
     if (error.isBoom) {
       // eslint-disable-next-line prefer-const

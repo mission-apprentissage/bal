@@ -22,21 +22,17 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
       ] as any,
     },
     async (request, response) => {
-      try {
-        const filter: Filter<IPerson> = {};
+      const filter: Filter<IPerson> = {};
 
-        const { q = "" } = request.query;
+      const { q = "" } = request.query;
 
-        if (q) {
-          filter.$text = { $search: q };
-        }
-
-        const persons = await findPersons(filter);
-
-        return response.status(200).send(persons as any);
-      } catch (error) {
-        response.log.error(error);
+      if (q) {
+        filter.$text = { $search: q };
       }
+
+      const persons = await findPersons(filter);
+
+      return response.status(200).send(persons as any);
     }
   );
 
@@ -58,16 +54,11 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
       ] as any,
     },
     async (request, response) => {
-      try {
-        console.log({ id: request.params.id });
-        const person = await findPerson({
-          _id: new ObjectId(request.params.id),
-        });
+      const person = await findPerson({
+        _id: new ObjectId(request.params.id),
+      });
 
-        return response.status(200).send(person as any); //IResGetPerson
-      } catch (error) {
-        response.log.error(error);
-      }
+      return response.status(200).send(person as any); //IResGetPerson
     }
   );
 };

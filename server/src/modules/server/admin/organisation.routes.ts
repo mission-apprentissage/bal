@@ -28,21 +28,17 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
       ] as any,
     },
     async (request, response) => {
-      try {
-        const filter: Filter<IOrganisation> = {};
+      const filter: Filter<IOrganisation> = {};
 
-        const { q } = request.query;
+      const { q } = request.query;
 
-        if (q) {
-          filter.$text = { $search: q };
-        }
-
-        const organisations = await findOrganisations(filter);
-
-        return response.status(200).send(organisations as any);
-      } catch (error) {
-        response.log.error(error);
+      if (q) {
+        filter.$text = { $search: q };
       }
+
+      const organisations = await findOrganisations(filter);
+
+      return response.status(200).send(organisations as any);
     }
   );
 
@@ -64,15 +60,11 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
       ] as any,
     },
     async (request, response) => {
-      try {
-        const organisation = await findOrganisation({
-          _id: new ObjectId(request.params.id),
-        });
+      const organisation = await findOrganisation({
+        _id: new ObjectId(request.params.id),
+      });
 
-        return response.status(200).send(organisation as any); //IResGetOrganisation
-      } catch (error) {
-        response.log.error(error);
-      }
+      return response.status(200).send(organisation as any); //IResGetOrganisation
     }
   );
 };

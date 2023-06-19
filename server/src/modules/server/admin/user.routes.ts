@@ -30,17 +30,13 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       ] as any,
     },
     async (request, response) => {
-      try {
-        const user = await createUser(request.body);
+      const user = await createUser(request.body);
 
-        if (!user) {
-          throw new Error("User not created");
-        }
-
-        return response.status(200).send(user as any); //IResPostUser
-      } catch (error) {
-        response.log.error(error);
+      if (!user) {
+        throw new Error("User not created");
       }
+
+      return response.status(200).send(user as any); //IResPostUser
     }
   );
 
@@ -58,21 +54,17 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       ] as any,
     },
     async (request, response) => {
-      try {
-        const filter: Filter<IUser> = {};
+      const filter: Filter<IUser> = {};
 
-        const { q } = request.query;
+      const { q } = request.query;
 
-        if (q) {
-          filter.$text = { $search: q };
-        }
-
-        const users = await findUsers(filter);
-
-        return response.status(200).send(users as any); //IResGetUsers
-      } catch (error) {
-        response.log.error(error);
+      if (q) {
+        filter.$text = { $search: q };
       }
+
+      const users = await findUsers(filter);
+
+      return response.status(200).send(users as any); //IResGetUsers
     }
   );
 
@@ -94,13 +86,9 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       ] as any,
     },
     async (request, response) => {
-      try {
-        const user = await findUser({ _id: new ObjectId(request.params.id) });
+      const user = await findUser({ _id: new ObjectId(request.params.id) });
 
-        return response.status(200).send(user as any); //IResGetUser
-      } catch (error) {
-        response.log.error(error);
-      }
+      return response.status(200).send(user as any); //IResGetUser
     }
   );
 };

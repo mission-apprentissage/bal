@@ -130,17 +130,12 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       ] as any,
     },
     async (_request, response) => {
-      try {
-        const documents = (await findDocuments(
-          { import_progress: { $exists: true } },
-          { projection: { hash_secret: 0, hash_fichier: 0 } }
-        )) as IResGetDocuments;
+      const documents = (await findDocuments(
+        { import_progress: { $exists: true } },
+        { projection: { hash_secret: 0, hash_fichier: 0 } }
+      )) as IResGetDocuments;
 
-        return response.status(200).send(documents as any); // TODO
-      } catch (error) {
-        response.log.error(error);
-        throw new Error("Someting went wrong");
-      }
+      return response.status(200).send(documents as any); // TODO
     }
   );
 
@@ -161,13 +156,9 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       ] as any,
     },
     async (request, response) => {
-      try {
-        await deleteDocumentById(new ObjectId(request.params.id));
+      await deleteDocumentById(new ObjectId(request.params.id));
 
-        return response.status(200).send({ success: true });
-      } catch (error) {
-        response.log.error(error);
-      }
+      return response.status(200).send({ success: true });
     }
   );
 };

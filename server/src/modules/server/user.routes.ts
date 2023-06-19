@@ -19,17 +19,13 @@ export const userRoutes = ({ server }: { server: Server }) => {
       ]) as any,
     },
     async (request, response) => {
-      try {
-        if (!request.user) {
-          throw new Error("User not found");
-        }
-
-        const api_key = await generateApiKey(request.user);
-
-        return response.status(200).send({ api_key });
-      } catch (error) {
-        response.log.error(error);
+      if (!request.user) {
+        throw new Error("User not found");
       }
+
+      const api_key = await generateApiKey(request.user);
+
+      return response.status(200).send({ api_key });
     }
   );
 };
