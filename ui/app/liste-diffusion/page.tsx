@@ -17,8 +17,8 @@ import {
   IMailingList,
   MAILING_LIST_STATUS,
 } from "../../../shared/models/mailingList.model";
+import { IReqGetMailingList } from "../../../shared/routes/mailingList.routes";
 import { DOCUMENT_TYPES } from "../../../shared/routes/upload.routes";
-import { IReqGetMailingList } from "../../../shared/routes/v1/mailingList.routes";
 import Table from "../../components/table/Table";
 import { Bin } from "../../theme/icons/Bin";
 import { DownloadLine } from "../../theme/icons/DownloadLine";
@@ -137,6 +137,7 @@ const ListeDiffusionPage = () => {
                 return (
                   row.original.created_at &&
                   formatDate(
+                    //@ts-ignore
                     row.original.created_at as string,
                     "dd/MM/yyyy à HH:mm"
                   )
