@@ -13,7 +13,7 @@ if [ ! -z "${CI:-}" ]; then
   ui/package.json
 
   git commit -m "chore(release): bump $next_version [skip ci]"
-  git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git $GITHUB_REF_NAME --force
+  git push --tags $GITHUB_REF_NAME --force
 else
   echo "Skipping push: Not in CI"
 fi

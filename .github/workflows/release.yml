@@ -55,20 +55,23 @@ jobs:
       - name: Check for updates in repo
         run: git fetch --all
 
+      - name: Setup git context
+        run: |
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.email "$USER_EMAIL"
+
       - name: Merge concurrent changes
         run: |
           if echo $(git log origin/$GITHUB_REF_NAME -1 --pretty=%B) | grep -c "chore(release): bump "
           then
-            git config --global user.email $USER_EMAIL
-            git config --global user.name $USER_NAME
             git merge --no-edit --ff -m "Merge remote-tracking branch 'origin/$GITHUB_REF_NAME' [skip ci]"
-            git push --tags https://$GITHUB_TOKEN@github.com/mission-apprentissage/bal.git $GITHUB_REF_NAME --force
+            git push --tags $GITHUB_REF_NAME --force
           else
             echo "skip pull"
           fi
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_NAME: ${{ secrets.USER_NAME }}
 
@@ -78,7 +81,6 @@ jobs:
       - name: bump and release
         run: npx -y antoinebigard-semantic-release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           GITHUB_REF_NAME: ${{ env.GITHUB_REF_NAME }}
