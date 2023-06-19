@@ -1,7 +1,7 @@
 name: Release version
 on:
   push:
-    branches: [main]
+    branches: [main, next]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -29,20 +29,13 @@ jobs:
           node-version: 18
 
       - uses: actions/cache@v3
+        id: cache
         with:
-          path: |
-            node_modules
-            ui/node_modules
-            server/node_modules
-            yarn.lock
-            /tmp/.build
-          key: ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
+          path: /tmp/docker_images.tar
+          key: docker-images-${{ hashFiles('**/yarn.lock') }}
 
-      - name: load mna_bal_deps_installer
-        run: |
-          docker load -i /tmp/.build/mna_bal_deps_installer.tar
+      - name: Load Docker image from cache
+        run: docker load < /tmp/docker_images.tar
         shell: bash
 
       - name: Login to GitHub Container Registry
@@ -71,7 +64,7 @@ jobs:
           USER_NAME: ${{ secrets.USER_NAME }}
 
       - name: bump and release
-        run: npx antoinebigard-semantic-release
+        run: npx -y antoinebigard-semantic-release
         env:
           GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}

@@ -7,6 +7,7 @@ registry=${2:?"Veuillez préciser le registry"}
 echo "Création des images docker (docker build)"
 echo "Build deps"
 docker build . \
+        --build-arg YARN_FLAGS="--immutable" \
         --tag mna_bal_deps_installer:local \
         --platform linux/amd64
 
