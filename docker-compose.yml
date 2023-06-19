@@ -63,7 +63,7 @@ services:
       mongodb:
         condition: service_healthy
       smtp:
-        condition: service_healthy
+        condition: service_completed_successfully
       repo_modules:
         condition: service_completed_successfully
     env_file: .env_server
@@ -133,6 +133,7 @@ services:
   mongodb:
     profiles:
       - "dev"
+      - "test"
     image: mongo:6.0.2-focal
     deploy:
       resources:
