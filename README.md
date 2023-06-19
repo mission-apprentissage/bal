@@ -72,6 +72,18 @@ Cette commande démarre les containers définis dans le fichier `docker-compose.
 
 L'application est ensuite accessible à l'url [http://localhost](http://localhost)
 
+Pour update les dependencies:
+
+```sh
+make install
+```
+
+Pour lancer les tests localement:
+
+```sh
+make test
+```
+
 ### Documentation API
 
 La documentation API est générée par [fastify-swagger](https://github.com/fastify/fastify-swagger) et accessible à l'adresse `/api/documentation`.
