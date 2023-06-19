@@ -1,5 +1,5 @@
 # Rebuild the source code only when needed
-FROM bal-repo_modules:latest AS builder
+FROM bal_root:latest AS builder
 WORKDIR /app
 
 COPY . .

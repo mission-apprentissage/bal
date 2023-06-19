@@ -2,7 +2,7 @@ ci-install:
 	docker compose --profile ci build --build-arg YARN_FLAGS="--immutable"
 
 install:
-	docker compose run --no-deps --rm repo_modules
+	docker compose run --no-deps --rm root
 
 start:
 	docker compose --profile dev up -d --remove-orphans

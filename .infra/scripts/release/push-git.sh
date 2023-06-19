@@ -6,7 +6,7 @@ next_version="${1}"
 if [ ! -z "${CI:-}" ]; then
   git add CHANGELOG.md \
   .github/workflows/_deploy.yml \
-  .infra/.env_docker_compose \
+  .infra/env.ini \
   package.json \
   server/package.json \
   shared/package.json \

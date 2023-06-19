@@ -4,7 +4,7 @@ cd "${0%/*}/../../" || exit;
 
 echo "Push les images docker de BAL sur le registry github (https://ghcr.io/mission-apprentissage/)"
 
-file_path="./.infra/.env_docker_compose"
+file_path="./.infra/env.ini"
 
 generate_next_patch_version() {
   version="$1"
@@ -97,7 +97,7 @@ if [ ! -z "$new_reverse_proxy_version" ]; then
   echo "Pushing reverse_proxy:$new_reverse_proxy_version ..."
   docker push ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:"$new_reverse_proxy_version"
 
-  sed -i '' "s/reverse_proxy_version=.*/reverse_proxy_version=$new_reverse_proxy_version/" ".infra/.env_docker_compose"
-  echo "Bump reverse_proxy version in .infra/.env_docker_compose : $new_reverse_proxy_version"
+  sed -i '' "s/reverse_proxy_version=.*/reverse_proxy_version=$new_reverse_proxy_version/" ".infra/env.ini"
+  echo "Bump reverse_proxy version in .infra/env.ini : $new_reverse_proxy_version"
 fi
 

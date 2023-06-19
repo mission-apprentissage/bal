@@ -1,7 +1,8 @@
 version: "3.8"
 
 services:
-  repo_modules:
+  root:
+    image: 'bal_root:latest'
     restart: "no"
     command: ["yarn", "install"]
     build:
@@ -35,6 +36,7 @@ services:
       context: reverse_proxy
 
   ui:
+    image: 'bal_root:latest'
     profiles:
       - "dev"
     stdin_open: true
@@ -43,18 +45,16 @@ services:
     env_file: .env_ui
     volumes:
       - ./:/app/:z
-    build:
-      context: .
-      dockerfile: Dockerfile
     working_dir: '/app/ui'
     expose:
       - '3000'
     command: ["yarn", "docker-dev"]
     depends_on:
-      repo_modules:
+      root:
         condition: service_completed_successfully
 
   server:
+    image: 'bal_root:latest'
     profiles:
       - "dev"
     networks:
@@ -64,7 +64,7 @@ services:
         condition: service_healthy
       smtp:
         condition: service_completed_successfully
-      repo_modules:
+      root:
         condition: service_completed_successfully
     env_file: .env_server
     volumes:
@@ -74,11 +74,9 @@ services:
     expose:
       - '5000'
     command: ["yarn", "dev"]
-    build:
-      context: .
-      dockerfile: Dockerfile
 
   test:
+    image: 'bal_root:latest'
     profiles:
       - "test"
     networks:
@@ -86,7 +84,7 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
-      repo_modules:
+      root:
         condition: service_completed_successfully
     env_file: ./server/.env.test
     volumes:
@@ -94,11 +92,9 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     working_dir: '/app'
-    build:
-      context: .
-      dockerfile: Dockerfile
   
   ci:
+    image: 'bal_root:latest'
     profiles:
       - "ci"
     networks:
@@ -113,11 +109,9 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     working_dir: '/app'
-    build:
-      context: .
-      dockerfile: Dockerfile
 
   processor:
+    image: 'bal_root:latest'
     profiles:
       - "dev"
     command: ["yarn", "cli", "processor"]
@@ -137,14 +131,11 @@ services:
         condition: service_healthy
       clamav:
         condition: service_healthy
-      repo_modules:
+      root:
         condition: service_completed_successfully
     working_dir: '/app/server'
     expose:
       - '5000'
-    build:
-      context: .
-      dockerfile: Dockerfile
 
   mongodb:
     profiles:

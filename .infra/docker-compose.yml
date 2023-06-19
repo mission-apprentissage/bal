@@ -15,7 +15,7 @@ x-deploy-default: &deploy-default
 
 services:
   reverse_proxy:
-    image: "${registry?}/mission-apprentissage/mna_bal_reverse_proxy:${reverse_proxy_version?}"
+    image: "{{registry}}/mission-apprentissage/mna_bal_reverse_proxy:{{reverse_proxy_version}}"
     deploy:
       <<: *deploy-default
       resources:
@@ -53,7 +53,7 @@ services:
         fluentd-async: "true"
 
   server:
-    image: "${registry?}/mission-apprentissage/mna_bal_server:${app_version?}"
+    image: "{{registry}}/mission-apprentissage/mna_bal_server:{{app_version}}"
     deploy:
       <<: *deploy-default
       resources:
@@ -81,7 +81,7 @@ services:
       start_period: 10s
 
   processor:
-    image: "${registry?}/mission-apprentissage/mna_bal_server:${app_version?}"
+    image: "{{registry}}/mission-apprentissage/mna_bal_server:{{app_version}}"
     deploy:
       <<: *deploy-default
       resources:
@@ -103,7 +103,7 @@ services:
         fluentd-async: "true"
 
   ui:
-    image: "${registry?}/mission-apprentissage/mna_bal_ui:${app_version?}"
+    image: "{{registry}}/mission-apprentissage/mna_bal_ui:{{app_version}}"
     deploy:
       <<: *deploy-default
       resources:

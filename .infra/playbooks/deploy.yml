@@ -5,13 +5,6 @@
   vars_files:
     - "../vault/vault.yml"
   tasks:
-    - name: copy docker env file
-      ansible.builtin.template:
-        src: "{{ item }}"
-        dest: "/opt/bal/.env_docker_compose"
-      with_fileglob:
-        - "../.env_docker_compose"
-
     - name: copy server env file
       ansible.builtin.template:
         src: "{{ item }}"
@@ -44,7 +37,7 @@
     - name: Récupération des images docker
       shell:
         chdir: /opt/bal
-        cmd: "sudo docker compose --env-file .env_docker_compose pull"
+        cmd: "sudo docker compose pull"
 
     - name: Récupération du status des migrations
       shell:
@@ -79,14 +72,14 @@
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/bal
-        cmd: "sudo env $(cat .env_docker_compose | xargs) docker stack deploy -c docker-compose.yml -c docker-compose.recette.yml bal"
+        cmd: "sudo docker stack deploy -c docker-compose.yml -c docker-compose.recette.yml bal"
       register: docker_deploy_output
       when: env_type == 'recette'
 
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/bal
-        cmd: "sudo env $(cat .env_docker_compose | xargs) docker stack deploy -c docker-compose.yml bal"
+        cmd: "sudo docker stack deploy -c docker-compose.yml bal"
       register: docker_deploy_output
       when: env_type == 'production'
 
