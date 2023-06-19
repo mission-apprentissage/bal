@@ -30,6 +30,7 @@ ResolveFastifyReplyReturnType<
   RouteGenericInterface
 > {
   return async (request, reply) => {
+    // @ts-ignore
     const result = (await serviceFunc(request, reply)) as any;
     // le résultat est à renvoyer en JSON par défaut
     if (!reply.getHeader("Content-Type")) {
