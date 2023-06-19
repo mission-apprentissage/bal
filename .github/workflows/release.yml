@@ -14,6 +14,9 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   release:
+    permissions:
+      contents: write
+      packages: write
     if: "!startsWith(github.event.head_commit.message, 'chore')"
     needs: ["tests"]
     runs-on: ubuntu-latest
@@ -45,24 +48,25 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GH_FG_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check for updates in repo
         run: git fetch --all
 
-      - run: |
-          if echo $(git log origin/${{ vars.GITHUB_REF_NAME }} -1 --pretty=%B) | grep -c "chore(release): bump "
+      - name: Merge concurrent changes
+        run: |
+          if echo $(git log origin/${{ env.GITHUB_REF_NAME }} -1 --pretty=%B) | grep -c "chore(release): bump "
           then
             git config --global user.email $USER_EMAIL
             git config --global user.name $USER_NAME
             git merge --no-edit -m "Merge remote-tracking branch 'refs/remotes/origin/${{ vars.GITHUB_REF_NAME }}' [skip ci]"
-            git push --tags https://$GH_TOKEN@github.com/mission-apprentissage/bal.git ${{ vars.GITHUB_REF_NAME }} --force
+            git push --tags https://$GITHUB_TOKEN@github.com/mission-apprentissage/bal.git ${{ vars.GITHUB_REF_NAME }} --force
           else
             echo "skip pull"
           fi
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_NAME: ${{ secrets.USER_NAME }}
 
@@ -72,7 +76,7 @@ jobs:
       - name: bump and release
         run: npx -y antoinebigard-semantic-release
         env:
-          GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          GITHUB_REF_NAME: ${{ vars.GITHUB_REF_NAME }}
+          GITHUB_REF_NAME: ${{ env.GITHUB_REF_NAME }}
