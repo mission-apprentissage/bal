@@ -1,3 +1,10 @@
+# [1.34.0-true.5](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.4...v1.34.0-true.5) (2023-06-19)
+
+
+### Bug Fixes
+
+* parallel action ([88f46fc](https://github.com/mission-apprentissage/bal/commit/88f46fc7a14326645798f1590ad470d7c6c9071b))
+
 # [1.34.0-true.4](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.3...v1.34.0-true.4) (2023-06-19)
 
 
