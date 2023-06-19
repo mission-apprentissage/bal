@@ -1,3 +1,10 @@
+## [1.34.6](https://github.com/mission-apprentissage/bal/compare/v1.34.5...v1.34.6) (2023-06-19)
+
+
+### Bug Fixes
+
+* here and there ([#149](https://github.com/mission-apprentissage/bal/issues/149)) ([9391c78](https://github.com/mission-apprentissage/bal/commit/9391c783b5b2ac788d7bb346bbf0607d348e4598))
+
 ## [1.34.5](https://github.com/mission-apprentissage/bal/compare/v1.34.4...v1.34.5) (2023-06-14)
 
 
