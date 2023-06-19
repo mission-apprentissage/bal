@@ -39,7 +39,7 @@ const channel = createHash("md5").update(branch).digest("hex");
 const localConfig = {
   branches: [
     "main",
-    { name: "next", channel: "next", prerelease: "true" },
+    { name: "next", channel: "next", prerelease: true },
     {
       name: branch,
       channel,
