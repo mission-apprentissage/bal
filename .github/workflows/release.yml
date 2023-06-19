@@ -59,7 +59,7 @@ jobs:
           if echo $(git log origin/$GITHUB_REF_NAME -1 --pretty=%B) | grep -c "chore(release): bump "
           then
             git merge --no-edit --ff -m "Merge remote-tracking branch 'origin/$GITHUB_REF_NAME' [skip ci]"
-            git push --tags $GITHUB_REF_NAME --force
+            git push --tags --force
           else
             echo "skip pull"
           fi
