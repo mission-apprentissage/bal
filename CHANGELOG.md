@@ -1,3 +1,10 @@
+# [1.34.0-true.4](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.3...v1.34.0-true.4) (2023-06-19)
+
+
+### Bug Fixes
+
+* prerelease tag ([7b19757](https://github.com/mission-apprentissage/bal/commit/7b19757b7003be238628c45564804a9c6a42bcbd))
+
 # [1.34.0-true.3](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.2...v1.34.0-true.3) (2023-06-19)
 
 
