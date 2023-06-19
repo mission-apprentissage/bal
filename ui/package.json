@@ -1,6 +1,6 @@
 {
   "name": "ui",
-  "version": "1.33.1",
+  "version": "1.34.0-true.3",
   "private": true,
   "scripts": {
     "dev": "NEXT_PUBLIC_VERSION=$npm_package_version next dev",
@@ -45,5 +45,6 @@
   "devDependencies": {
     "@types/lodash.range": "3.2.7",
     "@types/react-datepicker": "4.11.2"
-  }
+  },
+  "stableVersion": "1.33.1"
 }

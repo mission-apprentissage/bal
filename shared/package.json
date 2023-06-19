@@ -1,6 +1,6 @@
 {
   "name": "shared",
-  "version": "1.33.1",
+  "version": "1.34.0-true.3",
   "main": "./index.ts",
   "types": "./index.ts",
   "author": "mna",
@@ -9,5 +9,6 @@
   "dependencies": {
     "json-schema-to-ts": "2.8.0",
     "react": "18.2.0"
-  }
+  },
+  "stableVersion": "1.33.1"
 }
