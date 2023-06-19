@@ -12,7 +12,6 @@ export const RNCP_REGEX_PATTERN = "^(RNCP)?[0-9]{2,5}$";
 export const SIRET_REGEX_PATTERN = "^([0-9]{14}|[0-9]{9} [0-9]{4})$";
 export const CODE_NAF_REGEX_PATTERN = "^[0-9]{4}[A-Z]$";
 export const UAI_REGEX_PATTERN = "^[0-9]{7}[a-zA-Z]$";
-export const YEAR_RANGE_PATTERN = "^[12][0-9]{3}-[12][0-9]{3}$";
 
 // Numero INE (Identifiant National Elève)
 // Le numero INE composé de 11 caractères,
@@ -32,7 +31,6 @@ export const RNCP_REGEX = new RegExp(RNCP_REGEX_PATTERN);
 export const SIRET_REGEX = new RegExp(SIRET_REGEX_PATTERN);
 export const CODE_NAF_REGEX = new RegExp(CODE_NAF_REGEX_PATTERN);
 export const UAI_REGEX = new RegExp(UAI_REGEX_PATTERN);
-export const YEAR_RANGE_REGEX = new RegExp(YEAR_RANGE_PATTERN);
 
 export const isValidCFD = (cfd: string) =>
   typeof cfd === "string" && CFD_REGEX.test(cfd);

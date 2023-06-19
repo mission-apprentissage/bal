@@ -42,6 +42,13 @@ export function build(opts: FastifyServerOptions = {}) {
       },
       consumes: ["application/json"],
       produces: ["application/json"],
+      securityDefinitions: {
+        apiKey: {
+          type: "apiKey",
+          name: "Authorization",
+          in: "header",
+        },
+      },
     },
     transform: ({ schema, url }) => {
       const transformedSchema = { ...schema } as FastifySchema;
@@ -70,6 +77,25 @@ export function build(opts: FastifyServerOptions = {}) {
   app.register(fastifyMultipart);
   app.register(fastifyAuth);
   app.register(fastifyCors, {});
+
+  app.setErrorHandler(function (error, request, reply) {
+    // @ts-ignore
+    if (error.isBoom) {
+      // eslint-disable-next-line prefer-const
+      let payload = { message: error.message, errors: [] };
+      if (error.name === "ZodError") {
+        payload.message = "Validation failed";
+        // @ts-ignore
+        payload.errors = error.errors;
+      }
+      // @ts-ignore
+      return reply.status(error.output.statusCode).send(payload); // error.errors
+    }
+
+    // Send error response
+    return reply.status(500).send({ message: error.message });
+  });
+
   app.register(
     async (instance) => {
       registerRoutes({ server: instance as Server });
