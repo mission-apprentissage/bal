@@ -37,12 +37,12 @@ jobs:
       - uses: actions/cache@v3
         id: cache
         with:
-          path: /tmp/docker_images.tar
+          path: /tmp/docker_bal_root.tar
           fail-on-cache-miss: true
           key: docker-images-${{ hashFiles('**/yarn.lock') }}
 
       - name: Load Docker image from cache
-        run: docker load < /tmp/docker_images.tar
+        run: docker load < /tmp/docker_bal_root.tar
         shell: bash
 
       - name: Login to GitHub Container Registry
