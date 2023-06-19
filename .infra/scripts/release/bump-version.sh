@@ -4,10 +4,22 @@ set -euo pipefail
 next_version="${1}"
 
 cd ./ui
-npm version ${next_version} --allow-same-version
+
+UI_VERSION=$(cat package.json | jq -r '.version')
+if [ $UI_VERSION != $next_version ]; then
+  yarn version ${next_version}
+fi;
+
 cd ../server
-npm version ${next_version} --allow-same-version
+SERVER_VERSION=$(cat package.json | jq -r '.version')
+if [ $SERVER_VERSION != $next_version ]; then
+  yarn version ${next_version}
+fi;
+
 cd ../shared
-npm version ${next_version} --allow-same-version
+SHARED_VERSION=$(cat package.json | jq -r '.version')
+if [ $SHARED_VERSION != $next_version ]; then
+  yarn version ${next_version}
+fi;
 
 cd ..
