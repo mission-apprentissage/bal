@@ -1,14 +1,23 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-export const SResGetHealthCheck = {
-  type: "object",
-  properties: {
-    name: { type: "string" },
-    version: { type: "string" },
-    env: { type: "string" },
-  },
-  required: ["name", "version", "env"],
-  additionalProperties: false,
-} as const;
+export enum EnvEnum {
+  production = `production`,
+  recette = `recette`,
+  sandbox = `sandbox`,
+  preview = `preview`,
+}
+export const Env = z.nativeEnum(EnvEnum);
 
-export type IResGetHealthCheck = FromSchema<typeof SResGetHealthCheck>;
+export const ZResGetHealthCheck = () =>
+  z
+    .object({
+      name: z.string(),
+      version: z.string(),
+      env: Env,
+    })
+    .describe("API Health");
+
+export const SResGetHealthCheck = zodToJsonSchema(ZResGetHealthCheck());
+
+export type IResGetHealthCheck = z.input<ReturnType<typeof ZResGetHealthCheck>>;

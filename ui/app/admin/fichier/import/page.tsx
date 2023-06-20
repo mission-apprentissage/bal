@@ -97,7 +97,9 @@ const AdminImportPage = () => {
                   required:
                     "Obligatoire: Vous devez choisir le type de fichier que vous souhaitez importer",
                   validate: (value) => {
-                    return value && value in DOCUMENT_TYPES;
+                    return (
+                      value && Object.values(DOCUMENT_TYPES).includes(value)
+                    );
                   },
                 })}
               >

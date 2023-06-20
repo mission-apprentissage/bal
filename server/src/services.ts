@@ -1,6 +1,6 @@
-import { config } from "../config/config";
-import { createClamav } from "./modules/services/clamav";
-import { createMailerService } from "./modules/services/mailer/mailer";
+import { createClamav } from "@/common/services/clamav";
+import { createMailerService } from "@/common/services/mailer/mailer";
+import config from "@/config";
 
 export let mailer: ReturnType<typeof createMailerService>;
 export let clamav: ReturnType<typeof createClamav>;

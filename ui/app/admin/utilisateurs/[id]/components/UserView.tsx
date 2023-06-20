@@ -23,6 +23,7 @@ const UserView: FC<Props> = ({ user }) => {
         pages={[
           PAGES.homepage(),
           PAGES.adminUsers(),
+          // @ts-ignore
           PAGES.adminUserView(user._id as string),
         ]}
       />
@@ -45,6 +46,7 @@ const UserView: FC<Props> = ({ user }) => {
               if (!person) return null;
 
               return (
+                // @ts-ignore
                 <Text as={Link} href={PAGES.adminViewPerson(person._id).path}>
                   {getPersonDisplayName(person)}
                 </Text>
@@ -59,7 +61,8 @@ const UserView: FC<Props> = ({ user }) => {
             header: () => "Dernière utilisation API",
             cell: ({ api_key_used_at }) => {
               return api_key_used_at
-                ? formatDate(api_key_used_at, "PPP à p")
+                ? // @ts-ignore
+                  formatDate(api_key_used_at, "PPP à p")
                 : "Jamais";
             },
           },

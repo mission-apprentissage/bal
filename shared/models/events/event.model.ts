@@ -1,5 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { deserialize } from "../..";
 import { IModelDescriptor } from "../common";
 import { SBalEmailsPayload } from "./bal_emails.event";
 
@@ -14,7 +15,7 @@ const indexes: IModelDescriptor["indexes"] = [
 export const SEvent = {
   type: "object",
   properties: {
-    _id: { type: "string" },
+    _id: { type: "string", format: "ObjectId" },
     person_id: { type: "string" },
     name: { type: "string", enum: ["bal_emails"] },
     payload: {
@@ -24,6 +25,7 @@ export const SEvent = {
   required: ["person_id", "name", "payload"],
 } as const;
 
-export interface IEvent extends FromSchema<typeof SEvent> {}
+export interface IEvent
+  extends FromSchema<typeof SEvent, { deserialize: deserialize }> {}
 
 export default { schema: SEvent, indexes, collectionName };
