@@ -147,6 +147,7 @@ services:
       timeout: 5s
       retries: 12
       start_period: 10s
+    stop_grace_period: 2m
 
   metabase:
     image: metabase/metabase:v0.46.0
