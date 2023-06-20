@@ -1,20 +1,26 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
 
 const collectionName = "documentContents";
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ document_id: 1 }, { name: "document_id" }],
+  [{ type_document: 1 }, { name: "type_document" }],
 ];
 
 export const SDocumentContent = {
   type: "object",
   properties: {
-    _id: { type: "string" },
+    _id: { type: "string", format: "ObjectId" },
     document_id: { type: "string" },
     content: {
       type: "object",
+    },
+    type_document: {
+      type: "string",
+      description: "Le type de document (exemple: DECA, etc..)",
     },
     updated_at: {
       type: "string",
@@ -30,6 +36,7 @@ export const SDocumentContent = {
   required: ["_id", "document_id"],
 } as const;
 
-export interface IDocumentContent extends FromSchema<typeof SDocumentContent> {}
+export interface IDocumentContent
+  extends FromSchema<typeof SDocumentContent, { deserialize: deserialize }> {}
 
 export default { schema: SDocumentContent, indexes, collectionName };

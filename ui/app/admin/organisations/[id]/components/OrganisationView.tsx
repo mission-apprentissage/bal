@@ -21,6 +21,7 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
         pages={[
           PAGES.homepage(),
           PAGES.adminOrganisations(),
+          // @ts-ignore
           PAGES.adminViewOrganisation(organisation._id as string),
         ]}
       />

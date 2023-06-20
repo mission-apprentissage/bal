@@ -1,5 +1,4 @@
 import {
-  IResPostLogin,
   SReqGetResetPassword,
   SReqHeadersAuthorization,
   SReqPostLogin,
@@ -9,15 +8,16 @@ import {
 } from "shared/routes/auth.routes";
 import { SResError } from "shared/routes/common.routes";
 
-import { config } from "../../../config/config";
-import { createUserTokenSimple } from "../../utils/jwtUtils";
+import config from "@/config";
+
+import { createUserTokenSimple } from "../../common/utils/jwtUtils";
 import {
   resetPassword,
   sendResetPasswordEmail,
   verifyEmailPassword,
 } from "../actions/auth.actions";
 import { createSession, deleteSession } from "../actions/sessions.actions";
-import { Server } from ".";
+import { Server } from "./server";
 
 export const authRoutes = ({ server }: { server: Server }) => {
   /**
@@ -30,7 +30,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
         response: { 200: SResGetSession },
         headers: SReqHeadersAuthorization,
       } as const,
-      preHandler: server.auth([server.validateSession, server.validateJWT]),
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       return response.status(200).send(request.user);
@@ -69,7 +69,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
       return response
         .setCookie(config.session.cookieName, token, config.session.cookie)
         .status(200)
-        .send(user as IResPostLogin);
+        .send(user as any); //IResPostLogin
     }
   );
 
