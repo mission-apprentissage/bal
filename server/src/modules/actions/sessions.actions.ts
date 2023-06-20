@@ -1,7 +1,7 @@
 import { Filter, FindOptions } from "mongodb";
 import { ISession } from "shared/models/session.model";
 
-import { getDbCollection } from "../../utils/mongodb";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 type TCreateSession = Omit<ISession, "id">;
 

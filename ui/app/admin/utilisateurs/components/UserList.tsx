@@ -74,6 +74,7 @@ const UserList = () => {
                   flexGrow={1}
                 >
                   <Text isTruncated maxWidth={400}>
+                    {/* @ts-ignore */}
                     {getPersonDisplayName(person)}
                   </Text>
                 </Text>

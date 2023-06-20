@@ -9,7 +9,7 @@ import {
   connectToMongodb,
   createIndexes,
   getDatabase,
-} from "../../src/utils/mongodb";
+} from "@/common/utils/mongodbUtils";
 
 export const startAndConnectMongodb = async () => {
   const workerId = `${process.env.VITEST_POOL_ID}-${process.env.VITEST_WORKER_ID}`;
