@@ -11,9 +11,9 @@ other_version=$3
 conflict_marker_size=$4
 merged_result_pathname=$5
 
-ancestor_tempfile=$(mktemp tmp.XXXXXXXXXX)
-current_tempfile=$(mktemp tmp.XXXXXXXXXX)
-other_tempfile=$(mktemp tmp.XXXXXXXXXX)
+ancestor_tempfile=$(mktemp vault-tmp-ancestor.XXXXXXXXXX)
+current_tempfile=$(mktemp vault-tmp-current.XXXXXXXXXX)
+other_tempfile=$(mktemp vault-tmp-other.XXXXXXXXXX)
 
 delete_tempfiles() {
    echo $ancestor_tempfile
