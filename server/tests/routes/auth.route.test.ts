@@ -1,10 +1,12 @@
 import assert from "node:assert";
 
-import config from "@/config";
 import { afterAll, describe, it } from "vitest";
-import { getSession } from "../../src/modules/actions/sessions.actions";
-import { createUser } from "../../src/modules/actions/users.actions";
-import { build } from "../../src/modules/server/server";
+
+import config from "@/config";
+import { getSession } from "@/modules/actions/sessions.actions";
+import { createUser } from "@/modules/actions/users.actions";
+import { build } from "@/modules/server/server";
+
 import { useMongo } from "../utils/mongo.utils";
 const app = build();
 

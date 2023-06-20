@@ -1,7 +1,5 @@
 import { afterAll, beforeAll, beforeEach } from "vitest";
 
-import { config } from "../../config/config";
-import { modelDescriptors } from "../../src/db/models";
 import {
   clearAllCollections,
   closeMongodbConnection,
@@ -10,6 +8,8 @@ import {
   createIndexes,
   getDatabase,
 } from "@/common/utils/mongodbUtils";
+import config from "@/config";
+import { modelDescriptors } from "@/db/models";
 
 export const startAndConnectMongodb = async () => {
   const workerId = `${process.env.VITEST_POOL_ID}-${process.env.VITEST_WORKER_ID}`;
