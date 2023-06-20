@@ -179,6 +179,23 @@ Pour référencer cette variable dans un fichier, il faut utiliser la syntaxe `{
 La variable `env_type` qui est définie dans le fichier `env.ini` sera automatiquement valorisée en fonction de
 l'environnement cible.
 
+### Résolution des conflits
+
+Pour résoudre les conflits git sur le vault, il est possible de configurer git avec un mergetool custom. L'idée du custom merge tool est de décrypter le fichier pour appliquer le merge automatique de fichier.
+
+Pour l'installer il faut exécuter les commandes suivantes
+
+```shell
+git config --local merge.ansible-vault.driver "./.infra/scripts/vault/merge-vault.sh %O %A %B %L %P"
+git config --local merge.ansible-vault.name "Ansible Vault merge driver"
+```
+
+Ensuite lors du merge, vous serez invité à entrer votre passphrase (3 fois) pour décrypter les fichiers (distant, local et resultat). Il sera également affiché un le `git diff` dans le stdout.
+
+```shell
+git merge main
+```
+
 ## Habilitations
 
 ### Ajout d'un utilisateur
