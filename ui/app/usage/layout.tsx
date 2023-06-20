@@ -4,9 +4,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { FC, PropsWithChildren } from "react";
 
 import { useAuth } from "../../context/AuthContext";
+import { LockFill } from "../../theme/icons/LockFill";
 import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
 
-const tabs = [PAGES.usageApiValidation(), PAGES.usageApiHealthcheck()];
+const tabs = [
+  { ...PAGES.usageApiValidation(), secure: true },
+  PAGES.usageApiHealthcheck(),
+];
 
 const UsageLayout: FC<PropsWithChildren> = ({ children }) => {
   const { user } = useAuth();
@@ -31,8 +35,18 @@ const UsageLayout: FC<PropsWithChildren> = ({ children }) => {
       </Heading>
       <Tabs mb={8} index={index} onChange={handleChange}>
         <TabList>
-          {tabs.map((tab) => (
-            <Tab key={tab.path}>{tab.title}</Tab>
+          {tabs.map((tab: any) => (
+            <Tab key={tab.path}>
+              {tab.title}
+              {tab.secure && (
+                <LockFill
+                  color={"disablegrey"}
+                  boxSize="4"
+                  ml={2}
+                  mb="0.250em"
+                />
+              )}
+            </Tab>
           ))}
         </TabList>
       </Tabs>

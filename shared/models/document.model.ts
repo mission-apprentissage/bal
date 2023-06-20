@@ -1,5 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
 
 const collectionName = "documents";
@@ -11,6 +12,7 @@ export const SDocument = {
   properties: {
     _id: {
       type: "string",
+      format: "ObjectId",
       description: "Identifiant du document",
     },
     type_document: {
@@ -82,15 +84,7 @@ export interface IDocument
   extends FromSchema<
     typeof SDocument,
     {
-      deserialize: [
-        {
-          pattern: {
-            type: "string";
-            format: "date-time";
-          };
-          output: Date;
-        }
-      ];
+      deserialize: deserialize;
     }
   > {}
 

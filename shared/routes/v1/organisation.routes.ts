@@ -1,26 +1,37 @@
 import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-export const SReqPostOrganisationValidation = {
-  type: "object",
-  properties: {
-    email: { type: "string", format: "email" },
-    siret: { type: "string", "pattern": "^[0-9]{14}$" },
-  },
-  required: ["email", "siret"],
-} as const;
+import { extensions } from "../../helpers/zodHelpers/zodPrimitives";
 
-export type IReqPostOrganisationValidation = FromSchema<typeof SReqPostOrganisationValidation>;
+export const ZReqPostOrganisationValidation = () =>
+  z
+    .object({
+      email: z.string().trim().email("Email non valide"),
+      siret: extensions.siret(),
+    })
+    .describe("Organisation validation Request body");
+
+export type IReqPostOrganisationValidation = z.input<
+  ReturnType<typeof ZReqPostOrganisationValidation>
+>;
+
+export const SReqPostOrganisationValidation = zodToJsonSchema(
+  ZReqPostOrganisationValidation()
+);
 
 export const SResPostOrganisationValidation = {
   type: "object",
   properties: {
     is_valid: { type: "boolean" },
-    on: { type: "string", "enum": ["email", "domain"] },
+    on: { type: "string", enum: ["email", "domain"] },
   },
   required: ["is_valid"],
 } as const;
 
-export type IResOrganisationValidation = FromSchema<typeof SResPostOrganisationValidation>;
+export type IResOrganisationValidation = FromSchema<
+  typeof SResPostOrganisationValidation
+>;
 
 export const SReqHeadersOrganisation = {
   type: "object",

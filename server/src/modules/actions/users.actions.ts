@@ -1,9 +1,13 @@
 import { Filter, ObjectId, UpdateFilter } from "mongodb";
 import { IUser } from "shared/models/user.model";
 
-import { generateKey, generateSecretHash } from "../../utils/cryptoUtils";
-import { createUserTokenSimple } from "../../utils/jwtUtils";
-import { getDbCollection } from "../../utils/mongodb";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
+
+import {
+  generateKey,
+  generateSecretHash,
+} from "../../common/utils/cryptoUtils";
+import { createUserTokenSimple } from "../../common/utils/jwtUtils";
 import { hashPassword } from "../server/utils/password.utils";
 import { createPerson } from "./persons.actions";
 
