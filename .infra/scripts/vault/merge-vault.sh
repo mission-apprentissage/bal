@@ -16,6 +16,7 @@ current_tempfile=$(mktemp tmp.XXXXXXXXXX)
 other_tempfile=$(mktemp tmp.XXXXXXXXXX)
 
 delete_tempfiles() {
+   echo "Wesh"
     rm -f "$ancestor_tempfile" "$current_tempfile" "$other_tempfile"
 }
 trap delete_tempfiles EXIT
