@@ -1,3 +1,10 @@
+# [1.34.0-true.8](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.7...v1.34.0-true.8) (2023-06-20)
+
+
+### Bug Fixes
+
+* git push tag & branch ([e9bab35](https://github.com/mission-apprentissage/bal/commit/e9bab35005c840f821d1d59e19fa4774d00bef2f))
+
 # [1.34.0-true.7](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.6...v1.34.0-true.7) (2023-06-20)
 
 
