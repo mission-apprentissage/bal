@@ -1,13 +1,12 @@
 import { TemplateName, TemplatePayloads } from "shared/mailer";
-import { IBalEmail } from "shared/models/events/bal_emails.event";
 import { IEvent } from "shared/models/events/event.model";
 import { v4 as uuidv4 } from "uuid";
 
-import { mailer } from "../../services";
-import { generateHtml } from "../../utils/emailsUtils";
-import logger from "../../utils/logger";
-import { getDbCollection } from "../../utils/mongodb";
-import { getEmailInfos } from "../services/mailer/mailer";
+import logger from "@/common/logger";
+import { getEmailInfos } from "@/common/services/mailer/mailer";
+import { generateHtml } from "@/common/utils/emailsUtils";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
+import { mailer } from "@/services";
 
 function addEmail(
   person_id: string,
@@ -130,7 +129,7 @@ export async function renderEmail(token: string) {
   }
   const { templateName, payload } = event.payload.emails.find(
     (e) => e.token === token
-  ) as IBalEmail;
+  ) as any; // IBalEmail;
   return generateHtml(
     payload.recipient.email,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

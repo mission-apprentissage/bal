@@ -1,5 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
 
 const collectionName = "organisations";
@@ -71,21 +72,7 @@ export const SOrganisation = {
   required: ["_id"],
 } as const;
 
-export interface IOrganisation extends FromSchema<typeof SOrganisation> {}
-// export interface IOrganisation
-//   extends FromSchema<
-//     typeof SOrganisation,
-//     {
-//       deserialize: [
-//         {
-//           pattern: {
-//             type: "string";
-//             format: "ObjectId";
-//           };
-//           output: ObjectId;
-//         }
-//       ];
-//     }
-//   > {}
+export interface IOrganisation
+  extends FromSchema<typeof SOrganisation, { deserialize: deserialize }> {}
 
 export default { schema: SOrganisation, indexes, collectionName };
