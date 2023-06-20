@@ -2,9 +2,13 @@
 FROM bal_root:latest AS builder
 WORKDIR /app
 
-COPY . .
+COPY .yarn .yarn
+COPY ./server ./server
+COPY ./shared ./shared
 
 RUN yarn --cwd server build
+# Removing dev dependencies
+RUN yarn workspaces focus --all --production
 
 # Production image, copy all the files and run next
 FROM node:18-alpine AS runner
@@ -15,7 +19,11 @@ RUN apk add --update \
 
 ENV NODE_ENV production
 
-COPY --from=builder ./app/. .
+COPY --from=builder ./app/server/package.json ./server/package.json
+COPY --from=builder ./app/server/dist ./server/dist
+COPY --from=builder ./app/server/node_module[s] ./server/node_modules
+COPY --from=builder ./app/shared/node_module[s] ./shared/node_modules
+COPY --from=builder ./app/node_modules ./node_modules
 
 EXPOSE 5000
 WORKDIR /app/server
