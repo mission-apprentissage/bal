@@ -2,13 +2,14 @@ import { Filter, FindOptions, ObjectId, UpdateFilter } from "mongodb";
 import { IOrganisation } from "shared/models/organisation.model";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
-import { getDbCollection } from "../../utils/mongodb";
-import { getAktoVerification } from "../apis/akto";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
+
+import { getAktoVerification } from "../../common/apis/akto";
 import {
   getOpcoEpVerification,
   OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE,
   OPCO_EP_CODE_RETOUR_EMAIL_TROUVE,
-} from "../apis/opcoEp";
+} from "../../common/apis/opcoEp";
 import { getDecaVerification } from "./deca.actions";
 
 export const validation = async ({

@@ -1,3 +1,52 @@
+## [1.34.6](https://github.com/mission-apprentissage/bal/compare/v1.34.5...v1.34.6) (2023-06-19)
+
+
+### Bug Fixes
+
+* here and there ([#149](https://github.com/mission-apprentissage/bal/issues/149)) ([9391c78](https://github.com/mission-apprentissage/bal/commit/9391c783b5b2ac788d7bb346bbf0607d348e4598))
+
+## [1.34.5](https://github.com/mission-apprentissage/bal/compare/v1.34.4...v1.34.5) (2023-06-14)
+
+
+### Bug Fixes
+
+* lba campaign affelnet ([#136](https://github.com/mission-apprentissage/bal/issues/136)) ([ee17315](https://github.com/mission-apprentissage/bal/commit/ee173156ce3af86205ddf59728c4e4634bbfa2d1))
+
+## [1.34.4](https://github.com/mission-apprentissage/bal/compare/v1.34.3...v1.34.4) (2023-06-13)
+
+
+### Bug Fixes
+
+* upgrade file size to 60MB ([7fa153e](https://github.com/mission-apprentissage/bal/commit/7fa153e49b8c48d00dbd7568c9a02b7d41f1e824))
+
+## [1.34.3](https://github.com/mission-apprentissage/bal/compare/v1.34.2...v1.34.3) (2023-06-13)
+
+
+### Bug Fixes
+
+* re-enable cipher ([ba0130b](https://github.com/mission-apprentissage/bal/commit/ba0130bf993526ac1cb15c80b824797a79966b49))
+
+## [1.34.2](https://github.com/mission-apprentissage/bal/compare/v1.34.1...v1.34.2) (2023-06-13)
+
+
+### Bug Fixes
+
+* generate mailing list ([06e46f8](https://github.com/mission-apprentissage/bal/commit/06e46f8625aad5e6f98fa51addccb21cac51d13e))
+
+## [1.34.1](https://github.com/mission-apprentissage/bal/compare/v1.34.0...v1.34.1) (2023-06-13)
+
+
+### Bug Fixes
+
+* extract csv and add to db as stream ([4245a08](https://github.com/mission-apprentissage/bal/commit/4245a089cb69ac6ca56a94fb75029893d44805d7))
+
+# [1.34.0](https://github.com/mission-apprentissage/bal/compare/v1.33.1...v1.34.0) (2023-06-12)
+
+
+### Features
+
+* liste diffusion v0 ([#118](https://github.com/mission-apprentissage/bal/issues/118)) ([e372db4](https://github.com/mission-apprentissage/bal/commit/e372db4b179e0081d881e6f4ed5e9b4a3b69b59c))
+
 ## [1.33.1](https://github.com/mission-apprentissage/bal/compare/v1.33.0...v1.33.1) (2023-06-08)
 
 
