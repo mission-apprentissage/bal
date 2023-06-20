@@ -109,7 +109,9 @@ src/**/*.css.map
 
 */**/*.css
 */**/*.css.map
-
+*/**/node_modules
+*/**/.next
+ui/.next/
 */**/CHANGELOG.md
 
 

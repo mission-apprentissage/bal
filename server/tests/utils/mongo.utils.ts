@@ -4,7 +4,7 @@ import {
   closeMongodbConnection,
   connectToMongodb,
   getDatabase,
-} from "../../src/utils/mongodb";
+} from "@/common/utils/mongodbUtils";
 
 let mongoInMemory: MongoMemoryServer;
 

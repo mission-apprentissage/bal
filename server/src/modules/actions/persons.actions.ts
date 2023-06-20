@@ -1,7 +1,7 @@
 import { Filter, ObjectId, UpdateFilter } from "mongodb";
 import { IPerson } from "shared/models/person.model";
 
-import { getDbCollection } from "../../utils/mongodb";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 type ICreatePerson = {
   email: string;

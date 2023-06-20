@@ -1,20 +1,10 @@
 import companyEmailValidator from "company-email-validator";
 // @ts-ignore
-import { accumulateData, oleoduc, writeData } from "oleoduc";
-import { SIRET_REGEX } from "shared/constants";
-import { IDocument } from "shared/models/document.model";
-import { IDocumentContent } from "shared/models/documentContent.model";
+import { SIRET_REGEX } from "shared/constants/regex";
+import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
-import * as crypto from "../../utils/cryptoUtils";
-import { getFromStorage } from "../../utils/ovhUtils";
-import { getJsonFromCsvData } from "../../utils/parserUtils";
-import { noop } from "../server/utils/upload.utils";
-import {
-  createDocumentContent,
-  findDocumentContent,
-} from "./documentContent.actions";
-import { updateDocument } from "./documents.actions";
+import { findOneDocumentContent } from "./documentContent.actions";
 
 interface ContentLine {
   SIRET: string;
@@ -48,104 +38,6 @@ export const parseContentLine = (
   return { siret, emails };
 };
 
-const updateImportProgress = async (
-  _id: string,
-  currentLine: number,
-  totalLines: number,
-  currentProgress: number
-) => {
-  const step_precent = 2; // every 2%
-  const currentPercent = (currentLine * 100) / totalLines;
-  if (currentPercent - currentProgress < step_precent) {
-    // Do not update
-    return currentProgress;
-  }
-  currentProgress = currentPercent;
-  await updateDocument(
-    { _id },
-    {
-      $set: {
-        import_progress: currentProgress,
-      },
-    }
-  );
-  return currentPercent;
-};
-
-export const handleDecaFileContent = async (document: IDocument) => {
-  const stream = await getFromStorage(document.chemin_fichier);
-
-  let content: ContentLine[] = [];
-
-  await oleoduc(
-    stream,
-    crypto.isCipherAvailable() ? crypto.decipher(document.hash_secret) : noop(),
-    accumulateData(
-      (acc: Uint8Array, value: ArrayBuffer) => {
-        return Buffer.concat([acc, Buffer.from(value)]);
-      },
-      { accumulator: Buffer.from(new Uint8Array()) }
-    ),
-    writeData(async (data: Buffer) => {
-      if (document.ext_fichier === "csv") {
-        content = getJsonFromCsvData(data.toString(), "|");
-      }
-    })
-  );
-
-  let documentContents: IDocumentContent[] = [];
-
-  await updateDocument(
-    { _id: document._id },
-    {
-      $set: {
-        lines_count: content.length,
-        import_progress: 0,
-      },
-    }
-  );
-
-  let currentProgress = 0;
-  for (const [lineNumber, line] of content.entries()) {
-    const contentLine = parseContentLine(line);
-
-    currentProgress = await updateImportProgress(
-      document._id,
-      lineNumber,
-      content.length,
-      currentProgress
-    );
-
-    if (!contentLine) {
-      continue;
-    }
-
-    const documentContent = await createDocumentContent({
-      content: contentLine,
-      document_id: document._id.toString(),
-      updated_at: new Date(),
-      created_at: new Date(),
-    });
-
-    if (!documentContent) continue;
-
-    documentContents = [...documentContents, documentContent];
-  }
-
-  await updateDocument(
-    { _id: document._id },
-    {
-      $set: {
-        import_progress: 100,
-      },
-    }
-  );
-
-  // Create or update person
-
-  return documentContents;
-};
-
 export const getDecaVerification = async (
   siret: string,
   email: string
@@ -156,7 +48,8 @@ export const getDecaVerification = async (
   const siren = siret.substring(0, 9);
 
   // check siret / email
-  is_valid = !!(await findDocumentContent({
+  is_valid = !!(await findOneDocumentContent({
+    type_document: DOCUMENT_TYPES.DECA,
     "content.siret": siret,
     "content.emails": email,
   }));
@@ -170,7 +63,8 @@ export const getDecaVerification = async (
 
   // check siret / domain
   if (!isBlacklisted) {
-    is_valid = !!(await findDocumentContent({
+    is_valid = !!(await findOneDocumentContent({
+      type_document: DOCUMENT_TYPES.DECA,
       "content.siret": siret,
       "content.emails": { $regex: `.*@${domain}` },
     }));
@@ -184,7 +78,8 @@ export const getDecaVerification = async (
   }
 
   // check siren / email
-  is_valid = !!(await findDocumentContent({
+  is_valid = !!(await findOneDocumentContent({
+    type_document: DOCUMENT_TYPES.DECA,
     "content.siret": { $regex: `^${siren}` },
     "content.emails": email,
   }));
@@ -198,7 +93,8 @@ export const getDecaVerification = async (
 
   // check siren / domain
   if (!isBlacklisted) {
-    is_valid = !!(await findDocumentContent({
+    is_valid = !!(await findOneDocumentContent({
+      type_document: DOCUMENT_TYPES.DECA,
       "content.siret": { $regex: `^${siren}` },
       "content.emails": { $regex: `.*@${domain}` },
     }));
