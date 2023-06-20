@@ -45,22 +45,22 @@
         cmd: "sudo /opt/bal/tools/migrations/migrations-status.sh"
       register: migration_status_output
 
+    - name: "Shutdown processor"
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo docker service scale bal_processor=0"
+      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+
     - name: "Activation du mode maintenance pour effectuer la migration"
       shell:
         chdir: /opt/bal
         cmd: "sudo /opt/bal/tools/maintenance/maintenance-on.sh"
       when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
 
-    - name: "Shutdowm server"
+    - name: "Shutdown server"
       shell:
         chdir: /opt/bal
         cmd: "sudo docker service scale bal_server=0"
-      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
-
-    - name: "Shutdowm processor"
-      shell:
-        chdir: /opt/bal
-        cmd: "sudo docker service scale bal_processor=0"
       when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
 
     - name: Lancement des migrations
