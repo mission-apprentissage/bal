@@ -1,15 +1,23 @@
 import { MultipartFile } from "@fastify/multipart";
+import { ObjectId } from "mongodb";
 import { SResError } from "shared/routes/common.routes";
 import {
+  IResGetDocuments,
   IResPostAdminUpload,
   SReqQueryPostAdminUpload,
+  SResGetDocuments,
   SResPostAdminUpload,
 } from "shared/routes/upload.routes";
 
 import { FILE_SIZE_LIMIT } from "../../../../../shared/constants/index";
-import { uploadDocument } from "../../actions/documents.actions";
-import { processDocument } from "../../apis/processor";
-import { Server } from "..";
+import {
+  createEmptyDocument,
+  deleteDocumentById,
+  findDocuments,
+  uploadFile,
+} from "../../actions/documents.actions";
+import { addJob } from "../../jobs/jobs";
+import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 const validateFile = (file: MultipartFile) => {
@@ -48,7 +56,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         },
       } as const,
       preHandler: [
-        server.auth([server.validateJWT, server.validateSession]),
+        server.auth([server.validateSession]),
         ensureUserIsAdmin,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ] as any,
@@ -71,16 +79,28 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       }
 
       try {
-        const document = await uploadDocument(request.user, data, {
+        const document = await createEmptyDocument({
           type_document,
           fileSize,
+          filename: data.filename,
         });
 
         if (!document) {
           throw new Error("Impossible de stocker de le fichier");
         }
 
-        await processDocument(document);
+        const added_by = request.user._id.toString();
+
+        await uploadFile(added_by, data.file, document._id, {
+          mimetype: data.mimetype,
+        });
+
+        await addJob({
+          name: "import:document",
+          payload: {
+            document_id: document._id,
+          },
+        });
 
         return response
           .status(200)
@@ -92,6 +112,53 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           message,
         });
       }
+    }
+  );
+
+  server.get(
+    "/admin/documents",
+    {
+      schema: {
+        response: {
+          200: SResGetDocuments,
+        },
+      } as const,
+      preHandler: [
+        server.auth([server.validateSession]),
+        ensureUserIsAdmin,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ] as any,
+    },
+    async (_request, response) => {
+      const documents = (await findDocuments(
+        { import_progress: { $exists: true } },
+        { projection: { hash_secret: 0, hash_fichier: 0 } }
+      )) as IResGetDocuments;
+
+      return response.status(200).send(documents as any); // TODO
+    }
+  );
+
+  server.delete(
+    "/admin/document/:id",
+    {
+      schema: {
+        params: {
+          type: "object",
+          properties: { id: { type: "string" } },
+          required: ["id"],
+        },
+      } as const,
+      preHandler: [
+        server.auth([server.validateSession]),
+        ensureUserIsAdmin,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ] as any,
+    },
+    async (request, response) => {
+      await deleteDocumentById(new ObjectId(request.params.id));
+
+      return response.status(200).send({ success: true });
     }
   );
 };

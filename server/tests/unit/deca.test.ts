@@ -2,6 +2,7 @@ import assert from "node:assert";
 
 import { ObjectId } from "mongodb";
 import { describe, it } from "vitest";
+import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
 import {
   getDecaVerification,
@@ -110,6 +111,7 @@ describe("DECA verification", () => {
   it("should be valid SIRET email", async () => {
     await createDocumentContent({
       document_id: new ObjectId(),
+      type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
         emails: ["test1@company.com", "test2@company.com"],
@@ -125,6 +127,7 @@ describe("DECA verification", () => {
 
     await createDocumentContent({
       document_id: new ObjectId(),
+      type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
         emails: ["test1@gmail.com", "test2@company.com"],
@@ -142,6 +145,7 @@ describe("DECA verification", () => {
   it("should be valid SIRET domain", async () => {
     await createDocumentContent({
       document_id: new ObjectId(),
+      type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
         emails: ["test1@company.com", "test2@company.com"],
@@ -160,6 +164,7 @@ describe("DECA verification", () => {
   it("should be valid SIREN email", async () => {
     await createDocumentContent({
       document_id: new ObjectId(),
+      type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
         emails: ["test1@company.com", "test2@company.com"],
@@ -175,6 +180,7 @@ describe("DECA verification", () => {
     );
     await createDocumentContent({
       document_id: new ObjectId(),
+      type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
         emails: ["test1@gmail.com", "test2@company.com"],
@@ -193,6 +199,7 @@ describe("DECA verification", () => {
   it("should be valid SIREN domain", async () => {
     await createDocumentContent({
       document_id: new ObjectId(),
+      type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
         emails: ["test1@company.com", "test2@company.com"],
@@ -211,6 +218,7 @@ describe("DECA verification", () => {
   it("should not be valid SIRET domain if blacklisted", async () => {
     await createDocumentContent({
       document_id: new ObjectId(),
+      type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
         emails: ["test1@gmail.com", "test2@company.com"],
@@ -228,6 +236,7 @@ describe("DECA verification", () => {
   it("should not be valid SIREN domain if blacklisted", async () => {
     await createDocumentContent({
       document_id: new ObjectId(),
+      type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
         emails: ["test1@gmail.com", "test2@company.com"],
