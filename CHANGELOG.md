@@ -1,3 +1,10 @@
+# [1.34.0-true.11](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.10...v1.34.0-true.11) (2023-06-20)
+
+
+### Bug Fixes
+
+* first time deployment ([835ebf9](https://github.com/mission-apprentissage/bal/commit/835ebf9261b625b16ee7a45e899afde1812949b9))
+
 # [1.34.0-true.10](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.9...v1.34.0-true.10) (2023-06-20)
 
 
