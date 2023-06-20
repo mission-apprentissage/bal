@@ -2,7 +2,7 @@
   "name": "mna-bal",
   "description": "[MNA] BAL",
   "repository": "https://github.com/mission-apprentissage/bal.git",
-  "version": "1.33.1",
+  "version": "1.34.6",
   "author": "MNA",
   "license": "MIT",
   "private": true,
@@ -74,8 +74,7 @@
     "*.{ts,js,tsx}": [
       "eslint .",
       "prettier ./ui ./server"
-    ],
-    "*.{md,json,html}": "prettier ./ui ./server ./shared"
+    ]
   },
   "packageManager": "yarn@3.3.1"
 }

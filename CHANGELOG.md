@@ -1,81 +1,51 @@
-# [1.34.0-true.11](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.10...v1.34.0-true.11) (2023-06-20)
+## [1.34.6](https://github.com/mission-apprentissage/bal/compare/v1.34.5...v1.34.6) (2023-06-19)
 
 
 ### Bug Fixes
 
-* first time deployment ([835ebf9](https://github.com/mission-apprentissage/bal/commit/835ebf9261b625b16ee7a45e899afde1812949b9))
+* here and there ([#149](https://github.com/mission-apprentissage/bal/issues/149)) ([9391c78](https://github.com/mission-apprentissage/bal/commit/9391c783b5b2ac788d7bb346bbf0607d348e4598))
 
-# [1.34.0-true.10](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.9...v1.34.0-true.10) (2023-06-20)
-
-
-### Bug Fixes
-
-* docker graceful stop period ([5c6e5f6](https://github.com/mission-apprentissage/bal/commit/5c6e5f6477555e06e74f129d8fe9d68db3707604))
-
-# [1.34.0-true.9](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.8...v1.34.0-true.9) (2023-06-20)
+## [1.34.5](https://github.com/mission-apprentissage/bal/compare/v1.34.4...v1.34.5) (2023-06-14)
 
 
 ### Bug Fixes
 
-* git config identité ([f6efe26](https://github.com/mission-apprentissage/bal/commit/f6efe26efe225a9443b70f265779bedf23d0e86e))
-* mongodb healthcheck ([bda58bd](https://github.com/mission-apprentissage/bal/commit/bda58bd8104c8804c49356e596bfd3e27fc84740))
-* use known host from vars ([dfb0563](https://github.com/mission-apprentissage/bal/commit/dfb05631c9b07deba98a4ff89cc4a9123170a187))
+* lba campaign affelnet ([#136](https://github.com/mission-apprentissage/bal/issues/136)) ([ee17315](https://github.com/mission-apprentissage/bal/commit/ee173156ce3af86205ddf59728c4e4634bbfa2d1))
 
-# [1.34.0-true.8](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.7...v1.34.0-true.8) (2023-06-20)
+## [1.34.4](https://github.com/mission-apprentissage/bal/compare/v1.34.3...v1.34.4) (2023-06-13)
 
 
 ### Bug Fixes
 
-* git push tag & branch ([e9bab35](https://github.com/mission-apprentissage/bal/commit/e9bab35005c840f821d1d59e19fa4774d00bef2f))
+* upgrade file size to 60MB ([7fa153e](https://github.com/mission-apprentissage/bal/commit/7fa153e49b8c48d00dbd7568c9a02b7d41f1e824))
 
-# [1.34.0-true.7](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.6...v1.34.0-true.7) (2023-06-20)
-
-
-### Bug Fixes
-
-* shutdown order ([89ebe2a](https://github.com/mission-apprentissage/bal/commit/89ebe2a019cf16a597168175608db3d8a4a2251b))
-
-# [1.34.0-true.6](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.5...v1.34.0-true.6) (2023-06-20)
+## [1.34.3](https://github.com/mission-apprentissage/bal/compare/v1.34.2...v1.34.3) (2023-06-13)
 
 
 ### Bug Fixes
 
-* concurrent release ([0b42223](https://github.com/mission-apprentissage/bal/commit/0b422230483b6a325334cd06d110b4ba04ba3e06))
-* git login using token ([2e9805a](https://github.com/mission-apprentissage/bal/commit/2e9805a2b297f86f0dd0f73762f3fddbc7951633))
-* git push ([041c892](https://github.com/mission-apprentissage/bal/commit/041c8922f3e803e1f40e2af60c9f3dc205f59918))
-* github action deployment ([e62557e](https://github.com/mission-apprentissage/bal/commit/e62557e94828070a8245ed4730d45b4d996fe771))
-* GITHUB_REF_NAME ([66f1265](https://github.com/mission-apprentissage/bal/commit/66f12655ceb9856cd27aa4bcd93ac19bfa687054))
-* permissions ([9b1e1e8](https://github.com/mission-apprentissage/bal/commit/9b1e1e8f3740f62721078ce08c34e8a46815e3c1))
-* persist custom token ([572a8ac](https://github.com/mission-apprentissage/bal/commit/572a8ac098e58856f46af10359cf984ac9ea3347))
-* release ([fa798e5](https://github.com/mission-apprentissage/bal/commit/fa798e5800c5701193c9c7673308384d536d05f4))
-* release docker_bal_root ([2e29ac8](https://github.com/mission-apprentissage/bal/commit/2e29ac8b7a8316fd94cfc112d2c3592a8da21031))
-* test concurrent release ([3622a06](https://github.com/mission-apprentissage/bal/commit/3622a060faac2b1f2b2a0158b8901e1988988807))
-* token permission ([0a31ca1](https://github.com/mission-apprentissage/bal/commit/0a31ca16b158dc68a4cf3e8c263e4f6e573f171c))
-* try fast-forward when possible ([7e9fb8f](https://github.com/mission-apprentissage/bal/commit/7e9fb8f0791e028064824ffa68363e98b2d42c0e))
-* use permission write-all ([10a3938](https://github.com/mission-apprentissage/bal/commit/10a39383abbabc8dc13102cbb83d4bf7446ad436))
-* use persist-credentials ([4e455f7](https://github.com/mission-apprentissage/bal/commit/4e455f7d4b59db1175623ea385c39f3f35f29723))
+* re-enable cipher ([ba0130b](https://github.com/mission-apprentissage/bal/commit/ba0130bf993526ac1cb15c80b824797a79966b49))
 
-# [1.34.0-true.5](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.4...v1.34.0-true.5) (2023-06-19)
+## [1.34.2](https://github.com/mission-apprentissage/bal/compare/v1.34.1...v1.34.2) (2023-06-13)
 
 
 ### Bug Fixes
 
-* parallel action ([88f46fc](https://github.com/mission-apprentissage/bal/commit/88f46fc7a14326645798f1590ad470d7c6c9071b))
+* generate mailing list ([06e46f8](https://github.com/mission-apprentissage/bal/commit/06e46f8625aad5e6f98fa51addccb21cac51d13e))
 
-# [1.34.0-true.4](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.3...v1.34.0-true.4) (2023-06-19)
-
-
-### Bug Fixes
-
-* prerelease tag ([7b19757](https://github.com/mission-apprentissage/bal/commit/7b19757b7003be238628c45564804a9c6a42bcbd))
-
-# [1.34.0-true.3](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.2...v1.34.0-true.3) (2023-06-19)
+## [1.34.1](https://github.com/mission-apprentissage/bal/compare/v1.34.0...v1.34.1) (2023-06-13)
 
 
 ### Bug Fixes
 
-* push git ([e74aae7](https://github.com/mission-apprentissage/bal/commit/e74aae703b1da33e97b90e020c425676b6269903))
-* use rc candite ([4934b68](https://github.com/mission-apprentissage/bal/commit/4934b682de36d523525a1151ecce99761fc744e9))
+* extract csv and add to db as stream ([4245a08](https://github.com/mission-apprentissage/bal/commit/4245a089cb69ac6ca56a94fb75029893d44805d7))
+
+# [1.34.0](https://github.com/mission-apprentissage/bal/compare/v1.33.1...v1.34.0) (2023-06-12)
+
+
+### Features
+
+* liste diffusion v0 ([#118](https://github.com/mission-apprentissage/bal/issues/118)) ([e372db4](https://github.com/mission-apprentissage/bal/commit/e372db4b179e0081d881e6f4ed5e9b4a3b69b59c))
 
 ## [1.33.1](https://github.com/mission-apprentissage/bal/compare/v1.33.0...v1.33.1) (2023-06-08)
 

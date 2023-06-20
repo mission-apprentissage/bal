@@ -3,12 +3,10 @@ import assert from "node:assert";
 import { IUser } from "shared/models/user.model";
 import { afterAll, describe, it } from "vitest";
 
-import {
-  createUser,
-  findUser,
-  generateApiKey,
-} from "../../src/modules/actions/users.actions";
-import { build } from "../../src/modules/server";
+import { createUserTokenSimple } from "../../src/common/utils/jwtUtils";
+import { createSession } from "../../src/modules/actions/sessions.actions";
+import { createUser, findUser } from "../../src/modules/actions/users.actions";
+import { build } from "../../src/modules/server/server";
 import { useMongo } from "../utils/mongo.utils";
 
 const app = build();
@@ -27,7 +25,11 @@ describe("Users routes", () => {
       organisation_id: "64520f65d7726475fd54b3b7",
     })) as IUser;
 
-    const token = await generateApiKey(user);
+    const token = createUserTokenSimple({ payload: { email: user.email } });
+
+    await createSession({
+      token,
+    });
 
     const userWithToken = await findUser({ _id: user._id });
 
@@ -37,7 +39,7 @@ describe("Users routes", () => {
       method: "GET",
       url: "/api/auth/session",
       headers: {
-        ["Authorization"]: `Bearer ${token}`,
+        ["Cookie"]: `bal_session=${token}`,
       },
     });
 
@@ -46,7 +48,6 @@ describe("Users routes", () => {
     assert.equal(response.json().email, "connected@exemple.fr");
     assert.equal(response.json().password, undefined);
     assert.equal(response.json().api_key, undefined);
-    assert.ok(response.json().api_key_used_at);
   });
 
   it("should allow admin to create a user", async () => {
@@ -57,7 +58,11 @@ describe("Users routes", () => {
       is_admin: true,
     })) as IUser;
 
-    const token = await generateApiKey(admin);
+    const token = createUserTokenSimple({ payload: { email: admin.email } });
+
+    await createSession({
+      token,
+    });
 
     const response = await app.inject({
       method: "POST",
@@ -68,7 +73,7 @@ describe("Users routes", () => {
         organisation_id: "64520f65d7726475fd54b3b7",
       },
       headers: {
-        ["Authorization"]: `Bearer ${token}`,
+        ["Cookie"]: `bal_session=${token}`,
       },
     });
 
@@ -89,7 +94,11 @@ describe("Users routes", () => {
       organisation_id: "64520f65d7726475fd54b3b7",
     })) as IUser;
 
-    const token = await generateApiKey(user);
+    const token = createUserTokenSimple({ payload: { email: user.email } });
+
+    await createSession({
+      token,
+    });
 
     const response = await app.inject({
       method: "POST",
@@ -100,7 +109,7 @@ describe("Users routes", () => {
         organisation_id: "64520f65d7726475fd54b3b7",
       },
       headers: {
-        ["Authorization"]: `Bearer ${token}`,
+        ["Cookie"]: `bal_session=${token}`,
       },
     });
 

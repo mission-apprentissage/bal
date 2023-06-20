@@ -1,5 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
+import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
 
 const collectionName = "persons";
@@ -23,7 +24,7 @@ const indexes: IModelDescriptor["indexes"] = [
 export const SPerson = {
   type: "object",
   properties: {
-    _id: { type: "string" },
+    _id: { type: "string", format: "ObjectId" },
     email: { type: "string" },
     civility: {
       type: "string",
@@ -62,6 +63,7 @@ export const SPerson = {
   required: ["_id", "email", "organisation_id"],
 } as const;
 
-export interface IPerson extends FromSchema<typeof SPerson> {}
+export interface IPerson
+  extends FromSchema<typeof SPerson, { deserialize: deserialize }> {}
 
 export default { schema: SPerson, indexes, collectionName };

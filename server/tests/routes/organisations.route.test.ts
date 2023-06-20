@@ -2,13 +2,13 @@ import assert from "node:assert";
 
 import nock from "nock";
 import type { IUser } from "shared/models/user.model";
-import { afterAll, beforeEach, describe, it } from "vitest";
+import { afterAll, describe, it } from "vitest";
 
 import {
   createUser,
   generateApiKey,
 } from "../../src/modules/actions/users.actions";
-import { build } from "../../src/modules/server";
+import { build } from "../../src/modules/server/server";
 import { aktoValid } from "../data/akto";
 import {
   opcoEpInvalid,
@@ -35,9 +35,6 @@ describe("Organisations", () => {
     })) as IUser;
 
     userToken = await generateApiKey(user);
-  });
-
-  beforeEach(async () => {
     nock.cleanAll();
   });
 
@@ -96,14 +93,14 @@ describe("Organisations", () => {
         },
       });
 
+      assert.equal(response.json().is_valid, true);
+      assert.equal(response.json().on, "email");
+
       tokenMock.done();
       verificationMock.done();
 
       tokenMockAkto.done();
       verificationMockAkto.done();
-
-      assert.equal(response.json().is_valid, true);
-      assert.equal(response.json().on, "email");
     });
 
     it("should be valid for correct domain", async () => {
@@ -160,14 +157,24 @@ describe("Organisations", () => {
         },
       });
 
-      tokenMock.done();
-      verificationMock.done();
+      assert.equal(response.statusCode, 400);
+      assert.deepEqual(response.json(), {
+        errors: [
+          {
+            code: "custom",
+            message: "Le siret ne respecte pas l'algorithme luhn",
+            path: ["siret"],
+          },
+        ],
+        message: "Validation failed",
+      });
 
-      tokenMockAkto.done();
-      verificationMockAkto.done();
+      // We didn't call APIs
+      tokenMock.pendingMocks();
+      verificationMock.pendingMocks();
 
-      assert.equal(response.json().is_valid, false);
-      assert.equal(response.json().on, undefined);
+      tokenMockAkto.pendingMocks();
+      verificationMockAkto.pendingMocks();
     });
   });
 });

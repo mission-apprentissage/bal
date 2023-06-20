@@ -33,12 +33,12 @@ export const opcoEpSiretInconnu = {
 
 export const opcoEpValidEmail = {
   email: "valid-email-opco@test.dev",
-  siret: "12341234123412",
+  siret: "13002526500013", // Siret Dinum
 };
 
 export const opcoEpValidDomain = {
   email: "valid-domain-opco@test.dev",
-  siret: "43214321432121",
+  siret: "13002526500013", // Siret Dinum
 };
 
 export const opcoEpInvalid = {

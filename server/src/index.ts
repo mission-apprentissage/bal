@@ -1,9 +1,20 @@
-import { config } from "config/config";
+import { startCLI } from "@/commands";
+import logger from "@/common/logger";
+import {
+  configureDbSchemaValidation,
+  connectToMongodb,
+} from "@/common/utils/mongodbUtils";
+import config from "@/config";
+import { modelDescriptors } from "@/db/models";
+import createGlobalServices from "@/services";
 
-import { modelDescriptors } from "./db/models";
-import { server } from "./modules/server";
-import createGlobalServices from "./services";
-import { configureDbSchemaValidation, connectToMongodb } from "./utils/mongodb";
+process.on("unhandledRejection", (err) =>
+  logger.error(err, "unhandledRejection")
+);
+process.on("uncaughtException", (err) =>
+  logger.error(err, "uncaughtException")
+);
+
 (async function () {
   try {
     await connectToMongodb(config.mongodb.uri);
@@ -11,13 +22,9 @@ import { configureDbSchemaValidation, connectToMongodb } from "./utils/mongodb";
 
     await createGlobalServices();
 
-    server.listen({ port: 5000, host: "0.0.0.0" }, function (err) {
-      if (err) {
-        console.log(err);
-        process.exit(1);
-      }
-    });
+    startCLI();
   } catch (err) {
+    logger.error({ err }, "startup error");
     process.exit(1);
   }
 })();
