@@ -39,35 +39,50 @@
         chdir: /opt/bal
         cmd: "sudo docker compose pull"
 
+    - name: Récupération du status de la stack
+      shell:
+        chdir: /opt/bal
+        cmd: docker stack ls --format json
+      register: stack_status
+
     - name: Récupération du status des migrations
       shell:
         chdir: /opt/bal
         cmd: "sudo /opt/bal/tools/migrations/migrations-status.sh"
       register: migration_status_output
+      when: stack_status.stdout != ""
 
     - name: "Shutdown processor"
       shell:
         chdir: /opt/bal
         cmd: "sudo docker service scale bal_processor=0"
-      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+      when:
+        - stack_status.stdout != ""
+        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
 
     - name: "Activation du mode maintenance pour effectuer la migration"
       shell:
         chdir: /opt/bal
         cmd: "sudo /opt/bal/tools/maintenance/maintenance-on.sh"
-      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+      when:
+        - stack_status.stdout != ""
+        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
 
     - name: "Shutdown server"
       shell:
         chdir: /opt/bal
         cmd: "sudo docker service scale bal_server=0"
-      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+      when:
+        - stack_status.stdout != ""
+        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
 
     - name: Lancement des migrations
       shell:
         chdir: /opt/bal
         cmd: "sudo /opt/bal/tools/migrations/migrations-up.sh"
-      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+      when:
+        - stack_status.stdout != ""
+        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
 
     - name: Lancement de l'application {{env_type}}
       shell:
@@ -90,7 +105,9 @@
       shell:
         chdir: /opt/bal
         cmd: "sudo /opt/bal/tools/maintenance/maintenance-off.sh"
-      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+      when:
+        - stack_status.stdout != ""
+        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
 
     - name: Attente du deploiement
       shell:
