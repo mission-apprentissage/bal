@@ -54,7 +54,7 @@ jobs:
         with:
           name: github_actions
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+          known_hosts: ${{ vars.SSH_KNOWN_HOSTS }}
           config: |
             Host *
               IdentityFile ~/.ssh/github_actions
