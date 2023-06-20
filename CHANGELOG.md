@@ -1,3 +1,12 @@
+# [1.34.0-true.9](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.8...v1.34.0-true.9) (2023-06-20)
+
+
+### Bug Fixes
+
+* git config identité ([f6efe26](https://github.com/mission-apprentissage/bal/commit/f6efe26efe225a9443b70f265779bedf23d0e86e))
+* mongodb healthcheck ([bda58bd](https://github.com/mission-apprentissage/bal/commit/bda58bd8104c8804c49356e596bfd3e27fc84740))
+* use known host from vars ([dfb0563](https://github.com/mission-apprentissage/bal/commit/dfb05631c9b07deba98a4ff89cc4a9123170a187))
+
 # [1.34.0-true.8](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.7...v1.34.0-true.8) (2023-06-20)
 
 
