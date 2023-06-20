@@ -12,9 +12,14 @@ export const Nav = () => {
         Accueil
       </NavLink>
       {user && (
-        <NavLink href="/usage" segment="usage">
-          API
-        </NavLink>
+        <>
+          <NavLink href="/usage" segment="usage">
+            API
+          </NavLink>
+          <NavLink href="/liste-diffusion" segment="liste-diffusion">
+            Liste de diffusion
+          </NavLink>
+        </>
       )}
     </HStack>
   );

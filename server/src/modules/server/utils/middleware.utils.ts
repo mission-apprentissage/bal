@@ -5,14 +5,11 @@ import { preValidationHookHandler } from "fastify";
  */
 export const ensureUserIsAdmin: preValidationHookHandler = async (
   request,
-  reply,
-  done
+  reply
 ) => {
   const { user } = request;
 
   if (!user?.is_admin) {
     return reply.status(401).send("Non autorisé");
   }
-
-  done();
 };

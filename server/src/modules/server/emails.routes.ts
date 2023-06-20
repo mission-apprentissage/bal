@@ -13,7 +13,7 @@ import {
   renderEmail,
   unsubscribeUser,
 } from "../actions/emails.actions";
-import { Server } from ".";
+import { Server } from "./server";
 
 export const emailsRoutes = ({ server }: { server: Server }) => {
   const checkEmailToken: preValidationHookHandler = async (
