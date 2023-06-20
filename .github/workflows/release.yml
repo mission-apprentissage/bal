@@ -26,6 +26,14 @@ jobs:
           token: ${{ secrets.GH_FG_TOKEN }}
           persist-credentials: true
 
+      - name: Git config identity
+        run: |
+          git config --global user.name "$USER_NAME"
+          git config --global user.email "$USER_EMAIL"
+        env:
+          USER_NAME: ${{ secrets.USER_NAME }}
+          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
