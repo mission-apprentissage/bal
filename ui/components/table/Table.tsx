@@ -214,7 +214,7 @@ const Table = <TData extends object>({
           })}
         </Box>
       </Box>
-      {data.length > 5 && (
+      {pagination && data.length > 5 && (
         <>
           <Divider my={2} />
           <HStack spacing={3} justifyContent="space-between">
