@@ -1,3 +1,10 @@
+# [1.34.0-true.7](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.6...v1.34.0-true.7) (2023-06-20)
+
+
+### Bug Fixes
+
+* shutdown order ([89ebe2a](https://github.com/mission-apprentissage/bal/commit/89ebe2a019cf16a597168175608db3d8a4a2251b))
+
 # [1.34.0-true.6](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.5...v1.34.0-true.6) (2023-06-20)
 
 
