@@ -4,13 +4,13 @@ import { Box, Button, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import NavLink from "next/link";
 
-import { IDocument } from "../../../../shared/models/document.model";
 import Table from "../../../components/table/Table";
 import { Bin } from "../../../theme/icons/Bin";
 import { api } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 import { formatBytes } from "../../../utils/file.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
+import { IDocument } from "shared/models/document.model";
 
 const AdminImportPage = () => {
   const { data: documentLists } = useQuery<IDocument[]>({

@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { IResGetPersons } from "../../../../../shared/routes/person.routes";
 import FormSearch from "../../../../components/formSearch/FormSearch";
 import Table from "../../../../components/table/Table";
 import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";
@@ -13,6 +12,7 @@ import {
   getSearchParamsForQuery,
 } from "../../../../utils/query.utils";
 import { PAGES } from "../../../components/breadcrumb/Breadcrumb";
+import { IResGetPersons } from "shared/routes/person.routes";
 
 const PersonList = () => {
   const searchParams = useSearchParams();

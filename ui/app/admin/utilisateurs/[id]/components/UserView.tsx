@@ -4,12 +4,12 @@ import { Heading, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { FC } from "react";
 
-import { IResGetUser } from "../../../../../../shared/routes/user.routes";
 import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
 import { formatDate } from "../../../../../utils/date.utils";
 import Breadcrumb, {
   PAGES,
 } from "../../../../components/breadcrumb/Breadcrumb";
+import { IResGetUser } from "shared/routes/user.routes";
 import { getPersonDisplayName } from "../../../personnes/persons.format";
 
 interface Props {

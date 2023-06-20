@@ -4,11 +4,11 @@ import { Heading, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { FC } from "react";
 
-import { IResGetPerson } from "../../../../../../shared/routes/person.routes";
 import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
 import Breadcrumb, {
   PAGES,
 } from "../../../../components/breadcrumb/Breadcrumb";
+import { IResGetPerson } from "shared/routes/person.routes";
 
 interface Props {
   person: IResGetPerson;

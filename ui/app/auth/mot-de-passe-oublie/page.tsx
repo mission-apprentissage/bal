@@ -15,14 +15,11 @@ import {
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import {
-  IReqGetResetPassword,
-  IStatus,
-} from "../../../../shared/routes/auth.routes";
 import Link from "../../../components/link/Link";
 import { api } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import { NavLink } from "../../components/NavLink";
+import { IReqGetResetPassword, IStatus } from "shared/routes/auth.routes";
 
 const MotDePasseOubliePage = () => {
   const [status, setStatus] = useState<IStatus>();
