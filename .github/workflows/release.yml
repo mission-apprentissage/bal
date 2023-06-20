@@ -23,15 +23,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          persist-credentials: false
-
-      - name: Git login
-        run: |
-          git config --global user.name "$USER_NAME"
-          git config --global user.email "$USER_EMAIL"
-        env:
-          USER_NAME: ${{ secrets.USER_NAME }}
-          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+          token: ${{ secrets.GH_FG_TOKEN }}
+          persist-credentials: true
 
       - uses: actions/setup-node@v3
         with:
@@ -76,7 +69,6 @@ jobs:
       - name: bump and release
         run: npx -y antoinebigard-semantic-release
         env:
-          GH_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           GITHUB_REF_NAME: ${{ env.GITHUB_REF_NAME }}
