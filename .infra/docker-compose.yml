@@ -141,6 +141,12 @@ services:
         fluentd-address: localhost:24224
         tag: mongodb
         fluentd-async: "true"
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "'db.runCommand(\"ping\").ok'", '--quiet']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
 
   metabase:
     image: metabase/metabase:v0.46.0
