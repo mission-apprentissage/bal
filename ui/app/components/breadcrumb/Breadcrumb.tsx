@@ -93,6 +93,10 @@ export const PAGES = {
     title: "Healthcheck",
     path: "/usage/healthcheck",
   }),
+  listeDiffusion: () => ({
+    title: "Liste de diffusion",
+    path: "/liste-diffusion",
+  }),
 };
 
 interface Page {

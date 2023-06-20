@@ -3,7 +3,7 @@ import nock from "nock";
 import {
   OPCO_EP_AUTH_BASE_URL,
   OPCO_EP_BASE_URL,
-} from "../../../src/modules/apis/opcoEp";
+} from "../../../src/common/apis/opcoEp";
 import {
   opcoEpDomaineIdentique,
   opcoEpEmailOuDomaineInconnu,
