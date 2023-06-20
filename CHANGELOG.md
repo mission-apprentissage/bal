@@ -1,3 +1,10 @@
+# [1.34.0-true.10](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.9...v1.34.0-true.10) (2023-06-20)
+
+
+### Bug Fixes
+
+* docker graceful stop period ([5c6e5f6](https://github.com/mission-apprentissage/bal/commit/5c6e5f6477555e06e74f129d8fe9d68db3707604))
+
 # [1.34.0-true.9](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.8...v1.34.0-true.9) (2023-06-20)
 
 
