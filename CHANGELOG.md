@@ -1,3 +1,23 @@
+# [1.34.0-true.6](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.5...v1.34.0-true.6) (2023-06-20)
+
+
+### Bug Fixes
+
+* concurrent release ([0b42223](https://github.com/mission-apprentissage/bal/commit/0b422230483b6a325334cd06d110b4ba04ba3e06))
+* git login using token ([2e9805a](https://github.com/mission-apprentissage/bal/commit/2e9805a2b297f86f0dd0f73762f3fddbc7951633))
+* git push ([041c892](https://github.com/mission-apprentissage/bal/commit/041c8922f3e803e1f40e2af60c9f3dc205f59918))
+* github action deployment ([e62557e](https://github.com/mission-apprentissage/bal/commit/e62557e94828070a8245ed4730d45b4d996fe771))
+* GITHUB_REF_NAME ([66f1265](https://github.com/mission-apprentissage/bal/commit/66f12655ceb9856cd27aa4bcd93ac19bfa687054))
+* permissions ([9b1e1e8](https://github.com/mission-apprentissage/bal/commit/9b1e1e8f3740f62721078ce08c34e8a46815e3c1))
+* persist custom token ([572a8ac](https://github.com/mission-apprentissage/bal/commit/572a8ac098e58856f46af10359cf984ac9ea3347))
+* release ([fa798e5](https://github.com/mission-apprentissage/bal/commit/fa798e5800c5701193c9c7673308384d536d05f4))
+* release docker_bal_root ([2e29ac8](https://github.com/mission-apprentissage/bal/commit/2e29ac8b7a8316fd94cfc112d2c3592a8da21031))
+* test concurrent release ([3622a06](https://github.com/mission-apprentissage/bal/commit/3622a060faac2b1f2b2a0158b8901e1988988807))
+* token permission ([0a31ca1](https://github.com/mission-apprentissage/bal/commit/0a31ca16b158dc68a4cf3e8c263e4f6e573f171c))
+* try fast-forward when possible ([7e9fb8f](https://github.com/mission-apprentissage/bal/commit/7e9fb8f0791e028064824ffa68363e98b2d42c0e))
+* use permission write-all ([10a3938](https://github.com/mission-apprentissage/bal/commit/10a39383abbabc8dc13102cbb83d4bf7446ad436))
+* use persist-credentials ([4e455f7](https://github.com/mission-apprentissage/bal/commit/4e455f7d4b59db1175623ea385c39f3f35f29723))
+
 # [1.34.0-true.5](https://github.com/mission-apprentissage/bal/compare/v1.34.0-true.4...v1.34.0-true.5) (2023-06-19)
 
 
