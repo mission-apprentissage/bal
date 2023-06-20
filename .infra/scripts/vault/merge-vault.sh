@@ -24,7 +24,7 @@ ansible-vault decrypt --vault-password-file="${SCRIPT_DIR}/get-vault-password-cl
 ansible-vault decrypt --vault-password-file="${SCRIPT_DIR}/get-vault-password-client.sh" --output "$current_tempfile" "$current_version"
 ansible-vault decrypt --vault-password-file="${SCRIPT_DIR}/get-vault-password-client.sh" --output "$other_tempfile" "$other_version"
 
-git diff "$ancestor_tempfile" "$other_tempfile"
+git --no-pager diff --no-index "$ancestor_tempfile" "$other_tempfile" || true
 git merge-file "$current_tempfile" "$ancestor_tempfile" "$other_tempfile"
 
 ansible-vault encrypt --vault-password-file="${SCRIPT_DIR}/get-vault-password-client.sh" --output "$current_version" "$current_tempfile"
