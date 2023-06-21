@@ -1,6 +1,6 @@
 {
   "name": "shared",
-  "version": "1.35.1",
+  "version": "1.35.2-rc.1",
   "main": "./index.ts",
   "types": "./index.ts",
   "author": "mna",
@@ -16,5 +16,6 @@
     "luhn": "^2.4.1",
     "mongodb": "^4.11.0",
     "zod": "^3.21.4"
-  }
+  },
+  "stableVersion": "1.35.1"
 }

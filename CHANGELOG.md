@@ -1,3 +1,15 @@
+## [1.35.2-rc.1](https://github.com/mission-apprentissage/bal/compare/v1.35.1...v1.35.2-rc.1) (2023-06-21)
+
+
+### Bug Fixes
+
+* build ([080862b](https://github.com/mission-apprentissage/bal/commit/080862b8679853633daf52c6270de7bcb394dc41))
+* copy from ([94257c7](https://github.com/mission-apprentissage/bal/commit/94257c760921c82bde1057cc3f670df56195f06e))
+* possibly empty node_modules ([df0b43b](https://github.com/mission-apprentissage/bal/commit/df0b43b832f00c590dedc6efced6216005903d91))
+* simplify builder ([4db648c](https://github.com/mission-apprentissage/bal/commit/4db648ce0209dc35715fa53ea5be8642c09923d2))
+* trigger new release ([01df6d6](https://github.com/mission-apprentissage/bal/commit/01df6d6b6976d0d6813ca8f03fbb93be433db26d))
+* use Dockerfile as cache key too ([c5238ca](https://github.com/mission-apprentissage/bal/commit/c5238cabfc3510b67dbfb727a2b015d6529c9e26))
+
 ## [1.35.1](https://github.com/mission-apprentissage/bal/compare/v1.35.0...v1.35.1) (2023-06-21)
 
 
