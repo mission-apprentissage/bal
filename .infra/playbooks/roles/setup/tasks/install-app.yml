@@ -6,6 +6,21 @@
     - app
   when: item.state == 'directory'
 
+- name: Création des répertoires "/opt/bal/data"
+  file:
+    path: "/opt/bal/data/{{ item}}/"
+    state: directory
+  with_items:
+    - certbot
+    - clamav
+    - fluentd
+    - metabase
+    - mongodb
+    - nginx
+    - server
+    - smtp
+    - ssl
+
 - name: Copie des fichiers 'tools'
   ansible.builtin.template:
     src: "{{ item.src }}"
@@ -83,6 +98,4 @@
 - name: Add cron to rotate nginx files
   ansible.builtin.cron:
     name: "rotate_nginx_log_files"
-    minute: "0"
-    hour: "1"
-    job: "bash /opt/bal/tools/rotate-nginx-log-files.sh >> /var/log/cron.log 2>&1"
+    state : absent

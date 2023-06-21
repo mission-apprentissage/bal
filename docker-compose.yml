@@ -1,4 +1,5 @@
-version: "2.4"
+version: "3.8"
+
 services:
   repo_modules:
     restart: "no"
@@ -9,13 +10,6 @@ services:
       - ./:/app/:z
 
   reverse_proxy:
-    image: bal_reverse_proxy
-    container_name: bal_reverse_proxy
-    deploy:
-      resources:
-        limits:
-          memory: 256m
-    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
@@ -29,24 +23,15 @@ services:
       - DNS_SERVER=127.0.0.11
       - PROXY=1
       - SERVERNAME=localhost
-      - ACCESSLOG=/data/access.log
-      - ERRORLOG=/data/error.log
       - LOGLEVEL=warn
       - NGINX_ALWAYS_TLS_REDIRECT=false
       - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
     volumes:
       - bal_nginx_data:/data:z
-      - ./reverse_proxy/dev/includes:/etc/nginx/templates/includes/env
     build:
       context: reverse_proxy
 
   ui:
-    image: bal_ui
-    container_name: bal_ui
-    deploy:
-      resources:
-        limits:
-          memory: 2g
     stdin_open: true
     networks:
       - bal_network
@@ -64,13 +49,6 @@ services:
       dockerfile: ui/Dockerfile.dev
 
   server:
-    image: bal_server
-    container_name: bal_server
-    restart: "no"
-    deploy:
-      resources:
-        limits:
-          memory: 1g
     networks:
       - bal_network
     depends_on:
@@ -95,8 +73,6 @@ services:
       dockerfile: server/Dockerfile.dev
 
   processor:
-    image: bal_server
-    container_name: bal_processor
     command: ["yarn", "cli", "processor"]
     deploy:
       resources:
@@ -123,7 +99,6 @@ services:
 
   mongodb:
     image: mongo:6.0.2-focal
-    container_name: bal_mongodb
     deploy:
       resources:
         limits:
@@ -141,11 +116,6 @@ services:
 
   metabase:
     image: metabase/metabase:v0.46.0
-    container_name: bal_metabase
-    deploy:
-      resources:
-        limits:
-          memory: 2g
     depends_on:
       - mongodb
     restart: unless-stopped
@@ -162,11 +132,6 @@ services:
 
   clamav:
     image: clamav/clamav:latest
-    container_name: bal_clamav
-    deploy:
-      resources:
-        limits:
-          memory: 2g
     restart: unless-stopped
     networks:
       - bal_network
@@ -178,11 +143,6 @@ services:
   
   smtp:
     image: axllent/mailpit:v1.5.5
-    container_name: bal_smtp
-    deploy:
-      resources:
-        limits:
-          memory: 128m
     ports:
       - 1025:1025
     networks:

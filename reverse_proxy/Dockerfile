@@ -37,17 +37,9 @@ RUN set -eux; \
   strip objs/ngx_http_headers_more_filter_module.so; \
   cp objs/ngx_http_headers_more_filter_module.so /etc/nginx/modules/;
 
-
 FROM owasp/modsecurity-crs:3.3.4-nginx-202303180303
 
-RUN apt-get update \
-  && apt-get install -y logrotate
-
 COPY --from=nginxModules /etc/nginx/modules/ngx_http_headers_more_filter_module.so /etc/nginx/modules/ngx_http_headers_more_filter_module.so
-
-#Logrotate
-COPY app/logrotate.d/logrotate.conf /etc/logrotate.conf
-RUN chmod 644 /etc/logrotate.conf
 
 #Nginx
 COPY app/nginx /etc/nginx
