@@ -16,7 +16,7 @@ fileignoreconfig:
 - filename: .github/workflows/remove-preview.yml
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/.env_server
-  checksum: 38cb5efccb41c909f99895b8ea9de63b639327784e30cc8d476d01a50e64111e
+  checksum: 6af84bb7aa4a9867d0fb6a0f73cf6f0325483c440dc8dc018c08a6d34d9eb48c
 - filename: .infra/.env_ui
   checksum: 0dd94c954d75fd19bbe669eef8238c703d9fb8bea4025358071f9fae6140ac85
 - filename: .infra/README.md
