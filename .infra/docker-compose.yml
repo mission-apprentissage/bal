@@ -13,9 +13,6 @@ services:
       - "443:443"
     networks:
       - bal_network
-    depends_on:
-      - server
-      - ui
     environment:
       - SERVER_NAME={{dns_name}}
       - NGINX_ALWAYS_TLS_REDIRECT=true
@@ -80,8 +77,6 @@ services:
           memory: 256m
     networks:
       - bal_network
-    depends_on:
-      - server
     env_file: .env_ui
 
   mongodb:

@@ -21,9 +21,6 @@ services:
       - 443:443
     networks:
       - bal_network
-    depends_on:
-      - server
-      - ui
     environment:
       - PARANOIA=1
       - ANOMALY_INBOUND=5
@@ -53,8 +50,6 @@ services:
     stdin_open: true
     networks:
       - bal_network
-    depends_on:
-      - server
     environment:
       - NEXT_SERVER_URI=http://server:5000
       - NEXT_PUBLIC_SENTRY_DSN=
