@@ -1,4 +1,5 @@
 import { MultipartFile } from "@fastify/multipart";
+import Boom from "@hapi/boom";
 import { ObjectId } from "mongodb";
 import { SResError } from "shared/routes/common.routes";
 import {
@@ -65,28 +66,27 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       const { type_document } = request.query;
       const fileSize = parseInt(request.headers["content-length"] ?? "0");
 
-      const data = await request.file({
-        limits: {
-          fileSize: FILE_SIZE_LIMIT,
-        },
-      });
-
-      if (!request.user || !data || !validateFile(data)) {
-        return response.status(401).send({
-          type: "invalid_file",
-          message: "Le fichier n'est pas au bon format",
-        });
-      }
-
       try {
-        const document = await createEmptyDocument({
+        const data = await request.file({
+          limits: {
+            fileSize: FILE_SIZE_LIMIT,
+          },
+        });
+
+        if (!request.user || !data || !validateFile(data)) {
+          throw Boom.unauthorized("Le fichier n'est pas au bon format");
+        }
+
+        let document = null as any;
+
+        document = await createEmptyDocument({
           type_document,
           fileSize,
           filename: data.filename,
         });
 
         if (!document) {
-          throw new Error("Impossible de stocker de le fichier");
+          throw Boom.badImplementation("Impossible de stocker de le fichier");
         }
 
         const added_by = request.user._id.toString();
@@ -106,11 +106,12 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           .status(200)
           .send(document as unknown as IResPostAdminUpload);
       } catch (error) {
-        const { message } = error as Error;
-        return response.status(401).send({
-          type: "invalid_file",
-          message,
-        });
+        throw Boom.badImplementation(error as Error);
+        // const { message } = error as Error;
+        // return response.status(401).send({
+        //   type: "invalid_file",
+        //   message,
+        // });
       }
     }
   );

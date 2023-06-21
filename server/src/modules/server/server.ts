@@ -79,12 +79,17 @@ export function build(opts: FastifyServerOptions = {}) {
   app.register(fastifyCors, {});
 
   app.setErrorHandler(function (error, _request, reply) {
-    reply.log.error(error);
+    // reply.log.error(error); // TODO rattacher le logger fastify différement
 
     // @ts-ignore
     if (error.isBoom) {
       // eslint-disable-next-line prefer-const
-      let payload = { message: error.message, errors: [] };
+      let payload = {
+        message: error.message,
+        errors:
+          // @ts-ignore
+          error.errors || [],
+      };
       if (error.name === "ZodError") {
         payload.message = "Validation failed";
         // @ts-ignore

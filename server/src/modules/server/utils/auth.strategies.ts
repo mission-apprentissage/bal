@@ -1,4 +1,5 @@
 import { FastifyAuthFunction } from "@fastify/auth";
+import Boom from "@hapi/boom";
 import { JwtPayload } from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 import { IUser } from "shared/models/user.model";
@@ -55,14 +56,14 @@ export const authValidateSession: FastifyAuthFunction = async (
   const token = request.cookies?.[config.session.cookieName];
 
   if (!token) {
-    throw new Error("Session invalide");
+    throw Boom.unauthorized("Session invalide");
   }
 
   try {
     const session = await getSession({ token });
 
     if (!session) {
-      throw new Error("Session invalide");
+      throw Boom.unauthorized("Session invalide");
     }
 
     const { email } = decodeToken(token) as JwtPayload;
@@ -70,12 +71,12 @@ export const authValidateSession: FastifyAuthFunction = async (
     const user = await findUser({ email });
 
     if (!user) {
-      throw new Error("Session invalide");
+      throw Boom.unauthorized("Session invalide");
     }
 
     request.user = user;
   } catch (error) {
-    throw new Error("Session invalide");
+    throw Boom.unauthorized("Session invalide");
   }
 };
 
