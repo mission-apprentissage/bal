@@ -7,7 +7,6 @@ concurrency:
 
 jobs:
   tests:
-    if: github.event.pull_request.draft == false
     uses: "./.github/workflows/ci.yml"
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
