@@ -52,6 +52,7 @@
       shell:
         chdir: /opt/bal
         cmd: "sudo docker compose -f docker-compose.yml --env-file .env_docker_compose up -d"
+
       register: docker_compose_output
       when: env_type == 'production'
 
