@@ -44,20 +44,28 @@
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/bal
-        cmd: "sudo docker compose -f docker-compose.yml -f docker-compose.recette.yml --env-file .env_docker_compose up -d"
-      register: docker_compose_output
+        cmd: "sudo env $(cat .env_docker_compose | xargs) docker stack deploy -c docker-compose.yml -c docker-compose.recette.yml bal"
+      register: docker_deploy_output
       when: env_type == 'recette'
+
+    - debug:
+        var: docker_deploy_output
 
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/bal
-        cmd: "sudo docker compose -f docker-compose.yml --env-file .env_docker_compose up -d"
-
-      register: docker_compose_output
+        cmd: "sudo env $(cat .env_docker_compose | xargs) docker stack deploy -c docker-compose.yml bal"
+      register: docker_deploy_output
       when: env_type == 'production'
 
     - debug:
-        var: docker_compose_output
+        var: docker_deploy_output
+
+    - name: Attente du deploiement
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock sudobmitch/docker-stack-wait bal"
+      timeout: 900
 
     - name: migrations
       shell: "sudo bash /opt/bal/tools/run-migrations.sh"

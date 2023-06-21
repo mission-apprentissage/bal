@@ -3,7 +3,6 @@ version: "3.8"
 services:
   reverse_proxy:
     image: "${registry?}/mission-apprentissage/mna_bal_reverse_proxy:${reverse_proxy_version?}"
-    container_name: bal_reverse_proxy
     restart: unless-stopped
     deploy:
       resources:
@@ -37,7 +36,6 @@ services:
 
   server:
     image: "${registry?}/mission-apprentissage/mna_bal_server:${app_version?}"
-    container_name: bal_server
     restart: unless-stopped
     deploy:
       resources:
@@ -53,7 +51,6 @@ services:
 
   processor:
     image: "${registry?}/mission-apprentissage/mna_bal_server:${app_version?}"
-    container_name: bal_processor
     restart: unless-stopped
     deploy:
       resources:
@@ -70,7 +67,6 @@ services:
 
   ui:
     image: "${registry?}/mission-apprentissage/mna_bal_ui:${app_version?}"
-    container_name: bal_ui
     restart: unless-stopped
     deploy:
       resources:
@@ -82,7 +78,6 @@ services:
 
   mongodb:
     image: mongo:6.0.2-focal
-    container_name: bal_mongodb
     restart: unless-stopped
     deploy:
       resources:
@@ -99,7 +94,6 @@ services:
 
   metabase:
     image: metabase/metabase:v0.46.0
-    container_name: bal_metabase
     deploy:
       resources:
         limits:
@@ -120,7 +114,6 @@ services:
 
   clamav:
     image: clamav/clamav:latest
-    container_name: bal_clamav
     deploy:
       resources:
         limits:
@@ -136,7 +129,6 @@ services:
 
   nodeexporter:
     image: prom/node-exporter:v1.5.0
-    container_name: nodeexporter
     restart: unless-stopped
     hostname: bal-production
     command:
@@ -153,7 +145,6 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.46.0
-    container_name: cadvisor
     restart: unless-stopped
     hostname: bal-production
     privileged: true
