@@ -44,7 +44,7 @@ jobs:
         with:
           path: /tmp/docker_bal_root.tar
           fail-on-cache-miss: true
-          key: docker-images-${{ hashFiles('**/yarn.lock') }}
+          key: docker-images-${{ hashFiles('./yarn.lock') }}-${{ hashFiles('./Dockerfile') }}
 
       - name: Load Docker image from cache
         run: docker load < /tmp/docker_bal_root.tar
