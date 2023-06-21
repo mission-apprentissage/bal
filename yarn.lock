@@ -5358,7 +5358,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bson@npm:^4.7.0, bson@npm:^4.7.2":
+"bson@npm:^4.7.2":
   version: 4.7.2
   resolution: "bson@npm:4.7.2"
   dependencies:
@@ -6840,13 +6840,6 @@ __metadata:
   version: 1.0.0
   resolution: "delegates@npm:1.0.0"
   checksum: a51744d9b53c164ba9c0492471a1a2ffa0b6727451bdc89e31627fdf4adda9d51277cfcbfb20f0a6f08ccb3c436f341df3e92631a3440226d93a8971724771fd
-  languageName: node
-  linkType: hard
-
-"denque@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "denque@npm:2.1.0"
-  checksum: 1d4ae1d05e59ac3a3481e7b478293f4b4c813819342273f3d5b826c7ffa9753c520919ba264f377e09108d24ec6cf0ec0ac729a5686cbb8f32d797126c5dae74
   languageName: node
   linkType: hard
 
@@ -11091,7 +11084,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash-es@npm:4.17.21, lodash-es@npm:^4.17.21":
+"lodash-es@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash-es@npm:4.17.21"
   checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2
@@ -12806,26 +12799,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:4.11.0":
-  version: 4.11.0
-  resolution: "mongodb@npm:4.11.0"
-  dependencies:
-    "@aws-sdk/credential-providers": ^3.186.0
-    bson: ^4.7.0
-    denque: ^2.1.0
-    mongodb-connection-string-url: ^2.5.4
-    saslprep: ^1.0.3
-    socks: ^2.7.1
-  dependenciesMeta:
-    "@aws-sdk/credential-providers":
-      optional: true
-    saslprep:
-      optional: true
-  checksum: 3080c2f58dc712ca6d0a34b0f4101c3ca66fbf86360b2a5ea2b64a9f757b4a0d7b77851688657fc3240ac748ddcd69c21ec2f7c785f10cb7d41e00e863f415ec
-  languageName: node
-  linkType: hard
-
-"mongodb@npm:^4.4.1":
+"mongodb@npm:^4.11.0, mongodb@npm:^4.4.1":
   version: 4.16.0
   resolution: "mongodb@npm:4.16.0"
   dependencies:
@@ -12843,7 +12817,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:^5.3.0, mongodb@npm:^5.6.0":
+"mongodb@npm:^5.3.0":
   version: 5.6.0
   resolution: "mongodb@npm:5.6.0"
   dependencies:
@@ -15817,10 +15791,10 @@ __metadata:
     json-schema: 0.4.0
     jsonwebtoken: 9.0.0
     lil-http-terminator: 1.2.3
-    lodash-es: 4.17.21
+    lodash-es: ^4.17.21
     migrate-mongo: 9.0.0
     mjml: 4.14.1
-    mongodb: 4.11.0
+    mongodb: ^4.11.0
     nock: 13.2.4
     nodemailer: 6.9.1
     nodemailer-html-to-text: 3.2.0
@@ -15873,7 +15847,7 @@ __metadata:
     json-schema-to-ts: 2.8.0
     lodash-es: ^4.17.21
     luhn: ^2.4.1
-    mongodb: ^5.6.0
+    mongodb: ^4.11.0
     react: 18.2.0
     zod: ^3.21.4
     zod-to-json-schema: 3.21.1
