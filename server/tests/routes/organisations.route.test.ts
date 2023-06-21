@@ -1,7 +1,8 @@
 import assert from "node:assert";
 
 import nock from "nock";
-import { IUser } from "shared/models/user.model";
+import type { IUser } from "shared/models/user.model";
+import { afterAll, describe, it } from "vitest";
 
 import {
   createUser,
@@ -19,13 +20,14 @@ import {
   opcoEpTokenMock,
   opcoEpVerificationMock,
 } from "../utils/mocks/opcoEp.mock";
+import { useMongo } from "../utils/mongo.utils";
 
 const app = build();
 
 let userToken: string;
 
 describe("Organisations", () => {
-  beforeEach(async () => {
+  useMongo(async () => {
     const user = (await createUser({
       email: "connected@exemple.fr",
       password: "my-password",
@@ -34,6 +36,10 @@ describe("Organisations", () => {
 
     userToken = await generateApiKey(user);
     nock.cleanAll();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   describe("Validation Akto", () => {
@@ -87,14 +93,14 @@ describe("Organisations", () => {
         },
       });
 
+      assert.equal(response.json().is_valid, true);
+      assert.equal(response.json().on, "email");
+
       tokenMock.done();
       verificationMock.done();
 
       tokenMockAkto.done();
       verificationMockAkto.done();
-
-      assert.equal(response.json().is_valid, true);
-      assert.equal(response.json().on, "email");
     });
 
     it("should be valid for correct domain", async () => {
@@ -129,7 +135,7 @@ describe("Organisations", () => {
       assert.equal(response.json().on, "domain");
     });
 
-    it.skip("should not be valid for incorrect email and domain", async () => {
+    it("should not be valid for incorrect email and domain", async () => {
       const tokenMock = opcoEpTokenMock();
       const verificationMock = opcoEpVerificationMock(
         opcoEpInvalid.email,
@@ -151,14 +157,24 @@ describe("Organisations", () => {
         },
       });
 
-      tokenMock.done();
-      verificationMock.done();
+      assert.equal(response.statusCode, 400);
+      assert.deepEqual(response.json(), {
+        errors: [
+          {
+            code: "custom",
+            message: "Le siret ne respecte pas l'algorithme luhn",
+            path: ["siret"],
+          },
+        ],
+        message: "Validation failed",
+      });
 
-      tokenMockAkto.done();
-      verificationMockAkto.done();
+      // We didn't call APIs
+      tokenMock.pendingMocks();
+      verificationMock.pendingMocks();
 
-      assert.equal(response.json().is_valid, false);
-      assert.equal(response.json().on, undefined);
+      tokenMockAkto.pendingMocks();
+      verificationMockAkto.pendingMocks();
     });
   });
 });

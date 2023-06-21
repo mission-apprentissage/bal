@@ -35,6 +35,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
 
+      - run: touch .env_server
+
+      - run: touch .env_ui
+
       - run: make ci
 
       - run: make coverage
