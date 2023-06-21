@@ -9,7 +9,7 @@
   "type": "module",
   "scripts": {
     "start": "node dist/index.js start",
-    "dev": "tsup src/index.ts src/db/migrations --watch . --watch ../shared --onSuccess 'yarn run start'",
+    "dev": "tsup src/index.ts src/db/migrations --watch ./src --watch ../shared/src --onSuccess 'yarn run start'",
     "build": "tsup src/index.ts src/db/migrations",
     "typecheck": "tsc",
     "migrations:create": "yarn cli migrations:create",
@@ -61,7 +61,7 @@
     "oleoduc": "0.8.0",
     "omit-deep": "0.3.0",
     "rate-limiter-flexible": "2.3.6",
-    "shared": "*",
+    "shared": "workspace:*",
     "stream-transform": "3.2.2",
     "tcp-port-used": "1.0.2",
     "ts-node": "10.9.1",
