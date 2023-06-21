@@ -1,3 +1,10 @@
+## [1.34.7](https://github.com/mission-apprentissage/bal/compare/v1.34.6...v1.34.7) (2023-06-21)
+
+
+### Bug Fixes
+
+* disable palusible event ([172f793](https://github.com/mission-apprentissage/bal/commit/172f793d64e8c0853b49b9abe57a1a21f2015cf5))
+
 ## [1.34.6](https://github.com/mission-apprentissage/bal/compare/v1.34.5...v1.34.6) (2023-06-19)
 
 
