@@ -11,7 +11,7 @@ function backup() {
   echo "Creating backup..."
   mkdir -p "${BACKUP_LOCAL_DIR}"
   docker exec bal_mongodb bash -c "mongodump --gzip --archive -u backup -p {{ vault[env_type].MNA_BAL_MONGODB_BACKUP_PASSWORD }}" \
-  | bash "${SCRIPT_DIR}/gpg/encrypt.sh" >"${BACKUP_FILE}"
+  | bash "${SCRIPT_DIR}/../gpg/encrypt.sh" >"${BACKUP_FILE}"
 }
 
 function replicate_backups() {
