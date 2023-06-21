@@ -27,7 +27,7 @@ services:
       - NGINX_ALWAYS_TLS_REDIRECT=false
       - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
     volumes:
-      - bal_nginx_data:/data:z
+      - bal_nginx_data:/data
     build:
       context: reverse_proxy
 
@@ -35,13 +35,7 @@ services:
     stdin_open: true
     networks:
       - bal_network
-    environment:
-      - NEXT_SERVER_URI=http://server:5000
-      - NEXT_PUBLIC_SENTRY_DSN=
-      - NEXT_PUBLIC_ENV=dev
-      - NEXT_PUBLIC_BASE_HOST=localhost
-      - NEXT_PUBLIC_METABASE_URL=https://localhost/metabase
-      - NEXT_PUBLIC_METABASE_SECRET_KEY=
+    env_file: .env_ui
     volumes:
       - ./:/app/:z
     build:
@@ -54,20 +48,10 @@ services:
     depends_on:
       - mongodb
       - smtp
-    environment:
-      - MNA_BAL_MONGODB_URI=mongodb://mongodb:27017/mna-bal?retryWrites=true&w=majority
-      - MNA_BAL_ENV=dev
-      - MNA_BAL_LOG_LEVEL=debug
-      - MNA_BAL_LOG_DESTINATIONS=stdout,mongodb
-      - MNA_BAL_SMTP_HOST=smtp
-      - MNA_BAL_SMTP_PORT=1025
-      - MNA_BAL_AUTH_ACTIVATION_JWT_SECRET=secret
-      - MNA_BAL_AUTH_API_TOKEN_JWT_SECRET=secret
-      - MNA_BAL_AUTH_PASSWORD_JWT_SECRET=secret
-      - MNA_BAL_SENTRY_DSN=
+    env_file: .env_server
     volumes:
       - ./:/app/:z
-      - bal_server_data:/data:z
+      - bal_server_data:/data
     build:
       context: .
       dockerfile: server/Dockerfile.dev
@@ -84,15 +68,10 @@ services:
     depends_on:
       - mongodb
       - clamav
-    environment:
-      - MNA_BAL_MONGODB_URI=mongodb://mongodb:27017/mna-bal?retryWrites=true&w=majority
-      - MNA_BAL_ENV=dev
-      - MNA_BAL_LOG_LEVEL=debug
-      - MNA_BAL_LOG_DESTINATIONS=stdout,mongodb
-      - MNA_BAL_SENTRY_DSN=
+    env_file: .env_server
     volumes:
       - ./:/app/:z
-      - bal_server_data:/data:z
+      - bal_server_data:/data
     build:
       context: .
       dockerfile: server/Dockerfile.dev

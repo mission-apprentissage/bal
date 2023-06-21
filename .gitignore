@@ -154,4 +154,6 @@ sdk/lib
 
 .vault_pwd.txt
 node_modules.tar.gz
+/.env_server
+/.env_ui
 vault-tmp-*.*
