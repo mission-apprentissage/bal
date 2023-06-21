@@ -35,23 +35,16 @@
       when: env_type == 'recette'
 
     - name: Lancement de l'application {{env_type}}
-      docker_compose:
-        project_src: /opt/bal
-        recreate: always
-        remove_orphans: yes
-        files:
-          - docker-compose.yml
-          - docker-compose.recette.yml
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo docker compose -f docker-compose.yml -f docker-compose.recette.yml up -d --prune"
       register: docker_compose_output
       when: env_type == 'recette'
 
     - name: Lancement de l'application {{env_type}}
-      docker_compose:
-        project_src: /opt/bal
-        recreate: always
-        remove_orphans: yes
-        files:
-          - docker-compose.yml
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo docker compose -f docker-compose.yml up -d --prune"
       register: docker_compose_output
       when: env_type == 'production'
 

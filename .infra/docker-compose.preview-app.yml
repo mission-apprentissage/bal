@@ -4,7 +4,10 @@ services:
     image: "ghcr.io/mission-apprentissage/mna_bal_server:LOCAL_VERSION"
     container_name: bal_server_LOCAL_VERSION
     restart: unless-stopped
-    mem_limit: 1g
+    deploy:
+      resources:
+        limits:
+          memory: 1g
     networks:
       - bal_network
     depends_on:
@@ -23,7 +26,10 @@ services:
     image: "ghcr.io/mission-apprentissage/mna_bal_ui:LOCAL_VERSION"
     container_name: bal_ui_LOCAL_VERSION
     restart: unless-stopped
-    mem_limit: 256m
+    deploy:
+      resources:
+        limits:
+          memory: 256m
     networks:
       - bal_network
     depends_on:
@@ -40,7 +46,10 @@ services:
     image: "ghcr.io/mission-apprentissage/mna_bal_server:LOCAL_VERSION"
     container_name: bal_processor_LOCAL_VERSION
     command: ["yarn", "cli", "processor"]
-    mem_limit: 1g
+    deploy:
+      resources:
+        limits:
+          memory: 1g
     restart: unless-stopped
     networks:
       - bal_network

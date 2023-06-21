@@ -2,8 +2,7 @@
 
 ### Pré-requis
 
-- Docker 19+
-- Docker-compose 1.27+
+- Docker 19.03.0+
 
 ### Démarrage
 

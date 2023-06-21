@@ -4,7 +4,10 @@ services:
     image: "ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:{{ reverse_proxy_version }}"
     container_name: bal_reverse_proxy
     restart: unless-stopped
-    mem_limit: 256m
+    deploy:
+      resources:
+        limits:
+          memory: 256m
     ports:
       - "80:80"
       - "443:443"
@@ -38,7 +41,10 @@ services:
     image: "ghcr.io/mission-apprentissage/mna_bal_server:{{ app_version }}"
     container_name: bal_server
     restart: unless-stopped
-    mem_limit: 1g
+    deploy:
+      resources:
+        limits:
+          memory: 1g
     networks:
       - bal_network
     depends_on:
@@ -51,7 +57,10 @@ services:
     image: "ghcr.io/mission-apprentissage/mna_bal_server:{{ app_version }}"
     container_name: bal_processor
     restart: unless-stopped
-    mem_limit: 1g
+    deploy:
+      resources:
+        limits:
+          memory: 1g
     command: ["yarn", "cli", "processor"]
     networks:
       - bal_network
@@ -65,7 +74,10 @@ services:
     image: "ghcr.io/mission-apprentissage/mna_bal_ui:{{ app_version }}"
     container_name: bal_ui
     restart: unless-stopped
-    mem_limit: 256m
+    deploy:
+      resources:
+        limits:
+          memory: 256m
     networks:
       - bal_network
     depends_on:
@@ -76,7 +88,10 @@ services:
     image: mongo:6.0.2-focal
     container_name: bal_mongodb
     restart: unless-stopped
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     networks:
       - bal_network
     command: mongod --auth
@@ -89,7 +104,10 @@ services:
   metabase:
     image: metabase/metabase:v0.46.0
     container_name: bal_metabase
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     volumes:
       - /opt/bal/data/metabase:/data/metabase
       - /opt/bal/backups/metabase:/data/backups
@@ -107,7 +125,10 @@ services:
   clamav:
     image: clamav/clamav:latest
     container_name: bal_clamav
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     restart: unless-stopped
     networks:
       - bal_network
