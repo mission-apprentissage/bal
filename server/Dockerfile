@@ -19,8 +19,8 @@ RUN apk add --update \
 
 ENV NODE_ENV production
 
-COPY --from=builder /app/server ./
-COPY --from=builder /app/shared ./
+COPY --from=builder /app/server ./server
+COPY --from=builder /app/shared ./shared
 COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 5000
