@@ -61,10 +61,12 @@ const UsageVerificationPage = () => {
           </FormControl>
 
           <FormControl isInvalid={!!errors.siret} mb={5}>
-            <FormLabel>Siret</FormLabel>
+            <FormLabel>
+              Un SIRET au format valide est composé de 14 chiffres
+            </FormLabel>
             <InputGroup size="md">
               <Input
-                placeholder="1234567891234"
+                placeholder="98765432400019"
                 {...register("siret", {
                   required: "Siret obligatoire",
                 })}

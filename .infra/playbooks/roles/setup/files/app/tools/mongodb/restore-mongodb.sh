@@ -6,6 +6,6 @@ readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly BACKUP_FILE=${1:?"Please provide a backup file path"}; shift;
 
 echo "Restoring ${BACKUP_FILE}..."
-bash "${SCRIPT_DIR}/gpg/decrypt.sh" <"${BACKUP_FILE}" |
+bash "${SCRIPT_DIR}/../gpg/decrypt.sh" <"${BACKUP_FILE}" |
   docker exec -i $(docker ps -q -f name=bal_mongodb --latest) bash -c \
     "mongorestore --archive --gzip --drop -u backup -p {{ vault[env_type].MNA_BAL_MONGODB_BACKUP_PASSWORD }} $*"

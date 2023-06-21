@@ -114,7 +114,7 @@ export const Dropzone: FC<Props> = ({ options, isDisabled }) => {
                 Glissez le fichier dans cette zone ou cliquez sur le bouton pour
                 ajouter un document depuis votre disque dur
               </Text>
-              <Text color="mgalt">(.csv, maximum 60mb)</Text>
+              <Text color="mgalt">(.csv, maximum 100mb)</Text>
               <Button size="md" variant="secondary" mt={4}>
                 Ajouter un document
               </Button>

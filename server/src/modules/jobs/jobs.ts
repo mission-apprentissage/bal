@@ -9,15 +9,9 @@ import {
   up as upMigration,
 } from "@/modules/jobs/migrations/migrations";
 
-import {
-  findDocument,
-  handleDocumentFileContent,
-} from "../actions/documents.actions";
+import { handleDocumentFileContent } from "../actions/documents.actions";
 import { createJob } from "../actions/job.actions";
-import {
-  findMailingList,
-  processMailingList,
-} from "../actions/mailingLists.actions";
+import { processMailingList } from "../actions/mailingLists.actions";
 import { createUser } from "../actions/users.actions";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { executeJob } from "./executeJob";
@@ -71,27 +65,9 @@ async function runJob(
         case "migrations:create":
           return createMigration(job.payload as any);
         case "import:document":
-          return async () => {
-            const document = await findDocument({
-              _id: job.payload?.document_id,
-            });
-            if (!document) {
-              throw new Error("Processor > /document: Can't find document");
-            }
-            await handleDocumentFileContent(document);
-          };
+          return handleDocumentFileContent(job.payload as any);
         case "generate:mailing-list":
-          return async () => {
-            const mailingList = await findMailingList({
-              _id: job.payload?.mailing_list_id,
-            });
-            if (!mailingList) {
-              throw new Error(
-                "Processor > /mailing-list: Can't find mailing list"
-              );
-            }
-            await processMailingList(mailingList);
-          };
+          return processMailingList(job.payload as any);
         default:
           return Promise.resolve();
       }
