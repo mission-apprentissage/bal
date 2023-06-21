@@ -21,8 +21,8 @@ ENV NODE_ENV production
 
 COPY --from=builder ./app/server/package.json ./server/package.json
 COPY --from=builder ./app/server/dist ./server/dist
-COPY --from=builder ./app/server/node_module[s] ./server/node_modules
-COPY --from=builder ./app/shared/node_module[s] ./shared/node_modules
+COPY --from=builder ./app/server/node_modules ./server/node_modules
+COPY --from=builder ./app/shared/node_modules ./shared/node_modules
 COPY --from=builder ./app/node_modules ./node_modules
 
 EXPOSE 5000

@@ -15,7 +15,11 @@ ARG YARN_FLAGS
 
 RUN yarn install ${YARN_FLAGS}
 # Cache is not needed anymore
-RUN rm -rf .yarn/cache
+RUN rm -rf .yarn/cache && \
+  mkdir -p /app/node_modules && \
+  mkdir -p /app/server/node_modules && \
+  mkdir -p /app/shared/node_modules && \
+  mkdir -p /app/ui/node_modules;
 
 
 FROM node:18-alpine
