@@ -223,7 +223,6 @@ volumes:
     driver: local
     name: bal_smtp_data
 
-
 networks:
   bal_network:
     name: bal_network
