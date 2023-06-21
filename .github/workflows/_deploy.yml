@@ -14,7 +14,7 @@ on:
         description: app version
         type: string
         required: true
-        default: 1.35.2-rc.1
+        default: 1.35.2-rc.2
     secrets:
       SSH_PRIVATE_KEY:
         description: SSH private key

@@ -1,3 +1,10 @@
+## [1.35.2-rc.2](https://github.com/mission-apprentissage/bal/compare/v1.35.2-rc.1...v1.35.2-rc.2) (2023-06-21)
+
+
+### Bug Fixes
+
+* image copy ([10eb76f](https://github.com/mission-apprentissage/bal/commit/10eb76faeb048a6c78c8eebbd943653fb3e0d7b7))
+
 ## [1.35.2-rc.1](https://github.com/mission-apprentissage/bal/compare/v1.35.1...v1.35.2-rc.1) (2023-06-21)
 
 
