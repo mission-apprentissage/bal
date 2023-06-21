@@ -118,6 +118,7 @@ export const processMailingList = async (mailingList: IMailingList) => {
   switch (mailingList.source) {
     case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
     case DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023:
+    case DOCUMENT_TYPES.VOEUX_AFFELNET_JUIN_2023:
       return handleVoeuxParcoursupMai2023(mailingList);
 
     default:
