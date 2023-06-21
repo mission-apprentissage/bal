@@ -238,3 +238,5 @@ services:
 networks:
   bal_network:
     name: bal_network
+    attachable: true
+    driver: overlay
