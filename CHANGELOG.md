@@ -1,3 +1,10 @@
+# [1.35.0](https://github.com/mission-apprentissage/bal/compare/v1.34.7...v1.35.0) (2023-06-21)
+
+
+### Features
+
+* voeux juin ([#161](https://github.com/mission-apprentissage/bal/issues/161)) ([aa0447d](https://github.com/mission-apprentissage/bal/commit/aa0447d5878640046a4fbfb23a86c72291529a52))
+
 ## [1.34.7](https://github.com/mission-apprentissage/bal/compare/v1.34.6...v1.34.7) (2023-06-21)
 
 
