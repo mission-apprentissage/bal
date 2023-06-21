@@ -12,6 +12,12 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import {
+  IMailingList,
+  MAILING_LIST_STATUS,
+} from "shared/models/mailingList.model";
+import { IReqGetMailingList } from "shared/routes/mailingList.routes";
+import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
 import Table from "../../components/table/Table";
 import { Bin } from "../../theme/icons/Bin";
@@ -19,12 +25,6 @@ import { DownloadLine } from "../../theme/icons/DownloadLine";
 import { api } from "../../utils/api.utils";
 import { formatDate } from "../../utils/date.utils";
 import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
-import {
-  IMailingList,
-  MAILING_LIST_STATUS,
-} from "shared/models/mailingList.model";
-import { IReqGetMailingList } from "shared/routes/mailingList.routes";
-import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
 const ListeDiffusionPage = () => {
   const toast = useToast();

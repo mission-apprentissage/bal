@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { IResGetOrganisations } from "shared/routes/organisation.routes";
 
 import FormSearch from "../../../../components/formSearch/FormSearch";
 import Table from "../../../../components/table/Table";
@@ -11,7 +12,6 @@ import {
   getSearchParamsForQuery,
 } from "../../../../utils/query.utils";
 import { PAGES } from "../../../components/breadcrumb/Breadcrumb";
-import { IResGetOrganisations } from "shared/routes/organisation.routes";
 
 const OrganisationList = () => {
   const searchParams = useSearchParams();

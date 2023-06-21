@@ -2,13 +2,13 @@
 
 import { Heading, ListItem, UnorderedList } from "@chakra-ui/react";
 import { FC } from "react";
+import { IResGetOrganisation } from "shared/routes/organisation.routes";
 
 import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
 import Table from "../../../../../components/table/Table";
 import Breadcrumb, {
   PAGES,
 } from "../../../../components/breadcrumb/Breadcrumb";
-import { IResGetOrganisation } from "shared/routes/organisation.routes";
 
 interface Props {
   organisation: IResGetOrganisation;

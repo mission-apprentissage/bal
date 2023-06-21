@@ -12,12 +12,12 @@ import {
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
-import { api } from "../../../utils/api.utils";
 import {
   IReqPostOrganisationValidation,
   IResOrganisationValidation,
 } from "shared/routes/v1/organisation.routes";
+
+import { api } from "../../../utils/api.utils";
 
 const UsageVerificationPage = () => {
   const [requestData, setRequestData] =

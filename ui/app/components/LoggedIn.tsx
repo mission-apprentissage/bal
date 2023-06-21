@@ -13,13 +13,13 @@ import {
 import NavLink from "next/link";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
+import { IResGetSession } from "shared/routes/auth.routes";
 
 import { useAuth } from "../../context/AuthContext";
 import { Settings } from "../../theme/icons/Settings";
 import { Settings4Fill } from "../../theme/icons/Settings4Fill";
 import UserFill from "../../theme/icons/UserFill";
 import { api } from "../../utils/api.utils";
-import { IResGetSession } from "shared/routes/auth.routes";
 import { PAGES } from "./breadcrumb/Breadcrumb";
 interface Props {
   user: IResGetSession;
