@@ -14,6 +14,7 @@ import { processMailingList } from "../actions/mailingLists.actions";
 import { createUser } from "../actions/users.actions";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { executeJob } from "./executeJob";
+import { clear } from "./seed/clear";
 import { seed } from "./seed/seed";
 
 export async function addJob(
@@ -46,6 +47,8 @@ async function runJob(
       switch (job.name) {
         case "seed":
           return seed();
+        case "clear":
+          return clear();
         case "users:create":
           return createUser(job.payload as any);
         case "indexes:recreate":
