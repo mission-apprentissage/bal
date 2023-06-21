@@ -10,6 +10,8 @@ import {
   SResPostAdminUpload,
 } from "shared/routes/upload.routes";
 
+import logger from "@/common/logger";
+
 import { FILE_SIZE_LIMIT } from "../../../../../shared/constants/index";
 import {
   createEmptyDocument,
@@ -106,12 +108,9 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           .status(200)
           .send(document as unknown as IResPostAdminUpload);
       } catch (error) {
+        const err = server.multipartErrors;
+        logger.info(err);
         throw Boom.badImplementation(error as Error);
-        // const { message } = error as Error;
-        // return response.status(401).send({
-        //   type: "invalid_file",
-        //   message,
-        // });
       }
     }
   );

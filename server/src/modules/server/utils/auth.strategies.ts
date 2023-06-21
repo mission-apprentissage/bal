@@ -56,14 +56,14 @@ export const authValidateSession: FastifyAuthFunction = async (
   const token = request.cookies?.[config.session.cookieName];
 
   if (!token) {
-    throw Boom.unauthorized("Session invalide");
+    throw Boom.forbidden("Session invalide");
   }
 
   try {
     const session = await getSession({ token });
 
     if (!session) {
-      throw Boom.unauthorized("Session invalide");
+      throw Boom.forbidden("Session invalide");
     }
 
     const { email } = decodeToken(token) as JwtPayload;
@@ -71,12 +71,12 @@ export const authValidateSession: FastifyAuthFunction = async (
     const user = await findUser({ email });
 
     if (!user) {
-      throw Boom.unauthorized("Session invalide");
+      throw Boom.forbidden("Session invalide");
     }
 
     request.user = user;
   } catch (error) {
-    throw Boom.unauthorized("Session invalide");
+    throw Boom.forbidden("Session invalide");
   }
 };
 
