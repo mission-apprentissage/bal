@@ -1,4 +1,5 @@
-version: "2.4"
+version: "3.8"
+
 services:
   reverse_proxy:
     image: "ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:{{ reverse_proxy_version }}"

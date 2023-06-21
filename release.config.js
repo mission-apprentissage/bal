@@ -15,7 +15,7 @@ const mainConfig = {
     [
       "@semantic-release/exec",
       {
-        prepareCmd: `./git-hooks/prepare-release.sh \${nextRelease.version}`,
+        prepareCmd: `./git-hooks/prepare-release.sh \${nextRelease.version} ghcr.io`,
         publishCmd: "git checkout -- package.json",
       },
     ],
