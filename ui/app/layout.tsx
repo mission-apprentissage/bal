@@ -4,8 +4,8 @@ import "react-notion-x/src/styles.css";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 import { PropsWithChildren } from "react";
+import { IResGetSession } from "shared/routes/auth.routes";
 
-import { IResGetSession } from "../../shared/routes/auth.routes";
 import { AuthContextProvider } from "../context/AuthContext";
 
 async function getSession() {

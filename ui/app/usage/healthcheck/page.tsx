@@ -1,8 +1,8 @@
 "use client";
 import { Box, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { IResGetHealthCheck } from "shared/routes/core.routes";
 
-import { IResGetHealthCheck } from "../../../../shared/routes/core.routes";
 import { api } from "../../../utils/api.utils";
 
 const UsageHealthcheckPage = () => {

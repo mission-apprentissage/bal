@@ -3,8 +3,8 @@
 import { Heading, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { FC } from "react";
+import { IResGetUser } from "shared/routes/user.routes";
 
-import { IResGetUser } from "../../../../../../shared/routes/user.routes";
 import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
 import { formatDate } from "../../../../../utils/date.utils";
 import Breadcrumb, {

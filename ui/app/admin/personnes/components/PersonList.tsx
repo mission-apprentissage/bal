@@ -2,8 +2,8 @@ import { Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { IResGetPersons } from "shared/routes/person.routes";
 
-import { IResGetPersons } from "../../../../../shared/routes/person.routes";
 import FormSearch from "../../../../components/formSearch/FormSearch";
 import Table from "../../../../components/table/Table";
 import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";

@@ -6,8 +6,7 @@ import {
   useContext,
   useState,
 } from "react";
-
-import { IResGetSession } from "../../shared/routes/auth.routes";
+import { IResGetSession } from "shared/routes/auth.routes";
 
 interface IAuthContext {
   user?: IResGetSession;

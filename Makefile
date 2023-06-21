@@ -1,5 +1,5 @@
 ci-install:
-	docker compose --profile ci build --build-arg YARN_FLAGS="--immutable"
+	docker build --build-arg YARN_FLAGS="--immutable" --platform linux/amd64 --tag bal_root:latest .
 
 install:
 	docker compose run --no-deps --rm root

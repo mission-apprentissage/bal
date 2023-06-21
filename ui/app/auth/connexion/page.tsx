@@ -17,8 +17,8 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { IReqPostLogin, IStatus } from "shared/routes/auth.routes";
 
-import { IReqPostLogin, IStatus } from "../../../../shared/routes/auth.routes";
 import Link from "../../../components/link/Link";
 import { useAuth } from "../../../context/AuthContext";
 import { AlertRounded } from "../../../theme/icons/AlertRounded";

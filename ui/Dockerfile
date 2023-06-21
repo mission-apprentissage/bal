@@ -2,7 +2,9 @@
 FROM bal_root:latest AS builder
 WORKDIR /app
 
-COPY . .
+COPY .yarn .yarn
+COPY ./ui ./ui
+COPY ./shared ./shared
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
@@ -10,6 +12,8 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN yarn --cwd ui build
+# Removing dev dependencies
+RUN yarn workspaces focus --all --production
 
 # Production image, copy all the files and run next
 FROM node:18-alpine AS runner

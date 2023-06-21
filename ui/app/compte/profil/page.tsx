@@ -10,8 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { AxiosResponse } from "axios";
 import { useState } from "react";
+import { IResGetGenerateApiKey } from "shared/routes/user.routes";
 
-import { IResGetGenerateApiKey } from "../../../../shared/routes/user.routes";
 import { Dialog } from "../../../components/dialog/Dialog";
 import { useAuth } from "../../../context/AuthContext";
 import { api } from "../../../utils/api.utils";

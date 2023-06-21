@@ -1,7 +1,5 @@
 FROM node:18-alpine as deps_installer
 
-RUN apk add --no-cache libc6-compat
-
 WORKDIR /app
 
 RUN yarn set version 3.3.1
@@ -16,3 +14,13 @@ COPY shared/package.json shared/package.json
 ARG YARN_FLAGS
 
 RUN yarn install ${YARN_FLAGS}
+# Cache is not needed anymore
+RUN rm -rf .yarn/cache
+
+
+FROM node:18-alpine
+
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+COPY --from=deps_installer /app /app
