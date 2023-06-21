@@ -1,28 +1,26 @@
+ci-install:
+	docker compose --profile ci build --build-arg YARN_FLAGS="--immutable"
+
 install:
-	yarn
+	docker compose run --no-deps --rm repo_modules
 
 start:
-	docker compose up --build -d --remove-orphans
+	docker compose --profile dev up -d --remove-orphans
 
 seed:
-	docker compose run --rm -it server yarn cli seed
+	docker compose run --rm server yarn cli seed
+
+migrations:
+	docker compose run --rm server yarn cli migrations:status
 
 stop:
-	docker compose stop
-
-lint:
-	yarn lint
+	docker compose --profile dev down
 
 test:
-	docker compose run --build --rm server-test yarn test
-
-coverage:
-	docker compose run --build --rm server-test yarn test:coverage
+	docker compose run --rm test yarn test:server
 
 clean:
-	docker compose kill; docker system prune --force --volumes
+	docker compose down; docker system prune --force --volumes
 
-typecheck:
-	yarn --cwd server typecheck && yarn --cwd ui typecheck
-
-ci: lint test typecheck
+ci:
+	docker compose run --no-deps --rm ci yarn ci
