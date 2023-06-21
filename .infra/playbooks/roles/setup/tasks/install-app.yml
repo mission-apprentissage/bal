@@ -1,25 +1,20 @@
 - name: Création des répertoires app -> /opt/bal
   file:
-    path: "/opt/bal/{{ item.path }}/"
+    path: "/opt/bal/{{ item }}"
     state: directory
-  with_filetree:
-    - app
-  when: item.state == 'directory'
-
-- name: Création des répertoires "/opt/bal/data"
-  file:
-    path: "/opt/bal/data/{{ item}}/"
-    state: directory
+    recurse: true
   with_items:
-    - certbot
-    - clamav
-    - fluentd
-    - metabase
-    - mongodb
-    - nginx
-    - server
-    - smtp
-    - ssl
+    - data/nginx
+    - data/ssl
+    - data/server
+    - data/mongodb/db
+    - data/mongodb/configdb
+    - data/mongodb/backups
+    - data/metabase
+    - backups/metabase
+    - data/clamav
+    - data/fluentd
+    - data/smtp
 
 - name: Copie des fichiers 'tools'
   ansible.builtin.template:

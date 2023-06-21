@@ -1,5 +1,5 @@
 const mainConfig = {
-  branches: ["main"],
+  branches: ["main", { name: "next", channel: "next", prerelease: "rc" }],
   repositoryUrl: "https://github.com/mission-apprentissage/bal.git",
   allowOutdatedBranch: true,
   plugins: [
@@ -11,7 +11,6 @@ const mainConfig = {
         changelogFile: "CHANGELOG.md",
       },
     ],
-    "@semantic-release/npm",
     [
       "@semantic-release/exec",
       {
@@ -40,6 +39,7 @@ const channel = createHash("md5").update(branch).digest("hex");
 const localConfig = {
   branches: [
     "main",
+    { name: "next", channel: "next", prerelease: "rc" },
     {
       name: branch,
       channel,

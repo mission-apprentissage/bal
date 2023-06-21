@@ -1,5 +1,5 @@
 # Rebuild the source code only when needed
-FROM mna_bal_deps_installer:local AS builder
+FROM bal_root:latest AS builder
 WORKDIR /app
 
 COPY . .

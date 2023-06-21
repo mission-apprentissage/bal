@@ -5,13 +5,6 @@
   vars_files:
     - "../vault/vault.yml"
   tasks:
-    - name: copy docker env file
-      ansible.builtin.template:
-        src: "{{ item }}"
-        dest: "/opt/bal/.env_docker_compose"
-      with_fileglob:
-        - "../.env_docker_compose"
-
     - name: copy server env file
       ansible.builtin.template:
         src: "{{ item }}"
@@ -44,49 +37,64 @@
     - name: Récupération des images docker
       shell:
         chdir: /opt/bal
-        cmd: "sudo docker compose --env-file .env_docker_compose pull"
+        cmd: "sudo docker compose pull"
+
+    - name: Récupération du status de la stack
+      shell:
+        chdir: /opt/bal
+        cmd: docker stack ls --format json
+      register: stack_status
 
     - name: Récupération du status des migrations
       shell:
         chdir: /opt/bal
         cmd: "sudo /opt/bal/tools/migrations/migrations-status.sh"
       register: migration_status_output
+      when: stack_status.stdout != ""
+
+    - name: "Shutdown processor"
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo docker service scale bal_processor=0"
+      when:
+        - stack_status.stdout != ""
+        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
 
     - name: "Activation du mode maintenance pour effectuer la migration"
       shell:
         chdir: /opt/bal
         cmd: "sudo /opt/bal/tools/maintenance/maintenance-on.sh"
-      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+      when:
+        - stack_status.stdout != ""
+        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
 
-    - name: "Shutdowm server"
+    - name: "Shutdown server"
       shell:
         chdir: /opt/bal
         cmd: "sudo docker service scale bal_server=0"
-      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
-
-    - name: "Shutdowm processor"
-      shell:
-        chdir: /opt/bal
-        cmd: "sudo docker service scale bal_processor=0"
-      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+      when:
+        - stack_status.stdout != ""
+        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
 
     - name: Lancement des migrations
       shell:
         chdir: /opt/bal
         cmd: "sudo /opt/bal/tools/migrations/migrations-up.sh"
-      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+      when:
+        - stack_status.stdout != ""
+        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
 
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/bal
-        cmd: "sudo env $(cat .env_docker_compose | xargs) docker stack deploy -c docker-compose.yml -c docker-compose.recette.yml bal"
+        cmd: "sudo docker stack deploy -c docker-compose.yml -c docker-compose.recette.yml bal"
       register: docker_deploy_output
       when: env_type == 'recette'
 
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/bal
-        cmd: "sudo env $(cat .env_docker_compose | xargs) docker stack deploy -c docker-compose.yml bal"
+        cmd: "sudo docker stack deploy -c docker-compose.yml bal"
       register: docker_deploy_output
       when: env_type == 'production'
 
@@ -97,7 +105,9 @@
       shell:
         chdir: /opt/bal
         cmd: "sudo /opt/bal/tools/maintenance/maintenance-off.sh"
-      when: migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+      when:
+        - stack_status.stdout != ""
+        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
 
     - name: Attente du deploiement
       shell:

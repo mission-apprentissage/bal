@@ -1,8 +1,8 @@
 import assert from "node:assert";
 
 import { ObjectId } from "mongodb";
-import { describe, it } from "vitest";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
+import { describe, it } from "vitest";
 
 import {
   getDecaVerification,

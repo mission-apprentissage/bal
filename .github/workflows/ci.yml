@@ -29,12 +29,12 @@ jobs:
       - uses: actions/cache@v3
         id: cache
         with:
-          path: /tmp/docker_images.tar
+          path: /tmp/docker_bal_root.tar
           key: docker-images-${{ hashFiles('**/yarn.lock') }}
 
       - name: Load Docker image from cache
         if: steps.cache.outputs.cache-hit == 'true'
-        run: docker load < /tmp/docker_images.tar
+        run: docker load < /tmp/docker_bal_root.tar
         shell: bash
 
       - name: Build Image
@@ -58,4 +58,4 @@ jobs:
 
       - name: Save Image to cache
         if: steps.cache.outputs.cache-hit != 'true'
-        run: docker save bal-repo_modules bal-ci > /tmp/docker_images.tar
+        run: docker save bal_root > /tmp/docker_bal_root.tar
