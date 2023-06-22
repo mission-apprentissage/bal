@@ -249,7 +249,7 @@ export const updateImportProgress = async (
   currentPercent: number
 ) => {
   const step_precent = 2; // every 2%
-  const newCurrentPercent = (importedLength * 100) / totalLength;
+  let newCurrentPercent = (importedLength * 100) / totalLength;
   if (newCurrentPercent - currentPercent < step_precent) {
     // Do not update
     return currentPercent;
@@ -263,6 +263,7 @@ export const updateImportProgress = async (
       },
     }
   );
+  newCurrentPercent = newCurrentPercent > 100 ? 99 : newCurrentPercent;
   return newCurrentPercent;
 };
 
