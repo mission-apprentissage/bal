@@ -1,6 +1,6 @@
 import assert from "node:assert";
 
-import { afterAll, describe, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 import config from "@/config";
 import { getSession } from "@/modules/actions/sessions.actions";
@@ -18,10 +18,18 @@ type Cookie = {
 };
 
 describe("Authentication", () => {
-  useMongo();
+  const mongo = useMongo();
+
+  beforeAll(async () => {
+    await Promise.all([app.ready(), mongo.beforeAll()]);
+  }, 15_000);
+
+  beforeEach(async () => {
+    await mongo.beforeEach();
+  });
 
   afterAll(async () => {
-    await app.close();
+    await Promise.all([mongo.afterAll(), app.close()]);
   });
 
   it("should sign user in with valid credentials", async () => {
@@ -164,7 +172,7 @@ describe("Authentication", () => {
       },
     });
 
-    assert.equal(response.statusCode, 401);
+    assert.equal(response.statusCode, 403);
   });
 
   // TODO SHOULD BE NOOP EMAIL

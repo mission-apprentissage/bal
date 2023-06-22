@@ -1,7 +1,7 @@
 import assert from "node:assert";
 
 import { IUser } from "shared/models/user.model";
-import { afterAll, describe, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 import { createUserTokenSimple } from "../../src/common/utils/jwtUtils";
 import { createSession } from "../../src/modules/actions/sessions.actions";
@@ -12,10 +12,18 @@ import { useMongo } from "../utils/mongo.utils";
 const app = build();
 
 describe("Users routes", () => {
-  useMongo();
+  const mongo = useMongo();
+
+  beforeAll(async () => {
+    await Promise.all([app.ready(), mongo.beforeAll()]);
+  }, 15_000);
+
+  beforeEach(async () => {
+    await mongo.beforeEach();
+  });
 
   afterAll(async () => {
-    await app.close();
+    await Promise.all([mongo.afterAll(), app.close()]);
   });
 
   it("should get the current user with authorization token", async () => {

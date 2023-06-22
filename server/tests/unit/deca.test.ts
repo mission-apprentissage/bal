@@ -2,7 +2,7 @@ import assert from "node:assert";
 
 import { ObjectId } from "mongodb";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
-import { describe, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 import {
   getDecaVerification,
@@ -106,7 +106,19 @@ describe("DECA file", () => {
 });
 
 describe("DECA verification", () => {
-  useMongo();
+  const mongo = useMongo();
+
+  beforeAll(async () => {
+    await mongo.beforeAll();
+  });
+
+  beforeEach(async () => {
+    await mongo.beforeEach();
+  });
+
+  afterAll(async () => {
+    await mongo.afterAll();
+  });
 
   it("should be valid SIRET email", async () => {
     await createDocumentContent({

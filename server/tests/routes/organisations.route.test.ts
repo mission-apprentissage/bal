@@ -2,7 +2,7 @@ import assert from "node:assert";
 
 import nock from "nock";
 import type { IUser } from "shared/models/user.model";
-import { afterAll, describe, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 import {
   createUser,
@@ -27,7 +27,15 @@ const app = build();
 let userToken: string;
 
 describe("Organisations", () => {
-  useMongo(async () => {
+  const mongo = useMongo();
+
+  beforeAll(async () => {
+    await Promise.all([app.ready(), mongo.beforeAll()]);
+  }, 15_000);
+
+  beforeEach(async () => {
+    await mongo.beforeEach();
+
     const user = (await createUser({
       email: "connected@exemple.fr",
       password: "my-password",
@@ -39,7 +47,7 @@ describe("Organisations", () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await Promise.all([mongo.afterAll(), app.close()]);
   });
 
   describe("Validation Akto", () => {

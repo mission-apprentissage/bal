@@ -37,31 +37,31 @@ export function build(opts: FastifyServerOptions = {}) {
   app.register(fastifySwagger, {
     swagger: {
       info: {
-        title: "API documentation BAL",
-        version: pJson.version,
-      },
-      consumes: ["application/json"],
-      produces: ["application/json"],
-      securityDefinitions: {
-        apiKey: {
-          type: "apiKey",
-          name: "Authorization",
-          in: "header",
+          title: "API documentation BAL",
+          version: pJson.version,
+        },
+        consumes: ["application/json"],
+        produces: ["application/json"],
+        securityDefinitions: {
+          apiKey: {
+            type: "apiKey",
+            name: "Authorization",
+            in: "header",
+          },
         },
       },
-    },
-    transform: ({ schema, url }) => {
-      const transformedSchema = { ...schema } as FastifySchema;
-      if (!url.includes("/v1") && url !== "/api/healthcheck")
-        transformedSchema.hide = true;
-      return { schema: transformedSchema as JSONObject, url };
-    },
-  });
+      transform: ({ schema, url }) => {
+        const transformedSchema = { ...schema } as FastifySchema;
+        if (!url.includes("/v1") && url !== "/api/healthcheck")
+          transformedSchema.hide = true;
+        return { schema: transformedSchema as JSONObject, url };
+      },
+    });
 
-  app.register(fastifySwaggerUi, {
-    routePrefix: "/api/documentation",
-    uiConfig: {
-      docExpansion: "list",
+    app.register(fastifySwaggerUi, {
+      routePrefix: "/api/documentation",
+      uiConfig: {
+        docExpansion: "list",
       deepLinking: false,
     },
   });

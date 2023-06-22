@@ -1,5 +1,3 @@
-import { afterAll, beforeAll, beforeEach } from "vitest";
-
 import {
   clearAllCollections,
   closeMongodbConnection,
@@ -26,17 +24,18 @@ export const stopMongodb = async () => {
   await closeMongodbConnection();
 };
 
-export const useMongo = (loadData?: () => Promise<void>) => {
-  beforeAll(async () => {
-    await startAndConnectMongodb();
-  });
+export const useMongo = () => {
+  return {
+    beforeAll: async () => {
+      await startAndConnectMongodb();
+    },
 
-  afterAll(async () => {
-    await stopMongodb();
-  });
+    afterAll: async () => {
+      await stopMongodb();
+    },
 
-  beforeEach(async () => {
-    await clearAllCollections();
-    await loadData?.();
-  });
+    beforeEach: async () => {
+      await clearAllCollections();
+    },
+  };
 };
