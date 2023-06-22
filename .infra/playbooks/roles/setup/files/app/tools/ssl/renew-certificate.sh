@@ -5,12 +5,11 @@ readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly DNS_NAME=${1:?"Merci de préciser le nom de domaine"}; shift;
 
 start_reverse_proxy() {
-  bash /opt/bal/tools/reload-containers.sh \
-    --no-deps reverse_proxy
+  bash /opt/bal/tools/reload-containers.sh
 }
 
 stop_reverse_proxy() {
-  bash /opt/bal/tools/stop-containers.sh $(docker ps -q -f name=bal_reverse_proxy --latest) --no-deps reverse_proxy
+  bash /opt/bal/tools/stop-containers.sh reverse_proxy
 }
 
 renew_certificate() {

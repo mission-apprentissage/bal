@@ -101,6 +101,12 @@
     - debug:
         var: docker_deploy_output
 
+    - name: Attente du deploiement
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock sudobmitch/docker-stack-wait bal"
+      timeout: 900
+
     - name: "Désactivation du mode maintenance"
       shell:
         chdir: /opt/bal
@@ -108,9 +114,3 @@
       when:
         - stack_status.stdout != ""
         - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
-
-    - name: Attente du deploiement
-      shell:
-        chdir: /opt/bal
-        cmd: "sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock sudobmitch/docker-stack-wait bal"
-      timeout: 900
