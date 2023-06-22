@@ -100,7 +100,7 @@ services:
       MB_DB_FILE: /data/metabase/metabase.db
       MB_SITE_LOCALE: fr
       MB_SITE_URL: https://bal.apprentissage.beta.gouv.fr/metabase
-      # MB_DB_CONNECTION_URI: {{ vault[env_type].BAL_METABASE_DB_URI }}
+      # MB_DB_CONNECTION_URI:  vault[env_type].BAL_METABASE_DB_URI 
       # MB_DB_TYPE: postgres
     restart: always
     networks:
