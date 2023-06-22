@@ -12,7 +12,7 @@
     "global": "4.4.0"
   },
   "scripts": {
-    "docker:clean": "docker-compose kill && docker system prune --force --volumes",
+    "docker:clean": "docker compose kill && docker system prune --force --volumes",
     "lint": "eslint .",
     "lint:staged": "lint-staged",
     "prettier:fix": "prettier --write ./ui ./server",
@@ -23,7 +23,14 @@
     "talisman:add-exception": "yarn node-talisman --githook pre-commit -i",
     "e2e": "cypress open",
     "e2e:headless": "cypress run",
-    "e2e:convert": "chrome-recorder cypress/records/admin/*.json --output=cypress/e2e/admin; chrome-recorder cypress/records/user/*.json --output=cypress/e2e/user"
+    "e2e:convert": "chrome-recorder cypress/records/admin/*.json --output=cypress/e2e/admin; chrome-recorder cypress/records/user/*.json --output=cypress/e2e/user",
+    "typecheck:ui": "(cd ui; yarn typecheck)",
+    "typecheck:server": "(cd server; yarn typecheck)",
+    "typecheck": "yarn typecheck:ui && yarn typecheck:server",
+    "test:server": "(cd server; yarn test)",
+    "test:server:ci": "(cd server; yarn test:coverage)",
+    "ci": "yarn lint && yarn typecheck && yarn test:server:ci",
+    "test": "yarn lint && yarn typecheck && yarn test:server"
   },
   "workspaces": [
     "ui",

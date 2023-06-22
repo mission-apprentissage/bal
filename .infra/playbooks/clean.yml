@@ -2,10 +2,8 @@
 - hosts: all
   become: true
   tasks:
-    - name: Remove the default ubuntu
+    - name: Remove the user {{username}}
       user:
-        name: "{{item}}"
+        name: "{{username}}"
         state: absent
         remove: yes
-      with_items:
-        - ubuntu

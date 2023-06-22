@@ -5,6 +5,7 @@ import { sleep } from "@/common/utils/asyncUtils";
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 import {
   create as createMigration,
+  status as statusMigration,
   up as upMigration,
 } from "@/modules/jobs/migrations/migrations";
 
@@ -52,6 +53,15 @@ async function runJob(
           return recreateIndexes(job.payload as any);
         case "migrations:up":
           return upMigration();
+        case "migrations:status": {
+          const pendingMigrations = await statusMigration();
+          console.log(
+            `migrations-status=${
+              pendingMigrations === 0 ? "synced" : "pending"
+            }`
+          );
+          return;
+        }
         case "migrations:create":
           return createMigration(job.payload as any);
         case "import:document":

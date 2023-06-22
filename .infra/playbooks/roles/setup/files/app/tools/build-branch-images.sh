@@ -85,6 +85,6 @@ reload_containers
 clean_docker
 
 if [ "$PREVIEW_STATUS" == "open" ]; then
-    docker exec bal_server_"$LOCAL_VERSION" yarn cli "seed"
-    docker exec bal_server_"$LOCAL_VERSION" yarn cli "migrations:up"
+    docker exec $(docker ps -q -f name=bal_server_"$LOCAL_VERSION" --latest) yarn cli "seed"
+    docker exec $(docker ps -q -f name=bal_server_"$LOCAL_VERSION" --latest) yarn cli "migrations:up"
 fi

@@ -2,7 +2,7 @@
 
 ## Pré-requis
 
-- Docker & Docker-compose
+- Docker
 - Nodejs 16
 - Yarn
 

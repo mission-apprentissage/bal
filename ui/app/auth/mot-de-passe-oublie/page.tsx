@@ -14,11 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { IReqGetResetPassword, IStatus } from "shared/routes/auth.routes";
 
-import {
-  IReqGetResetPassword,
-  IStatus,
-} from "../../../../shared/routes/auth.routes";
 import Link from "../../../components/link/Link";
 import { api } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";

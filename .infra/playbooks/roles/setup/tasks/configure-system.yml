@@ -72,13 +72,6 @@
   shell: "yarn set version berry"
   when: env_type == 'preview'
 
-- name: "install docker-compose"
-  pip:
-    executable: "pip3"
-    name: docker-compose
-  environment:
-    TMP: /var/tmp
-
 - name: Set timezone to Europe/Paris
   community.general.timezone:
     name: Europe/Paris

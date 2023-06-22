@@ -9,7 +9,7 @@ stop_container() {
 }
 
 restart_container() {
-  NO_UPDATE=true bash /opt/bal/tools/reload-containers.sh --no-deps metabase
+  bash /opt/bal/tools/reload-containers.sh metabase
 }
 
 function restore_metabase(){
@@ -19,7 +19,7 @@ function restore_metabase(){
   tar -xvf "${BACKUP_FILE}" -C /opt/bal/data/metabase
   restart_container
 
-  echo "Sauvegarde terminé."
+  echo "Réstauration terminée."
 }
 
 restore_metabase

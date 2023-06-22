@@ -1,18 +1,32 @@
-version: "2.4"
+version: "3.8"
+
+# The following variables define reusable configurations for deployment, providing consistent and predefined 
+# behaviors for updating, rolling back, and restarting services.
+
+x-deploy-default: &deploy-default
+  update_config:
+    failure_action: rollback
+    parallelism: 1
+    delay: 10s
+  rollback_config:
+    parallelism: 0
+  restart_policy:
+    window: 5s
+
 services:
   reverse_proxy:
-    image: "ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:{{ reverse_proxy_version }}"
-    container_name: bal_reverse_proxy
-    restart: unless-stopped
-    mem_limit: 256m
+    image: "{{registry}}/mission-apprentissage/mna_bal_reverse_proxy:{{reverse_proxy_version}}"
+    deploy:
+      <<: *deploy-default
+      resources:
+        limits:
+          memory: 256m
+      replicas: 2
     ports:
       - "80:80"
       - "443:443"
     networks:
       - bal_network
-    depends_on:
-      - server
-      - ui
     environment:
       - SERVER_NAME={{dns_name}}
       - NGINX_ALWAYS_TLS_REDIRECT=true
@@ -25,20 +39,27 @@ services:
       - DNS_SERVER=127.0.0.11
       - PROXY=1
       - SERVERNAME=localhost
-      - ACCESSLOG=/data/access.log
-      - ERRORLOG=/data/error.log
       - LOGLEVEL=warn
       - NGINX_ALWAYS_TLS_REDIRECT=false
       - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
     volumes:
       - /opt/bal/data/nginx:/data
       - /opt/bal/data/ssl:/ssl:ro
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: nginx
+        fluentd-async: "true"
 
   server:
-    image: "ghcr.io/mission-apprentissage/mna_bal_server:{{ app_version }}"
-    container_name: bal_server
-    restart: unless-stopped
-    mem_limit: 1g
+    image: "{{registry}}/mission-apprentissage/mna_bal_server:{{app_version}}"
+    deploy:
+      <<: *deploy-default
+      resources:
+        limits:
+          memory: 1g
+      replicas: 2
     networks:
       - bal_network
     depends_on:
@@ -46,12 +67,26 @@ services:
     env_file: .env_server
     volumes:
       - /opt/bal/data/server:/data
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: server
+        fluentd-async: "true"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:5000/api/healthcheck"]
+      interval: 10s
+      timeout: 30s
+      retries: 11
+      start_period: 10s
 
   processor:
-    image: "ghcr.io/mission-apprentissage/mna_bal_server:{{ app_version }}"
-    container_name: bal_processor
-    restart: unless-stopped
-    mem_limit: 1g
+    image: "{{registry}}/mission-apprentissage/mna_bal_server:{{app_version}}"
+    deploy:
+      <<: *deploy-default
+      resources:
+        limits:
+          memory: 1g
     command: ["yarn", "cli", "processor"]
     networks:
       - bal_network
@@ -60,23 +95,38 @@ services:
     env_file: .env_server
     volumes:
       - /opt/bal/data/server:/data
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: processor
+        fluentd-async: "true"
 
   ui:
-    image: "ghcr.io/mission-apprentissage/mna_bal_ui:{{ app_version }}"
-    container_name: bal_ui
-    restart: unless-stopped
-    mem_limit: 256m
+    image: "{{registry}}/mission-apprentissage/mna_bal_ui:{{app_version}}"
+    deploy:
+      <<: *deploy-default
+      resources:
+        limits:
+          memory: 256m
+      replicas: 2
     networks:
       - bal_network
-    depends_on:
-      - server
     env_file: .env_ui
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: ui
+        fluentd-async: "true"
 
   mongodb:
     image: mongo:6.0.2-focal
-    container_name: bal_mongodb
-    restart: unless-stopped
-    mem_limit: 2g
+    deploy:
+      <<: *deploy-default
+      resources:
+        limits:
+          memory: 2g
     networks:
       - bal_network
     command: mongod --auth
@@ -85,11 +135,27 @@ services:
       - /opt/bal/data/mongodb/configdb:/data/configdb
       - /opt/bal/data/mongodb/backups:/data/backups-legacy
       - /opt/bal/configs/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: mongodb
+        fluentd-async: "true"
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "'db.runCommand(\"ping\").ok'", '--quiet']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    stop_grace_period: 2m
 
   metabase:
     image: metabase/metabase:v0.46.0
-    container_name: bal_metabase
-    mem_limit: 2g
+    deploy:
+      <<: *deploy-default
+      resources:
+        limits:
+          memory: 2g
     volumes:
       - /opt/bal/data/metabase:/data/metabase
       - /opt/bal/backups/metabase:/data/backups
@@ -99,18 +165,25 @@ services:
       JAVA_TIMEZONE: Europe/Paris
       MB_DB_FILE: /data/metabase/metabase.db
       MB_SITE_LOCALE: fr
-      MB_SITE_URL: https://bal.apprentissage.beta.gouv.fr/metabase
+      MB_SITE_URL: {{dns_name}}/metabase
       # MB_DB_CONNECTION_URI:  vault[env_type].BAL_METABASE_DB_URI 
       # MB_DB_TYPE: postgres
-    restart: always
     networks:
       - bal_network
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: metabase
+        fluentd-async: "true"
 
   clamav:
     image: clamav/clamav:latest
-    container_name: bal_clamav
-    mem_limit: 2g
-    restart: unless-stopped
+    deploy:
+      <<: *deploy-default
+      resources:
+        limits:
+          memory: 2g
     networks:
       - bal_network
     healthcheck:
@@ -118,12 +191,20 @@ services:
       interval: 60s
       retries: 3
       start_period: 120s
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: clamav
+        fluentd-async: "true"
+    volumes:
+      - /opt/bal/data/clamav:/var/lib/clamav
 
   nodeexporter:
     image: prom/node-exporter:v1.5.0
-    container_name: nodeexporter
-    restart: unless-stopped
-    hostname: bal-production
+    hostname: {{host_name}}
+    deploy:
+      <<: *deploy-default
     command:
       - '--path.procfs=/host/proc'
       - '--path.rootfs=/rootfs'
@@ -138,9 +219,9 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.46.0
-    container_name: cadvisor
-    restart: unless-stopped
-    hostname: bal-production
+    deploy:
+      <<: *deploy-default
+    hostname: {{host_name}}
     privileged: true
     devices:
       - /dev/kmsg
@@ -153,6 +234,18 @@ services:
     networks:
       - bal_network
 
+  fluentd:
+    image: fluent/fluentd:v1.16
+    user: root
+    volumes:
+      - /opt/bal/configs/fluentd/conf:/fluentd/etc
+      - /opt/bal/data/fluentd:/var/log/fluent
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+
 networks:
   bal_network:
     name: bal_network
+    attachable: true
+    driver: overlay

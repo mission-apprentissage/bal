@@ -6,7 +6,6 @@ echo "Push les images docker de BAL sur le registry github (https://ghcr.io/miss
 
 file_path="./.infra/env.ini"
 
-
 generate_next_patch_version() {
   version="$1"
   IFS='.' read -ra parts <<< "$version"
@@ -82,32 +81,23 @@ echo "Création des images docker locales (docker build)"
 
 if [ ! -z "$new_app_version" ]; then
   echo "Build ui:$new_app_version ..."
-  docker build . -f "ui/Dockerfile.preview" --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$new_app_version" \
-  --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
-  --label "org.opencontainers.image.description=Ui bal" \
-  --label "org.opencontainers.image.licenses=MIT"
-  echo "Building server:$new_app_version ..."
-  docker build . -f "server/Dockerfile.preview" --tag ghcr.io/mission-apprentissage/mna_bal_server:"$new_app_version" \
-            --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
-            --label "org.opencontainers.image.description=Server bal" \
-            --label "org.opencontainers.image.licenses=MIT"
-  sleep 3
-  echo "Push des images locales sur le registry"
-  echo "Pushing ui:$new_app_version ..."
-  docker push ghcr.io/mission-apprentissage/mna_bal_ui:"$new_app_version"
-  sleep 3
-  echo "Pushing server:$new_app_version ..."
-  docker push ghcr.io/mission-apprentissage/mna_bal_server:"$new_app_version"
+  bash ./.infra/scripts/release/build-images.sh $new_app_version ghcr.io
+  bash ./.infra/scripts/release/push-images.sh $new_app_version ghcr.io
 fi
 
 if [ ! -z "$new_reverse_proxy_version" ]; then
   echo "Building reverse_proxy:$new_reverse_proxy_version ..."
-  docker build ./reverse_proxy --tag ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:"$new_reverse_proxy_version" \
-            --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
-            --label "org.opencontainers.image.description=Reverse proxy bal" \
-            --label "org.opencontainers.image.licenses=MIT"
+  docker build ./reverse_proxy \
+        --platform linux/amd64 \
+        --tag ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:"$new_reverse_proxy_version" \
+        --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
+        --label "org.opencontainers.image.description=Reverse proxy bal" \
+        --label "org.opencontainers.image.licenses=MIT"
   sleep 3
   echo "Pushing reverse_proxy:$new_reverse_proxy_version ..."
   docker push ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:"$new_reverse_proxy_version"
+
+  sed -i '' "s/reverse_proxy_version=.*/reverse_proxy_version=$new_reverse_proxy_version/" ".infra/env.ini"
+  echo "Bump reverse_proxy version in .infra/env.ini : $new_reverse_proxy_version"
 fi
 

@@ -1,20 +1,14 @@
 {
-  "ts-node": {
-    "esm": true,
-    "files": true // this force ts-node to include .d.ts files https://stackoverflow.com/q/51610583
-  },
   "include": ["./**/*.ts"],
   "exclude": ["**/node_modules"],
-  "files": [
-    "src/types.d.ts"
-  ],
+  "files": ["src/types.d.ts"],
   "compilerOptions": {
     "strictPropertyInitialization": false,
     "listEmittedFiles": false,
     "listFiles": false,
     "pretty": true,
     "isolatedModules": false,
-    
+
     // "baseUrl": ".",
 
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
