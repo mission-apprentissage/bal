@@ -45,6 +45,9 @@ RUN apt-get update \
 
 COPY --from=nginxModules /etc/nginx/modules/ngx_http_headers_more_filter_module.so /etc/nginx/modules/ngx_http_headers_more_filter_module.so
 
+# Disable some owasp-crs rules
+COPY app/nginx/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf /etc/modsecurity.d/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+
 #Logrotate
 COPY app/logrotate.d/logrotate.conf /etc/logrotate.conf
 RUN chmod 644 /etc/logrotate.conf

@@ -19,6 +19,9 @@ services:
     volumes:
       - /opt/bal/configs/reverse_proxy/recette:/etc/nginx/templates/includes/env
 
+  metabase:
+   environment:
+      MB_SITE_URL: https://bal-recette.apprentissage.beta.gouv.fr/metabase
 
   nodeexporter:
     hostname: bal-recette
