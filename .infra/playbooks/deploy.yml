@@ -58,7 +58,7 @@
         cmd: "sudo docker service scale bal_processor=0"
       when:
         - stack_status.stdout != ""
-        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+        - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'
 
     - name: "Activation du mode maintenance pour effectuer la migration"
       shell:
@@ -66,7 +66,7 @@
         cmd: "sudo /opt/bal/tools/maintenance/maintenance-on.sh"
       when:
         - stack_status.stdout != ""
-        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+        - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'
 
     - name: "Shutdown server"
       shell:
@@ -74,7 +74,7 @@
         cmd: "sudo docker service scale bal_server=0"
       when:
         - stack_status.stdout != ""
-        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+        - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'
 
     - name: Lancement des migrations
       shell:
@@ -82,7 +82,7 @@
         cmd: "sudo /opt/bal/tools/migrations/migrations-up.sh"
       when:
         - stack_status.stdout != ""
-        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+        - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'
 
     - name: Lancement de l'application {{env_type}}
       shell:
@@ -113,4 +113,4 @@
         cmd: "sudo /opt/bal/tools/maintenance/maintenance-off.sh"
       when:
         - stack_status.stdout != ""
-        - migration_status_output.stdout_lines[-1] != 'migrations-status=synced'
+        - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'

@@ -307,7 +307,7 @@ Editer le vault pour créer les env-vars liés à ce nouvel environnement (cf: [
 
 Pour configurer l'environnement, il faut lancer la commande suivante :
 
-```
+```bash
 ssh-keyscan <ip> >> ~/.ssh/known_hosts
 bash scripts/setup-vm.sh <nom_environnement> --user ubuntu --ask-pass
 ```

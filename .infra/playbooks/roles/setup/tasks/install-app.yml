@@ -16,6 +16,14 @@
     - data/fluentd
     - data/smtp
 
+- name: Création des répertoires app/tools & app/configs -> /opt/bal
+  file:
+    path: "/opt/bal/{{ item.path }}/"
+    state: directory
+  with_filetree:
+    - app
+  when: item.state == 'directory'
+
 - name: Copie des fichiers 'tools'
   ansible.builtin.template:
     src: "{{ item.src }}"
