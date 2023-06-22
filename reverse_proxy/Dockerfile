@@ -41,6 +41,9 @@ FROM owasp/modsecurity-crs:3.3.4-nginx-202303180303
 
 COPY --from=nginxModules /etc/nginx/modules/ngx_http_headers_more_filter_module.so /etc/nginx/modules/ngx_http_headers_more_filter_module.so
 
+# Disable some owasp-crs rules
+COPY app/nginx/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf /etc/modsecurity.d/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
+
 #Nginx
 COPY app/nginx /etc/nginx
 

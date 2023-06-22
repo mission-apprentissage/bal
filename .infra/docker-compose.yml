@@ -165,7 +165,9 @@ services:
       JAVA_TIMEZONE: Europe/Paris
       MB_DB_FILE: /data/metabase/metabase.db
       MB_SITE_LOCALE: fr
-      MB_SITE_URL: https://bal.apprentissage.beta.gouv.fr/metabase
+      MB_SITE_URL: {{dns_name}}/metabase
+      # MB_DB_CONNECTION_URI:  vault[env_type].BAL_METABASE_DB_URI 
+      # MB_DB_TYPE: postgres
     networks:
       - bal_network
     logging:
@@ -219,7 +221,7 @@ services:
     image: gcr.io/cadvisor/cadvisor:v0.46.0
     deploy:
       <<: *deploy-default
-    hostname: bal-production
+    hostname: {{host_name}}
     privileged: true
     devices:
       - /dev/kmsg
