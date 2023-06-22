@@ -1,3 +1,10 @@
+# [1.36.0](https://github.com/mission-apprentissage/bal/compare/v1.35.5...v1.36.0) (2023-06-22)
+
+
+### Features
+
+* Déploiement sans interruption de service ([#166](https://github.com/mission-apprentissage/bal/issues/166)) ([05e281a](https://github.com/mission-apprentissage/bal/commit/05e281aedb579b3fcb349ae82efecf2649facd2d)), closes [#120](https://github.com/mission-apprentissage/bal/issues/120) [#121](https://github.com/mission-apprentissage/bal/issues/121) [#122](https://github.com/mission-apprentissage/bal/issues/122) [#123](https://github.com/mission-apprentissage/bal/issues/123) [#124](https://github.com/mission-apprentissage/bal/issues/124) [#126](https://github.com/mission-apprentissage/bal/issues/126) [#130](https://github.com/mission-apprentissage/bal/issues/130) [#135](https://github.com/mission-apprentissage/bal/issues/135) [#145](https://github.com/mission-apprentissage/bal/issues/145) [#146](https://github.com/mission-apprentissage/bal/issues/146) [#150](https://github.com/mission-apprentissage/bal/issues/150) [#151](https://github.com/mission-apprentissage/bal/issues/151) [#159](https://github.com/mission-apprentissage/bal/issues/159) [#165](https://github.com/mission-apprentissage/bal/issues/165)
+
 ## [1.35.6-rc.1](https://github.com/mission-apprentissage/bal/compare/v1.35.5...v1.35.6-rc.1) (2023-06-22)
 
 
