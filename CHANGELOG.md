@@ -1,3 +1,10 @@
+## [1.35.4](https://github.com/mission-apprentissage/bal/compare/v1.35.3...v1.35.4) (2023-06-22)
+
+
+### Bug Fixes
+
+* upload catching ([246bba8](https://github.com/mission-apprentissage/bal/commit/246bba8db64452afd21fd1ea7211fa30684c53bd))
+
 ## [1.35.3](https://github.com/mission-apprentissage/bal/compare/v1.35.2...v1.35.3) (2023-06-22)
 
 
