@@ -109,7 +109,11 @@ const AdminImportPage = () => {
               size: 25,
               header: () => "Actions",
               cell: ({ row }) => {
-                if (row.original.import_progress !== 100) return null;
+                if (
+                  row.original.import_progress !== 100 &&
+                  row.original.import_progress !== 0 // TODO This is a quick cleaning method but if delete and job running nned to send a kill sig to job
+                )
+                  return null;
                 return (
                   <Bin
                     boxSize="5"

@@ -121,6 +121,6 @@ describe("Users routes", () => {
       },
     });
 
-    assert.equal(response.statusCode, 401);
+    assert.equal(response.statusCode, 403);
   });
 });

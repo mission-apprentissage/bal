@@ -1,3 +1,25 @@
+## [1.35.5](https://github.com/mission-apprentissage/bal/compare/v1.35.4...v1.35.5) (2023-06-22)
+
+
+### Bug Fixes
+
+* style (moche) ([05f5b45](https://github.com/mission-apprentissage/bal/commit/05f5b45f170e8f45f8737f2c51b3cf07bf148619))
+
+## [1.35.4](https://github.com/mission-apprentissage/bal/compare/v1.35.3...v1.35.4) (2023-06-22)
+
+
+### Bug Fixes
+
+* upload catching ([246bba8](https://github.com/mission-apprentissage/bal/commit/246bba8db64452afd21fd1ea7211fa30684c53bd))
+
+## [1.35.3](https://github.com/mission-apprentissage/bal/compare/v1.35.2...v1.35.3) (2023-06-22)
+
+
+### Bug Fixes
+
+* bug hunting [#2](https://github.com/mission-apprentissage/bal/issues/2) ([ffc9a0b](https://github.com/mission-apprentissage/bal/commit/ffc9a0b24c5cd0d4d7a2c5f867ab958fc712e6e0))
+* returns and catch ovh errors ([047e3e1](https://github.com/mission-apprentissage/bal/commit/047e3e12f2a4f2372bb24f4871c4a338fa2825c5))
+
 ## [1.35.2](https://github.com/mission-apprentissage/bal/compare/v1.35.1...v1.35.2) (2023-06-21)
 
 

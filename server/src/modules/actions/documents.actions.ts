@@ -216,7 +216,9 @@ export const extractDocumentContent = async ({
       delimiter,
     }),
     writeData(async (json) => {
-      importedLength += Buffer.byteLength(JSON.stringify(json));
+      importedLength += Buffer.byteLength(
+        JSON.stringify(Object.values(json)).replace(/^\[(.*)\]$/, "$1")
+      );
       importedLines += 1;
       currentPercent = await updateImportProgress(
         document._id,
@@ -247,7 +249,7 @@ export const updateImportProgress = async (
   currentPercent: number
 ) => {
   const step_precent = 2; // every 2%
-  const newCurrentPercent = (importedLength * 100) / totalLength;
+  let newCurrentPercent = (importedLength * 100) / totalLength;
   if (newCurrentPercent - currentPercent < step_precent) {
     // Do not update
     return currentPercent;
@@ -261,6 +263,7 @@ export const updateImportProgress = async (
       },
     }
   );
+  newCurrentPercent = newCurrentPercent > 100 ? 99 : newCurrentPercent;
   return newCurrentPercent;
 };
 
@@ -304,10 +307,18 @@ export const deleteDocumentById = async (documentId: ObjectId) => {
   if (!document) {
     throw new Error("Impossible de trouver le document");
   }
-  await deleteFromStorage(document.chemin_fichier);
-  await deleteDocumentContent({
-    document_id: document._id.toString(),
-  });
+  try {
+    await deleteFromStorage(document.chemin_fichier);
+  } catch (error) {
+    logger.error(error);
+  }
+  try {
+    await deleteDocumentContent({
+      document_id: document._id.toString(),
+    });
+  } catch (error) {
+    logger.error(error);
+  }
   await getDbCollection("documents").deleteOne({ _id: document._id });
 };
 
