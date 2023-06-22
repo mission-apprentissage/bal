@@ -216,7 +216,7 @@ export const extractDocumentContent = async ({
       delimiter,
     }),
     writeData(async (json) => {
-      importedLength += Buffer.byteLength(JSON.stringify(json));
+      importedLength += Buffer.byteLength(JSON.stringify(Object.values(json)));
       importedLines += 1;
       currentPercent = await updateImportProgress(
         document._id,

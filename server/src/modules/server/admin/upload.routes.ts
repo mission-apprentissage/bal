@@ -68,29 +68,36 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       const { type_document } = request.query;
       const fileSize = parseInt(request.headers["content-length"] ?? "0");
 
+      let data = null as any;
       try {
-        const data = await request.file({
+        data = await request.file({
           limits: {
             fileSize: FILE_SIZE_LIMIT,
           },
         });
+      } catch (error) {
+        const err = server.multipartErrors;
+        logger.debug(err);
+        throw Boom.badImplementation(error as Error);
+      }
 
-        if (!request.user || !data || !validateFile(data)) {
-          throw Boom.unauthorized("Le fichier n'est pas au bon format");
-        }
+      if (!request.user || !data || !validateFile(data)) {
+        throw Boom.unauthorized("Le fichier n'est pas au bon format");
+      }
 
-        let document = null as any;
+      let document = null as any;
 
-        document = await createEmptyDocument({
-          type_document,
-          fileSize,
-          filename: data.filename,
-        });
+      document = await createEmptyDocument({
+        type_document,
+        fileSize,
+        filename: data.filename,
+      });
 
-        if (!document) {
-          throw Boom.badImplementation("Impossible de stocker de le fichier");
-        }
+      if (!document) {
+        throw Boom.badImplementation("Impossible de stocker de le fichier");
+      }
 
+      try {
         const added_by = request.user._id.toString();
 
         await uploadFile(added_by, data.file, document._id, {
@@ -109,7 +116,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           .send(document as unknown as IResPostAdminUpload);
       } catch (error) {
         const err = server.multipartErrors;
-        logger.info(err);
+        logger.debug(err);
         throw Boom.badImplementation(error as Error);
       }
     }
