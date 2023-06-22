@@ -1,3 +1,10 @@
+## [1.35.5](https://github.com/mission-apprentissage/bal/compare/v1.35.4...v1.35.5) (2023-06-22)
+
+
+### Bug Fixes
+
+* style (moche) ([05f5b45](https://github.com/mission-apprentissage/bal/commit/05f5b45f170e8f45f8737f2c51b3cf07bf148619))
+
 ## [1.35.4](https://github.com/mission-apprentissage/bal/compare/v1.35.3...v1.35.4) (2023-06-22)
 
 
