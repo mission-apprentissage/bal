@@ -1,3 +1,19 @@
+## [1.35.6-rc.1](https://github.com/mission-apprentissage/bal/compare/v1.35.5...v1.35.6-rc.1) (2023-06-22)
+
+
+### Bug Fixes
+
+* build ([080862b](https://github.com/mission-apprentissage/bal/commit/080862b8679853633daf52c6270de7bcb394dc41))
+* copy from ([94257c7](https://github.com/mission-apprentissage/bal/commit/94257c760921c82bde1057cc3f670df56195f06e))
+* image copy ([10eb76f](https://github.com/mission-apprentissage/bal/commit/10eb76faeb048a6c78c8eebbd943653fb3e0d7b7))
+* maintenance off ([bff640d](https://github.com/mission-apprentissage/bal/commit/bff640d4475dd21640fd814d2c4056724706bd0c))
+* nginx metabase reverse config ([652d4e5](https://github.com/mission-apprentissage/bal/commit/652d4e5fc4683275b640da1c1ef0a4a4d1c01ae4))
+* possibly empty node_modules ([df0b43b](https://github.com/mission-apprentissage/bal/commit/df0b43b832f00c590dedc6efced6216005903d91))
+* simplify builder ([4db648c](https://github.com/mission-apprentissage/bal/commit/4db648ce0209dc35715fa53ea5be8642c09923d2))
+* tests ([c8f4741](https://github.com/mission-apprentissage/bal/commit/c8f4741af8a3b76967936de34a14ae99d85ac85e))
+* trigger new release ([01df6d6](https://github.com/mission-apprentissage/bal/commit/01df6d6b6976d0d6813ca8f03fbb93be433db26d))
+* use Dockerfile as cache key too ([c5238ca](https://github.com/mission-apprentissage/bal/commit/c5238cabfc3510b67dbfb727a2b015d6529c9e26))
+
 ## [1.35.5](https://github.com/mission-apprentissage/bal/compare/v1.35.4...v1.35.5) (2023-06-22)
 
 
