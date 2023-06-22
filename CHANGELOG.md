@@ -1,3 +1,11 @@
+## [1.35.3](https://github.com/mission-apprentissage/bal/compare/v1.35.2...v1.35.3) (2023-06-22)
+
+
+### Bug Fixes
+
+* bug hunting [#2](https://github.com/mission-apprentissage/bal/issues/2) ([ffc9a0b](https://github.com/mission-apprentissage/bal/commit/ffc9a0b24c5cd0d4d7a2c5f867ab958fc712e6e0))
+* returns and catch ovh errors ([047e3e1](https://github.com/mission-apprentissage/bal/commit/047e3e12f2a4f2372bb24f4871c4a338fa2825c5))
+
 ## [1.35.2](https://github.com/mission-apprentissage/bal/compare/v1.35.1...v1.35.2) (2023-06-21)
 
 
