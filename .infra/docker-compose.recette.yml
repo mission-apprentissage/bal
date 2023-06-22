@@ -19,6 +19,13 @@ services:
     volumes:
       - /opt/bal/configs/reverse_proxy/recette:/etc/nginx/templates/includes/env
 
+
+  nodeexporter:
+    hostname: bal-recette
+
+  cadvisor:
+    hostname: bal-recette
+
 networks:
   bal_network:
     name: bal_network
