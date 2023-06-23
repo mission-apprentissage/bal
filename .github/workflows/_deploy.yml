@@ -53,7 +53,7 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           name: github_actions
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
           known_hosts: ${{ vars.SSH_KNOWN_HOSTS }}
           config: |
             Host *
@@ -64,7 +64,7 @@ jobs:
 
       - name: Run playbook
         run: |
-          ansible-playbook -i ".infra/env.ini" --limit "${{ inputs.environment }}" --vault-password-file=".infra/.vault_pwd.txt" --extra-vars "app_version=${{ inputs.app_version }} ansible_sudo_pass=${{ secrets.PWD_DEPLOY }}" ".infra/playbooks/deploy.yml" --user ${{ secrets.USR_DEPLOY }}
+          ansible-playbook -i ".infra/env.ini" --limit "${{ inputs.environment }}" --vault-password-file=".infra/.vault_pwd.txt" --extra-vars "app_version=${{ inputs.app_version }} ansible_sudo_pass=${{ secrets.DEPLOY_PASS }}" ".infra/playbooks/deploy.yml" --user ${{ secrets.DEPLOY_USERNAME }}
 
       - name: Notify failure on Slack
         uses: ravsamhq/notify-slack-action@v2

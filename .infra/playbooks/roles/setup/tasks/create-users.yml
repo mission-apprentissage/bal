@@ -7,3 +7,18 @@
   loop: "{{habilitations}}"
   loop_control:
     loop_var: habilitation
+
+- name: "Création utilisateur deploy"
+  user:
+    name: "deploy"
+    password: "{{ vault.MNA_BAL_GH_USER_PASS_CLEAR | password_hash }}"
+    update_password: on_create
+    shell: /bin/bash
+    groups: sudo,mna
+    append: yes
+
+- name: "Ajout des clés d'autorisation à l'utilisateur deploy"
+  authorized_key:
+    user: "deploy"
+    state: present
+    key: "{{ vault.MNA_BAL_GH_USER_PUBLIC_KEY }}"
