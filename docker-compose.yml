@@ -189,7 +189,7 @@ services:
       test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
       interval: 60s
       retries: 3
-      start_period: 120s
+      start_period: 6m
   
   smtp:
     profiles:
