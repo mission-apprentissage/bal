@@ -97,12 +97,25 @@ program
 program
   .command("migrations:up")
   .description("Run migrations up")
-  .option("-s, --sync", "Run job synchronously")
-  .action(async ({ sync }) => {
+  .action(async () => {
     await addJob(
       {
         name: "migrations:up",
-        sync,
+        sync: true,
+      },
+      { runningLogs: false }
+    );
+    process.exit(0);
+  });
+
+program
+  .command("migrations:status")
+  .description("Check migrations status")
+  .action(async () => {
+    await addJob(
+      {
+        name: "migrations:status",
+        sync: true,
       },
       { runningLogs: false }
     );
@@ -113,12 +126,11 @@ program
   .command("migrations:create")
   .description("Run migrations create")
   .requiredOption("-d, --description <string>", "description")
-  .option("-s, --sync", "Run job synchronously")
-  .action(async ({ description, sync }) => {
+  .action(async ({ description }) => {
     await addJob({
       name: "migrations:create",
       payload: description,
-      sync,
+      sync: true,
     });
     process.exit(0);
   });

@@ -10,8 +10,8 @@ readonly BACKUP_FILE="${BACKUP_LOCAL_DIR}/mongodb-$(date +'%Y-%m-%d_%H%M%S').gpg
 function backup() {
   echo "Creating backup..."
   mkdir -p "${BACKUP_LOCAL_DIR}"
-  docker exec bal_mongodb bash -c "mongodump --gzip --archive -u backup -p {{ vault[env_type].MNA_BAL_MONGODB_BACKUP_PASSWORD }}" \
-  | bash "${SCRIPT_DIR}/gpg/encrypt.sh" >"${BACKUP_FILE}"
+  docker exec $(docker ps -q -f name=bal_mongodb --latest) bash -c "mongodump --gzip --archive -u backup -p {{ vault[env_type].MNA_BAL_MONGODB_BACKUP_PASSWORD }}" \
+  | bash "${SCRIPT_DIR}/../gpg/encrypt.sh" >"${BACKUP_FILE}"
 }
 
 function replicate_backups() {

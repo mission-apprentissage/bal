@@ -1,6 +1,6 @@
 {
   "name": "shared",
-  "version": "1.34.6",
+  "version": "1.36.0",
   "main": "./index.ts",
   "types": "./index.ts",
   "author": "mna",
@@ -10,5 +10,11 @@
     "json-schema-to-ts": "2.8.0",
     "react": "18.2.0",
     "zod-to-json-schema": "3.21.1"
+  },
+  "devDependencies": {
+    "lodash-es": "^4.17.21",
+    "luhn": "^2.4.1",
+    "mongodb": "^4.11.0",
+    "zod": "^3.21.4"
   }
 }

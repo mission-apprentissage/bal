@@ -8,4 +8,4 @@ echo "[$(date +'%Y-%m-%d_%H%M%S')] Running ${BASH_SOURCE[0]} $*"
 echo "****************************"
 
 echo "Arrêt des conteneurs ${CONTAINER_FILTER}..."
-docker container stop $(docker container ls -q --filter name="${CONTAINER_FILTER}") || true
+docker service scale bal_${CONTAINER_FILTER}=0

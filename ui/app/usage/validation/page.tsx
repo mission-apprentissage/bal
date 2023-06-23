@@ -12,11 +12,11 @@ import {
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
 import {
   IReqPostOrganisationValidation,
   IResOrganisationValidation,
-} from "../../../../shared/routes/v1/organisation.routes";
+} from "shared/routes/v1/organisation.routes";
+
 import { api } from "../../../utils/api.utils";
 
 const UsageVerificationPage = () => {
@@ -61,10 +61,12 @@ const UsageVerificationPage = () => {
           </FormControl>
 
           <FormControl isInvalid={!!errors.siret} mb={5}>
-            <FormLabel>Siret</FormLabel>
+            <FormLabel>
+              Un SIRET au format valide est composé de 14 chiffres
+            </FormLabel>
             <InputGroup size="md">
               <Input
-                placeholder="1234567891234"
+                placeholder="98765432400019"
                 {...register("siret", {
                   required: "Siret obligatoire",
                 })}

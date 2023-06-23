@@ -1,25 +1,41 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
-
 import {
+  clearAllCollections,
   closeMongodbConnection,
+  configureDbSchemaValidation,
   connectToMongodb,
+  createIndexes,
   getDatabase,
 } from "@/common/utils/mongodbUtils";
-
-let mongoInMemory: MongoMemoryServer;
+import config from "@/config";
+import { modelDescriptors } from "@/db/models";
 
 export const startAndConnectMongodb = async () => {
-  mongoInMemory = await MongoMemoryServer.create();
-  const uri = mongoInMemory.getUri();
-  await connectToMongodb(uri);
+  const workerId = `${process.env.VITEST_POOL_ID}-${process.env.VITEST_WORKER_ID}`;
+
+  await connectToMongodb(
+    config.mongodb.uri.replace("VITEST_POOL_ID", workerId)
+  );
+  await createIndexes();
+  await configureDbSchemaValidation(modelDescriptors);
 };
 
 export const stopMongodb = async () => {
+  await getDatabase().dropDatabase();
   await closeMongodbConnection();
-  await mongoInMemory.stop();
 };
 
-export const clearAllCollections = async () => {
-  const collections = await getDatabase().collections();
-  return Promise.all(collections.map((c) => c.deleteMany({})));
+export const useMongo = () => {
+  return {
+    beforeAll: async () => {
+      await startAndConnectMongodb();
+    },
+
+    afterAll: async () => {
+      await stopMongodb();
+    },
+
+    beforeEach: async () => {
+      await clearAllCollections();
+    },
+  };
 };

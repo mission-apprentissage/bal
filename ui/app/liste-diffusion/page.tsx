@@ -12,13 +12,13 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-
 import {
   IMailingList,
   MAILING_LIST_STATUS,
-} from "../../../shared/models/mailingList.model";
-import { IReqGetMailingList } from "../../../shared/routes/mailingList.routes";
-import { DOCUMENT_TYPES } from "../../../shared/routes/upload.routes";
+} from "shared/models/mailingList.model";
+import { IReqGetMailingList } from "shared/routes/mailingList.routes";
+import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
+
 import Table from "../../components/table/Table";
 import { Bin } from "../../theme/icons/Bin";
 import { DownloadLine } from "../../theme/icons/DownloadLine";
@@ -91,10 +91,12 @@ const ListeDiffusionPage = () => {
                   },
                 })}
               >
-                {/* {Object.values(DOCUMENT_TYPES).map((type) => (
+                {[
+                  DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023,
+                  DOCUMENT_TYPES.VOEUX_AFFELNET_JUIN_2023,
+                ].map((type) => (
                   <option key={type}>{type}</option>
-                ))} */}
-                <option>Voeux Affelnet Mai 2023</option>
+                ))}
               </Select>
               <FormErrorMessage>{errors.source?.message}</FormErrorMessage>
             </FormControl>

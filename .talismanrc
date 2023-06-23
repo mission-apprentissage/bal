@@ -16,7 +16,7 @@ fileignoreconfig:
 - filename: .github/workflows/remove-preview.yml
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/.env_server
-  checksum: 38cb5efccb41c909f99895b8ea9de63b639327784e30cc8d476d01a50e64111e
+  checksum: 6af84bb7aa4a9867d0fb6a0f73cf6f0325483c440dc8dc018c08a6d34d9eb48c
 - filename: .infra/.env_ui
   checksum: 0dd94c954d75fd19bbe669eef8238c703d9fb8bea4025358071f9fae6140ac85
 - filename: .infra/README.md
@@ -46,7 +46,7 @@ fileignoreconfig:
 - filename: .infra/docker-compose.recette.yml
   checksum: 1b26e5f3e3d4f30ddd5eb53bf09dffe27867beec422d64e4caad783acf31fbae
 - filename: .infra/env.ini
-  checksum: 4b945eeb5565397dcac0d72fb48973fda59416abdf616d9b84bd447779583d76
+  checksum: cb36ac12c7694365baf49764a6693519a7226162e229a4b7b121366965e339d8
 - filename: .infra/scripts/deploy-app.sh
   checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
 - filename: .infra/scripts/ovh/create-backup-partition.sh
@@ -60,7 +60,7 @@ fileignoreconfig:
 - filename: .infra/scripts/vault/renew-vault.sh
   checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
 - filename: .infra/vault/vault.yml
-  checksum: 802edcd45f16ce5e6e6057c1d61c11767c81b20d620befcb9caf7c6902789c7b
+  checksum: 48536fbb9e3d3d0632ba4017a05ccc0c4b31a468bbfd66f9365e6176104579f1
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh

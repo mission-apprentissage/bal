@@ -10,7 +10,7 @@ stop_container() {
 }
 
 restart_container() {
-  NO_UPDATE=true bash /opt/bal/tools/reload-containers.sh --no-deps metabase
+  bash /opt/bal/tools/reload-containers.sh
 }
 
 function backup_metabase(){

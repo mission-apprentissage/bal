@@ -1,26 +1,24 @@
-version: "2.4"
+version: "3.8"
+
 services:
-  repo_modules:
+  root:
+    image: 'bal_root:latest'
     restart: "no"
+    command: ["yarn", "install"]
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     volumes:
       - ./:/app/:z
 
   reverse_proxy:
-    image: bal_reverse_proxy
-    container_name: bal_reverse_proxy
-    mem_limit: 256m
-    restart: unless-stopped
+    profiles:
+      - "dev"
     ports:
       - 80:80
       - 443:443
     networks:
       - bal_network
-    depends_on:
-      - server
-      - ui
     environment:
       - PARANOIA=1
       - ANOMALY_INBOUND=5
@@ -29,110 +27,143 @@ services:
       - DNS_SERVER=127.0.0.11
       - PROXY=1
       - SERVERNAME=localhost
-      - ACCESSLOG=/data/access.log
-      - ERRORLOG=/data/error.log
       - LOGLEVEL=warn
       - NGINX_ALWAYS_TLS_REDIRECT=false
       - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
     volumes:
-      - bal_nginx_data:/data:z
-      - ./reverse_proxy/dev/includes:/etc/nginx/templates/includes/env
+      - bal_nginx_data:/data
     build:
       context: reverse_proxy
 
   ui:
-    image: bal_ui
-    container_name: bal_ui
-    mem_limit: 2g
+    image: 'bal_root:latest'
+    profiles:
+      - "dev"
     stdin_open: true
     networks:
       - bal_network
-    depends_on:
-      - server
-    environment:
-      - NEXT_SERVER_URI=http://server:5000
-      - NEXT_PUBLIC_SENTRY_DSN=
-      - NEXT_PUBLIC_ENV=dev
-      - NEXT_PUBLIC_BASE_HOST=localhost
-      - NEXT_PUBLIC_METABASE_URL=https://localhost/metabase
-      - NEXT_PUBLIC_METABASE_SECRET_KEY=
+    env_file: .env_ui
     volumes:
       - ./:/app/:z
-    build:
-      context: .
-      dockerfile: ui/Dockerfile.dev
+    working_dir: '/app/ui'
+    expose:
+      - '3000'
+    command: ["yarn", "docker-dev"]
+    depends_on:
+      root:
+        condition: service_completed_successfully
 
   server:
-    image: bal_server
-    container_name: bal_server
-    restart: "no"
-    mem_limit: 1g
+    image: 'bal_root:latest'
+    profiles:
+      - "dev"
     networks:
       - bal_network
     depends_on:
-      - mongodb
-      - smtp
-    environment:
-      - MNA_BAL_MONGODB_URI=mongodb://mongodb:27017/mna-bal?retryWrites=true&w=majority
-      - MNA_BAL_ENV=dev
-      - MNA_BAL_LOG_LEVEL=debug
-      - MNA_BAL_LOG_DESTINATIONS=stdout,mongodb
-      - MNA_BAL_SMTP_HOST=smtp
-      - MNA_BAL_SMTP_PORT=1025
-      - MNA_BAL_AUTH_ACTIVATION_JWT_SECRET=secret
-      - MNA_BAL_AUTH_API_TOKEN_JWT_SECRET=secret
-      - MNA_BAL_AUTH_PASSWORD_JWT_SECRET=secret
-      - MNA_BAL_SENTRY_DSN=
+      mongodb:
+        condition: service_healthy
+      smtp:
+        condition: service_completed_successfully
+      root:
+        condition: service_completed_successfully
+    env_file: .env_server
     volumes:
       - ./:/app/:z
-      - bal_server_data:/data:z
-    build:
-      context: .
-      dockerfile: server/Dockerfile.dev
+      - bal_server_data:/data
+    working_dir: '/app/server'
+    expose:
+      - '5000'
+    command: ["yarn", "dev"]
+
+  test:
+    image: 'bal_root:latest'
+    profiles:
+      - "test"
+    networks:
+      - bal_network
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      root:
+        condition: service_completed_successfully
+    env_file: ./server/.env.test
+    volumes:
+      - ./:/app/:z
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    working_dir: '/app'
+  
+  ci:
+    image: 'bal_root:latest'
+    profiles:
+      - "ci"
+    networks:
+      - bal_network
+    env_file: ./server/.env.test
+    volumes:
+      - ./:/app/:z
+      - /app/node_modules
+      - /app/server/node_modules
+      - /app/shared/node_modules
+      - /app/ui/node_modules
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    working_dir: '/app'
 
   processor:
-    image: bal_server
-    container_name: bal_processor
+    image: 'bal_root:latest'
+    profiles:
+      - "dev"
     command: ["yarn", "cli", "processor"]
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     restart: unless-stopped
     networks:
       - bal_network
-    depends_on:
-      - mongodb
-      - clamav
-    environment:
-      - MNA_BAL_MONGODB_URI=mongodb://mongodb:27017/mna-bal?retryWrites=true&w=majority
-      - MNA_BAL_ENV=dev
-      - MNA_BAL_LOG_LEVEL=debug
-      - MNA_BAL_LOG_DESTINATIONS=stdout,mongodb
-      - MNA_BAL_SENTRY_DSN=
+    env_file: .env_server
     volumes:
       - ./:/app/:z
-      - bal_server_data:/data:z
-    build:
-      context: .
-      dockerfile: server/Dockerfile.dev
+      - bal_server_data:/data
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      clamav:
+        condition: service_healthy
+      root:
+        condition: service_completed_successfully
+    working_dir: '/app/server'
+    expose:
+      - '5000'
 
   mongodb:
+    profiles:
+      - "dev"
+      - "test"
     image: mongo:6.0.2-focal
-    container_name: bal_mongodb
-    mem_limit: 2g
+    deploy:
+      resources:
+        limits:
+          memory: 2g
     restart: unless-stopped
-    depends_on:
-      repo_modules:
-        condition: service_completed_successfully
     ports:
       - "127.0.0.1:27017:27017"
     networks:
       - bal_network
     volumes:
       - bal_mongodb_data:/data
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "'db.runCommand(\"ping\").ok'", '--quiet']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
 
   metabase:
+    profiles:
+      - "dev"
     image: metabase/metabase:v0.46.0
-    container_name: bal_metabase
-    mem_limit: 2g
     depends_on:
       - mongodb
     restart: unless-stopped
@@ -148,9 +179,9 @@ services:
       - bal_metabase_data:/data/backups
 
   clamav:
+    profiles:
+      - "dev"
     image: clamav/clamav:latest
-    container_name: bal_clamav
-    mem_limit: 2g
     restart: unless-stopped
     networks:
       - bal_network
@@ -161,9 +192,9 @@ services:
       start_period: 120s
   
   smtp:
+    profiles:
+      - "dev"
     image: axllent/mailpit:v1.5.5
-    container_name: bal_smtp
-    mem_limit: 128m
     ports:
       - 1025:1025
     networks:
@@ -192,8 +223,6 @@ volumes:
     driver: local
     name: bal_smtp_data
 
-
 networks:
   bal_network:
     name: bal_network
-

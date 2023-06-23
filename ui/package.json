@@ -1,21 +1,20 @@
 {
   "name": "ui",
-  "version": "1.34.6",
+  "version": "1.34.0",
   "private": true,
   "scripts": {
     "dev": "NEXT_PUBLIC_VERSION=$npm_package_version next dev",
-    "build": "NEXT_PUBLIC_VERSION=$npm_package_version next build",
+    "build": "NEXT_PUBLIC_VERSION=$npm_package_version next build --no-lint",
     "start": "NEXT_PUBLIC_VERSION=$npm_package_version next start",
     "docker-dev": "yarn dev",
-    "typecheck": "tsc"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@chakra-ui/icons": "2.0.17",
-    "@chakra-ui/next-js": "2.1.1",
-    "@chakra-ui/react": "2.5.3",
+    "@chakra-ui/icons": "2.0.19",
+    "@chakra-ui/next-js": "2.1.4",
+    "@chakra-ui/react": "2.7.1",
     "@emotion/react": "11.10.6",
     "@emotion/styled": "11.10.6",
-    "@tanstack/match-sorter-utils": "8.8.4",
     "@tanstack/react-query": "4.29.5",
     "@tanstack/react-table": "8.9.1",
     "@types/node": "18.11.18",
@@ -38,12 +37,15 @@
     "react-markdown": "8.0.7",
     "react-notion-x": "6.16.0",
     "react-phone-input-2": "2.15.1",
-    "shared": "*",
+    "shared": "workspace:*",
     "typescript": "4.9.5",
     "yup": "1.1.1"
   },
   "devDependencies": {
+    "@chakra-ui/theme": "^3.1.2",
     "@types/lodash.range": "3.2.7",
-    "@types/react-datepicker": "4.11.2"
+    "@types/react-datepicker": "4.11.2",
+    "luxon": "^3.3.0",
+    "notion-types": "^6.16.0"
   }
 }

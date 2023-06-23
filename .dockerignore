@@ -3,6 +3,6 @@
 .git/
 .infra
 .vscode
-**/node_modules
 **/dist
-yarn.lock
+.env_server
+.env_ui

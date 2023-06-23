@@ -149,7 +149,7 @@ export const uploadFile = async (
   const { isInfected, viruses } = await getScanResults();
 
   if (isInfected) {
-    if (!test) {
+    if (!testMode) {
       const listViruses = viruses.join(",");
       logger.error(
         `Uploaded file ${path} is infected by ${listViruses}. Deleting file from storage...`
@@ -208,7 +208,7 @@ export const extractDocumentContent = async ({
 
   let importedLines = 0;
   let importedLength = 0;
-  let currentProgress = 0;
+  let currentPercent = 0;
   await oleoduc(
     stream,
     crypto.isCipherAvailable() ? crypto.decipher(document.hash_secret) : noop(),
@@ -216,14 +216,16 @@ export const extractDocumentContent = async ({
       delimiter,
     }),
     writeData(async (json) => {
-      importedLength += Buffer.byteLength(JSON.stringify(json));
+      importedLength += Buffer.byteLength(
+        JSON.stringify(Object.values(json)).replace(/^\[(.*)\]$/, "$1")
+      );
       importedLines += 1;
-      currentProgress = await updateImportProgress(
+      currentPercent = await updateImportProgress(
         document._id,
         importedLines,
         importedLength,
         document.taille_fichier,
-        currentProgress
+        currentPercent
       );
       await importDocumentContent(document, [json], formatter);
     })
@@ -244,25 +246,25 @@ export const updateImportProgress = async (
   importedLines: number,
   importedLength: number,
   totalLength: number,
-  currentProgress: number
+  currentPercent: number
 ) => {
   const step_precent = 2; // every 2%
-  const currentPercent = (importedLength * 100) / totalLength;
-  if (currentPercent - currentProgress < step_precent) {
+  let newCurrentPercent = (importedLength * 100) / totalLength;
+  if (newCurrentPercent - currentPercent < step_precent) {
     // Do not update
-    return currentProgress;
+    return currentPercent;
   }
-  currentProgress = currentPercent;
   await updateDocument(
     { _id },
     {
       $set: {
         lines_count: importedLines,
-        import_progress: currentProgress,
+        import_progress: newCurrentPercent,
       },
     }
   );
-  return currentPercent;
+  newCurrentPercent = newCurrentPercent > 100 ? 99 : newCurrentPercent;
+  return newCurrentPercent;
 };
 
 export const importDocumentContent = async <
@@ -305,14 +307,28 @@ export const deleteDocumentById = async (documentId: ObjectId) => {
   if (!document) {
     throw new Error("Impossible de trouver le document");
   }
-  await deleteFromStorage(document.chemin_fichier);
-  await deleteDocumentContent({
-    document_id: document._id.toString(),
-  });
+  try {
+    await deleteFromStorage(document.chemin_fichier);
+  } catch (error) {
+    logger.error(error);
+  }
+  try {
+    await deleteDocumentContent({
+      document_id: document._id.toString(),
+    });
+  } catch (error) {
+    logger.error(error);
+  }
   await getDbCollection("documents").deleteOne({ _id: document._id });
 };
 
-export const handleDocumentFileContent = async (document: IDocument) => {
+export const handleDocumentFileContent = async ({ document_id }) => {
+  const document = await findDocument({
+    _id: document_id,
+  });
+  if (!document) {
+    throw new Error("Processor > /document: Can't find document");
+  }
   switch (document.type_document) {
     case DOCUMENT_TYPES.DECA:
       await extractDocumentContent({
@@ -323,6 +339,7 @@ export const handleDocumentFileContent = async (document: IDocument) => {
       break;
     case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
     case DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023:
+    case DOCUMENT_TYPES.VOEUX_AFFELNET_JUIN_2023:
       await extractDocumentContent({ document });
       break;
 

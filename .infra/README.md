@@ -24,7 +24,14 @@
 ## Prérequis
 
 Contient l'ensemble des données sensibles nécessaires à la mise en place de
-l'application. Ce projet utilise Ansible 2.7+ pour configurer et déployer l'application.
+l'application.
+
+- Ansible 2.7+: `brew install ansible`
+- sshpass
+  ```
+  brew tap esolitos/ipa
+  brew install esolitos/ipa/sshpass
+  ```
 
 **Fichier disponible seulement aux personnes habilitées**
 
@@ -38,28 +45,7 @@ suivant : https://docs.github.com/en/authentication/connecting-to-github-with-ss
 
 ### GPG
 
-Pour utiliser le projet infra, vous devez avoir une clé GPG, si ce n'est pas le cas, vous pouvez en créer une via la
-commande :
-
-```bash
- bash scripts/create-gpg-key.sh <prénom> <nom> <email>
-```
-
-Une fois terminé, le script va vous indiquer l'identifiant de votre clé GPG. Afin qu'elle puisse être utilisée au sein
-de la mission apprentissage, vous devez publier votre clé :
-
-```bash
-gpg --send-key <identifiant>
-```
-
-Il est vivement conseillé de réaliser un backup des clés publique et privée qui viennent d'être créés.
-
-```bash
-gpg --export <identifiant> > public_key.gpg
-gpg --export-secret-keys <identifiant> > private_key.gpg
-```
-
-Ces deux fichiers peuvent, par exemple, être stockés sur une clé USB.
+Veuillez suivre les instructions dans le [root README](../README.md#gpg)
 
 ## Configuration et déploiement d'un environnement
 
@@ -299,7 +285,7 @@ La première étape est de créer un VPS via l'interface d'OVH : https://www.ovh
 Une fois le VPS créé, il est nécessaire de configurer le firewall en lançant la commande :
 
 ```sh
-bash scripts/ovh/create-firewall.sh <nom de l'environnement>
+bash scripts/ovh/create-firewall.sh <nom de l'environnement> <app-key> <app-secret>
 ```
 
 Lors de l'exécution de ce script, vous serez redirigé vers une page web vous demandant de vous authentifier afin de
@@ -307,8 +293,12 @@ générer un jeton d'api. Vous devez donc avoir un compte OVH ayant le droit de 
 Apprentissage. Une fois authentifié, le script utilisera automatiquement ce jeton.
 
 Quand le script est terminé, vous pouvez aller sur l'interface
-OVH [https://www.ovh.com/manager/dedicated/#/configuration/ip?tab=ip](https://www.ovh.com/manager/dedicated/#/configuration/ip?tab=ip)
+OVH [https://www.ovh.com/manager/#/dedicated/ip](https://www.ovh.com/manager/#/dedicated/ip)
 afin de vérifier que le firewall a été activé pour l'ip du VPS.
+
+### Création du domaine name
+
+Créer un domain name pour le nouvel environment https://admin.alwaysdata.com/record/?domain=69636 `bal-<nom de l'environnement>.apprentissage.beta.gouv.fr`
 
 ### Déclaration de l'environnement
 
@@ -316,24 +306,25 @@ Le fichier `/env.ini` définit les environnements de l'application. Il faut donc
 dans ce fichier en renseignant les informations suivantes :
 
 ```
-[<nom de l'environnemnt>]
+[<nom de l'environnement>]
 <IP>
-[<nom de l'environnemnt>:vars]
-dns_name=<nom de l'application>.mnaDNSBASE
-host_name=<nom de la mahcine (ex: mna-catalogue-production)>
+[<nom de l'environnement>:vars]
+dns_name=bal-<nom de l'environnement>.apprentissage.beta.gouv.fr
+host_name=bal-<nom de l'environnement>
 update_sshd_config=true
-env_type=production
-
+env_type=recette
 ```
 
 Pour information, vous pouvez obtenir l'adresse ip du vps en consultant les emails de
 service : https://www.ovh.com/manager/dedicated/#/useraccount/emails
 
+Editer le vault pour créer les env-vars liés à ce nouvel environnement (cf: [Edition du vault](#edition-du-vault))
+
 ### Configuration de l'environnement
 
 Pour configurer l'environnement, il faut lancer la commande suivante :
 
-```
+```bash
 ssh-keyscan <ip> >> ~/.ssh/known_hosts
 bash scripts/setup-vm.sh <nom_environnement> --user ubuntu --ask-pass
 ```
@@ -353,21 +344,11 @@ ssh <nom_utilisateur>@<ip>
 Enfin pour des questions de sécurité, vous devez supprimer l'utilisateur `ubuntu` :
 
 ```
-bash scripts/clean.sh <nom_environnement> --user <nom_utilisateur>
+bash scripts/clean.sh <nom_environnement> --user <votre_nom_utilisateur>  --extra-vars "username=ubuntu"
 ```
 
-## Tester les playbook Ansible
+### Deploiement de l'environnement
 
-Il est possible de tester le playbook Ansible en utilisant Vagrant 2.2+ et VirtualBox 5+. Une fois ces deux outils
-installés, il faut lancer la commande :
-
-```sh
-bash ansible/test/run-playbook-tests.sh
 ```
-
-Ce script va créer une machine virtuelle dans VirtualBox et exécuter le playbook sur cette VM. Il est ensuite possible
-de se connecter à la machine via la commande :
-
-```sh
-bash ansible/test/connect-to-vm.sh
+bash scripts/deploy-app.sh <nom_environnement> --user <nom_utilisateur>
 ```

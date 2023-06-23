@@ -2,13 +2,7 @@
 set -euo pipefail
 #Needs to be run as sudo
 
-function tail_logs() {
-    echo "Rechargement des conteneurs ..."
+readonly SERVICE=${1:?"Merci de préciser le service"}
+shift
 
-    /usr/local/bin/docker-compose \
-      -f "/opt/bal/docker-compose.yml" \
-      --project-name bal \
-      logs "$@"
-}
-
-tail_logs "$@"
+docker service logs bal_${SERVICE} "$@"

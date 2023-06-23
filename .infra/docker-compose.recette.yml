@@ -1,9 +1,16 @@
-version: "2.4"
+version: "3.8"
+
 services:
   smtp:
     image: axllent/mailpit:v1.5.5
-    container_name: bal_smtp
-    mem_limit: 128m
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+      update_config:
+        failure_action: rollback
+      rollback_config:
+        parallelism: 0
     ports:
       - 1025:1025
     networks:
@@ -14,11 +21,3 @@ services:
     environment:
       - MP_DATA_FILE=/data/mailpit.db
       - MP_UI_AUTH_FILE=/auth
-
-  reverse_proxy:
-    volumes:
-      - /opt/bal/configs/reverse_proxy/recette:/etc/nginx/templates/includes/env
-
-networks:
-  bal_network:
-    name: bal_network

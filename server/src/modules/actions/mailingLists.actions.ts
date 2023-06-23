@@ -110,14 +110,18 @@ export const updateMailingList = async (
  * ACTIONS
  */
 
-export const processMailingList = async (mailingList: IMailingList) => {
+export const processMailingList = async ({ mailing_list_id }) => {
+  const mailingList = await findMailingList({
+    _id: mailing_list_id,
+  });
   if (!mailingList) {
-    throw new Error("Error creating mailing list");
+    throw new Error("Processor > /mailing-list: Can't find mailing list");
   }
 
   switch (mailingList.source) {
     case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
     case DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023:
+    case DOCUMENT_TYPES.VOEUX_AFFELNET_JUIN_2023:
       return handleVoeuxParcoursupMai2023(mailingList);
 
     default:

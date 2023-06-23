@@ -1,28 +1,26 @@
+ci-install:
+	docker build --build-arg YARN_FLAGS="--immutable" --platform linux/amd64 --tag bal_root:latest .
+
 install:
-	yarn
+	docker compose run --no-deps --rm root
 
 start:
-	docker-compose up --build --force-recreate -d
+	docker compose --profile dev up -d --remove-orphans
 
 seed:
-	yarn --cwd server cli seed
+	docker compose run --rm server yarn cli seed
+
+migrations:
+	docker compose run --rm server yarn cli migrations:status
 
 stop:
-	docker-compose stop
-
-lint:
-	yarn lint
+	docker compose --profile dev down
 
 test:
-	yarn --cwd server test
-
-coverage:
-	yarn --cwd server test:coverage
+	docker compose run --rm test yarn test:server
 
 clean:
-	docker-compose kill && docker system prune --force --volumes
+	docker compose down; docker system prune --force --volumes
 
-typecheck:
-	yarn --cwd server typecheck && yarn --cwd ui typecheck
-
-ci: lint test typecheck
+ci:
+	docker compose run --no-deps --rm ci yarn ci

@@ -1,3 +1,95 @@
+# [1.36.0](https://github.com/mission-apprentissage/bal/compare/v1.35.5...v1.36.0) (2023-06-22)
+
+
+### Features
+
+* Déploiement sans interruption de service ([#166](https://github.com/mission-apprentissage/bal/issues/166)) ([05e281a](https://github.com/mission-apprentissage/bal/commit/05e281aedb579b3fcb349ae82efecf2649facd2d)), closes [#120](https://github.com/mission-apprentissage/bal/issues/120) [#121](https://github.com/mission-apprentissage/bal/issues/121) [#122](https://github.com/mission-apprentissage/bal/issues/122) [#123](https://github.com/mission-apprentissage/bal/issues/123) [#124](https://github.com/mission-apprentissage/bal/issues/124) [#126](https://github.com/mission-apprentissage/bal/issues/126) [#130](https://github.com/mission-apprentissage/bal/issues/130) [#135](https://github.com/mission-apprentissage/bal/issues/135) [#145](https://github.com/mission-apprentissage/bal/issues/145) [#146](https://github.com/mission-apprentissage/bal/issues/146) [#150](https://github.com/mission-apprentissage/bal/issues/150) [#151](https://github.com/mission-apprentissage/bal/issues/151) [#159](https://github.com/mission-apprentissage/bal/issues/159) [#165](https://github.com/mission-apprentissage/bal/issues/165)
+
+## [1.35.6-rc.1](https://github.com/mission-apprentissage/bal/compare/v1.35.5...v1.35.6-rc.1) (2023-06-22)
+
+
+### Bug Fixes
+
+* build ([080862b](https://github.com/mission-apprentissage/bal/commit/080862b8679853633daf52c6270de7bcb394dc41))
+* copy from ([94257c7](https://github.com/mission-apprentissage/bal/commit/94257c760921c82bde1057cc3f670df56195f06e))
+* image copy ([10eb76f](https://github.com/mission-apprentissage/bal/commit/10eb76faeb048a6c78c8eebbd943653fb3e0d7b7))
+* maintenance off ([bff640d](https://github.com/mission-apprentissage/bal/commit/bff640d4475dd21640fd814d2c4056724706bd0c))
+* nginx metabase reverse config ([652d4e5](https://github.com/mission-apprentissage/bal/commit/652d4e5fc4683275b640da1c1ef0a4a4d1c01ae4))
+* possibly empty node_modules ([df0b43b](https://github.com/mission-apprentissage/bal/commit/df0b43b832f00c590dedc6efced6216005903d91))
+* simplify builder ([4db648c](https://github.com/mission-apprentissage/bal/commit/4db648ce0209dc35715fa53ea5be8642c09923d2))
+* tests ([c8f4741](https://github.com/mission-apprentissage/bal/commit/c8f4741af8a3b76967936de34a14ae99d85ac85e))
+* trigger new release ([01df6d6](https://github.com/mission-apprentissage/bal/commit/01df6d6b6976d0d6813ca8f03fbb93be433db26d))
+* use Dockerfile as cache key too ([c5238ca](https://github.com/mission-apprentissage/bal/commit/c5238cabfc3510b67dbfb727a2b015d6529c9e26))
+
+## [1.35.5](https://github.com/mission-apprentissage/bal/compare/v1.35.4...v1.35.5) (2023-06-22)
+
+
+### Bug Fixes
+
+* style (moche) ([05f5b45](https://github.com/mission-apprentissage/bal/commit/05f5b45f170e8f45f8737f2c51b3cf07bf148619))
+
+## [1.35.4](https://github.com/mission-apprentissage/bal/compare/v1.35.3...v1.35.4) (2023-06-22)
+
+
+### Bug Fixes
+
+* upload catching ([246bba8](https://github.com/mission-apprentissage/bal/commit/246bba8db64452afd21fd1ea7211fa30684c53bd))
+
+## [1.35.3](https://github.com/mission-apprentissage/bal/compare/v1.35.2...v1.35.3) (2023-06-22)
+
+
+### Bug Fixes
+
+* bug hunting [#2](https://github.com/mission-apprentissage/bal/issues/2) ([ffc9a0b](https://github.com/mission-apprentissage/bal/commit/ffc9a0b24c5cd0d4d7a2c5f867ab958fc712e6e0))
+* returns and catch ovh errors ([047e3e1](https://github.com/mission-apprentissage/bal/commit/047e3e12f2a4f2372bb24f4871c4a338fa2825c5))
+
+## [1.35.2](https://github.com/mission-apprentissage/bal/compare/v1.35.1...v1.35.2) (2023-06-21)
+
+
+### Bug Fixes
+
+* bug hunting ([13c42b6](https://github.com/mission-apprentissage/bal/commit/13c42b6fb13826a81634cc70cb6186ba4b759fdc))
+
+## [1.35.2-rc.2](https://github.com/mission-apprentissage/bal/compare/v1.35.2-rc.1...v1.35.2-rc.2) (2023-06-21)
+
+
+### Bug Fixes
+
+* image copy ([10eb76f](https://github.com/mission-apprentissage/bal/commit/10eb76faeb048a6c78c8eebbd943653fb3e0d7b7))
+
+## [1.35.2-rc.1](https://github.com/mission-apprentissage/bal/compare/v1.35.1...v1.35.2-rc.1) (2023-06-21)
+
+
+### Bug Fixes
+
+* build ([080862b](https://github.com/mission-apprentissage/bal/commit/080862b8679853633daf52c6270de7bcb394dc41))
+* copy from ([94257c7](https://github.com/mission-apprentissage/bal/commit/94257c760921c82bde1057cc3f670df56195f06e))
+* possibly empty node_modules ([df0b43b](https://github.com/mission-apprentissage/bal/commit/df0b43b832f00c590dedc6efced6216005903d91))
+* simplify builder ([4db648c](https://github.com/mission-apprentissage/bal/commit/4db648ce0209dc35715fa53ea5be8642c09923d2))
+* trigger new release ([01df6d6](https://github.com/mission-apprentissage/bal/commit/01df6d6b6976d0d6813ca8f03fbb93be433db26d))
+* use Dockerfile as cache key too ([c5238ca](https://github.com/mission-apprentissage/bal/commit/c5238cabfc3510b67dbfb727a2b015d6529c9e26))
+
+## [1.35.1](https://github.com/mission-apprentissage/bal/compare/v1.35.0...v1.35.1) (2023-06-21)
+
+
+### Bug Fixes
+
+* some fixes ([b7342e8](https://github.com/mission-apprentissage/bal/commit/b7342e8721cccb29644dbe2908e7225d9cd3fc5e))
+
+# [1.35.0](https://github.com/mission-apprentissage/bal/compare/v1.34.7...v1.35.0) (2023-06-21)
+
+
+### Features
+
+* voeux juin ([#161](https://github.com/mission-apprentissage/bal/issues/161)) ([aa0447d](https://github.com/mission-apprentissage/bal/commit/aa0447d5878640046a4fbfb23a86c72291529a52))
+
+## [1.34.7](https://github.com/mission-apprentissage/bal/compare/v1.34.6...v1.34.7) (2023-06-21)
+
+
+### Bug Fixes
+
+* disable palusible event ([172f793](https://github.com/mission-apprentissage/bal/commit/172f793d64e8c0853b49b9abe57a1a21f2015cf5))
+
 ## [1.34.6](https://github.com/mission-apprentissage/bal/compare/v1.34.5...v1.34.6) (2023-06-19)
 
 

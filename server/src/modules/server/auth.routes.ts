@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import {
   SReqGetResetPassword,
   SReqHeadersAuthorization,
@@ -47,7 +48,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
         body: SReqPostLogin,
         response: {
           200: SResPostLogin,
-          401: SResError,
+          403: SResError,
         },
       } as const,
     },
@@ -57,10 +58,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
       const user = await verifyEmailPassword(email, password);
 
       if (!user || !user._id) {
-        return response.status(401).send({
-          type: "invalid_credentials",
-          message: "Identifiants incorrects.",
-        });
+        throw Boom.forbidden("Identifiants incorrects");
       }
 
       const token = createUserTokenSimple({ payload: { email: user.email } });
