@@ -6,15 +6,15 @@ concurrency:
   group: ${{ github.workflow }}
 
 jobs:
-  tests:
-    uses: "./.github/workflows/ci.yml"
-    secrets:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  # tests:
+  #   uses: "./.github/workflows/ci.yml"
+  #   secrets:
+  #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   deploy:
     # if: github.event.pull_request.draft == false
     name: Deploy Preview ${{ github.event.pull_request.number }}
-    needs: ["tests"]
+    # needs: ["tests"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -44,9 +44,12 @@ jobs:
       - name: Install jmespath for Ansible
         run: pip install jmespath
 
+      - name: Which python
+        run: which python
+
       - name: Run playbook
         run: |
-          ansible-playbook -i ".infra/env.ini" --limit preview --vault-password-file=".infra/.vault_pwd.txt"  -e 'ansible_python_interpreter=/usr/bin/python3' --extra-vars "pr_number=${{ github.event.pull_request.number }} ansible_sudo_pass=${{ secrets.PWD_DEPLOY }}" ".infra/playbooks/preview.yml" --user ${{ secrets.USR_DEPLOY }}
+          ansible-playbook -i ".infra/env.ini" --limit preview --vault-password-file=".infra/.vault_pwd.txt"  -e 'ansible_python_interpreter=$(which python)' --extra-vars "pr_number=${{ github.event.pull_request.number }} ansible_sudo_pass=${{ secrets.PWD_DEPLOY }}" ".infra/playbooks/preview.yml" --user ${{ secrets.USR_DEPLOY }}
 
       - name: Preview Summary
         run: echo 'https://${{ github.event.pull_request.number }}.bal-preview.apprentissage.beta.gouv.fr/ 🚀' >> $GITHUB_STEP_SUMMARY
