@@ -85,8 +85,20 @@
             chdir: "/opt/bal/projects/{{ pr_number }}"
             cmd: docker compose up -d --remove-orphans --wait
 
-        # TODO: Remove data from MongoDB
-        # TODO: Seed
+        - name: Trigger ACME companion
+          shell:
+            chdir: /opt/bal
+            cmd: docker exec nginx-proxy-acme /app/signal_le_service
+
+        - name: Execute MongoDB migrations
+          shell:
+            chdir: "/opt/bal/projects/{{ pr_number }}"
+	          cmd: docker compose run --rm server yarn cli migrations:up
+
+        - name: Seed database
+          shell:
+            chdir: "/opt/bal/projects/{{ pr_number }}"
+	          cmd: docker compose run --rm server yarn cli seed --sync
 
         - name: "Preview URL"
           debug:
@@ -106,11 +118,6 @@
             cmd: docker compose down --remove-orphans	--volumes
           when: check_stat.stat.exists
 
-        - name: Removing preview directory
-          shell:
-            cmd: "rm -rf /opt/bal/projects/{{ pr_number }}"
-          when: check_stat.stat.exists
-
         - name: Removing server image
           shell:
             cmd: "docker image rm ghcr.io/mission-apprentissage/mna_bal_server:0.0.0-{{ pr_number }}"
@@ -121,15 +128,10 @@
             cmd: "docker image rm ghcr.io/mission-apprentissage/mna_bal_ui:0.0.0-{{ pr_number }}"
           when: check_stat.stat.exists
 
-    # - name: Restart ACME Companion
-    #   shell:
-    #     chdir: /opt/bal
-    #     cmd: docker compose restart acme-companion
-
-    # - name: Restart Nginx
-    #   shell:
-    #     chdir: /opt/bal
-    #     cmd: docker compose restart reverse_proxy
+        - name: Removing preview directory
+          shell:
+            cmd: "rm -rf /opt/bal/projects/{{ pr_number }}"
+          when: check_stat.stat.exists
 
     - name: Clean Docker
       shell: docker system prune --force --volumes
