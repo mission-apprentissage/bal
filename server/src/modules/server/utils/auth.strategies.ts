@@ -22,13 +22,13 @@ declare module "fastify" {
 export const authValidateJWT: FastifyAuthFunction = async (request, _reply) => {
   let token: string | undefined = request.raw.headers["authorization"];
   if (!token) {
-    throw new Error("Jeton manquant");
+    throw Boom.forbidden("Jeton manquant");
   }
 
   if (token.startsWith("Bearer ")) {
     token = token.substring(7, token.length);
   } else {
-    throw new Error("Jeton invalide");
+    throw Boom.forbidden("Jeton invalide");
   }
 
   try {
@@ -37,7 +37,7 @@ export const authValidateJWT: FastifyAuthFunction = async (request, _reply) => {
     const user = await findUser({ _id: new ObjectId(_id) });
 
     if (!user || !user?.api_key || !compareKeys(user.api_key, api_key)) {
-      throw new Error("Jeton invalide");
+      throw Boom.forbidden("Jeton invalide");
     }
 
     const api_key_used_at = new Date();
@@ -45,7 +45,7 @@ export const authValidateJWT: FastifyAuthFunction = async (request, _reply) => {
     await updateUser(user, { api_key_used_at });
     request.user = { ...user, api_key_used_at };
   } catch (error) {
-    throw new Error("Jeton invalide");
+    throw Boom.forbidden("Jeton invalide");
   }
 };
 
@@ -83,10 +83,10 @@ export const authValidateSession: FastifyAuthFunction = async (
 export const authWebHookKey: FastifyAuthFunction = async (request, _reply) => {
   const { webhookKey } = request.query as { webhookKey: string | undefined };
   if (!webhookKey) {
-    throw new Error("Clé manquante");
+    throw Boom.forbidden("Clé manquante");
   }
 
   if (config.smtp.webhookKey !== webhookKey) {
-    throw new Error("Not authorised");
+    throw Boom.forbidden("Non autorisé");
   }
 };

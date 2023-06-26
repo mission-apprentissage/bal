@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import { SResGetGenerateApiKey } from "shared/routes/user.routes";
 
 import { generateApiKey } from "../actions/users.actions";
@@ -20,7 +21,7 @@ export const userRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       if (!request.user) {
-        throw new Error("User not found");
+        throw Boom.unauthorized("User not found");
       }
 
       const api_key = await generateApiKey(request.user);
