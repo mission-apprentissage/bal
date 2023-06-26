@@ -36,6 +36,11 @@ jobs:
       - name: Create vault pwd file
         run: echo ${{ secrets.VAULT_PWD }} > .infra/.vault_pwd.txt
 
+      - name: Setup python interpreter for Ansible
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
       - name: Install jmespath for Ansible
         run: pip install jmespath
 
