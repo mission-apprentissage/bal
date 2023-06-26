@@ -126,9 +126,7 @@
 
         - name: Remove database
           shell:
-            chdir: "/opt/bal/projects/{{ pr_number }}"
-            cmd: docker run --env-file .env_server --rm -it --network bal_network mongo:6.0.2-focal bash -c 'mongosh $MNA_BAL_MONGODB_URI --eval "db.dropDatabase()"'
-          when: check_stat.stat.exists
+            cmd: docker run --rm -it --network bal_network mongo:6.0.2-focal mongosh "{{ vault[env_type].MNA_BAL_MONGODB_URI }}" --eval "db.dropDatabase()"
 
         - name: Removing preview directory
           shell:
