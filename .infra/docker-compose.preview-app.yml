@@ -1,8 +1,9 @@
-version: "2.4"
+version: "3.8"
+
 services:
-  server_LOCAL_VERSION:
-    image: "ghcr.io/mission-apprentissage/mna_bal_server:LOCAL_VERSION"
-    container_name: bal_server_LOCAL_VERSION
+  server:
+    image: "{{registry}}/mission-apprentissage/mna_bal_server:0.0.0-{{pr_number}}"
+    container_name: bal_{{pr_number}}_server
     restart: unless-stopped
     deploy:
       resources:
@@ -10,21 +11,19 @@ services:
           memory: 1g
     networks:
       - bal_network
-    depends_on:
-      - mongodb
     environment:
-      - VIRTUAL_HOST=LOCAL_VERSION.bal-preview.apprentissage.beta.gouv.fr
+      - VIRTUAL_HOST={{pr_number}}.bal-preview.apprentissage.beta.gouv.fr
       - VIRTUAL_PATH=/api
       - VIRTUAL_PORT=5000
-      - LETSENCRYPT_HOST=LOCAL_VERSION.bal-preview.apprentissage.beta.gouv.fr
+      - LETSENCRYPT_HOST={{pr_number}}.bal-preview.apprentissage.beta.gouv.fr
       - LETSENCRYPT_EMAIL=misson.apprentissage.devops@gmail.com
     env_file: .env_server
     volumes:
-      - /opt/bal/data/server:/data
+      - server:/data
 
-  ui_LOCAL_VERSION:
-    image: "ghcr.io/mission-apprentissage/mna_bal_ui:LOCAL_VERSION"
-    container_name: bal_ui_LOCAL_VERSION
+  ui:
+    image: "ghcr.io/mission-apprentissage/mna_bal_ui:0.0.0-{{pr_number}}"
+    container_name: bal_{{pr_number}}_ui
     restart: unless-stopped
     deploy:
       resources:
@@ -32,19 +31,17 @@ services:
           memory: 256m
     networks:
       - bal_network
-    depends_on:
-      - server_LOCAL_VERSION
     environment:
-      - VIRTUAL_HOST=LOCAL_VERSION.bal-preview.apprentissage.beta.gouv.fr
+      - VIRTUAL_HOST={{pr_number}}.bal-preview.apprentissage.beta.gouv.fr
       - VIRTUAL_PATH=/
       - VIRTUAL_PORT=3000
-      - LETSENCRYPT_HOST=LOCAL_VERSION.bal-preview.apprentissage.beta.gouv.fr
+      - LETSENCRYPT_HOST={{pr_number}}.bal-preview.apprentissage.beta.gouv.fr
       - LETSENCRYPT_EMAIL=misson.apprentissage.devops@gmail.com
     env_file: .env_ui
 
-  processor_LOCAL_VERSION:
-    image: "ghcr.io/mission-apprentissage/mna_bal_server:LOCAL_VERSION"
-    container_name: bal_processor_LOCAL_VERSION
+  processor:
+    image: "ghcr.io/mission-apprentissage/mna_bal_server:0.0.0-{{pr_number}}"
+    container_name: bal_{{pr_number}}_processor
     command: ["yarn", "cli", "processor"]
     deploy:
       resources:
@@ -53,12 +50,12 @@ services:
     restart: unless-stopped
     networks:
       - bal_network
-    depends_on:
-      - mongodb
     env_file: .env_server
     volumes:
-      - /opt/bal/data/server:/data
+      - server:/data
 
+volumes:
+  server:
 
 networks:
   bal_network:

@@ -22,3 +22,15 @@
     user: "deploy"
     state: present
     key: "{{ vault.MNA_BAL_GH_USER_PUBLIC_KEY }}"
+
+- name: "Ajout de la SSH private key"
+  copy:
+    dest: "~/.ssh/id_ed25519"
+    content: "{{ vault.MNA_BAL_GH_USER_PRIVATE_KEY }}"
+    owner: root
+    mode: "700"
+
+- name: "Ajout de la SSH key"
+  shell: |
+    eval "$(ssh-agent)"
+    ssh-add ~/.ssh/id_ed25519

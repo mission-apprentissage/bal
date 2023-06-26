@@ -1,35 +1,135 @@
 ---
-- hosts: all
+- hosts: preview
   become: true
   gather_facts: false
   vars_files:
     - "../vault/vault.yml"
   tasks:
-    - name: copy server env file
-      ansible.builtin.template:
-        src: "{{ item }}"
-        dest: "/opt/bal/.env_server"
-      with_fileglob:
-        - "../.env_server"
+    - name: Get Pull Request Infos
+      ansible.builtin.shell: curl -s https://api.github.com/repos/mission-apprentissage/bal/pulls/{{ pr_number }}
+      register: result
 
-    - name: copy ui env file
-      ansible.builtin.template:
-        src: "{{ item }}"
-        dest: "/opt/bal/.env_ui"
-      with_fileglob:
-        - "../.env_ui"
+    - name: Save Pull Requests Infos
+      set_fact:
+        pr_commit_id: "{{ result.stdout | from_json | json_query('head.sha') }}"
+        pr_title: "{{ result.stdout | from_json | json_query('title') }}"
+        pr_state: "{{ result.stdout | from_json | json_query('state') }}"
 
-    - name: creation du fichier docker compose
-      ansible.builtin.template:
-        src: "{{ item }}"
-        dest: "/opt/bal/docker-compose.preview-app.yml"
-      with_fileglob:
-        - "../docker-compose.preview-app.yml"
+    - name: Deploying preview
+      when: pr_state == 'open'
+      block:
+        - name: création du répertoire de build
+          file:
+            path: /opt/bal/projects/{{ pr_number }}
+            state: directory
+            owner: root
+            group: root
+            mode: 770
 
-    - name: Build local images {{ pr_number }}
-      shell: "bash /opt/bal/tools/build-branch-images.sh {{ git_revision }} {{ pr_number }} {{ status }}"
-      register: results
+        - name: copy server env file
+          ansible.builtin.template:
+            src: "{{ item }}"
+            dest: "/opt/bal/projects/{{ pr_number }}/.env_server"
+          with_fileglob:
+            - "../.env_server"
 
-    - debug:
-        msg: "{{ item }}"
-      loop: "{{ results.stderr_lines }}"
+        - name: copy ui env file
+          ansible.builtin.template:
+            src: "{{ item }}"
+            dest: "/opt/bal/projects/{{ pr_number }}/.env_ui"
+          with_fileglob:
+            - "../.env_ui"
+
+        - name: creation du fichier docker compose
+          ansible.builtin.template:
+            src: "{{ item }}"
+            dest: "/opt/bal/projects/{{ pr_number }}/docker-compose.yml"
+          with_fileglob:
+            - "../docker-compose.preview-app.yml"
+
+        - name: "Clone du repository"
+          git:
+            repo: "git@github.com:mission-apprentissage/bal.git"
+            version: "{{ pr_commit_id }}"
+            force: yes
+            accept_newhostkey: yes
+            dest: /opt/bal/repository
+
+        - name: Root only pour tous les répertoires applicatifs
+          file:
+            path: "{{item}}"
+            state: directory
+            owner: root
+            group: root
+            mode: 770
+          with_items:
+            - "/opt/bal/repository"
+
+        - name: Bump version 0.0.0-{{ pr_number }}
+          shell:
+            cmd: "bash .infra/scripts/release/bump-version.sh 0.0.0-{{ pr_number }}"
+            chdir: /opt/bal/repository
+
+        - name: Build dependencies image
+          shell:
+            cmd: "make ci-install"
+            chdir: /opt/bal/repository
+
+        - name: Build local images 0.0.0-{{ pr_number }}
+          shell:
+            cmd: "bash .infra/scripts/release/build-images.sh 0.0.0-{{ pr_number }} ghcr.io"
+            chdir: /opt/bal/repository
+
+        - name: Start Application
+          shell:
+            chdir: "/opt/bal/projects/{{ pr_number }}"
+            cmd: docker compose up -d --remove-orphans --wait
+
+        # TODO: Remove data from MongoDB
+        # TODO: Seed
+
+        - name: "Preview URL"
+          debug:
+            msg: "https://{{ pr_number }}.bal-preview.apprentissage.beta.gouv.fr/"
+
+    - name: Uninstalling preview
+      when: pr_state != 'open'
+      block:
+        - name: Check if preview is deployed
+          stat:
+            path: "/opt/bal/projects/{{ pr_number }}"
+          register: check_stat
+
+        - name: Stopping the preview
+          shell:
+            chdir: "/opt/bal/projects/{{ pr_number }}"
+            cmd: docker compose down --remove-orphans	--volumes
+          when: check_stat.stat.exists
+
+        - name: Removing preview directory
+          shell:
+            cmd: "rm -rf /opt/bal/projects/{{ pr_number }}"
+          when: check_stat.stat.exists
+
+        - name: Removing server image
+          shell:
+            cmd: "docker image rm ghcr.io/mission-apprentissage/mna_bal_server:0.0.0-{{ pr_number }}"
+          when: check_stat.stat.exists
+
+        - name: Removing ui image
+          shell:
+            cmd: "docker image rm ghcr.io/mission-apprentissage/mna_bal_ui:0.0.0-{{ pr_number }}"
+          when: check_stat.stat.exists
+
+    # - name: Restart ACME Companion
+    #   shell:
+    #     chdir: /opt/bal
+    #     cmd: docker compose restart acme-companion
+
+    # - name: Restart Nginx
+    #   shell:
+    #     chdir: /opt/bal
+    #     cmd: docker compose restart reverse_proxy
+
+    - name: Clean Docker
+      shell: docker system prune --force --volumes
