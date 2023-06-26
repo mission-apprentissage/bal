@@ -44,12 +44,9 @@ jobs:
       - name: Install jmespath for Ansible
         run: pip install jmespath
 
-      - name: Which python
-        run: which python
-
       - name: Run playbook
         run: |
-          ansible-playbook -i ".infra/env.ini" --limit preview --vault-password-file=".infra/.vault_pwd.txt"  -e 'ansible_python_interpreter=$(which python)' --extra-vars "pr_number=${{ github.event.pull_request.number }} ansible_sudo_pass=${{ secrets.PWD_DEPLOY }}" ".infra/playbooks/preview.yml" --user ${{ secrets.USR_DEPLOY }}
+          ansible-playbook -i ".infra/env.ini" --limit preview --vault-password-file=".infra/.vault_pwd.txt"  -e "ansible_python_interpreter=$(which python)" --extra-vars "pr_number=${{ github.event.pull_request.number }} ansible_sudo_pass=${{ secrets.PWD_DEPLOY }}" ".infra/playbooks/preview.yml" --user ${{ secrets.USR_DEPLOY }}
 
       - name: Preview Summary
         run: echo 'https://${{ github.event.pull_request.number }}.bal-preview.apprentissage.beta.gouv.fr/ 🚀' >> $GITHUB_STEP_SUMMARY
