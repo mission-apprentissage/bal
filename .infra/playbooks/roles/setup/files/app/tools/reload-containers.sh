@@ -6,10 +6,10 @@ readonly PROJECT_DIR="/opt/bal"
 
 function reload_containers() {
     echo "Rechargement des conteneurs ..."
-    if test -f "docker-compose.recette.yml"; then
-      docker stack deploy -c docker-compose.yml -c docker-compose.recette.yml bal;
+    if test -f "/opt/bal/docker-compose.recette.yml"; then
+      docker stack deploy -c /opt/bal/docker-compose.yml -c /opt/bal/docker-compose.recette.yml bal;
     else
-      docker stack deploy -c docker-compose.yml bal;
+      docker stack deploy -c /opt/bal/docker-compose.yml bal;
     fi
 }
 
