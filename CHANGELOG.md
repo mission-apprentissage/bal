@@ -1,3 +1,17 @@
+# [1.38.0](https://github.com/mission-apprentissage/bal/compare/v1.37.0...v1.38.0) (2023-06-26)
+
+
+### Features
+
+* script clear ([#169](https://github.com/mission-apprentissage/bal/issues/169)) ([690d22c](https://github.com/mission-apprentissage/bal/commit/690d22c65adf5d7da1f35e9f55853fd15e2e361f))
+
+# [1.37.0](https://github.com/mission-apprentissage/bal/compare/v1.36.0...v1.37.0) (2023-06-26)
+
+
+### Features
+
+* dedicated user deployment ([#179](https://github.com/mission-apprentissage/bal/issues/179)) ([643474e](https://github.com/mission-apprentissage/bal/commit/643474e05a0bba9e9846a35c0444c577ed76185c))
+
 # [1.36.0](https://github.com/mission-apprentissage/bal/compare/v1.35.5...v1.36.0) (2023-06-22)
 
 
