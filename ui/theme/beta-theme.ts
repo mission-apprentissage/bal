@@ -2,52 +2,62 @@ const rootFontSizePx = 16;
 
 const colors = {
   // doc https://www.systeme-de-design.gouv.fr/elements-d-interface/fondamentaux-identite-de-l-etat/couleurs-palette/
-  bluefrance: {
+  blue_france: {
     main: "#000091",
-    light: "#5770BE",
-    113: "#000091",
-    "113_hover": "#1212ff",
-    "113_active": "#2323ff",
-    525: "#6a6af4",
-    "525_hover": "#9898f8",
-    "525_active": "#aeaef9",
-    850: "#cacafb",
-    "850_hover": "#a1a1f8",
-    "850_active": "#8b8bf6",
-    925: "#e3e3fd",
-    "925_hover": "#c1c1fb",
-    "925_active": "#adadf9",
+    main_hover: "#1212FF",
+    main_active: "#2323FF",
+
+    secondary: "#6A6AF4",
+
+    light: "#E3E3FD",
+    light_hover: "#C1C1FB",
+    light_active: "#ADADF9",
+
+    extra_light: "#F5F5FE",
+    extra_light_hover: "#C1C1FB",
+    extra_light_active: "#ADADF9",
   },
-  white: "#ffffff",
-  redmarianne: "#e1000f",
-  success: "#0d6635",
-  error: "#b60000",
-  warning: "#fa5c00",
-  warning2: "#E4794A",
-  info: "#3a55d1",
-  galt: "#f9f8f6",
-  galt_hover: "#eceae3",
-  galt2: "#F6F6F6",
-  galtDark: "#ECEAE3",
-  mgalt: "#666666",
-  dgalt: "#E5E5E5",
-  disablegrey: "#929292",
-  labelgrey: "#161616",
-  flatwarm: "#B34000",
-  plaininfo: "#0063CB",
-  greensoftc: "#22967E",
-  flatsuccess: "#18753C",
-  flaterror: "#CE0500",
+
+  /**
+   * Couleurs principales
+   */
+
+  red_marianne: "#C9191E",
+  success_main: "#18753C",
+  error_main: "#CE0500",
+  warning_main: "#EF5800",
+  info_main: "#0063CB",
+  /**
+   * Couleurs secondaires
+   */
+
+  grey_alt_light: "#F9F8F6",
+  grey_alt_dark: "#ECEAE3",
+  success_light: "#B8FEC9",
+  error_light: "#FFE9E9",
+  blue_cumulus_sun_368: {
+    main: "#3558A2",
+    hover: "#5982E0",
+    active: "#7996E6",
+  },
+
+  /**
+   * Couleurs illustratives
+   */
+
+  orange_terre_battue_main_645: "#E4794A",
+  pink_tuile_main_556: "#CE614A",
+  blue_ecume_main_400: "#465F9D",
   grey: {
-    800: "#1e1e1e",
-    750: "#2a2a2a",
-    700: "#383838",
-    600: "#6a6a6a",
-    500: "#9c9c9c",
-    400: "#cecece",
-    300: "#e7e7e7",
-    200: "#f0f0f0",
-    100: "#f8f8f8",
+    50: "#161616",
+    200: "#3A3A3A",
+    425: "#666666",
+    625: "#929292",
+    850: "#CECECE",
+    925: "#E5E5E5",
+    950: "#EEEEEE",
+    975: "#F6F6F6",
+    1000: "#FFFFFF",
   },
   greenwarm: {
     600: "#877e59",

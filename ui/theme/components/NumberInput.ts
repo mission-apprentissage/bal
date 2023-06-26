@@ -1,33 +1,33 @@
 const commonFieldStyle = {
-  color: "grey.800",
+  color: "grey.50",
   borderBottomRadius: 0,
   borderTopRadius: "4px",
   borderWidth: 0,
   borderBottom: "2px solid",
   marginBottom: "-2px",
-  borderBottomColor: "grey.600",
-  bg: "grey.200",
+  borderBottomColor: "grey.425",
+  bg: "grey.950",
   outline: "0px solid",
   _focus: {
-    borderBottomColor: "grey.600",
+    borderBottomColor: "grey.425",
     boxShadow: "none",
     outlineColor: "none",
   },
   _focusVisible: {
-    borderBottomColor: "grey.600",
+    borderBottomColor: "grey.425",
     boxShadow: "none",
     outline: "2px solid",
     outlineColor: "#2A7FFE",
     outlineOffset: "2px",
   },
   _invalid: {
-    borderBottomColor: "error",
+    borderBottomColor: "error_main",
     boxShadow: "none",
-    outlineColor: "error",
+    outlineColor: "error_main",
     outlineOffset: "2px",
   },
   _hover: {
-    borderBottomColor: "grey.600",
+    borderBottomColor: "grey.425",
   },
 };
 
@@ -40,8 +40,8 @@ const NumberInput = {
         _disabled: {
           cursor: "not-allowed",
           opacity: 1,
-          color: "grey.600",
-          borderBottomColor: "#E5E5E5",
+          color: "grey.425",
+          borderBottomColor: "grey.925",
         },
       },
     },
@@ -55,7 +55,7 @@ const NumberInput = {
       field: {
         ...commonFieldStyle,
         _placeholder: {
-          color: "grey.500",
+          color: "grey.625",
         },
       },
     },
@@ -71,7 +71,7 @@ const NumberInput = {
         fontStyle: "italic",
         borderBottomColor: "green.400",
         _placeholder: {
-          color: "grey.800",
+          color: "grey.50",
         },
       },
     },

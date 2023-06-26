@@ -43,7 +43,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
             <UserFill mt="0.3rem" boxSize={4} />
             <Box display={["none", "block"]} ml={2}>
               <Text
-                color="bluefrance.main"
+                color="blue_france.main"
                 textStyle="sm"
                 textOverflow="ellipsis"
                 maxWidth="200px"
@@ -58,7 +58,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
           <MenuItem
             href={PAGES.compteProfil().path}
             as={NavLink}
-            icon={<Settings4Fill boxSize={4} color="bluefrance.main" />}
+            icon={<Settings4Fill boxSize={4} color="blue_france.main" />}
           >
             Mon compte
           </MenuItem>
@@ -68,7 +68,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
                 data-id="menuitem:admin:users"
                 href={PAGES.adminUsers().path}
                 as={NavLink}
-                icon={<Settings boxSize={4} color="bluefrance.main" />}
+                icon={<Settings boxSize={4} color="blue_france.main" />}
               >
                 Gestion des utilisateurs
               </MenuItem>
@@ -76,7 +76,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
                 data-id="menuitem:admin:persons"
                 href={PAGES.adminPersons().path}
                 as={NavLink}
-                icon={<Settings boxSize={4} color="bluefrance.main" />}
+                icon={<Settings boxSize={4} color="blue_france.main" />}
               >
                 Gestion des personnes
               </MenuItem>
@@ -84,7 +84,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
                 data-id="menuitem:admin:organisations"
                 href={PAGES.adminOrganisations().path}
                 as={NavLink}
-                icon={<Settings boxSize={4} color="bluefrance.main" />}
+                icon={<Settings boxSize={4} color="blue_france.main" />}
               >
                 Gestion des organisations
               </MenuItem>
@@ -92,7 +92,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
                 data-id="menuitem:admin:manage-files"
                 href={PAGES.adminFichier().path}
                 as={NavLink}
-                icon={<Settings boxSize={4} color="bluefrance.main" />}
+                icon={<Settings boxSize={4} color="blue_france.main" />}
               >
                 Gestion des fichiers
               </MenuItem>

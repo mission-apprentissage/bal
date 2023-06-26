@@ -63,7 +63,7 @@ const MotDePasseOubliePage = () => {
         w={{ base: "100%", md: "50%" }}
         h="100%"
         border="1px solid"
-        borderColor="bluefrance.925"
+        borderColor="blue_france.light"
       >
         <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
           Mot de passe oublié
@@ -78,7 +78,7 @@ const MotDePasseOubliePage = () => {
               />
               <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
-            <Text color={status?.error ? "error" : "info"} mt={2}>
+            <Text color={status?.error ? "error_main" : "info_main"} mt={2}>
               {status?.message}
             </Text>
           </Box>
@@ -86,7 +86,7 @@ const MotDePasseOubliePage = () => {
             <Button variant="primary" type="submit">
               Recevoir un courriel de ré-initialisation
             </Button>
-            <Link href="/auth/connexion" as={NavLink} color="grey.600">
+            <Link href="/auth/connexion" as={NavLink} color="grey.425">
               Annuler
             </Link>
           </HStack>

@@ -117,7 +117,7 @@ const AdminImportPage = () => {
                 return (
                   <Bin
                     boxSize="5"
-                    color="redmarianne"
+                    color="red_marianne"
                     cursor="pointer"
                     onClick={() =>
                       onDeleteDocument(row.original._id.toString())

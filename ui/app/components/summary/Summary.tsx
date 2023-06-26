@@ -9,9 +9,9 @@ const Summary: FC<Props> = ({ children, ...boxProps }) => (
   <Box
     position={["static", "static", "static", "sticky"]}
     top={["0", "0", "0", "10"]}
-    background="galt"
+    background="grey_alt_light"
     padding="3w"
-    color="grey.800"
+    color="grey.50"
     alignSelf="flex-start"
     fontSize="omega"
     w="40%"

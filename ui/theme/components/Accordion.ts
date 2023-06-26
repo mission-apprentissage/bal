@@ -16,7 +16,7 @@ const Accordion = {
     withBorder: {
       container: {
         mb: 2,
-        borderColor: "#E3E3FD",
+        borderColor: "blue_france.light",
         borderWidth: 1,
         borderStyle: "solid",
         borderRadius: "md",

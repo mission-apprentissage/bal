@@ -18,7 +18,7 @@ const DonneesPersonnelles = () => {
           <Link
             padding="1w"
             href="#mission"
-            _hover={{ textDecoration: "none", bg: "grey.200" }}
+            _hover={{ textDecoration: "none", bg: "grey.950" }}
           >
             <Text>
               <Text as="span" fontWeight="700">
@@ -30,7 +30,7 @@ const DonneesPersonnelles = () => {
           <Link
             padding="1w"
             href="#finalite"
-            _hover={{ textDecoration: "none", bg: "grey.200" }}
+            _hover={{ textDecoration: "none", bg: "grey.950" }}
           >
             <Text marginTop="1w">
               <Text as="span" fontWeight="700">
@@ -42,7 +42,7 @@ const DonneesPersonnelles = () => {
           <Link
             padding="1w"
             href="#minimisation"
-            _hover={{ textDecoration: "none", bg: "grey.200" }}
+            _hover={{ textDecoration: "none", bg: "grey.950" }}
           >
             <Text marginTop="1w">
               <Text as="span" fontWeight="700">
@@ -68,7 +68,7 @@ const DonneesPersonnelles = () => {
           </Text>
         </Section>
         <Section id="mission-interet-public" marginTop="5w">
-          <Box color="greensoftc">
+          <Box color="blue_france.main">
             <Text fontSize="gamma" fontWeight="700">
               Base légale
             </Text>
@@ -77,17 +77,17 @@ const DonneesPersonnelles = () => {
             </Text>
           </Box>
           <Box marginTop="1w">
-            <Text fontSize="epsilon" color="grey.800">
+            <Text fontSize="epsilon" color="grey.50">
               Il existe plusieurs bases légales pour fonder un traitement de
               données à caractère personnel :
             </Text>
-            <Box as="ul" paddingLeft="2w" fontSize="epsilon" color="grey.800">
+            <Box as="ul" paddingLeft="2w" fontSize="epsilon" color="grey.50">
               <li>Le consentement des personnes ;</li>
               <li>Une obligation légale ;</li>
               <li>L’existence d’un contrat ;</li>
               <li>Une mission d’intérêt public, etc...</li>
             </Box>
-            <Text paddingY="2w" fontSize="epsilon" color="grey.800">
+            <Text paddingY="2w" fontSize="epsilon" color="grey.50">
               C’est sur cette dernière base légale que se fonde notre
               traitement. En effet, la Mission a accès à certaines données à
               caractère personnel (état civil, coordonnées, code formation,
@@ -97,7 +97,7 @@ const DonneesPersonnelles = () => {
               et des analyses de données pour améliorer la qualité du service
               public rendu.
             </Text>
-            <Text fontSize="epsilon" color="grey.800">
+            <Text fontSize="epsilon" color="grey.50">
               Le traitement de collecte des données relatives aux candidats à
               l’apprentissage et aux apprentis s’inscrit dans une mission
               d’intérêt public décrite dans le cadre de la mission Houzel. Cette
@@ -110,7 +110,7 @@ const DonneesPersonnelles = () => {
         </Section>
         {/* Block Faciliter le pilotage */}
         <Section id="faciliter-pilotage-operationnel" marginTop="5w">
-          <Box color="greensoftc">
+          <Box color="blue_france.main">
             <Text fontSize="gamma" fontWeight="700" id="finalite">
               Finalité
             </Text>
@@ -119,17 +119,17 @@ const DonneesPersonnelles = () => {
             </Text>
           </Box>
           <Box marginTop="1w">
-            <Text fontSize="epsilon" color="grey.800">
+            <Text fontSize="epsilon" color="grey.50">
               Le {productName} vise à mettre à disposition de toutes les parties
               prenantes de la formation en apprentissage les données clés, de
               manière dynamique, afin de permettre un pilotage opérationnel
               réactif dans les territoires.
             </Text>
-            <Text paddingY="2w" fontSize="epsilon" color="grey.800">
+            <Text paddingY="2w" fontSize="epsilon" color="grey.50">
               L’affichage des données en temps réel auprès des acteurs
               institutionnels leur permet :
             </Text>
-            <Box as="ul" paddingLeft="2w" fontSize="epsilon" color="grey.800">
+            <Box as="ul" paddingLeft="2w" fontSize="epsilon" color="grey.50">
               <li>
                 <strong>D&apos;avoir une tendance de l’évolution</strong> du
                 nombre d’apprentis ;
@@ -149,7 +149,7 @@ const DonneesPersonnelles = () => {
 
         {/* Block Minimisation des données */}
         <Section id="minimisation-donnees" marginTop="5w">
-          <Box color="greensoftc">
+          <Box color="blue_france.main">
             <Text fontSize="gamma" fontWeight="700">
               Données collectées
             </Text>
@@ -158,11 +158,11 @@ const DonneesPersonnelles = () => {
             </Text>
           </Box>
           <Box marginTop="1w" marginBottom="15w">
-            <Text marginBottom="2w" fontSize="epsilon" color="grey.800">
+            <Text marginBottom="2w" fontSize="epsilon" color="grey.50">
               Dans le respect du RGPD, seules les données utiles à la
               construction du {productName} sont collectées.
             </Text>
-            <Text fontSize="epsilon" color="grey.800">
+            <Text fontSize="epsilon" color="grey.50">
               Données concernant l’apprenant :
             </Text>
             <Box
@@ -170,7 +170,7 @@ const DonneesPersonnelles = () => {
               marginBottom="2w"
               paddingLeft="2w"
               fontSize="epsilon"
-              color="grey.800"
+              color="grey.50"
             >
               <li>
                 <strong>Identification</strong> : nom, prénom, date de
@@ -186,7 +186,7 @@ const DonneesPersonnelles = () => {
                 sans contrat, rupturant, abandon
               </li>
             </Box>
-            <Text fontSize="epsilon" color="grey.800">
+            <Text fontSize="epsilon" color="grey.50">
               Données concernant l’organisme :
             </Text>
             <Box
@@ -194,17 +194,17 @@ const DonneesPersonnelles = () => {
               marginBottom="2w"
               paddingLeft="2w"
               fontSize="epsilon"
-              color="grey.800"
+              color="grey.50"
             >
               <li>
                 <strong>Identification</strong> : UAI, SIRET, Nom, Code Insee
                 CFA Formateur
               </li>
             </Box>
-            <Text fontSize="epsilon" color="grey.800">
+            <Text fontSize="epsilon" color="grey.50">
               Données concernant le contrat d&apos;apprentissage :
             </Text>
-            <Box as="ul" paddingLeft="2w" fontSize="epsilon" color="grey.800">
+            <Box as="ul" paddingLeft="2w" fontSize="epsilon" color="grey.50">
               <li>Date de début et date de fin</li>
             </Box>
           </Box>

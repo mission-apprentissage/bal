@@ -82,7 +82,7 @@ const Cgu: FC<Props> = ({ onLoad }) => {
               key={item.anchorName}
               padding="1w"
               href={`#${item.anchorLink}`}
-              _hover={{ textDecoration: "none", bg: "grey.200" }}
+              _hover={{ textDecoration: "none", bg: "grey.950" }}
             >
               <Text>
                 <Text as="span" fontWeight="700">
@@ -96,7 +96,7 @@ const Cgu: FC<Props> = ({ onLoad }) => {
       </Summary>
       <Box>
         <Section pt="0">
-          <Heading textStyle="h2" color="grey.800" mt={5}>
+          <Heading textStyle="h2" color="grey.50" mt={5}>
             CONDITIONS GÉNÉRALES D&apos;UTILISATION
           </Heading>
           <Text>Dernière mise à jour le : 3 novembre 2022 - {cguVersion} </Text>

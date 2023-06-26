@@ -75,7 +75,7 @@ const PolitiqueDeConfidentialite = () => {
               key={item.anchorName}
               padding="1w"
               href={`#${item.anchorLink}`}
-              _hover={{ textDecoration: "none", bg: "grey.200" }}
+              _hover={{ textDecoration: "none", bg: "grey.950" }}
             >
               <Text>
                 <Text as="span" fontWeight="700">
@@ -89,7 +89,7 @@ const PolitiqueDeConfidentialite = () => {
       </Summary>
       <Box>
         <Section pt="0">
-          <Heading textStyle="h2" color="grey.800" mt={5}>
+          <Heading textStyle="h2" color="grey.50" mt={5}>
             Politique de confidentialité
           </Heading>
           <Heading as={"h3"} textStyle="h6" mb={2}>
@@ -216,7 +216,7 @@ const PolitiqueDeConfidentialite = () => {
             date et l’heure précise de la requête – ces éléments sont
             indispensables pour nous permettre de retrouver votre recherche –
             par voie électronique à l’adresse suivante :{" "}
-            <Link href={`mailto:${CONTACT_ADDRESS}`} color="bluefrance">
+            <Link href={`mailto:${CONTACT_ADDRESS}`} color="blue_france.main">
               {CONTACT_ADDRESS}
             </Link>
             <br />

@@ -2,16 +2,16 @@ const Checkbox = {
   parts: ["container", "control", "label"],
   baseStyle: {
     control: {
-      borderColor: "#161616",
+      borderColor: "grey.50",
       border: "1px",
       _checked: {
-        background: "bluefrance",
+        background: "blue_france.main",
         color: "white",
-        borderColor: "#161616",
+        borderColor: "grey.50",
         border: "1px",
         _hover: {
-          background: "bluefrance",
-          borderColor: "#161616",
+          background: "blue_france.main",
+          borderColor: "grey.50",
           border: "1px",
         },
       },

@@ -87,7 +87,7 @@ const UsageVerificationPage = () => {
               <Heading size="sm" mb={2}>
                 Requête
               </Heading>
-              <Box mt={2} p={2} bgColor="grey.100">
+              <Box mt={2} p={2} bgColor="grey.975">
                 <pre>
                   <p>{JSON.stringify(requestData, null, "\t")}</p>
                 </pre>
@@ -99,7 +99,7 @@ const UsageVerificationPage = () => {
               <Heading size="sm" mb={2}>
                 Réponse
               </Heading>
-              <Box mt={2} p={2} bgColor="grey.100">
+              <Box mt={2} p={2} bgColor="grey.975">
                 <pre>
                   <p>{JSON.stringify(responseData, null, "\t")}</p>
                 </pre>

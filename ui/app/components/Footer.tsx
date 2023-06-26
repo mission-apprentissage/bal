@@ -23,7 +23,7 @@ const Footer = () => {
   return (
     <Box
       borderTop="1px solid"
-      borderColor="bluefrance"
+      borderColor="blue_france.main"
       color="#1E1E1E"
       fontSize="zeta"
       w="full"
@@ -112,7 +112,7 @@ const Footer = () => {
           </GridItem>
         </Grid>
       </Container>
-      <Box borderTop="1px solid" borderColor="#CECECE" color="#6A6A6A">
+      <Box borderTop="1px solid" borderColor="grey.850" color="#6A6A6A">
         <Container maxWidth={"container.xl"} py={[3, 3, 5]}>
           <Flex flexDirection={["column", "column", "row"]}>
             <List

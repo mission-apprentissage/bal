@@ -6,21 +6,21 @@ const Link = {
   variants: {
     card: {
       p: 8,
-      bg: "#F9F8F6",
-      _hover: { bg: "#eceae3", textDecoration: "none" },
+      bg: "grey_alt_light",
+      _hover: { bg: "grey_alt_dark", textDecoration: "none" },
       display: "block",
     },
     pill: {
       borderRadius: 24,
       fontSize: "zeta",
-      color: "bluefrance.main",
+      color: "blue_france.main",
       px: 3,
       py: 1,
-      _hover: { bg: "grey.200", textDecoration: "none" },
+      _hover: { bg: "grey.950", textDecoration: "none" },
     },
     summary: {
       fontSize: "zeta",
-      _hover: { textDecoration: "none", bg: "grey.200" },
+      _hover: { textDecoration: "none", bg: "grey.950" },
       p: 2,
     },
   },

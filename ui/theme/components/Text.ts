@@ -9,7 +9,7 @@ const Text = {
     },
     card: {
       p: 8,
-      bg: "#F9F8F6",
+      bg: "grey_alt_light",
       display: "block",
     },
   },

@@ -54,7 +54,7 @@ const MentionsLegales = () => {
               key={item.anchorName}
               padding="1w"
               href={`#${item.anchorLink}`}
-              _hover={{ textDecoration: "none", bg: "grey.200" }}
+              _hover={{ textDecoration: "none", bg: "grey.950" }}
             >
               <Text>
                 <Text as="span" fontWeight="700">
@@ -68,7 +68,7 @@ const MentionsLegales = () => {
       </Summary>
       <Box>
         <Section pt={0}>
-          <Heading textStyle="h2" color="grey.800" mt={5}>
+          <Heading textStyle="h2" color="grey.50" mt={5}>
             Mentions légales
           </Heading>
           <Text>Mentions légales du site « BAL »</Text>

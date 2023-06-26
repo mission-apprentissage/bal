@@ -26,7 +26,7 @@ export const Header = () => {
         <Box
           width="100%"
           borderBottom="1px solid"
-          borderBottomColor="grey.400"
+          borderBottomColor="grey.850"
         />
       }
       align={"start"}
