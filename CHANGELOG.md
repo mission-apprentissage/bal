@@ -1,3 +1,10 @@
+# [1.37.0](https://github.com/mission-apprentissage/bal/compare/v1.36.0...v1.37.0) (2023-06-26)
+
+
+### Features
+
+* dedicated user deployment ([#179](https://github.com/mission-apprentissage/bal/issues/179)) ([643474e](https://github.com/mission-apprentissage/bal/commit/643474e05a0bba9e9846a35c0444c577ed76185c))
+
 # [1.36.0](https://github.com/mission-apprentissage/bal/compare/v1.35.5...v1.36.0) (2023-06-22)
 
 
