@@ -1,3 +1,10 @@
+# [1.38.0](https://github.com/mission-apprentissage/bal/compare/v1.37.0...v1.38.0) (2023-06-26)
+
+
+### Features
+
+* script clear ([#169](https://github.com/mission-apprentissage/bal/issues/169)) ([690d22c](https://github.com/mission-apprentissage/bal/commit/690d22c65adf5d7da1f35e9f55853fd15e2e361f))
+
 # [1.37.0](https://github.com/mission-apprentissage/bal/compare/v1.36.0...v1.37.0) (2023-06-26)
 
 

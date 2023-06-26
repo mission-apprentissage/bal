@@ -14,7 +14,7 @@ on:
         description: app version
         type: string
         required: true
-        default: 1.37.0
+        default: 1.38.0
     secrets:
       SSH_PRIVATE_KEY:
         description: SSH private key
