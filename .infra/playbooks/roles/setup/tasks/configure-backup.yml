@@ -25,7 +25,7 @@
         name: "backup mongodb each day at 04h00"
         minute: "0"
         hour: "4"
-        job: "bash /opt/bal/tools/mongodb/backup-mongodb.sh >> /var/log/backup-mongodb.log 2>&1"
+        job: "bash /opt/bal/tools/mongodb/backup-mongodb.sh >> /var/log/backup-mongodb.log 2>&1; /opt/bal/tools/monitoring/export-cron-status-prom.sh -c 'MongoDB Backup' -v $?"
 
     - name: Add metabase backup cron"
       become: true
@@ -33,7 +33,7 @@
         name: "backup metabase"
         minute: "20"
         hour: "0"
-        job: "bash /opt/bal/tools/metabase/backup-metabase.sh >> /var/log/backup-metabase.log 2>&1"
+        job: "bash /opt/bal/tools/metabase/backup-metabase.sh >> /var/log/backup-metabase.log 2>&1; /opt/bal/tools/monitoring/export-cron-status-prom.sh -c 'Metabase Backup' -v $?"
 
   when: backup_partition_name is defined
 
