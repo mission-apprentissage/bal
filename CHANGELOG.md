@@ -1,3 +1,10 @@
+# [1.39.0](https://github.com/mission-apprentissage/bal/compare/v1.38.0...v1.39.0) (2023-06-27)
+
+
+### Features
+
+* Suppression du NAS ([#188](https://github.com/mission-apprentissage/bal/issues/188)) ([07bc111](https://github.com/mission-apprentissage/bal/commit/07bc111f761335a60c0b087c877501b61da32c3f))
+
 # [1.38.0](https://github.com/mission-apprentissage/bal/compare/v1.37.0...v1.38.0) (2023-06-26)
 
 
