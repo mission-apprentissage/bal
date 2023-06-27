@@ -224,31 +224,6 @@ Une fois ces fichiers mis à jour, vous devez renouveler le vault et lancer la c
 
 ## Modification d'un environnement
 
-### Ajouter un disque de sauvegarde externe
-
-Il est possible d'ajouter un disque externe permettant de sauvegarder l'ensemble des données de l'application. Pour se
-faire, il faut la commande suivante
-
-```sh
-bash scripts/ovh/create-backup-partition.sh <nom de l'environnement>
-```
-
-Lors de l'exécution de ce script, vous serez redirigé vers une page web vous demandant de vous authentifier afin de
-générer un jeton d'api. Vous devez donc avoir un compte OVH ayant le droit de gérer les instances de la Mission
-Apprentissage. Une fois authentifié, le script utilisera automatiquement ce jeton.
-
-Quand le script est terminé, vous pouvez aller sur l'interface
-OVH [https://www.ovh.com/manager/dedicated/#/nasha/zpool-128310/partitions](https://www.ovh.com/manager/dedicated/#/nasha/zpool-128310/partitions)
-afin de vérifier que la partition est bien créée.
-
-- Dans le fichier `/env.ini`, vous devez ensuite ajouter la nom de la partition pour l'environnement :
-
-```
-backup_partition_name=<nom de la partition>
-```
-
-- Relancer le `setup-vm.sh` afin d'appliquer les modifications sur le serveur.
-
 ### Notifications Slack
 
 Un mécanisme de banissement d'IP est mis en place dans le dossier :
