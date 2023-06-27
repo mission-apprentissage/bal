@@ -52,8 +52,12 @@ export const organisationRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const { email, siret } = request.body as IReqPostOrganisationValidation;
 
-      const res = await validation({ email: email.toLowerCase(), siret });
-      return response.status(200).send(res);
+      try {
+        const res = await validation({ email: email.toLowerCase(), siret });
+        return response.status(200).send(res);
+      } catch (error) {
+        throw Boom.badImplementation(error as Error);
+      }
     }
   );
 };

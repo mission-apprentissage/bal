@@ -1,5 +1,6 @@
 import { IncomingMessage } from "node:http";
 
+import Boom from "@hapi/boom";
 import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
 import { IUser } from "shared/models/user.model";
@@ -48,8 +49,9 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       });
 
       if (!mailingList) {
-        throw new Error("Can't create mailing list");
+        throw Boom.badData("Impossible de créer la liste de diffusion");
       }
+
       await addJob({
         name: "generate:mailing-list",
         payload: {
@@ -117,7 +119,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         !mailingList?.document ||
         user?._id.toString() !== mailingList?.user_id
       ) {
-        return response.status(403).send({ message: "Forbidden" });
+        throw Boom.forbidden("Forbidden");
       }
 
       let stream: IncomingMessage | Readable;
@@ -128,7 +130,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         if (error.message.includes("Status code 404")) {
           fileNotFound = true;
         } else {
-          throw new Error(error.message);
+          throw Boom.badData("Impossible de télécharger le fichier");
         }
       }
 
@@ -181,7 +183,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         !mailingList?.document ||
         user?._id.toString() !== mailingList?.user_id
       ) {
-        return response.status(403).send({ message: "Forbidden" });
+        throw Boom.forbidden("Forbidden");
       }
 
       await deleteMailingList(mailingList);

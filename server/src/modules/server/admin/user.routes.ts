@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import { Filter, ObjectId } from "mongodb";
 import { IUser } from "shared/models/user.model";
 import { SReqParamsSearchPagination } from "shared/routes/common.routes";
@@ -33,7 +34,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       const user = await createUser(request.body);
 
       if (!user) {
-        throw new Error("User not created");
+        throw Boom.badImplementation("Impossible de créer l'utilisateur");
       }
 
       return response.status(200).send(user as any); //IResPostUser

@@ -1,3 +1,4 @@
+import { IUser } from "shared/models/user.model";
 import { SResGetGenerateApiKey } from "shared/routes/user.routes";
 
 import { generateApiKey } from "../actions/users.actions";
@@ -19,11 +20,7 @@ export const userRoutes = ({ server }: { server: Server }) => {
       ]) as any,
     },
     async (request, response) => {
-      if (!request.user) {
-        throw new Error("User not found");
-      }
-
-      const api_key = await generateApiKey(request.user);
+      const api_key = await generateApiKey(request.user as IUser);
 
       return response.status(200).send({ api_key });
     }

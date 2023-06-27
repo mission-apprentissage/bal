@@ -117,10 +117,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
 
         return response.status(200).send();
       } catch (error) {
-        return response.status(401).send({
-          type: "invalid_token",
-          message: "Jeton invalide",
-        });
+        throw Boom.badData("Jeton invalide");
       }
     }
   );
