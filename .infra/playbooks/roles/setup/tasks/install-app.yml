@@ -48,21 +48,18 @@
     state: absent
     regexp: "mna"
 
-- name: "Clone du repository (branche : {{ git_revision }})"
-  git:
-    repo: "https://github.com/mission-apprentissage/bal.git"
-    version: "{{ git_revision }}"
-    force: yes
-    accept_hostkey: yes
-    dest: /opt/bal/repository
-  when: env_type == 'preview'
-
-- name: creation du fichier docker compose preview
+- name: creation du fichier docker compose preview proxy
   ansible.builtin.template:
     src: "{{ item }}"
     dest: "/opt/bal/docker-compose.yml"
   with_fileglob:
     - "../../../../docker-compose.preview.yml"
+  when: env_type == 'preview'
+
+- name: lancement preview proxy
+  shell:
+    chdir: /opt/bal
+    cmd: docker compose up -d --wait
   when: env_type == 'preview'
 
 - name: récupération du status de docker swarm
@@ -84,22 +81,6 @@
     group: root
     mode: 770
   with_items:
-    - "/opt/bal/repository"
-  when: env_type == 'preview'
-
-- name: Root only pour tous les répertoires applicatifs
-  file:
-    path: "{{item}}"
-    state: directory
-    owner: root
-    group: root
-    mode: 770
-  with_items:
     - "/opt/bal/tools"
     - "/opt/bal/data"
     - "/opt/bal/backups"
-
-- name: Add cron to rotate nginx files
-  ansible.builtin.cron:
-    name: "rotate_nginx_log_files"
-    state : absent

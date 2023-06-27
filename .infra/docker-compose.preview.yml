@@ -1,4 +1,5 @@
-version: "2.4"
+version: "3.8"
+
 services:
   reverse_proxy:
     image: "nginxproxy/nginx-proxy"
@@ -67,7 +68,7 @@ services:
       JAVA_TIMEZONE: Europe/Paris
       MB_DB_FILE: /data/metabase/metabase.db
       MB_SITE_LOCALE: fr
-      MB_SITE_URL: https://bal-preview.apprentissage.beta.gouv.fr/metabase
+      MB_SITE_URL: https:/{{dns_name}}/metabase
     restart: always
     networks:
       - bal_network
@@ -105,10 +106,10 @@ services:
     environment:
       - MP_DATA_FILE=/data/mailpit.db
       - MP_UI_AUTH_FILE=/auth
-      - VIRTUAL_HOST=smtp.bal-preview.apprentissage.beta.gouv.fr
+      - VIRTUAL_HOST=smtp.{{dns_name}}
       - VIRTUAL_PATH=/
       - VIRTUAL_PORT=8025
-      - LETSENCRYPT_HOST=smtp.bal-preview.apprentissage.beta.gouv.fr
+      - LETSENCRYPT_HOST=smtp.{{dns_name}}
       - LETSENCRYPT_EMAIL=misson.apprentissage.devops@gmail.com
 
 volumes:
