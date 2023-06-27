@@ -3,7 +3,6 @@ set -euo pipefail
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly PR_NUMBER=${1:?"Merci de préciser la version local (ex. 33)"}; shift;
-# readonly PREVIEW_STATUS=${1:?"Merci de préciser si la preview est ouverte ou fermée (open/close)"}; shift;
 
 function deploy() {
 echo "Déploiement preview"
