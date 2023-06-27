@@ -2,7 +2,7 @@ export const Heading = {
   baseStyle: {
     fontFamily: "Marianne",
     fontWeight: "700",
-    color: "grey.800",
+    color: "grey.50",
     lineHeight: "1.4",
   },
   variants: {

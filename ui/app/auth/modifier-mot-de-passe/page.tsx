@@ -74,7 +74,7 @@ const ModifierMotDePassePage = () => {
         w={{ base: "100%", md: "50%" }}
         h="100%"
         border="1px solid"
-        borderColor="bluefrance.925"
+        borderColor="blue_france.light"
       >
         <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
           Modifiez votre mot de passe {token}
@@ -108,7 +108,7 @@ const ModifierMotDePassePage = () => {
                 <>{errors.password_confirmation?.message}</>
               </FormErrorMessage>
             </FormControl>
-            <Text color={status?.error ? "error" : "info"} mt={2}>
+            <Text color={status?.error ? "error_main" : "info_main"} mt={2}>
               {status?.message}
             </Text>
           </Box>
@@ -117,7 +117,7 @@ const ModifierMotDePassePage = () => {
             <Button variant="primary" type="submit">
               Modifier mon mot de passe
             </Button>
-            <Link href="/auth/connexion" as={NavLink} color="grey.600">
+            <Link href="/auth/connexion" as={NavLink} color="grey.425">
               Annuler
             </Link>
           </HStack>

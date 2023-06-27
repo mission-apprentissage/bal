@@ -26,7 +26,7 @@ export const RightIcon: FC<RightIconsProps> = ({
 }) => {
   if (loading) return <Spinner boxSize="4" />;
   if (success) return <CheckIcon color={"green.500"} boxSize="4" />;
-  if (locked) return <LockFill color={"disablegrey"} boxSize="4" />;
+  if (locked) return <LockFill color={"grey.625"} boxSize="4" />;
   return null;
 };
 

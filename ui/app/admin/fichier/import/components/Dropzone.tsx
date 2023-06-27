@@ -22,14 +22,14 @@ const baseStyle = {
   alignItems: "center",
   padding: "20px",
   borderWidth: 2,
-  borderColor: "#E5E5E5",
+  borderColor: "grey.925",
   borderStyle: "dashed",
-  color: "#9c9c9c",
+  color: "grey.625",
   transition: "border .24s ease-in-out",
 } as const;
 
 const activeStyle = {
-  borderColor: "#3a55d1",
+  borderColor: "blue_cumulus_sun_368.active",
 } as const;
 
 interface Props {
@@ -79,11 +79,11 @@ export const Dropzone: FC<Props> = ({ options, isDisabled }) => {
               <ListItem
                 key={file.name}
                 borderBottom="solid 1px"
-                borderColor="dgalt"
+                borderColor="grey.925"
                 pb={3}
               >
                 <HStack>
-                  <File boxSize="5" color="bluefrance.main" />
+                  <File boxSize="5" color="blue_france.main" />
                   <Box flexGrow={1}>
                     <Text>
                       {file.name} - {formatBytes(file.size)}
@@ -92,7 +92,7 @@ export const Dropzone: FC<Props> = ({ options, isDisabled }) => {
                   {!isDisabled && (
                     <Bin
                       boxSize="5"
-                      color="redmarianne"
+                      color="red_marianne"
                       cursor="pointer"
                       onClick={() => handleDelete(file)}
                     />
@@ -109,12 +109,12 @@ export const Dropzone: FC<Props> = ({ options, isDisabled }) => {
             <Text>Glissez et déposez ici ...</Text>
           ) : (
             <>
-              <DownloadLine boxSize="4" color="bluefrance" mb={4} />
-              <Text color="mgalt">
+              <DownloadLine boxSize="4" color="blue_france.main" mb={4} />
+              <Text color="grey.425">
                 Glissez le fichier dans cette zone ou cliquez sur le bouton pour
                 ajouter un document depuis votre disque dur
               </Text>
-              <Text color="mgalt">(.csv, maximum 100mb)</Text>
+              <Text color="grey.425">(.csv, maximum 100mb)</Text>
               <Button size="md" variant="secondary" mt={4}>
                 Ajouter un document
               </Button>

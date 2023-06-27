@@ -19,10 +19,10 @@ export const NavLink: FC<Props> = ({ children, segment, href }) => {
       href={href}
       fontSize={14}
       p={4}
-      color="bluefrance.113"
+      color="blue_france.main"
       borderBottomWidth={3}
-      borderColor={isActive ? "bluefrance.113" : "transparent"}
-      _hover={{ textDecoration: "unset", bg: "grey.1000_hover" }}
+      borderColor={isActive ? "blue_france.main" : "transparent"}
+      _hover={{ textDecoration: "unset", bg: "grey.9750_hover" }}
     >
       {children}
     </Link>

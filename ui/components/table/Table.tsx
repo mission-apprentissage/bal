@@ -133,7 +133,7 @@ const Table = <TData extends object>({
               as="tr"
               key={key}
               borderBottom="3px solid"
-              borderColor="bluefrance.main"
+              borderColor="blue_france.main"
             >
               {headerGroup.headers.map((header) => {
                 return (
@@ -143,8 +143,8 @@ const Table = <TData extends object>({
                     fontWeight="bold"
                     fontSize="0.9rem"
                     overflow="hidden"
-                    borderColor="grey.800"
-                    color="grey.800"
+                    borderColor="grey.50"
+                    color="grey.50"
                     textAlign="left"
                     {...{
                       colSpan: header.colSpan,
@@ -184,7 +184,7 @@ const Table = <TData extends object>({
               <Fragment key={row.id}>
                 <Box
                   as="tr"
-                  bg={j % 2 === 0 ? "galt" : "white"}
+                  bg={j % 2 === 0 ? "grey_alt_light" : "white"}
                   py="3"
                   data-rowindex={row.id}
                   onClick={() => onRowClick?.(row.id)}
@@ -244,7 +244,7 @@ const Table = <TData extends object>({
               <Box px={5}>
                 <Button
                   {...{
-                    bg: "bluefrance",
+                    bg: "blue_france.main",
                     color: "white",
                     pointerEvents: "none",
                   }}

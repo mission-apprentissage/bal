@@ -111,9 +111,9 @@ interface Props {
 const Breadcrumb: FC<Props> = ({ pages }) => {
   return (
     <ChakraBreadcrumb
-      separator={<ArrowDropRightLine color="grey.600" boxSize={3} mb={1} />}
+      separator={<ArrowDropRightLine color="grey.425" boxSize={3} mb={1} />}
       textStyle="xs"
-      color={"grey.800"}
+      color={"grey.50"}
       mb={4}
     >
       {pages?.map((page, index) => {
@@ -135,7 +135,7 @@ const Breadcrumb: FC<Props> = ({ pages }) => {
               <BreadcrumbLink
                 as={NavLink}
                 href={page.path}
-                color={"grey.600"}
+                color={"grey.425"}
                 textDecoration="underline"
                 _focus={{
                   boxShadow: "0 0 0 3px #2A7FFE",

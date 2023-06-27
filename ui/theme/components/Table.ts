@@ -5,20 +5,20 @@ export const Table = {
         fontFamily: "heading",
         fontWeight: "bold",
         fontSize: "zeta",
-        color: "grey.600",
+        color: "grey.425",
         textTransform: "none",
       },
       tbody: {
         tr: {
           fontSize: "zeta",
-          color: "grey.800",
-          bordercolor: "bluefrance.main",
+          color: "grey.50",
+          bordercolor: "blue_france.main",
           "&:nth-of-type(odd)": {
-            backgroundColor: "grey.100",
+            backgroundColor: "grey.975",
           },
           _hover: {
-            color: "bluefrance.main",
-            backgroundColor: "grey.200",
+            color: "blue_france.main",
+            backgroundColor: "grey.950",
             cursor: "pointer",
           },
         },
@@ -27,22 +27,22 @@ export const Table = {
     secondary: {
       th: {
         textTransform: "initial",
-        textColor: "grey.800",
+        textColor: "grey.50",
         fontSize: "zeta",
         fontWeight: "700",
         paddingY: "3w",
         letterSpacing: "0px",
         borderBottom: "2px solid",
-        borderBottomcolor: "bluefrance.main",
+        borderBottomcolor: "blue_france.main",
       },
       tbody: {
         tr: {
           fontSize: "zeta",
-          color: "grey.800",
-          bordercolor: "bluefrance.main",
+          color: "grey.50",
+          bordercolor: "blue_france.main",
           _hover: {
-            color: "bluefrance.main",
-            backgroundColor: "grey.200",
+            color: "blue_france.main",
+            backgroundColor: "grey.950",
             cursor: "pointer",
           },
         },

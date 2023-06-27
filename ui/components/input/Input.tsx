@@ -160,9 +160,7 @@ export const InputField = memo(({ mt, mb, ml, mr, w, ...props }: any) => {
       id={name.replaceAll(".", "_")}
     >
       {!NoLabel[fieldType] && label && (
-        <FormLabel color={locked ? "disablegrey" : "labelgrey"}>
-          {label}
-        </FormLabel>
+        <FormLabel color={locked ? "grey.625" : "grey.50"}>{label}</FormLabel>
       )}
       <HStack align="center">
         <InputGroup id={`${name}_group_input`} isolation="auto">
@@ -175,7 +173,7 @@ export const InputField = memo(({ mt, mb, ml, mr, w, ...props }: any) => {
         )}
       </HStack>
       {warning && (
-        <FormHelperText color={"warning"}>
+        <FormHelperText color={"warning_main"}>
           {typeof warning !== "function" ? warning : warning()}
         </FormHelperText>
       )}

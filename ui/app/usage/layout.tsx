@@ -39,12 +39,7 @@ const UsageLayout: FC<PropsWithChildren> = ({ children }) => {
             <Tab key={tab.path}>
               {tab.title}
               {tab.secure && (
-                <LockFill
-                  color={"disablegrey"}
-                  boxSize="4"
-                  ml={2}
-                  mb="0.250em"
-                />
+                <LockFill color={"grey.625"} boxSize="4" ml={2} mb="0.250em" />
               )}
             </Tab>
           ))}

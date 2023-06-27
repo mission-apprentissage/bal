@@ -36,12 +36,12 @@ export default async function NotFoundPage() {
                 w="100%"
                 pt={[4, 8]}
                 px={[1, 1, 6, 8]}
-                color="grey.800"
+                color="grey.50"
                 paddingY="4w"
               >
                 <Box
                   border="1px solid"
-                  borderColor="#E3E3FD"
+                  borderColor="blue_france.light"
                   padding="4w"
                   marginTop="6w"
                   w="100%"
@@ -51,7 +51,7 @@ export default async function NotFoundPage() {
                     <Heading fontSize="28px" fontWeight="bold">
                       Page non trouvée
                     </Heading>
-                    <Text color="grey.800" fontSize="zeta" marginBottom="2w">
+                    <Text color="grey.50" fontSize="zeta" marginBottom="2w">
                       La page que vous recherchez n’existe pas ou a été déplacée
                     </Text>
 
@@ -59,10 +59,10 @@ export default async function NotFoundPage() {
                       href="/"
                       _hover={{
                         textDecoration: "none",
-                        color: "grey.800",
-                        background: "galt",
+                        color: "grey.50",
+                        background: "grey_alt_light",
                       }}
-                      color="bluefrance"
+                      color="blue_france.main"
                     >
                       <Box
                         as="i"

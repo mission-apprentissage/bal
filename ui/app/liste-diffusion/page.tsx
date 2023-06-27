@@ -171,7 +171,7 @@ const ListeDiffusionPage = () => {
                     </a>
                     <Bin
                       boxSize="5"
-                      color="redmarianne"
+                      color="red_marianne"
                       cursor="pointer"
                       onClick={() =>
                         onDeleteMailingList(row.original._id.toString())

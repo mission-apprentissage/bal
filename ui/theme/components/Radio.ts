@@ -2,16 +2,16 @@ const Radio = {
   parts: ["container", "control", "label"],
   baseStyle: {
     control: {
-      borderColor: "#161616",
+      borderColor: "grey.50",
       border: "1px",
       _checked: {
-        color: "bluefrance.main",
+        color: "blue_france.main",
         p: "1px",
         background: "white",
-        bordercolor: "bluefrance.main",
+        bordercolor: "blue_france.main",
         _hover: {
           background: "white",
-          bordercolor: "bluefrance.main",
+          bordercolor: "blue_france.main",
         },
       },
     },

@@ -61,7 +61,7 @@ const ConnexionPage = () => {
         w={{ base: "100%", md: "50%" }}
         h="100%"
         border="1px solid"
-        borderColor="bluefrance.925"
+        borderColor="blue_france.light"
       >
         <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
           Connectez-vous
@@ -101,7 +101,7 @@ const ConnexionPage = () => {
               </FormErrorMessage>
             </FormControl>
             {status?.error && (
-              <Text color="error" mt={8}>
+              <Text color="error_main" mt={8}>
                 <AlertRounded mb="0.5" /> {status?.message}
               </Text>
             )}
@@ -113,7 +113,7 @@ const ConnexionPage = () => {
             <Link
               href="/auth/mot-de-passe-oublie"
               as={NavLink}
-              color="grey.600"
+              color="grey.425"
             >
               Mot de passe oublié
             </Link>

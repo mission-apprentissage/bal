@@ -55,7 +55,7 @@ const InfoTooltip: FC<Props> = memo(
       <Popover placement="bottom">
         <PopoverTrigger>
           <IconButton
-            icon={<TooltipIcon color={"grey.700"} w="23px" h="23px" />}
+            icon={<TooltipIcon color={"grey.200"} w="23px" h="23px" />}
             aria-label={"tooltip"}
           />
         </PopoverTrigger>
@@ -113,7 +113,7 @@ const InfoTooltip: FC<Props> = memo(
                             variant="solid"
                             bg="greenmedium.300"
                             borderRadius="16px"
-                            color="grey.800"
+                            color="grey.50"
                             textStyle="sm"
                             px="15px"
                             ml="10px"
