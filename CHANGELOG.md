@@ -1,3 +1,10 @@
+# [1.40.0](https://github.com/mission-apprentissage/bal/compare/v1.39.0...v1.40.0) (2023-06-27)
+
+
+### Features
+
+* theme ([#190](https://github.com/mission-apprentissage/bal/issues/190)) ([80abf12](https://github.com/mission-apprentissage/bal/commit/80abf12de8d59e481aeb0793aee2f4b6928cf2b1))
+
 # [1.39.0](https://github.com/mission-apprentissage/bal/compare/v1.38.0...v1.39.0) (2023-06-27)
 
 
