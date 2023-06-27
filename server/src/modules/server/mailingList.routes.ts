@@ -130,7 +130,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         if (error.message.includes("Status code 404")) {
           fileNotFound = true;
         } else {
-          throw Boom.badData(error.message);
+          throw Boom.badData("Impossible de télécharger le fichier");
         }
       }
 
