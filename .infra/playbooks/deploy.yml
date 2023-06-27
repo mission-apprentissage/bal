@@ -113,4 +113,3 @@
         cmd: "sudo /opt/bal/tools/maintenance/maintenance-off.sh"
       when:
         - stack_status.stdout != ""
-        - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'
