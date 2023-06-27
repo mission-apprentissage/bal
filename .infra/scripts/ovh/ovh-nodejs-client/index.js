@@ -2,7 +2,6 @@ require("dotenv").config();
 const { program: cli } = require("commander");
 const { getClient } = require("./api");
 const { configureFirewall, activateMitigation, closeService } = require("./firewall");
-const { createBackupPartition } = require("./nas");
 
 function handleError(e) {
   console.error(e.constructor.name === "EnvVarError" ? e.message : e);
@@ -32,18 +31,6 @@ cli
     await activateMitigation(client, ip);
 
     console.log(`Firewall and mitigation activated for VPS ${ip}`);
-  });
-
-cli
-  .command("createBackupPartition <ip> <partitionName>")
-  .description("Permet de créer une partition de backup sur le NAS")
-  .option("--key <key>", "La consumer key")
-  .action(async (ip, partitionName, { key }) => {
-    let client = await getClient(key);
-
-    await createBackupPartition(client, ip, partitionName);
-
-    console.log(`NAS partition '${partitionName}' created`);
   });
 
 cli

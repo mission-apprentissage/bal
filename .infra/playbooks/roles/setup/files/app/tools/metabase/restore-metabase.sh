@@ -2,7 +2,7 @@
 set -euo pipefail
 #Needs to be run as sudo
 
-readonly BACKUP_FILE=${1:?"Please provide a backup file path $(echo '' && find /mnt/backups/metabase)"}; shift;
+readonly BACKUP_FILE=${1:?"Please provide a backup file path $(echo '' && find /opt/bal/backups/metabase)"}; shift;
 
 stop_container() {
   bash /opt/bal/tools/stop-containers.sh metabase
