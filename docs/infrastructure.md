@@ -1,8 +1,8 @@
-# Architecture
+# Infrastructure
 
-## Infrastructure
+## Architecture
 
-L'infrastructure repose sur [Docker Swarm](https://docs.docker.com/engine/swarm/) afin d'assurer un déploiement sans interruption de service grâce notamment à:
+La stack repose sur [Docker Swarm](https://docs.docker.com/engine/swarm/) afin d'assurer un déploiement sans interruption de service grâce notamment à:
 
 - La prise en charge de la réplication des services (plusieurs conteneurs par service)
 - Un équilibreur de charge intégré qui répartit les requêtes sur les différents conteneurs (load-balanceur)
@@ -153,14 +153,13 @@ sequenceDiagram
     Server-->>-Github: Terminé
 
     Github->>+Server: Déploiement de la stack
-    Remarque au-dessus de Server,MongoDB: Mise à jour de tous les conteneurs en parallèle (voir diagramme précédent)
+    Note over Server,MongoDB: Mise à jour de tous les conteneurs en parallèle (voir diagramme précédent)
     Server-->>-Github: Stack déployée
 
     Github->>+Server: Désactivation du mode de maintenance
     Server->>N1: Désactivation du mode de maintenance
     Server->>N2: Désactivation du mode de maintenance
     Server-->>-Github: Désactivé
-
 ```
 
 ### Healthcheck
