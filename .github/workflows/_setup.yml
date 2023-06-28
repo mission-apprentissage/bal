@@ -58,7 +58,9 @@ jobs:
         run: echo ${{ secrets.VAULT_PWD }} > .infra/.vault_pwd.txt
 
       - name: Create Habilitations file
-        run: echo "${{ secrets.HABILITATIONS }}" > .infra/vault/habilitations.yml
+        run: echo "$CONTENT" > .infra/vault/habilitations.yml
+        env:
+          CONTENT: ${{ secrets.HABILITATIONS }}
 
       - name: Install Ansible Galaxy
         run: |
