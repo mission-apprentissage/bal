@@ -79,7 +79,7 @@ jobs:
         if: always()
         with:
           status: ${{ job.status }}
-          notification_title: "Le déploiement ${{ inputs.app_version }} en ${{ inputs.environment }} a échoué"
+          notification_title: "Le setup de ${{ inputs.environment }} a échoué"
           notify_when: "failure"
           mention_groups: "!channel"
         env:
@@ -90,7 +90,7 @@ jobs:
         if: always()
         with:
           status: ${{ job.status }}
-          notification_title: "Déploiement ${{ inputs.app_version }} en ${{ inputs.environment }} terminé avec succès"
+          notification_title: "Le setup de ${{ inputs.environment }} terminé avec succès"
           notify_when: "success"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
