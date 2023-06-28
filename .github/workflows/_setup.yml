@@ -57,6 +57,9 @@ jobs:
       - name: Create vault pwd file
         run: echo ${{ secrets.VAULT_PWD }} > .infra/.vault_pwd.txt
 
+      - name: Create Habilitations file
+        run: echo "${{ secrets.HABILITATIONS }}" > .infra/vault/habilitations.yml
+
       - name: Install Ansible Galaxy
         run: |
           ansible-galaxy install patrickjahns.promtail
