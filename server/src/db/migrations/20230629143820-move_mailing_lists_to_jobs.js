@@ -1,4 +1,4 @@
-export const up = async (db, client) => {
+export const up = async (db, _client) => {
   const mailingLists = await db.collection("mailingLists").find({});
 
   await Promise.all(
@@ -25,4 +25,4 @@ export const up = async (db, client) => {
   await db.dropCollection("mailingLists");
 };
 
-export const down = async (db, client) => {};
+export const down = async (_db, _client) => {};

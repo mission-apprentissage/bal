@@ -3,6 +3,7 @@ import { pipeline } from "node:stream/promises";
 
 import { stringify } from "csv-stringify";
 import { Filter, ObjectId } from "mongodb";
+import { IDocument } from "shared/models/document.model";
 import { IJob } from "shared/models/job.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
@@ -34,6 +35,13 @@ export interface IMailingList {
   user_id: string;
   source: string;
   document_id?: string;
+}
+
+interface OutputWish {
+  lien_prdv: string;
+  lien_lba: string;
+  libelle_etab_accueil: string;
+  libelle_formation: string;
 }
 
 export const createMailingList = async (data: IMailingList) => {
@@ -178,7 +186,7 @@ async function* getLine(cursor) {
     email: null,
     nom_eleve: null,
     prenom_eleve: null,
-    wishes: [] as any[],
+    wishes: [] as OutputWish[],
   };
   for await (const {
     content: { email, nom_eleve, prenom_eleve, ...rest },
@@ -202,7 +210,7 @@ async function* getLine(cursor) {
   if (currentLine.email !== null) yield currentLine;
 }
 
-export const createMailingListFile = async (document: any) => {
+export const createMailingListFile = async (document: IDocument) => {
   const documentContents = await getDbCollection("documentContents").find(
     {
       document_id: document._id.toString(),
