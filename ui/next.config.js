@@ -20,7 +20,7 @@ const contentSecurityPolicy = `
       };
       object-src 'none';
       script-src 'self' https://plausible.io 'unsafe-inline' ${
-        process.env.NEXT_PUBLIC_ENV === "dev" ? "'unsafe-eval'" : ""
+        process.env.NEXT_PUBLIC_ENV === "local" ? "'unsafe-eval'" : ""
       };
       script-src-attr 'none';
       style-src 'self' https:  https: *.plausible.io 'unsafe-inline';

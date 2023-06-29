@@ -63,7 +63,7 @@ services:
       mongodb:
         condition: service_healthy
       smtp:
-        condition: service_completed_successfully
+        condition: service_started
       root:
         condition: service_completed_successfully
     env_file: .env_server
