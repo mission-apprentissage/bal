@@ -2,7 +2,7 @@ import { Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 
 import { stringify } from "csv-stringify";
-import { Filter, ObjectId } from "mongodb";
+import { Filter, FindOptions, ObjectId } from "mongodb";
 import { IDocument } from "shared/models/document.model";
 import { IJob } from "shared/models/job.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
@@ -67,8 +67,11 @@ export const findMailingList = async (filter: Filter<IJob>) => {
   });
 };
 
-export const findMailingLists = async (filter: Filter<IJob>) => {
-  return findJobs(filter);
+export const findMailingLists = async (
+  filter: Filter<IJob>,
+  options?: FindOptions<IJob>
+) => {
+  return findJobs(filter, options);
 };
 
 export const updateMailingList = async (

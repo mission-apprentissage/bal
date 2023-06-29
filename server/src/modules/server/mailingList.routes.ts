@@ -58,9 +58,14 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const user = request.user as IUser;
 
-      const mailingLists = await findMailingLists({
-        "payload.user_id": user._id.toString(),
-      });
+      const mailingLists = await findMailingLists(
+        {
+          "payload.user_id": user._id.toString(),
+        },
+        {
+          sort: { created_at: -1 },
+        }
+      );
 
       return response.status(200).send(mailingLists as any);
     }
@@ -168,8 +173,8 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       });
 
       if (
-        !mailingList?.document ||
-        user?._id.toString() !== mailingList?.user_id
+        !mailingList ||
+        user?._id.toString() !== mailingList?.payload?.user_id
       ) {
         throw Boom.forbidden("Forbidden");
       }

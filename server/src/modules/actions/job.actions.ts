@@ -31,8 +31,11 @@ export const findJob = async (
   return await getDbCollection("jobs").findOne<IJob>(filter, options);
 };
 
-export const findJobs = async (filter: Filter<IJob>) => {
-  return await getDbCollection("jobs").find<IJob>(filter).toArray();
+export const findJobs = async (
+  filter: Filter<IJob>,
+  options?: FindOptions<IJob>
+) => {
+  return await getDbCollection("jobs").find<IJob>(filter, options).toArray();
 };
 
 /**
