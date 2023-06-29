@@ -95,7 +95,7 @@ export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
     throw new Error("Missing filename");
   }
 
-  const doucument = await createDocument({
+  const document = await createDocument({
     _id: documentId,
     type_document: options.type_document,
     ext_fichier: options.filename.split(".").pop(),
@@ -110,7 +110,7 @@ export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
     updated_at: new Date(),
     created_at: new Date(),
   });
-  return doucument as IDocument;
+  return document as IDocument;
 };
 
 export const uploadFile = async (

@@ -1,12 +1,10 @@
-import { Filter, FindOptions } from "mongodb";
+import { Filter, FindOptions, ObjectId } from "mongodb";
 import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 /**
  * Création d'un job
- * @param {*} data
- * @returns
  */
 export const createJob = async ({
   name,
@@ -33,13 +31,14 @@ export const findJob = async (
   return await getDbCollection("jobs").findOne<IJob>(filter, options);
 };
 
+export const findJobs = async (filter: Filter<IJob>) => {
+  return await getDbCollection("jobs").find<IJob>(filter).toArray();
+};
+
 /**
  * Mise à jour d'un job
- * @param {*} _id
- * @param {Object} data
- * @returns
  */
-export const updateJob = async (_id, data) => {
+export const updateJob = async (_id: ObjectId, data: Partial<IJob>) => {
   return getDbCollection("jobs").updateOne(
     { _id },
     { $set: { ...data, updated_at: new Date() } }

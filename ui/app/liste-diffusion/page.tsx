@@ -12,10 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import {
-  IMailingList,
-  MAILING_LIST_STATUS,
-} from "shared/models/mailingList.model";
+import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
 import { IReqGetMailingList } from "shared/routes/mailingList.routes";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
@@ -29,7 +26,7 @@ import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
 const ListeDiffusionPage = () => {
   const toast = useToast();
 
-  const { data: mailingLists, refetch } = useQuery<IMailingList[]>({
+  const { data: mailingLists, refetch } = useQuery<IJob[]>({
     queryKey: ["mailingLists"],
     queryFn: async () => {
       const { data } = await api.get("/mailing-lists");
@@ -119,16 +116,31 @@ const ListeDiffusionPage = () => {
               id: "source",
               size: 100,
               header: () => "Source",
+              cell: ({ row }) => row.original.payload?.source,
             },
             status: {
               id: "status",
               size: 100,
               header: () => "Statut",
               cell: ({ row }) => {
-                return {
-                  pending: "En cours de génération",
-                  finished: "Terminé",
-                }[row.original.status];
+                return (
+                  <>
+                    {
+                      {
+                        pending: "En attente",
+                        will_start: "Programmé",
+                        running: "En cours",
+                        finished: "Terminé",
+                        blocked: "Bloqué",
+                        errored: "Erreur",
+                      }[row.original.status]
+                    }
+                    {row.original.status === JOB_STATUS_LIST.RUNNING &&
+                      row.original.payload?.processed && (
+                        <> ({row.original.payload?.processed} %)</>
+                      )}
+                  </>
+                );
               },
             },
             date: {
@@ -152,10 +164,7 @@ const ListeDiffusionPage = () => {
               size: 25,
               header: () => "Actions",
               cell: ({ row }) => {
-                if (
-                  row.original.status !== MAILING_LIST_STATUS.FINISHED ||
-                  !row.original.document_id
-                ) {
+                if (row.original.status !== JOB_STATUS_LIST.FINISHED) {
                   return null;
                 }
 
