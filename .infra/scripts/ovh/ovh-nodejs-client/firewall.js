@@ -111,6 +111,7 @@ async function configureFirewall(client, ip) {
   await addRule(client, ip, rules.allowTcpOnPort(22, 1));
   await addRule(client, ip, rules.allowTcpOnPort(443, 2));
   await addRule(client, ip, rules.allowTcpOnPort(80, 3));
+  await addRule(client, ip, rules.allowTcpOnPort(27017, 4));
   await addRule(client, ip, rules.allowICMP());
   await addRule(client, ip, rules.denyAllTcp());
 }

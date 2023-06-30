@@ -15,10 +15,6 @@ const config = {
   mongodb: {
     uri: env.get("MNA_BAL_MONGODB_URI").required().asString(),
   },
-  processorUrl: env
-    .get("MNA_BAL_PROCESSOR_URL")
-    .default("http://processor:6000")
-    .asString(),
   log: {
     type: env.get("MNA_BAL_LOG_TYPE").default("console").asString(),
     level: env.get("MNA_BAL_LOG_LEVEL").default("info").asString(),
