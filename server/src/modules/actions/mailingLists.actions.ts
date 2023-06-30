@@ -166,13 +166,10 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
     processed += wishes.length;
 
     await updateJob(job._id, {
-      payload: {
-        ...job.payload,
-        processed: document.lines_count
-          ? (processed / document.lines_count) * 100 //
-          : 0,
-        processed_count: processed,
-      },
+      "payload.processed": document.lines_count
+        ? (processed / document.lines_count) * 100
+        : 0,
+      "payload.processed_count": processed,
     });
     // Check if there are more documents to retrieve
     if (wishes.length === batchSize) {

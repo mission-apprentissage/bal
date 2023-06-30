@@ -4,7 +4,10 @@ import Boom from "@hapi/boom";
 import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
 import { IUser } from "shared/models/user.model";
-import { SReqGetMailingList } from "shared/routes/mailingList.routes";
+import {
+  SReqGetMailingList,
+  SResGetMailingLists,
+} from "shared/routes/mailingList.routes";
 import { Readable } from "stream";
 
 import logger from "../../common/logger";
@@ -50,6 +53,11 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/mailing-lists",
     {
+      schema: {
+        response: {
+          200: SResGetMailingLists,
+        },
+      } as const,
       preHandler: server.auth([
         server.validateSession,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -100,8 +108,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
        */
 
       if (
-        !mailingList ||
-        !mailingList.payload?.document_id ||
+        !mailingList?.payload?.document_id ||
         user?._id.toString() !== mailingList.payload?.user_id
       ) {
         throw Boom.forbidden("Forbidden");

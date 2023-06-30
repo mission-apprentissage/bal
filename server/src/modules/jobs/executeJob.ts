@@ -2,7 +2,7 @@ import { formatDuration, intervalToDuration } from "date-fns";
 import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
 
 import logger from "@/common/logger";
-import { findJob, updateJob } from "@/modules/actions/job.actions";
+import { updateJob } from "@/modules/actions/job.actions";
 
 import { closeMongodbConnection } from "../../common/utils/mongodbUtils";
 
@@ -40,11 +40,11 @@ export const executeJob = async (
   const duration = formatDuration(
     intervalToDuration({ start: startDate, end: endDate })
   );
-  // récupérer la version la plus récente pour conserver les éventuelles modifications effectuées durant l'éxecution du job
-  const finishedJob = (await findJob({ _id: job._id })) as IJob;
   await updateJob(job._id, {
     status: error ? JOB_STATUS_LIST.ERRORED : JOB_STATUS_LIST.FINISHED,
-    payload: { ...finishedJob.payload, duration, result, error },
+    "payload.duration": duration,
+    "payload.result": result,
+    "payload.error": error,
     ended_at: endDate,
   });
   if (options.runningLogs) logger.info(`Job: ${job.name} Ended`);
