@@ -19,10 +19,6 @@ const ListeDiffusionPage = () => {
     },
   });
 
-  const handleGenerate = async () => {
-    await refetch();
-  };
-
   const generatingMailingList = mailingLists?.find((mailingList) =>
     [
       JOB_STATUS_LIST.RUNNING,
@@ -39,9 +35,12 @@ const ListeDiffusionPage = () => {
       </Heading>
 
       {generatingMailingList ? (
-        <GeneratingMailingList mailingList={generatingMailingList} />
+        <GeneratingMailingList
+          mailingList={generatingMailingList}
+          onDone={refetch}
+        />
       ) : (
-        <Form onSuccess={handleGenerate} />
+        <Form onSuccess={refetch} />
       )}
 
       <ListMailingList mailingLists={mailingLists} onDelete={refetch} />

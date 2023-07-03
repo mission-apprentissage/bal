@@ -1,16 +1,45 @@
 import { Box, Center, Heading, Text } from "@chakra-ui/react";
 import Image from "next/image";
-import { FC } from "react";
-import { IJob } from "shared/models/job.model";
+import { FC, useEffect, useState } from "react";
+import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
+
+import { api } from "../../../utils/api.utils";
 
 interface Props {
   mailingList: IJob;
+  onDone: () => void;
 }
 
-const GeneratingMailingList: FC<Props> = ({ mailingList }) => {
+const GeneratingMailingList: FC<Props> = ({
+  mailingList: initialMailingList,
+  onDone,
+}) => {
+  const [mailingList, setMailingList] = useState<IJob>(initialMailingList);
   const progression = Math.ceil(
     (mailingList.payload?.processed as number) ?? 0
   );
+
+  const fetchMailingList = async () => {
+    const { data } = await api.get(`/mailing-lists/${mailingList._id}`);
+    setMailingList(data);
+
+    if (
+      [
+        JOB_STATUS_LIST.FINISHED,
+        JOB_STATUS_LIST.ERRORED,
+        JOB_STATUS_LIST.BLOCKED,
+      ].includes(data.status)
+    ) {
+      onDone();
+    }
+  };
+
+  useEffect(() => {
+    const id = setInterval(fetchMailingList, 3000);
+
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <Box textAlign="center" pt="4" pb="6">
       <Center>

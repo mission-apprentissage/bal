@@ -19,3 +19,7 @@ export const SResGetMailingLists = {
 } as const;
 
 export type IResGetMailingLists = FromSchema<typeof SResGetMailingLists>;
+
+export const SResGetMailingList = SJob;
+
+export type IResGetMailingList = FromSchema<typeof SResGetMailingList>;

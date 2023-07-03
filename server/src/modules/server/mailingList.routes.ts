@@ -6,6 +6,7 @@ import { oleoduc } from "oleoduc";
 import { IUser } from "shared/models/user.model";
 import {
   SReqGetMailingList,
+  SResGetMailingList,
   SResGetMailingLists,
 } from "shared/routes/mailingList.routes";
 import { Readable } from "stream";
@@ -76,6 +77,40 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       );
 
       return response.status(200).send(mailingLists as any);
+    }
+  );
+
+  server.get(
+    "/mailing-lists/:id",
+    {
+      schema: {
+        params: {
+          type: "object",
+          properties: { id: { type: "string" } },
+          required: ["id"],
+        },
+        response: {
+          200: SResGetMailingList,
+        },
+      } as const,
+      preHandler: server.auth([
+        server.validateSession,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ]) as any,
+    },
+    async (request, response) => {
+      const { user } = request;
+      const { id } = request.params;
+
+      const mailingList = await findMailingList({
+        _id: new ObjectId(id),
+      });
+
+      if (mailingList?.payload?.user_id !== user?._id.toString()) {
+        throw Boom.forbidden("Forbidden");
+      }
+
+      return response.status(200).send(mailingList as any);
     }
   );
 
