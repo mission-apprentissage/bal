@@ -1,3 +1,10 @@
+## [1.40.1](https://github.com/mission-apprentissage/bal/compare/v1.40.0...v1.40.1) (2023-07-03)
+
+
+### Bug Fixes
+
+* backup CRONs ([#203](https://github.com/mission-apprentissage/bal/issues/203)) ([0605eb5](https://github.com/mission-apprentissage/bal/commit/0605eb5efe6f44330726fe50ef6559b63972d0af))
+
 # [1.40.0](https://github.com/mission-apprentissage/bal/compare/v1.39.0...v1.40.0) (2023-06-27)
 
 
