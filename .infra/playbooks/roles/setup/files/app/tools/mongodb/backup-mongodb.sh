@@ -11,7 +11,7 @@ function backup() {
   mkdir -p "${BACKUP_LOCAL_DIR}"
   docker exec $(docker ps -q -f name=bal_mongodb --latest) bash -c "mongodump --gzip --archive -u backup -p {{ vault[env_type].MNA_BAL_MONGODB_BACKUP_PASSWORD }}" \
   | bash "${SCRIPT_DIR}/../gpg/encrypt.sh" >"${BACKUP_FILE}"
-  rm /opt/bal/backups/mongodb/latest.gpg
+  rm -f /opt/bal/backups/mongodb/latest.gpg
   ln -s "${BACKUP_FILE}" /opt/bal/backups/mongodb/latest.gpg
 }
 
