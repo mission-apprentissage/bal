@@ -1,4 +1,4 @@
-import { Filter, FindOptions } from "mongodb";
+import { Filter, FindOptions, ObjectId } from "mongodb";
 import { IDocumentContent } from "shared/models/documentContent.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
@@ -8,7 +8,7 @@ type TCreateDocumentContent = Omit<IDocumentContent, "id">;
 export const createDocumentContent = async (data: TCreateDocumentContent) => {
   const { insertedId: _id } = await getDbCollection(
     "documentContents"
-  ).insertOne(data);
+  ).insertOne({ ...data, updated_at: new Date(), created_at: new Date() });
 
   const documentContent = await findOneDocumentContent({ _id });
 
@@ -38,4 +38,14 @@ export const deleteDocumentContent = async (
   filter: Filter<IDocumentContent>
 ) => {
   await getDbCollection("documentContents").deleteMany(filter);
+};
+
+export const updateDocumentContent = async (
+  _id: ObjectId,
+  data: Partial<IDocumentContent>
+) => {
+  return getDbCollection("documentContents").updateOne(
+    { _id },
+    { $set: { ...data, updated_at: new Date() } }
+  );
 };

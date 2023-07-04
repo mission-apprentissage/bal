@@ -38,9 +38,11 @@ interface ICreateDocument extends Omit<IDocument, "_id"> {
 }
 
 export const createDocument = async (data: ICreateDocument) => {
-  const { insertedId: _id } = await getDbCollection("documents").insertOne(
-    data
-  );
+  const { insertedId: _id } = await getDbCollection("documents").insertOne({
+    ...data,
+    updated_at: new Date(),
+    created_at: new Date(),
+  });
 
   return findDocument({ _id });
 };

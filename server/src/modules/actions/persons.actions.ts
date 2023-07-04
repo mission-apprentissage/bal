@@ -33,6 +33,8 @@ export const createPerson = async (data: ICreatePerson) => {
   const { insertedId: personId } = await getDbCollection("persons").insertOne({
     ...data,
     _id,
+    updated_at: new Date(),
+    created_at: new Date(),
   });
 
   const person = await findPerson({ _id: personId });
@@ -86,7 +88,7 @@ export const updatePerson = async (
       _id: person._id,
     },
     {
-      $set: data,
+      $set: { ...data, updated_at: new Date() },
       ...updateFilter,
     }
   );

@@ -63,6 +63,8 @@ export const createOrganisation = async (data: ICreateOrganisation) => {
   ).insertOne({
     ...data,
     _id,
+    updated_at: new Date(),
+    created_at: new Date(),
   });
 
   return organisationId;
@@ -112,7 +114,7 @@ export const updatePerson = async (
       _id: organisation._id,
     },
     {
-      $set: data,
+      $set: { ...data, updated_at: new Date() },
       ...updateFilter,
     }
   );

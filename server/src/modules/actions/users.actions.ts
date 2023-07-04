@@ -50,6 +50,8 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
     person_id: person._id,
     _id,
     password,
+    updated_at: new Date(),
+    created_at: new Date(),
   });
 
   const user = await findUser({ _id: userId });
@@ -103,7 +105,7 @@ export const updateUser = async (
       _id: user._id,
     },
     {
-      $set: data,
+      $set: { ...data, updated_at: new Date() },
       ...updateFilter,
     }
   );

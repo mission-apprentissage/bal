@@ -27,6 +27,9 @@ function addEmail(
           sendDates: [new Date()],
         },
       },
+      $set: {
+        updated_at: new Date(),
+      },
     },
     { returnDocument: "after", upsert: true }
   );
@@ -42,6 +45,9 @@ function addEmailMessageId(token, messageId) {
       $unset: {
         "payload.emails.$.error": 1,
       },
+      $set: {
+        updated_at: new Date(),
+      },
     },
     { returnDocument: "after" }
   );
@@ -56,6 +62,7 @@ function addEmailError(token, e) {
           err_type: "fatal",
           message: e.message,
         },
+        updated_at: new Date(),
       },
     },
     { returnDocument: "after" }
@@ -68,6 +75,9 @@ export async function markEmailAsDelivered(messageId) {
     {
       $unset: {
         "payload.emails.$.error": 1,
+      },
+      $set: {
+        updated_at: new Date(),
       },
     },
     { returnDocument: "after" }
@@ -82,6 +92,7 @@ export async function markEmailAsFailed(messageId, type) {
         "payload.emails.$.error": {
           err_type: type,
         },
+        updated_at: new Date(),
       },
     },
     { returnDocument: "after" }
@@ -94,6 +105,7 @@ export async function markEmailAsOpened(token) {
     {
       $set: {
         "payload.emails.$.openDate": new Date(),
+        updated_at: new Date(),
       },
     },
     { returnDocument: "after" }
@@ -113,6 +125,7 @@ export async function unsubscribeUser(id) {
     {
       $set: {
         "payload.unsubscribe": true,
+        updated_at: new Date(),
       },
     },
     { returnDocument: "after" }
