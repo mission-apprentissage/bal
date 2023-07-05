@@ -32,6 +32,9 @@ trap handle_error ERR
 echo "****************************"
 echo "[$(date +'%Y-%m-%d_%H%M%S')] Running ${BASH_SOURCE[0]} $*"
 echo "****************************"
+
+trap start_reverse_proxy EXIT
+
 stop_reverse_proxy
 renew_certificate
 start_reverse_proxy
