@@ -6,9 +6,10 @@ import { getDbCollection } from "@/common/utils/mongodbUtils";
 type TCreateDocumentContent = Omit<IDocumentContent, "id">;
 
 export const createDocumentContent = async (data: TCreateDocumentContent) => {
+  const now = new Date();
   const { insertedId: _id } = await getDbCollection(
     "documentContents"
-  ).insertOne({ ...data, updated_at: new Date(), created_at: new Date() });
+  ).insertOne({ ...data, updated_at: now, created_at: now });
 
   const documentContent = await findOneDocumentContent({ _id });
 

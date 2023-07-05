@@ -15,6 +15,7 @@ function addEmail(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any
 ) {
+  const now = new Date();
   return getDbCollection("events").findOneAndUpdate(
     { person_id, name: "bal_emails" },
     {
@@ -24,11 +25,14 @@ function addEmail(
           token,
           templateName,
           payload,
-          sendDates: [new Date()],
+          sendDates: [now],
         },
       },
       $set: {
-        updated_at: new Date(),
+        updated_at: now,
+      },
+      $setOnInsert: {
+        created_at: now,
       },
     },
     { returnDocument: "after", upsert: true }

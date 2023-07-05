@@ -29,12 +29,12 @@ const DEFAULT_UNWIND = {
 
 export const createPerson = async (data: ICreatePerson) => {
   const _id = new ObjectId();
-
+  const now = new Date();
   const { insertedId: personId } = await getDbCollection("persons").insertOne({
     ...data,
     _id,
-    updated_at: new Date(),
-    created_at: new Date(),
+    updated_at: now,
+    created_at: now,
   });
 
   const person = await findPerson({ _id: personId });

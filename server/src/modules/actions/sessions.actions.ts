@@ -6,10 +6,11 @@ import { getDbCollection } from "@/common/utils/mongodbUtils";
 type TCreateSession = Omit<ISession, "id">;
 
 export const createSession = async (data: TCreateSession) => {
+  const now = new Date();
   const { insertedId: _id } = await getDbCollection("sessions").insertOne({
     ...data,
-    updated_at: new Date(),
-    created_at: new Date(),
+    updated_at: now,
+    created_at: now,
   });
 
   const session = await getSession({ _id });
