@@ -44,12 +44,14 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   const _id = new ObjectId();
 
   const password = hashPassword(data.password);
-
+  const now = new Date();
   const { insertedId: userId } = await getDbCollection("users").insertOne({
     ...data,
     person_id: person._id,
     _id,
     password,
+    updated_at: now,
+    created_at: now,
   });
 
   const user = await findUser({ _id: userId });
@@ -103,7 +105,7 @@ export const updateUser = async (
       _id: user._id,
     },
     {
-      $set: data,
+      $set: { ...data, updated_at: new Date() },
       ...updateFilter,
     }
   );

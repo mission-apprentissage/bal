@@ -12,6 +12,16 @@ export const SSession = {
   properties: {
     _id: { type: "string", format: "ObjectId" },
     token: { type: "string" },
+    updated_at: {
+      type: "string",
+      format: "date-time",
+      description: "Date de mise à jour en base de données",
+    },
+    created_at: {
+      type: "string",
+      format: "date-time",
+      description: "Date d'ajout en base de données",
+    },
   },
   required: ["token"],
 } as const;

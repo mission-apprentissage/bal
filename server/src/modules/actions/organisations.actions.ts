@@ -57,12 +57,14 @@ export const validation = async ({
 interface ICreateOrganisation extends Omit<IOrganisation, "_id"> {}
 export const createOrganisation = async (data: ICreateOrganisation) => {
   const _id = new ObjectId();
-
+  const now = new Date();
   const { insertedId: organisationId } = await getDbCollection(
     "organisations"
   ).insertOne({
     ...data,
     _id,
+    updated_at: now,
+    created_at: now,
   });
 
   return organisationId;
@@ -112,7 +114,7 @@ export const updatePerson = async (
       _id: organisation._id,
     },
     {
-      $set: data,
+      $set: { ...data, updated_at: new Date() },
       ...updateFilter,
     }
   );
