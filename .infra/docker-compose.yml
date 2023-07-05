@@ -62,8 +62,6 @@ services:
       replicas: 2
     networks:
       - bal_network
-    depends_on:
-      - mongodb
     env_file: .env_server
     volumes:
       - /opt/bal/data/server:/data
@@ -90,8 +88,6 @@ services:
     command: ["yarn", "cli", "processor"]
     networks:
       - bal_network
-    depends_on:
-      - mongodb
     env_file: .env_server
     volumes:
       - /opt/bal/data/server:/data
@@ -120,35 +116,6 @@ services:
         tag: ui
         fluentd-async: "true"
 
-  mongodb:
-    image: mongo:6.0.2-focal
-    deploy:
-      <<: *deploy-default
-      resources:
-        limits:
-          memory: 2g
-    networks:
-      - bal_network
-    command: mongod --auth
-    volumes:
-      - /opt/bal/data/mongodb/db:/data/db
-      - /opt/bal/data/mongodb/configdb:/data/configdb
-      - /opt/bal/data/mongodb/backups:/data/backups-legacy
-      - /opt/bal/configs/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: mongodb
-        fluentd-async: "true"
-    healthcheck:
-      test: ['CMD', 'mongosh', '--eval', "'db.runCommand(\"ping\").ok'", '--quiet']
-      interval: 10s
-      timeout: 5s
-      retries: 12
-      start_period: 10s
-    stop_grace_period: 2m
-
   metabase:
     image: metabase/metabase:v0.46.0
     deploy:
@@ -159,8 +126,6 @@ services:
     volumes:
       - /opt/bal/data/metabase:/data/metabase
       - /opt/bal/backups/metabase:/data/backups
-    depends_on:
-      - mongodb
     environment:
       JAVA_TIMEZONE: Europe/Paris
       MB_DB_FILE: /data/metabase/metabase.db

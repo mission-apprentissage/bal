@@ -1,49 +1,22 @@
 /* eslint-disable */
 
-db.getSiblingDB("{{ vault.DB_SIBLING_NAME }}").createRole({
-  role: "app",
-  roles: [{ role: "readWrite", db: "{{ vault.DB_NAME }}" }],
-  privileges: [
-    {
-      resource: { db: "{{ vault.DB_NAME }}", collection: "" },
-      actions: [
-        "collMod",
-        "createIndex",
-        "listCollections",
-        "bypassDocumentValidation",
-      ],
-    },
-  ],
-});
-
-db.getSiblingDB("{{ vault.DB_SIBLING_NAME }}").createUser({
-  user: "{{ vault[env_type].MNA_BAL_MONGODB_USER }}",
+db.getSiblingDB("admin").createUser({
+  user: "mna-bal",
   pwd: "{{ vault[env_type].MNA_BAL_MONGODB_USER_PASSWORD }}",
-  roles: ["app"],
+  roles: [{ role: "dbOwner", db: "mna-bal" }],
 });
 
-db.getSiblingDB("{{ vault.DB_SIBLING_NAME }}").createUser({
-  user: "{{ vault[env_type].MNA_BAL_MONGODB_ADMIN_USER }}",
-  pwd: "{{ vault[env_type].MNA_BAL_MONGODB_ADMIN_PASSWORD }}",
-  roles: [
-    { role: "userAdminAnyDatabase", db: "{{ vault.DB_ADMIN_NAME }}" },
-    { role: "readWriteAnyDatabase", db: "{{ vault.DB_ADMIN_NAME }}" },
-    { role: "dbAdminAnyDatabase", db: "{{ vault.DB_ADMIN_NAME }}" },
-    { role: "clusterAdmin", db: "{{ vault.DB_ADMIN_NAME }}" },
-  ],
-});
-
-db.getSiblingDB("{{ vault.DB_SIBLING_NAME }}").createUser({
-  user: "{{ vault[env_type].MNA_BAL_MONGODB_BACKUP_USER }}",
+db.getSiblingDB("admin").createUser({
+  user: "backup",
   pwd: "{{ vault[env_type].MNA_BAL_MONGODB_BACKUP_PASSWORD }}",
   roles: [
-    { role: "backup", db: "{{ vault.DB_ADMIN_NAME }}" },
-    { role: "restore", db: "{{ vault.DB_ADMIN_NAME }}" },
+    { role: "backup", db: "admin" },
+    { role: "restore", db: "admin" },
   ],
 });
 
-db.getSiblingDB("{{ vault.DB_SIBLING_NAME }}").createUser({
-  user: "{{ vault[env_type].MNA_BAL_MONGODB_METABASE_USER }}",
+db.getSiblingDB("admin").createUser({
+  user: "metabase",
   pwd: "{{ vault[env_type].MNA_BAL_MONGODB_METABASE_PASSWORD }}",
-  roles: [{ role: "read", db: "{{ vault.DB_ADMIN_NAME }}" }],
+  roles: [{ role: "readAnyDatabase", db: "admin" }],
 });
