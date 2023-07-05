@@ -2,8 +2,9 @@ import { Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 
 import { stringify } from "csv-stringify";
-import { Filter, ObjectId, UpdateFilter } from "mongodb";
-import { IMailingList } from "shared/models/mailingList.model";
+import { Filter, FindOptions, ObjectId } from "mongodb";
+import { IDocument } from "shared/models/document.model";
+import { IJob } from "shared/models/job.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
 import logger from "@/common/logger";
@@ -16,6 +17,7 @@ import {
   TrainingLink,
 } from "../../common/apis/lba";
 import { uploadToStorage } from "../../common/utils/ovhUtils";
+import { addJob } from "../jobs/jobs";
 import { noop } from "../server/utils/upload.utils";
 import {
   createEmptyDocument,
@@ -23,101 +25,67 @@ import {
   findDocument,
   importDocumentContent,
 } from "./documents.actions";
-
-const DEFAULT_LOOKUP = {
-  from: "documents",
-  let: { documentId: { $toObjectId: "$document_id" } },
-  pipeline: [
-    {
-      $match: {
-        $expr: { $eq: ["$_id", "$$documentId"] },
-      },
-    },
-  ],
-  as: "document",
-};
-
-const DEFAULT_UNWIND = {
-  path: "$document",
-  preserveNullAndEmptyArrays: true,
-};
+import { findJob, findJobs, updateJob } from "./job.actions";
 
 /**
  * CRUD
  */
 
-interface ICreateMailingList extends Omit<IMailingList, "_id"> {}
+export interface IMailingList {
+  user_id: string;
+  source: string;
+  document_id?: string;
+}
 
-export const createMailingList = async (data: ICreateMailingList) => {
-  const { insertedId: _id } = await getDbCollection("mailingLists").insertOne(
-    data
-  );
+interface OutputWish {
+  lien_prdv: string;
+  lien_lba: string;
+  libelle_etab_accueil: string;
+  libelle_formation: string;
+}
 
-  return findMailingList({ _id });
+export const createMailingList = async (data: IMailingList) => {
+  const outputDocument = await createEmptyDocument({
+    type_document: `mailing-list-${data.source}`,
+    filename: `mailing-list-${data.source}-${new ObjectId()}.csv`,
+  });
+
+  return addJob({
+    name: "generate:mailing-list",
+    payload: {
+      user_id: data.user_id,
+      source: data.source,
+      document_id: outputDocument._id.toString(),
+    },
+  });
 };
 
-export const findMailingList = async (filter: Filter<IMailingList>) => {
-  return getDbCollection("mailingLists")
-    .aggregate<IMailingList>([
-      {
-        $match: filter,
-      },
-      {
-        $lookup: DEFAULT_LOOKUP,
-      },
-      {
-        $unwind: DEFAULT_UNWIND,
-      },
-    ])
-    .next();
+export const findMailingList = async (filter: Filter<IJob>) => {
+  return findJob({
+    name: "generate:mailing-list",
+    ...filter,
+  });
 };
 
-export const findMailingLists = async (filter: Filter<IMailingList>) => {
-  const users = await getDbCollection("mailingLists")
-    .aggregate<IMailingList>([
-      {
-        $match: filter,
-      },
-      {
-        $lookup: DEFAULT_LOOKUP,
-      },
-      {
-        $unwind: DEFAULT_UNWIND,
-      },
-    ])
-    .toArray();
-
-  return users;
+export const findMailingLists = async (
+  filter: Filter<IJob>,
+  options?: FindOptions<IJob>
+) => {
+  return findJobs(filter, options);
 };
 
 export const updateMailingList = async (
-  mailingList: IMailingList,
-  data: Partial<IMailingList>,
-  updateFilter: UpdateFilter<IMailingList> = {}
+  _id: ObjectId,
+  data: Partial<IMailingList>
 ) => {
-  return await getDbCollection("mailingLists").findOneAndUpdate(
-    {
-      _id: mailingList._id,
-    },
-    {
-      $set: data,
-      ...updateFilter,
-    }
-  );
+  return updateJob(_id, data);
 };
 
 /**
  * ACTIONS
  */
 
-export const processMailingList = async ({ mailing_list_id }) => {
-  const mailingList = await findMailingList({
-    _id: mailing_list_id,
-  });
-  if (!mailingList) {
-    throw new Error("Processor > /mailing-list: Can't find mailing list");
-  }
-
+export const processMailingList = async (mailingList: IMailingList) => {
   switch (mailingList.source) {
     case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
     case DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023:
@@ -132,6 +100,12 @@ export const processMailingList = async ({ mailing_list_id }) => {
 };
 
 const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
+  const job = await findJob({
+    "payload.document_id": mailingList.document_id,
+  });
+
+  if (!job) throw new Error("Job not found");
+
   const document = await findDocument({
     type_document: mailingList.source,
   });
@@ -141,77 +115,70 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
   const batchSize = LIMIT_TRAINING_LINKS_PER_REQUEST;
   let skip = 0;
   let hasMore = true;
+  let processed = 0;
 
-  const outputDocument = await createEmptyDocument({
-    type_document: `mailing-list-${DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023}`,
-    filename: `mailing-list-${mailingList._id.toString()}-${
-      mailingList.source
-    }.csv`,
+  const outputDocument = await findDocument({
+    _id: new ObjectId(mailingList.document_id),
   });
+
+  if (!outputDocument) throw new Error("Output document not found");
 
   while (hasMore) {
-    try {
-      const wishes = await getDbCollection("documentContents")
-        .find({ document_id: document._id.toString() })
-        .limit(batchSize)
-        .skip(skip)
-        .toArray();
+    const wishes = await getDbCollection("documentContents")
+      .find({ document_id: document._id.toString() })
+      .limit(batchSize)
+      .skip(skip)
+      .toArray();
 
-      if (!wishes.length) {
-        hasMore = false;
-        continue;
-      }
+    if (!wishes.length) {
+      hasMore = false;
+      continue;
+    }
 
-      // TODO: vérifier le nom des colonnes
-      const data = wishes?.map((dc) => ({
-        id: dc._id.toString(),
-        cle_ministere_educatif: dc.content?.cle_ministere_educatif ?? "",
-        mef: dc.content?.code_mef ?? "",
-        code_postal: dc.content?.code_postal ?? "",
-        uai: dc.content?.code_uai_etab_accueil ?? "",
-        cfd: dc.content?.cfd ?? "", // pas présent dans le fichier
-        rncp: dc.content?.rncp ?? "", // pas présent dans le fichier
-        email:
-          dc.content?.mail_responsable_1 ??
-          dc.content?.mail_responsable_2 ??
-          "",
-        nom_eleve: dc.content?.nom_eleve ?? "",
-        prenom_eleve: [
-          dc.content?.prenom_1 ?? "",
-          dc.content?.prenom_2 ?? "",
-          dc.content?.prenom_3 ?? "",
-        ]
-          .join(" ")
-          .trim(),
-        libelle_etab_accueil: dc.content?.libelle_etab_accueil ?? "",
-        libelle_formation: dc.content?.libelle_formation ?? "",
-      }));
+    // TODO: vérifier le nom des colonnes
+    const data = wishes?.map((dc) => ({
+      id: dc._id.toString(),
+      cle_ministere_educatif: dc.content?.cle_ministere_educatif ?? "",
+      mef: dc.content?.code_mef ?? "",
+      code_postal: dc.content?.code_postal ?? "",
+      uai: dc.content?.code_uai_etab_accueil ?? "",
+      cfd: dc.content?.cfd ?? "", // pas présent dans le fichier
+      rncp: dc.content?.rncp ?? "", // pas présent dans le fichier
+      email:
+        dc.content?.mail_responsable_1 ?? dc.content?.mail_responsable_2 ?? "",
+      nom_eleve: dc.content?.nom_eleve ?? "",
+      prenom_eleve: [
+        dc.content?.prenom_1 ?? "",
+        dc.content?.prenom_2 ?? "",
+        dc.content?.prenom_3 ?? "",
+      ]
+        .join(" ")
+        .trim(),
+      libelle_etab_accueil: dc.content?.libelle_etab_accueil ?? "",
+      libelle_formation: dc.content?.libelle_formation ?? "",
+    }));
 
-      const tmp = (await getTrainingLinks(data)) as TrainingLink[];
-      const tmpContent = tmp.flat();
+    const tmp = (await getTrainingLinks(data)) as TrainingLink[];
+    const tmpContent = tmp.flat();
 
-      await importDocumentContent(outputDocument, tmpContent, (line) => line);
+    await importDocumentContent(outputDocument, tmpContent, (line) => line);
 
-      // Check if there are more documents to retrieve
-      if (wishes.length === batchSize) {
-        skip += batchSize;
-      } else {
-        hasMore = false;
-        logger.info("All documents retrieved");
-      }
-    } catch (err) {
-      await updateMailingList(mailingList, {
-        status: "error",
-      });
-      console.error("Error retrieving documents:", err);
-      return;
+    processed += wishes.length;
+
+    await updateJob(job._id, {
+      "payload.processed": document.lines_count
+        ? (processed / document.lines_count) * 100
+        : 0,
+      "payload.processed_count": processed,
+    });
+    // Check if there are more documents to retrieve
+    if (wishes.length === batchSize) {
+      skip += batchSize;
+    } else {
+      hasMore = false;
+      logger.info("All documents retrieved");
     }
   }
-
-  await updateMailingList(mailingList, {
-    document_id: outputDocument._id.toString(),
-    status: "finished",
-  });
 };
 
 async function* getLine(cursor) {
@@ -219,7 +186,7 @@ async function* getLine(cursor) {
     email: null,
     nom_eleve: null,
     prenom_eleve: null,
-    wishes: [] as any[],
+    wishes: [] as OutputWish[],
   };
   for await (const {
     content: { email, nom_eleve, prenom_eleve, ...rest },
@@ -243,7 +210,7 @@ async function* getLine(cursor) {
   if (currentLine.email !== null) yield currentLine;
 }
 
-export const createMailingListFile = async (document: any) => {
+export const createMailingListFile = async (document: IDocument) => {
   const documentContents = await getDbCollection("documentContents").find(
     {
       document_id: document._id.toString(),
@@ -309,7 +276,11 @@ export const createMailingListFile = async (document: any) => {
   // });
 };
 
-export const deleteMailingList = async (mailingList: IMailingList) => {
-  await deleteDocumentById(new ObjectId(mailingList.document_id));
-  await getDbCollection("mailingLists").deleteOne({ _id: mailingList._id });
+export const deleteMailingList = async (mailingList: IJob) => {
+  if (mailingList.payload?.document_id) {
+    await deleteDocumentById(
+      new ObjectId(mailingList.payload.document_id as string)
+    );
+  }
+  await getDbCollection("jobs").deleteOne({ _id: mailingList._id });
 };
