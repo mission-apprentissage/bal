@@ -160,24 +160,6 @@ services:
       retries: 12
       start_period: 10s
 
-  metabase:
-    profiles:
-      - "dev"
-    image: metabase/metabase:v0.46.0
-    depends_on:
-      - mongodb
-    restart: unless-stopped
-    networks:
-      - bal_network
-    environment:
-      JAVA_TIMEZONE: Europe/Paris
-      MB_DB_FILE: /data/metabase/metabase.db
-      MB_SITE_LOCALE: fr
-      MB_SITE_URL: http://localhost/metabase
-    volumes:
-      - bal_metabase_data:/data/metabase
-      - bal_metabase_data:/data/backups
-
   clamav:
     profiles:
       - "dev"
@@ -190,6 +172,8 @@ services:
       interval: 60s
       retries: 3
       start_period: 6m
+    volumes:
+      - bal_clamav_data:/var/lib/clamav
   
   smtp:
     profiles:
@@ -197,22 +181,18 @@ services:
     image: axllent/mailpit:v1.5.5
     ports:
       - 1025:1025
+      - 8025:8025
     networks:
       - bal_network
     environment:
       - MP_DATA_FILE=/data/mailpit.db
     volumes:
       - bal_smtp_data:/data
-    depends_on:
-      - mongodb
 
 volumes:
   bal_mongodb_data:
     driver: local
     name: bal_mongodb_data
-  bal_metabase_data:
-    driver: local
-    name: bal_metabase_data
   bal_nginx_data:
     driver: local
     name: bal_nginx_data
@@ -222,6 +202,9 @@ volumes:
   bal_smtp_data:
     driver: local
     name: bal_smtp_data
+  bal_clamav_data:
+    driver: local
+    name: bal_clamav_data
 
 networks:
   bal_network:
