@@ -1,3 +1,10 @@
+# [1.41.0](https://github.com/mission-apprentissage/bal/compare/v1.40.1...v1.41.0) (2023-07-05)
+
+
+### Features
+
+* mailing list progress ([#195](https://github.com/mission-apprentissage/bal/issues/195)) ([e6cdc5d](https://github.com/mission-apprentissage/bal/commit/e6cdc5d6a6bb6ea7034e9fac8fd017480bb58719))
+
 ## [1.40.1](https://github.com/mission-apprentissage/bal/compare/v1.40.0...v1.40.1) (2023-07-03)
 
 
