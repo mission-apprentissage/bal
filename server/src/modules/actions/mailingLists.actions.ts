@@ -103,6 +103,9 @@ export const updateMailingList = async (
  * ACTIONS
  */
 
+const EMAIL_REGEX =
+  /^(?:[a-zA-Z0-9])([-_0-9a-zA-Z]+(\.[-_0-9a-zA-Z]+)*|^"([\001-\010\013\014\016-\037!#-[\]-\177]|\\[\001-011\013\014\016-\177])*")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}\.?$/;
+
 export const processMailingList = async (mailingList: IMailingList) => {
   switch (mailingList.source) {
     case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
@@ -167,33 +170,49 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
 
     const trainingLinks = (await getTrainingLinks(data)) as TrainingLink[];
 
+    const toDuplicate: (TrainingLink & WishContent & { email?: string })[] = [];
     const trainingLinksWithWishes = trainingLinks
       .map((tl) => {
         const wish = wishes.find((w) => w._id.toString() === tl.id);
+        const {
+          mail_responsable_1,
+          mail_responsable_2,
+          nom_eleve,
+          prenom_1,
+          prenom_2,
+          prenom_3,
+          libelle_etab_accueil,
+          libelle_formation,
+        } = wish?.content ?? {};
 
-        return {
+        // filtrer les emails invalides
+        const emails = [
+          ...new Set([mail_responsable_1, mail_responsable_2]),
+        ].filter((e) => EMAIL_REGEX.test(e ?? ""));
+
+        const wishData = {
           ...tl,
-          email:
-            wish?.content?.mail_responsable_1 ??
-            wish?.content?.mail_responsable_2 ??
-            "",
-          nom_eleve: wish?.content?.nom_eleve ?? "",
-          prenom_eleve: [
-            wish?.content?.prenom_1 ?? "",
-            wish?.content?.prenom_2 ?? "",
-            wish?.content?.prenom_3 ?? "",
-          ]
+          email: emails?.[0] ?? "",
+          nom_eleve: nom_eleve ?? "",
+          prenom_eleve: [prenom_1 ?? "", prenom_2 ?? "", prenom_3 ?? ""]
             .join(" ")
             .trim(),
-          libelle_etab_accueil: wish?.content?.libelle_etab_accueil ?? "",
-          libelle_formation: wish?.content?.libelle_formation ?? "",
+          libelle_etab_accueil: libelle_etab_accueil ?? "",
+          libelle_formation: libelle_formation ?? "",
         };
+
+        // si plusieurs emails différents, on duplique la ligne
+        if (emails.length === 2) {
+          toDuplicate.push({ ...wishData, email: emails[1] ?? "" });
+        }
+
+        return wishData;
       })
       .flat();
 
     await importDocumentContent(
       outputDocument,
-      trainingLinksWithWishes,
+      [...trainingLinksWithWishes, ...toDuplicate],
       (line) => line
     );
 
@@ -250,8 +269,7 @@ export const createMailingListFile = async (document: IDocument) => {
       document_id: document._id.toString(),
       "content.email": {
         $ne: "",
-        $regex:
-          /^(?:[a-zA-Z0-9])([-_0-9a-zA-Z]+(\.[-_0-9a-zA-Z]+)*|^"([\001-\010\013\014\016-\037!#-[\]-\177]|\\[\001-011\013\014\016-\177])*")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}\.?$/,
+        $regex: EMAIL_REGEX,
       },
     },
     {
