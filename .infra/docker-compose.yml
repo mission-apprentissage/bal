@@ -123,16 +123,25 @@ services:
       resources:
         limits:
           memory: 2g
-    volumes:
-      - /opt/bal/data/metabase:/data/metabase
-      - /opt/bal/backups/metabase:/data/backups
     environment:
       JAVA_TIMEZONE: Europe/Paris
-      MB_DB_FILE: /data/metabase/metabase.db
       MB_SITE_LOCALE: fr
       MB_SITE_URL: {{dns_name}}/metabase
-      # MB_DB_CONNECTION_URI:  vault[env_type].BAL_METABASE_DB_URI 
-      # MB_DB_TYPE: postgres
+      MB_DB_TYPE: postgres
+      MB_DB_CONNECTION_URI: {{vault[env_type].BAL_METABASE_DB_URI}}
+      MB_ENCRYPTION_SECRET_KEY: {{vault[env_type].BAL_METABASE_ENCRYPTION_SECRET_KEY}}
+      MB_PASSWORD_COMPLEXITY: strong
+      MB_START_OF_WEEK: monday
+      MB_EMAIL_SMTP_HOST: {{vault[env_type].MNA_BAL_SMTP_HOST}}
+      MB_EMAIL_SMTP_PORT: {{vault[env_type].MNA_BAL_SMTP_PORT}}
+      MB_EMAIL_SMTP_USERNAME: {{vault[env_type].MNA_BAL_SMTP_AUTH_USER}}
+      MB_EMAIL_SMTP_PASSWORD: {{vault[env_type].MNA_BAL_SMTP_AUTH_PASS}}
+      MB_EMAIL_SMTP_SECURITY: tls
+    healthcheck:
+      test: curl --fail -I http://localhost:3000/api/health || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 5
     networks:
       - bal_network
     logging:

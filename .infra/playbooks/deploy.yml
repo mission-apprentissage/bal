@@ -107,9 +107,12 @@
         cmd: "sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock sudobmitch/docker-stack-wait bal"
       timeout: 900
 
+    - name: "Setup de la Metabase"
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo /opt/bal/tools/metabase/setup-metabase.sh"
+
     - name: "Désactivation du mode maintenance"
       shell:
         chdir: /opt/bal
         cmd: "sudo /opt/bal/tools/maintenance/maintenance-off.sh"
-      when:
-        - stack_status.stdout != ""
