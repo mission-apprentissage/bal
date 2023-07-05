@@ -86,7 +86,7 @@ const ProfilPage = () => {
               )}`}
             </>
           ) : (
-            <>Ce jeton n'a pas encore été utilisée</>
+            <>Ce jeton n'a pas encore été utilisé</>
           )}
         </Text>
       )}
