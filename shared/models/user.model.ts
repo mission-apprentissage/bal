@@ -36,6 +36,16 @@ export const SUser = {
       format: "date-time",
       description: "Date de denière utilisation de la clé api",
     },
+    updated_at: {
+      type: "string",
+      format: "date-time",
+      description: "Date de mise à jour en base de données",
+    },
+    created_at: {
+      type: "string",
+      format: "date-time",
+      description: "Date d'ajout en base de données",
+    },
   },
   required: ["_id", "email", "password", "person_id"],
 } as const;

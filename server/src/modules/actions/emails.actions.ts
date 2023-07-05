@@ -15,6 +15,7 @@ function addEmail(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any
 ) {
+  const now = new Date();
   return getDbCollection("events").findOneAndUpdate(
     { person_id, name: "bal_emails" },
     {
@@ -24,8 +25,14 @@ function addEmail(
           token,
           templateName,
           payload,
-          sendDates: [new Date()],
+          sendDates: [now],
         },
+      },
+      $set: {
+        updated_at: now,
+      },
+      $setOnInsert: {
+        created_at: now,
       },
     },
     { returnDocument: "after", upsert: true }
@@ -42,6 +49,9 @@ function addEmailMessageId(token, messageId) {
       $unset: {
         "payload.emails.$.error": 1,
       },
+      $set: {
+        updated_at: new Date(),
+      },
     },
     { returnDocument: "after" }
   );
@@ -56,6 +66,7 @@ function addEmailError(token, e) {
           err_type: "fatal",
           message: e.message,
         },
+        updated_at: new Date(),
       },
     },
     { returnDocument: "after" }
@@ -68,6 +79,9 @@ export async function markEmailAsDelivered(messageId) {
     {
       $unset: {
         "payload.emails.$.error": 1,
+      },
+      $set: {
+        updated_at: new Date(),
       },
     },
     { returnDocument: "after" }
@@ -82,6 +96,7 @@ export async function markEmailAsFailed(messageId, type) {
         "payload.emails.$.error": {
           err_type: type,
         },
+        updated_at: new Date(),
       },
     },
     { returnDocument: "after" }
@@ -94,6 +109,7 @@ export async function markEmailAsOpened(token) {
     {
       $set: {
         "payload.emails.$.openDate": new Date(),
+        updated_at: new Date(),
       },
     },
     { returnDocument: "after" }
@@ -113,6 +129,7 @@ export async function unsubscribeUser(id) {
     {
       $set: {
         "payload.unsubscribe": true,
+        updated_at: new Date(),
       },
     },
     { returnDocument: "after" }
