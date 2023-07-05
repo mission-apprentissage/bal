@@ -1,3 +1,10 @@
+# [1.42.0](https://github.com/mission-apprentissage/bal/compare/v1.41.1...v1.42.0) (2023-07-05)
+
+
+### Features
+
+* timestamps model ([#207](https://github.com/mission-apprentissage/bal/issues/207)) ([f410b5e](https://github.com/mission-apprentissage/bal/commit/f410b5e23d65ff736cf486d8e8e8ace6f076b3e3))
+
 ## [1.41.1](https://github.com/mission-apprentissage/bal/compare/v1.41.0...v1.41.1) (2023-07-05)
 
 
