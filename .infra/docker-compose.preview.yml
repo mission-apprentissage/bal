@@ -88,6 +88,8 @@ services:
       interval: 60s
       retries: 3
       start_period: 6m
+    volumes:
+      - /opt/bal/data/clamav:/var/lib/clamav
 
   smtp:
     image: axllent/mailpit:v1.5.5
