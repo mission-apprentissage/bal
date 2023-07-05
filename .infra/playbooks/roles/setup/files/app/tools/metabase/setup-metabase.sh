@@ -18,7 +18,7 @@ curl -s {{dns_name}}/metabase/api/setup \
     \"user\": {
         \"password_confirm\": \"{{ vault[env_type].MNA_BAL_METABASE_ADMIN_PASS }}\",
         \"password\": \"{{ vault[env_type].MNA_BAL_METABASE_ADMIN_PASS }}\",
-        \"site_name\": \"Boite Au Lettre\",
+        \"site_name\": \"boite aux lettres\",
         \"email\": \"{{ vault[env_type].MNA_BAL_METABASE_ADMIN_EMAIL }}\",
         \"last_name\": null,
         \"first_name\": null
@@ -43,7 +43,7 @@ curl -s {{dns_name}}/metabase/api/setup \
     },
     \"invite\": null,
     \"prefs\": {
-        \"site_name\": \"Boite Au Lettre\",
+        \"site_name\": \"boite aux lettres\",
         \"site_locale\": \"fr\",
         \"allow_tracking\": false
     }
