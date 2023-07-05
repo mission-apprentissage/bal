@@ -190,6 +190,8 @@ services:
       interval: 60s
       retries: 3
       start_period: 6m
+    volumes:
+      - bal_clamav_data:/var/lib/clamav
   
   smtp:
     profiles:
@@ -222,6 +224,9 @@ volumes:
   bal_smtp_data:
     driver: local
     name: bal_smtp_data
+  bal_clamav_data:
+    driver: local
+    name: bal_clamav_data
 
 networks:
   bal_network:
