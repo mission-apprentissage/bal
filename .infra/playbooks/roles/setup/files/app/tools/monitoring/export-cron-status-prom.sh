@@ -48,5 +48,5 @@ cat << EOF >> /opt/bal/data/cron/node_cron_job_exit_code.$ID.prom.$$
 # TYPE node_cron_job_exit_code counter
 node_cron_job_exit_code{code="$CODE"} $VALUE
 EOF
-chmod chmod go+rw /opt/bal/data/cron/node_cron_job_exit_code.$ID.prom.$$
+chmod go+rw /opt/bal/data/cron/node_cron_job_exit_code.$ID.prom.$$
 mv /opt/bal/data/cron/node_cron_job_exit_code.$ID.prom.$$ /opt/bal/data/cron/node_cron_job_exit_code.$ID.prom

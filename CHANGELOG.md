@@ -1,3 +1,24 @@
+## [1.41.1](https://github.com/mission-apprentissage/bal/compare/v1.41.0...v1.41.1) (2023-07-05)
+
+
+### Bug Fixes
+
+* renew_certif bash trap ([#206](https://github.com/mission-apprentissage/bal/issues/206)) ([da0c550](https://github.com/mission-apprentissage/bal/commit/da0c550023373e32df1a246dc7260076ee118ed2))
+
+# [1.41.0](https://github.com/mission-apprentissage/bal/compare/v1.40.1...v1.41.0) (2023-07-05)
+
+
+### Features
+
+* mailing list progress ([#195](https://github.com/mission-apprentissage/bal/issues/195)) ([e6cdc5d](https://github.com/mission-apprentissage/bal/commit/e6cdc5d6a6bb6ea7034e9fac8fd017480bb58719))
+
+## [1.40.1](https://github.com/mission-apprentissage/bal/compare/v1.40.0...v1.40.1) (2023-07-03)
+
+
+### Bug Fixes
+
+* backup CRONs ([#203](https://github.com/mission-apprentissage/bal/issues/203)) ([0605eb5](https://github.com/mission-apprentissage/bal/commit/0605eb5efe6f44330726fe50ef6559b63972d0af))
+
 # [1.40.0](https://github.com/mission-apprentissage/bal/compare/v1.39.0...v1.40.0) (2023-06-27)
 
 

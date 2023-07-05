@@ -40,6 +40,7 @@ export const SJob = {
     payload: {
       type: "object",
       description: "La donnée liéé à la tâche",
+      additionalProperties: true,
     },
     scheduled_at: {
       type: "string",

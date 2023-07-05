@@ -2,10 +2,10 @@ ci-install:
 	docker build --build-arg YARN_FLAGS="--immutable" --platform linux/amd64 --tag bal_root:latest .
 
 install:
-	docker compose run --no-deps --rm root
+	docker compose run --no-deps --rm --build root
 
 start:
-	docker compose --profile dev up -d --remove-orphans
+	docker compose --profile dev up -d --remove-orphans --build
 
 seed:
 	docker compose run --rm server yarn cli seed

@@ -19,7 +19,7 @@ function backup_metabase(){
   stop_container
   tar -zcvf "${BACKUP_FILE}" -C /opt/bal/data/metabase .
   restart_container
-  rm /opt/bal/backups/metabase/latest.gpg
+  rm -f /opt/bal/backups/metabase/latest.gpg
   ln -s "${BACKUP_FILE}" /opt/bal/backups/metabase/latest.gpg
 
   echo "Sauvegarde terminé."

@@ -42,7 +42,9 @@ export const executeJob = async (
   );
   await updateJob(job._id, {
     status: error ? JOB_STATUS_LIST.ERRORED : JOB_STATUS_LIST.FINISHED,
-    payload: { duration, result, error },
+    "payload.duration": duration,
+    "payload.result": result,
+    "payload.error": error,
     ended_at: endDate,
   });
   if (options.runningLogs) logger.info(`Job: ${job.name} Ended`);
