@@ -1,3 +1,10 @@
+# [1.43.0](https://github.com/mission-apprentissage/bal/compare/v1.42.0...v1.43.0) (2023-07-06)
+
+
+### Features
+
+* gestion email multiples ([#211](https://github.com/mission-apprentissage/bal/issues/211)) ([9be7795](https://github.com/mission-apprentissage/bal/commit/9be7795bcab0020762ea0a36288d8bcea9c647bd))
+
 # [1.42.0](https://github.com/mission-apprentissage/bal/compare/v1.41.1...v1.42.0) (2023-07-05)
 
 
