@@ -16,7 +16,7 @@
     "cli": "node dist/index.js",
     "cli-docker": "docker exec -it bal_server yarn cli",
     "test": "vitest -c ./vitest.config.ts --run",
-    "test:coverage": "yarn test --coverage",
+    "test:ci": "yarn test --coverage",
     "test:watch": "vitest -c ./vitest.config.ts --watch"
   },
   "dependencies": {

@@ -12,25 +12,21 @@
     "global": "4.4.0"
   },
   "scripts": {
-    "docker:clean": "docker compose kill && docker system prune --force --volumes",
     "lint": "eslint .",
     "lint:staged": "lint-staged",
     "prettier:fix": "prettier --write ./ui ./server",
     "prettier:check": "prettier --check ./ui ./server",
-    "app:release": "semantic-release",
-    "app:release:local": "CI=true LOCAL_RELEASE=true semantic-release",
+    "release": "antoinebigard-semantic-release",
+    "app:release:local": "CI=true LOCAL_RELEASE=true antoinebigard-semantic-release",
     "prepare": "husky install",
     "talisman:add-exception": "yarn node-talisman --githook pre-commit -i",
     "e2e": "cypress open",
     "e2e:headless": "cypress run",
     "e2e:convert": "chrome-recorder cypress/records/admin/*.json --output=cypress/e2e/admin; chrome-recorder cypress/records/user/*.json --output=cypress/e2e/user",
-    "typecheck:ui": "(cd ui; yarn typecheck)",
-    "typecheck:server": "(cd server; yarn typecheck)",
-    "typecheck": "yarn typecheck:ui && yarn typecheck:server",
-    "test:server": "(cd server; yarn test)",
-    "test:server:ci": "(cd server; yarn test:coverage)",
-    "ci": "yarn lint && yarn typecheck && yarn test:server:ci",
-    "test": "yarn lint && yarn typecheck && yarn test:server"
+    "test": "yarn workspaces foreach -A run test",
+    "test:ci": "yarn workspaces foreach -Ap run test",
+    "typecheck": "yarn workspaces foreach -A run typecheck",
+    "typecheck:ci": "yarn workspaces foreach -Ap run typecheck"
   },
   "workspaces": [
     "ui",
@@ -46,6 +42,7 @@
     "@semantic-release/git": "10.0.1",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
+    "antoinebigard-semantic-release": "0.0.0-development",
     "cypress": "12.10.0",
     "eslint": "8.25.0",
     "eslint-config-next": "13.0.1",
@@ -60,7 +57,6 @@
     "lint-staged": "11.2.6",
     "node-talisman": "^1.29.9",
     "prettier": "2.7.1",
-    "semantic-release": "19.0.2",
     "semantic-release-slack-bot": "3.5.2",
     "typescript": "4.5.2"
   },

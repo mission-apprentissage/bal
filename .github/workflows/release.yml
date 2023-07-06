@@ -15,7 +15,8 @@ jobs:
 
   release:
     permissions: write-all
-    if: "!startsWith(github.event.head_commit.message, 'chore')"
+    outputs:
+      VERSION: ${{ steps.get-version.outputs.VERSION }}
     needs: ["tests"]
     runs-on: ubuntu-latest
     steps:
@@ -37,18 +38,15 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "npm"
+          cache: "yarn"
 
-      - uses: actions/cache@v3
-        id: cache
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
         with:
-          path: /tmp/docker_bal_root.tar
-          fail-on-cache-miss: true
-          key: docker-images-${{ hashFiles('./yarn.lock') }}-${{ hashFiles('./Dockerfile') }}
-
-      - name: Load Docker image from cache
-        run: docker load < /tmp/docker_bal_root.tar
-        shell: bash
+          platforms: linux/amd64
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -72,8 +70,28 @@ jobs:
         shell: bash
 
       - name: bump and release
-        run: npx -y -p @semantic-release/changelog -p @semantic-release/exec -p antoinebigard-semantic-release -p semantic-release-slack-bot semantic-release
+        run: yarn release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           GITHUB_REF_NAME: ${{ env.GITHUB_REF_NAME }}
+
+      - name: Retrieve version
+        id: get-version
+        run: echo "VERSION=$(git describe --tags | cut -c2-)" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    if: github.event.ref == 'refs/heads/main'
+    needs: ["release"]
+    name: Deploy ${{ needs.release.outputs.VERSION }} on recette
+    uses: "./.github/workflows/_deploy.yml"
+    with:
+      environment: recette
+      app_version: ${{ needs.release.outputs.VERSION }}
+    secrets:
+      DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+      SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+      DEPLOY_USERNAME: ${{ secrets.DEPLOY_USERNAME }}
+      DEPLOY_PASS: ${{ secrets.DEPLOY_PASS }}
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      VAULT_PWD: ${{ secrets.VAULT_PWD }}
