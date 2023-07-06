@@ -1,3 +1,10 @@
+## [1.42.1-rc.2](https://github.com/mission-apprentissage/bal/compare/v1.42.1-rc.1...v1.42.1-rc.2) (2023-07-06)
+
+
+### Bug Fixes
+
+* use deploy user ([bc0db28](https://github.com/mission-apprentissage/bal/commit/bc0db289f1f531cb3e7fc673a1f602b175c93313))
+
 ## [1.42.1-rc.1](https://github.com/mission-apprentissage/bal/compare/v1.42.0...v1.42.1-rc.1) (2023-07-06)
 
 

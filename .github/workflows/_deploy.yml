@@ -13,7 +13,7 @@ on:
         description: app version
         type: string
         required: true
-        default: 1.42.1-rc.1
+        default: 1.42.1-rc.2
     secrets:
       DEPLOY_SSH_PRIVATE_KEY:
         description: SSH private key
@@ -35,13 +35,13 @@ on:
       environment:
         description: The environment to deploy to
         type: string
-        default: 1.42.1-rc.1
+        default: 1.42.1-rc.2
         required: false
       app_version:
         description: app version
         type: string
         required: false
-        default: 1.42.1-rc.1
+        default: 1.42.1-rc.2
     secrets:
       DEPLOY_SSH_PRIVATE_KEY:
         description: SSH private key
