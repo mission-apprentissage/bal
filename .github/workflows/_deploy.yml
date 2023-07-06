@@ -9,11 +9,38 @@ on:
         options:
           - production
           - recette
-          - sandbox
       app_version:
         description: app version
         type: string
         required: true
+        default: 1.42.0
+    secrets:
+      SSH_PRIVATE_KEY:
+        description: SSH private key
+        required: true
+      SSH_KNOWN_HOSTS:
+        description: SSH known hosts list
+        required: true
+      USR_DEPLOY:
+        description: SSH USER TO DEPLOY
+        required: true
+      PWD_DEPLOY:
+        description: SSH PWD TO DEPLOY
+        required: true
+      SLACK_WEBHOOK:
+        description: Slack webhook URL
+        required: true
+  workflow_call:
+    inputs:
+      environment:
+        description: The environment to deploy to
+        type: string
+        default: recette
+        required: false
+      app_version:
+        description: app version
+        type: string
+        required: false
         default: 1.42.0
     secrets:
       SSH_PRIVATE_KEY:
