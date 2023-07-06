@@ -77,6 +77,7 @@
     "@types/tcp-port-used": "^1.0.1",
     "@types/uuid": "^9.0.1",
     "@vitest/coverage-v8": "^0.32.1",
+    "dotenv": "^16.3.1",
     "json-schema": "0.4.0",
     "nock": "13.2.4",
     "tsup": "6.5.0",

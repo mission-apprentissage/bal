@@ -35,7 +35,7 @@ jobs:
       - name: typecheck
         run: yarn typecheck:ci
 
-      - name: yarn test:server:ci
+      - name: test
         run: yarn test:ci
 
       - name: Upload coverage report to Codecov

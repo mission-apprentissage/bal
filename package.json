@@ -23,10 +23,10 @@
     "e2e": "cypress open",
     "e2e:headless": "cypress run",
     "e2e:convert": "chrome-recorder cypress/records/admin/*.json --output=cypress/e2e/admin; chrome-recorder cypress/records/user/*.json --output=cypress/e2e/user",
-    "test": "yarn workspaces foreach -A run test",
-    "test:ci": "yarn workspaces foreach -Ap run test",
-    "typecheck": "yarn workspaces foreach -A run typecheck",
-    "typecheck:ci": "yarn workspaces foreach -Ap run typecheck"
+    "test": "yarn workspaces foreach -A --exclude mna-bal run test",
+    "test:ci": "yarn workspaces foreach -Ap --exclude mna-bal run test",
+    "typecheck": "yarn workspaces foreach -A --exclude mna-bal run typecheck",
+    "typecheck:ci": "yarn workspaces foreach -Ap --exclude mna-bal run typecheck"
   },
   "workspaces": [
     "ui",
