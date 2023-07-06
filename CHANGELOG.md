@@ -1,3 +1,10 @@
+## [1.42.1-rc.1](https://github.com/mission-apprentissage/bal/compare/v1.42.0...v1.42.1-rc.1) (2023-07-06)
+
+
+### Bug Fixes
+
+* trigger ([638dbe8](https://github.com/mission-apprentissage/bal/commit/638dbe8dde1235a082f86a143cd46ac994465585))
+
 # [1.42.0](https://github.com/mission-apprentissage/bal/compare/v1.41.1...v1.42.0) (2023-07-05)
 
 
