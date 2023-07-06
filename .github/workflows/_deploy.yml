@@ -14,22 +14,6 @@ on:
         type: string
         required: true
         default: 1.42.1-rc.2
-    secrets:
-      DEPLOY_SSH_PRIVATE_KEY:
-        description: SSH private key
-        required: true
-      SSH_KNOWN_HOSTS:
-        description: SSH known hosts list
-        required: true
-      DEPLOY_USERNAME:
-        description: SSH USER TO DEPLOY
-        required: true
-      DEPLOY_PASS:
-        description: SSH PWD TO DEPLOY
-        required: true
-      SLACK_WEBHOOK:
-        description: Slack webhook URL
-        required: true
   workflow_call:
     inputs:
       environment:
@@ -57,6 +41,9 @@ on:
         required: true
       SLACK_WEBHOOK:
         description: Slack webhook URL
+        required: true
+      VAULT_PWD:
+        description: Vault Password
         required: true
 
 jobs:
