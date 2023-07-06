@@ -1,23 +1,9 @@
-## [1.42.1-rc.3](https://github.com/mission-apprentissage/bal/compare/v1.42.1-rc.2...v1.42.1-rc.3) (2023-07-06)
+# [1.43.0](https://github.com/mission-apprentissage/bal/compare/v1.42.0...v1.43.0) (2023-07-06)
 
 
-### Bug Fixes
+### Features
 
-* missing secret ([4f86371](https://github.com/mission-apprentissage/bal/commit/4f86371d9bab139f0bdef2e1868bcd98f89a61da))
-
-## [1.42.1-rc.2](https://github.com/mission-apprentissage/bal/compare/v1.42.1-rc.1...v1.42.1-rc.2) (2023-07-06)
-
-
-### Bug Fixes
-
-* use deploy user ([bc0db28](https://github.com/mission-apprentissage/bal/commit/bc0db289f1f531cb3e7fc673a1f602b175c93313))
-
-## [1.42.1-rc.1](https://github.com/mission-apprentissage/bal/compare/v1.42.0...v1.42.1-rc.1) (2023-07-06)
-
-
-### Bug Fixes
-
-* trigger ([638dbe8](https://github.com/mission-apprentissage/bal/commit/638dbe8dde1235a082f86a143cd46ac994465585))
+* gestion email multiples ([#211](https://github.com/mission-apprentissage/bal/issues/211)) ([9be7795](https://github.com/mission-apprentissage/bal/commit/9be7795bcab0020762ea0a36288d8bcea9c647bd))
 
 # [1.42.0](https://github.com/mission-apprentissage/bal/compare/v1.41.1...v1.42.0) (2023-07-05)
 
