@@ -88,4 +88,8 @@ export interface IDocument
     }
   > {}
 
+export interface IDocumentWithContent<TContent> extends IDocument {
+  content: TContent;
+}
+
 export default { schema: SDocument, indexes, collectionName };

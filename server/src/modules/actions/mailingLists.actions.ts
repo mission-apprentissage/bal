@@ -3,7 +3,7 @@ import { pipeline } from "node:stream/promises";
 
 import { stringify } from "csv-stringify";
 import { Filter, FindOptions, ObjectId } from "mongodb";
-import { IDocument } from "shared/models/document.model";
+import { IDocument, IDocumentWithContent } from "shared/models/document.model";
 import { IJob } from "shared/models/job.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
@@ -15,6 +15,7 @@ import {
   getTrainingLinks,
   LIMIT_TRAINING_LINKS_PER_REQUEST,
   TrainingLink,
+  TrainingLinkData,
 } from "../../common/apis/lba";
 import { uploadToStorage } from "../../common/utils/ovhUtils";
 import { addJob } from "../jobs/jobs";
@@ -35,6 +36,23 @@ export interface IMailingList {
   user_id: string;
   source: string;
   document_id?: string;
+}
+
+interface WishContent {
+  cle_ministere_educatif?: string;
+  code_mef?: string;
+  code_postal?: string;
+  code_uai_etab_accueil?: string;
+  cfd?: string;
+  rncp?: string;
+  mail_responsable_1?: string;
+  mail_responsable_2?: string;
+  nom_eleve?: string;
+  prenom_1?: string;
+  prenom_2?: string;
+  prenom_3?: string;
+  libelle_etab_accueil?: string;
+  libelle_formation?: string;
 }
 
 interface OutputWish {
@@ -85,6 +103,9 @@ export const updateMailingList = async (
  * ACTIONS
  */
 
+const EMAIL_REGEX =
+  /^(?:[a-zA-Z0-9])([-_0-9a-zA-Z]+(\.[-_0-9a-zA-Z]+)*|^"([\001-\010\013\014\016-\037!#-[\]-\177]|\\[\001-011\013\014\016-\177])*")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}\.?$/;
+
 export const processMailingList = async (mailingList: IMailingList) => {
   switch (mailingList.source) {
     case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
@@ -125,7 +146,9 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
 
   while (hasMore) {
     const wishes = await getDbCollection("documentContents")
-      .find({ document_id: document._id.toString() })
+      .find<IDocumentWithContent<WishContent>>({
+        document_id: document._id.toString(),
+      })
       .limit(batchSize)
       .skip(skip)
       .toArray();
@@ -135,33 +158,63 @@ const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
       continue;
     }
 
-    // TODO: vérifier le nom des colonnes
-    const data = wishes?.map((dc) => ({
-      id: dc._id.toString(),
-      cle_ministere_educatif: dc.content?.cle_ministere_educatif ?? "",
-      mef: dc.content?.code_mef ?? "",
-      code_postal: dc.content?.code_postal ?? "",
-      uai: dc.content?.code_uai_etab_accueil ?? "",
-      cfd: dc.content?.cfd ?? "", // pas présent dans le fichier
-      rncp: dc.content?.rncp ?? "", // pas présent dans le fichier
-      email:
-        dc.content?.mail_responsable_1 ?? dc.content?.mail_responsable_2 ?? "",
-      nom_eleve: dc.content?.nom_eleve ?? "",
-      prenom_eleve: [
-        dc.content?.prenom_1 ?? "",
-        dc.content?.prenom_2 ?? "",
-        dc.content?.prenom_3 ?? "",
-      ]
-        .join(" ")
-        .trim(),
-      libelle_etab_accueil: dc.content?.libelle_etab_accueil ?? "",
-      libelle_formation: dc.content?.libelle_formation ?? "",
+    const data: TrainingLinkData[] = wishes.map((w) => ({
+      id: w._id.toString(),
+      cle_ministere_educatif: w.content?.cle_ministere_educatif ?? "",
+      mef: w.content?.code_mef ?? "",
+      code_postal: w.content?.code_postal ?? "",
+      uai: w.content?.code_uai_etab_accueil ?? "",
+      cfd: w.content?.cfd ?? "", // pas présent dans le fichier
+      rncp: w.content?.rncp ?? "", // pas présent dans le fichier
     }));
 
-    const tmp = (await getTrainingLinks(data)) as TrainingLink[];
-    const tmpContent = tmp.flat();
+    const trainingLinks = (await getTrainingLinks(data)) as TrainingLink[];
 
-    await importDocumentContent(outputDocument, tmpContent, (line) => line);
+    const toDuplicate: (TrainingLink & WishContent & { email?: string })[] = [];
+    const trainingLinksWithWishes = trainingLinks
+      .map((tl) => {
+        const wish = wishes.find((w) => w._id.toString() === tl.id);
+        const {
+          mail_responsable_1,
+          mail_responsable_2,
+          nom_eleve,
+          prenom_1,
+          prenom_2,
+          prenom_3,
+          libelle_etab_accueil,
+          libelle_formation,
+        } = wish?.content ?? {};
+
+        // filtrer les emails invalides
+        const emails = [
+          ...new Set([mail_responsable_1, mail_responsable_2]),
+        ].filter((e) => EMAIL_REGEX.test(e ?? ""));
+
+        const wishData = {
+          ...tl,
+          email: emails?.[0] ?? "",
+          nom_eleve: nom_eleve ?? "",
+          prenom_eleve: [prenom_1 ?? "", prenom_2 ?? "", prenom_3 ?? ""]
+            .join(" ")
+            .trim(),
+          libelle_etab_accueil: libelle_etab_accueil ?? "",
+          libelle_formation: libelle_formation ?? "",
+        };
+
+        // si plusieurs emails différents, on duplique la ligne
+        if (emails.length === 2) {
+          toDuplicate.push({ ...wishData, email: emails[1] ?? "" });
+        }
+
+        return wishData;
+      })
+      .flat();
+
+    await importDocumentContent(
+      outputDocument,
+      [...trainingLinksWithWishes, ...toDuplicate],
+      (line) => line
+    );
 
     processed += wishes.length;
 
@@ -216,8 +269,7 @@ export const createMailingListFile = async (document: IDocument) => {
       document_id: document._id.toString(),
       "content.email": {
         $ne: "",
-        $regex:
-          /^(?:[a-zA-Z0-9])([-_0-9a-zA-Z]+(\.[-_0-9a-zA-Z]+)*|^"([\001-\010\013\014\016-\037!#-[\]-\177]|\\[\001-011\013\014\016-\177])*")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}\.?$/,
+        $regex: EMAIL_REGEX,
       },
     },
     {
