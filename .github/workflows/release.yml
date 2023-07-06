@@ -71,11 +71,8 @@ jobs:
           fi
         shell: bash
 
-      - name: Install dependencies
-        run: yarn install --immutable
-
       - name: bump and release
-        run: npx -y antoinebigard-semantic-release
+        run: npx -y -p @semantic-release/changelog -p @semantic-release/exec -p antoinebigard-semantic-release -p semantic-release-slack-bot semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
