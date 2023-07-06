@@ -15,14 +15,14 @@ if [[ ! -z "$CI" ]]; then
 fi
 
 echo "Build bal_root:latest ..."
-docker buildx . \
+docker build . \
         --platform linux/amd64 \
         --build-arg YARN_FLAGS="--immutable" \
         --tag bal_root:latest \
         $EXTRA_OPTS
 
 echo "Build ui:$next_version ..."
-docker buildx . -f "ui/Dockerfile" \
+docker build . -f "ui/Dockerfile" \
         --platform linux/amd64 \
         --tag $registry/mission-apprentissage/mna_bal_ui:"$next_version" \
         --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
@@ -30,7 +30,7 @@ docker buildx . -f "ui/Dockerfile" \
         --label "org.opencontainers.image.licenses=MIT"
 
 echo "Building server:$next_version ..."
-docker buildx . -f "server/Dockerfile" \
+docker build . -f "server/Dockerfile" \
           --platform linux/amd64 \
           --progress=plain \
           --tag $registry/mission-apprentissage/mna_bal_server:"$next_version" \
