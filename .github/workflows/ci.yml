@@ -52,6 +52,7 @@ jobs:
           tags: bal_root:latest
           platforms: linux/amd64
           build-args: "YARN_FLAGS=--immutable"
+          load: true
 
       - name: Creates empty env-vars server
         run: touch .env_server
