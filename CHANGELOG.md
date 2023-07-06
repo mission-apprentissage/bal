@@ -1,3 +1,10 @@
+## [1.42.1-rc.3](https://github.com/mission-apprentissage/bal/compare/v1.42.1-rc.2...v1.42.1-rc.3) (2023-07-06)
+
+
+### Bug Fixes
+
+* missing secret ([4f86371](https://github.com/mission-apprentissage/bal/commit/4f86371d9bab139f0bdef2e1868bcd98f89a61da))
+
 ## [1.42.1-rc.2](https://github.com/mission-apprentissage/bal/compare/v1.42.1-rc.1...v1.42.1-rc.2) (2023-07-06)
 
 
