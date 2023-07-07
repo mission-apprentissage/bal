@@ -1,5 +1,5 @@
 install:
-	docker compose run --no-deps --rm --build root
+	yarn install
 
 start:
 	docker compose --profile dev up -d --remove-orphans --build
@@ -14,10 +14,7 @@ stop:
 	docker compose --profile dev down
 
 test:
-	docker compose run --rm test yarn test:server
+	yarn test
 
 clean:
-	docker compose down; docker system prune --force --volumes
-
-ci:
-	docker compose run --no-deps --rm ci yarn ci
+	docker compose --profile dev down; docker system prune --force --volumes
