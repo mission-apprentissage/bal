@@ -10,7 +10,9 @@
     pr_state: "{{ result.stdout | from_json | json_query('state') }}"
 
 - name: "[{{ pr_number }}] Deploying preview"
-  when: pr_state == 'open'
+  when:
+    - pr_state == 'open'
+    - build == true
   block:
     - name: "[{{ pr_number }}] création du répertoire de build"
       file:
@@ -60,16 +62,9 @@
         cmd: "bash .infra/scripts/release/bump-version.sh 0.0.0-{{ pr_number }}"
         chdir: /opt/bal/repository
 
-    - name: "[{{ pr_number }}] Build dependencies image"
-      shell:
-        cmd: "make ci-install"
-        chdir: /opt/bal/repository
-      async: 900 # max 15 minutes
-      poll: 15 # check every 15s
-
     - name: "[{{ pr_number }}] Build local images 0.0.0-{{ pr_number }}"
       shell:
-        cmd: "bash .infra/scripts/release/build-images.sh 0.0.0-{{ pr_number }} ghcr.io"
+        cmd: "bash .infra/scripts/release/build-images.sh 0.0.0-{{ pr_number }} ghcr.io load"
         chdir: /opt/bal/repository
       async: 900 # max 15 minutes
       poll: 15 # check every 15s

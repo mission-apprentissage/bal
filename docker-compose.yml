@@ -1,24 +1,27 @@
 version: "3.8"
 
-services:
-  root:
-    image: 'bal_root:latest'
-    restart: "no"
-    command: ["yarn", "install"]
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./:/app/:z
+x-default: &default
+  networks:
+    - bal_network
+  restart: unless-stopped
 
+x-node-image: &node-image
+  <<: *default
+  build:
+    context: .
+    dockerfile: Dockerfile
+    target: builder_root
+  volumes:
+    - ./:/app/:z
+  
+services:
   reverse_proxy:
+    <<: *default
     profiles:
       - "dev"
     ports:
       - 80:80
       - 443:443
-    networks:
-      - bal_network
     environment:
       - PARANOIA=1
       - ANOMALY_INBOUND=5
@@ -36,36 +39,23 @@ services:
       context: reverse_proxy
 
   ui:
-    image: 'bal_root:latest'
+    <<: *node-image
     profiles:
       - "dev"
     stdin_open: true
-    networks:
-      - bal_network
     env_file: .env_ui
-    volumes:
-      - ./:/app/:z
     working_dir: '/app/ui'
     expose:
       - '3000'
     command: ["yarn", "docker-dev"]
-    depends_on:
-      root:
-        condition: service_completed_successfully
 
   server:
-    image: 'bal_root:latest'
-    profiles:
-      - "dev"
-    networks:
-      - bal_network
+    <<: *node-image
     depends_on:
       mongodb:
         condition: service_healthy
       smtp:
         condition: service_started
-      root:
-        condition: service_completed_successfully
     env_file: .env_server
     volumes:
       - ./:/app/:z
@@ -76,52 +66,27 @@ services:
     command: ["yarn", "dev"]
 
   test:
-    image: 'bal_root:latest'
+    <<: *node-image
     profiles:
       - "test"
-    networks:
-      - bal_network
     depends_on:
       mongodb:
         condition: service_healthy
-      root:
-        condition: service_completed_successfully
-    env_file: ./server/.env.test
-    volumes:
-      - ./:/app/:z
     extra_hosts:
       - host.docker.internal:host-gateway
-    working_dir: '/app'
   
   ci:
-    image: 'bal_root:latest'
+    <<: *node-image
     profiles:
       - "ci"
-    networks:
-      - bal_network
-    env_file: ./server/.env.test
-    volumes:
-      - ./:/app/:z
-      - /app/node_modules
-      - /app/server/node_modules
-      - /app/shared/node_modules
-      - /app/ui/node_modules
     extra_hosts:
       - host.docker.internal:host-gateway
-    working_dir: '/app'
 
   processor:
-    image: 'bal_root:latest'
+    <<: *node-image
     profiles:
       - "dev"
     command: ["yarn", "cli", "processor"]
-    deploy:
-      resources:
-        limits:
-          memory: 2g
-    restart: unless-stopped
-    networks:
-      - bal_network
     env_file: .env_server
     volumes:
       - ./:/app/:z
@@ -131,26 +96,18 @@ services:
         condition: service_healthy
       clamav:
         condition: service_healthy
-      root:
-        condition: service_completed_successfully
     working_dir: '/app/server'
     expose:
       - '5000'
 
   mongodb:
+    <<: *default
     profiles:
       - "dev"
       - "test"
     image: mongo:6.0.2-focal
-    deploy:
-      resources:
-        limits:
-          memory: 2g
-    restart: unless-stopped
     ports:
       - "127.0.0.1:27017:27017"
-    networks:
-      - bal_network
     volumes:
       - bal_mongodb_data:/data
     healthcheck:
@@ -161,12 +118,10 @@ services:
       start_period: 10s
 
   clamav:
+    <<: *default
     profiles:
       - "dev"
     image: clamav/clamav:latest
-    restart: unless-stopped
-    networks:
-      - bal_network
     healthcheck:
       test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
       interval: 60s
@@ -176,14 +131,13 @@ services:
       - bal_clamav_data:/var/lib/clamav
   
   smtp:
+    <<: *default
     profiles:
       - "dev"
     image: axllent/mailpit:v1.5.5
     ports:
       - 1025:1025
       - 8025:8025
-    networks:
-      - bal_network
     environment:
       - MP_DATA_FILE=/data/mailpit.db
     volumes:

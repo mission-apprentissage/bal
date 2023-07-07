@@ -21,36 +21,33 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v3
 
-      - uses: actions/cache@v3
-        id: cache
+      - uses: actions/setup-node@v3
         with:
-          path: /tmp/docker_bal_root.tar
-          key: docker-images-${{ hashFiles('./yarn.lock') }}-${{ hashFiles('./Dockerfile') }}
+          node-version: 18
 
-      - name: Load Docker image from cache
-        if: steps.cache.outputs.cache-hit == 'true'
-        run: docker load < /tmp/docker_bal_root.tar
-        shell: bash
+      - run: which python3
 
-      - name: Build Image
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: make ci-install
-        shell: bash
+      - uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+            .yarn/install-state.gz
+          key: yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: yarn-
 
-      - name: Creates empty env-vars server
-        run: touch .env_server
+      - name: Install dependencies
+        run: yarn install
 
-      - name: Creates empty env-vars ui
-        run: touch .env_ui
+      - name: lint
+        run: yarn lint
 
-      - name: Run CI suite
-        run: make ci
+      - name: typecheck
+        run: yarn typecheck:ci
+
+      - name: test
+        run: yarn test:ci
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Save Image to cache
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: docker save bal_root > /tmp/docker_bal_root.tar

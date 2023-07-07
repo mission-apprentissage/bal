@@ -1,8 +1,5 @@
-ci-install:
-	docker build --build-arg YARN_FLAGS="--immutable" --platform linux/amd64 --tag bal_root:latest .
-
 install:
-	docker compose run --no-deps --rm --build root
+	yarn install
 
 start:
 	docker compose --profile dev up -d --remove-orphans --build
@@ -20,13 +17,10 @@ stop:
 	docker compose --profile dev down
 
 test:
-	docker compose run --rm -it test yarn test:server
+	yarn test
 
 debug-test-server:
 	docker compose run -p 9231:9231 --rm -it --workdir /app/server test sh -c 'node --inspect-brk=0.0.0.0:9231 `yarn bin vitest` --single-thread --isolate false -c ./vitest.config.ts --run --test-timeout=300000'
 
 clean:
-	docker compose down; docker system prune --force --volumes
-
-ci:
-	docker compose run --no-deps --rm ci yarn ci
+	docker compose --profile dev down; docker system prune --force --volumes

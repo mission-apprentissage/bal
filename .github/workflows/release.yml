@@ -51,7 +51,6 @@ jobs:
     permissions: write-all
     outputs:
       VERSION: ${{ steps.get-version.outputs.VERSION }}
-    if: "!startsWith(github.event.head_commit.message, 'chore')"
     needs: ["tests"]
     runs-on: ubuntu-latest
     steps:
@@ -73,18 +72,23 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: "npm"
 
       - uses: actions/cache@v3
-        id: cache
         with:
-          path: /tmp/docker_bal_root.tar
-          fail-on-cache-miss: true
-          key: docker-images-${{ hashFiles('./yarn.lock') }}-${{ hashFiles('./Dockerfile') }}
+          path: |
+            **/node_modules
+            .yarn/install-state.gz
+          key: yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: yarn-
 
-      - name: Load Docker image from cache
-        run: docker load < /tmp/docker_bal_root.tar
-        shell: bash
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          platforms: linux/amd64
+          install: true
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -107,8 +111,11 @@ jobs:
           fi
         shell: bash
 
+      - name: Expose GitHub Runtime
+        uses: crazy-max/ghaction-github-runtime@v2
+
       - name: bump and release
-        run: npx -y -p @semantic-release/changelog -p @semantic-release/exec -p antoinebigard-semantic-release -p semantic-release-slack-bot semantic-release
+        run: yarn release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
