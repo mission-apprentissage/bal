@@ -1,3 +1,10 @@
+## [1.43.1](https://github.com/mission-apprentissage/bal/compare/v1.43.0...v1.43.1) (2023-07-07)
+
+
+### Bug Fixes
+
+* concurrent release ([#219](https://github.com/mission-apprentissage/bal/issues/219)) ([a232712](https://github.com/mission-apprentissage/bal/commit/a23271272f7ebf01c3d6876163a56119e47aaa2a))
+
 # [1.43.0](https://github.com/mission-apprentissage/bal/compare/v1.42.0...v1.43.0) (2023-07-06)
 
 
