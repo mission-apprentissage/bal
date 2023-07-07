@@ -24,7 +24,7 @@ Voici les étapes pour créer votre clé GPG :
 
    - `Please select what kind of key you want` > `ECC (sign and encrypt)`
    - `Please select which elliptic curve you want` > `Curve 25519`
-- `Please specify how long the key should be valid` > `0`
+   - `Please specify how long the key should be valid` > `0`
    - `Real Name`: `<Prenom> <Nom>`
    - `Email Address`: `email@mail.gouv.fr`
 
@@ -113,27 +113,3 @@ Cette commande exécutera tous les tests du projet et vous affichera les résult
 ### Aller plus loin
 
 Pour plus de details concernants le développement de l'application, veuillez consulter la documentation [developping](./docs/developping.md)
-
-### Documentation API
-
-La documentation API est générée par [fastify-swagger](https://github.com/fastify/fastify-swagger) et accessible à l'adresse `/api/documentation`.
-
-### Convention de typage
-
-Chaque route est typée au niveau de la requête et de la réponse. Les types sont définis dans le dossier `shared` pour une utilisation dans `ui` et `server`.
-
-#### Nommage
-
-- `S | I` pour Schema ou Interface
-- `Req | Res` pour Request ou Response
-- `Get | Post | Put | Patch | Delete` pour la méthode
-- Nom du modèle
-
-##### Exemple
-
-- `SReqPostUser` pour le schema de la requête POST d'un `User`
-- `SResPostUser` pour le schema de la réponse POST d'un `User`
-- `IResGetUser` pour l'interface de la réponse GET d'un `User`
-- `IResPostUser` pour l'interface de la réponse POST d'un `User`
-
-![](https://avatars1.githubusercontent.com/u/63645182?s=200&v=4)
