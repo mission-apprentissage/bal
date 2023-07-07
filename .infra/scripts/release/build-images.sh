@@ -31,17 +31,19 @@ docker build . -f "ui/Dockerfile" \
         --tag $registry/mission-apprentissage/mna_bal_ui:"$next_version" \
         --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
         --label "org.opencontainers.image.description=Ui bal" \
-        --label "org.opencontainers.image.licenses=MIT"
+        --label "org.opencontainers.image.licenses=MIT" \
+        $EXTRA_OPTS
 
 echo "Building server:$next_version ..."
 docker build . -f "server/Dockerfile" \
-          --platform linux/amd64 \
-          --${mode} \
-          --progress=plain \
-          --tag $registry/mission-apprentissage/mna_bal_server:"$next_version" \
-          --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
-          --label "org.opencontainers.image.description=Server bal" \
-          --label "org.opencontainers.image.licenses=MIT"
+        --platform linux/amd64 \
+        --${mode} \
+        --progress=plain \
+        --tag $registry/mission-apprentissage/mna_bal_server:"$next_version" \
+        --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
+        --label "org.opencontainers.image.description=Server bal" \
+        --label "org.opencontainers.image.licenses=MIT" \
+        $EXTRA_OPTS
 
 if [[ $(uname) = "Darwin" ]]; then
   sed -i '' "s/registry=.*/registry=$registry/" ".infra/env.ini"
