@@ -10,7 +10,7 @@ x-node-image: &node-image
   build:
     context: .
     dockerfile: Dockerfile
-    target: rawDeps
+    target: builder_root
   volumes:
     - ./:/app/:z
   
