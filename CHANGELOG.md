@@ -1,56 +1,9 @@
-# [1.44.0-rc.5](https://github.com/mission-apprentissage/bal/compare/v1.44.0-rc.4...v1.44.0-rc.5) (2023-07-07)
+## [1.43.1](https://github.com/mission-apprentissage/bal/compare/v1.43.0...v1.43.1) (2023-07-07)
 
 
 ### Bug Fixes
 
-* add commander ([b9b5e86](https://github.com/mission-apprentissage/bal/commit/b9b5e8615acd22885c00ea3f649a6c632aeb6ca8))
-* which python ([83b45ab](https://github.com/mission-apprentissage/bal/commit/83b45abe7a8e900f8c4529398788045dd3bac66c))
-
-# [1.44.0-rc.4](https://github.com/mission-apprentissage/bal/compare/v1.44.0-rc.3...v1.44.0-rc.4) (2023-07-07)
-
-
-### Bug Fixes
-
-* min cache-mode ([ab8482b](https://github.com/mission-apprentissage/bal/commit/ab8482b91753063ebf5dc60cbd21d311e5c3cd3e))
-* use builder_root ([ae2e5c5](https://github.com/mission-apprentissage/bal/commit/ae2e5c51a14ca7b2db75ef58af8d0790d6964d52))
-
-# [1.44.0-rc.3](https://github.com/mission-apprentissage/bal/compare/v1.44.0-rc.2...v1.44.0-rc.3) (2023-07-07)
-
-
-### Bug Fixes
-
-* build images ([c4f6cf3](https://github.com/mission-apprentissage/bal/commit/c4f6cf393f196532279c4834cbe9f3eb46cd3665))
-* skip pushing ([1184422](https://github.com/mission-apprentissage/bal/commit/1184422642883cdea613804048ddbedeae4551d1))
-
-# [1.44.0-rc.2](https://github.com/mission-apprentissage/bal/compare/v1.44.0-rc.1...v1.44.0-rc.2) (2023-07-07)
-
-
-### Bug Fixes
-
-* remove ci-install ([6f0c535](https://github.com/mission-apprentissage/bal/commit/6f0c535fd1c328bf3be3b9ba6271072cd58df33e))
-
-# [1.44.0-rc.1](https://github.com/mission-apprentissage/bal/compare/v1.43.0...v1.44.0-rc.1) (2023-07-07)
-
-
-### Bug Fixes
-
-* action file ([bcf0f5a](https://github.com/mission-apprentissage/bal/commit/bcf0f5ae1c22741e99c329375f251819917b9748))
-* build ([678ba22](https://github.com/mission-apprentissage/bal/commit/678ba2225769a6f4351ace14b83a041eefe41301))
-* ci ([ccc172d](https://github.com/mission-apprentissage/bal/commit/ccc172d4bb477e06aa0dd3fb0f9c4036092cb487))
-* Dockerfile ([b2cc44d](https://github.com/mission-apprentissage/bal/commit/b2cc44d5f2aef5bc46812b79bc06d6a4494666ec))
-* extra opts ([ee7a3f3](https://github.com/mission-apprentissage/bal/commit/ee7a3f3fd2e22e64d2b3b645ad44d3ee1b4e043d))
-* improve cache ([991a712](https://github.com/mission-apprentissage/bal/commit/991a71200ceb8de1654daca7ffb9b0fc5f5ade0f))
-* missing bin ([00f651a](https://github.com/mission-apprentissage/bal/commit/00f651a903b873ec73dfbc454a94fe194d06b26b))
-* support push/load mode ([f99753d](https://github.com/mission-apprentissage/bal/commit/f99753dc6d4ddb214712074593f4a71d9f08f340))
-* use build ([45bccdb](https://github.com/mission-apprentissage/bal/commit/45bccdb4caae2657d6821c8c2ed7f68a8b125484))
-* use cache ([065076d](https://github.com/mission-apprentissage/bal/commit/065076d7c20c51c0bb6303b85f2e9918414b9cb2))
-* use multi-stage build ([2a38091](https://github.com/mission-apprentissage/bal/commit/2a38091587858dfff1fcb91ecf5b3ba9f47b4e5e))
-* yarn cache ([5870be7](https://github.com/mission-apprentissage/bal/commit/5870be78432c5f93b40d863fbb06b96742a8433c))
-
-
-### Features
-
-* hybride environnement ([315bf98](https://github.com/mission-apprentissage/bal/commit/315bf9825b2305d1086e9eb3afec503237502044))
+* concurrent release ([#219](https://github.com/mission-apprentissage/bal/issues/219)) ([a232712](https://github.com/mission-apprentissage/bal/commit/a23271272f7ebf01c3d6876163a56119e47aaa2a))
 
 # [1.43.0](https://github.com/mission-apprentissage/bal/compare/v1.42.0...v1.43.0) (2023-07-06)
 

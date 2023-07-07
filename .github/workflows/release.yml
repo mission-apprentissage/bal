@@ -13,6 +13,40 @@ jobs:
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  # Si une release concurrente a eu lieu, il faut s'assurer de bien merge les changements
+  update:
+    if: "startsWith(github.event.head_commit.message, 'chore')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_FG_TOKEN }}
+          persist-credentials: true
+
+      - name: Git config identity
+        run: |
+          git config --global user.name "$USER_NAME"
+          git config --global user.email "$USER_EMAIL"
+        env:
+          USER_NAME: ${{ secrets.USER_NAME }}
+          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+
+      - name: Check for updates in repo
+        run: git fetch --all
+
+      - name: Merge concurrent changes
+        run: |
+          if echo $(git log origin/$GITHUB_REF_NAME -1 --pretty=%B) | grep -c "chore(release): bump "
+          then
+            git merge --no-edit --ff -m "Merge remote-tracking branch 'origin/$GITHUB_REF_NAME' [skip ci]"
+            git push --follow-tags --force
+          else
+            echo "skip pull"
+          fi
+        shell: bash
+
   release:
     permissions: write-all
     outputs:

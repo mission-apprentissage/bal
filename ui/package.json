@@ -1,6 +1,6 @@
 {
   "name": "ui",
-  "version": "1.44.0-rc.5",
+  "version": "1.42.1",
   "private": true,
   "scripts": {
     "dev": "NEXT_PUBLIC_VERSION=$npm_package_version next dev",
@@ -47,6 +47,5 @@
     "@types/react-datepicker": "4.11.2",
     "luxon": "^3.3.0",
     "notion-types": "^6.16.0"
-  },
-  "stableVersion": "1.42.0"
+  }
 }
