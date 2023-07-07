@@ -1,88 +1,118 @@
-# BAL
+# BAL - Boite Aux Lettres
+
+## Fiche Produit
+
+Consultez la [Fiche Produit](https://www.notion.so/mission-apprentissage/Fiche-produit-73bbd7e5983749b7974c2f7c11194518?pvs=4) pour plus d'informations sur le projet.
 
 ## Installation
 
 ### Pré-requis
 
-- Docker 19.03.0+
+Avant d'installer le projet, assurez-vous d'avoir les éléments suivants :
+
+- Docker 23.03.0+
 - GPG
+- NodeJS 18+ (vous pouvez utiliser [n](https://github.com/tj/n#third-party-installers) pour l'installer)
 
-### GPG
+### Clé GPG
 
-Pour décrypter les variables d'environnement, vous devez avoir une clé GPG, si ce n'est pas le cas, vous pouvez en créer en suivant la documentation Github https://docs.github.com/fr/authentication/managing-commit-signature-verification/generating-a-new-gpg-key
+Pour décrypter les variables d'environnement, vous avez besoin d'une clé GPG. Si vous n'en avez pas, vous pouvez en créer une en suivant la documentation GitHub [ici](https://docs.github.com/fr/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
 
-Choisir les choix suivants:
+Voici les étapes pour créer votre clé GPG :
 
-- `Please select what kind of key you want` > `ECC (sign and encrypt)`
-- `Please select which elliptic curve you want` > `Curve 25519`
+1. Lors de la création de la clé, choisissez les options suivantes :
+
+   - `Please select what kind of key you want` > `ECC (sign and encrypt)`
+   - `Please select which elliptic curve you want` > `Curve 25519`
 - `Please specify how long the key should be valid` > `0`
-- `Real Name`: `<Prenom> <Nom>`
-- `Email Address`: `email@mail.gouv.fr`
+   - `Real Name`: `<Prenom> <Nom>`
+   - `Email Address`: `email@mail.gouv.fr`
 
-Une fois terminé, vous pouvez récupérer l'identifiant de votre clé via la commande suivante:
+2. Pour utiliser votre clé au sein du projet, publiez-la en exécutant la commande suivante :
 
-```bash
-gpg --list-secret-keys --keyid-format=long
-```
+   ```bash
+   gpg --list-secret-keys --keyid-format=long
+   ```
 
-> L'identifiant de votre clé correspond à la valeur `sec ed25519/<identifiant>`
+   L'identifiant de votre clé correspond à la valeur `sec ed25519/<identifiant>`.
 
-Afin qu'elle puisse être utilisée au sein
-de la mission apprentissage, vous devez publier votre clé
+3. Pour utiliser votre clé au sein de la mission apprentissage, vous devez la publier en exécutant la commande suivante :
 
-```bash
-gpg --send-key <identifiant>
-```
+   ```bash
+   gpg --send-key <identifiant>
+   ```
 
-Il est vivement conseillé de réaliser un backup des clés publique et privée qui viennent d'être créés.
+4. Pour une meilleure sécurité, il est recommandé de sauvegarder les clés publique et privée nouvellement créées. Vous pouvez les exporter en exécutant les commandes suivantes :
 
-```bash
-gpg --export <identifiant> > public_key.gpg
-gpg --export-secret-keys <identifiant> > private_key.gpg
-```
+   ```bash
+   gpg --export <identifiant> > public_key.gpg
+   gpg --export-secret-keys <identifiant> > private_key.gpg
+   ```
 
-Ces deux fichiers peuvent, par exemple, être stockés sur une clé USB.
+   Ces deux fichiers peuvent être sauvegardés, par exemple, sur une clé USB.
 
-Veuillez communiquer cette clé à votre équipe pour etre authorisé à décrypter le vault.
+5. Communiquez votre clé à votre équipe afin d'être autorisé à décrypter le vault.
 
-**Une fois habilité vous aurez accés aux fichiers suivants:**
+**Une fois autorisé, vous aurez accès aux fichiers suivants :**
 
-- .infra/vault/.vault-password.gpg
-- .infra/vault/habilitations.yml
+- `.infra/vault/.vault-password.gpg`
+- `.infra/vault/habilitations.yml`
 
 ### Variables d'environnement local
 
-Pour récupérer les variables d'environnement localement veuillez lancer la commande:
+Pour récupérer les variables d'environnement localement, veuillez exécuter la commande suivante :
 
 ```bash
 .infra/scripts/vault/setup-local-env.sh
 ```
 
-> Le script va vous demander à plusieurs reprise votre passphrase de votre clé GPG pour décrypter les variables d'environnment du vault.
+Le script vous demandera plusieurs fois la phrase secrète de votre clé GPG pour décrypter les variables d'environnement du vault.
 
-### Démarrage
+## Développement
 
-Pour lancer l'application :
+### Installation des dépendances
+
+Avant de lancer l'application, assurez-vous d'installer toutes les dépendances nécessaires en exécutant la commande suivante :
+
+```sh
+yarn install
+```
+
+Cette commande mettra à jour les dépendances du projet.
+
+> **Note** : Pour que vos changements se reflètent dans votre application locale, vous devez exécuter la commande `make start`.
+
+### Lancement de l'application
+
+Pour démarrer l'application en mode local, exécutez la commande suivante :
 
 ```sh
 make start
 ```
 
-Cette commande démarre les containers définis dans le fichier `docker-compose.yml`
+Cette commande démarre les containers définis dans le fichier `docker-compose.yml`.
 
-L'application est ensuite accessible à l'url [http://localhost](http://localhost)
+Une fois l'application démarrée, vous pourrez y accéder via l'URL [http://localhost](http://localhost)
 
-Pour update les dependencies:
+### Exécution des tests
 
-```sh
-make install
-```
-
-Pour lancer les tests localement:
+Pour exécuter les tests localement, utilisez la commande suivante :
 
 ```sh
-make test
+yarn test
 ```
+
+Cette commande exécutera tous les tests du projet et vous affichera les résultats.
+
+**Assurez-vous:**
+
+1. D'avoir installé toutes les dépendances via la commande `yarn install` avant de lancer les tests
+
+2. D'avoir lancé l'application car les tests utilisent la base de donnée.
+
+### Aller plus loin
+
+Pour plus de details concernants le développement de l'application, veuillez consulter la documentation [developping](./docs/developping.md)
 
 ### Documentation API
 
