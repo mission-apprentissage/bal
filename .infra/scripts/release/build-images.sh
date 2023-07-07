@@ -5,10 +5,10 @@ next_version="${1}"
 registry=${2:?"Veuillez préciser le registry"}
 mode=${3:?"Veuillez préciser le mode <push|load>"}
 
-ROOT_EXTRA_OPTS=""
+EXTRA_OPTS=""
 if [[ ! -z "${CI:-}" ]]; then
     DEPS_ID=($(md5sum ./yarn.lock))
-    ROOT_EXTRA_OPTS="\
+    EXTRA_OPTS="\
         --cache-from type=gha,scope=$DEPS_ID \
         --cache-to type=gha,mode=max,scope=$DEPS_ID \
     "
