@@ -43,6 +43,7 @@
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
     "antoinebigard-semantic-release": "0.0.0-development",
+    "commander": "10.0.0",
     "cypress": "12.10.0",
     "eslint": "8.25.0",
     "eslint-config-next": "13.0.1",

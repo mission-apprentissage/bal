@@ -13,10 +13,10 @@ SHARED_OPS="\
         --label "org.opencontainers.image.licenses=MIT"
 "
 
-EXTRA_OPTS=""
+CACHE_OPTS=""
 if [[ ! -z "${CI:-}" ]]; then
     DEPS_ID=($(md5sum ./yarn.lock))
-    EXTRA_OPTS="\
+    CACHE_OPTS="\
         --cache-from type=gha,scope=$DEPS_ID \
         --cache-to type=gha,mode=min,scope=$DEPS_ID \
     "
@@ -25,7 +25,7 @@ fi
 echo "Build all stages in parallel"
 docker build . \
         $SHARED_OPS \
-        $EXTRA_OPTS
+        $CACHE_OPTS
 
 echo "Build ui:$next_version with mode=$mode"
 docker build . \
@@ -33,8 +33,7 @@ docker build . \
         --label "org.opencontainers.image.description=Ui bal" \
         --target ui \
         --${mode} \
-        $SHARED_OPS \
-        $EXTRA_OPTS
+        $SHARED_OPS
 
 echo "Building server:$next_version  with mode=$mode"
 docker build . \
@@ -42,8 +41,7 @@ docker build . \
         --label "org.opencontainers.image.description=Server bal" \
         --target server \
         --${mode} \
-        $SHARED_OPS \
-        $EXTRA_OPTS
+        $SHARED_OPS
 
 if [[ $(uname) = "Darwin" ]]; then
   sed -i '' "s/registry=.*/registry=$registry/" ".infra/env.ini"
