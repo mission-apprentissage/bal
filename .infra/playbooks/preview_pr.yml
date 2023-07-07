@@ -111,6 +111,7 @@
         chdir: "/opt/bal/projects/{{ pr_number }}"
         cmd: docker compose down --remove-orphans	--volumes
       when: check_stat.stat.exists
+      ignore_errors: true
 
     - name: "[{{ pr_number }}] Removing server image"
       shell:
