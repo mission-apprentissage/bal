@@ -1,3 +1,11 @@
+# [1.44.0-rc.5](https://github.com/mission-apprentissage/bal/compare/v1.44.0-rc.4...v1.44.0-rc.5) (2023-07-07)
+
+
+### Bug Fixes
+
+* add commander ([b9b5e86](https://github.com/mission-apprentissage/bal/commit/b9b5e8615acd22885c00ea3f649a6c632aeb6ca8))
+* which python ([83b45ab](https://github.com/mission-apprentissage/bal/commit/83b45abe7a8e900f8c4529398788045dd3bac66c))
+
 # [1.44.0-rc.4](https://github.com/mission-apprentissage/bal/compare/v1.44.0-rc.3...v1.44.0-rc.4) (2023-07-07)
 
 
