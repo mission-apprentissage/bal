@@ -15,6 +15,8 @@ jobs:
 
   release:
     permissions: write-all
+    outputs:
+      VERSION: ${{ steps.get-version.outputs.VERSION }}
     if: "!startsWith(github.event.head_commit.message, 'chore')"
     needs: ["tests"]
     runs-on: ubuntu-latest
@@ -77,3 +79,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_FG_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           GITHUB_REF_NAME: ${{ env.GITHUB_REF_NAME }}
+
+      - name: Retrieve version
+        id: get-version
+        run: echo "VERSION=$(git describe --tags | cut -c2-)" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: ["release"]
+    name: Deploy ${{ needs.release.outputs.VERSION }} on recette
+    uses: "./.github/workflows/_deploy.yml"
+    with:
+      environment: recette
+      app_version: ${{ needs.release.outputs.VERSION }}
+    secrets:
+      DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+      SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+      DEPLOY_USERNAME: ${{ secrets.DEPLOY_USERNAME }}
+      DEPLOY_PASS: ${{ secrets.DEPLOY_PASS }}
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      VAULT_PWD: ${{ secrets.VAULT_PWD }}

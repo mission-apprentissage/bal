@@ -11,16 +11,16 @@ on:
           - recette
           - sandbox
     secrets:
-      SSH_PRIVATE_KEY:
+      DEPLOY_SSH_PRIVATE_KEY:
         description: SSH private key
         required: true
       SSH_KNOWN_HOSTS:
         description: SSH known hosts list
         required: true
-      USR_DEPLOY:
+      DEPLOY_USERNAME:
         description: SSH USER TO DEPLOY
         required: true
-      PWD_DEPLOY:
+      DEPLOY_PASS:
         description: SSH PWD TO DEPLOY
         required: true
       SLACK_WEBHOOK:
