@@ -18,7 +18,7 @@ if [[ ! -z "${CI:-}" ]]; then
     DEPS_ID=($(md5sum ./yarn.lock))
     EXTRA_OPTS="\
         --cache-from type=gha,scope=$DEPS_ID \
-        --cache-to type=gha,mode=max,scope=$DEPS_ID \
+        --cache-to type=gha,mode=min,scope=$DEPS_ID \
     "
 fi
 
