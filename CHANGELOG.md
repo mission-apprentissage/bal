@@ -1,3 +1,10 @@
+## [1.43.2](https://github.com/mission-apprentissage/bal/compare/v1.43.1...v1.43.2) (2023-07-07)
+
+
+### Bug Fixes
+
+* support de l'environnement de developpement hybride local / docker ([#218](https://github.com/mission-apprentissage/bal/issues/218)) ([81f0e39](https://github.com/mission-apprentissage/bal/commit/81f0e392d7136201e98ddb715ef5fef8dfce4b78))
+
 ## [1.43.1](https://github.com/mission-apprentissage/bal/compare/v1.43.0...v1.43.1) (2023-07-07)
 
 
