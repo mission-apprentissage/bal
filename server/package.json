@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "1.43.1-0",
+  "version": "1.44.0-rc.3",
   "description": "[MNA] bal server",
   "repository": "https://github.com/mission-apprentissage/bal.git",
   "author": "MNA",
