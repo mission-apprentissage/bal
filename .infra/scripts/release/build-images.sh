@@ -25,20 +25,23 @@ fi
 
 echo "Build all stages in parallel"
 docker build . \
+        $SHARED_OPS \
         $EXTRA_OPTS
 
-echo "Build ui:$next_version ..."
+echo "Build ui:$next_version with mode=$mode"
 docker build . \
         --tag $registry/mission-apprentissage/mna_bal_ui:"$next_version" \
         --label "org.opencontainers.image.description=Ui bal" \
         --target ui \
+        $SHARED_OPS \
         $EXTRA_OPTS
 
-echo "Building server:$next_version ..."
+echo "Building server:$next_version  with mode=$mode"
 docker build . \
         --tag $registry/mission-apprentissage/mna_bal_server:"$next_version" \
         --label "org.opencontainers.image.description=Server bal" \
         --target server \
+        $SHARED_OPS \
         $EXTRA_OPTS
 
 if [[ $(uname) = "Darwin" ]]; then
