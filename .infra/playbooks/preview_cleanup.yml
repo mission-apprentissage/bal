@@ -15,3 +15,5 @@
       loop: "{{ projects.files | map(attribute='path')| map('basename') | list }}"
       loop_control:
         loop_var: pr_number
+      vars:
+        build: false
