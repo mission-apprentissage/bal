@@ -1,3 +1,10 @@
+# [1.44.0-rc.2](https://github.com/mission-apprentissage/bal/compare/v1.44.0-rc.1...v1.44.0-rc.2) (2023-07-07)
+
+
+### Bug Fixes
+
+* remove ci-install ([6f0c535](https://github.com/mission-apprentissage/bal/commit/6f0c535fd1c328bf3be3b9ba6271072cd58df33e))
+
 # [1.44.0-rc.1](https://github.com/mission-apprentissage/bal/compare/v1.43.0...v1.44.0-rc.1) (2023-07-07)
 
 
