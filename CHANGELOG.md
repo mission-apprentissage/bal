@@ -1,3 +1,11 @@
+# [1.44.0-rc.4](https://github.com/mission-apprentissage/bal/compare/v1.44.0-rc.3...v1.44.0-rc.4) (2023-07-07)
+
+
+### Bug Fixes
+
+* min cache-mode ([ab8482b](https://github.com/mission-apprentissage/bal/commit/ab8482b91753063ebf5dc60cbd21d311e5c3cd3e))
+* use builder_root ([ae2e5c5](https://github.com/mission-apprentissage/bal/commit/ae2e5c51a14ca7b2db75ef58af8d0790d6964d52))
+
 # [1.44.0-rc.3](https://github.com/mission-apprentissage/bal/compare/v1.44.0-rc.2...v1.44.0-rc.3) (2023-07-07)
 
 
