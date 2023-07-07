@@ -27,7 +27,7 @@ RUN rm -rf .yarn/cache && \
 ##############################################################
 
 # Rebuild the source code only when needed
-FROM root AS builder_server
+FROM builder_root AS builder_server
 WORKDIR /app
 
 COPY .yarn .yarn
@@ -61,7 +61,7 @@ CMD ["node", "dist/index.js", "start"]
 ##############################################################
 
 # Rebuild the source code only when needed
-FROM root AS builder_ui
+FROM builder_root AS builder_ui
 WORKDIR /app
 COPY .yarn .yarn
 COPY ./ui ./ui
