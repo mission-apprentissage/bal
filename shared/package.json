@@ -17,5 +17,5 @@
     "mongodb": "^4.11.0",
     "zod": "^3.21.4"
   },
-  "stableVersion": "1.43.0"
+  "stableVersion": "1.42.0"
 }

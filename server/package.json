@@ -85,5 +85,5 @@
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^0.32.0"
   },
-  "stableVersion": "1.43.0"
+  "stableVersion": "1.42.0"
 }
