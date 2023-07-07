@@ -8,7 +8,6 @@ mode=${3:?"Veuillez préciser le mode <push|load>"}
 SHARED_OPS="\
         --build-arg YARN_FLAGS="--immutable" \
         --platform linux/amd64 \
-        --${mode} \
         --progress=plain \
         --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
         --label "org.opencontainers.image.licenses=MIT"
@@ -33,6 +32,7 @@ docker build . \
         --tag $registry/mission-apprentissage/mna_bal_ui:"$next_version" \
         --label "org.opencontainers.image.description=Ui bal" \
         --target ui \
+        --${mode} \
         $SHARED_OPS \
         $EXTRA_OPTS
 
@@ -41,6 +41,7 @@ docker build . \
         --tag $registry/mission-apprentissage/mna_bal_server:"$next_version" \
         --label "org.opencontainers.image.description=Server bal" \
         --target server \
+        --${mode} \
         $SHARED_OPS \
         $EXTRA_OPTS
 
