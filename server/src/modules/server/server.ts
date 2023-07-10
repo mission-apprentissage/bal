@@ -8,6 +8,7 @@ import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts
 import fastify, { FastifySchema, FastifyServerOptions } from "fastify";
 
 import pJson from "../../../package.json";
+import { initSentryFastify } from "../../common/services/sentry/sentry";
 import { organisationAdminRoutes } from "./admin/organisation.routes";
 import { personAdminRoutes } from "./admin/person.routes";
 import { uploadAdminRoutes } from "./admin/upload.routes";
@@ -33,35 +34,36 @@ export interface Server extends FastifyServer {
 
 export function build(opts: FastifyServerOptions = {}) {
   const app = fastify(opts);
+  initSentryFastify(app);
 
   app.register(fastifySwagger, {
     swagger: {
       info: {
-          title: "API documentation BAL",
-          version: pJson.version,
-        },
-        consumes: ["application/json"],
-        produces: ["application/json"],
-        securityDefinitions: {
-          apiKey: {
-            type: "apiKey",
-            name: "Authorization",
-            in: "header",
-          },
+        title: "API documentation BAL",
+        version: pJson.version,
+      },
+      consumes: ["application/json"],
+      produces: ["application/json"],
+      securityDefinitions: {
+        apiKey: {
+          type: "apiKey",
+          name: "Authorization",
+          in: "header",
         },
       },
-      transform: ({ schema, url }) => {
-        const transformedSchema = { ...schema } as FastifySchema;
-        if (!url.includes("/v1") && url !== "/api/healthcheck")
-          transformedSchema.hide = true;
-        return { schema: transformedSchema as JSONObject, url };
-      },
-    });
+    },
+    transform: ({ schema, url }) => {
+      const transformedSchema = { ...schema } as FastifySchema;
+      if (!url.includes("/v1") && url !== "/api/healthcheck")
+        transformedSchema.hide = true;
+      return { schema: transformedSchema as JSONObject, url };
+    },
+  });
 
-    app.register(fastifySwaggerUi, {
-      routePrefix: "/api/documentation",
-      uiConfig: {
-        docExpansion: "list",
+  app.register(fastifySwaggerUi, {
+    routePrefix: "/api/documentation",
+    uiConfig: {
+      docExpansion: "list",
       deepLinking: false,
     },
   });
@@ -80,6 +82,8 @@ export function build(opts: FastifyServerOptions = {}) {
 
   app.setErrorHandler(function (error, _request, reply) {
     // reply.log.error(error); // TODO rattacher le logger fastify différement
+
+    this.Sentry.captureException(error);
 
     // @ts-ignore
     if (error.isBoom) {

@@ -16,4 +16,12 @@ export const coreRoutes = ({ server }: { server: Server }) => {
       });
     }
   );
+  server.get(
+    "/test-sentry",
+    { schema: { response: { 200: SResGetHealthCheck } } },
+    async () => {
+      console.log("Hello");
+      throw new Error("oops");
+    }
+  );
 };

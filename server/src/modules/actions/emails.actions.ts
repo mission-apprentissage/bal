@@ -1,3 +1,4 @@
+import { captureException } from "@sentry/node";
 import { TemplateName, TemplatePayloads } from "shared/mailer";
 import { IEvent } from "shared/models/events/event.model";
 import { v4 as uuidv4 } from "uuid";
@@ -180,6 +181,7 @@ export async function sendStoredEmail<T extends TemplateName>(
     );
     await addEmailMessageId(emailToken, messageId);
   } catch (err: unknown) {
+    captureException(err);
     logger.error({ err, template: templateName }, "error sending email");
     await addEmailError(emailToken, err);
   }
