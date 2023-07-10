@@ -8,10 +8,10 @@ debug:
 	docker compose -f docker-compose.yml -f docker-compose.debug.yml --profile dev up -d
 
 seed:
-	docker compose run --rm server yarn cli seed
+	docker compose --profile dev run --rm server yarn cli seed
 
 migrations:
-	docker compose run --rm server yarn cli migrations:status
+	docker compose --profile dev run --rm server yarn cli migrations:status
 
 stop:
 	docker compose --profile dev down
