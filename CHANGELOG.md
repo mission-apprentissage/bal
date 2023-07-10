@@ -1,3 +1,10 @@
+## [1.43.3](https://github.com/mission-apprentissage/bal/compare/v1.43.2...v1.43.3) (2023-07-10)
+
+
+### Bug Fixes
+
+* cleanup preview script ([#222](https://github.com/mission-apprentissage/bal/issues/222)) ([ee004a5](https://github.com/mission-apprentissage/bal/commit/ee004a59dea81f2c32f12f7cd5aa5025743a633b))
+
 ## [1.43.2](https://github.com/mission-apprentissage/bal/compare/v1.43.1...v1.43.2) (2023-07-07)
 
 
