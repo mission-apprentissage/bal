@@ -13,9 +13,6 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          persist-credentials: false
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -36,4 +33,4 @@ jobs:
 
       - name: Run playbook
         run: |
-          ansible-playbook -i ".infra/env.ini" --limit preview --vault-password-file=".infra/.vault_pwd.txt"  ansible_sudo_pass=${{ secrets.DEPLOY_PASS }}" ".infra/playbooks/preview_cleanup.yml" --user ${{ secrets.DEPLOY_USERNAME }}
+          ansible-playbook -i ".infra/env.ini" --limit preview --vault-password-file=".infra/.vault_pwd.txt" --extra-vars "ansible_sudo_pass=${{ secrets.DEPLOY_PASS }}" ".infra/playbooks/preview_cleanup.yml" --user ${{ secrets.DEPLOY_USERNAME }}
