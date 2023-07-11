@@ -14,7 +14,6 @@ export const SReqQueryPostAdminUpload = {
   properties: {
     type_document: {
       type: "string",
-      enum: Object.values(DOCUMENT_TYPES),
     },
   },
   required: ["type_document"],
@@ -90,3 +89,12 @@ export type IResGetDocuments = FromSchema<
     deserialize: deserialize;
   }
 >;
+
+export const SResGetDocumentTypes = {
+  type: "array",
+  items: {
+    type: "string",
+  },
+} as const;
+
+export type IResGetDocumentTypes = FromSchema<typeof SResGetDocumentTypes>;
