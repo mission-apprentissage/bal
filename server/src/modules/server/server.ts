@@ -131,6 +131,7 @@ export const server = build({
       keywords: ["kind", "modifier"],
     },
   },
+  trustProxy: 1,
 }).withTypeProvider<JsonSchemaToTsProvider>();
 
 type RegisterRoutes = (opts: { server: Server }) => void;
