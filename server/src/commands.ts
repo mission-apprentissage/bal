@@ -5,6 +5,7 @@ import logger from "@/common/logger";
 import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
 import { server } from "@/modules/server/server";
 
+import { initSentryProcessor } from "./common/services/sentry/sentry";
 import { addJob, processor } from "./modules/jobs/jobs";
 
 program.configureHelp({
@@ -54,6 +55,7 @@ program
   .description("Run job processor")
   .action(async () => {
     logger.info(`Process jobs queue - start`);
+    initSentryProcessor();
     await processor();
   });
 

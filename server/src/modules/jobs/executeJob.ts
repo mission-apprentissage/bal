@@ -1,15 +1,18 @@
+import {
+  captureException,
+  getCurrentHub,
+  runWithAsyncContext,
+} from "@sentry/node";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
 
 import logger from "@/common/logger";
 import { updateJob } from "@/modules/actions/job.actions";
 
+import { closeSentry } from "../../common/services/sentry/sentry";
 import { closeMongodbConnection } from "../../common/utils/mongodbUtils";
 
-/**
- * Wrapper pour l'exécution de jobs
- */
-export const executeJob = async (
+const runner = async (
   job: IJob,
   jobFunc: () => Promise<any>,
   options: { runningLogs: boolean } = {
@@ -28,6 +31,7 @@ export const executeJob = async (
   try {
     result = await jobFunc();
   } catch (err: any) {
+    captureException(err);
     if (options.runningLogs)
       logger.error(
         { err, writeErrors: err.writeErrors, error: err },
@@ -62,10 +66,44 @@ export const executeJob = async (
       try {
         await closeMongodbConnection();
       } catch (err) {
+        captureException(err);
         if (options.runningLogs)
           logger.error({ err }, "close mongodb connection error");
       }
+      await closeSentry();
       process.exit(error ? 1 : 0); // eslint-disable-line no-process-exit
     }, 500);
   }
 };
+
+export function executeJob(
+  job: IJob,
+  jobFunc: () => Promise<any>,
+  options: { runningLogs: boolean } = {
+    runningLogs: true,
+  }
+) {
+  return runWithAsyncContext(async () => {
+    const hub = getCurrentHub();
+    const transaction = hub.startTransaction({
+      name: `JOB: ${job.name}`,
+      op: "processor.job",
+    });
+    hub.configureScope((scope) => {
+      scope.setSpan(transaction);
+      scope.setTag("job", job.name);
+      scope.setContext("job", job);
+    });
+    const start = Date.now();
+    try {
+      await runner(job, jobFunc, options);
+    } finally {
+      transaction.setMeasurement(
+        "job.execute",
+        Date.now() - start,
+        "millisecond"
+      );
+      transaction.finish();
+    }
+  });
+}
