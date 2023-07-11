@@ -5,9 +5,23 @@ import fastifyMultipart from "@fastify/multipart";
 import fastifySwagger, { JSONObject } from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
-import fastify, { FastifySchema, FastifyServerOptions } from "fastify";
+import { Boom, isBoom } from "@hapi/boom";
+import { captureException } from "@sentry/node";
+import fastify, {
+  FastifyBaseLogger,
+  FastifyError,
+  FastifyInstance,
+  FastifySchema,
+  FastifyServerOptions,
+  RawReplyDefaultExpression,
+  RawRequestDefaultExpression,
+  RawServerDefault,
+} from "fastify";
+import { IResError } from "shared/routes/common.routes";
+import { ZodError } from "zod";
 
 import pJson from "../../../package.json";
+import logger from "../../common/logger";
 import { initSentryFastify } from "../../common/services/sentry/sentry";
 import { organisationAdminRoutes } from "./admin/organisation.routes";
 import { personAdminRoutes } from "./admin/person.routes";
@@ -25,14 +39,24 @@ import {
 } from "./utils/auth.strategies";
 import { organisationRoutes } from "./v1/organisation.routes";
 
-type FastifyServer = typeof server;
-export interface Server extends FastifyServer {
-  validateJWT: FastifyAuthFunction;
-  validateSession: FastifyAuthFunction;
-  validateWebHookKey: FastifyAuthFunction;
+declare module "fastify" {
+  interface FastifyInstance {
+    validateJWT: FastifyAuthFunction;
+    validateSession: FastifyAuthFunction;
+    validateWebHookKey: FastifyAuthFunction;
+  }
 }
 
-export function build(opts: FastifyServerOptions = {}) {
+export interface Server
+  extends FastifyInstance<
+    RawServerDefault,
+    RawRequestDefaultExpression<RawServerDefault>,
+    RawReplyDefaultExpression<RawServerDefault>,
+    FastifyBaseLogger,
+    JsonSchemaToTsProvider
+  > {}
+
+export function build(opts: FastifyServerOptions = {}): Server {
   const app = fastify(opts);
   initSentryFastify(app);
 
@@ -80,31 +104,44 @@ export function build(opts: FastifyServerOptions = {}) {
   app.register(fastifyAuth);
   app.register(fastifyCors, {});
 
-  app.setErrorHandler(function (error, _request, reply) {
-    // reply.log.error(error); // TODO rattacher le logger fastify différement
+  app.setErrorHandler<
+    FastifyError | Boom<unknown> | Error | ZodError,
+    { Reply: IResError }
+  >((error, _request, reply) => {
+    logger.error(error);
 
-    this.Sentry.captureException(error);
+    let statusCode = (error as FastifyError).statusCode ?? 500;
+    let message = error.message;
+    let name = error.name;
 
-    // @ts-ignore
-    if (error.isBoom) {
-      // eslint-disable-next-line prefer-const
-      let payload = {
-        message: error.message,
-        errors:
-          // @ts-ignore
-          error.errors || [],
-      };
-      if (error.name === "ZodError") {
-        payload.message = "Validation failed";
-        // @ts-ignore
-        payload.errors = error.errors;
-      }
-      // @ts-ignore
-      return reply.status(error.output.statusCode).send(payload); // error.errors
+    if (error instanceof ZodError) {
+      name = "Validation failed";
+      message = error.issues.reduce((acc, issue, i) => {
+        const path = issue.path.length === 0 ? "" : issue.path.join(".");
+        const delimiter = i === 0 ? "" : ", ";
+        return acc + `${delimiter}${path}: ${issue.message}`;
+      }, "");
     }
 
-    // Send error response
-    return reply.send({ message: error.message });
+    if (isBoom(error)) {
+      statusCode = error.output.statusCode;
+
+      return reply.status(statusCode).send({
+        message,
+        statusCode,
+        name,
+      });
+    }
+
+    if (statusCode >= 500) {
+      captureException(error);
+    }
+
+    return reply.status(statusCode).send({
+      message: error.message,
+      statusCode,
+      name,
+    });
   });
 
   app.register(
@@ -132,7 +169,7 @@ export const server = build({
     },
   },
   trustProxy: 1,
-}).withTypeProvider<JsonSchemaToTsProvider>();
+}).withTypeProvider<JsonSchemaToTsProvider>() as Server;
 
 type RegisterRoutes = (opts: { server: Server }) => void;
 

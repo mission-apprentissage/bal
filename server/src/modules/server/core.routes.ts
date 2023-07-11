@@ -20,8 +20,7 @@ export const coreRoutes = ({ server }: { server: Server }) => {
     "/test-sentry",
     { schema: { response: { 200: SResGetHealthCheck } } },
     async () => {
-      console.log("Hello");
-      throw new Error("oops");
+      throw new Error("testing sentry error");
     }
   );
 };

@@ -2853,13 +2853,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/auth@npm:4.2.0":
-  version: 4.2.0
-  resolution: "@fastify/auth@npm:4.2.0"
+"@fastify/auth@npm:4.3.0":
+  version: 4.3.0
+  resolution: "@fastify/auth@npm:4.3.0"
   dependencies:
     fastify-plugin: ^4.0.0
     reusify: ^1.0.4
-  checksum: a6f488c726ed3f5719ac824034b1681860e0d92463be087cc3b29e1b700bef8bfd767c338c26b71885dfc76dd613184ec7be9b2a6b62b0d6624989d0a027e307
+  checksum: 000995f0a9aab993ab6c8e792c7909b914f375760f32fcd007dd555601dd7ad2f04444beb87f5ac50dfee1062fee75192668978de73f3bf467ef7a169897dd7f
   languageName: node
   linkType: hard
 
@@ -2882,13 +2882,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/cors@npm:8.2.0":
-  version: 8.2.0
-  resolution: "@fastify/cors@npm:8.2.0"
+"@fastify/cors@npm:8.3.0":
+  version: 8.3.0
+  resolution: "@fastify/cors@npm:8.3.0"
   dependencies:
     fastify-plugin: ^4.0.0
     mnemonist: 0.39.5
-  checksum: b2e30602d3aad7b2170a153b60e2b0dba8ad7df67ac3b7918374d202097f60b8a252baeafbf37f4323190fa87170960a3162aa6120540f825ae7750414c3feea
+  checksum: f487b5a8823264c3db58e99df020e38ada524514d60f2c5c2e01b994519545e2fc9481006d98e485b40e536b9b89f72af9061d9377b8e93f6ce07b14d40164a2
   languageName: node
   linkType: hard
 
@@ -2915,19 +2915,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/multipart@npm:7.6.0":
-  version: 7.6.0
-  resolution: "@fastify/multipart@npm:7.6.0"
+"@fastify/multipart@npm:7.7.0":
+  version: 7.7.0
+  resolution: "@fastify/multipart@npm:7.7.0"
   dependencies:
     "@fastify/busboy": ^1.0.0
     "@fastify/deepmerge": ^1.0.0
     "@fastify/error": ^3.0.0
+    "@fastify/swagger": ^8.3.1
+    "@fastify/swagger-ui": ^1.8.0
     end-of-stream: ^1.4.4
     fastify-plugin: ^4.0.0
-    hexoid: ^1.0.0
     secure-json-parse: ^2.4.0
     stream-wormhole: ^1.1.0
-  checksum: eaaabb54825d2bd943da777b1615cdb773f5bf817c5fe1f5d91602cc4bbc5515c69eb553d0535b0025649bfca61f5a89134fcb08f43d1b009b7dd0f513f13523
+  checksum: 119403f85ac2c8e8203c30c0245ad85bcddf3c9c2bfad563f22a871351e36c58587b936ef77d6e0800c98a38731d7a688ce3adc5fa09de2428c7f7bb275d7d92
   languageName: node
   linkType: hard
 
@@ -2959,29 +2960,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/swagger-ui@npm:1.6.0":
-  version: 1.6.0
-  resolution: "@fastify/swagger-ui@npm:1.6.0"
+"@fastify/swagger-ui@npm:1.9.2, @fastify/swagger-ui@npm:^1.8.0":
+  version: 1.9.2
+  resolution: "@fastify/swagger-ui@npm:1.9.2"
   dependencies:
     "@fastify/static": ^6.0.0
     fastify-plugin: ^4.0.0
     openapi-types: ^12.0.2
     rfdc: ^1.3.0
-    yaml: ^2.1.3
-  checksum: b9078ff374bb55b5bc00819eab5c26590eb575c01478ccbc805dcb997150bb67834d0273e1c02e03e8f4242e58f01936072f5c2693febfb0912c8b35f356e287
+    yaml: ^2.2.2
+  checksum: 0113cd29076dcce9e20bdff1e871e574205d5967c7203b7831bc5b7cd10ad7959e5994b8a2b9218ea68d11a4a18bd027cdef526b34ce2d6e0314c482f32d7f5c
   languageName: node
   linkType: hard
 
-"@fastify/swagger@npm:8.3.1":
-  version: 8.3.1
-  resolution: "@fastify/swagger@npm:8.3.1"
+"@fastify/swagger@npm:8.8.0, @fastify/swagger@npm:^8.3.1":
+  version: 8.8.0
+  resolution: "@fastify/swagger@npm:8.8.0"
   dependencies:
     fastify-plugin: ^4.0.0
     json-schema-resolver: ^2.0.0
     openapi-types: ^12.0.0
     rfdc: ^1.3.0
-    yaml: ^2.1.1
-  checksum: 36d043af809bb2fc44b794b58d6399c2357fe534d8dd1d196b3106764b0bca256f53ff80253d45d64ffb3e2e1a69d94cbdd8705e4b912c51ffc91960d1e9270c
+    yaml: ^2.2.2
+  checksum: 6f41ba96fd3f3c610eab883b7ced53ad714bb822e729297cb4ef7299859d1373109b9251395a0f0f7923da49ff67a2a626d3df5d9fad497053c536cb647ca312
   languageName: node
   linkType: hard
 
@@ -8636,9 +8637,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:4.18.0":
-  version: 4.18.0
-  resolution: "fastify@npm:4.18.0"
+"fastify@npm:4.19.2":
+  version: 4.19.2
+  resolution: "fastify@npm:4.19.2"
   dependencies:
     "@fastify/ajv-compiler": ^3.5.0
     "@fastify/error": ^3.2.0
@@ -8656,7 +8657,7 @@ __metadata:
     secure-json-parse: ^2.5.0
     semver: ^7.5.0
     tiny-lru: ^11.0.1
-  checksum: 14dc83e3cc46edf4c0c8874eec2d9e95c96980acd3dfa0114d40cf0b27e09f1c01e4956d5bdb412be955c59e4e1e4a9c28a31659dfb26e8c1d0e2d77af4d926e
+  checksum: 64bd66dc0fc6b188dd7642af01b08d9010855155910fa158b08a74a1d38dc0908323588d9bd93077e0a9aaa8bb597580de9327ab7240c69370c6059d517e62d5
   languageName: node
   linkType: hard
 
@@ -9602,13 +9603,6 @@ __metadata:
   bin:
     he: bin/he
   checksum: 3d4d6babccccd79c5c5a3f929a68af33360d6445587d628087f39a965079d84f18ce9c3d3f917ee1e3978916fc833bb8b29377c3b403f919426f91bc6965e7a7
-  languageName: node
-  linkType: hard
-
-"hexoid@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "hexoid@npm:1.0.0"
-  checksum: 27a148ca76a2358287f40445870116baaff4a0ed0acc99900bf167f0f708ffd82e044ff55e9949c71963852b580fc024146d3ac6d5d76b508b78d927fa48ae2d
   languageName: node
   linkType: hard
 
@@ -16237,12 +16231,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "server@workspace:server"
   dependencies:
-    "@fastify/auth": 4.2.0
+    "@fastify/auth": 4.3.0
     "@fastify/cookie": 8.3.0
-    "@fastify/cors": 8.2.0
-    "@fastify/multipart": 7.6.0
-    "@fastify/swagger": 8.3.1
-    "@fastify/swagger-ui": 1.6.0
+    "@fastify/cors": 8.3.0
+    "@fastify/multipart": 7.7.0
+    "@fastify/swagger": 8.8.0
+    "@fastify/swagger-ui": 1.9.2
     "@fastify/type-provider-json-schema-to-ts": 2.2.2
     "@hapi/boom": 10.0.1
     "@immobiliarelabs/fastify-sentry": ^6.0.7
@@ -16278,7 +16272,7 @@ __metadata:
     dotenv: ^16.3.1
     ejs: 3.1.9
     env-var: 7.1.1
-    fastify: 4.18.0
+    fastify: 4.19.2
     json-schema: 0.4.0
     jsonwebtoken: 9.0.0
     lil-http-terminator: 1.2.3
@@ -18753,7 +18747,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.1.1, yaml@npm:^2.1.3":
+"yaml@npm:^2.2.2":
   version: 2.3.1
   resolution: "yaml@npm:2.3.1"
   checksum: 2c7bc9a7cd4c9f40d3b0b0a98e370781b68b8b7c4515720869aced2b00d92f5da1762b4ffa947f9e795d6cd6b19f410bd4d15fdd38aca7bd96df59bd9486fb54

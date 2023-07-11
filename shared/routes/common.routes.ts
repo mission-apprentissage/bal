@@ -3,10 +3,11 @@ import { FromSchema } from "json-schema-to-ts";
 export const SResError = {
   type: "object",
   properties: {
-    type: { type: "string" },
+    code: { type: "string" },
     message: { type: "string" },
+    statusCode: { type: "number" },
   },
-  required: ["type", "message"],
+  required: ["message", "statusCode"],
 } as const;
 
 export type IResError = FromSchema<typeof SResError>;
