@@ -1,3 +1,10 @@
+# [1.45.0](https://github.com/mission-apprentissage/bal/compare/v1.44.0...v1.45.0) (2023-07-11)
+
+
+### Features
+
+* grouper par email nom prenom, plusieurs destinataires ([#216](https://github.com/mission-apprentissage/bal/issues/216)) ([bb101c8](https://github.com/mission-apprentissage/bal/commit/bb101c8613b50ef4351730b22efbabb977a83eaf))
+
 # [1.44.0](https://github.com/mission-apprentissage/bal/compare/v1.43.3...v1.44.0) (2023-07-11)
 
 
