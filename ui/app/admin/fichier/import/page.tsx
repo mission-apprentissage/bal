@@ -3,6 +3,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -12,6 +13,7 @@ import {
   Input,
   Select,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -19,8 +21,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { FILE_SIZE_LIMIT } from "shared/constants/index";
 import { IResError } from "shared/routes/common.routes";
 import {
-  DOCUMENT_TYPES,
   IReqQueryPostAdminUpload,
+  IResGetDocumentTypes,
 } from "shared/routes/upload.routes";
 
 // import { AlertRounded } from "../../../../theme/icons/AlertRounded";
@@ -31,6 +33,8 @@ import { Dropzone } from "./components/Dropzone";
 
 interface FormValues extends IReqQueryPostAdminUpload {
   file: File;
+  has_new_type_document: boolean;
+  new_type_document: string;
 }
 
 const AdminImportPage = () => {
@@ -38,16 +42,30 @@ const AdminImportPage = () => {
   const { toastSuccess, toastError } = useToaster();
   const router = useRouter();
 
+  const { data: types = [] } = useQuery<IResGetDocumentTypes>({
+    queryKey: ["documentTypes"],
+    queryFn: async () => {
+      const { data } = await api.get("/admin/documents/types");
+
+      return data;
+    },
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm<FormValues>();
+
+  const hasNewTypeDocument = watch("has_new_type_document");
 
   const onSubmit: SubmitHandler<FormValues> = async ({
     file,
     type_document,
+    has_new_type_document,
+    new_type_document,
   }) => {
     setIsSubmitting(true);
     try {
@@ -55,7 +73,11 @@ const AdminImportPage = () => {
       formData.append("file", file);
 
       await api.post("/admin/upload", formData, {
-        params: { type_document },
+        params: {
+          type_document: has_new_type_document
+            ? new_type_document
+            : type_document,
+        },
       });
       toastSuccess("Fichier importé avec succès.");
       router.push(PAGES.adminFichier().path);
@@ -87,30 +109,50 @@ const AdminImportPage = () => {
             <FormControl
               isInvalid={!!errors.type_document}
               mb={5}
-              isDisabled={isSubmitting}
+              isDisabled={hasNewTypeDocument || isSubmitting}
             >
               <FormLabel>Type de document</FormLabel>
               <Select
                 isInvalid={!!errors.type_document}
                 placeholder="Choisir un type de document"
                 {...register("type_document", {
-                  required:
-                    "Obligatoire: Vous devez choisir le type de fichier que vous souhaitez importer",
-                  validate: (value) => {
-                    return (
-                      value && Object.values(DOCUMENT_TYPES).includes(value)
-                    );
-                  },
+                  required: !hasNewTypeDocument,
                 })}
               >
-                {Object.values(DOCUMENT_TYPES).map((type) => (
+                {types?.map((type) => (
                   <option key={type}>{type}</option>
                 ))}
               </Select>
               <FormErrorMessage>
-                {errors.type_document?.message}
+                Obligatoire: Vous devez choisir le type de fichier que vous
+                souhaitez importer
               </FormErrorMessage>
             </FormControl>
+            <FormControl mb={5} isDisabled={isSubmitting}>
+              <Checkbox {...register("has_new_type_document")}>
+                Je souhaite ajouter un nouveau type de document
+              </Checkbox>
+            </FormControl>
+
+            {hasNewTypeDocument && (
+              <FormControl
+                isInvalid={!!errors.new_type_document}
+                mb={5}
+                isDisabled={isSubmitting}
+              >
+                <FormLabel>Nom de votre type de document</FormLabel>
+                <Input
+                  placeholder="Source de données"
+                  {...register("new_type_document", {
+                    required:
+                      "Obligatoire: Veuillez saisir le nom de votre type de document",
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors.new_type_document?.message}
+                </FormErrorMessage>
+              </FormControl>
+            )}
 
             <FormControl
               isInvalid={!!errors.file}
