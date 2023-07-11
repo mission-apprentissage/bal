@@ -1,3 +1,10 @@
+# [1.44.0](https://github.com/mission-apprentissage/bal/compare/v1.43.3...v1.44.0) (2023-07-11)
+
+
+### Features
+
+* installation de Sentry sur l'API ([#223](https://github.com/mission-apprentissage/bal/issues/223)) ([1625c54](https://github.com/mission-apprentissage/bal/commit/1625c544eb3cf859686ce73a35a639f858cb1b44))
+
 ## [1.43.3](https://github.com/mission-apprentissage/bal/compare/v1.43.2...v1.43.3) (2023-07-10)
 
 
