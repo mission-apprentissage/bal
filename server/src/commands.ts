@@ -149,7 +149,7 @@ program
   .action(async ({ description }) => {
     const exitCode = await addJob({
       name: "migrations:create",
-      payload: description,
+      payload: { description },
       sync: true,
     });
     if (exitCode) {

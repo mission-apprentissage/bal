@@ -1,3 +1,5 @@
+import { readFile, writeFile } from "node:fs/promises";
+
 import {
   config,
   create as mcreate,
@@ -31,7 +33,7 @@ const myConfig = {
   changelogCollectionName: "migrations",
 
   // The file extension to create migrations and search for in migration dir
-  migrationFileExtension: ".js",
+  migrationFileExtension: ".ts",
 
   // Enable the algorithm to create a checksum of the file contents and use that in the comparison to determin
   // if the file should be run.  Requires that scripts are coded to be run multiple times.
@@ -68,9 +70,21 @@ export async function status(): Promise<number> {
     .length;
 }
 
-export async function create(description: string) {
+export async function create({ description }: { description: string }) {
   // @ts-ignore
   config.set({ ...myConfig, migrationsDir: "src/db/migrations" });
   const fileName = await mcreate(description);
+  const file = `src/db/migrations/${fileName}`;
+  const content = await readFile(file, {
+    encoding: "utf-8",
+  });
+  const newContent =
+    'import { Db, MongoClient } from "mongodb";\n\n' +
+    content.replaceAll(
+      "async (db, client)",
+      "async (_db: Db, _client: MongoClient)"
+    );
+
+  await writeFile(file, newContent, { encoding: "utf-8" });
   console.log("Created:", fileName);
 }

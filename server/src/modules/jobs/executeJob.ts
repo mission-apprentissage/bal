@@ -9,9 +9,6 @@ import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
 import logger from "@/common/logger";
 import { updateJob } from "@/modules/actions/job.actions";
 
-import { closeSentry } from "../../common/services/sentry/sentry";
-import { closeMongodbConnection } from "../../common/utils/mongodbUtils";
-
 const runner = async (
   job: IJob,
   jobFunc: () => Promise<any>,
@@ -83,7 +80,7 @@ export function executeJob(
     });
     const start = Date.now();
     try {
-      await runner(job, jobFunc, options);
+      return await runner(job, jobFunc, options);
     } finally {
       transaction.setMeasurement(
         "job.execute",
