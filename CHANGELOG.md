@@ -1,3 +1,10 @@
+## [1.45.1](https://github.com/mission-apprentissage/bal/compare/v1.45.0...v1.45.1) (2023-07-12)
+
+
+### Bug Fixes
+
+* CLI migrations scripts ([#227](https://github.com/mission-apprentissage/bal/issues/227)) ([8f5918e](https://github.com/mission-apprentissage/bal/commit/8f5918e09782efb0e3586097c658d6bae9aff7f0))
+
 # [1.45.0](https://github.com/mission-apprentissage/bal/compare/v1.44.0...v1.45.0) (2023-07-11)
 
 
