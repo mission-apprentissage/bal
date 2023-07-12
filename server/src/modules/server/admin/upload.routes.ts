@@ -185,7 +185,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (_request, response) => {
-      const types = await getDocumentTypes();
+      const types: IResGetDocumentTypes = await getDocumentTypes();
 
       return response.status(200).send(types);
     }
