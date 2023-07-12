@@ -1,32 +1,36 @@
 import Boom from "@hapi/boom";
 import {
   IReqPostOrganisationValidation,
+  IResOrganisationValidation,
   SReqHeadersOrganisation,
   SReqPostOrganisationValidation,
   SResPostOrganisationValidation,
   ZReqPostOrganisationValidation,
 } from "shared/routes/v1/organisation.routes";
 
-import config from "@/config";
-
+import config from "../../../config";
 import { validation } from "../../actions/organisations.actions";
 import { Server } from "../server";
 
 export const organisationRoutes = ({ server }: { server: Server }) => {
-  server.post(
+  server.post<{
+    Body: IReqPostOrganisationValidation;
+    Reply: IResOrganisationValidation;
+  }>(
     "/organisation/validation",
     {
-      // @ts-expect-error
       schema: {
         body: SReqPostOrganisationValidation,
-        response: { 200: SResPostOrganisationValidation },
+        response: {
+          200: SResPostOrganisationValidation,
+        },
         headers: SReqHeadersOrganisation,
         security: [
           {
             apiKey: [],
           },
         ],
-      } as const,
+      },
       preHandler: [
         server.auth([
           async (request, _reply, ...arg) => {
@@ -42,15 +46,14 @@ export const organisationRoutes = ({ server }: { server: Server }) => {
         async (request, _reply) => {
           try {
             await ZReqPostOrganisationValidation().parseAsync(request.body);
-          } catch (error: any) {
-            throw Boom.badRequest(error);
+          } catch (error) {
+            throw Boom.badRequest(error as Error);
           }
         },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      ],
     },
     async (request, response) => {
-      const { email, siret } = request.body as IReqPostOrganisationValidation;
+      const { email, siret } = request.body;
 
       try {
         const res = await validation({ email: email.toLowerCase(), siret });

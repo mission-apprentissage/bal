@@ -1,3 +1,5 @@
+import { captureException } from "@sentry/node";
+
 import { startCLI } from "@/commands";
 import logger from "@/common/logger";
 import {
@@ -8,13 +10,6 @@ import config from "@/config";
 import { modelDescriptors } from "@/db/models";
 import createGlobalServices from "@/services";
 
-process.on("unhandledRejection", (err) =>
-  logger.error(err, "unhandledRejection")
-);
-process.on("uncaughtException", (err) =>
-  logger.error(err, "uncaughtException")
-);
-
 (async function () {
   try {
     await connectToMongodb(config.mongodb.uri);
@@ -24,6 +19,7 @@ process.on("uncaughtException", (err) =>
 
     startCLI();
   } catch (err) {
+    captureException(err);
     logger.error({ err }, "startup error");
     process.exit(1);
   }

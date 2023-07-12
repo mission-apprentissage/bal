@@ -244,7 +244,11 @@ async function* getLine(cursor) {
   for await (const {
     content: { email, nom_eleve, prenom_eleve, ...rest },
   } of cursor) {
-    if (currentLine.email !== null && email !== currentLine.email) {
+    if (
+      (currentLine.email !== null && email !== currentLine.email) ||
+      nom_eleve !== currentLine.nom_eleve ||
+      prenom_eleve !== currentLine.prenom_eleve
+    ) {
       yield currentLine;
       currentLine = {
         email: null,
@@ -276,6 +280,8 @@ export const createMailingListFile = async (document: IDocument) => {
       projection: { _id: 0, content: 1 },
       sort: {
         "content.email": 1,
+        "content.nom_eleve": 1,
+        "content.prenom_eleve": 1,
       },
     }
   );

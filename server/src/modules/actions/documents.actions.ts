@@ -1,3 +1,4 @@
+import { captureException } from "@sentry/node";
 import {
   Filter,
   FindOneAndUpdateOptions,
@@ -313,6 +314,7 @@ export const deleteDocumentById = async (documentId: ObjectId) => {
   try {
     await deleteFromStorage(document.chemin_fichier);
   } catch (error) {
+    captureException(error);
     logger.error(error);
   }
   try {
@@ -320,6 +322,7 @@ export const deleteDocumentById = async (documentId: ObjectId) => {
       document_id: document._id.toString(),
     });
   } catch (error) {
+    captureException(error);
     logger.error(error);
   }
   await getDbCollection("documents").deleteOne({ _id: document._id });

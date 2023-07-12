@@ -167,14 +167,9 @@ describe("Organisations", () => {
 
       assert.equal(response.statusCode, 400);
       assert.deepEqual(response.json(), {
-        errors: [
-          {
-            code: "custom",
-            message: "Le siret ne respecte pas l'algorithme luhn",
-            path: ["siret"],
-          },
-        ],
-        message: "Validation failed",
+        message: "siret: Le siret ne respecte pas l'algorithme luhn",
+        name: "Validation failed",
+        statusCode: 400,
       });
 
       // We didn't call APIs

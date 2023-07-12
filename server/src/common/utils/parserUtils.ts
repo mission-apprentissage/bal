@@ -1,4 +1,5 @@
 // @ts-ignore
+import { captureException } from "@sentry/node";
 import csvToJson from "convert-csv-to-json";
 import { parse } from "csv-parse";
 import { isEmpty, pickBy } from "lodash-es";
@@ -32,6 +33,7 @@ export const getJsonFromXlsxData = (
 
     return json;
   } catch (err) {
+    captureException(err);
     return null;
   }
 };

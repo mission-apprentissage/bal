@@ -1,3 +1,4 @@
+import { captureException } from "@sentry/node";
 import { JSONSchema7 } from "json-schema";
 import { CollectionInfo, CreateCollectionOptions, MongoClient } from "mongodb";
 import omitDeep from "omit-deep";
@@ -169,7 +170,8 @@ export const configureDbSchemaValidation = async (
           },
         });
       } catch (error) {
-        console.error(error);
+        captureException(error);
+        logger.error(error);
       }
     })
   );
@@ -208,7 +210,8 @@ export const createIndexes = async () => {
             options
           );
         } catch (err) {
-          console.error(
+          captureException(err);
+          logger.error(
             `Error creating indexes for ${descriptor.collectionName}: ${err}`
           );
         }

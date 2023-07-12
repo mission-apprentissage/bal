@@ -50,7 +50,6 @@ export const getTrainingLinks = async (data: TrainingLinkData[]) => {
       return links;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log({ error });
       throw new ApiError(
         "Api LBA",
         `${error.message}`,

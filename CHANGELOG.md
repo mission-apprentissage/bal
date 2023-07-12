@@ -1,3 +1,31 @@
+# [1.45.0](https://github.com/mission-apprentissage/bal/compare/v1.44.0...v1.45.0) (2023-07-11)
+
+
+### Features
+
+* grouper par email nom prenom, plusieurs destinataires ([#216](https://github.com/mission-apprentissage/bal/issues/216)) ([bb101c8](https://github.com/mission-apprentissage/bal/commit/bb101c8613b50ef4351730b22efbabb977a83eaf))
+
+# [1.44.0](https://github.com/mission-apprentissage/bal/compare/v1.43.3...v1.44.0) (2023-07-11)
+
+
+### Features
+
+* installation de Sentry sur l'API ([#223](https://github.com/mission-apprentissage/bal/issues/223)) ([1625c54](https://github.com/mission-apprentissage/bal/commit/1625c544eb3cf859686ce73a35a639f858cb1b44))
+
+## [1.43.3](https://github.com/mission-apprentissage/bal/compare/v1.43.2...v1.43.3) (2023-07-10)
+
+
+### Bug Fixes
+
+* cleanup preview script ([#222](https://github.com/mission-apprentissage/bal/issues/222)) ([ee004a5](https://github.com/mission-apprentissage/bal/commit/ee004a59dea81f2c32f12f7cd5aa5025743a633b))
+
+## [1.43.2](https://github.com/mission-apprentissage/bal/compare/v1.43.1...v1.43.2) (2023-07-07)
+
+
+### Bug Fixes
+
+* support de l'environnement de developpement hybride local / docker ([#218](https://github.com/mission-apprentissage/bal/issues/218)) ([81f0e39](https://github.com/mission-apprentissage/bal/commit/81f0e392d7136201e98ddb715ef5fef8dfce4b78))
+
 ## [1.43.1](https://github.com/mission-apprentissage/bal/compare/v1.43.0...v1.43.1) (2023-07-07)
 
 
