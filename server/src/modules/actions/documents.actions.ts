@@ -82,6 +82,11 @@ export const updateDocument = async (
   );
   return updated.value as IDocument | null;
 };
+
+export const getDocumentTypes = () => {
+  return getDbCollection("documents").distinct("type_document");
+};
+
 interface IUploadDocumentOptions {
   type_document?: string;
   fileSize?: number;
@@ -343,13 +348,9 @@ export const handleDocumentFileContent = async ({ document_id }) => {
         formatter: parseContentLine,
       });
       break;
-    case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
-    case DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023:
-    case DOCUMENT_TYPES.VOEUX_AFFELNET_JUIN_2023:
-      await extractDocumentContent({ document });
-      break;
 
     default:
+      await extractDocumentContent({ document });
       break;
   }
 };
