@@ -9,16 +9,13 @@ import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
 import logger from "@/common/logger";
 import { updateJob } from "@/modules/actions/job.actions";
 
-import { closeSentry } from "../../common/services/sentry/sentry";
-import { closeMongodbConnection } from "../../common/utils/mongodbUtils";
-
 const runner = async (
   job: IJob,
   jobFunc: () => Promise<any>,
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }
-) => {
+): Promise<number> => {
   if (options.runningLogs) logger.info(`Job: ${job.name} Started`);
   const startDate = new Date();
   await updateJob(job._id, {
@@ -60,20 +57,7 @@ const runner = async (
       );
   }
 
-  if (job.sync) {
-    // Waiting logger to flush all logs (MongoDB)
-    setTimeout(async () => {
-      try {
-        await closeMongodbConnection();
-      } catch (err) {
-        captureException(err);
-        if (options.runningLogs)
-          logger.error({ err }, "close mongodb connection error");
-      }
-      await closeSentry();
-      process.exit(error ? 1 : 0); // eslint-disable-line no-process-exit
-    }, 500);
-  }
+  return error ? 1 : 0;
 };
 
 export function executeJob(
@@ -96,7 +80,7 @@ export function executeJob(
     });
     const start = Date.now();
     try {
-      await runner(job, jobFunc, options);
+      return await runner(job, jobFunc, options);
     } finally {
       transaction.setMeasurement(
         "job.execute",

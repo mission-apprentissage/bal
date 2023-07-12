@@ -5,12 +5,20 @@ import logger from "@/common/logger";
 import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
 import { server } from "@/modules/server/server";
 
-import { initSentryProcessor } from "./common/services/sentry/sentry";
+import {
+  closeSentry,
+  initSentryProcessor,
+} from "./common/services/sentry/sentry";
 import { addJob, processor } from "./modules/jobs/jobs";
 
-program.configureHelp({
-  sortSubcommands: true,
-});
+program
+  .configureHelp({
+    sortSubcommands: true,
+  })
+  .hook("postAction", async () => {
+    await closeMongodbConnection();
+    await closeSentry();
+  });
 
 program
   .command("start")
@@ -68,7 +76,7 @@ program
   .option("-a, --admin", "administrateur")
   .option("-s, --sync", "Run job synchronously")
   .action(async ({ email, password, organisationId, admin = false, sync }) => {
-    await addJob({
+    const exitCode = await addJob({
       name: "users:create",
       payload: {
         email,
@@ -78,7 +86,10 @@ program
       },
       sync,
     });
-    process.exit(0);
+
+    if (exitCode) {
+      program.error("Command failed", { exitCode });
+    }
   });
 
 program
@@ -86,42 +97,49 @@ program
   .description("Seed env")
   .option("-s, --sync", "Run job synchronously")
   .action(async ({ sync }) => {
-    await addJob(
+    const exitCode = await addJob(
       {
         name: "seed",
         sync,
       },
-      { runningLogs: false }
+      { runningLogs: true }
     );
-    process.exit(0);
+
+    if (exitCode) {
+      program.error("Command failed", { exitCode });
+    }
   });
 
 program
   .command("migrations:up")
   .description("Run migrations up")
   .action(async () => {
-    await addJob(
+    const exitCode = await addJob(
       {
         name: "migrations:up",
         sync: true,
       },
-      { runningLogs: false }
+      { runningLogs: true }
     );
-    process.exit(0);
+    if (exitCode) {
+      program.error("Command failed", { exitCode });
+    }
   });
 
 program
   .command("migrations:status")
   .description("Check migrations status")
   .action(async () => {
-    await addJob(
+    const exitCode = await addJob(
       {
         name: "migrations:status",
         sync: true,
       },
       { runningLogs: false }
     );
-    process.exit(0);
+    if (exitCode) {
+      program.error("Command failed", { exitCode });
+    }
   });
 
 program
@@ -129,12 +147,14 @@ program
   .description("Run migrations create")
   .requiredOption("-d, --description <string>", "description")
   .action(async ({ description }) => {
-    await addJob({
+    const exitCode = await addJob({
       name: "migrations:create",
-      payload: description,
+      payload: { description },
       sync: true,
     });
-    process.exit(0);
+    if (exitCode) {
+      program.error("Command failed", { exitCode });
+    }
   });
 
 program
@@ -143,12 +163,14 @@ program
   .option("-d, --drop", "Drop indexes before recreating them")
   .option("-s, --sync", "Run job synchronously")
   .action(async ({ drop, sync }) => {
-    await addJob({
+    const exitCode = await addJob({
       name: "indexes:recreate",
       payload: { drop },
       sync,
     });
-    process.exit(0);
+    if (exitCode) {
+      program.error("Command failed", { exitCode });
+    }
   });
 
 program.hook("preAction", (_, actionCommand) => {

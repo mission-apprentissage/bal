@@ -1,4 +1,6 @@
-export const up = async (db) => {
+import { Db } from "mongodb";
+
+export const up = async (db: Db) => {
   const documents = await db
     .collection("documents")
     .find({}, { projection: { type_document: 1, _id: 1 } })
