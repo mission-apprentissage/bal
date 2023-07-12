@@ -23,7 +23,7 @@ export async function addJob(
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }
-) {
+): Promise<number> {
   const job = await createJob({
     name,
     payload,
@@ -34,6 +34,8 @@ export async function addJob(
   if (sync && job) {
     return runJob(job, options);
   }
+
+  return 0;
 }
 
 async function runJob(
@@ -41,7 +43,7 @@ async function runJob(
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }
-) {
+): Promise<number> {
   return executeJob(
     job,
     async () => {

@@ -47,6 +47,7 @@ export async function up() {
 
   await status();
 
+  const client = getMongodbClient();
   // @ts-ignore
   await mup(client.db(), client);
 }
