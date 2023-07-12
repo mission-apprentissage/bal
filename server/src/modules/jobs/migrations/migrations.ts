@@ -33,7 +33,7 @@ const myConfig = {
   changelogCollectionName: "migrations",
 
   // The file extension to create migrations and search for in migration dir
-  migrationFileExtension: ".ts",
+  migrationFileExtension: ".js",
 
   // Enable the algorithm to create a checksum of the file contents and use that in the comparison to determin
   // if the file should be run.  Requires that scripts are coded to be run multiple times.
@@ -72,7 +72,11 @@ export async function status(): Promise<number> {
 
 export async function create({ description }: { description: string }) {
   // @ts-ignore
-  config.set({ ...myConfig, migrationsDir: "src/db/migrations" });
+  config.set({
+    ...myConfig,
+    migrationsDir: "src/db/migrations",
+    migrationFileExtension: ".ts",
+  });
   const fileName = await mcreate(description);
   const file = `src/db/migrations/${fileName}`;
   const content = await readFile(file, {
