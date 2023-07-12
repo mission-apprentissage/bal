@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { SResError } from "shared/routes/common.routes";
 import {
   IResGetDocuments,
+  IResGetDocumentTypes,
   IResPostAdminUpload,
   SReqQueryPostAdminUpload,
   SResGetDocuments,
@@ -171,22 +172,22 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get(
+  server.get<{
+    Reply: {
+      200: IResGetDocumentTypes;
+    };
+  }>(
     "/admin/documents/types",
     {
       schema: {
         response: {
           200: SResGetDocumentTypes,
         },
-      } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      },
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (_request, response) => {
-      const types = await getDocumentTypes();
+      const types: IResGetDocumentTypes = await getDocumentTypes();
 
       return response.status(200).send(types);
     }
