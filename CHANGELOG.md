@@ -1,3 +1,10 @@
+## [1.45.2](https://github.com/mission-apprentissage/bal/compare/v1.45.1...v1.45.2) (2023-07-12)
+
+
+### Bug Fixes
+
+* migration status extension ([#228](https://github.com/mission-apprentissage/bal/issues/228)) ([180eec4](https://github.com/mission-apprentissage/bal/commit/180eec435e0ff27fce313c8b3a0ebedbd3c47560))
+
 ## [1.45.1](https://github.com/mission-apprentissage/bal/compare/v1.45.0...v1.45.1) (2023-07-12)
 
 
