@@ -46,6 +46,7 @@ jobs:
         run: echo 'https://${{ github.event.pull_request.number }}.bal-preview.apprentissage.beta.gouv.fr/ 🚀' >> $GITHUB_STEP_SUMMARY
 
       - name: Comment PR Preview
+        if: github.event.pull_request.state != 'closed'
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
