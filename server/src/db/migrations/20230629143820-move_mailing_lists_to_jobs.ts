@@ -1,5 +1,15 @@
-export const up = async (db, _client) => {
-  const mailingLists = await db.collection("mailingLists").find({});
+import { Db } from "mongodb";
+
+export const up = async (db: Db, _client) => {
+  const matchingCollections = await db
+    .listCollections({ name: "mailingLists" })
+    .toArray();
+
+  if (matchingCollections.length === 0) {
+    return;
+  }
+
+  const mailingLists = await db.collection("mailingLists").find({}).toArray();
 
   await Promise.all(
     mailingLists.map(async (mailingList) => {
