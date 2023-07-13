@@ -1,5 +1,25 @@
 # Développement
 
+- [Développement](#développement)
+  - [Pré-requis](#pré-requis)
+  - [Organisation des dossiers](#organisation-des-dossiers)
+  - [Opérations](#opérations)
+    - [Installation et Mise à jour des dépendences](#installation-et-mise-à-jour-des-dépendences)
+  - [Linter](#linter)
+  - [Prettier](#prettier)
+  - [Typescript](#typescript)
+    - [Arrêt de l'application](#arrêt-de-lapplication)
+    - [Suppression de la stack](#suppression-de-la-stack)
+    - [Execution de commandes depuis les conteneurs](#execution-de-commandes-depuis-les-conteneurs)
+      - [Server CLI](#server-cli)
+    - [Emails](#emails)
+    - [Debugger sous VSCode](#debugger-sous-vscode)
+      - [Server Inspect](#server-inspect)
+      - [Processor Inspect](#processor-inspect)
+      - [Server Test](#server-test)
+  - [Aller plus loin](#aller-plus-loin)
+
+
 ## Pré-requis
 
 - Docker
@@ -15,100 +35,71 @@ Ce projet est organisé de la manière suivante :
     |-- .github
     |-- reverse_proxy
     |-- server
+    |-- shared
     |-- ui
     |-- docker-compose.yml
-    |-- docker-compose.override.yml
+    |-- docker-compose.debug.yml
 
 ```
 
+- Le dossier `/.infra` contient la configuration de l'instructure.
 - Le dossier `/.github` contient l'ensemble des Github Actions.
 - Le dossier `/reverse_proxy` contient le serveur Nginx et sa configuration en tant que reverse_proxy.
 - Le dossier `server` contient l'ensemble de l'application coté serveur, à savoir l'API Node Express.
+- Le dossier `shared` contient le code partagé entre l'ui et le server
 - Le dossier `ui` contient l'ensemble de l'application coté front, à savoir le code NextJs.
 - Le fichier `/docker-compose.yml` va définir la configuration des conteneurs de l'application, _pour plus d'informations sur Docker cf: https://docs.docker.com/_
-- Le fichier `/docker-compose.override.yml` va définir la configuration Docker spécifique à l'environnement local de développement.
+- Le fichier `/docker-compose.debug.yml` va définir la configuration Docker spécifique à l'environnement local de développement nécessaire au debugging local.
 
-=======
+## Opérations
 
-### Variables d'environnement
+Veuillez consulter le [README](../README.md#développement) principal pour le démarrage.
 
-Avant de démarrer la stack il vous faut copier et renommer les fichier suivant :
+### Installation et Mise à jour des dépendences
+
+Pour installer et mettre à jour les dépendences, vous pouvez au choix:
+
+- Modifier les différents `package.json` et appliquer les changements via `yarn install`
+- Ajouter des dépendences via la commande `yarn add`
+
+Pour refleter les changements, il faudra relancer les applications via la commande `make start`
+
+**Note:** les changements appliqués à `.yarn/cache` doivent etre commit dans le repository.
+
+## Linter
+
+Un linter (via ESLint) est mis en place dans le projet, pour le lancer :
 
 ```bash
-cp ui/.env.example ui/.env
-cp server/.env.example server/.env
+mna-bal local:lint
 ```
 
-Les variables par défaut ne permettent pas :
+**Note:** eslint est run automatiquement à chaque commit
 
-- De recuperer les information liées à un siret
-- L'affichage de la page de statistiques
-- L'upload de fichier
-- La signature électronique
-- L'envoi vers AGECAP.
+## Prettier
 
-### Démarrage de la stack
-
-Pour créer la stack et monter l'environnement il suffit de lancer la commande suivante :
+Prettier est mis en place dans le projet, pour le lancer :
 
 ```bash
-make install
-make start
+mna-bal local:prettier:fix
 ```
 
-### Hydratation du projet en local
+**Note:** eslint est run automatiquement à chaque commit
 
-Pour créer des jeux de test facilement il suffit de lancer les commandes suivante :
+## Typescript
+
+L'application utilise TypeScript, pour vérifier que les erreurs liés au type veuillez lancer:
 
 ```bash
-yarn --cwd server seed -e admin@mail.com
-yarn --cwd server imports
+mna-bal local:typecheck
 ```
 
-=======
+### Arrêt de l'application
 
-## Conteneurs Docker
-
-- Un serveur Web Nginx jouant le role de reverse proxy, _défini dans le service `reverse_proxy` du docker-compose_.
-- Un serveur Node Express, _défini dans le service `server` du docker-compose_.
-- Une base de donnée mongoDb _défini dans le service `mongodb` du docker-compose_.
-- Un serveur Front sous NextJs _défini dans le service `ui` du docker-compose_.
-
-### Seulement sur les environnements production, recette et test
-
-- Un outil de statistiques défini dans le service `metabase` dans le repository d'infrastructure.
-
-### Seulement sur les environnements de test
-
-- Un serveur SMTP Mailpit défini dans le service `smtp` du docker-compose.override.
-
-### Serveur Nodes & Nginx - Reverse Proxy
-
-Le serveur nginx écoute sur le port 80 et fait office de reverse proxy pour les services :
-
-- server
-- ui
-- smtp
-- metabase (recette et production)
-
-Le serveur Web Node Express utilise le port 5000.
-
-Dans la configuration de nginx, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/api.inc` qui définir la gestion de l'API Node Express.
-Dans la configuration de nginx, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/ui.inc` qui définir la gestion de l'UI React.
-Dans la configuration des websocket, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/ws.inc` qui définir la gestion de socket.io.
-Dans la configuration de smtp, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/smtp.inc` qui définir la gestion de MailPit.
-Dans la configuration de metabase, on fait référence au fichier `/reverse_proxy/app/nginx/conf.d/locations/metabase.inc` qui définir la gestion de Metabase.
-
-### Base de données MongoDb
-
-Le base de données est une MongoDb et utilise le port par défaut 27017.
-
-### Arrêt de la stack
-
-Il est possible de stopper les conteneur en lancant la commande suivante :
+Il est possible de stopper l'application en lancant la commande suivante :
 
 ```bash
-make stop
+mna-bal local:stop
 ```
 
 ### Suppression de la stack
@@ -116,133 +107,64 @@ make stop
 Pour supprimer l'ensemble de la stack et tuer tous les conteneurs il suffit de lancer la commande suivante :
 
 ```bash
-make clean
+mna-bal local:clean
 ```
 
-### Vérification du montage de la stack
+### Execution de commandes depuis les conteneurs
 
-Après avoir créé la stack pour vérifier que les conteneurs sont bien présents vous pouvez lancer la commande suivante depuis le répertoire `server` :
+Il est possible de lancer une session interractive dans un conteneur via la commande suivante:
 
 ```bash
-docker exec -t -i cerfa_server /bin/bash
+mna-bal local:docker:sh <nom-du-servive>
 ```
 
-De même pour consulter la liste des fichiers dans le docker :
+De meme il est possible de lancer des commandes directements:
 
 ```bash
-docker exec cerfa_server bash -c 'ls'
+mna-bal local:docker:run <nom-du-servive> <command>
 ```
 
-## Linter
+#### Server CLI
 
-Un linter (via ESLint) est mis en place dans le projet, pour le lancer :
+De manière général, il est recommandé d'utiliser une session interactive.
+
+Vous pouvez utiliser la cli du server, dans la session interactive `docker compose run --rm -it server sh`:
+- `yarn cli --help`: List l'ensemble des commandes disponibles
+- `yarn cli seed`: Seed de la database
+- `yarn cli migrations:status`: Vérification du status des migrations
+- `yarn cli migrations:up`: Execution des migrations
+- `yarn cli migrations:create`: Creation d'une nouvelle migration
+
+Il est aussi possible de lancer ces commandes sans session interactive comme par example: 
 
 ```bash
-yarn lint
+mna-bal local:server:cli --help
 ```
 
-## Tests
+### Emails
 
-Des tests sont mis en place en utilisant le framework Mocha.
+Le server SMTP de test [Mailpit](https://github.com/axllent/mailpit) est utilisé localement pour prendre en charge l'envoi d'emails localement.
 
-_Pour en savoir plus sur Mocha : https://mochajs.org/_
+Vous pouvez accéder à l'interface utilisateur à l'addresse suivante [http://localhost:8085](http://localhost:8085).
 
-Les tests sont en règle général découpés en 3 dossiers :
-
-- Le dossier `server/tests/unit` contient la liste des tests unitaires.
-- Le dossier `server/tests/integration` contient la liste des tests d'intégration
-- Le dossier `server/tests/utils` contient la liste des utilitaires communs de test.
-
-## Mailer
-
-Le server SMTP de test [Mailpit](https://github.com/axllent/mailpit) est utilisé localement pour prendre en charge l'envoi d'emails.
-
-## Server Node Express
-
-### Http
-
-La structure principale du serveur Node Express est définie dans `server/src/http` et contient :
-
-- La liste des middlewares express à appliquer
-- La liste des routes d'API
-- Le point d'entrée principal du serveur : `server/src/httpserver.js`
-
-Il est possible de tester en local le server express via `http://localhost/api`
-
-### Logger
-
-Pour la gestion des logs nous utilisons la librairie bunyan _cf : https://www.npmjs.com/package/bunyan_
-
-Par défaut plusieurs streams sont disponibles :
-
-- console
-- json
-- slack
-- mongodb
-
-Pour mettre en place les notifications Slack il est nécessaire d'utiliser les Webhooks et de créer une chaine dédiée dans votre espace de travail Slack.
-
-Il vous faudra créer une application dans Slack et récupérer le lien de la Webhook, pour en savoir plus : https://api.slack.com/messaging/webhooks.
-
-### Utilitaires
-
-Certains modules utilitaires sont présents dans `server/src/common/utils`
-
-### Composants injectables
-
-Un module permettant de contenir des composants "communs" et injectable dans les routes est proposé dans le fichier `server/src/common/components/components.js`
-
-Vous pouvez ajouter dans ce fichier des élements communs à réexploiter dans l'API.
-
-## Debugger sous VSCode
+### Debugger sous VSCode
 
 Il est possible de débugger facilement **sous VSCode** grace à la configuration Vscode partagée.
 
-### Server Inspect
+#### Server Inspect
 
 - Lancer la task `Attach Server`
 - Lancer l'application en utilisant la commande `make debug` au lieu de `make start`.
 
-### Processor Inspect
+#### Processor Inspect
 
 - Lancer la task `Attach Processor`
 - Lancer l'application en utilisant la commande `make debug` au lieu de `make start`.
 
-### Server Test Inspect
+#### Server Test
 
-- Lancer la task `Attach Test`
-- Lancer l'application en utilisant la commande `make debug-test-server` au lieu de `make test`.
+Utilisez l'extension VsCode [Vitest](https://marketplace.visualstudio.com/items?itemName=ZixuanChen.vitest-explorer)
 
-## Workflows & CI / CD
+## Aller plus loin
 
-Dans le repertoire `/.github/workflows` sont définie les Github actions à mettre en place sur le repository.
-
-Le workflow principal est définie dans `/.github/workflows/yarn-ci.yml` et se charge à chaque push sur une branche de :
-
-- Vérifier l'installation des dépendances
-- Lancer le linter
-- Exécuter les tests unitaires.
-
-### Documentation API
-
-La documentation API est générée par [fastify-swagger](https://github.com/fastify/fastify-swagger) et accessible à l'adresse `/api/documentation`.
-
-### Convention de typage
-
-Chaque route est typée au niveau de la requête et de la réponse. Les types sont définis dans le dossier `shared` pour une utilisation dans `ui` et `server`.
-
-#### Nommage
-
-- `S | I` pour Schema ou Interface
-- `Req | Res` pour Request ou Response
-- `Get | Post | Put | Patch | Delete` pour la méthode
-- Nom du modèle
-
-##### Exemple
-
-- `SReqPostUser` pour le schema de la requête POST d'un `User`
-- `SResPostUser` pour le schema de la réponse POST d'un `User`
-- `IResGetUser` pour l'interface de la réponse GET d'un `User`
-- `IResPostUser` pour l'interface de la réponse POST d'un `User`
-
-![](https://avatars1.githubusercontent.com/u/63645182?s=200&v=4)
+- [Développement du Server](./developpement/server.md)

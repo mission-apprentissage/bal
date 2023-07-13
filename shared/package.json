@@ -6,6 +6,9 @@
   "author": "mna",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "json-schema-to-ts": "2.8.0",
     "react": "18.2.0",

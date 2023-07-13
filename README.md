@@ -1,5 +1,20 @@
 # BAL - Boite Aux Lettres
 
+- [BAL - Boite Aux Lettres](#bal---boite-aux-lettres)
+  - [Fiche Produit](#fiche-produit)
+  - [Installation](#installation)
+    - [Pré-requis](#pré-requis)
+    - [Clé GPG](#clé-gpg)
+  - [Développement](#développement)
+    - [Installation des dépendances](#installation-des-dépendances)
+    - [Developpement CLI mna-bal](#developpement-cli-mna-bal)
+    - [Variables d'environnement local](#variables-denvironnement-local)
+    - [Lancement de l'application](#lancement-de-lapplication)
+    - [Hydratation du projet en local](#hydratation-du-projet-en-local)
+    - [Exécution des tests](#exécution-des-tests)
+  - [Aller plus loin](#aller-plus-loin)
+
+
 ## Fiche Produit
 
 Consultez la [Fiche Produit](https://www.notion.so/mission-apprentissage/Fiche-produit-73bbd7e5983749b7974c2f7c11194518?pvs=4) pour plus d'informations sur le projet.
@@ -58,48 +73,67 @@ Voici les étapes pour créer votre clé GPG :
 - `.infra/vault/.vault-password.gpg`
 - `.infra/vault/habilitations.yml`
 
-### Variables d'environnement local
-
-Pour récupérer les variables d'environnement localement, veuillez exécuter la commande suivante :
-
-```bash
-.infra/scripts/vault/setup-local-env.sh
-```
-
-Le script vous demandera plusieurs fois la phrase secrète de votre clé GPG pour décrypter les variables d'environnement du vault.
-
 ## Développement
 
 ### Installation des dépendances
 
 Avant de lancer l'application, assurez-vous d'installer toutes les dépendances nécessaires en exécutant la commande suivante :
 
-```sh
+```bash
 yarn install
 ```
 
+Vous pouvez également utiliser la commande `.bin/mna-bal local:install`
+
 Cette commande mettra à jour les dépendances du projet.
 
-> **Note** : Pour que vos changements se reflètent dans votre application locale, vous devez exécuter la commande `make start`.
+> **Note** : Pour que vos changements se reflètent dans votre application locale, vous devez exécuter la commande `.bin/mna-bal local:start`.
+
+
+### Developpement CLI mna-bal
+
+Les principales opérations sont regroupée dans un CLI `.bin/mna-bal`, il est possible de liste l'ensemble des commandes disponible via `.bin/mna-bal help`.
+
+Il est également possible d'installer globallement l'exécutable via la commande `.bin/mna-bal local:bin:install` une fois installé il est possible d'utiliser la CLI via `mna-bal help` directement (n'oubliez pas d'ouvrir une nouvelle session de votre terminal).
+
+Enfin si vous utilisez ZSH, vous pouvez installer le support du tab-completion de la commande via `mna-bal local:completion:zsh`
+
+### Variables d'environnement local
+
+Avant de lancer l'application, il vous faudra récupérer les variables d'environnement localement. Pour cela veuillez exécuter la commande suivante :
+
+```bash
+.bin/mna-bal local:env:update
+```
+
+Le script vous demandera plusieurs fois la phrase secrète de votre clé GPG pour décrypter les variables d'environnement du vault.
 
 ### Lancement de l'application
 
 Pour démarrer l'application en mode local, exécutez la commande suivante :
 
-```sh
-make start
+```bash
+.bin/mna-bal local:start
 ```
 
 Cette commande démarre les containers définis dans le fichier `docker-compose.yml`.
 
 Une fois l'application démarrée, vous pourrez y accéder via l'URL [http://localhost](http://localhost)
 
+### Hydratation du projet en local
+
+Pour créer des jeux de test facilement il suffit de lancer les commandes suivante :
+
+```bash
+.bin/mna-bal local:server:seed
+```
+
 ### Exécution des tests
 
 Pour exécuter les tests localement, utilisez la commande suivante :
 
-```sh
-yarn test
+```bash
+.bin/mna-bal local:test
 ```
 
 Cette commande exécutera tous les tests du projet et vous affichera les résultats.
@@ -110,6 +144,8 @@ Cette commande exécutera tous les tests du projet et vous affichera les résult
 
 2. D'avoir lancé l'application car les tests utilisent la base de donnée.
 
-### Aller plus loin
+## Aller plus loin
 
-Pour plus de details concernants le développement de l'application, veuillez consulter la documentation [developping](./docs/developping.md)
+- [Développement](./docs/developping.md)
+- [Infrastructure](./docs/developping.md)
+- [Sécurité](./docs/securite.md)
