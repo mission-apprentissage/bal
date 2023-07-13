@@ -14,6 +14,7 @@ import { createJob } from "../actions/job.actions";
 import { processMailingList } from "../actions/mailingLists.actions";
 import { createUser } from "../actions/users.actions";
 import { recreateIndexes } from "./db/recreateIndexes";
+import { validateModels } from "./db/schemaValidation";
 import { executeJob } from "./executeJob";
 import { clear } from "./seed/clear";
 import { seed } from "./seed/seed";
@@ -56,8 +57,14 @@ async function runJob(
           return createUser(job.payload as any);
         case "indexes:recreate":
           return recreateIndexes(job.payload as any);
-        case "migrations:up":
-          return upMigration();
+        case "db:validate":
+          return validateModels();
+        case "migrations:up": {
+          await upMigration();
+          // Validate all documents after the migration
+          await addJob({ name: "db:validate" });
+          return;
+        }
         case "migrations:status": {
           const pendingMigrations = await statusMigration();
           console.log(
