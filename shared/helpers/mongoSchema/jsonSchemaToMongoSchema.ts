@@ -23,7 +23,10 @@ type MongoBsonType =
   | "long"
   | "decimal"
   | "minKey"
-  | "maxKey";
+  | "maxKey"
+  | "number";
+
+// https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/#available-keywords
 
 export interface MongoSchema {
   additionalItems?: boolean | MongoSchema;
@@ -88,7 +91,7 @@ function convertTypeToBsonType(type: JSONSchema7TypeName): MongoBsonType {
     case "string":
       return "string";
     case "number":
-      return "double";
+      return "number";
     case "integer":
       return "int";
     case "boolean":
@@ -104,7 +107,6 @@ function convertTypeToBsonType(type: JSONSchema7TypeName): MongoBsonType {
 
 /**
  * Conversion du schema pour le format mongoDB
- * https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/#available-keywords
  */
 export const jsonSchemaToMongoSchema = (schema: JSONSchema7): MongoSchema => {
   const result: MongoSchema = {};

@@ -1,5 +1,10 @@
 import { captureException } from "@sentry/node";
-import { Collection, CollectionInfo, MongoClient } from "mongodb";
+import {
+  Collection,
+  CollectionInfo,
+  MongoClient,
+  MongoServerError,
+} from "mongodb";
 import { jsonSchemaToMongoSchema } from "shared/helpers/mongoSchema/jsonSchemaToMongoSchema";
 import { CollectionName, IModelDescriptor } from "shared/models/common";
 import { IDocumentMap, modelDescriptors } from "shared/models/models";
@@ -82,7 +87,13 @@ const createCollectionIfDoesNotExist = async (
     .includes(collectionName);
 
   if (!collectionExistsInDb) {
-    await db.createCollection(collectionName);
+    try {
+      await db.createCollection(collectionName);
+    } catch (err) {
+      if ((err as MongoServerError).codeName !== "NamespaceExists") {
+        throw err;
+      }
+    }
   }
 };
 

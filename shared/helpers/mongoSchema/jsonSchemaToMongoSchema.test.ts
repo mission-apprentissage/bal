@@ -118,7 +118,7 @@ describe("jsonSchemaToMongoSchema", () => {
           description: "Checksum fichier",
         },
         import_progress: {
-          bsonType: "double",
+          bsonType: "number",
           description: "Progress percentage (-1 not started)",
         },
         lines_count: {

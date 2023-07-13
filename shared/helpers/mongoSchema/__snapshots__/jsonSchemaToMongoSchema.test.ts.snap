@@ -73,7 +73,7 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
       "description": "Hash fichier",
     },
     "import_progress": {
-      "bsonType": "double",
+      "bsonType": "number",
       "description": "Progress percentage (-1 not started)",
     },
     "lines_count": {
