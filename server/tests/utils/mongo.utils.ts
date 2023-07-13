@@ -6,6 +6,7 @@ import {
   configureDbSchemaValidation,
   connectToMongodb,
   createIndexes,
+  getDatabase,
 } from "@/common/utils/mongodbUtils";
 import config from "@/config";
 
@@ -20,7 +21,7 @@ export const startAndConnectMongodb = async () => {
 };
 
 export const stopMongodb = async () => {
-  // await getDatabase().dropDatabase();
+  await getDatabase().dropDatabase();
   await closeMongodbConnection();
 };
 
