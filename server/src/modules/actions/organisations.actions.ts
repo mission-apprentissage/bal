@@ -104,7 +104,7 @@ export const findOrganisationBySiret = async (
   return organisation;
 };
 
-export const updatePerson = async (
+export const updateOrganisation = async (
   organisation: IOrganisation,
   data: Partial<IOrganisation>,
   updateFilter: UpdateFilter<IOrganisation> = {}

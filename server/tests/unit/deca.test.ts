@@ -1,14 +1,12 @@
 import assert from "node:assert";
 
-import { ObjectId } from "mongodb";
-import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 import {
   getDecaVerification,
+  importDecaContent,
   parseContentLine,
 } from "../../src/modules/actions/deca.actions";
-import { createDocumentContent } from "../../src/modules/actions/documentContent.actions";
 import { useMongo } from "../utils/mongo.utils";
 
 describe("DECA file", () => {
@@ -121,14 +119,11 @@ describe("DECA verification", () => {
   });
 
   it("should be valid SIRET email", async () => {
-    await createDocumentContent({
-      document_id: new ObjectId().toString(),
-      type_document: DOCUMENT_TYPES.DECA,
-      content: {
-        siret: "12345678901234",
-        emails: ["test1@company.com", "test2@company.com"],
-      },
-    });
+    await importDecaContent(
+      ["test1@company.com", "test2@company.com"],
+      "12345678901234"
+    );
+
     assert.deepEqual(
       await getDecaVerification("12345678901234", "test1@company.com"),
       {
@@ -137,14 +132,11 @@ describe("DECA verification", () => {
       }
     );
 
-    await createDocumentContent({
-      document_id: new ObjectId().toString(),
-      type_document: DOCUMENT_TYPES.DECA,
-      content: {
-        siret: "12345678901234",
-        emails: ["test1@gmail.com", "test2@company.com"],
-      },
-    });
+    await importDecaContent(
+      ["test1@gmail.com", "test2@company.com"],
+      "12345678901234"
+    );
+
     assert.deepEqual(
       await getDecaVerification("12345678901234", "test1@gmail.com"),
       {
@@ -155,14 +147,10 @@ describe("DECA verification", () => {
   });
 
   it("should be valid SIRET domain", async () => {
-    await createDocumentContent({
-      document_id: new ObjectId().toString(),
-      type_document: DOCUMENT_TYPES.DECA,
-      content: {
-        siret: "12345678901234",
-        emails: ["test1@company.com", "test2@company.com"],
-      },
-    });
+    await importDecaContent(
+      ["test1@company.com", "test2@company.com"],
+      "12345678901234"
+    );
 
     assert.deepEqual(
       await getDecaVerification("12345678901234", "test3@company.com"),
@@ -174,14 +162,10 @@ describe("DECA verification", () => {
   });
 
   it("should be valid SIREN email", async () => {
-    await createDocumentContent({
-      document_id: new ObjectId().toString(),
-      type_document: DOCUMENT_TYPES.DECA,
-      content: {
-        siret: "12345678901234",
-        emails: ["test1@company.com", "test2@company.com"],
-      },
-    });
+    await importDecaContent(
+      ["test1@company.com", "test2@company.com"],
+      "12345678901234"
+    );
 
     assert.deepEqual(
       await getDecaVerification("12345678999999", "test2@company.com"),
@@ -190,14 +174,10 @@ describe("DECA verification", () => {
         on: "email",
       }
     );
-    await createDocumentContent({
-      document_id: new ObjectId().toString(),
-      type_document: DOCUMENT_TYPES.DECA,
-      content: {
-        siret: "12345678901234",
-        emails: ["test1@gmail.com", "test2@company.com"],
-      },
-    });
+    await importDecaContent(
+      ["test1@gmail.com", "test2@company.com"],
+      "12345678901234"
+    );
 
     assert.deepEqual(
       await getDecaVerification("12345678999999", "test1@gmail.com"),
@@ -209,14 +189,10 @@ describe("DECA verification", () => {
   });
 
   it("should be valid SIREN domain", async () => {
-    await createDocumentContent({
-      document_id: new ObjectId().toString(),
-      type_document: DOCUMENT_TYPES.DECA,
-      content: {
-        siret: "12345678901234",
-        emails: ["test1@company.com", "test2@company.com"],
-      },
-    });
+    await importDecaContent(
+      ["test1@company.com", "test2@company.com"],
+      "12345678901234"
+    );
 
     assert.deepEqual(
       await getDecaVerification("12345678999999", "test3@company.com"),
@@ -228,14 +204,10 @@ describe("DECA verification", () => {
   });
 
   it("should not be valid SIRET domain if blacklisted", async () => {
-    await createDocumentContent({
-      document_id: new ObjectId().toString(),
-      type_document: DOCUMENT_TYPES.DECA,
-      content: {
-        siret: "12345678901234",
-        emails: ["test1@gmail.com", "test2@company.com"],
-      },
-    });
+    await importDecaContent(
+      ["test1@gmail.com", "test2@company.com"],
+      "12345678901234"
+    );
 
     assert.deepEqual(
       await getDecaVerification("12345678901234", "test3@gmail.com"),
@@ -246,14 +218,10 @@ describe("DECA verification", () => {
   });
 
   it("should not be valid SIREN domain if blacklisted", async () => {
-    await createDocumentContent({
-      document_id: new ObjectId().toString(),
-      type_document: DOCUMENT_TYPES.DECA,
-      content: {
-        siret: "12345678901234",
-        emails: ["test1@gmail.com", "test2@company.com"],
-      },
-    });
+    await importDecaContent(
+      ["test1@gmail.com", "test2@company.com"],
+      "12345678901234"
+    );
 
     assert.deepEqual(
       await getDecaVerification("12345678999999", "test3@gmail.com"),

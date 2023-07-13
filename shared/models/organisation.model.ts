@@ -29,6 +29,7 @@ export const SOrganisation = {
   properties: {
     _id: { type: "string", format: "ObjectId" },
     nom: { type: "string", description: "Nom de l'organisation" },
+    siren: { type: "string", description: "Siren de l'organisation" },
     email_domains: {
       type: "array",
       items: {

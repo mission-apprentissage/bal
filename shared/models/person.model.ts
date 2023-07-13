@@ -33,7 +33,12 @@ export const SPerson = {
     },
     nom: { type: "string", description: "Le nom de la personne" },
     prenom: { type: "string", description: "Le prénom de la personne" },
-    organisation_id: { type: "string" },
+    organisations: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
     sirets: {
       type: "array",
       items: {
@@ -60,7 +65,7 @@ export const SPerson = {
       description: "Date d'ajout en base de données",
     },
   },
-  required: ["_id", "email", "organisation_id"],
+  required: ["_id", "email"],
   additionalProperties: false,
 } as const;
 

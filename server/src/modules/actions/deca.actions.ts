@@ -1,24 +1,29 @@
 import companyEmailValidator from "company-email-validator";
 // @ts-ignore
 import { SIRET_REGEX } from "shared/constants/regex";
-import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
-import { findOneDocumentContent } from "./documentContent.actions";
+import { getDbCollection } from "../../common/utils/mongodbUtils";
+import {
+  createOrganisation,
+  findOrganisation,
+  updateOrganisation,
+} from "./organisations.actions";
+import { findPerson } from "./persons.actions";
 
 interface ContentLine {
   SIRET: string;
   EMAIL?: string;
 }
 
-interface ParsedContentLine {
+export interface DECAParsedContentLine {
   siret: string;
   emails: string[];
 }
 
 export const parseContentLine = (
   line: ContentLine
-): ParsedContentLine | undefined => {
+): DECAParsedContentLine | undefined => {
   if (!line.EMAIL) return;
   if (!SIRET_REGEX.test(line.SIRET)) return;
 
@@ -38,6 +43,62 @@ export const parseContentLine = (
   return { siret, emails };
 };
 
+export const importDecaContent = async (emails: string[], siret: string) => {
+  const uniqueEmails = [...new Set(emails)];
+  const siren = siret.substring(0, 9);
+  const domains = [...new Set(uniqueEmails.map((e) => e.split("@")[1]))];
+
+  let organisation = await findOrganisation({ siren });
+
+  if (!organisation) {
+    const organisationId = await createOrganisation({
+      siren,
+      etablissements: [{ siret }],
+      email_domains: domains,
+    });
+
+    organisation = await findOrganisation({ _id: organisationId });
+  } else {
+    const etablissement = organisation.etablissements?.find(
+      (e) => e.siret === siret
+    );
+
+    if (!etablissement) {
+      organisation.etablissements?.push({ siret });
+    }
+
+    const newDomains = domains.filter(
+      (domain) => !organisation?.email_domains?.includes(domain)
+    );
+
+    if (newDomains.length) {
+      organisation.email_domains?.push(...newDomains);
+    }
+
+    await updateOrganisation(organisation, organisation);
+  }
+
+  uniqueEmails.forEach((email) => {
+    getDbCollection("persons").updateOne(
+      {
+        email,
+      },
+      {
+        $addToSet: {
+          organisations: organisation?._id,
+          sirets: siret,
+        },
+        $setOnInsert: {
+          email,
+        },
+      },
+      {
+        upsert: true,
+      }
+    );
+  });
+};
+
 export const getDecaVerification = async (
   siret: string,
   email: string
@@ -48,10 +109,9 @@ export const getDecaVerification = async (
   const siren = siret.substring(0, 9);
 
   // check siret / email
-  is_valid = !!(await findOneDocumentContent({
-    type_document: DOCUMENT_TYPES.DECA,
-    "content.siret": siret,
-    "content.emails": email,
+  is_valid = !!(await findPerson({
+    email: email,
+    sirets: siret,
   }));
 
   if (is_valid) {
@@ -63,10 +123,9 @@ export const getDecaVerification = async (
 
   // check siret / domain
   if (!isBlacklisted) {
-    is_valid = !!(await findOneDocumentContent({
-      type_document: DOCUMENT_TYPES.DECA,
-      "content.siret": siret,
-      "content.emails": { $regex: `.*@${domain}` },
+    is_valid = !!(await findOrganisation({
+      "etablissements.siret": siret,
+      email_domains: domain,
     }));
 
     if (is_valid) {
@@ -78,10 +137,9 @@ export const getDecaVerification = async (
   }
 
   // check siren / email
-  is_valid = !!(await findOneDocumentContent({
-    type_document: DOCUMENT_TYPES.DECA,
-    "content.siret": { $regex: `^${siren}` },
-    "content.emails": email,
+  is_valid = !!(await findPerson({
+    email: email,
+    sirets: { $regex: `^${siren}` },
   }));
 
   if (is_valid) {
@@ -93,10 +151,9 @@ export const getDecaVerification = async (
 
   // check siren / domain
   if (!isBlacklisted) {
-    is_valid = !!(await findOneDocumentContent({
-      type_document: DOCUMENT_TYPES.DECA,
-      "content.siret": { $regex: `^${siren}` },
-      "content.emails": { $regex: `.*@${domain}` },
+    is_valid = !!(await findOrganisation({
+      siren: siren,
+      email_domains: domain,
     }));
 
     if (is_valid) {
