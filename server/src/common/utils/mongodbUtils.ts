@@ -16,15 +16,15 @@ interface JSONSchema7WithBSONType extends Omit<JSONSchema7, "properties"> {
   [key: string]: any;
 }
 
-/** @type {MongoClient} */
-let mongodbClient: MongoClient;
+let mongodbClient: MongoClient | null = null;
 
-const ensureInitialization = () => {
+export const ensureInitialization = () => {
   if (!mongodbClient) {
     throw new Error(
       "Database connection does not exist. Please call connectToMongodb before."
     );
   }
+  return mongodbClient;
 };
 
 /**
@@ -32,7 +32,19 @@ const ensureInitialization = () => {
  * @returns client
  */
 export const connectToMongodb = async (uri: string) => {
-  const client = new MongoClient(uri);
+  const client = new MongoClient(uri, {
+    appName: "bal",
+  });
+
+  client.on("connectionPoolReady", () => {
+    logger.info("MongoDB reconnected");
+    mongodbClient = client;
+  });
+
+  client.on("connectionPoolClosed", () => {
+    logger.warn("MongoDB closed");
+    mongodbClient = null;
+  });
 
   await client.connect();
   mongodbClient = client;
@@ -44,27 +56,24 @@ export const connectToMongodb = async (uri: string) => {
 export const getMongodbClient = () => mongodbClient;
 
 export const closeMongodbConnection = () => {
-  ensureInitialization();
-  return mongodbClient.close();
+  logger.warn("Closing MongoDB");
+  return mongodbClient?.close();
 };
 
 export const getDatabase = () => {
-  ensureInitialization();
-  return mongodbClient.db();
+  return ensureInitialization().db();
 };
 
 export const getDbCollection = (name: string) => {
-  ensureInitialization();
-  return mongodbClient.db().collection(name);
+  return ensureInitialization().db().collection(name);
 };
 
 export const getCollectionList = () => {
-  return mongodbClient.db().listCollections().toArray();
+  return ensureInitialization().db().listCollections().toArray();
 };
 
 export const getDbCollectionIndexes = async (name: string) => {
-  ensureInitialization();
-  return await mongodbClient.db().collection(name).indexes();
+  return await ensureInitialization().db().collection(name).indexes();
 };
 
 /**

@@ -72,7 +72,11 @@ export async function status(): Promise<number> {
 
 export async function create({ description }: { description: string }) {
   // @ts-ignore
-  config.set({ ...myConfig, migrationsDir: "src/db/migrations" });
+  config.set({
+    ...myConfig,
+    migrationsDir: "src/db/migrations",
+    migrationFileExtension: ".ts",
+  });
   const fileName = await mcreate(description);
   const file = `src/db/migrations/${fileName}`;
   const content = await readFile(file, {
