@@ -61,10 +61,14 @@ interface OutputWish {
   libelle_formation: string;
 }
 
+export const MAILING_LIST_DOCUMENT_PREFIX = "mailing-list";
+
 export const createMailingList = async (data: IMailingList) => {
   const outputDocument = await createEmptyDocument({
-    type_document: `mailing-list-${data.source}`,
-    filename: `mailing-list-${data.source}-${new ObjectId()}.csv`,
+    type_document: `${MAILING_LIST_DOCUMENT_PREFIX}-${data.source}`,
+    filename: `${MAILING_LIST_DOCUMENT_PREFIX}-${
+      data.source
+    }-${new ObjectId()}.csv`,
   });
 
   return addJob({

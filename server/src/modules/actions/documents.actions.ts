@@ -31,6 +31,7 @@ import {
   createDocumentContent,
   deleteDocumentContent,
 } from "./documentContent.actions";
+import { MAILING_LIST_DOCUMENT_PREFIX } from "./mailingLists.actions";
 
 const testMode = config.env === "test";
 
@@ -84,7 +85,16 @@ export const updateDocument = async (
 };
 
 export const getDocumentTypes = async (): Promise<string[]> => {
-  return getDbCollection("documents").distinct("type_document");
+  // exclude mailing list documents
+  const regexPattern = `^${MAILING_LIST_DOCUMENT_PREFIX}`;
+
+  return getDbCollection("documents").distinct("type_document", {
+    type_document: {
+      $not: {
+        $regex: new RegExp(regexPattern, "i"),
+      },
+    },
+  });
 };
 
 interface ICreateEmptyDocumentOptions {
