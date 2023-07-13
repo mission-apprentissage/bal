@@ -61,6 +61,4 @@ export const up = async (db: Db, _client: MongoClient) => {
         );
     }
   }
-
-  throw new Error("wesh");
 };
