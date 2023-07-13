@@ -149,7 +149,9 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.delete(
+  server.delete<{
+    Params: { id: string };
+  }>(
     "/admin/document/:id",
     {
       schema: {
@@ -158,12 +160,8 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           properties: { id: { type: "string" } },
           required: ["id"],
         },
-      } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      },
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       await deleteDocumentById(new ObjectId(request.params.id));
@@ -187,7 +185,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (_request, response) => {
-      const types: IResGetDocumentTypes = await getDocumentTypes();
+      const types = await getDocumentTypes();
 
       return response.status(200).send(types);
     }

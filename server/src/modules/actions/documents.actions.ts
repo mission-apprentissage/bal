@@ -83,7 +83,7 @@ export const updateDocument = async (
   return updated.value as IDocument | null;
 };
 
-export const getDocumentTypes = () => {
+export const getDocumentTypes = (): Promise<string[]> => {
   return getDbCollection("documents").distinct("type_document");
 };
 
