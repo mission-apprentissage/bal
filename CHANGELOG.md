@@ -1,3 +1,10 @@
+## [1.45.3](https://github.com/mission-apprentissage/bal/compare/v1.45.2...v1.45.3) (2023-07-13)
+
+
+### Bug Fixes
+
+* mongodb connection ([#229](https://github.com/mission-apprentissage/bal/issues/229)) ([fbd1419](https://github.com/mission-apprentissage/bal/commit/fbd1419e775d2d3aa4b0ae93d851df7e1e56df75))
+
 ## [1.45.2](https://github.com/mission-apprentissage/bal/compare/v1.45.1...v1.45.2) (2023-07-12)
 
 
