@@ -1,3 +1,4 @@
+import { captureException } from "@sentry/node";
 import { program } from "commander";
 import HttpTerminator from "lil-http-terminator";
 
@@ -24,36 +25,43 @@ program
   .command("start")
   .description("Démarre le serveur HTTP")
   .action(async () => {
-    server.listen({ port: 5000, host: "0.0.0.0" }, function (err) {
+    try {
+      await server.listen({ port: 5000, host: "0.0.0.0" });
       logger.info(`Server ready and listening on port ${5000}`);
-      if (err) {
-        console.log(err);
-        process.exit(1);
-      }
-    });
+    } catch (err) {
+      logger.error(err);
+      captureException(err);
+      throw err;
+    }
 
-    let shutdownInProgress = false;
-    ["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
-      (process as NodeJS.EventEmitter).on(signal, async () => {
-        try {
-          if (shutdownInProgress) {
-            logger.warn(`application shut down (FORCED) (signal=${signal})`);
-            process.exit(0); // eslint-disable-line no-process-exit
+    return new Promise((resolve, reject) => {
+      let shutdownInProgress = false;
+      ["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
+        (process as NodeJS.EventEmitter).on(signal, async () => {
+          try {
+            if (shutdownInProgress) {
+              const message = `application shut down (FORCED) (signal=${signal})`;
+              logger.warn(message);
+              reject(new Error(message));
+              return;
+            }
+
+            shutdownInProgress = true;
+            logger.warn(`application shutting down (signal=${signal})`);
+            await HttpTerminator({
+              server: server.server,
+              maxWaitTimeout: 50_000,
+              logger: logger,
+            }).terminate();
+            await closeMongodbConnection();
+            logger.warn("application shut down");
+            resolve();
+          } catch (err) {
+            captureException(err);
+            logger.error({ err }, "error during shutdown");
+            reject(err);
           }
-          shutdownInProgress = true;
-          logger.warn(`application shutting down (signal=${signal})`);
-          await HttpTerminator({
-            server: server.server,
-            maxWaitTimeout: 50_000,
-            logger: logger,
-          }).terminate();
-          await closeMongodbConnection();
-          logger.warn("application shut down");
-          process.exit(0); // eslint-disable-line no-process-exit
-        } catch (err) {
-          logger.error({ err }, "error during shutdown");
-          process.exit(1); // eslint-disable-line no-process-exit
-        }
+        });
       });
     });
   });
