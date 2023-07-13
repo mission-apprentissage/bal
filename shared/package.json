@@ -6,6 +6,11 @@
   "author": "mna",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "test": "vitest -c ./vitest.config.ts --run",
+    "test:ci": "yarn test --coverage",
+    "test:watch": "vitest -c ./vitest.config.ts --watch"
+  },
   "dependencies": {
     "json-schema-to-ts": "2.8.0",
     "react": "18.2.0",
@@ -15,6 +20,8 @@
     "lodash-es": "^4.17.21",
     "luhn": "^2.4.1",
     "mongodb": "^4.11.0",
+    "vite-tsconfig-paths": "^4.2.0",
+    "vitest": "^0.33.0",
     "zod": "^3.21.4"
   }
 }

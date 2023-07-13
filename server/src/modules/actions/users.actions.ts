@@ -47,7 +47,7 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   const now = new Date();
   const { insertedId: userId } = await getDbCollection("users").insertOne({
     ...data,
-    person_id: person._id,
+    person_id: person._id.toString(),
     _id,
     password,
     updated_at: now,

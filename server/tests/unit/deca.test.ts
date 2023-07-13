@@ -122,7 +122,7 @@ describe("DECA verification", () => {
 
   it("should be valid SIRET email", async () => {
     await createDocumentContent({
-      document_id: new ObjectId(),
+      document_id: new ObjectId().toString(),
       type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
@@ -138,7 +138,7 @@ describe("DECA verification", () => {
     );
 
     await createDocumentContent({
-      document_id: new ObjectId(),
+      document_id: new ObjectId().toString(),
       type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
@@ -156,7 +156,7 @@ describe("DECA verification", () => {
 
   it("should be valid SIRET domain", async () => {
     await createDocumentContent({
-      document_id: new ObjectId(),
+      document_id: new ObjectId().toString(),
       type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
@@ -175,7 +175,7 @@ describe("DECA verification", () => {
 
   it("should be valid SIREN email", async () => {
     await createDocumentContent({
-      document_id: new ObjectId(),
+      document_id: new ObjectId().toString(),
       type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
@@ -191,7 +191,7 @@ describe("DECA verification", () => {
       }
     );
     await createDocumentContent({
-      document_id: new ObjectId(),
+      document_id: new ObjectId().toString(),
       type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
@@ -210,7 +210,7 @@ describe("DECA verification", () => {
 
   it("should be valid SIREN domain", async () => {
     await createDocumentContent({
-      document_id: new ObjectId(),
+      document_id: new ObjectId().toString(),
       type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
@@ -229,7 +229,7 @@ describe("DECA verification", () => {
 
   it("should not be valid SIRET domain if blacklisted", async () => {
     await createDocumentContent({
-      document_id: new ObjectId(),
+      document_id: new ObjectId().toString(),
       type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",
@@ -247,7 +247,7 @@ describe("DECA verification", () => {
 
   it("should not be valid SIREN domain if blacklisted", async () => {
     await createDocumentContent({
-      document_id: new ObjectId(),
+      document_id: new ObjectId().toString(),
       type_document: DOCUMENT_TYPES.DECA,
       content: {
         siret: "12345678901234",

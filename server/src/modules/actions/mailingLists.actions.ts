@@ -91,13 +91,6 @@ export const findMailingLists = async (
   return findJobs(filter, options);
 };
 
-export const updateMailingList = async (
-  _id: ObjectId,
-  data: Partial<IMailingList>
-) => {
-  return updateJob(_id, data);
-};
-
 /**
  * ACTIONS
  */

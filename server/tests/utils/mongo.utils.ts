@@ -1,13 +1,13 @@
+import { modelDescriptors } from "shared/models/models";
+
 import {
   clearAllCollections,
   closeMongodbConnection,
   configureDbSchemaValidation,
   connectToMongodb,
   createIndexes,
-  getDatabase,
 } from "@/common/utils/mongodbUtils";
 import config from "@/config";
-import { modelDescriptors } from "@/db/models";
 
 export const startAndConnectMongodb = async () => {
   const workerId = `${process.env.VITEST_POOL_ID}-${process.env.VITEST_WORKER_ID}`;
@@ -20,7 +20,7 @@ export const startAndConnectMongodb = async () => {
 };
 
 export const stopMongodb = async () => {
-  await getDatabase().dropDatabase();
+  // await getDatabase().dropDatabase();
   await closeMongodbConnection();
 };
 

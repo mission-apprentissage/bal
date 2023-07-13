@@ -1,4 +1,4 @@
-import { Filter, ObjectId } from "mongodb";
+import { ObjectId, RootFilterOperators } from "mongodb";
 import { IOrganisation } from "shared/models/organisation.model";
 import { SReqParamsSearchPagination } from "shared/routes/common.routes";
 import {
@@ -28,7 +28,7 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
       ] as any,
     },
     async (request, response) => {
-      const filter: Filter<IOrganisation> = {};
+      const filter: RootFilterOperators<IOrganisation> = {};
 
       const { q } = request.query;
 

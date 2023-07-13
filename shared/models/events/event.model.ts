@@ -4,7 +4,7 @@ import { deserialize } from "../..";
 import { IModelDescriptor } from "../common";
 import { SBalEmailsPayload } from "./bal_emails.event";
 
-const collectionName = "events";
+const collectionName = "events" as const;
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ person_id: 1 }, {}],
@@ -28,4 +28,8 @@ export const SEvent = {
 export interface IEvent
   extends FromSchema<typeof SEvent, { deserialize: deserialize }> {}
 
-export default { schema: SEvent, indexes, collectionName };
+export default {
+  schema: SEvent as any as IModelDescriptor["schema"],
+  indexes,
+  collectionName,
+};

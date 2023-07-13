@@ -3,7 +3,10 @@ import { IDocumentContent } from "shared/models/documentContent.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-type TCreateDocumentContent = Omit<IDocumentContent, "id">;
+type TCreateDocumentContent = Omit<
+  IDocumentContent,
+  "_id" | "updated_at" | "created_at"
+>;
 
 export const createDocumentContent = async (data: TCreateDocumentContent) => {
   const now = new Date();

@@ -1,4 +1,5 @@
 import { captureException } from "@sentry/node";
+import { modelDescriptors } from "shared/models/models";
 
 import { startCLI } from "@/commands";
 import logger from "@/common/logger";
@@ -7,7 +8,6 @@ import {
   connectToMongodb,
 } from "@/common/utils/mongodbUtils";
 import config from "@/config";
-import { modelDescriptors } from "@/db/models";
 import createGlobalServices from "@/services";
 
 (async function () {
