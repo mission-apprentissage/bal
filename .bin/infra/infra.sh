@@ -23,14 +23,13 @@ function Help_infra() {
    echo "  infra:vault:encrypt                                                                 Encrypt vault file"
    echo "  infra:vault:password                                                                Show vault password"
    echo "  infra:vault:renew                                                                   Renew vault password"
-   echo "  infra:user:remove --user <your_username> --extra-vars "username=<username_remove>"  Remove user from server (you need to manually remove from habilitation & renew vault first)"
+   echo "  infra:user:remove --user <your_username> --extra-vars "username=\<username_remove\>"  Remove user from server (you need to manually remove from habilitation & renew vault first)"
    echo "  infra:firewall:update <env> <app-key> <app-secret>                                  Update OVH firewall"
    echo "  infra:logs:ls <destination> <file>                                                  List application logs files on <destination>; destination can be any destination valid using SSH command"
    echo "  infra:logs:dl:local <destination> <file>                                            Download application logs files on <destination> to local; destination can be any destination valid using SSH command"
    echo "  infra:logs:rm:local                                                                 Remove local logs files downloaded via infra:logs:dl:local"
    echo 
-   echo 
-   exit 1
+   echo
 }
 
 function infra_setup() {

@@ -1,4 +1,4 @@
-#compdef mna-bal
+#compdef -d mna-bal
 
 _mna-bal_completion() {
   local curcontext="$curcontext" state line
@@ -52,8 +52,7 @@ _mna-bal_completion() {
   )
 
   # Set completion behavior based on the current word
-  _arguments -C \
-    '1: :->command'
+  _arguments -C '1: :->command'
 
   case $state in
     (command)

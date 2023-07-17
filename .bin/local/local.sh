@@ -39,18 +39,17 @@ function Help_local() {
    echo "  local:docker:run [service] [run_command] [run_args...]  Run a one-off command on the provided service"
    echo "  local:docker:sh [service]                               Start interactive session in the provided service"
    echo 
-   echo 
-
-   exit 1
+   echo
 }
 
 function local_bin_install() {
-  sudo ln -fs "$(ROOT_DIR)/.bin/mna-bal" /usr/local/bin/mna-bal
+  sudo ln -fs "${ROOT_DIR}/.bin/mna-bal" /usr/local/bin/mna-bal
 }
 
 function local_completion_zsh() {
-  suod mkdir -p /usr/local/share/zsh/site-functions
-  sudo ln -fs "$(ROOT_DIR)/.bin/zsh-completion" /usr/local/share/zsh/site-functions/_mna-bal
+  sudo mkdir -p /usr/local/share/zsh/site-functions
+  sudo ln -fs "${ROOT_DIR}/.bin/zsh-completion" /usr/local/share/zsh/site-functions/_mna-bal
+  compinit -C
 }
 
 function local_start() {
