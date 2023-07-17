@@ -6,10 +6,12 @@ readonly DNS_NAME=${1:?"Merci de préciser le nom de domaine"}; shift;
 
 start_reverse_proxy() {
   bash /opt/bal/tools/reload-containers.sh
+  bash /opt/bal/tools/wait-deployment.sh
 }
 
 stop_reverse_proxy() {
   bash /opt/bal/tools/stop-containers.sh reverse_proxy
+  bash /opt/bal/tools/wait-deployment.sh
 }
 
 renew_certificate() {
