@@ -78,8 +78,8 @@ export const importDecaContent = async (emails: string[], siret: string) => {
     await updateOrganisation(organisation, organisation);
   }
 
-  uniqueEmails.forEach((email) => {
-    getDbCollection("persons").updateOne(
+  for (const email of uniqueEmails) {
+    await getDbCollection("persons").updateOne(
       {
         email,
       },
@@ -96,7 +96,7 @@ export const importDecaContent = async (emails: string[], siret: string) => {
         upsert: true,
       }
     );
-  });
+  }
 };
 
 export const getDecaVerification = async (

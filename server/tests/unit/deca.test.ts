@@ -7,6 +7,8 @@ import {
   importDecaContent,
   parseContentLine,
 } from "../../src/modules/actions/deca.actions";
+import { findOrganisations } from "../../src/modules/actions/organisations.actions";
+import { findPersons } from "../../src/modules/actions/persons.actions";
 import { useMongo } from "../utils/mongo.utils";
 
 describe("DECA file", () => {
@@ -99,6 +101,55 @@ describe("DECA file", () => {
         EMAIL: "{email1@test.dev}",
       }),
       undefined
+    );
+  });
+});
+
+describe("DECA import", () => {
+  const mongo = useMongo();
+
+  beforeAll(async () => {
+    await mongo.beforeAll();
+  });
+
+  beforeEach(async () => {
+    await mongo.beforeEach();
+  });
+
+  afterAll(async () => {
+    await mongo.afterAll();
+  });
+
+  it("should import DECA content", async () => {
+    await importDecaContent(
+      ["test1@company.com", "test2@company.com"],
+      "12345678901234"
+    );
+    await importDecaContent(["test1@company.com"], "12345678900000");
+
+    const persons = await findPersons({});
+    const organisations = await findOrganisations({});
+
+    assert.equal(persons.length, 2);
+    assert.equal(persons[0].email, "test1@company.com");
+    assert.ok(persons[0].sirets?.includes("12345678901234"));
+    assert.ok(persons[0].sirets?.includes("12345678900000"));
+
+    assert.equal(persons[1].email, "test2@company.com");
+    assert.ok(persons[1].sirets?.includes("12345678901234"));
+
+    assert.equal(organisations.length, 1);
+    assert.equal(organisations[0].siren, "123456789");
+
+    assert.equal(organisations[0].email_domains?.length, 1);
+    assert.ok(organisations[0].email_domains?.includes("company.com"));
+
+    assert.equal(organisations[0].etablissements?.length, 2);
+    assert.ok(
+      organisations[0].etablissements?.find((e) => e.siret === "12345678901234")
+    );
+    assert.ok(
+      organisations[0].etablissements?.find((e) => e.siret === "12345678900000")
     );
   });
 });
