@@ -25,12 +25,12 @@ export const up = async (db: Db, _client: MongoClient) => {
     .collection("documentContents")
     .find({ type_document: DOCUMENT_TYPES.DECA });
 
-  documentContentsCursor.on("data", async (documentContent) => {
+  for await (const documentContent of documentContentsCursor) {
     await importDecaContent(
       documentContent.content.emails,
       documentContent.content.siret
     );
-  });
+  }
 };
 
 export const down = async (_db: Db, _client: MongoClient) => {};

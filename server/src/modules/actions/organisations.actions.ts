@@ -1,4 +1,5 @@
 import { Filter, FindOptions, ObjectId, UpdateFilter } from "mongodb";
+import { getSirenFromSiret } from "shared/helpers/common";
 import { IOrganisation } from "shared/models/organisation.model";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
@@ -25,7 +26,7 @@ export const validation = async ({
     return testDeca;
   }
 
-  const siren = siret.substring(0, 9);
+  const siren = getSirenFromSiret(siret);
   const testAkto = await getAktoVerification(siren, email);
   if (testAkto) {
     return {

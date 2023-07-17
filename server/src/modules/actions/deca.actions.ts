@@ -1,6 +1,7 @@
 import companyEmailValidator from "company-email-validator";
 // @ts-ignore
 import { SIRET_REGEX } from "shared/constants/regex";
+import { getSirenFromSiret } from "shared/helpers/common";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
 import { getDbCollection } from "../../common/utils/mongodbUtils";
@@ -45,7 +46,7 @@ export const parseContentLine = (
 
 export const importDecaContent = async (emails: string[], siret: string) => {
   const uniqueEmails = [...new Set(emails)];
-  const siren = siret.substring(0, 9);
+  const siren = getSirenFromSiret(siret);
   const domains = [...new Set(uniqueEmails.map((e) => e.split("@")[1]))];
 
   let organisation = await findOrganisation({ siren });
@@ -64,11 +65,14 @@ export const importDecaContent = async (emails: string[], siret: string) => {
     );
 
     if (!etablissement) {
+      organisation.etablissements = organisation.etablissements ?? [];
       organisation.etablissements?.push({ siret });
     }
 
     const newDomains = domains.filter(
-      (domain) => !organisation?.email_domains?.includes(domain)
+      (domain) =>
+        !organisation?.email_domains?.includes(domain) &&
+        companyEmailValidator.isCompanyDomain(domain)
     );
 
     if (newDomains.length) {
@@ -78,25 +82,27 @@ export const importDecaContent = async (emails: string[], siret: string) => {
     await updateOrganisation(organisation, organisation);
   }
 
-  for (const email of uniqueEmails) {
-    await getDbCollection("persons").updateOne(
-      {
-        email,
-      },
-      {
-        $addToSet: {
-          organisations: organisation?._id,
-          sirets: siret,
-        },
-        $setOnInsert: {
+  await Promise.all(
+    uniqueEmails.map((email) =>
+      getDbCollection("persons").updateOne(
+        {
           email,
         },
-      },
-      {
-        upsert: true,
-      }
-    );
-  }
+        {
+          $addToSet: {
+            organisations: organisation?._id,
+            sirets: siret,
+          },
+          $setOnInsert: {
+            email,
+          },
+        },
+        {
+          upsert: true,
+        }
+      )
+    )
+  );
 };
 
 export const getDecaVerification = async (
@@ -106,7 +112,7 @@ export const getDecaVerification = async (
   let is_valid = false;
   const isBlacklisted = !companyEmailValidator.isCompanyEmail(email);
   const [_user, domain] = email.split("@");
-  const siren = siret.substring(0, 9);
+  const siren = getSirenFromSiret(siret);
 
   // check siret / email
   is_valid = !!(await findPerson({
