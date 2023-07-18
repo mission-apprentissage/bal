@@ -1,3 +1,56 @@
+# [1.47.0](https://github.com/mission-apprentissage/bal/compare/v1.46.0...v1.47.0) (2023-07-18)
+
+
+### Bug Fixes
+
+* action file ([bcf0f5a](https://github.com/mission-apprentissage/bal/commit/bcf0f5ae1c22741e99c329375f251819917b9748))
+* add commander ([b9b5e86](https://github.com/mission-apprentissage/bal/commit/b9b5e8615acd22885c00ea3f649a6c632aeb6ca8))
+* build ([678ba22](https://github.com/mission-apprentissage/bal/commit/678ba2225769a6f4351ace14b83a041eefe41301))
+* build images ([c4f6cf3](https://github.com/mission-apprentissage/bal/commit/c4f6cf393f196532279c4834cbe9f3eb46cd3665))
+* ci ([ccc172d](https://github.com/mission-apprentissage/bal/commit/ccc172d4bb477e06aa0dd3fb0f9c4036092cb487))
+* completion cache ([916518f](https://github.com/mission-apprentissage/bal/commit/916518f70680e8b75d9861e2fe4893211d781d17))
+* create migration ([b966d76](https://github.com/mission-apprentissage/bal/commit/b966d761d655638a547ad02dc101b66bffa38058))
+* **deps:** bump semver from 6.3.0 to 6.3.1 in /.infra/scripts/ovh/ovh-nodejs-client ([#224](https://github.com/mission-apprentissage/bal/issues/224)) ([9cb4afe](https://github.com/mission-apprentissage/bal/commit/9cb4afe163a68fa3e712e82a492d8e1599603d27))
+* Dockerfile ([b2cc44d](https://github.com/mission-apprentissage/bal/commit/b2cc44d5f2aef5bc46812b79bc06d6a4494666ec))
+* document migrations ([0e0b97a](https://github.com/mission-apprentissage/bal/commit/0e0b97a89f1c0cd6c86bea0796f90af417a9692b))
+* extra opts ([ee7a3f3](https://github.com/mission-apprentissage/bal/commit/ee7a3f3fd2e22e64d2b3b645ad44d3ee1b4e043d))
+* improve cache ([991a712](https://github.com/mission-apprentissage/bal/commit/991a71200ceb8de1654daca7ffb9b0fc5f5ade0f))
+* min cache-mode ([ab8482b](https://github.com/mission-apprentissage/bal/commit/ab8482b91753063ebf5dc60cbd21d311e5c3cd3e))
+* missing bin ([00f651a](https://github.com/mission-apprentissage/bal/commit/00f651a903b873ec73dfbc454a94fe194d06b26b))
+* MongoDB typing & MongoDB Schema ([8310df6](https://github.com/mission-apprentissage/bal/commit/8310df6586b2b6bff657af97fbb6a95ec9ad8349))
+* MongoDB typing & MongoDB Schema ([#230](https://github.com/mission-apprentissage/bal/issues/230)) ([a787363](https://github.com/mission-apprentissage/bal/commit/a787363a4d7642d6e1320e7a8bd05681dd151f7c))
+* relative script dir path ([be6208f](https://github.com/mission-apprentissage/bal/commit/be6208f5327074512ed64de2656de523dc42711e))
+* relative script dir path ([281c5d9](https://github.com/mission-apprentissage/bal/commit/281c5d99441d47db54dba2f3f5ec5d67cf9ce2ee))
+* relative script dir path ([#237](https://github.com/mission-apprentissage/bal/issues/237)) ([1b30309](https://github.com/mission-apprentissage/bal/commit/1b30309bfbe7d5162055c6cedf01a49bcd2c71d6))
+* relative script dir path ([#238](https://github.com/mission-apprentissage/bal/issues/238)) ([14dc82c](https://github.com/mission-apprentissage/bal/commit/14dc82caec0b1cfd7ff1e9a8698fe1df94dd7fd0))
+* remove ci-install ([6f0c535](https://github.com/mission-apprentissage/bal/commit/6f0c535fd1c328bf3be3b9ba6271072cd58df33e))
+* remove Error in migration ([e835bae](https://github.com/mission-apprentissage/bal/commit/e835baeecdf590f7867ad93c92d9ada844031b6a))
+* remove validation enum ([806f5ac](https://github.com/mission-apprentissage/bal/commit/806f5acf2ef0503c01745967892be92c127269eb))
+* server migrations & cli exit codes ([bcbaaad](https://github.com/mission-apprentissage/bal/commit/bcbaaad06265009234ba86120a327b5803b6e879))
+* skip pushing ([1184422](https://github.com/mission-apprentissage/bal/commit/1184422642883cdea613804048ddbedeae4551d1))
+* support push/load mode ([f99753d](https://github.com/mission-apprentissage/bal/commit/f99753dc6d4ddb214712074593f4a71d9f08f340))
+* type ([a7125a8](https://github.com/mission-apprentissage/bal/commit/a7125a8b37e93f502909812b71cfd751a04580e6))
+* type ([31b12c6](https://github.com/mission-apprentissage/bal/commit/31b12c65c44196882a063afcde6125082ad0d87a))
+* upload type ([8938cbb](https://github.com/mission-apprentissage/bal/commit/8938cbb9eeb69dcfe0a6fb8638147d6195cd128d))
+* upload type ([7c1794f](https://github.com/mission-apprentissage/bal/commit/7c1794f922deb4a34d48de7995967079d4465953))
+* use build ([45bccdb](https://github.com/mission-apprentissage/bal/commit/45bccdb4caae2657d6821c8c2ed7f68a8b125484))
+* use builder_root ([ae2e5c5](https://github.com/mission-apprentissage/bal/commit/ae2e5c51a14ca7b2db75ef58af8d0790d6964d52))
+* use cache ([065076d](https://github.com/mission-apprentissage/bal/commit/065076d7c20c51c0bb6303b85f2e9918414b9cb2))
+* use multi-stage build ([2a38091](https://github.com/mission-apprentissage/bal/commit/2a38091587858dfff1fcb91ecf5b3ba9f47b4e5e))
+* which python ([83b45ab](https://github.com/mission-apprentissage/bal/commit/83b45abe7a8e900f8c4529398788045dd3bac66c))
+* yarn cache ([5870be7](https://github.com/mission-apprentissage/bal/commit/5870be78432c5f93b40d863fbb06b96742a8433c))
+
+
+### Features
+
+* add documents validation ([97bb1ff](https://github.com/mission-apprentissage/bal/commit/97bb1ff0f8ef1742a814a5496b88bdefed6417a1))
+* create dev cli tool ([d0f29b7](https://github.com/mission-apprentissage/bal/commit/d0f29b76082b49b182d0e61e532ca3231dcdc719))
+* exclude mailing list types ([4a11e84](https://github.com/mission-apprentissage/bal/commit/4a11e8475761886bd8b39a92201430dbf4d486ef))
+* hybride environnement ([315bf98](https://github.com/mission-apprentissage/bal/commit/315bf9825b2305d1086e9eb3afec503237502044))
+* importer nouveau type fichier ([23edbcd](https://github.com/mission-apprentissage/bal/commit/23edbcdf10f90dfc55bdbfd3ae00834885746746))
+* mailing list source ([1735b8d](https://github.com/mission-apprentissage/bal/commit/1735b8d46bfe65cf887105b3b3f7c333dbed65cb))
+* utilitaire de développement local + documentation ([#232](https://github.com/mission-apprentissage/bal/issues/232)) ([7ba29ca](https://github.com/mission-apprentissage/bal/commit/7ba29ca1eaa343d9e8402eb4a223c02e1d8a7d38))
+
 # [1.46.0](https://github.com/mission-apprentissage/bal/compare/v1.45.3...v1.46.0) (2023-07-18)
 
 
