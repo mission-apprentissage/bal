@@ -1,109 +1,151 @@
-# BAL
+# BAL - Boite Aux Lettres
+
+- [BAL - Boite Aux Lettres](#bal---boite-aux-lettres)
+  - [Fiche Produit](#fiche-produit)
+  - [Installation](#installation)
+    - [Pré-requis](#pré-requis)
+    - [Clé GPG](#clé-gpg)
+  - [Développement](#développement)
+    - [Installation des dépendances](#installation-des-dépendances)
+    - [Developpement CLI mna-bal](#developpement-cli-mna-bal)
+    - [Variables d'environnement local](#variables-denvironnement-local)
+    - [Lancement de l'application](#lancement-de-lapplication)
+    - [Hydratation du projet en local](#hydratation-du-projet-en-local)
+    - [Exécution des tests](#exécution-des-tests)
+  - [Aller plus loin](#aller-plus-loin)
+
+
+## Fiche Produit
+
+Consultez la [Fiche Produit](https://www.notion.so/mission-apprentissage/Fiche-produit-73bbd7e5983749b7974c2f7c11194518?pvs=4) pour plus d'informations sur le projet.
 
 ## Installation
 
 ### Pré-requis
 
-- Docker 19.03.0+
+Avant d'installer le projet, assurez-vous d'avoir les éléments suivants :
+
+- Docker 23.03.0+
 - GPG
+- NodeJS 18+ (vous pouvez utiliser [n](https://github.com/tj/n#third-party-installers) pour l'installer)
 
-### GPG
+### Clé GPG
 
-Pour décrypter les variables d'environnement, vous devez avoir une clé GPG, si ce n'est pas le cas, vous pouvez en créer en suivant la documentation Github https://docs.github.com/fr/authentication/managing-commit-signature-verification/generating-a-new-gpg-key
+Pour décrypter les variables d'environnement, vous avez besoin d'une clé GPG. Si vous n'en avez pas, vous pouvez en créer une en suivant la documentation GitHub [ici](https://docs.github.com/fr/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
 
-Choisir les choix suivants:
+Voici les étapes pour créer votre clé GPG :
 
-- `Please select what kind of key you want` > `ECC (sign and encrypt)`
-- `Please select which elliptic curve you want` > `Curve 25519`
-- `Please specify how long the key should be valid` > `0`
-- `Real Name`: `<Prenom> <Nom>`
-- `Email Address`: `email@mail.gouv.fr`
+1. Lors de la création de la clé, choisissez les options suivantes :
 
-Une fois terminé, vous pouvez récupérer l'identifiant de votre clé via la commande suivante:
+   - `Please select what kind of key you want` > `ECC (sign and encrypt)`
+   - `Please select which elliptic curve you want` > `Curve 25519`
+   - `Please specify how long the key should be valid` > `0`
+   - `Real Name`: `<Prenom> <Nom>`
+   - `Email Address`: `email@mail.gouv.fr`
+
+2. Pour utiliser votre clé au sein du projet, publiez-la en exécutant la commande suivante :
+
+   ```bash
+   gpg --list-secret-keys --keyid-format=long
+   ```
+
+   L'identifiant de votre clé correspond à la valeur `sec ed25519/<identifiant>`.
+
+3. Pour utiliser votre clé au sein de la mission apprentissage, vous devez la publier en exécutant la commande suivante :
+
+   ```bash
+   gpg --send-key <identifiant>
+   ```
+
+4. Pour une meilleure sécurité, il est recommandé de sauvegarder les clés publique et privée nouvellement créées. Vous pouvez les exporter en exécutant les commandes suivantes :
+
+   ```bash
+   gpg --export <identifiant> > public_key.gpg
+   gpg --export-secret-keys <identifiant> > private_key.gpg
+   ```
+
+   Ces deux fichiers peuvent être sauvegardés, par exemple, sur une clé USB.
+
+5. Communiquez votre clé à votre équipe afin d'être autorisé à décrypter le vault.
+
+**Une fois autorisé, vous aurez accès aux fichiers suivants :**
+
+- `.infra/vault/.vault-password.gpg`
+- `.infra/vault/habilitations.yml`
+
+## Développement
+
+### Installation des dépendances
+
+Avant de lancer l'application, assurez-vous d'installer toutes les dépendances nécessaires en exécutant la commande suivante :
 
 ```bash
-gpg --list-secret-keys --keyid-format=long
+yarn install
 ```
 
-> L'identifiant de votre clé correspond à la valeur `sec ed25519/<identifiant>`
+Vous pouvez également utiliser la commande `.bin/mna-bal local:install`
 
-Afin qu'elle puisse être utilisée au sein
-de la mission apprentissage, vous devez publier votre clé
+Cette commande mettra à jour les dépendances du projet.
 
-```bash
-gpg --send-key <identifiant>
-```
+> **Note** : Pour que vos changements se reflètent dans votre application locale, vous devez exécuter la commande `.bin/mna-bal local:start`.
 
-Il est vivement conseillé de réaliser un backup des clés publique et privée qui viennent d'être créés.
 
-```bash
-gpg --export <identifiant> > public_key.gpg
-gpg --export-secret-keys <identifiant> > private_key.gpg
-```
+### Developpement CLI mna-bal
 
-Ces deux fichiers peuvent, par exemple, être stockés sur une clé USB.
+Les principales opérations sont regroupée dans un CLI `.bin/mna-bal`, il est possible de liste l'ensemble des commandes disponible via `.bin/mna-bal help`.
 
-Veuillez communiquer cette clé à votre équipe pour etre authorisé à décrypter le vault.
+Il est également possible d'installer globallement l'exécutable via la commande `.bin/mna-bal local:bin:install` une fois installé il est possible d'utiliser la CLI via `mna-bal help` directement (n'oubliez pas d'ouvrir une nouvelle session de votre terminal).
 
-**Une fois habilité vous aurez accés aux fichiers suivants:**
-
-- .infra/vault/.vault-password.gpg
-- .infra/vault/habilitations.yml
+Enfin si vous utilisez ZSH, vous pouvez installer le support du tab-completion de la commande via `mna-bal local:completion:zsh`
 
 ### Variables d'environnement local
 
-Pour récupérer les variables d'environnement localement veuillez lancer la commande:
+Avant de lancer l'application, il vous faudra récupérer les variables d'environnement localement. Pour cela veuillez exécuter la commande suivante :
 
 ```bash
-.infra/scripts/vault/setup-local-env.sh
+.bin/mna-bal local:env:update
 ```
 
-> Le script va vous demander à plusieurs reprise votre passphrase de votre clé GPG pour décrypter les variables d'environnment du vault.
+Le script vous demandera plusieurs fois la phrase secrète de votre clé GPG pour décrypter les variables d'environnement du vault.
 
-### Démarrage
+### Lancement de l'application
 
-Pour lancer l'application :
+Pour démarrer l'application en mode local, exécutez la commande suivante :
 
-```sh
-make start
+```bash
+.bin/mna-bal local:start
 ```
 
-Cette commande démarre les containers définis dans le fichier `docker-compose.yml`
+Cette commande démarre les containers définis dans le fichier `docker-compose.yml`.
 
-L'application est ensuite accessible à l'url [http://localhost](http://localhost)
+Une fois l'application démarrée, vous pourrez y accéder via l'URL [http://localhost](http://localhost)
 
-Pour update les dependencies:
+### Hydratation du projet en local
 
-```sh
-make install
+Pour créer des jeux de test facilement il suffit de lancer les commandes suivante :
+
+```bash
+.bin/mna-bal local:server:seed
 ```
 
-Pour lancer les tests localement:
+### Exécution des tests
 
-```sh
-make test
+Pour exécuter les tests localement, utilisez la commande suivante :
+
+```bash
+.bin/mna-bal local:test
 ```
 
-### Documentation API
+Cette commande exécutera tous les tests du projet et vous affichera les résultats.
 
-La documentation API est générée par [fastify-swagger](https://github.com/fastify/fastify-swagger) et accessible à l'adresse `/api/documentation`.
+**Assurez-vous:**
 
-### Convention de typage
+1. D'avoir installé toutes les dépendances via la commande `yarn install` avant de lancer les tests
 
-Chaque route est typée au niveau de la requête et de la réponse. Les types sont définis dans le dossier `shared` pour une utilisation dans `ui` et `server`.
+2. D'avoir lancé l'application car les tests utilisent la base de donnée.
 
-#### Nommage
+## Aller plus loin
 
-- `S | I` pour Schema ou Interface
-- `Req | Res` pour Request ou Response
-- `Get | Post | Put | Patch | Delete` pour la méthode
-- Nom du modèle
-
-##### Exemple
-
-- `SReqPostUser` pour le schema de la requête POST d'un `User`
-- `SResPostUser` pour le schema de la réponse POST d'un `User`
-- `IResGetUser` pour l'interface de la réponse GET d'un `User`
-- `IResPostUser` pour l'interface de la réponse POST d'un `User`
-
-![](https://avatars1.githubusercontent.com/u/63645182?s=200&v=4)
+- [Développement](./docs/developping.md)
+- [Infrastructure](./docs/developping.md)
+- [Sécurité](./docs/securite.md)

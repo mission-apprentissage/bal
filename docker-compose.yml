@@ -17,8 +17,6 @@ x-node-image: &node-image
 services:
   reverse_proxy:
     <<: *default
-    profiles:
-      - "dev"
     ports:
       - 80:80
       - 443:443
@@ -40,14 +38,12 @@ services:
 
   ui:
     <<: *node-image
-    profiles:
-      - "dev"
     stdin_open: true
     env_file: .env_ui
     working_dir: '/app/ui'
     expose:
       - '3000'
-    command: ["yarn", "docker-dev"]
+    command: ["yarn", "dev"]
 
   server:
     <<: *node-image
@@ -65,27 +61,8 @@ services:
       - '5000'
     command: ["yarn", "dev"]
 
-  test:
-    <<: *node-image
-    profiles:
-      - "test"
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    extra_hosts:
-      - host.docker.internal:host-gateway
-  
-  ci:
-    <<: *node-image
-    profiles:
-      - "ci"
-    extra_hosts:
-      - host.docker.internal:host-gateway
-
   processor:
     <<: *node-image
-    profiles:
-      - "dev"
     command: ["yarn", "cli", "processor"]
     env_file: .env_server
     volumes:
@@ -102,9 +79,6 @@ services:
 
   mongodb:
     <<: *default
-    profiles:
-      - "dev"
-      - "test"
     image: mongo:6.0.2-focal
     ports:
       - "127.0.0.1:27017:27017"
@@ -119,8 +93,6 @@ services:
 
   clamav:
     <<: *default
-    profiles:
-      - "dev"
     image: clamav/clamav:latest
     healthcheck:
       test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
@@ -132,8 +104,6 @@ services:
   
   smtp:
     <<: *default
-    profiles:
-      - "dev"
     image: axllent/mailpit:v1.5.5
     ports:
       - 1025:1025
