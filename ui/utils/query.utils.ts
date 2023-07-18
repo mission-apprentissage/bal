@@ -16,11 +16,11 @@ export const queryClient = new QueryClient({
 });
 
 export const getSearchParamsForQuery = (
-  searchParams: ReadonlyURLSearchParams
+  searchParams: ReadonlyURLSearchParams | null
 ) => {
-  const q = searchParams.get("q") ?? "";
-  const page = searchParams.get("page") ?? "1";
-  const limit = searchParams.get("limit") ?? "10";
+  const q = searchParams?.get("q") ?? "";
+  const page = searchParams?.get("page") ?? "1";
+  const limit = searchParams?.get("limit") ?? "10";
 
   return {
     q,
@@ -31,10 +31,10 @@ export const getSearchParamsForQuery = (
 
 export const formatUrlWithNewParams = (
   to: string,
-  searchParams: ReadonlyURLSearchParams,
+  searchParams: ReadonlyURLSearchParams | null,
   newParams: Record<string, string | number>
 ) => {
-  const newSearchParams = new URLSearchParams(searchParams.toString());
+  const newSearchParams = new URLSearchParams(searchParams?.toString());
 
   Object.entries(newParams).forEach(([key, value]) => {
     newSearchParams.set(key, value.toString());

@@ -19,7 +19,7 @@ interface Props {
 
 const RootTemplate: FC<Props> = ({ children }) => {
   const searchParams = useSearchParams();
-  const tracking = useRef(searchParams.get("notracking") !== "true");
+  const tracking = useRef(searchParams?.get("notracking") !== "true");
 
   return (
     <PlausibleProvider
