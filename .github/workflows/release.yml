@@ -122,7 +122,7 @@ jobs:
 
       - name: Retrieve version
         id: get-version
-        run: echo "VERSION=$(git describe --tags | cut -c2-)" >> "$GITHUB_OUTPUT"
+        run: echo "VERSION=$(git describe --tags --abbrev=0 | cut -c2-)" >> "$GITHUB_OUTPUT"
 
   deploy:
     needs: ["release"]
