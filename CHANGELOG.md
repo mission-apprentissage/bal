@@ -1,3 +1,10 @@
+# [1.46.0](https://github.com/mission-apprentissage/bal/compare/v1.45.3...v1.46.0) (2023-07-18)
+
+
+### Features
+
+* importer nouveau type fichier [GENT-27] ([#226](https://github.com/mission-apprentissage/bal/issues/226)) ([ea51a01](https://github.com/mission-apprentissage/bal/commit/ea51a018be38bc9b9283bbc146a665039f2f8106))
+
 ## [1.45.3](https://github.com/mission-apprentissage/bal/compare/v1.45.2...v1.45.3) (2023-07-13)
 
 
