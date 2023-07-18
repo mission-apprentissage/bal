@@ -5,7 +5,6 @@ import { stringify } from "csv-stringify";
 import { Filter, FindOptions, ObjectId } from "mongodb";
 import { IDocument, IDocumentWithContent } from "shared/models/document.model";
 import { IJob } from "shared/models/job.model";
-import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
 import logger from "@/common/logger";
 import * as crypto from "@/common/utils/cryptoUtils";
@@ -62,10 +61,14 @@ interface OutputWish {
   libelle_formation: string;
 }
 
+export const MAILING_LIST_DOCUMENT_PREFIX = "mailing-list";
+
 export const createMailingList = async (data: IMailingList) => {
   const outputDocument = await createEmptyDocument({
-    type_document: `mailing-list-${data.source}`,
-    filename: `mailing-list-${data.source}-${new ObjectId()}.csv`,
+    type_document: `${MAILING_LIST_DOCUMENT_PREFIX}-${data.source}`,
+    filename: `${MAILING_LIST_DOCUMENT_PREFIX}-${
+      data.source
+    }-${new ObjectId()}.csv`,
   });
 
   return addJob({
@@ -107,20 +110,12 @@ const EMAIL_REGEX =
   /^(?:[a-zA-Z0-9])([-_0-9a-zA-Z]+(\.[-_0-9a-zA-Z]+)*|^"([\001-\010\013\014\016-\037!#-[\]-\177]|\\[\001-011\013\014\016-\177])*")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}\.?$/;
 
 export const processMailingList = async (mailingList: IMailingList) => {
-  switch (mailingList.source) {
-    case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
-    case DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023:
-    case DOCUMENT_TYPES.VOEUX_AFFELNET_JUIN_2023:
-      return handleVoeuxParcoursupMai2023(mailingList);
-
-    default:
-      break;
-  }
-
-  return;
+  return handleSourceVoeuxAffelnetParcoursup(mailingList);
 };
 
-const handleVoeuxParcoursupMai2023 = async (mailingList: IMailingList) => {
+const handleSourceVoeuxAffelnetParcoursup = async (
+  mailingList: IMailingList
+) => {
   const job = await findJob({
     "payload.document_id": mailingList.document_id,
   });

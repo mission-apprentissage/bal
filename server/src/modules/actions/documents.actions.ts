@@ -31,6 +31,7 @@ import {
   createDocumentContent,
   deleteDocumentContent,
 } from "./documentContent.actions";
+import { MAILING_LIST_DOCUMENT_PREFIX } from "./mailingLists.actions";
 
 const testMode = config.env === "test";
 
@@ -82,6 +83,20 @@ export const updateDocument = async (
   );
   return updated.value as IDocument | null;
 };
+
+export const getDocumentTypes = (): Promise<string[]> => {
+  // exclude mailing list documents
+  const regexPattern = `^${MAILING_LIST_DOCUMENT_PREFIX}`;
+
+  return getDbCollection("documents").distinct("type_document", {
+    type_document: {
+      $not: {
+        $regex: new RegExp(regexPattern, "i"),
+      },
+    },
+  });
+};
+
 interface IUploadDocumentOptions {
   type_document?: string;
   fileSize?: number;
@@ -343,13 +358,9 @@ export const handleDocumentFileContent = async ({ document_id }) => {
         formatter: parseContentLine,
       });
       break;
-    case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
-    case DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023:
-    case DOCUMENT_TYPES.VOEUX_AFFELNET_JUIN_2023:
-      await extractDocumentContent({ document });
-      break;
 
     default:
+      await extractDocumentContent({ document });
       break;
   }
 };

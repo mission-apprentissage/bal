@@ -1,12 +1,11 @@
 import { FromSchema } from "json-schema-to-ts";
 
 import { SJob } from "../models/job.model";
-import { DOCUMENT_TYPES } from "./upload.routes";
 
 export const SReqGetMailingList = {
   type: "object",
   properties: {
-    source: { type: "string", enum: Object.values(DOCUMENT_TYPES) },
+    source: { type: "string" },
   },
   required: ["source"],
 } as const;

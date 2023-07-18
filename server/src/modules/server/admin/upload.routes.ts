@@ -4,9 +4,11 @@ import { ObjectId } from "mongodb";
 import { SResError } from "shared/routes/common.routes";
 import {
   IResGetDocuments,
+  IResGetDocumentTypes,
   IResPostAdminUpload,
   SReqQueryPostAdminUpload,
   SResGetDocuments,
+  SResGetDocumentTypes,
   SResPostAdminUpload,
 } from "shared/routes/upload.routes";
 
@@ -17,6 +19,7 @@ import {
   createEmptyDocument,
   deleteDocumentById,
   findDocuments,
+  getDocumentTypes,
   uploadFile,
 } from "../../actions/documents.actions";
 import { addJob } from "../../jobs/jobs";
@@ -146,7 +149,9 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.delete(
+  server.delete<{
+    Params: { id: string };
+  }>(
     "/admin/document/:id",
     {
       schema: {
@@ -155,17 +160,34 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           properties: { id: { type: "string" } },
           required: ["id"],
         },
-      } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      },
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       await deleteDocumentById(new ObjectId(request.params.id));
 
       return response.status(200).send({ success: true });
+    }
+  );
+
+  server.get<{
+    Reply: {
+      200: IResGetDocumentTypes;
+    };
+  }>(
+    "/admin/documents/types",
+    {
+      schema: {
+        response: {
+          200: SResGetDocumentTypes,
+        },
+      },
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
+    },
+    async (_request, response) => {
+      const types = await getDocumentTypes();
+
+      return response.status(200).send(types);
     }
   );
 };
