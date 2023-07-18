@@ -37,7 +37,7 @@
     - name: Récupération des images docker
       shell:
         chdir: /opt/bal
-        cmd: "sudo docker compose pull --ignore-pull-failures"
+        cmd: "sudo docker compose pull"
 
     - name: Récupération du status de la stack
       shell:
