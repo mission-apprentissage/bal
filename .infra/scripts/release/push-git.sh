@@ -4,7 +4,7 @@ set -euo pipefail
 next_version="${1}"
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly ROOT_DIR="${SCRIPT_DIR}/../.."
+readonly ROOT_DIR="${SCRIPT_DIR}/../../.."
 
 cd ${ROOT_DIR}
 
