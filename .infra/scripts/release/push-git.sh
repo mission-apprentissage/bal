@@ -3,6 +3,11 @@ set -euo pipefail
 
 next_version="${1}"
 
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly ROOT_DIR="${SCRIPT_DIR}/../.."
+
+cd ${ROOT_DIR}
+
 if [ ! -z "${CI:-}" ]; then
   git add CHANGELOG.md \
   .github/workflows/_deploy.yml \
