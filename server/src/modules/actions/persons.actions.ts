@@ -1,4 +1,4 @@
-import { Filter, ObjectId, UpdateFilter } from "mongodb";
+import { Filter, UpdateFilter } from "mongodb";
 import { IPerson } from "shared/models/person.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
@@ -6,7 +6,7 @@ import { getDbCollection } from "@/common/utils/mongodbUtils";
 type ICreatePerson = {
   email: string;
   organisation_id: string;
-  _meta: unknown;
+  _meta: { [x: string]: unknown };
 };
 
 const DEFAULT_LOOKUP = {
@@ -28,11 +28,9 @@ const DEFAULT_UNWIND = {
 };
 
 export const createPerson = async (data: ICreatePerson) => {
-  const _id = new ObjectId();
   const now = new Date();
   const { insertedId: personId } = await getDbCollection("persons").insertOne({
     ...data,
-    _id,
     updated_at: now,
     created_at: now,
   });

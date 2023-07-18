@@ -4,14 +4,15 @@ import {
   runWithAsyncContext,
 } from "@sentry/node";
 import { formatDuration, intervalToDuration } from "date-fns";
+import { WithId } from "mongodb";
 import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
 
 import logger from "@/common/logger";
 import { updateJob } from "@/modules/actions/job.actions";
 
 const runner = async (
-  job: IJob,
-  jobFunc: () => Promise<any>,
+  job: WithId<IJob>,
+  jobFunc: () => Promise<unknown>,
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }
@@ -23,7 +24,7 @@ const runner = async (
     started_at: startDate,
   });
   let error: Error | undefined = undefined;
-  let result = undefined;
+  let result: unknown = undefined;
 
   try {
     result = await jobFunc();
@@ -43,9 +44,7 @@ const runner = async (
   );
   await updateJob(job._id, {
     status: error ? JOB_STATUS_LIST.ERRORED : JOB_STATUS_LIST.FINISHED,
-    "payload.duration": duration,
-    "payload.result": result,
-    "payload.error": error,
+    output: { duration, result, error },
     ended_at: endDate,
   });
   if (options.runningLogs) logger.info(`Job: ${job.name} Ended`);
@@ -62,7 +61,7 @@ const runner = async (
 
 export function executeJob(
   job: IJob,
-  jobFunc: () => Promise<any>,
+  jobFunc: () => Promise<unknown>,
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }

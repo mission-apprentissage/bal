@@ -1,4 +1,4 @@
-import { Filter, ObjectId } from "mongodb";
+import { ObjectId, RootFilterOperators } from "mongodb";
 import { IPerson } from "shared/models/person.model";
 import { SReqParamsSearchPagination } from "shared/routes/common.routes";
 import { SResGetPerson, SResGetPersons } from "shared/routes/person.routes";
@@ -22,7 +22,7 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
       ] as any,
     },
     async (request, response) => {
-      const filter: Filter<IPerson> = {};
+      const filter: RootFilterOperators<IPerson> = {};
 
       const { q = "" } = request.query;
 

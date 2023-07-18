@@ -1,6 +1,7 @@
 import { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
 import { ObjectId } from "mongodb";
+import { IDocument } from "shared/models/document.model";
 import { SResError } from "shared/routes/common.routes";
 import {
   IResGetDocuments,
@@ -71,7 +72,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       const { type_document } = request.query;
       const fileSize = parseInt(request.headers["content-length"] ?? "0");
 
-      let data = null as any;
+      let data: MultipartFile | null | undefined = null;
       try {
         data = await request.file({
           limits: {
@@ -88,12 +89,10 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         throw Boom.unauthorized("Le fichier n'est pas au bon format");
       }
 
-      let document = null as any;
-
-      document = await createEmptyDocument({
+      const document = await createEmptyDocument({
         type_document,
         fileSize,
-        filename: data.filename,
+        filename: data.filename as `${string}.${IDocument["ext_fichier"]}`,
       });
 
       if (!document) {
