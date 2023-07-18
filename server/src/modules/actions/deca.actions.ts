@@ -76,6 +76,7 @@ export const importDecaContent = async (emails: string[], siret: string) => {
     );
 
     if (newDomains.length) {
+      organisation.email_domains = organisation.email_domains ?? [];
       organisation.email_domains?.push(...newDomains);
     }
 
