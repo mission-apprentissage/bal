@@ -30,21 +30,5 @@
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "/app"
     },
-    {
-      "name": "Attach Test",
-      "port": 9231,
-      "request": "attach",
-      "skipFiles": [
-        "<node_internals>/**",
-        "**/node_modules/**",
-        "**/$KNOWN_TOOLS$/**"
-      ],
-      "type": "node",
-      "localRoot": "${workspaceFolder}",
-      "remoteRoot": "/app",
-      "smartStep": true,
-      "autoAttachChildProcesses": false,
-      "timeout": 60000,
-    },
   ]
 }

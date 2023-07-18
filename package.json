@@ -25,8 +25,8 @@
     "e2e:convert": "chrome-recorder cypress/records/admin/*.json --output=cypress/e2e/admin; chrome-recorder cypress/records/user/*.json --output=cypress/e2e/user",
     "test": "yarn workspaces foreach -A --exclude mna-bal run test",
     "test:ci": "yarn workspaces foreach -Ap --exclude mna-bal run test",
-    "typecheck": "yarn workspaces foreach -A --exclude mna-bal run typecheck",
-    "typecheck:ci": "yarn workspaces foreach -Ap --exclude mna-bal run typecheck"
+    "typecheck": "yarn workspaces foreach -Av --exclude mna-bal run typecheck",
+    "typecheck:ci": "yarn workspaces foreach -Apv --exclude mna-bal run typecheck"
   },
   "workspaces": [
     "ui",
@@ -73,5 +73,5 @@
       "prettier ./ui ./server"
     ]
   },
-  "packageManager": "yarn@3.3.1"
+  "packageManager": "yarn@3.6.1"
 }
