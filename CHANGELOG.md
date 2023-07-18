@@ -1,3 +1,11 @@
+## [1.47.1](https://github.com/mission-apprentissage/bal/compare/v1.47.0...v1.47.1) (2023-07-18)
+
+
+### Bug Fixes
+
+* migration ([fbeb5d5](https://github.com/mission-apprentissage/bal/commit/fbeb5d51e61253951c308238bb4bf0aabd3893ce))
+* migration ([#244](https://github.com/mission-apprentissage/bal/issues/244)) ([235d372](https://github.com/mission-apprentissage/bal/commit/235d37283b4f62a979f90a2d56e2253e333c6402))
+
 # [1.47.0](https://github.com/mission-apprentissage/bal/compare/v1.46.0...v1.47.0) (2023-07-18)
 
 
