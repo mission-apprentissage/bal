@@ -1,0 +1,67 @@
+#compdef -d mna-bal
+
+_mna-bal_completion() {
+  local curcontext="$curcontext" state line
+  typeset -A opt_args
+  local -a commands=(
+   "help:'Show help message'"
+   "local\:bin\:install:'Install mna-bal bin locally'"
+   "local\:completion\:zsh:'Install mna-bal completion script for zsh'"
+   "local\:start:'Starts application locally'"
+   "local\:stop:'Stop local application'"
+   "local\:clean:'Stop & Remove application; including data volumes'"
+   "local\:debug:'Start application locally in debug mode'"
+   "local\:server\:run:'Run a one-off command on the server container'"
+   "local\:server\:sh:'Start interactive session in the server container'"
+   "local\:server\:cli:'Run a server CLI command'"
+   "local\:server\:seed:'Seed database with mock data'"
+   "local\:server\:migrations\:status:'Check database migration status'"
+   "local\:server\:migrations\:up:'Execute pending database migrations'"
+   "local\:server\:migrations\:create:'Create a new empte database migration'"
+   "local\:test:'Run tests for all projects (server, ui, shared)'"
+   "local\:test\:server:'Run server tests'"
+   "local\:test\:server\:watch:'Run server tests in watch mode'"
+   "local\:test\:shared\:watch:'Run shared tests in watch mode'"
+   "local\:test\:ui\:watch:'Run ui tests in watch mode'"
+   "local\:lint:'Run eslint'"
+   "local\:typecheck:'Check Typescript definitions in all projects (server, ui, shared)'"
+   "local\:typecheck\:server:'Check Typescript definitions in server'"
+   "local\:typecheck\:ui:'Check Typescript definitions in ui'"
+   "local\:typecheck\:shared:'Check Typescript definitions in shared'"
+   "local\:env\:update:'Update local env files using values from vault file'"
+   "local\:docker\:run:'Run a one-off command on the provided service'"
+   "local\:docker\:sh:'Start interactive session in the provided service'"
+
+   "infra\:setup:'Setup infra on environnement <env>'"
+   "infra\:setup\:prod:'Setup infra on production'"
+   "infra\:setup\:recette:'Setup infra on recette'"
+   "infra\:release\:images:'Build & Push Docker image releases'"
+   "infra\:deploy:'Deploy application to <env>'"
+   "infra\:deploy\:prod:'Deploy application to production'"
+   "infra\:deploy\:recette:'Deploy application to recette'"
+   "infra\:vault\:edit:'Edit vault file'"
+   "infra\:vault\:generate:'Generate vault file'"
+   "infra\:vault\:encrypt:'Encrypt vault file'"
+   "infra\:vault\:password:'Show vault password'"
+   "infra\:vault\:renew:'Renew vault password'"
+   "infra\:user\:remove:'Remove user from server (you need to manually remove from habilitation & renew vault first)'"
+   "infra\:firewall\:update:'Update OVH firewall'"
+   "infra\:logs\:ls:'List application logs files on <destination>; destination can be any destination valid using SSH command'"
+   "infra\:logs\:dl\:local:'Download application logs files on <destination> to local; destination can be any destination valid using SSH command'"
+   "infra\:logs\:rm\:local:'Remove local logs files downloaded via infra:logs:dl:local'"
+  )
+
+  # Set completion behavior based on the current word
+  _arguments -C '1: :->command'
+
+  case $state in
+    (command)
+      # Provide completion for commands
+      _describe 'command' commands
+      ;;
+  esac
+  
+  # _describe 'command' commands
+}
+
+_mna-bal_completion "$@"

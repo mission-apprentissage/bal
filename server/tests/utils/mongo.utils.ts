@@ -1,3 +1,5 @@
+import { modelDescriptors } from "shared/models/models";
+
 import {
   clearAllCollections,
   closeMongodbConnection,
@@ -7,7 +9,6 @@ import {
   getDatabase,
 } from "@/common/utils/mongodbUtils";
 import config from "@/config";
-import { modelDescriptors } from "@/db/models";
 
 export const startAndConnectMongodb = async () => {
   const workerId = `${process.env.VITEST_POOL_ID}-${process.env.VITEST_WORKER_ID}`;

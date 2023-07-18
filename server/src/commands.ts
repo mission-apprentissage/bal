@@ -102,12 +102,48 @@ program
 
 program
   .command("seed")
-  .description("Seed env")
+  .description("Seed database")
   .option("-s, --sync", "Run job synchronously")
   .action(async ({ sync }) => {
     const exitCode = await addJob(
       {
         name: "seed",
+        sync,
+      },
+      { runningLogs: true }
+    );
+
+    if (exitCode) {
+      program.error("Command failed", { exitCode });
+    }
+  });
+
+program
+  .command("clear")
+  .description("Clear database")
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ sync }) => {
+    const exitCode = await addJob(
+      {
+        name: "clear",
+        sync,
+      },
+      { runningLogs: true }
+    );
+
+    if (exitCode) {
+      program.error("Command failed", { exitCode });
+    }
+  });
+
+program
+  .command("db:validate")
+  .description("Validate Documents")
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ sync }) => {
+    const exitCode = await addJob(
+      {
+        name: "db:validate",
         sync,
       },
       { runningLogs: true }

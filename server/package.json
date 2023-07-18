@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "1.45.3",
+  "version": "1.46.0",
   "description": "[MNA] bal server",
   "repository": "https://github.com/mission-apprentissage/bal.git",
   "author": "MNA",
@@ -14,7 +14,6 @@
     "typecheck": "tsc --noEmit",
     "migrations:create": "yarn cli migrations:create",
     "cli": "node dist/index.js",
-    "cli-docker": "docker exec -it bal_server yarn cli",
     "test": "vitest -c ./vitest.config.ts --run",
     "test:ci": "yarn test --coverage",
     "test:watch": "vitest -c ./vitest.config.ts --watch"

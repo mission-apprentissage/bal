@@ -3,7 +3,7 @@ import { FromSchema } from "json-schema-to-ts";
 import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
 
-const collectionName = "sessions";
+const collectionName = "sessions" as const;
 
 const indexes: IModelDescriptor["indexes"] = [];
 
@@ -24,9 +24,14 @@ export const SSession = {
     },
   },
   required: ["token"],
+  additionalProperties: false,
 } as const;
 
 export interface ISession
   extends FromSchema<typeof SSession, { deserialize: deserialize }> {}
 
-export default { schema: SSession, indexes, collectionName };
+export default {
+  schema: SSession as any as IModelDescriptor["schema"],
+  indexes,
+  collectionName,
+};

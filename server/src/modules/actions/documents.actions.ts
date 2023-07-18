@@ -31,6 +31,7 @@ import {
   createDocumentContent,
   deleteDocumentContent,
 } from "./documentContent.actions";
+import { MAILING_LIST_DOCUMENT_PREFIX } from "./mailingLists.actions";
 
 const testMode = config.env === "test";
 
@@ -82,15 +83,31 @@ export const updateDocument = async (
   );
   return updated.value as IDocument | null;
 };
-interface IUploadDocumentOptions {
-  type_document?: string;
+
+export const getDocumentTypes = async (): Promise<string[]> => {
+  // exclude mailing list documents
+  const regexPattern = `^${MAILING_LIST_DOCUMENT_PREFIX}`;
+
+  return getDbCollection("documents").distinct("type_document", {
+    type_document: {
+      $not: {
+        $regex: new RegExp(regexPattern, "i"),
+      },
+    },
+  });
+};
+
+interface ICreateEmptyDocumentOptions {
+  type_document: string;
   fileSize?: number;
-  filename?: string;
+  filename: `${string}.${IDocument["ext_fichier"]}`;
   mimetype?: string;
   createDocumentDb?: boolean;
 }
 
-export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
+export const createEmptyDocument = async (
+  options: ICreateEmptyDocumentOptions
+) => {
   const documentId = new ObjectId();
   const documentHash = crypto.generateKey();
   const path = `uploads/${documentId}/${options.filename}`;
@@ -99,17 +116,20 @@ export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
     throw new Error("Missing filename");
   }
 
+  const extFichier = options.filename
+    .split(".")
+    .at(-1) as IDocument["ext_fichier"];
+
   const document = await createDocument({
     _id: documentId,
     type_document: options.type_document,
-    ext_fichier: options.filename.split(".").pop(),
+    ext_fichier: extFichier,
     nom_fichier: options.filename,
     chemin_fichier: path,
     taille_fichier: options.fileSize || 0,
     import_progress: 0,
     hash_secret: documentHash,
     hash_fichier: "",
-    confirm: true,
     added_by: new ObjectId().toString(),
     updated_at: new Date(),
     created_at: new Date(),
@@ -117,11 +137,26 @@ export const createEmptyDocument = async (options: IUploadDocumentOptions) => {
   return document as IDocument;
 };
 
+interface IUploadDocumentOptionsWithCreate {
+  type_document: string;
+  fileSize: number;
+  filename: `${string}.${IDocument["ext_fichier"]}`;
+  mimetype: string;
+  createDocumentDb: true;
+}
+
+interface IUploadDocumentOptionsWithoutCreate {
+  mimetype: string;
+  createDocumentDb?: false | void;
+}
+
 export const uploadFile = async (
   added_by: string,
   stream: Readable,
   documentId: ObjectId = new ObjectId(),
-  options: IUploadDocumentOptions
+  options:
+    | IUploadDocumentOptionsWithCreate
+    | IUploadDocumentOptionsWithoutCreate
 ) => {
   const doc = await findDocument({ _id: documentId });
   if (!doc) {
@@ -171,14 +206,15 @@ export const uploadFile = async (
     await createDocument({
       _id: documentId,
       type_document: options.type_document,
-      ext_fichier: options.filename.split(".").pop(),
+      ext_fichier: options.filename
+        .split(".")
+        .pop() as IDocument["ext_fichier"],
       nom_fichier: options.filename,
       chemin_fichier: path,
       import_progress: 0,
       taille_fichier: options.fileSize,
       hash_secret: documentHash,
       hash_fichier,
-      confirm: true,
       added_by,
       updated_at: new Date(),
       created_at: new Date(),
@@ -292,8 +328,6 @@ export const importDocumentContent = async <
       content: contentLine,
       document_id: document._id.toString(),
       type_document: document.type_document,
-      updated_at: new Date(),
-      created_at: new Date(),
     });
 
     if (!documentContent) continue;
@@ -343,13 +377,9 @@ export const handleDocumentFileContent = async ({ document_id }) => {
         formatter: parseContentLine,
       });
       break;
-    case DOCUMENT_TYPES.VOEUX_PARCOURSUP_MAI_2023:
-    case DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023:
-    case DOCUMENT_TYPES.VOEUX_AFFELNET_JUIN_2023:
-      await extractDocumentContent({ document });
-      break;
 
     default:
+      await extractDocumentContent({ document });
       break;
   }
 };

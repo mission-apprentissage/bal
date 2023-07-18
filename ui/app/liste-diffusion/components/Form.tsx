@@ -7,10 +7,14 @@ import {
   HStack,
   Select,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { IReqGetMailingList } from "shared/routes/mailingList.routes";
-import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
+import {
+  DOCUMENT_TYPES,
+  IResGetDocumentTypes,
+} from "shared/routes/upload.routes";
 
 import { api } from "../../../utils/api.utils";
 
@@ -25,11 +29,23 @@ const Form: FC<Props> = ({ onSuccess }) => {
     register,
   } = useForm<IReqGetMailingList>();
 
+  const { data: types = [] } = useQuery<IResGetDocumentTypes>({
+    queryKey: ["documentTypes"],
+    queryFn: async () => {
+      const { data } = await api.get("/admin/documents/types");
+
+      return data;
+    },
+  });
+
   const onSubmit = async (data: IReqGetMailingList) => {
     await api.post("/mailing-list", { source: data.source });
 
     await onSuccess();
   };
+
+  const validTypes = types.filter((t) => t !== DOCUMENT_TYPES.DECA);
+
   return (
     <Box w={{ base: "100%", md: "50%" }}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -46,14 +62,11 @@ const Form: FC<Props> = ({ onSuccess }) => {
               {...register("source", {
                 required: "Obligatoire: Vous devez choisir la source",
                 validate: (value) => {
-                  return value && Object.values(DOCUMENT_TYPES).includes(value);
+                  return value && validTypes.includes(value);
                 },
               })}
             >
-              {[
-                DOCUMENT_TYPES.VOEUX_AFFELNET_MAI_2023,
-                DOCUMENT_TYPES.VOEUX_AFFELNET_JUIN_2023,
-              ].map((type) => (
+              {validTypes.map((type) => (
                 <option key={type}>{type}</option>
               ))}
             </Select>

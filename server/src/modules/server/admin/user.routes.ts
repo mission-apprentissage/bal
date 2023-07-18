@@ -1,5 +1,5 @@
 import Boom from "@hapi/boom";
-import { Filter, ObjectId } from "mongodb";
+import { ObjectId, RootFilterOperators } from "mongodb";
 import { IUser } from "shared/models/user.model";
 import { SReqParamsSearchPagination } from "shared/routes/common.routes";
 import {
@@ -55,7 +55,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       ] as any,
     },
     async (request, response) => {
-      const filter: Filter<IUser> = {};
+      const filter: RootFilterOperators<IUser> = {};
 
       const { q } = request.query;
 

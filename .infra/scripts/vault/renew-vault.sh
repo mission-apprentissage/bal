@@ -8,8 +8,10 @@ function renew() {
   local previous_vault_password_file="${SCRIPT_DIR}/../../vault/.vault-password-previous.gpg"
   local vault_password_file="${SCRIPT_DIR}/../../vault/.vault-password.gpg"
 
-  echo "Backuping previous vault password..."
-  mv "${vault_password_file}" "${previous_vault_password_file}"
+  if [ -f "$vault_password_file" ]; then
+    echo "Backuping previous vault password..."
+    mv "${vault_password_file}" "${previous_vault_password_file}"
+  fi
 
   echo "Generating new vault password..."
   bash "${SCRIPT_DIR}/generate-vault-password.sh"

@@ -56,7 +56,7 @@ export const sendResetPasswordEmail = async (email: string) => {
 export const resetPassword = async (password: string, token: string) => {
   const decoded = verify(token, config.auth.resetPasswordToken.jwtSecret);
 
-  if (!decoded) {
+  if (!decoded || !decoded.sub) {
     throw new Error("Invalid token");
   }
 

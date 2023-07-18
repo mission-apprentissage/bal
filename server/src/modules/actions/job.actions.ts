@@ -1,4 +1,4 @@
-import { Filter, FindOptions, ObjectId } from "mongodb";
+import { Filter, FindOptions, MatchKeysAndValues, ObjectId } from "mongodb";
 import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
@@ -41,7 +41,10 @@ export const findJobs = async (
 /**
  * Mise à jour d'un job
  */
-export const updateJob = async (_id: ObjectId, data: Partial<IJob>) => {
+export const updateJob = async (
+  _id: ObjectId,
+  data: MatchKeysAndValues<IJob>
+) => {
   return getDbCollection("jobs").updateOne(
     { _id },
     { $set: { ...data, updated_at: new Date() } }

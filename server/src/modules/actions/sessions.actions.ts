@@ -1,4 +1,4 @@
-import { Filter, FindOptions } from "mongodb";
+import { Filter, FindOptions, ObjectId } from "mongodb";
 import { ISession } from "shared/models/session.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
@@ -29,7 +29,7 @@ export const deleteSession = async (session: ISession) => {
   await getDbCollection("sessions").deleteMany(session);
 };
 
-export const updateSession = async (_id: string, data: Partial<ISession>) => {
+export const updateSession = async (_id: ObjectId, data: Partial<ISession>) => {
   return getDbCollection("sessions").updateOne(
     { _id },
     { $set: { ...data, updated_at: new Date() } }

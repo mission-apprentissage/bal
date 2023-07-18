@@ -1,20 +1,15 @@
 import { captureException } from "@sentry/node";
-import { JSONSchema7 } from "json-schema";
-import { CollectionInfo, CreateCollectionOptions, MongoClient } from "mongodb";
-import omitDeep from "omit-deep";
-import { IModelDescriptor } from "shared/models/common";
+import {
+  Collection,
+  CollectionInfo,
+  MongoClient,
+  MongoServerError,
+} from "mongodb";
+import { jsonSchemaToMongoSchema } from "shared/helpers/mongoSchema/jsonSchemaToMongoSchema";
+import { CollectionName, IModelDescriptor } from "shared/models/common";
+import { IDocumentMap, modelDescriptors } from "shared/models/models";
 
 import logger from "@/common/logger";
-import { modelDescriptors } from "@/db/models";
-
-interface JSONSchema7WithBSONType extends Omit<JSONSchema7, "properties"> {
-  bsonType?: string;
-  properties?: {
-    [key: string]: JSONSchema7WithBSONType;
-  };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
 
 let mongodbClient: MongoClient | null = null;
 
@@ -64,7 +59,9 @@ export const getDatabase = () => {
   return ensureInitialization().db();
 };
 
-export const getDbCollection = (name: string) => {
+export const getDbCollection = <K extends CollectionName>(
+  name: K
+): Collection<IDocumentMap[K]> => {
   return ensureInitialization().db().collection(name);
 };
 
@@ -72,7 +69,7 @@ export const getCollectionList = () => {
   return ensureInitialization().db().listCollections().toArray();
 };
 
-export const getDbCollectionIndexes = async (name: string) => {
+export const getDbCollectionIndexes = async (name: CollectionName) => {
   return await ensureInitialization().db().collection(name).indexes();
 };
 
@@ -80,7 +77,9 @@ export const getDbCollectionIndexes = async (name: string) => {
  * Création d'une collection si elle n'existe pas
  * @param {string} collectionName
  */
-const createCollectionIfDoesNotExist = async (collectionName: string) => {
+const createCollectionIfDoesNotExist = async (
+  collectionName: CollectionName
+) => {
   const db = getDatabase();
   const collectionsInDb = await db.listCollections().toArray();
   const collectionExistsInDb = collectionsInDb
@@ -88,7 +87,13 @@ const createCollectionIfDoesNotExist = async (collectionName: string) => {
     .includes(collectionName);
 
   if (!collectionExistsInDb) {
-    await db.createCollection(collectionName);
+    try {
+      await db.createCollection(collectionName);
+    } catch (err) {
+      if ((err as MongoServerError).codeName !== "NamespaceExists") {
+        throw err;
+      }
+    }
   }
 };
 
@@ -107,47 +112,6 @@ export const collectionExistInDb = (
     .includes(collectionName);
 
 /**
- * Conversion du schema pour le format mongoDB
- */
-const convertSchemaToMongoSchema = (
-  schema: JSONSchema7
-): CreateCollectionOptions["validator"] => {
-  let convertedSchema = replaceDateProperties(schema);
-  convertedSchema = JSON.parse(
-    JSON.stringify(convertedSchema)
-      .replaceAll("type", "bsonType")
-      .replaceAll("boolean", "bool")
-      .replaceAll("integer", "int")
-  );
-
-  if (convertedSchema.properties) {
-    // remplacer _id de "string" à "objectId"
-    convertedSchema["properties"]["_id"] = { bsonType: "objectId" };
-  }
-
-  // strip example, format field because NON STANDARD jsonSchema
-  return omitDeep(convertedSchema, ["example", "format"]);
-};
-
-const replaceDateProperties = (schema: JSONSchema7) => {
-  const properties: JSONSchema7WithBSONType = {};
-
-  if (!schema.properties) {
-    return schema;
-  }
-
-  Object.entries(schema.properties).map(([key, value]) => {
-    const property = value as JSONSchema7;
-
-    if (property.format === "date-time") {
-      properties[key] = { ...property, bsonType: "date" };
-    }
-  });
-
-  return { ...schema, properties };
-};
-
-/**
  * Config de la validation
  * @param {*} modelDescriptors
  */
@@ -160,11 +124,7 @@ export const configureDbSchemaValidation = async (
     modelDescriptors.map(async ({ collectionName, schema }) => {
       await createCollectionIfDoesNotExist(collectionName);
 
-      if (!schema) {
-        return;
-      }
-
-      const convertedSchema = convertSchemaToMongoSchema(schema as JSONSchema7);
+      const convertedSchema = jsonSchemaToMongoSchema(schema);
 
       try {
         await db.command({

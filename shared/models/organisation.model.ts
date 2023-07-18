@@ -3,7 +3,7 @@ import { FromSchema } from "json-schema-to-ts";
 import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
 
-const collectionName = "organisations";
+const collectionName = "organisations" as const;
 
 const indexes: IModelDescriptor["indexes"] = [
   [
@@ -70,9 +70,14 @@ export const SOrganisation = {
     },
   },
   required: ["_id"],
+  additionalProperties: false,
 } as const;
 
 export interface IOrganisation
   extends FromSchema<typeof SOrganisation, { deserialize: deserialize }> {}
 
-export default { schema: SOrganisation, indexes, collectionName };
+export default {
+  schema: SOrganisation as any as IModelDescriptor["schema"],
+  indexes,
+  collectionName,
+};

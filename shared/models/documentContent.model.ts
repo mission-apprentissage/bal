@@ -3,7 +3,7 @@ import { FromSchema } from "json-schema-to-ts";
 import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
 
-const collectionName = "documentContents";
+const collectionName = "documentContents" as const;
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ document_id: 1 }, { name: "document_id" }],
@@ -34,9 +34,14 @@ export const SDocumentContent = {
     },
   },
   required: ["_id", "document_id"],
+  additionalProperties: false,
 } as const;
 
 export interface IDocumentContent
   extends FromSchema<typeof SDocumentContent, { deserialize: deserialize }> {}
 
-export default { schema: SDocumentContent, indexes, collectionName };
+export default {
+  schema: SDocumentContent as any as IModelDescriptor["schema"],
+  indexes,
+  collectionName,
+};

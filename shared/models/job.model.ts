@@ -3,7 +3,7 @@ import { FromSchema } from "json-schema-to-ts";
 import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
 
-const collectionName = "jobs";
+const collectionName = "jobs" as const;
 
 const indexes: IModelDescriptor["indexes"] = [];
 
@@ -42,6 +42,11 @@ export const SJob = {
       description: "La donnée liéé à la tâche",
       additionalProperties: true,
     },
+    output: {
+      type: "object",
+      description: "Les valeurs de retours du job",
+      additionalProperties: true,
+    },
     scheduled_at: {
       type: "string",
       format: "date-time",
@@ -69,6 +74,7 @@ export const SJob = {
     },
   },
   required: ["_id", "name", "status", "scheduled_at"],
+  additionalProperties: false,
 } as const;
 
 export enum JOB_STATUS_LIST {
@@ -83,4 +89,8 @@ export enum JOB_STATUS_LIST {
 export interface IJob
   extends FromSchema<typeof SJob, { deserialize: deserialize }> {}
 
-export default { schema: SJob, indexes, collectionName };
+export default {
+  schema: SJob as any as IModelDescriptor["schema"],
+  indexes,
+  collectionName,
+};

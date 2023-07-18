@@ -27,7 +27,7 @@ export function checksum() {
     algorithm: "md5",
   });
 
-  const promise = new Promise((resolve, reject) => {
+  const promise: Promise<string> = new Promise((resolve, reject) => {
     stream.on("digest", resolve);
     stream.on("error", reject);
   });
