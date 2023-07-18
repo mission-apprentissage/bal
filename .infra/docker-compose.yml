@@ -13,8 +13,14 @@ x-deploy-default: &deploy-default
   restart_policy:
     window: 5s
 
+x-default: &default
+  networks:
+    - bal_network
+
+
 services:
   reverse_proxy:
+    <<: *x-default
     image: "{{registry}}/mission-apprentissage/mna_bal_reverse_proxy:{{reverse_proxy_version}}"
     deploy:
       <<: *deploy-default
@@ -25,8 +31,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    networks:
-      - bal_network
     environment:
       - SERVER_NAME={{dns_name}}
       - NGINX_ALWAYS_TLS_REDIRECT=true
@@ -53,6 +57,7 @@ services:
         fluentd-async: "true"
 
   server:
+    <<: *x-default
     image: "{{registry}}/mission-apprentissage/mna_bal_server:{{app_version}}"
     deploy:
       <<: *deploy-default
@@ -60,8 +65,6 @@ services:
         limits:
           memory: 1g
       replicas: 2
-    networks:
-      - bal_network
     env_file: .env_server
     volumes:
       - /opt/bal/data/server:/data
@@ -79,6 +82,7 @@ services:
       start_period: 10s
 
   processor:
+    <<: *x-default
     image: "{{registry}}/mission-apprentissage/mna_bal_server:{{app_version}}"
     deploy:
       <<: *deploy-default
@@ -86,8 +90,6 @@ services:
         limits:
           memory: 1g
     command: ["yarn", "cli", "processor"]
-    networks:
-      - bal_network
     env_file: .env_server
     volumes:
       - /opt/bal/data/server:/data
@@ -99,6 +101,7 @@ services:
         fluentd-async: "true"
 
   ui:
+    <<: *x-default
     image: "{{registry}}/mission-apprentissage/mna_bal_ui:{{app_version}}"
     deploy:
       <<: *deploy-default
@@ -106,8 +109,6 @@ services:
         limits:
           memory: 256m
       replicas: 2
-    networks:
-      - bal_network
     env_file: .env_ui
     logging:
       driver: "fluentd"
@@ -117,6 +118,7 @@ services:
         fluentd-async: "true"
 
   metabase:
+    <<: *x-default
     image: metabase/metabase:v0.46.0
     deploy:
       <<: *deploy-default
@@ -143,8 +145,6 @@ services:
       timeout: 5s
       retries: 5
       start_period: 6m
-    networks:
-      - bal_network
     logging:
       driver: "fluentd"
       options:
@@ -153,14 +153,13 @@ services:
         fluentd-async: "true"
 
   clamav:
+    <<: *x-default
     image: clamav/clamav:latest
     deploy:
       <<: *deploy-default
       resources:
         limits:
           memory: 2g
-    networks:
-      - bal_network
     healthcheck:
       test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
       interval: 60s
@@ -176,6 +175,7 @@ services:
       - /opt/bal/data/clamav:/var/lib/clamav
 
   nodeexporter:
+    <<: *x-default
     image: prom/node-exporter:v1.5.0
     hostname: {{host_name}}
     user: root
@@ -192,10 +192,9 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
       - /opt/bal/data/cron:/var/cron-exporter:rw
-    networks:
-      - bal_network
 
   cadvisor:
+    <<: *x-default
     image: gcr.io/cadvisor/cadvisor:v0.46.0
     deploy:
       <<: *deploy-default
@@ -209,10 +208,9 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
-    networks:
-      - bal_network
 
   fluentd:
+    <<: *x-default
     image: fluent/fluentd:v1.16
     user: root
     volumes:
