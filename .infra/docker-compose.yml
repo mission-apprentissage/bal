@@ -226,4 +226,5 @@ networks:
   bal_network:
     name: bal_network
     attachable: true
+    external: true
     driver: overlay
