@@ -1,8 +1,8 @@
 import Boom from "@hapi/boom";
+import { SReqHeadersAuthorization } from "shared/routes/common.routes";
 import {
   IReqPostOrganisationValidation,
   IResOrganisationValidation,
-  SReqHeadersOrganisation,
   SReqPostOrganisationValidation,
   SResPostOrganisationValidation,
   ZReqPostOrganisationValidation,
@@ -15,7 +15,7 @@ import { Server } from "../server";
 export const organisationRoutes = ({ server }: { server: Server }) => {
   server.post<{
     Body: IReqPostOrganisationValidation;
-    Reply: IResOrganisationValidation;
+    Reply: { 200: IResOrganisationValidation };
   }>(
     "/organisation/validation",
     {
@@ -24,7 +24,7 @@ export const organisationRoutes = ({ server }: { server: Server }) => {
         response: {
           200: SResPostOrganisationValidation,
         },
-        headers: SReqHeadersOrganisation,
+        headers: SReqHeadersAuthorization,
         security: [
           {
             apiKey: [],

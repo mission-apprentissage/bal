@@ -1,84 +1,50 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-export const SBalEmail = {
-  type: "object",
-  properties: {
-    token: { type: "string" },
-    templateName: { type: "string" },
-    payload: {
-      type: "object",
-      properties: {
-        recipient: {
-          type: "object",
-          properties: {
-            email: { type: "string" },
-          },
-          required: ["email"],
-          additionalProperties: true,
-        },
-      },
-      additionalProperties: true,
-      required: ["recipient"],
-    },
-    sendDates: {
-      type: "array",
-      items: {
-        type: "string",
-        format: "date-time",
-      },
-    },
-    openDate: {
-      type: "string",
-      format: "date-time",
-    },
-    messageIds: {
-      type: "array",
-      items: {
-        type: "string",
-      },
-    },
-    error: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          err_type: {
-            type: "string",
-            enum: [
-              "fatal",
-              "soft_bounce",
-              "hard_bounce",
-              "complaint",
-              "invalid_email",
-              "blocked",
-              "error",
-            ],
-          },
-          message: { type: "string" },
-        },
-      },
-    },
-  },
-  required: ["token", "templateName", "sendDates", "payload"],
-  additionalProperties: true,
-} as const;
+export const ZBalEmail = () =>
+  z.object({
+    token: z.string(),
+    templateName: z.string(),
+    payload: z.object({
+      recipient: z.object({
+        email: z.string(),
+      }),
+    }),
+    sendDates: z.array(z.date()),
+    openDate: z.date().optional(),
+    messageIds: z.array(z.string()).optional().nullable(),
+    error: z
+      .array(
+        z.object({
+          err_type: z.enum([
+            "fatal",
+            "soft_bounce",
+            "hard_bounce",
+            "complaint",
+            "invalid_email",
+            "blocked",
+            "error",
+          ]),
+          message: z.string(),
+        })
+      )
+      .optional(),
+  });
 
-export const SBalEmails = {
-  type: "array",
-  items: SBalEmail,
-} as const;
+export const SBalEmail = zodToJsonSchema(ZBalEmail());
 
-export const SBalEmailsPayload = {
-  type: "object",
-  properties: {
-    emails: SBalEmails,
-    unsubscribe: { type: "boolean", description: "unsubscribe email" },
-  },
-  required: ["emails"],
-  additionalProperties: true,
-} as const;
+export const ZBalEmails = () => z.array(ZBalEmail());
 
-export interface IBalEmail extends FromSchema<typeof SBalEmail> {}
-export interface IBalEmails extends FromSchema<typeof SBalEmails> {}
-export interface IBalEmailsPayload
-  extends FromSchema<typeof SBalEmailsPayload> {}
+export const SBalEmails = zodToJsonSchema(ZBalEmails());
+
+export const ZBalEmailsPayload = () =>
+  z.object({
+    emails: ZBalEmails(),
+    unsubscribe: z.boolean().optional().describe("unsubscribe email"),
+  });
+
+export const SBalEmailsPayload = zodToJsonSchema(ZBalEmailsPayload());
+
+export type IBalEmail = z.input<ReturnType<typeof ZBalEmail>>;
+export type IBalEmails = z.input<ReturnType<typeof ZBalEmails>>;
+export type IBalEmailsPayload = z.input<ReturnType<typeof ZBalEmailsPayload>>;

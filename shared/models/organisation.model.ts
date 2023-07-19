@@ -1,6 +1,7 @@
-import { FromSchema } from "json-schema-to-ts";
+import { ObjectId } from "mongodb";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
 
 const collectionName = "organisations" as const;
@@ -24,57 +25,37 @@ const indexes: IModelDescriptor["indexes"] = [
   ],
 ];
 
-export const SOrganisation = {
-  type: "object",
-  properties: {
-    _id: { type: "string", format: "ObjectId" },
-    nom: { type: "string", description: "Nom de l'organisation" },
-    email_domains: {
-      type: "array",
-      items: {
-        type: "string",
-      },
-    },
-    etablissements: {
-      type: "array",
-      items: {
-        type: "object",
-        additionalProperties: false,
-        properties: {
-          nom: { type: "string", description: "Nom de l'établissement" },
-          siret: {
-            type: "string",
-            description: "Siret actif de l'établissement",
-          },
-          is_hq: { type: "boolean", description: "Siége social" },
-          is_close: { type: "boolean", description: "Est fermé" },
-        },
-      },
-    },
-    _meta: {
-      type: "object",
-      properties: {
-        source: { type: "string" },
-      },
-      additionalProperties: true,
-    }, // exemple UAI
-    updated_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date de mise à jour en base de données",
-    },
-    created_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date d'ajout en base de données",
-    },
-  },
-  required: ["_id"],
-  additionalProperties: false,
-} as const;
+export const ZOrganisation = () =>
+  z
+    .object({
+      _id: z.instanceof(ObjectId).describe("Identifiant de l'organisation"),
+      nom: z.string().optional().describe("Nom de l'organisation"),
+      email_domains: z
+        .array(z.string())
+        .optional()
+        .describe("Liste des domaines email"),
+      etablissements: z
+        .array(
+          z
+            .object({
+              nom: z.string().describe("Nom de l'établissement"),
+              siret: z.string().describe("Siret actif de l'établissement"),
+              is_hq: z.boolean().describe("Siège social"),
+              is_close: z.boolean().describe("Est fermé"),
+            })
+            .strict()
+        )
+        .optional()
+        .describe("Liste des établissements"),
+      _meta: z.record(z.any()).optional().describe("Métadonnées"),
+      updated_at: z.date().describe("Date de mise à jour en base de données"),
+      created_at: z.date().describe("Date d'ajout en base de données"),
+    })
+    .strict();
 
-export interface IOrganisation
-  extends FromSchema<typeof SOrganisation, { deserialize: deserialize }> {}
+export const SOrganisation = zodToJsonSchema(ZOrganisation());
+
+export type IOrganisation = z.input<ReturnType<typeof ZOrganisation>>;
 
 export default {
   schema: SOrganisation as any as IModelDescriptor["schema"],

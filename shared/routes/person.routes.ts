@@ -1,50 +1,29 @@
-import { FromSchema } from "json-schema-to-ts";
+import { ObjectId } from "mongodb";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-import { SOrganisation } from "../models/organisation.model";
+import { ZOrganisation } from "../models/organisation.model";
 
-export const SResGetPerson = {
-  type: "object",
-  properties: {
-    _id: { type: "string" },
-    email: { type: "string" },
-    civility: {
-      type: "string",
-      enum: ["Madame", "Monsieur"],
-    },
-    nom: { type: "string" },
-    prenom: { type: "string" },
-    organisation_id: { type: "string" },
-    organisation: SOrganisation,
-    sirets: {
-      type: "array",
-      items: {
-        type: "string",
-      },
-    },
-    _meta: {
-      type: "object",
-      properties: {
-        source: { type: "string" },
-      },
-      additionalProperties: true,
-    },
-    updated_at: {
-      type: "string",
-      format: "date-time",
-    },
-    created_at: {
-      type: "string",
-      format: "date-time",
-    },
-  },
-  required: ["_id", "email", "organisation_id"],
-} as const;
+export const ZResGetPerson = () =>
+  z
+    .object({
+      _id: z.instanceof(ObjectId),
+      email: z.string().email(),
+      civility: z.enum(["Madame", "Monsieur"]).optional(),
+      nom: z.string().optional(),
+      prenom: z.string().optional(),
+      organisation_id: z.string(),
+      organisation: ZOrganisation().optional(),
+      sirets: z.array(z.string()).optional(),
+      _meta: z.record(z.any()).optional(),
+      updated_at: z.date(),
+      created_at: z.date(),
+    })
+    .strict();
 
-export type IResGetPerson = FromSchema<typeof SResGetPerson>;
+export const SResGetPerson = zodToJsonSchema(ZResGetPerson());
+export type IResGetPerson = z.input<ReturnType<typeof ZResGetPerson>>;
 
-export const SResGetPersons = {
-  type: "array",
-  items: SResGetPerson,
-} as const;
-
-export type IResGetPersons = FromSchema<typeof SResGetPersons>;
+export const ZResGetPersons = () => z.array(ZResGetPerson());
+export const SResGetPersons = zodToJsonSchema(ZResGetPersons());
+export type IResGetPersons = z.input<ReturnType<typeof ZResGetPersons>>;

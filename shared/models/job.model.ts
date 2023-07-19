@@ -1,81 +1,8 @@
-import { FromSchema } from "json-schema-to-ts";
+import { ObjectId } from "mongodb";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-import { deserialize } from "..";
 import { IModelDescriptor } from "./common";
-
-const collectionName = "jobs" as const;
-
-const indexes: IModelDescriptor["indexes"] = [];
-
-export const SJob = {
-  type: "object",
-  properties: {
-    _id: { type: "string", format: "ObjectId" },
-    name: { type: "string", description: "Le nom de la tâche" },
-    // worker_id: { type: "string" },
-    // source: {
-    //   type: "string",
-    // },
-    // document_id: {
-    //   type: "string",
-    //   description: "Fichier liste de diffusion",
-    // },
-    // document: SDocument,
-    // user_id: {
-    //   type: "string",
-    // },
-    status: {
-      type: "string",
-      description: "Statut courant du job",
-      enum: [
-        "pending",
-        "will_start",
-        "running",
-        "finished",
-        "blocked",
-        "errored",
-      ],
-    },
-    sync: { type: "boolean" },
-    payload: {
-      type: "object",
-      description: "La donnée liéé à la tâche",
-      additionalProperties: true,
-    },
-    output: {
-      type: "object",
-      description: "Les valeurs de retours du job",
-      additionalProperties: true,
-    },
-    scheduled_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date de lancement programmée",
-    },
-    started_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date de lancement",
-    },
-    ended_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date de fin d'execution",
-    },
-    updated_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date de mise à jour en base de données",
-    },
-    created_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date d'ajout en base de données",
-    },
-  },
-  required: ["_id", "name", "status", "scheduled_at"],
-  additionalProperties: false,
-} as const;
 
 export enum JOB_STATUS_LIST {
   PENDING = "pending",
@@ -86,8 +13,36 @@ export enum JOB_STATUS_LIST {
   ERRORED = "errored",
 }
 
-export interface IJob
-  extends FromSchema<typeof SJob, { deserialize: deserialize }> {}
+const collectionName = "jobs" as const;
+
+const indexes: IModelDescriptor["indexes"] = [];
+
+export const ZJob = () =>
+  z
+    .object({
+      _id: z.instanceof(ObjectId).describe("Identifiant de la tâche"),
+      name: z.string().describe("Le nom de la tâche"),
+      status: z.nativeEnum(JOB_STATUS_LIST).describe("Statut courant du job"),
+      sync: z.boolean().describe("Si le job est synchrone"),
+      payload: z
+        .record(z.any())
+        .optional()
+        .describe("La donnée liéé à la tâche"),
+      output: z
+        .record(z.any())
+        .optional()
+        .describe("Les valeurs de retours du job"),
+      scheduled_at: z.date().describe("Date de lancement programmée"),
+      started_at: z.date().optional().describe("Date de lancement"),
+      ended_at: z.date().optional().describe("Date de fin d'execution"),
+      updated_at: z.date().describe("Date de mise à jour en base de données"),
+      created_at: z.date().describe("Date d'ajout en base de données"),
+    })
+    .strict();
+
+export const SJob = zodToJsonSchema(ZJob());
+
+export type IJob = z.input<ReturnType<typeof ZJob>>;
 
 export default {
   schema: SJob as any as IModelDescriptor["schema"],
