@@ -14,7 +14,6 @@
     - [Exécution des tests](#exécution-des-tests)
   - [Aller plus loin](#aller-plus-loin)
 
-
 ## Fiche Produit
 
 Consultez la [Fiche Produit](https://www.notion.so/mission-apprentissage/Fiche-produit-73bbd7e5983749b7974c2f7c11194518?pvs=4) pour plus d'informations sur le projet.
@@ -89,7 +88,6 @@ Cette commande mettra à jour les dépendances du projet.
 
 > **Note** : Pour que vos changements se reflètent dans votre application locale, vous devez exécuter la commande `.bin/mna-bal local:start`.
 
-
 ### Developpement CLI mna-bal
 
 Les principales opérations sont regroupée dans un CLI `.bin/mna-bal`, il est possible de liste l'ensemble des commandes disponible via `.bin/mna-bal help`.
@@ -143,6 +141,14 @@ Cette commande exécutera tous les tests du projet et vous affichera les résult
 1. D'avoir installé toutes les dépendances via la commande `yarn install` avant de lancer les tests
 
 2. D'avoir lancé l'application car les tests utilisent la base de donnée.
+
+#### Snapshots
+
+Pour mettre à jour les snapshots, utilisez la commande suivante dans `/shared`
+
+```bash
+yarn test --update
+```
 
 ## Aller plus loin
 

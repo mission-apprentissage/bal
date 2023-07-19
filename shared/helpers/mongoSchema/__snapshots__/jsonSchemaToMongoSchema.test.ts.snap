@@ -6,10 +6,12 @@ exports[`jsonSchemaToMongoSchema > should convert documentContents schema 1`] = 
   "bsonType": "object",
   "properties": {
     "_id": {
-      "bsonType": "objectId",
+      "description": "Identifiant du document",
     },
     "content": {
+      "additionalProperties": {},
       "bsonType": "object",
+      "description": "Contenu du document",
     },
     "created_at": {
       "bsonType": "date",
@@ -17,6 +19,7 @@ exports[`jsonSchemaToMongoSchema > should convert documentContents schema 1`] = 
     },
     "document_id": {
       "bsonType": "string",
+      "description": "Identifiant du document",
     },
     "type_document": {
       "bsonType": "string",
@@ -30,6 +33,8 @@ exports[`jsonSchemaToMongoSchema > should convert documentContents schema 1`] = 
   "required": [
     "_id",
     "document_id",
+    "updated_at",
+    "created_at",
   ],
 }
 `;
@@ -40,7 +45,6 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "bsonType": "objectId",
       "description": "Identifiant du document",
     },
     "added_by": {
@@ -77,7 +81,7 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
       "description": "Progress percentage (-1 not started)",
     },
     "lines_count": {
-      "bsonType": "int",
+      "bsonType": "number",
       "description": "Number of lines",
     },
     "nom_fichier": {
@@ -85,7 +89,7 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
       "description": "Le nom de fichier",
     },
     "taille_fichier": {
-      "bsonType": "int",
+      "bsonType": "number",
       "description": "Taille du fichier en bytes",
     },
     "type_document": {
@@ -107,6 +111,7 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
     "hash_secret",
     "hash_fichier",
     "added_by",
+    "updated_at",
     "created_at",
   ],
 }
@@ -114,119 +119,136 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
 
 exports[`jsonSchemaToMongoSchema > should convert events schema 1`] = `
 {
+  "additionalProperties": false,
   "bsonType": "object",
   "properties": {
     "_id": {
-      "bsonType": "objectId",
+      "description": "Identifiant de l'évènement",
     },
     "name": {
       "bsonType": "string",
-      "enum": [
-        "bal_emails",
-      ],
+      "description": "Nom de l'évènement",
     },
     "payload": {
-      "anyOf": [
-        {
-          "additionalProperties": true,
-          "bsonType": "object",
-          "properties": {
-            "emails": {
-              "bsonType": "array",
-              "items": {
-                "additionalProperties": true,
-                "bsonType": "object",
-                "properties": {
-                  "error": {
-                    "bsonType": "array",
-                    "items": {
-                      "bsonType": "object",
-                      "properties": {
-                        "err_type": {
-                          "bsonType": "string",
-                          "enum": [
-                            "fatal",
-                            "soft_bounce",
-                            "hard_bounce",
-                            "complaint",
-                            "invalid_email",
-                            "blocked",
-                            "error",
-                          ],
-                        },
-                        "message": {
-                          "bsonType": "string",
-                        },
-                      },
+      "additionalProperties": false,
+      "bsonType": "object",
+      "description": "Payload de l'évènement",
+      "properties": {
+        "emails": {
+          "bsonType": "array",
+          "items": {
+            "additionalProperties": false,
+            "bsonType": "object",
+            "properties": {
+              "error": {
+                "bsonType": "array",
+                "items": {
+                  "additionalProperties": false,
+                  "bsonType": "object",
+                  "properties": {
+                    "err_type": {
+                      "bsonType": "string",
+                      "enum": [
+                        "fatal",
+                        "soft_bounce",
+                        "hard_bounce",
+                        "complaint",
+                        "invalid_email",
+                        "blocked",
+                        "error",
+                      ],
                     },
-                  },
-                  "messageIds": {
-                    "bsonType": "array",
-                    "items": {
+                    "message": {
                       "bsonType": "string",
                     },
                   },
-                  "openDate": {
-                    "bsonType": "date",
+                  "required": [
+                    "err_type",
+                    "message",
+                  ],
+                },
+              },
+              "messageIds": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "not": {},
+                      },
+                      {
+                        "bsonType": "array",
+                        "items": {
+                          "bsonType": "string",
+                        },
+                      },
+                    ],
                   },
-                  "payload": {
-                    "additionalProperties": true,
+                  {
+                    "bsonType": "null",
+                  },
+                ],
+              },
+              "openDate": {
+                "bsonType": "date",
+              },
+              "payload": {
+                "additionalProperties": false,
+                "bsonType": "object",
+                "properties": {
+                  "recipient": {
+                    "additionalProperties": false,
                     "bsonType": "object",
                     "properties": {
-                      "recipient": {
-                        "additionalProperties": true,
-                        "bsonType": "object",
-                        "properties": {
-                          "email": {
-                            "bsonType": "string",
-                          },
-                        },
-                        "required": [
-                          "email",
-                        ],
+                      "email": {
+                        "bsonType": "string",
                       },
                     },
                     "required": [
-                      "recipient",
+                      "email",
                     ],
-                  },
-                  "sendDates": {
-                    "bsonType": "array",
-                    "items": {
-                      "bsonType": "date",
-                    },
-                  },
-                  "templateName": {
-                    "bsonType": "string",
-                  },
-                  "token": {
-                    "bsonType": "string",
                   },
                 },
                 "required": [
-                  "token",
-                  "templateName",
-                  "sendDates",
-                  "payload",
+                  "recipient",
                 ],
               },
+              "sendDates": {
+                "bsonType": "array",
+                "items": {
+                  "bsonType": "date",
+                },
+              },
+              "templateName": {
+                "bsonType": "string",
+              },
+              "token": {
+                "bsonType": "string",
+              },
             },
-            "unsubscribe": {
-              "bsonType": "bool",
-              "description": "unsubscribe email",
-            },
+            "required": [
+              "token",
+              "templateName",
+              "payload",
+              "sendDates",
+            ],
           },
-          "required": [
-            "emails",
-          ],
         },
+        "unsubscribe": {
+          "bsonType": "bool",
+          "description": "unsubscribe email",
+        },
+      },
+      "required": [
+        "emails",
       ],
     },
     "person_id": {
       "bsonType": "string",
+      "description": "Identifiant de la personne",
     },
   },
   "required": [
+    "_id",
     "person_id",
     "name",
     "payload",
@@ -240,7 +262,7 @@ exports[`jsonSchemaToMongoSchema > should convert jobs schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "bsonType": "objectId",
+      "description": "Identifiant de la tâche",
     },
     "created_at": {
       "bsonType": "date",
@@ -255,12 +277,12 @@ exports[`jsonSchemaToMongoSchema > should convert jobs schema 1`] = `
       "description": "Le nom de la tâche",
     },
     "output": {
-      "additionalProperties": true,
+      "additionalProperties": {},
       "bsonType": "object",
       "description": "Les valeurs de retours du job",
     },
     "payload": {
-      "additionalProperties": true,
+      "additionalProperties": {},
       "bsonType": "object",
       "description": "La donnée liéé à la tâche",
     },
@@ -286,6 +308,7 @@ exports[`jsonSchemaToMongoSchema > should convert jobs schema 1`] = `
     },
     "sync": {
       "bsonType": "bool",
+      "description": "Si le job est synchrone",
     },
     "updated_at": {
       "bsonType": "date",
@@ -296,7 +319,10 @@ exports[`jsonSchemaToMongoSchema > should convert jobs schema 1`] = `
     "_id",
     "name",
     "status",
+    "sync",
     "scheduled_at",
+    "updated_at",
+    "created_at",
   ],
 }
 `;
@@ -307,16 +333,12 @@ exports[`jsonSchemaToMongoSchema > should convert organisations schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "bsonType": "objectId",
+      "description": "Identifiant de l'organisation",
     },
     "_meta": {
-      "additionalProperties": true,
+      "additionalProperties": {},
       "bsonType": "object",
-      "properties": {
-        "source": {
-          "bsonType": "string",
-        },
-      },
+      "description": "Métadonnées",
     },
     "created_at": {
       "bsonType": "date",
@@ -324,12 +346,14 @@ exports[`jsonSchemaToMongoSchema > should convert organisations schema 1`] = `
     },
     "email_domains": {
       "bsonType": "array",
+      "description": "Liste des domaines email",
       "items": {
         "bsonType": "string",
       },
     },
     "etablissements": {
       "bsonType": "array",
+      "description": "Liste des établissements",
       "items": {
         "additionalProperties": false,
         "bsonType": "object",
@@ -340,7 +364,7 @@ exports[`jsonSchemaToMongoSchema > should convert organisations schema 1`] = `
           },
           "is_hq": {
             "bsonType": "bool",
-            "description": "Siége social",
+            "description": "Siège social",
           },
           "nom": {
             "bsonType": "string",
@@ -351,6 +375,12 @@ exports[`jsonSchemaToMongoSchema > should convert organisations schema 1`] = `
             "description": "Siret actif de l'établissement",
           },
         },
+        "required": [
+          "nom",
+          "siret",
+          "is_hq",
+          "is_close",
+        ],
       },
     },
     "nom": {
@@ -374,16 +404,12 @@ exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "bsonType": "objectId",
+      "description": "Identifiant de la personne",
     },
     "_meta": {
-      "additionalProperties": true,
+      "additionalProperties": {},
       "bsonType": "object",
-      "properties": {
-        "source": {
-          "bsonType": "string",
-        },
-      },
+      "description": "Métadonnées",
     },
     "civility": {
       "bsonType": "string",
@@ -399,6 +425,7 @@ exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
     },
     "email": {
       "bsonType": "string",
+      "description": "Email de la personne",
     },
     "nom": {
       "bsonType": "string",
@@ -406,17 +433,25 @@ exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
     },
     "organisation_id": {
       "bsonType": "string",
+      "description": "Identifiant de l'organisation",
     },
     "prenom": {
       "bsonType": "string",
       "description": "Le prénom de la personne",
     },
     "sirets": {
-      "bsonType": "array",
+      "anyOf": [
+        {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "string",
+          },
+        },
+        {
+          "bsonType": "null",
+        },
+      ],
       "description": "Liste de sirets recensé (sécurisation qualité de la donnée)",
-      "items": {
-        "bsonType": "string",
-      },
     },
     "updated_at": {
       "bsonType": "date",
@@ -427,6 +462,9 @@ exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
     "_id",
     "email",
     "organisation_id",
+    "_meta",
+    "updated_at",
+    "created_at",
   ],
 }
 `;
@@ -437,7 +475,7 @@ exports[`jsonSchemaToMongoSchema > should convert sessions schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "bsonType": "objectId",
+      "description": "Identifiant de la session",
     },
     "created_at": {
       "bsonType": "date",
@@ -445,6 +483,7 @@ exports[`jsonSchemaToMongoSchema > should convert sessions schema 1`] = `
     },
     "token": {
       "bsonType": "string",
+      "description": "Token de la session",
     },
     "updated_at": {
       "bsonType": "date",
@@ -452,7 +491,10 @@ exports[`jsonSchemaToMongoSchema > should convert sessions schema 1`] = `
     },
   },
   "required": [
+    "_id",
     "token",
+    "updated_at",
+    "created_at",
   ],
 }
 `;
@@ -463,14 +505,29 @@ exports[`jsonSchemaToMongoSchema > should convert users schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "bsonType": "objectId",
+      "description": "Identifiant de l'utilisateur",
     },
     "api_key": {
       "bsonType": "string",
+      "description": "Clé API",
     },
     "api_key_used_at": {
-      "bsonType": "date",
-      "description": "Date de denière utilisation de la clé api",
+      "anyOf": [
+        {
+          "anyOf": [
+            {
+              "not": {},
+            },
+            {
+              "bsonType": "date",
+            },
+          ],
+        },
+        {
+          "bsonType": "null",
+        },
+      ],
+      "description": "Date de dernière utilisation de la clé API",
     },
     "created_at": {
       "bsonType": "date",
@@ -478,15 +535,20 @@ exports[`jsonSchemaToMongoSchema > should convert users schema 1`] = `
     },
     "email": {
       "bsonType": "string",
+      "description": "Email de l'utilisateur",
     },
     "is_admin": {
       "bsonType": "bool",
+      "description": "Est administrateur",
     },
     "password": {
       "bsonType": "string",
+      "description": "Mot de passe de l'utilisateur",
+      "minLength": 8,
     },
     "person_id": {
       "bsonType": "string",
+      "description": "Identifiant de la personne",
     },
     "updated_at": {
       "bsonType": "date",
@@ -498,6 +560,8 @@ exports[`jsonSchemaToMongoSchema > should convert users schema 1`] = `
     "email",
     "password",
     "person_id",
+    "updated_at",
+    "created_at",
   ],
 }
 `;
