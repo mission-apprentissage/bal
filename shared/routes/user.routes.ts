@@ -1,6 +1,8 @@
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
+import { ZPerson } from "../models/person.model";
+
 export const ZReqPostUser = () =>
   z
     .object({
@@ -20,6 +22,7 @@ export const ZResGetUser = () =>
       email: z.string().email(),
       is_admin: z.boolean().optional(),
       api_key_used_at: z.date().optional(),
+      person: ZPerson(),
     })
     .strict();
 

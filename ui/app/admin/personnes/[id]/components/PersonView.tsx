@@ -21,7 +21,7 @@ const PersonView: FC<Props> = ({ person }) => {
         pages={[
           PAGES.homepage(),
           PAGES.adminPersons(),
-          PAGES.adminViewPerson(person._id as string),
+          PAGES.adminViewPerson(person._id as unknown as string),
         ]}
       />
       <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
@@ -52,7 +52,11 @@ const PersonView: FC<Props> = ({ person }) => {
               return organisation ? (
                 <Text
                   as={Link}
-                  href={PAGES.adminViewOrganisation(organisation._id).path}
+                  href={
+                    PAGES.adminViewOrganisation(
+                      organisation._id as unknown as string
+                    ).path
+                  }
                 >
                   {organisation.nom}
                 </Text>

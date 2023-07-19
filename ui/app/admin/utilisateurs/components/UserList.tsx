@@ -91,7 +91,9 @@ const UserList = () => {
             header: () => "Dernière utilisation API",
             cell: ({ row }) => {
               const date = row.original.api_key_used_at;
-              return date ? formatDate(date, "PPP à p") : "Jamais";
+              return date
+                ? formatDate(date as unknown as string, "PPP à p")
+                : "Jamais";
             },
           },
           actions: {
