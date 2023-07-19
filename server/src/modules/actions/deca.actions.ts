@@ -91,7 +91,7 @@ export const importDecaContent = async (emails: string[], siret: string) => {
         },
         {
           $addToSet: {
-            organisations: organisation?._id,
+            organisations: organisation?._id ?? [],
             sirets: siret,
           },
           $setOnInsert: {
