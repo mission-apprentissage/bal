@@ -51,6 +51,7 @@ export const SOrganisation = {
           is_hq: { type: "boolean", description: "Siége social" },
           is_close: { type: "boolean", description: "Est fermé" },
         },
+        required: ["siret"],
       },
     },
     _meta: {
