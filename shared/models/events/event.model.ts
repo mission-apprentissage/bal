@@ -18,7 +18,7 @@ export const ZEvent = () =>
     _id: z.instanceof(ObjectId).describe("Identifiant de l'évènement"),
     person_id: z.string().describe("Identifiant de la personne"),
     name: z.string().describe("Nom de l'évènement"),
-    payload: z.array(ZBalEmailsPayload()).describe("Payload de l'évènement"),
+    payload: ZBalEmailsPayload().describe("Payload de l'évènement"),
   });
 
 export const SEvent = zodToJsonSchema(ZEvent());

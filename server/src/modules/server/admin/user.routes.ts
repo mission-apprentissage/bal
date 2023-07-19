@@ -1,8 +1,12 @@
 import Boom from "@hapi/boom";
 import { ObjectId, RootFilterOperators } from "mongodb";
 import { IUser } from "shared/models/user.model";
-import { SReqParamsSearchPagination } from "shared/routes/common.routes";
 import {
+  IReqParamsSearchPagination,
+  SReqParamsSearchPagination,
+} from "shared/routes/common.routes";
+import {
+  IReqPostUser,
   SReqPostUser,
   SResGetUser,
   SResGetUsers,
@@ -17,7 +21,9 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
   /**
    * Créer un utilisateur
    */
-  server.post(
+  server.post<{
+    Body: IReqPostUser;
+  }>(
     "/admin/user",
     {
       schema: {
@@ -41,7 +47,9 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get(
+  server.get<{
+    Querystring: IReqParamsSearchPagination;
+  }>(
     "/admin/users",
     {
       schema: {

@@ -1,6 +1,9 @@
 import { ObjectId, RootFilterOperators } from "mongodb";
 import { IPerson } from "shared/models/person.model";
-import { SReqParamsSearchPagination } from "shared/routes/common.routes";
+import {
+  IReqParamsSearchPagination,
+  SReqParamsSearchPagination,
+} from "shared/routes/common.routes";
 import { SResGetPerson, SResGetPersons } from "shared/routes/person.routes";
 
 import { findPerson, findPersons } from "../../actions/persons.actions";
@@ -8,7 +11,9 @@ import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 export const personAdminRoutes = ({ server }: { server: Server }) => {
-  server.get(
+  server.get<{
+    Querystring: IReqParamsSearchPagination;
+  }>(
     "/admin/persons",
     {
       schema: {

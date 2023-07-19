@@ -5,6 +5,7 @@ import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
 import { IUser } from "shared/models/user.model";
 import {
+  IReqGetMailingList,
   SReqGetMailingList,
   SResGetMailingList,
   SResGetMailingLists,
@@ -26,16 +27,15 @@ import { Server } from "./server";
 import { noop } from "./utils/upload.utils";
 
 export const mailingListRoutes = ({ server }: { server: Server }) => {
-  server.post(
+  server.post<{
+    Body: IReqGetMailingList;
+  }>(
     "/mailing-list",
     {
       schema: {
         body: SReqGetMailingList,
       } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const { source } = request.body;
@@ -59,10 +59,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           200: SResGetMailingLists,
         },
       } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const user = request.user as IUser;
@@ -80,7 +77,9 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get(
+  server.get<{
+    Params: { id: string };
+  }>(
     "/mailing-lists/:id",
     {
       schema: {
@@ -93,10 +92,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           200: SResGetMailingList,
         },
       } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const { user } = request;

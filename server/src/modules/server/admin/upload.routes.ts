@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { IDocument } from "shared/models/document.model";
 import { SResError } from "shared/routes/common.routes";
 import {
+  IReqQueryPostAdminUpload,
   IResGetDocuments,
   IResGetDocumentTypes,
   IResPostAdminUpload,
@@ -52,7 +53,9 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
   /**
    * Importer un fichier
    */
-  server.post(
+  server.post<{
+    Querystring: IReqQueryPostAdminUpload;
+  }>(
     "/admin/upload",
     {
       schema: {
@@ -62,11 +65,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           401: SResError,
         },
       } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       const { type_document } = request.query;
