@@ -22,7 +22,7 @@ export const ZResGetUser = () =>
       email: z.string().email(),
       is_admin: z.boolean().optional(),
       api_key_used_at: z.date().optional(),
-      person: ZPerson(),
+      person: ZPerson().optional(),
     })
     .strict();
 
