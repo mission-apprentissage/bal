@@ -80,7 +80,7 @@ function local_docker_sh() {
 }
 
 function local_server_run() {
-  local_debug server "$@"
+  local_docker_run server "$@"
 }
 
 function local_server_sh() {
