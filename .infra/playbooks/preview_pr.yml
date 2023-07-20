@@ -77,7 +77,7 @@
     - name: "[{{ pr_number }}] Trigger ACME companion"
       shell:
         chdir: /opt/bal
-        cmd: docker exec nginx-proxy-acme /app/signal_le_service
+        cmd: docker exec nginx-proxy-acme /app/force_renew
 
     - name: "[{{ pr_number }}] Execute MongoDB migrations"
       shell:
