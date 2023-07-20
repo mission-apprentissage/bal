@@ -15,4 +15,4 @@ stringifiedContent = stringifiedContent.replace(
   '.should("contain", "$1")'
 );
 console.log(stringifiedContent);
-// return stringifiedContent;
+return stringifiedContent;
