@@ -15,11 +15,9 @@ const contentSecurityPolicy = `
       base-uri 'self';
       block-all-mixed-content;
       font-src 'self'  https: data:;
-      frame-ancestors 'self' https://${process.env.NEXT_PUBLIC_BASE_HOST};
-      frame-src 'self' https://plausible.io https://${process.env.NEXT_PUBLIC_BASE_HOST};
-      img-src 'self' https://www.notion.so data: ${
-        process.env.NEXT_PUBLIC_ENV !== "production" ? "" : ""
-      };
+      frame-ancestors 'self';
+      frame-src 'self' https://plausible.io;
+      img-src 'self' https://www.notion.so data: ;
       object-src 'none';
       script-src 'self' https://plausible.io 'unsafe-inline' ${
         process.env.NEXT_PUBLIC_ENV === "local" ? "'unsafe-eval'" : ""

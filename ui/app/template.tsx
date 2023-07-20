@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
 import { FC, useRef } from "react";
 
+import { publicConfig } from "../config.public";
 import { theme } from "../theme/theme";
 import { queryClient } from "../utils/query.utils";
 import Footer from "./components/Footer";
@@ -25,7 +26,7 @@ const RootTemplate: FC<Props> = ({ children }) => {
     <PlausibleProvider
       trackLocalhost={false}
       enabled={tracking.current}
-      domain={`${process.env.NEXT_PUBLIC_BASE_HOST}`}
+      domain={publicConfig.host}
     >
       <QueryClientProvider client={queryClient}>
         <CacheProvider>

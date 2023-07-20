@@ -57,7 +57,7 @@ export const up = async (db: Db, _client: MongoClient) => {
         .collection("persons")
         .updateOne(
           { _id: person._id },
-          { $set: { organisation_id: organisation.id.toString() } }
+          { $set: { organisation_id: organisation._id.toString() } }
         );
     }
   }
