@@ -56,7 +56,7 @@ export default function Home() {
             });
 
             try {
-              const res = await fetch("/api/sentry-example-api");
+              const res = await fetch("/sentry/sentry-example-api");
               if (!res.ok) {
                 throw new Error("Sentry Example Frontend Error");
               }

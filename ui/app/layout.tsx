@@ -11,14 +11,11 @@ import { AuthContextProvider } from "../context/AuthContext";
 
 async function getSession() {
   try {
-    const response = await fetch(
-      `${publicConfig.apiEndpoint}/api/auth/session`,
-      {
-        headers: {
-          cookie: headers().get("cookie") ?? "",
-        },
-      }
-    );
+    const response = await fetch(`${publicConfig.apiEndpoint}/auth/session`, {
+      headers: {
+        cookie: headers().get("cookie") ?? "",
+      },
+    });
 
     const session: IResGetSession = await response.json();
 
