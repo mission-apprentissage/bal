@@ -111,6 +111,12 @@
       shell:
         chdir: /opt/bal
         cmd: "sudo /opt/bal/tools/metabase/setup-metabase.sh"
+      timeout: 900
+
+    - name: "Prune Docker"
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo docker system prune --force --until=36h"
 
     - name: "Désactivation du mode maintenance"
       shell:
