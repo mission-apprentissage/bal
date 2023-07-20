@@ -22,7 +22,7 @@ services:
       - server:/data
 
   ui:
-    image: "ghcr.io/mission-apprentissage/mna_bal_ui:0.0.0-{{pr_number}}"
+    image: "ghcr.io/mission-apprentissage/mna_bal_ui:0.0.0-{{pr_number}}-preview"
     container_name: bal_{{pr_number}}_ui
     restart: unless-stopped
     deploy:
