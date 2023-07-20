@@ -3,13 +3,16 @@ import { cypressStringifyChromeRecording } from "@cypress/chrome-recorder";
 import { readFileSync } from "node:fs";
 
 const recordingContent = readFileSync(
-  "cypress/records/admin/canSeeUploadPage.json"
+  "cypress/records/admin/can-access-upload-page.json"
 );
-// console.log(JSON.parse(recordingContent));
+console.log(JSON.parse(recordingContent));
 
-const stringifiedContent = await cypressStringifyChromeRecording(
+let stringifiedContent = await cypressStringifyChromeRecording(
   recordingContent
 );
+stringifiedContent = stringifiedContent.replace(
+  /\.type\(">(.*)"\)/,
+  '.should("contain", "$1")'
+);
 console.log(stringifiedContent);
-// cy.get("h1").should("contain", "BAL");
 // return stringifiedContent;

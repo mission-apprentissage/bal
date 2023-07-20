@@ -4,6 +4,7 @@ describe("can-access-upload-page", () => {
     cy.visit("https://bal-recette.apprentissage.beta.gouv.fr/");
     cy.get("#menu-button-\\:R1akmautjaH1\\:").click();
     cy.get("[data-id='menuitem\\:admin\\:manage-files']").click();
+    cy.get("h2").should("contain", "Gestion fichiers sources");
   });
 });
-//# recorderSourceMap=BCBDBEBFBGA
+//# recorderSourceMap=BCBDBEBFBGB

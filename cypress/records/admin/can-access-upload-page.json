@@ -60,14 +60,16 @@
             "offsetX": 153
         },
         {
-            "type": "waitForElement",
+            "type": "change",
             "target": "main",
             "selectors": [
-                "nav.css-555147",
-                "xpath//html/body/div[2]/div/nav[2]",
-                "pierce/nav.css-555147",
-                "text/Gestion fichiers sources+"
-            ]
+                [
+                    "h2"
+                ],
+                ["aria/Gestion fichiers sources"]
+            ],
+            "value": ">Gestion fichiers sources"
         }
+        
     ]
 }
