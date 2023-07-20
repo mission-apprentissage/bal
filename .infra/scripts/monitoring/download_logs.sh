@@ -46,7 +46,7 @@ fi;
 
 case $OPERATION in
   'ls')
-    ssh -t bal-prod "sudo -S ls /opt/bal/data/fluentd/$FILE"
+    ssh -t $SERVER "sudo -S ls /opt/bal/data/fluentd/$FILE"
     ;;
   'dl')
     if [[ "$FILE" != *.log.gz ]]; then
@@ -56,7 +56,8 @@ case $OPERATION in
     NAME="${FILE%.log.gz}"
     mkdir -p "$SCRIPT_DIR/logs/"
     DEST="$SCRIPT_DIR/logs/$NAME.json"
-    ssh bal-prod "sudo -S cat /opt/bal/data/fluentd/$FILE" | gunzip -c | jq -s > "$DEST"
+    mkdir -p "$(dirname "$DEST")"
+    ssh $SERVER "sudo -S cat /opt/bal/data/fluentd/$FILE" | gunzip -c | jq -s > "$DEST"
     echo "Fichier téléchargé dans $DEST";
     ;;
   *)

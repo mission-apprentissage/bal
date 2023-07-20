@@ -1,3 +1,12 @@
+## [1.47.2](https://github.com/mission-apprentissage/bal/compare/v1.47.1...v1.47.2) (2023-07-20)
+
+
+### Bug Fixes
+
+* dev environnment small adaptations ([#247](https://github.com/mission-apprentissage/bal/issues/247)) ([5623e49](https://github.com/mission-apprentissage/bal/commit/5623e4940a5c73f759a2453d14d05ae725eadfbc))
+* function call in bin ([0a5eb2a](https://github.com/mission-apprentissage/bal/commit/0a5eb2aabac6a8b243fed95690012a19e3d7abd1))
+* local dev fixes ([7e457f2](https://github.com/mission-apprentissage/bal/commit/7e457f26f0aa698bfdbc4ee7cfac200f65bad70a))
+
 ## [1.47.1](https://github.com/mission-apprentissage/bal/compare/v1.47.0...v1.47.1) (2023-07-18)
 
 
