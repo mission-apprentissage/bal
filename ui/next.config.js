@@ -4,7 +4,6 @@
 const path = require("path");
 const { withPlausibleProxy } = require("next-plausible");
 const { withSentryConfig } = require("@sentry/nextjs");
-// const { version } = require('./spackage.json');
 
 function inline(value) {
   return value.replace(/\s{2,}/g, " ").trim();

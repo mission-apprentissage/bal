@@ -6,12 +6,14 @@
 import { ExtraErrorData, HttpClient } from "@sentry/integrations";
 import * as Sentry from "@sentry/nextjs";
 
+import { publicConfig } from "./config.public";
+
 Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  tracesSampleRate: process.env.NEXT_PUBLIC_ENV === "production" ? 0.1 : 1.0,
+  dsn: publicConfig.sentry.dsn,
+  tracesSampleRate: publicConfig.env === "production" ? 0.1 : 1.0,
   tracePropagationTargets: [/\.apprentissage\.beta\.gouv\.fr$/],
-  environment: process.env.NEXT_PUBLIC_ENV,
-  enabled: process.env.NEXT_PUBLIC_ENV !== "local",
+  environment: publicConfig.env,
+  enabled: publicConfig.env !== "local",
   // debug: true,
   normalizeDepth: 8,
   integrations: [
