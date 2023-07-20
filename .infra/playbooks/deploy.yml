@@ -5,6 +5,20 @@
   vars_files:
     - "../vault/vault.yml"
   tasks:
+    - name: check du docker network
+      ansible.builtin.shell:
+        chdir: /opt/bal
+        cmd: docker network ls --filter name=bal_network -q
+      register: network
+    - debug:
+        var: network
+
+    - name: création du docker network
+      ansible.builtin.shell:
+        chdir: /opt/bal
+        cmd: docker network create -d overlay --attachable bal_network
+      when: network.stdout == ""
+
     - name: copy server env file
       ansible.builtin.template:
         src: "{{ item }}"
