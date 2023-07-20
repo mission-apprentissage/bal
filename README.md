@@ -14,7 +14,6 @@
     - [Exécution des tests](#exécution-des-tests)
   - [Aller plus loin](#aller-plus-loin)
 
-
 ## Fiche Produit
 
 Consultez la [Fiche Produit](https://www.notion.so/mission-apprentissage/Fiche-produit-73bbd7e5983749b7974c2f7c11194518?pvs=4) pour plus d'informations sur le projet.
@@ -28,6 +27,7 @@ Avant d'installer le projet, assurez-vous d'avoir les éléments suivants :
 - Docker 23.03.0+
 - GPG
 - NodeJS 18+ (vous pouvez utiliser [n](https://github.com/tj/n#third-party-installers) pour l'installer)
+- Brew (jq)
 
 ### Clé GPG
 
@@ -89,14 +89,13 @@ Cette commande mettra à jour les dépendances du projet.
 
 > **Note** : Pour que vos changements se reflètent dans votre application locale, vous devez exécuter la commande `.bin/mna-bal local:start`.
 
-
 ### Developpement CLI mna-bal
 
 Les principales opérations sont regroupée dans un CLI `.bin/mna-bal`, il est possible de liste l'ensemble des commandes disponible via `.bin/mna-bal help`.
 
 Il est également possible d'installer globallement l'exécutable via la commande `.bin/mna-bal local:bin:install` une fois installé il est possible d'utiliser la CLI via `mna-bal help` directement (n'oubliez pas d'ouvrir une nouvelle session de votre terminal).
 
-Enfin si vous utilisez ZSH, vous pouvez installer le support du tab-completion de la commande via `mna-bal local:completion:zsh`
+Enfin si vous utilisez ZSH, vous pouvez installer le support du tab-completion de la commande via `mna-bal local:completion:zsh` puis `compinit -C`
 
 ### Variables d'environnement local
 
