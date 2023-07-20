@@ -1,11 +1,8 @@
 import axios from "axios";
 
-export const api = axios.create({
-  baseURL: "/api",
-  withCredentials: true,
-});
+import { publicConfig } from "../config.public";
 
-export const apiServer = axios.create({
-  baseURL: `${process.env.NEXT_SERVER_URI}/api`,
+export const api = axios.create({
+  baseURL: `${publicConfig.apiEndpoint}/api`,
   withCredentials: true,
 });

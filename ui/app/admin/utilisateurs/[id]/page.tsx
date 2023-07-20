@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 
-import { apiServer } from "../../../../utils/api.utils";
+import { api } from "@/utils/api.utils";
+
 import UserView from "./components/UserView";
 
 interface Props {
@@ -8,7 +9,7 @@ interface Props {
 }
 
 const AdminUserViewPage = async ({ params }: Props) => {
-  const { data: user } = await apiServer.get(`/admin/users/${params.id}`, {
+  const { data: user } = await api.get(`/admin/users/${params.id}`, {
     headers: {
       cookie: headers().get("cookie") ?? "",
     },

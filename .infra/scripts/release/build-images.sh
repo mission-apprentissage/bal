@@ -6,20 +6,26 @@ readonly ROOT_DIR="${SCRIPT_DIR}/../../.."
 
 cd ${ROOT_DIR}
 
-next_version="${1}"
-registry=${2:?"Veuillez préciser le registry"}
-mode=${3:?"Veuillez préciser le mode <push|load>"}
+next_version="${1:?"Veuillez préciser la version"}"
+mode=${2:?"Veuillez préciser le mode <push|load>"}
+shift 2
+
+if [[ $# == "0" ]]; then
+  echo "Veuillez spécifier les environnements à build (production, recette, preview, local)"
+  exit 1;
+fi;
+
 
 SHARED_OPS="\
         --build-arg YARN_FLAGS="--immutable" \
         --platform linux/amd64 \
-        --progress=plain \
         --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
         --label "org.opencontainers.image.licenses=MIT"
 "
 
 CACHE_OPTS=""
 if [[ ! -z "${CI:-}" ]]; then
+    SHARED_OPS="${SHARED_OPS} --progress=plain"
     DEPS_ID=($(md5sum ./yarn.lock))
     CACHE_OPTS="\
         --cache-from type=gha,scope=$DEPS_ID \
@@ -27,33 +33,38 @@ if [[ ! -z "${CI:-}" ]]; then
     "
 fi
 
-echo "Build all stages in parallel"
+echo "Build all stages in parallel and cache yarn installs"
 docker build . \
+        --target root \
         $SHARED_OPS \
         $CACHE_OPTS
 
-echo "Build ui:$next_version with mode=$mode"
-docker build . \
-        --tag $registry/mission-apprentissage/mna_bal_ui:"$next_version" \
-        --label "org.opencontainers.image.description=Ui bal" \
-        --target ui \
-        --${mode} \
-        $SHARED_OPS
 
-echo "Building server:$next_version  with mode=$mode"
+for env in "$@"
+do
+  echo "Build ui:$next_version with mode=$mode; env=$env"
+  docker build . \
+    --build-arg PUBLIC_ENV="$env" \
+    --build-arg PUBLIC_VERSION="$next_version" \
+    --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$next_version-$env" \
+    --label "org.opencontainers.image.description=Ui bal" \
+    --target ui \
+    --${mode} \
+    --quiet \
+    $SHARED_OPS &
+done
+
+echo "Building server:$next_version with mode=$mode"
 docker build . \
-        --tag $registry/mission-apprentissage/mna_bal_server:"$next_version" \
+        --build-arg PUBLIC_VERSION="$next_version" \
+        --tag ghcr.io/mission-apprentissage/mna_bal_server:"$next_version" \
         --label "org.opencontainers.image.description=Server bal" \
         --target server \
         --${mode} \
-        $SHARED_OPS
+        --quiet \
+        $SHARED_OPS &
 
-if [[ $(uname) = "Darwin" ]]; then
-  sed -i '' "s/registry=.*/registry=$registry/" ".infra/env.ini"
-else
-  sed -i'' "s/registry=.*/registry=$registry/" ".infra/env.ini"
-fi
-echo "Bump registry in .infra/env.ini : $registry"
+wait
 
 if [[ $(uname) = "Darwin" ]]; then
   sed -i '' "s/app_version=.*/app_version=$next_version/" ".infra/env.ini"
