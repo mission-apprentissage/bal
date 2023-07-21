@@ -26,13 +26,6 @@
       with_fileglob:
         - "../.env_server"
 
-    - name: copy ui env file
-      ansible.builtin.template:
-        src: "{{ item }}"
-        dest: "/opt/bal/.env_ui"
-      with_fileglob:
-        - "../.env_ui"
-
     - name: copy du fichier docker compose
       ansible.builtin.template:
         src: "{{ item }}"

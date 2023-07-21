@@ -27,11 +27,6 @@
         content: "{{ lookup('ansible.builtin.template', '../.env_server') }}"
         dest: "/opt/bal/projects/{{ pr_number }}/.env_server"
 
-    - name: "[{{ pr_number }}] copy ui env file"
-      ansible.builtin.copy:
-        content: "{{ lookup('ansible.builtin.template', '../.env_ui') }}"
-        dest: "/opt/bal/projects/{{ pr_number }}/.env_ui"
-
     - name: "[{{ pr_number }}] creation du fichier docker compose"
       ansible.builtin.template:
         src: "{{ item }}"
@@ -64,7 +59,7 @@
 
     - name: "[{{ pr_number }}] Build local images 0.0.0-{{ pr_number }}"
       shell:
-        cmd: "bash .infra/scripts/release/build-images.sh 0.0.0-{{ pr_number }} ghcr.io load"
+        cmd: "bash .infra/scripts/release/build-images.sh 0.0.0-{{ pr_number }} load preview"
         chdir: /opt/bal/repository
       async: 900 # max 15 minutes
       poll: 15 # check every 15s

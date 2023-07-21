@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
 import { FC, useRef } from "react";
 
+import { publicConfig } from "../config.public";
 import { theme } from "../theme/theme";
 import { queryClient } from "../utils/query.utils";
 import Footer from "./components/Footer";
@@ -19,13 +20,13 @@ interface Props {
 
 const RootTemplate: FC<Props> = ({ children }) => {
   const searchParams = useSearchParams();
-  const tracking = useRef(searchParams.get("notracking") !== "true");
+  const tracking = useRef(searchParams?.get("notracking") !== "true");
 
   return (
     <PlausibleProvider
       trackLocalhost={false}
       enabled={tracking.current}
-      domain={`${process.env.NEXT_PUBLIC_BASE_HOST}`}
+      domain={publicConfig.host}
     >
       <QueryClientProvider client={queryClient}>
         <CacheProvider>
