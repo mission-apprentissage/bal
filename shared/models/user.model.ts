@@ -27,7 +27,7 @@ export const ZUser = () =>
     .object({
       _id: zObjectId,
       email: z.string().email().describe("Email de l'utilisateur"),
-      password: z.string().min(8).describe("Mot de passe de l'utilisateur"),
+      password: z.string().describe("Mot de passe de l'utilisateur"),
       person_id: z.string().describe("Identifiant de la personne"),
       is_admin: z.boolean().optional().describe("Est administrateur"),
       api_key: z.string().optional().describe("Clé API"),

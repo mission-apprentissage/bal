@@ -516,7 +516,6 @@ exports[`jsonSchemaToMongoSchema > should convert users schema 1`] = `
     "password": {
       "bsonType": "string",
       "description": "Mot de passe de l'utilisateur",
-      "minLength": 8,
     },
     "person_id": {
       "bsonType": "string",
