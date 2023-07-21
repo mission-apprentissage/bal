@@ -130,7 +130,7 @@
     - name: "Prune Docker"
       shell:
         chdir: /opt/bal
-        cmd: "sudo docker system prune --force --until=36h"
+        cmd: "sudo docker system prune --all --force"
 
     - name: "Désactivation du mode maintenance"
       shell:
