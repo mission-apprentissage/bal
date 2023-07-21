@@ -25,7 +25,7 @@ SHARED_OPS="\
 CACHE_OPTS=""
 if [[ ! -z "${CI:-}" ]]; then
     DEPS_ID=($(md5sum ./yarn.lock))
-    SHARED_OPS="${SHARED_OPS} --progress=plain --cache-from type=gha,scope=$DEPS_ID"
+    SHARED_OPS="${SHARED_OPS} --cache-from type=gha,scope=$DEPS_ID"
     CACHE_OPTS="\
         --cache-to type=gha,mode=min,scope=$DEPS_ID \
     "
