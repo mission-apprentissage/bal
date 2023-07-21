@@ -493,14 +493,7 @@ exports[`jsonSchemaToMongoSchema > should convert users schema 1`] = `
     "api_key_used_at": {
       "anyOf": [
         {
-          "anyOf": [
-            {
-              "not": {},
-            },
-            {
-              "bsonType": "date",
-            },
-          ],
+          "bsonType": "date",
         },
         {
           "bsonType": "null",

@@ -33,8 +33,7 @@ export const ZUser = () =>
       api_key: z.string().optional().describe("Clé API"),
       api_key_used_at: z
         .date()
-        .optional()
-        .nullable()
+        .nullish()
         .describe("Date de dernière utilisation de la clé API"),
       updated_at: z
         .date()
