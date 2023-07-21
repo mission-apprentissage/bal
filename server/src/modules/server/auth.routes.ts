@@ -77,10 +77,13 @@ export const authRoutes = ({ server }: { server: Server }) => {
       const token = createUserTokenSimple({ payload: { email: user.email } });
       await createSession({ token });
 
-      return response
-        .setCookie(config.session.cookieName, token, config.session.cookie)
-        .status(200)
-        .send(user as any); // Fixme type, looks like we're returning too much info here!
+      return (
+        response
+          .setCookie(config.session.cookieName, token, config.session.cookie)
+          .status(200)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .send(user as any)
+      ); // Fixme type, looks like we're returning too much info here!
     }
   );
 

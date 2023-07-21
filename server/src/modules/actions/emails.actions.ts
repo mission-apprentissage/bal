@@ -144,9 +144,11 @@ export async function renderEmail(token: string) {
   if (!event) {
     return;
   }
-  const { templateName, payload } = event.payload.emails.find(
-    (e) => e.token === token
-  ) as any; // IBalEmail;
+  const email = event.payload.emails.find((e) => e.token === token);
+  if (!email) {
+    return;
+  }
+  const { templateName, payload } = email;
   return generateHtml(
     payload.recipient.email,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

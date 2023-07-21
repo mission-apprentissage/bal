@@ -17859,6 +17859,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"type-fest@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "type-fest@npm:4.0.0"
+  checksum: 716f32ac341b1cf35bf08cc5cc6a11822436333966d3f4d94758112f45829efa3efb643ebc74a53e514e68a1bddab144d0153d654e072b41ba9bd98bcf841d75
+  languageName: node
+  linkType: hard
+
 "typed-array-length@npm:^1.0.4":
   version: 1.0.4
   resolution: "typed-array-length@npm:1.0.4"
@@ -17983,6 +17990,7 @@ __metadata:
     react-notion-x: 6.16.0
     react-phone-input-2: 2.15.1
     shared: "workspace:*"
+    type-fest: ^4.0.0
     typescript: 4.9.5
     yup: 1.1.1
   languageName: unknown

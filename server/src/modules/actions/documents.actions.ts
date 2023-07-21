@@ -237,6 +237,7 @@ export const extractDocumentContent = async ({
 }: {
   document: IDocumentDocument;
   delimiter?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formatter?: (line: any) => any;
 }) => {
   const stream = await getFromStorage(document.chemin_fichier);

@@ -4,6 +4,7 @@ import { Box, Button, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import NavLink from "next/link";
 import { IDocument } from "shared/models/document.model";
+import { Jsonify } from "type-fest";
 
 import Table from "../../../components/table/Table";
 import { Bin } from "../../../theme/icons/Bin";
@@ -13,7 +14,7 @@ import { formatBytes } from "../../../utils/file.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 
 const AdminImportPage = () => {
-  const { data: documentLists } = useQuery<IDocument[]>({
+  const { data: documentLists } = useQuery<Jsonify<IDocument>[]>({
     queryKey: ["documentLists"],
     queryFn: async () => {
       const { data } = await api.get("/admin/documents");
@@ -86,10 +87,7 @@ const AdminImportPage = () => {
               cell: ({ row }) => {
                 return (
                   row.original.created_at &&
-                  formatDate(
-                    row.original.created_at as any,
-                    "dd/MM/yyyy à HH:mm"
-                  )
+                  formatDate(row.original.created_at, "dd/MM/yyyy à HH:mm")
                 );
               },
             },

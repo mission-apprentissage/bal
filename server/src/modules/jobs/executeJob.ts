@@ -27,6 +27,7 @@ const runner = async (
 
   try {
     result = await jobFunc();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     captureException(err);
     if (options.runningLogs)

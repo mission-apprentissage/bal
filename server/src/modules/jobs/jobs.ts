@@ -54,8 +54,10 @@ async function runJob(
         case "clear":
           return clear();
         case "users:create":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return createUser(job.payload as any);
         case "indexes:recreate":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return recreateIndexes(job.payload as any);
         case "db:validate":
           return validateModels();

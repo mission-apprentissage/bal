@@ -30,11 +30,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
         body: SReqPostUser,
         response: { 200: SResPostUser },
       } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       const user = await createUser(request.body);
@@ -43,7 +39,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
         throw Boom.badImplementation("Impossible de créer l'utilisateur");
       }
 
-      return response.status(200).send(user as any); //IResPostUser
+      return response.status(200).send(user); //IResPostUser
     }
   );
 

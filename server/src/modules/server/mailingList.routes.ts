@@ -73,7 +73,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         }
       );
 
-      return response.status(200).send(mailingLists as any);
+      return response.status(200).send(mailingLists);
     }
   );
 
@@ -106,7 +106,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         throw Boom.forbidden("Forbidden");
       }
 
-      return response.status(200).send(mailingList as any);
+      return response.status(200).send(mailingList);
     }
   );
 
@@ -120,10 +120,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           required: ["id"],
         },
       } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const { user } = request;
@@ -157,6 +154,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       let fileNotFound = false;
       try {
         stream = await getFromStorage(document.chemin_fichier);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         if (error.message.includes("Status code 404")) {
           fileNotFound = true;
@@ -197,10 +195,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           required: ["id"],
         },
       } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const { user } = request;
