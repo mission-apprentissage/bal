@@ -34,8 +34,6 @@ exports[`jsonSchemaToMongoSchema > should convert documentContents schema 1`] = 
   "required": [
     "_id",
     "document_id",
-    "updated_at",
-    "created_at",
   ],
 }
 `;
@@ -113,7 +111,6 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
     "hash_secret",
     "hash_fichier",
     "added_by",
-    "updated_at",
     "created_at",
   ],
 }
@@ -121,7 +118,7 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
 
 exports[`jsonSchemaToMongoSchema > should convert events schema 1`] = `
 {
-  "additionalProperties": false,
+  "additionalProperties": true,
   "bsonType": "object",
   "properties": {
     "_id": {
@@ -136,7 +133,7 @@ exports[`jsonSchemaToMongoSchema > should convert events schema 1`] = `
       ],
     },
     "payload": {
-      "additionalProperties": false,
+      "additionalProperties": true,
       "bsonType": "object",
       "description": "Payload de l'évènement",
       "properties": {
@@ -149,7 +146,7 @@ exports[`jsonSchemaToMongoSchema > should convert events schema 1`] = `
               "error": {
                 "bsonType": "array",
                 "items": {
-                  "additionalProperties": false,
+                  "additionalProperties": true,
                   "bsonType": "object",
                   "properties": {
                     "err_type": {
@@ -168,10 +165,6 @@ exports[`jsonSchemaToMongoSchema > should convert events schema 1`] = `
                       "bsonType": "string",
                     },
                   },
-                  "required": [
-                    "err_type",
-                    "message",
-                  ],
                 },
               },
               "messageIds": {
@@ -184,11 +177,11 @@ exports[`jsonSchemaToMongoSchema > should convert events schema 1`] = `
                 "bsonType": "date",
               },
               "payload": {
-                "additionalProperties": false,
+                "additionalProperties": true,
                 "bsonType": "object",
                 "properties": {
                   "recipient": {
-                    "additionalProperties": false,
+                    "additionalProperties": true,
                     "bsonType": "object",
                     "properties": {
                       "email": {
@@ -312,10 +305,7 @@ exports[`jsonSchemaToMongoSchema > should convert jobs schema 1`] = `
     "_id",
     "name",
     "status",
-    "sync",
     "scheduled_at",
-    "updated_at",
-    "created_at",
   ],
 }
 `;
@@ -374,12 +364,6 @@ exports[`jsonSchemaToMongoSchema > should convert organisations schema 1`] = `
             "description": "Siret actif de l'établissement",
           },
         },
-        "required": [
-          "nom",
-          "siret",
-          "is_hq",
-          "is_close",
-        ],
       },
     },
     "nom": {
@@ -415,9 +399,6 @@ exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
           "bsonType": "string",
         },
       },
-      "required": [
-        "source",
-      ],
     },
     "civility": {
       "bsonType": "string",
@@ -492,8 +473,6 @@ exports[`jsonSchemaToMongoSchema > should convert sessions schema 1`] = `
   "required": [
     "_id",
     "token",
-    "updated_at",
-    "created_at",
   ],
 }
 `;
@@ -560,8 +539,6 @@ exports[`jsonSchemaToMongoSchema > should convert users schema 1`] = `
     "email",
     "password",
     "person_id",
-    "updated_at",
-    "created_at",
   ],
 }
 `;

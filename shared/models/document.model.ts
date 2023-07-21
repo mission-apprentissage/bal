@@ -38,7 +38,10 @@ export const ZDocument = () =>
         .optional()
         .describe("Number of lines"),
       added_by: z.string().describe("Qui a ajouté le fichier"),
-      updated_at: z.date().describe("Date de mise à jour en base de données"),
+      updated_at: z
+        .date()
+        .optional()
+        .describe("Date de mise à jour en base de données"),
       created_at: z.date().describe("Date d'ajout en base de données"),
     })
     .strict();

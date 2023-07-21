@@ -13,12 +13,14 @@ const indexes: IModelDescriptor["indexes"] = [
 ];
 
 export const ZEvent = () =>
-  z.object({
-    _id: zObjectId,
-    person_id: z.string().describe("Identifiant de la personne"),
-    name: z.enum(["bal_emails"]).describe("Nom de l'évènement"),
-    payload: ZBalEmailsPayload().describe("Payload de l'évènement"),
-  });
+  z
+    .object({
+      _id: zObjectId,
+      person_id: z.string().describe("Identifiant de la personne"),
+      name: z.enum(["bal_emails"]).describe("Nom de l'évènement"),
+      payload: ZBalEmailsPayload().describe("Payload de l'évènement"),
+    })
+    .nonstrict();
 
 export const SEvent = zodToJsonSchema(ZEvent(), toJsonSchemaOptions);
 

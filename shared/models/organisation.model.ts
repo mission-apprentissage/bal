@@ -37,10 +37,13 @@ export const ZOrganisation = () =>
         .array(
           z
             .object({
-              nom: z.string().describe("Nom de l'établissement"),
-              siret: z.string().describe("Siret actif de l'établissement"),
-              is_hq: z.boolean().describe("Siège social"),
-              is_close: z.boolean().describe("Est fermé"),
+              nom: z.string().optional().describe("Nom de l'établissement"),
+              siret: z
+                .string()
+                .optional()
+                .describe("Siret actif de l'établissement"),
+              is_hq: z.boolean().optional().describe("Siège social"),
+              is_close: z.boolean().optional().describe("Est fermé"),
             })
             .strict()
         )

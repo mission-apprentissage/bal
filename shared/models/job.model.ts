@@ -22,7 +22,7 @@ export const ZJob = () =>
       _id: zObjectId,
       name: z.string().describe("Le nom de la tâche"),
       status: z.nativeEnum(JOB_STATUS_LIST).describe("Statut courant du job"),
-      sync: z.boolean().describe("Si le job est synchrone"),
+      sync: z.boolean().optional().describe("Si le job est synchrone"),
       payload: z
         .record(z.any())
         .optional()
@@ -34,8 +34,14 @@ export const ZJob = () =>
       scheduled_at: z.date().describe("Date de lancement programmée"),
       started_at: z.date().optional().describe("Date de lancement"),
       ended_at: z.date().optional().describe("Date de fin d'execution"),
-      updated_at: z.date().describe("Date de mise à jour en base de données"),
-      created_at: z.date().describe("Date d'ajout en base de données"),
+      updated_at: z
+        .date()
+        .optional()
+        .describe("Date de mise à jour en base de données"),
+      created_at: z
+        .date()
+        .optional()
+        .describe("Date d'ajout en base de données"),
     })
     .strict();
 

@@ -38,7 +38,7 @@ export const ZPerson = () =>
         ),
       _meta: z
         .object({
-          source: z.string(),
+          source: z.string().optional(),
         })
         .describe("Métadonnées")
         .nonstrict()
