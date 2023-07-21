@@ -33,7 +33,7 @@ function Help_infra() {
 }
 
 function infra_setup() {
-  ${ROOT_DIR}/.infra/scripts/setup-vm.sh "$@"
+  "$ROOT_DIR/.infra/scripts/setup-vm.sh" "$@"
 }
 
 function infra_setup_prod() {
@@ -45,11 +45,11 @@ function infra_setup_recette() {
 }
 
 function infra_release_images() {
-  ${ROOT_DIR}/.infra/scripts/push-images.sh "$@"
+  "$ROOT_DIR/.infra/scripts/push-images.sh" "$@"
 }
 
 function infra_deploy() {
-  ${ROOT_DIR}/.infra/scripts/deploy-app.sh "$@"
+  "$ROOT_DIR/.infra/scripts/deploy-app.sh" "$@"
 }
 
 function infra_deploy_prod() {
@@ -78,25 +78,25 @@ function infra_vault_password() {
 }
 
 function infra_vault_renew() {
-  ${ROOT_DIR}/.infra/scripts/vault/renew-vault.sh "$@"
+  "$ROOT_DIR/.infra/scripts/vault/renew-vault.sh" "$@"
 }
 
 function infra_user_remove() {
-  ${ROOT_DIR}/.infra/scripts/clean.sh <nom_environnement> "$@"
+  "$ROOT_DIR/.infra/scripts/clean.sh" <nom_environnement> "$@"
 }
 
 function infra_firewall_update() {
-  ${ROOT_DIR}/.infra/scripts/ovh/create-firewall.sh "$@"
+  "$ROOT_DIR/.infra/scripts/ovh/create-firewall.sh" "$@"
 }
 
 function infra_logs_ls() {
-  ${ROOT_DIR}/.infra/scripts/monitoring/download_logs.sh ls "$@"
+  "$ROOT_DIR/.infra/scripts/monitoring/download_logs.sh" ls "$@"
 }
 
 function infra_logs_dl_local() {
-  ${ROOT_DIR}/.infra/scripts/monitoring/download_logs.sh dl "$@"
+  "$ROOT_DIR/.infra/scripts/monitoring/download_logs.sh" dl "$@"
 }
 
 function infra_logs_rm_local() {
-  ${ROOT_DIR}/.infra/scripts/monitoring/download_logs.sh rm "$@"
+  "$ROOT_DIR/.infra/scripts/monitoring/download_logs.sh" rm "$@"
 }

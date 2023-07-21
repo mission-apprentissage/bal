@@ -6,18 +6,16 @@ import { headers } from "next/headers";
 import { PropsWithChildren } from "react";
 import { IResGetSession } from "shared/routes/auth.routes";
 
+import { publicConfig } from "../config.public";
 import { AuthContextProvider } from "../context/AuthContext";
 
 async function getSession() {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_SERVER_URI}/api/auth/session`,
-      {
-        headers: {
-          cookie: headers().get("cookie") ?? "",
-        },
-      }
-    );
+    const response = await fetch(`${publicConfig.apiEndpoint}/auth/session`, {
+      headers: {
+        cookie: headers().get("cookie") ?? "",
+      },
+    });
 
     const session: IResGetSession = await response.json();
 

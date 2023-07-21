@@ -11,6 +11,7 @@ import {
 import { Metadata } from "next";
 import PlausibleProvider from "next-plausible";
 
+import { publicConfig } from "../config.public";
 import { NotFound } from "../theme/icons/NotFound";
 import { theme } from "../theme/theme";
 import Footer from "./components/Footer";
@@ -23,10 +24,7 @@ export const metadata: Metadata = {
 
 export default async function NotFoundPage() {
   return (
-    <PlausibleProvider
-      trackLocalhost={false}
-      domain={`${process.env.NEXT_PUBLIC_BASE_HOST}`}
-    >
+    <PlausibleProvider trackLocalhost={false} domain={publicConfig.host}>
       <CacheProvider>
         <ChakraProvider theme={theme}>
           <Header />

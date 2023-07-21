@@ -13,7 +13,7 @@ x-node-image: &node-image
     target: builder_root
   volumes:
     - ./:/app/:z
-  
+
 services:
   reverse_proxy:
     <<: *default
@@ -39,10 +39,9 @@ services:
   ui:
     <<: *node-image
     stdin_open: true
-    env_file: .env_ui
-    working_dir: '/app/ui'
+    working_dir: "/app/ui"
     expose:
-      - '3000'
+      - "3000"
     command: ["yarn", "dev"]
 
   server:
@@ -56,9 +55,9 @@ services:
     volumes:
       - ./:/app/:z
       - bal_server_data:/data
-    working_dir: '/app/server'
+    working_dir: "/app/server"
     expose:
-      - '5000'
+      - "5000"
     command: ["yarn", "dev"]
 
   processor:
@@ -73,9 +72,9 @@ services:
         condition: service_healthy
       clamav:
         condition: service_healthy
-    working_dir: '/app/server'
+    working_dir: "/app/server"
     expose:
-      - '5000'
+      - "5000"
 
   mongodb:
     <<: *default
@@ -101,7 +100,7 @@ services:
       start_period: 6m
     volumes:
       - bal_clamav_data:/var/lib/clamav
-  
+
   smtp:
     <<: *default
     image: axllent/mailpit:v1.5.5

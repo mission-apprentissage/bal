@@ -31,7 +31,7 @@ const ModifierMotDePassePage = () => {
   const { push } = useRouter();
   const searchParams = useSearchParams();
 
-  const token = searchParams.get("token");
+  const token = searchParams?.get("token");
 
   const {
     register,
