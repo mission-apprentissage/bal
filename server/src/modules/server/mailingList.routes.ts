@@ -110,7 +110,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get(
+  server.get<{ Params: { id: string } }>(
     "/mailing-lists/:id/download",
     {
       schema: {
@@ -185,7 +185,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.delete(
+  server.delete<{ Params: { id: string } }>(
     "/mailing-list/:id",
     {
       schema: {
