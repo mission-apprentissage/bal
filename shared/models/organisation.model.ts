@@ -23,6 +23,10 @@ const indexes: IModelDescriptor["indexes"] = [
     },
   ],
   [{ siren: 1, email_domains: 1 }, { name: "siren_email_domains" }],
+  [
+    { email_domains: 1, "etablissements.siret": 1 },
+    { name: "email_domains_siret" },
+  ],
 ];
 
 export const SOrganisation = {
