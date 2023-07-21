@@ -1,6 +1,8 @@
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
+import { toJsonSchemaOptions } from "../common";
+
 export const ZBalEmail = () =>
   z.object({
     token: z.string(),
@@ -43,7 +45,10 @@ export const ZBalEmailsPayload = () =>
     unsubscribe: z.boolean().optional().describe("unsubscribe email"),
   });
 
-export const SBalEmailsPayload = zodToJsonSchema(ZBalEmailsPayload());
+export const SBalEmailsPayload = zodToJsonSchema(
+  ZBalEmailsPayload(),
+  toJsonSchemaOptions
+);
 
 export type IBalEmail = z.input<ReturnType<typeof ZBalEmail>>;
 export type IBalEmails = z.input<ReturnType<typeof ZBalEmails>>;

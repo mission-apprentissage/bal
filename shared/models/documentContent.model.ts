@@ -1,8 +1,7 @@
-import { ObjectId } from "mongodb";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
-import { IModelDescriptor } from "./common";
+import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
 
 const collectionName = "documentContents" as const;
 
@@ -14,7 +13,7 @@ const indexes: IModelDescriptor["indexes"] = [
 export const ZDocumentContent = () =>
   z
     .object({
-      _id: z.instanceof(ObjectId).describe("Identifiant du document"),
+      _id: zObjectId,
       document_id: z.string().describe("Identifiant du document"),
       content: z.record(z.any()).optional().describe("Contenu du document"),
       type_document: z
@@ -26,7 +25,10 @@ export const ZDocumentContent = () =>
     })
     .strict();
 
-export const SDocumentContent = zodToJsonSchema(ZDocumentContent());
+export const SDocumentContent = zodToJsonSchema(
+  ZDocumentContent(),
+  toJsonSchemaOptions
+);
 
 export type IDocumentContent = z.input<ReturnType<typeof ZDocumentContent>>;
 

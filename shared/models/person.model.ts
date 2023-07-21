@@ -1,8 +1,7 @@
-import { ObjectId } from "mongodb";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
-import { IModelDescriptor } from "./common";
+import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
 
 const collectionName = "persons" as const;
 
@@ -25,7 +24,7 @@ const indexes: IModelDescriptor["indexes"] = [
 export const ZPerson = () =>
   z
     .object({
-      _id: z.instanceof(ObjectId).describe("Identifiant de la personne"),
+      _id: zObjectId,
       email: z.string().email().describe("Email de la personne"),
       civility: z.enum(["Madame", "Monsieur"]).optional().describe("civilité"),
       nom: z.string().optional().describe("Le nom de la personne"),
@@ -49,7 +48,7 @@ export const ZPerson = () =>
     })
     .strict();
 
-export const SPerson = zodToJsonSchema(ZPerson());
+export const SPerson = zodToJsonSchema(ZPerson(), toJsonSchemaOptions);
 
 export type IPerson = z.input<ReturnType<typeof ZPerson>>;
 

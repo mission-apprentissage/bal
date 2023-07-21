@@ -6,7 +6,8 @@ exports[`jsonSchemaToMongoSchema > should convert documentContents schema 1`] = 
   "bsonType": "object",
   "properties": {
     "_id": {
-      "description": "Identifiant du document",
+      "bsonType": "objectId",
+      "description": "Identifiant unique",
     },
     "content": {
       "additionalProperties": {},
@@ -45,7 +46,8 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "description": "Identifiant du document",
+      "bsonType": "objectId",
+      "description": "Identifiant unique",
     },
     "added_by": {
       "bsonType": "string",
@@ -77,7 +79,7 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
       "description": "Hash fichier",
     },
     "import_progress": {
-      "bsonType": "number",
+      "bsonType": "int",
       "description": "Progress percentage (-1 not started)",
     },
     "lines_count": {
@@ -89,7 +91,7 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
       "description": "Le nom de fichier",
     },
     "taille_fichier": {
-      "bsonType": "number",
+      "bsonType": "int",
       "description": "Taille du fichier en bytes",
     },
     "type_document": {
@@ -123,7 +125,8 @@ exports[`jsonSchemaToMongoSchema > should convert events schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "description": "Identifiant de l'évènement",
+      "bsonType": "objectId",
+      "description": "Identifiant unique",
     },
     "name": {
       "bsonType": "string",
@@ -262,7 +265,8 @@ exports[`jsonSchemaToMongoSchema > should convert jobs schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "description": "Identifiant de la tâche",
+      "bsonType": "objectId",
+      "description": "Identifiant unique",
     },
     "created_at": {
       "bsonType": "date",
@@ -333,7 +337,8 @@ exports[`jsonSchemaToMongoSchema > should convert organisations schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "description": "Identifiant de l'organisation",
+      "bsonType": "objectId",
+      "description": "Identifiant unique",
     },
     "_meta": {
       "additionalProperties": {},
@@ -404,7 +409,8 @@ exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "description": "Identifiant de la personne",
+      "bsonType": "objectId",
+      "description": "Identifiant unique",
     },
     "_meta": {
       "additionalProperties": {},
@@ -475,7 +481,8 @@ exports[`jsonSchemaToMongoSchema > should convert sessions schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "description": "Identifiant de la session",
+      "bsonType": "objectId",
+      "description": "Identifiant unique",
     },
     "created_at": {
       "bsonType": "date",
@@ -505,7 +512,8 @@ exports[`jsonSchemaToMongoSchema > should convert users schema 1`] = `
   "bsonType": "object",
   "properties": {
     "_id": {
-      "description": "Identifiant de l'utilisateur",
+      "bsonType": "objectId",
+      "description": "Identifiant unique",
     },
     "api_key": {
       "bsonType": "string",

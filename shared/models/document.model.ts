@@ -1,8 +1,7 @@
-import { ObjectId } from "mongodb";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
-import { IModelDescriptor } from "./common";
+import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
 
 const collectionName = "documents" as const;
 
@@ -11,7 +10,7 @@ const indexes: IModelDescriptor["indexes"] = [];
 export const ZDocument = () =>
   z
     .object({
-      _id: z.instanceof(ObjectId).describe("Identifiant du document"),
+      _id: zObjectId,
       type_document: z
         .string()
         .describe("Le type de document (exemple: DECA, etc..)"),
@@ -20,11 +19,17 @@ export const ZDocument = () =>
         .describe("Le type de fichier extension"),
       nom_fichier: z.string().describe("Le nom de fichier"),
       chemin_fichier: z.string().describe("Chemin du fichier binaire"),
-      taille_fichier: z.number().describe("Taille du fichier en bytes"),
+      taille_fichier: z
+        .number()
+        .int()
+        .finite()
+        .describe("Taille du fichier en bytes"),
       hash_secret: z.string().describe("Hash fichier"),
       hash_fichier: z.string().describe("Checksum fichier"),
       import_progress: z
         .number()
+        .int()
+        .finite()
         .optional()
         .describe("Progress percentage (-1 not started)"),
       lines_count: z.number().optional().describe("Number of lines"),
@@ -34,7 +39,7 @@ export const ZDocument = () =>
     })
     .strict();
 
-export const SDocument = zodToJsonSchema(ZDocument());
+export const SDocument = zodToJsonSchema(ZDocument(), toJsonSchemaOptions);
 
 export type IDocument = z.input<ReturnType<typeof ZDocument>>;
 

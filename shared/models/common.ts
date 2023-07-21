@@ -1,5 +1,6 @@
 import { JSONSchema7 } from "json-schema";
 import { CreateIndexesOptions, IndexSpecification } from "mongodb";
+import { z } from "zod";
 
 export type CollectionName =
   | "users"
@@ -16,3 +17,11 @@ export interface IModelDescriptor {
   indexes: [IndexSpecification, CreateIndexesOptions][];
   collectionName: CollectionName;
 }
+
+export const zObjectId = z.string().length(24).describe("Identifiant unique");
+
+export const toJsonSchemaOptions = {
+  definitions: {
+    objectId: zObjectId,
+  },
+};

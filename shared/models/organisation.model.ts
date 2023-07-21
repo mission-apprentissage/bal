@@ -1,8 +1,7 @@
-import { ObjectId } from "mongodb";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
-import { IModelDescriptor } from "./common";
+import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
 
 const collectionName = "organisations" as const;
 
@@ -28,7 +27,7 @@ const indexes: IModelDescriptor["indexes"] = [
 export const ZOrganisation = () =>
   z
     .object({
-      _id: z.instanceof(ObjectId).describe("Identifiant de l'organisation"),
+      _id: zObjectId,
       nom: z.string().optional().describe("Nom de l'organisation"),
       email_domains: z
         .array(z.string())
@@ -59,7 +58,10 @@ export const ZOrganisation = () =>
     })
     .strict();
 
-export const SOrganisation = zodToJsonSchema(ZOrganisation());
+export const SOrganisation = zodToJsonSchema(
+  ZOrganisation(),
+  toJsonSchemaOptions
+);
 
 export type IOrganisation = z.input<ReturnType<typeof ZOrganisation>>;
 

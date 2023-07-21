@@ -1,8 +1,7 @@
-import { ObjectId } from "mongodb";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
-import { IModelDescriptor } from "./common";
+import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
 
 export enum JOB_STATUS_LIST {
   PENDING = "pending",
@@ -20,7 +19,7 @@ const indexes: IModelDescriptor["indexes"] = [];
 export const ZJob = () =>
   z
     .object({
-      _id: z.instanceof(ObjectId).describe("Identifiant de la tâche"),
+      _id: zObjectId,
       name: z.string().describe("Le nom de la tâche"),
       status: z.nativeEnum(JOB_STATUS_LIST).describe("Statut courant du job"),
       sync: z.boolean().describe("Si le job est synchrone"),
@@ -40,7 +39,7 @@ export const ZJob = () =>
     })
     .strict();
 
-export const SJob = zodToJsonSchema(ZJob());
+export const SJob = zodToJsonSchema(ZJob(), toJsonSchemaOptions);
 
 export type IJob = z.input<ReturnType<typeof ZJob>>;
 
