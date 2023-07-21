@@ -1,3 +1,4 @@
+import { WithId } from "mongodb";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
@@ -10,36 +11,33 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ type_document: 1 }, { name: "type_document" }],
 ];
 
-export const ZDocumentContent = () =>
-  z
-    .object({
-      _id: zObjectId,
-      document_id: z.string().describe("Identifiant du document"),
-      content: z.record(z.any()).optional().describe("Contenu du document"),
-      type_document: z
-        .string()
-        .optional()
-        .describe("Le type de document (exemple: DECA, etc..)"),
-      updated_at: z
-        .date()
-        .optional()
-        .describe("Date de mise à jour en base de données"),
-      created_at: z
-        .date()
-        .optional()
-        .describe("Date d'ajout en base de données"),
-    })
-    .strict();
+export const ZDocumentContent = z
+  .object({
+    _id: zObjectId,
+    document_id: z.string().describe("Identifiant du document"),
+    content: z.record(z.any()).optional().describe("Contenu du document"),
+    type_document: z
+      .string()
+      .optional()
+      .describe("Le type de document (exemple: DECA, etc..)"),
+    updated_at: z
+      .date()
+      .optional()
+      .describe("Date de mise à jour en base de données"),
+    created_at: z.date().optional().describe("Date d'ajout en base de données"),
+  })
+  .strict();
 
 export const SDocumentContent = zodToJsonSchema(
-  ZDocumentContent(),
+  ZDocumentContent,
   toJsonSchemaOptions
 );
 
-export type IDocumentContent = z.input<ReturnType<typeof ZDocumentContent>>;
+export type IDocumentContent = z.input<typeof ZDocumentContent>;
+export type IDocumentContentDocument = WithId<Omit<IDocumentContent, "_id">>;
 
 export default {
-  schema: SDocumentContent as any as IModelDescriptor["schema"],
+  schema: SDocumentContent as IModelDescriptor["schema"],
   indexes,
   collectionName,
 };

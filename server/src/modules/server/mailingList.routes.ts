@@ -3,7 +3,6 @@ import { IncomingMessage } from "node:http";
 import Boom from "@hapi/boom";
 import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
-import { IUser } from "shared/models/user.model";
 import {
   IReqGetMailingList,
   SReqGetMailingList,
@@ -24,6 +23,7 @@ import {
   findMailingLists,
 } from "../actions/mailingLists.actions";
 import { Server } from "./server";
+import { getUserFromRequest } from "./utils/auth.strategies";
 import { noop } from "./utils/upload.utils";
 
 export const mailingListRoutes = ({ server }: { server: Server }) => {
@@ -39,7 +39,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       const { source } = request.body;
-      const user = request.user as IUser;
+      const user = getUserFromRequest(request);
 
       try {
         await createMailingList({ user_id: user._id.toString(), source });
@@ -62,7 +62,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
-      const user = request.user as IUser;
+      const user = getUserFromRequest(request);
 
       const mailingLists = await findMailingLists(
         {

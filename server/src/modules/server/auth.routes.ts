@@ -80,7 +80,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
       return response
         .setCookie(config.session.cookieName, token, config.session.cookie)
         .status(200)
-        .send(user);
+        .send(user as any); // Fixme type, looks like we're returning too much info here!
     }
   );
 

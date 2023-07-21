@@ -4,14 +4,13 @@ import {
   runWithAsyncContext,
 } from "@sentry/node";
 import { formatDuration, intervalToDuration } from "date-fns";
-import { WithId } from "mongodb";
-import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
+import { IJobDocument, JOB_STATUS_LIST } from "shared/models/job.model";
 
 import logger from "@/common/logger";
 import { updateJob } from "@/modules/actions/job.actions";
 
 const runner = async (
-  job: WithId<IJob>,
+  job: IJobDocument,
   jobFunc: () => Promise<unknown>,
   options: { runningLogs: boolean } = {
     runningLogs: true,
@@ -60,7 +59,7 @@ const runner = async (
 };
 
 export function executeJob(
-  job: IJob,
+  job: IJobDocument,
   jobFunc: () => Promise<unknown>,
   options: { runningLogs: boolean } = {
     runningLogs: true,

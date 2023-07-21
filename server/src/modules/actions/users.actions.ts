@@ -1,5 +1,6 @@
 import { Filter, ObjectId, UpdateFilter } from "mongodb";
-import { IUser } from "shared/models/user.model";
+import { IPersonDocument } from "shared/models/person.model";
+import { IUserDocument } from "shared/models/user.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -30,6 +31,10 @@ const DEFAULT_UNWIND = {
   preserveNullAndEmptyArrays: true,
 };
 
+interface IUserDocumentWithPerson extends IUserDocument {
+  person: null | IPersonDocument;
+}
+
 export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   const person = await createPerson({
     email: data.email,
@@ -37,31 +42,31 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
     _meta: { source: "bal" },
   });
 
-  if (!person) {
-    throw new Error("Can't create person");
-  }
-
   const _id = new ObjectId();
 
   const password = hashPassword(data.password);
   const now = new Date();
-  const { insertedId: userId } = await getDbCollection("users").insertOne({
+  const user = {
     ...data,
     person_id: person._id.toString(),
     _id,
     password,
     updated_at: now,
     created_at: now,
-  });
+  };
+  const { insertedId: userId } = await getDbCollection("users").insertOne(user);
 
-  const user = await findUser({ _id: userId });
-
-  return user;
+  return {
+    ...user,
+    _id: userId,
+  };
 };
 
-export const findUsers = async (filter: Filter<IUser>) => {
+export const findUsers = async (
+  filter: Filter<IUserDocument>
+): Promise<IUserDocumentWithPerson[]> => {
   const users = await getDbCollection("users")
-    .aggregate<IUser>([
+    .aggregate<IUserDocumentWithPerson>([
       {
         $match: filter,
       },
@@ -77,9 +82,11 @@ export const findUsers = async (filter: Filter<IUser>) => {
   return users;
 };
 
-export const findUser = async (filter: Filter<IUser>) => {
+export const findUser = async (
+  filter: Filter<IUserDocument>
+): Promise<IUserDocumentWithPerson | null> => {
   const user = await getDbCollection("users")
-    .aggregate<IUser>([
+    .aggregate<IUserDocumentWithPerson>([
       {
         $match: filter,
       },
@@ -96,9 +103,9 @@ export const findUser = async (filter: Filter<IUser>) => {
 };
 
 export const updateUser = async (
-  user: IUser,
-  data: Partial<IUser>,
-  updateFilter: UpdateFilter<IUser> = {}
+  user: IUserDocument,
+  data: Partial<IUserDocument>,
+  updateFilter: UpdateFilter<IUserDocument> = {}
 ) => {
   return await getDbCollection("users").findOneAndUpdate(
     {
@@ -111,7 +118,7 @@ export const updateUser = async (
   );
 };
 
-export const generateApiKey = async (user: IUser) => {
+export const generateApiKey = async (user: IUserDocument) => {
   const generatedKey = generateKey();
   const secretHash = generateSecretHash(generatedKey);
 

@@ -1,5 +1,6 @@
 import { Filter, UpdateFilter } from "mongodb";
-import { IPerson } from "shared/models/person.model";
+import { IOrganisationDocument } from "shared/models/organisation.model";
+import { IPerson, IPersonDocument } from "shared/models/person.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -27,22 +28,32 @@ const DEFAULT_UNWIND = {
   preserveNullAndEmptyArrays: true,
 };
 
+interface PersonWithOrganisation extends IPersonDocument {
+  organisation: null | IOrganisationDocument;
+}
+
 export const createPerson = async (data: ICreatePerson) => {
   const now = new Date();
-  const { insertedId: personId } = await getDbCollection("persons").insertOne({
+  const person = {
     ...data,
     updated_at: now,
     created_at: now,
-  });
+  };
+  const { insertedId: personId } = await getDbCollection("persons").insertOne(
+    person
+  );
 
-  const person = await findPerson({ _id: personId });
-
-  return person;
+  return {
+    ...person,
+    _id: personId,
+  };
 };
 
-export const findPerson = async (filter: Filter<IPerson>) => {
+export const findPerson = async (
+  filter: Filter<IPersonDocument>
+): Promise<PersonWithOrganisation | null> => {
   const person = await getDbCollection("persons")
-    .aggregate<IPerson>([
+    .aggregate<PersonWithOrganisation>([
       {
         $match: filter,
       },
@@ -58,9 +69,11 @@ export const findPerson = async (filter: Filter<IPerson>) => {
   return person;
 };
 
-export const findPersons = async (filter: Filter<IPerson>) => {
+export const findPersons = async (
+  filter: Filter<IPerson>
+): Promise<PersonWithOrganisation[]> => {
   const persons = await getDbCollection("persons")
-    .aggregate<IPerson>([
+    .aggregate<PersonWithOrganisation>([
       {
         $match: filter,
       },
@@ -77,8 +90,8 @@ export const findPersons = async (filter: Filter<IPerson>) => {
 };
 
 export const updatePerson = async (
-  person: IPerson,
-  data: Partial<IPerson>,
+  person: IPersonDocument,
+  data: Partial<IPersonDocument>,
   updateFilter: UpdateFilter<IPerson> = {}
 ) => {
   return await getDbCollection("persons").findOneAndUpdate(

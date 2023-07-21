@@ -45,7 +45,7 @@ export const organisationRoutes = ({ server }: { server: Server }) => {
 
         async (request, _reply) => {
           try {
-            await ZReqPostOrganisationValidation().parseAsync(request.body);
+            await ZReqPostOrganisationValidation.parseAsync(request.body);
           } catch (error) {
             throw Boom.badRequest(error as Error);
           }

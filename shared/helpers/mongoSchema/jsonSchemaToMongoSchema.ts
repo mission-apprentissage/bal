@@ -218,7 +218,9 @@ export const jsonSchemaToMongoSchema = (schema: JSONSchema7): MongoSchema => {
     }
     delete result.type;
     result.bsonType = "objectId";
-    result.description = result.description ?? zObjectId.description;
+    if (!result.description && zObjectId.description) {
+      result.description = zObjectId.description;
+    }
   }
 
   return result;

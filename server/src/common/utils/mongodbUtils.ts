@@ -4,6 +4,7 @@ import {
   CollectionInfo,
   MongoClient,
   MongoServerError,
+  WithoutId,
 } from "mongodb";
 import { jsonSchemaToMongoSchema } from "shared/helpers/mongoSchema/jsonSchemaToMongoSchema";
 import { CollectionName, IModelDescriptor } from "shared/models/common";
@@ -61,7 +62,7 @@ export const getDatabase = () => {
 
 export const getDbCollection = <K extends CollectionName>(
   name: K
-): Collection<IDocumentMap[K]> => {
+): Collection<WithoutId<IDocumentMap[K]>> => {
   return ensureInitialization().db().collection(name);
 };
 

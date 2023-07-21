@@ -3,13 +3,11 @@ import zodToJsonSchema from "zod-to-json-schema";
 
 import { ZOrganisation } from "../models/organisation.model";
 
-export const SResGetOrganisation = zodToJsonSchema(ZOrganisation());
+export const SResGetOrganisation = zodToJsonSchema(ZOrganisation);
 
-export type IResGetOrganisation = z.input<ReturnType<typeof ZOrganisation>>;
+export type IResGetOrganisation = z.input<typeof ZOrganisation>;
 
-export const ZResGetOrganisations = () => z.array(ZOrganisation());
-export const SResGetOrganisations = zodToJsonSchema(ZResGetOrganisations());
+export const ZResGetOrganisations = z.array(ZOrganisation);
+export const SResGetOrganisations = zodToJsonSchema(ZResGetOrganisations);
 
-export type IResGetOrganisations = z.input<
-  ReturnType<typeof ZResGetOrganisations>
->;
+export type IResGetOrganisations = z.input<typeof ZResGetOrganisations>;

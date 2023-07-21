@@ -1,3 +1,4 @@
+import { WithId } from "mongodb";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
@@ -7,28 +8,25 @@ const collectionName = "sessions" as const;
 
 const indexes: IModelDescriptor["indexes"] = [];
 
-export const ZSession = () =>
-  z
-    .object({
-      _id: zObjectId,
-      token: z.string().describe("Token de la session"),
-      updated_at: z
-        .date()
-        .optional()
-        .describe("Date de mise à jour en base de données"),
-      created_at: z
-        .date()
-        .optional()
-        .describe("Date d'ajout en base de données"),
-    })
-    .strict();
+export const ZSession = z
+  .object({
+    _id: zObjectId,
+    token: z.string().describe("Token de la session"),
+    updated_at: z
+      .date()
+      .optional()
+      .describe("Date de mise à jour en base de données"),
+    created_at: z.date().optional().describe("Date d'ajout en base de données"),
+  })
+  .strict();
 
-export const SSession = zodToJsonSchema(ZSession(), toJsonSchemaOptions);
+export const SSession = zodToJsonSchema(ZSession, toJsonSchemaOptions);
 
-export type ISession = z.input<ReturnType<typeof ZSession>>;
+export type ISession = z.input<typeof ZSession>;
+export type ISessionDocument = WithId<Omit<ISession, "_id">>;
 
 export default {
-  schema: SSession as any as IModelDescriptor["schema"],
+  schema: SSession as IModelDescriptor["schema"],
   indexes,
   collectionName,
 };

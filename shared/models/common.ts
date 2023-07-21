@@ -13,7 +13,7 @@ export type CollectionName =
   | "documentContents";
 
 export interface IModelDescriptor {
-  schema: JSONSchema7;
+  schema: Readonly<JSONSchema7>;
   indexes: [IndexSpecification, CreateIndexesOptions][];
   collectionName: CollectionName;
 }

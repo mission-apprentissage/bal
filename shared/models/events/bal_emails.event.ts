@@ -3,8 +3,8 @@ import zodToJsonSchema from "zod-to-json-schema";
 
 import { toJsonSchemaOptions } from "../common";
 
-export const ZBalEmail = () =>
-  z.object({
+export const ZBalEmail = z
+  .object({
     token: z.string(),
     templateName: z.string(),
     payload: z
@@ -39,27 +39,27 @@ export const ZBalEmail = () =>
           .nonstrict()
       )
       .optional(),
-  });
+  })
+  .nonstrict();
 
-export const SBalEmail = zodToJsonSchema(ZBalEmail());
+export const SBalEmail = zodToJsonSchema(ZBalEmail);
 
-export const ZBalEmails = () => z.array(ZBalEmail());
+export const ZBalEmails = z.array(ZBalEmail);
 
-export const SBalEmails = zodToJsonSchema(ZBalEmails());
+export const SBalEmails = zodToJsonSchema(ZBalEmails);
 
-export const ZBalEmailsPayload = () =>
-  z
-    .object({
-      emails: ZBalEmails(),
-      unsubscribe: z.boolean().optional().describe("unsubscribe email"),
-    })
-    .nonstrict();
+export const ZBalEmailsPayload = z
+  .object({
+    emails: ZBalEmails,
+    unsubscribe: z.boolean().optional().describe("unsubscribe email"),
+  })
+  .nonstrict();
 
 export const SBalEmailsPayload = zodToJsonSchema(
-  ZBalEmailsPayload(),
+  ZBalEmailsPayload,
   toJsonSchemaOptions
 );
 
-export type IBalEmail = z.input<ReturnType<typeof ZBalEmail>>;
-export type IBalEmails = z.input<ReturnType<typeof ZBalEmails>>;
-export type IBalEmailsPayload = z.input<ReturnType<typeof ZBalEmailsPayload>>;
+export type IBalEmail = z.input<typeof ZBalEmail>;
+export type IBalEmails = z.input<typeof ZBalEmails>;
+export type IBalEmailsPayload = z.input<typeof ZBalEmailsPayload>;

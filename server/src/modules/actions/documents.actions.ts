@@ -8,8 +8,8 @@ import {
 } from "mongodb";
 import { oleoduc, writeData } from "oleoduc";
 // @ts-ignore
-import { IDocument } from "shared/models/document.model";
-import { IDocumentContent } from "shared/models/documentContent.model";
+import { IDocument, IDocumentDocument } from "shared/models/document.model";
+import { IDocumentContentDocument } from "shared/models/documentContent.model";
 import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { Readable } from "stream";
 
@@ -39,38 +39,44 @@ interface ICreateDocument extends Omit<IDocument, "_id"> {
   _id: ObjectId;
 }
 
-export const createDocument = async (data: ICreateDocument) => {
+export const createDocument = async (
+  data: ICreateDocument
+): Promise<IDocumentDocument> => {
   const now = new Date();
-  const { insertedId: _id } = await getDbCollection("documents").insertOne({
+  const doc = {
     ...data,
     updated_at: now,
     created_at: now,
-  });
+  };
+  const { insertedId } = await getDbCollection("documents").insertOne(doc);
 
-  return findDocument({ _id });
+  return {
+    ...doc,
+    _id: insertedId,
+  };
 };
 
 export const findDocument = async (
-  filter: Filter<IDocument>,
-  options?: FindOptions<IDocument>
-) => {
-  return await getDbCollection("documents").findOne<IDocument>(filter, options);
+  filter: Filter<IDocumentDocument>,
+  options?: FindOptions<IDocumentDocument>
+): Promise<IDocumentDocument | null> => {
+  return await getDbCollection("documents").findOne(filter, options);
 };
 
 export const findDocuments = async (
-  filter: Filter<IDocument>,
-  options?: FindOptions<IDocument>
+  filter: Filter<IDocumentDocument>,
+  options?: FindOptions<IDocumentDocument>
 ) => {
   const documents = await getDbCollection("documents")
-    .find<IDocument>(filter, options)
+    .find<IDocumentDocument>(filter, options)
     .toArray();
 
   return documents;
 };
 
 export const updateDocument = async (
-  filter: Filter<IDocument>,
-  update: UpdateFilter<IDocument>,
+  filter: Filter<IDocumentDocument>,
+  update: UpdateFilter<IDocumentDocument>,
   options?: FindOneAndUpdateOptions
 ) => {
   const updated = await getDbCollection("documents").findOneAndUpdate(
@@ -81,7 +87,7 @@ export const updateDocument = async (
       returnDocument: "after",
     }
   );
-  return updated.value as IDocument | null;
+  return updated.value;
 };
 
 export const getDocumentTypes = async (): Promise<string[]> => {
@@ -134,7 +140,7 @@ export const createEmptyDocument = async (
     updated_at: new Date(),
     created_at: new Date(),
   });
-  return document as IDocument;
+  return document;
 };
 
 interface IUploadDocumentOptionsWithCreate {
@@ -229,7 +235,7 @@ export const extractDocumentContent = async ({
   delimiter = ";",
   formatter = (line) => line,
 }: {
-  document: IDocument;
+  document: IDocumentDocument;
   delimiter?: string;
   formatter?: (line: any) => any;
 }) => {
@@ -311,11 +317,11 @@ export const importDocumentContent = async <
   TFileLine = unknown,
   TContentLine = unknown
 >(
-  document: IDocument,
+  document: IDocumentDocument,
   content: TFileLine[],
   formatter: (line: TFileLine) => TContentLine
 ) => {
-  let documentContents: IDocumentContent[] = [];
+  let documentContents: IDocumentContentDocument[] = [];
 
   for (const [_lineNumber, line] of content.entries()) {
     const contentLine = formatter(line);

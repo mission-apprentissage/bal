@@ -1,5 +1,5 @@
 import { Filter, FindOptions, ObjectId } from "mongodb";
-import { ISession } from "shared/models/session.model";
+import { ISession, ISessionDocument } from "shared/models/session.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -19,17 +19,20 @@ export const createSession = async (data: TCreateSession) => {
 };
 
 export const getSession = async (
-  filter: Filter<ISession>,
+  filter: Filter<ISessionDocument>,
   options?: FindOptions
-) => {
-  return await getDbCollection("sessions").findOne<ISession>(filter, options);
+): Promise<ISessionDocument | null> => {
+  return await getDbCollection("sessions").findOne(filter, options);
 };
 
 export const deleteSession = async (token: string) => {
   await getDbCollection("sessions").deleteMany({ token });
 };
 
-export const updateSession = async (_id: ObjectId, data: Partial<ISession>) => {
+export const updateSession = async (
+  _id: ObjectId,
+  data: Partial<ISessionDocument>
+) => {
   return getDbCollection("sessions").updateOne(
     { _id },
     { $set: { ...data, updated_at: new Date() } }

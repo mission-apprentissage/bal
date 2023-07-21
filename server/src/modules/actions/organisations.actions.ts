@@ -1,5 +1,8 @@
 import { Filter, FindOptions, ObjectId, UpdateFilter } from "mongodb";
-import { IOrganisation } from "shared/models/organisation.model";
+import {
+  IOrganisation,
+  IOrganisationDocument,
+} from "shared/models/organisation.model";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
@@ -83,12 +86,12 @@ export const findOrganisations = async (filter: Filter<IOrganisation> = {}) => {
 };
 
 export const findOrganisation = async (
-  filter: Filter<IOrganisation>,
+  filter: Filter<IOrganisationDocument>,
   options?: FindOptions
 ) => {
   const organisation = await getDbCollection(
     "organisations"
-  ).findOne<IOrganisation>(filter, options);
+  ).findOne<IOrganisationDocument>(filter, options);
 
   return organisation;
 };
@@ -105,9 +108,9 @@ export const findOrganisationBySiret = async (
 };
 
 export const updatePerson = async (
-  organisation: IOrganisation,
-  data: Partial<IOrganisation>,
-  updateFilter: UpdateFilter<IOrganisation> = {}
+  organisation: IOrganisationDocument,
+  data: Partial<IOrganisationDocument>,
+  updateFilter: UpdateFilter<IOrganisationDocument> = {}
 ) => {
   return await getDbCollection("organisations").findOneAndUpdate(
     {

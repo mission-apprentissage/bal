@@ -1,6 +1,5 @@
 import assert from "node:assert";
 
-import { IUser } from "shared/models/user.model";
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 import { createUserTokenSimple } from "../../src/common/utils/jwtUtils";
@@ -27,11 +26,11 @@ describe("Users routes", () => {
   });
 
   it("should get the current user with authorization token", async () => {
-    const user = (await createUser({
+    const user = await createUser({
       email: "connected@exemple.fr",
       password: "my-password",
       organisation_id: "64520f65d7726475fd54b3b7",
-    })) as IUser;
+    });
 
     const token = createUserTokenSimple({ payload: { email: user.email } });
 
@@ -59,12 +58,12 @@ describe("Users routes", () => {
   });
 
   it("should allow admin to create a user", async () => {
-    const admin = (await createUser({
+    const admin = await createUser({
       email: "admin@exemple.fr",
       password: "my-password",
       organisation_id: "64520f65d7726475fd54b3b7",
       is_admin: true,
-    })) as IUser;
+    });
 
     const token = createUserTokenSimple({ payload: { email: admin.email } });
 
@@ -96,11 +95,11 @@ describe("Users routes", () => {
   });
 
   it("should not allow non-admin to create a user", async () => {
-    const user = (await createUser({
+    const user = await createUser({
       email: "user@exemple.fr",
       password: "my-password",
       organisation_id: "64520f65d7726475fd54b3b7",
-    })) as IUser;
+    });
 
     const token = createUserTokenSimple({ payload: { email: user.email } });
 

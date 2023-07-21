@@ -1,7 +1,6 @@
 import assert from "node:assert";
 
 import nock from "nock";
-import type { IUser } from "shared/models/user.model";
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 import {
@@ -36,11 +35,11 @@ describe("Organisations", () => {
   beforeEach(async () => {
     await mongo.beforeEach();
 
-    const user = (await createUser({
+    const user = await createUser({
       email: "connected@exemple.fr",
       password: "my-password",
       organisation_id: "64520f65d7726475fd54b3b7",
-    })) as IUser;
+    });
 
     userToken = await generateApiKey(user);
     nock.cleanAll();

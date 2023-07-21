@@ -13,8 +13,7 @@ function addEmail(
   person_id: string,
   token: string,
   templateName: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload: any
+  payload: IEvent["payload"]["emails"][number]["payload"]
 ) {
   const now = new Date();
   return getDbCollection("events").findOneAndUpdate(

@@ -1,3 +1,4 @@
+import { WithId } from "mongodb";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
@@ -24,58 +25,55 @@ const indexes: IModelDescriptor["indexes"] = [
   ],
 ];
 
-export const ZOrganisation = () =>
-  z
-    .object({
-      _id: zObjectId,
-      nom: z.string().optional().describe("Nom de l'organisation"),
-      email_domains: z
-        .array(z.string())
-        .optional()
-        .describe("Liste des domaines email"),
-      etablissements: z
-        .array(
-          z
-            .object({
-              nom: z.string().optional().describe("Nom de l'établissement"),
-              siret: z
-                .string()
-                .optional()
-                .describe("Siret actif de l'établissement"),
-              is_hq: z.boolean().optional().describe("Siège social"),
-              is_close: z.boolean().optional().describe("Est fermé"),
-            })
-            .strict()
-        )
-        .optional()
-        .describe("Liste des établissements"),
-      _meta: z
-        .object({
-          source: z.string().optional(),
-        })
-        .nonstrict()
-        .optional()
-        .describe("Métadonnées"),
-      updated_at: z
-        .date()
-        .optional()
-        .describe("Date de mise à jour en base de données"),
-      created_at: z
-        .date()
-        .optional()
-        .describe("Date d'ajout en base de données"),
-    })
-    .strict();
+export const ZOrganisation = z
+  .object({
+    _id: zObjectId,
+    nom: z.string().optional().describe("Nom de l'organisation"),
+    email_domains: z
+      .array(z.string())
+      .optional()
+      .describe("Liste des domaines email"),
+    etablissements: z
+      .array(
+        z
+          .object({
+            nom: z.string().optional().describe("Nom de l'établissement"),
+            siret: z
+              .string()
+              .optional()
+              .describe("Siret actif de l'établissement"),
+            is_hq: z.boolean().optional().describe("Siège social"),
+            is_close: z.boolean().optional().describe("Est fermé"),
+          })
+          .strict()
+      )
+      .optional()
+      .describe("Liste des établissements"),
+    _meta: z
+      .object({
+        source: z.string().optional(),
+      })
+      .nonstrict()
+      .optional()
+      .describe("Métadonnées"),
+    updated_at: z
+      .date()
+      .optional()
+      .describe("Date de mise à jour en base de données"),
+    created_at: z.date().optional().describe("Date d'ajout en base de données"),
+  })
+  .strict();
 
 export const SOrganisation = zodToJsonSchema(
-  ZOrganisation(),
+  ZOrganisation,
   toJsonSchemaOptions
 );
 
-export type IOrganisation = z.input<ReturnType<typeof ZOrganisation>>;
+export type IOrganisation = z.input<typeof ZOrganisation>;
+export type IOrganisationDocument = WithId<Omit<IOrganisation, "_id">>;
 
 export default {
-  schema: SOrganisation as any as IModelDescriptor["schema"],
+  schema: SOrganisation as IModelDescriptor["schema"],
   indexes,
   collectionName,
 };

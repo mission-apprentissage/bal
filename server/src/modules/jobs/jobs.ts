@@ -1,4 +1,4 @@
-import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
+import { IJobDocument, JOB_STATUS_LIST } from "shared/models/job.model";
 
 import logger from "@/common/logger";
 import { sleep } from "@/common/utils/asyncUtils";
@@ -20,7 +20,7 @@ import { clear } from "./seed/clear";
 import { seed } from "./seed/seed";
 
 export async function addJob(
-  { name, payload = {}, scheduled_at = new Date(), sync = false }: any,
+  { name, payload = {}, scheduled_at = new Date(), sync = false },
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }
@@ -40,7 +40,7 @@ export async function addJob(
 }
 
 async function runJob(
-  job: IJob,
+  job: IJobDocument,
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }
@@ -91,15 +91,15 @@ async function runJob(
 //abortSignal
 export async function processor() {
   logger.info(`Process jobs queue - looking for a job to execute`);
-  const { value: nextJob } = (await getDbCollection("jobs").findOneAndUpdate(
+  const { value: nextJob } = await getDbCollection("jobs").findOneAndUpdate(
     { status: JOB_STATUS_LIST.PENDING, scheduled_at: { $lte: new Date() } },
     { $set: { status: JOB_STATUS_LIST.WILLSTART } },
     { sort: { scheduled_at: 1 } }
-  )) as any;
+  );
 
   if (nextJob) {
     logger.info(`Process jobs queue - job ${nextJob.name} will start`);
-    await runJob(nextJob as IJob);
+    await runJob(nextJob);
   } else {
     await sleep(60000); // 1 min
   }

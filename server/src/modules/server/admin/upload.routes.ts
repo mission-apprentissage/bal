@@ -5,7 +5,6 @@ import { IDocument } from "shared/models/document.model";
 import { SResError } from "shared/routes/common.routes";
 import {
   IReqQueryPostAdminUpload,
-  IResGetDocuments,
   IResGetDocumentTypes,
   IResPostAdminUpload,
   SReqQueryPostAdminUpload,
@@ -131,19 +130,15 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           200: SResGetDocuments,
         },
       } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (_request, response) => {
-      const documents = (await findDocuments(
+      const documents = await findDocuments(
         { import_progress: { $exists: true } },
         { projection: { hash_secret: 0, hash_fichier: 0 } }
-      )) as IResGetDocuments;
+      );
 
-      return response.status(200).send(documents as any); // TODO
+      return response.status(200).send(documents);
     }
   );
 
