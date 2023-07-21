@@ -10,7 +10,7 @@ exports[`jsonSchemaToMongoSchema > should convert documentContents schema 1`] = 
       "description": "Identifiant unique",
     },
     "content": {
-      "additionalProperties": {},
+      "additionalProperties": true,
       "bsonType": "object",
       "description": "Contenu du document",
     },
@@ -270,12 +270,12 @@ exports[`jsonSchemaToMongoSchema > should convert jobs schema 1`] = `
       "description": "Le nom de la tâche",
     },
     "output": {
-      "additionalProperties": {},
+      "additionalProperties": true,
       "bsonType": "object",
       "description": "Les valeurs de retours du job",
     },
     "payload": {
-      "additionalProperties": {},
+      "additionalProperties": true,
       "bsonType": "object",
       "description": "La donnée liéé à la tâche",
     },

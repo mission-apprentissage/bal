@@ -63,6 +63,10 @@ describe("jsonSchemaToMongoSchema", () => {
           format: "date-time",
           description: "Date d'ajout en base de données",
         },
+        _meta: {
+          type: "object",
+          additionalProperties: {},
+        },
       },
       required: [
         "_id",
@@ -134,6 +138,10 @@ describe("jsonSchemaToMongoSchema", () => {
         created_at: {
           bsonType: "date",
           description: "Date d'ajout en base de données",
+        },
+        _meta: {
+          bsonType: "object",
+          additionalProperties: true,
         },
       },
       required: [

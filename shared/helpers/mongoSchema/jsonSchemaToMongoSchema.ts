@@ -120,9 +120,15 @@ export const jsonSchemaToMongoSchema = (schema: JSONSchema7): MongoSchema => {
   }
 
   if (schema.additionalProperties != null) {
-    result.additionalProperties = convertJSONSchema7Definition(
-      schema.additionalProperties
-    );
+    if (typeof schema.additionalProperties === "boolean") {
+      result.additionalProperties = schema.additionalProperties;
+    } else if (Object.keys(schema.additionalProperties).length === 0) {
+      result.additionalProperties = true;
+    } else {
+      result.additionalProperties = convertJSONSchema7Definition(
+        schema.additionalProperties
+      );
+    }
   }
 
   if (schema.allOf) {
