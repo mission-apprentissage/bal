@@ -15,7 +15,6 @@ if [[ $# == "0" ]]; then
   exit 1;
 fi;
 
-
 SHARED_OPS="\
         --build-arg YARN_FLAGS="--immutable" \
         --platform linux/amd64 \
@@ -25,10 +24,9 @@ SHARED_OPS="\
 
 CACHE_OPTS=""
 if [[ ! -z "${CI:-}" ]]; then
-    SHARED_OPS="${SHARED_OPS} --progress=plain"
     DEPS_ID=($(md5sum ./yarn.lock))
+    SHARED_OPS="${SHARED_OPS} --progress=plain --cache-from type=gha,scope=$DEPS_ID"
     CACHE_OPTS="\
-        --cache-from type=gha,scope=$DEPS_ID \
         --cache-to type=gha,mode=min,scope=$DEPS_ID \
     "
 fi
@@ -39,10 +37,13 @@ docker build . \
         $SHARED_OPS \
         $CACHE_OPTS
 
+# Declare an associative array to store the names and PIDs of the background processes
+names=()
+pids=()
 
 for env in "$@"
 do
-  echo "Build ui:$next_version with mode=$mode; env=$env"
+  echo "Start building ui:$next_version with mode=$mode; env=$env"
   docker build . \
     --build-arg PUBLIC_ENV="$env" \
     --build-arg PUBLIC_VERSION="$next_version" \
@@ -52,9 +53,12 @@ do
     --${mode} \
     --quiet \
     $SHARED_OPS &
+
+  pids+=($!)
+  names+=("ui-$env")
 done
 
-echo "Building server:$next_version with mode=$mode"
+echo "Start building server:$next_version with mode=$mode"
 docker build . \
         --build-arg PUBLIC_VERSION="$next_version" \
         --tag ghcr.io/mission-apprentissage/mna_bal_server:"$next_version" \
@@ -64,7 +68,23 @@ docker build . \
         --quiet \
         $SHARED_OPS &
 
-wait
+pids+=($!)
+names+=("server")
+
+final_code=0
+for ((i = 0; i < ${#pids[@]}; i++)); do
+  pid=${pids[i]}
+  name=${names[i]}
+  wait "$pid"
+  status_code=$?
+  final_code=$((final_code + status_code))
+  echo "Process '$name' with PID $pid finished with status code: $status_code"
+done
+
+if [ "$final_code" -gt 0 ]; then
+  echo "One or more background processes failed."
+  exit 1
+fi
 
 if [[ $(uname) = "Darwin" ]]; then
   sed -i '' "s/app_version=.*/app_version=$next_version/" ".infra/env.ini"
