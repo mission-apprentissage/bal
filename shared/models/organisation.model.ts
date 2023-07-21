@@ -46,7 +46,13 @@ export const ZOrganisation = () =>
         )
         .optional()
         .describe("Liste des établissements"),
-      _meta: z.record(z.any()).optional().describe("Métadonnées"),
+      _meta: z
+        .object({
+          source: z.string().optional(),
+        })
+        .nonstrict()
+        .optional()
+        .describe("Métadonnées"),
       updated_at: z
         .date()
         .optional()

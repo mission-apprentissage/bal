@@ -16,7 +16,7 @@ export const ZEvent = () =>
   z.object({
     _id: zObjectId,
     person_id: z.string().describe("Identifiant de la personne"),
-    name: z.string().describe("Nom de l'évènement"),
+    name: z.enum(["bal_emails"]).describe("Nom de l'évènement"),
     payload: ZBalEmailsPayload().describe("Payload de l'évènement"),
   });
 

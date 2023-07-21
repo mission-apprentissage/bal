@@ -28,11 +28,15 @@ export const ZDocument = () =>
       hash_fichier: z.string().describe("Checksum fichier"),
       import_progress: z
         .number()
-        .int()
         .finite()
         .optional()
         .describe("Progress percentage (-1 not started)"),
-      lines_count: z.number().optional().describe("Number of lines"),
+      lines_count: z
+        .number()
+        .int()
+        .finite()
+        .optional()
+        .describe("Number of lines"),
       added_by: z.string().describe("Qui a ajouté le fichier"),
       updated_at: z.date().describe("Date de mise à jour en base de données"),
       created_at: z.date().describe("Date d'ajout en base de données"),

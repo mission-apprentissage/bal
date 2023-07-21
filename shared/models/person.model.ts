@@ -32,14 +32,25 @@ export const ZPerson = () =>
       organisation_id: z.string().describe("Identifiant de l'organisation"),
       sirets: z
         .array(z.string())
-        .nullable()
         .optional()
         .describe(
           "Liste de sirets recensé (sécurisation qualité de la donnée)"
         ),
-      _meta: z.record(z.any()).describe("Métadonnées"),
-      updated_at: z.date().describe("Date de mise à jour en base de données"),
-      created_at: z.date().describe("Date d'ajout en base de données"),
+      _meta: z
+        .object({
+          source: z.string(),
+        })
+        .describe("Métadonnées")
+        .nonstrict()
+        .optional(),
+      updated_at: z
+        .date()
+        .describe("Date de mise à jour en base de données")
+        .optional(),
+      created_at: z
+        .date()
+        .describe("Date d'ajout en base de données")
+        .optional(),
     })
     .required({
       _id: true,

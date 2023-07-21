@@ -79,11 +79,11 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
       "description": "Hash fichier",
     },
     "import_progress": {
-      "bsonType": "int",
+      "bsonType": "number",
       "description": "Progress percentage (-1 not started)",
     },
     "lines_count": {
-      "bsonType": "number",
+      "bsonType": "int",
       "description": "Number of lines",
     },
     "nom_fichier": {
@@ -131,6 +131,9 @@ exports[`jsonSchemaToMongoSchema > should convert events schema 1`] = `
     "name": {
       "bsonType": "string",
       "description": "Nom de l'évènement",
+      "enum": [
+        "bal_emails",
+      ],
     },
     "payload": {
       "additionalProperties": false,
@@ -172,24 +175,10 @@ exports[`jsonSchemaToMongoSchema > should convert events schema 1`] = `
                 },
               },
               "messageIds": {
-                "anyOf": [
-                  {
-                    "anyOf": [
-                      {
-                        "not": {},
-                      },
-                      {
-                        "bsonType": "array",
-                        "items": {
-                          "bsonType": "string",
-                        },
-                      },
-                    ],
-                  },
-                  {
-                    "bsonType": "null",
-                  },
-                ],
+                "bsonType": "array",
+                "items": {
+                  "bsonType": "string",
+                },
               },
               "openDate": {
                 "bsonType": "date",
@@ -341,9 +330,14 @@ exports[`jsonSchemaToMongoSchema > should convert organisations schema 1`] = `
       "description": "Identifiant unique",
     },
     "_meta": {
-      "additionalProperties": {},
+      "additionalProperties": true,
       "bsonType": "object",
       "description": "Métadonnées",
+      "properties": {
+        "source": {
+          "bsonType": "string",
+        },
+      },
     },
     "created_at": {
       "bsonType": "date",
@@ -413,9 +407,17 @@ exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
       "description": "Identifiant unique",
     },
     "_meta": {
-      "additionalProperties": {},
+      "additionalProperties": true,
       "bsonType": "object",
       "description": "Métadonnées",
+      "properties": {
+        "source": {
+          "bsonType": "string",
+        },
+      },
+      "required": [
+        "source",
+      ],
     },
     "civility": {
       "bsonType": "string",
@@ -446,18 +448,11 @@ exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
       "description": "Le prénom de la personne",
     },
     "sirets": {
-      "anyOf": [
-        {
-          "bsonType": "array",
-          "items": {
-            "bsonType": "string",
-          },
-        },
-        {
-          "bsonType": "null",
-        },
-      ],
+      "bsonType": "array",
       "description": "Liste de sirets recensé (sécurisation qualité de la donnée)",
+      "items": {
+        "bsonType": "string",
+      },
     },
     "updated_at": {
       "bsonType": "date",
@@ -468,9 +463,6 @@ exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
     "_id",
     "email",
     "organisation_id",
-    "_meta",
-    "updated_at",
-    "created_at",
   ],
 }
 `;

@@ -14,7 +14,7 @@ export const ZBalEmail = () =>
     }),
     sendDates: z.array(z.date()),
     openDate: z.date().optional(),
-    messageIds: z.array(z.string()).optional().nullable(),
+    messageIds: z.array(z.string()).optional(),
     error: z
       .array(
         z.object({
