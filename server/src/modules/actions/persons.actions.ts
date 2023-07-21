@@ -47,6 +47,9 @@ export const findPerson = async (filter: Filter<IPerson>) => {
         $match: filter,
       },
       {
+        $limit: 1,
+      },
+      {
         $lookup: DEFAULT_LOOKUP,
       },
       {
