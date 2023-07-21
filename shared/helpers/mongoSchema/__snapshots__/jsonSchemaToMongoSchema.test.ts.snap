@@ -351,11 +351,18 @@ exports[`jsonSchemaToMongoSchema > should convert organisations schema 1`] = `
             "description": "Siret actif de l'établissement",
           },
         },
+        "required": [
+          "siret",
+        ],
       },
     },
     "nom": {
       "bsonType": "string",
       "description": "Nom de l'organisation",
+    },
+    "siren": {
+      "bsonType": "string",
+      "description": "Siren de l'organisation",
     },
     "updated_at": {
       "bsonType": "date",
@@ -404,8 +411,11 @@ exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
       "bsonType": "string",
       "description": "Le nom de la personne",
     },
-    "organisation_id": {
-      "bsonType": "string",
+    "organisations": {
+      "bsonType": "array",
+      "items": {
+        "bsonType": "string",
+      },
     },
     "prenom": {
       "bsonType": "string",
@@ -426,7 +436,6 @@ exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
   "required": [
     "_id",
     "email",
-    "organisation_id",
   ],
 }
 `;
