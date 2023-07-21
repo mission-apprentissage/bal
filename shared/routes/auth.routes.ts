@@ -14,7 +14,7 @@ export const ZReqGetSession = () =>
       _id: z.instanceof(ObjectId),
       email: z.string().email(),
       is_admin: z.boolean().optional(),
-      api_key_used_at: z.date().optional(),
+      api_key_used_at: z.date().optional().nullable(),
       person: ZPerson().optional(),
     })
     .strict();
