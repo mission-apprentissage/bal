@@ -140,7 +140,7 @@ exports[`jsonSchemaToMongoSchema > should convert events schema 1`] = `
         "emails": {
           "bsonType": "array",
           "items": {
-            "additionalProperties": false,
+            "additionalProperties": true,
             "bsonType": "object",
             "properties": {
               "error": {
