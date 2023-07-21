@@ -14,7 +14,7 @@ const mainConfig = {
     [
       "@semantic-release/exec",
       {
-        prepareCmd: `.infra/scripts/release/release-app.sh \${nextRelease.version} ghcr.io`,
+        prepareCmd: `.infra/scripts/release/release-app.sh \${nextRelease.version} push`,
         publishCmd: "git checkout -- package.json",
       },
     ],

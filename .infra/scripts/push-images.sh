@@ -81,7 +81,7 @@ echo "Création des images docker locales (docker build)"
 
 if [ ! -z "$new_app_version" ]; then
   echo "Build ui:$new_app_version ..."
-  .infra/scripts/release/release-app.sh $new_app_version ghcr.io push
+  .infra/scripts/release/release-app.sh $new_app_version push
 fi
 
 if [ ! -z "$new_reverse_proxy_version" ]; then
