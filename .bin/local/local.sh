@@ -49,7 +49,7 @@ function local_bin_install() {
 function local_completion_zsh() {
   sudo mkdir -p /usr/local/share/zsh/site-functions
   sudo ln -fs "${ROOT_DIR}/.bin/zsh-completion" /usr/local/share/zsh/site-functions/_mna-bal
-  compinit -C
+  sudo rm -f ~/.zcompdump
 }
 
 function local_start() {
@@ -80,7 +80,7 @@ function local_docker_sh() {
 }
 
 function local_server_run() {
-  local_debug server "$@"
+  local_docker_run server "$@"
 }
 
 function local_server_sh() {

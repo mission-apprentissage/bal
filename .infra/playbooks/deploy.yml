@@ -5,19 +5,26 @@
   vars_files:
     - "../vault/vault.yml"
   tasks:
+    - name: check du docker network
+      ansible.builtin.shell:
+        chdir: /opt/bal
+        cmd: docker network ls --filter name=bal_network -q
+      register: network
+    - debug:
+        var: network
+
+    - name: création du docker network
+      ansible.builtin.shell:
+        chdir: /opt/bal
+        cmd: docker network create -d overlay --attachable bal_network
+      when: network.stdout == ""
+
     - name: copy server env file
       ansible.builtin.template:
         src: "{{ item }}"
         dest: "/opt/bal/.env_server"
       with_fileglob:
         - "../.env_server"
-
-    - name: copy ui env file
-      ansible.builtin.template:
-        src: "{{ item }}"
-        dest: "/opt/bal/.env_ui"
-      with_fileglob:
-        - "../.env_ui"
 
     - name: copy du fichier docker compose
       ansible.builtin.template:
@@ -111,6 +118,12 @@
       shell:
         chdir: /opt/bal
         cmd: "sudo /opt/bal/tools/metabase/setup-metabase.sh"
+      timeout: 900
+
+    - name: "Prune Docker"
+      shell:
+        chdir: /opt/bal
+        cmd: "sudo docker system prune --all --force"
 
     - name: "Désactivation du mode maintenance"
       shell:

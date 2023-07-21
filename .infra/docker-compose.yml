@@ -21,7 +21,7 @@ x-default: &default
 services:
   reverse_proxy:
     <<: *default
-    image: "{{registry}}/mission-apprentissage/mna_bal_reverse_proxy:{{reverse_proxy_version}}"
+    image: "ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:{{reverse_proxy_version}}"
     deploy:
       <<: *deploy-default
       resources:
@@ -58,7 +58,7 @@ services:
 
   server:
     <<: *default
-    image: "{{registry}}/mission-apprentissage/mna_bal_server:{{app_version}}"
+    image: "ghcr.io/mission-apprentissage/mna_bal_server:{{app_version}}"
     deploy:
       <<: *deploy-default
       resources:
@@ -83,7 +83,7 @@ services:
 
   processor:
     <<: *default
-    image: "{{registry}}/mission-apprentissage/mna_bal_server:{{app_version}}"
+    image: "ghcr.io/mission-apprentissage/mna_bal_server:{{app_version}}"
     deploy:
       <<: *deploy-default
       resources:
@@ -102,14 +102,13 @@ services:
 
   ui:
     <<: *default
-    image: "{{registry}}/mission-apprentissage/mna_bal_ui:{{app_version}}"
+    image: "ghcr.io/mission-apprentissage/mna_bal_ui:{{app_version}}-{{env_type}}"
     deploy:
       <<: *deploy-default
       resources:
         limits:
           memory: 256m
       replicas: 2
-    env_file: .env_ui
     logging:
       driver: "fluentd"
       options:

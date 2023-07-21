@@ -27,6 +27,7 @@ Avant d'installer le projet, assurez-vous d'avoir les éléments suivants :
 - Docker 23.03.0+
 - GPG
 - NodeJS 18+ (vous pouvez utiliser [n](https://github.com/tj/n#third-party-installers) pour l'installer)
+- Brew (jq)
 
 ### Clé GPG
 
@@ -94,7 +95,7 @@ Les principales opérations sont regroupée dans un CLI `.bin/mna-bal`, il est p
 
 Il est également possible d'installer globallement l'exécutable via la commande `.bin/mna-bal local:bin:install` une fois installé il est possible d'utiliser la CLI via `mna-bal help` directement (n'oubliez pas d'ouvrir une nouvelle session de votre terminal).
 
-Enfin si vous utilisez ZSH, vous pouvez installer le support du tab-completion de la commande via `mna-bal local:completion:zsh`
+Enfin si vous utilisez ZSH, vous pouvez installer le support du tab-completion de la commande via `mna-bal local:completion:zsh` puis `compinit -C`
 
 ### Variables d'environnement local
 
