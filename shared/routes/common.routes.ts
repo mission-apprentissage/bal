@@ -1,22 +1,35 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-export const SResError = {
-  type: "object",
-  properties: {
-    code: { type: "string" },
-    message: { type: "string" },
-    statusCode: { type: "number" },
-  },
-  required: ["message", "statusCode"],
-} as const;
+export const ZResError = z
+  .object({
+    code: z.string().optional(),
+    message: z.string(),
+    statusCode: z.number(),
+  })
+  .strict();
 
-export type IResError = FromSchema<typeof SResError>;
+export const SResError = zodToJsonSchema(ZResError);
+export type IResError = z.input<typeof ZResError>;
 
-export const SReqParamsSearchPagination = {
-  type: "object",
-  properties: {
-    page: { type: "number" },
-    limit: { type: "number" },
-    q: { type: "string" },
-  },
-} as const;
+export const ZReqParamsSearchPagination = z
+  .object({
+    page: z.number().optional(),
+    limit: z.number().optional(),
+    q: z.string().optional(),
+  })
+  .strict();
+export const SReqParamsSearchPagination = zodToJsonSchema(
+  ZReqParamsSearchPagination
+);
+export type IReqParamsSearchPagination = z.input<
+  typeof ZReqParamsSearchPagination
+>;
+
+export const ZReqHeadersAuthorization = z.object({
+  Authorization: z.string().describe("Bearer token").optional(),
+});
+
+export const SReqHeadersAuthorization = zodToJsonSchema(
+  ZReqHeadersAuthorization
+);

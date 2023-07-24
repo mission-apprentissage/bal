@@ -1,13 +1,20 @@
 import Boom from "@hapi/boom";
 import {
+  IReqGetResetPassword,
+  IReqPostLogin,
+  IReqPostResetPassword,
+  IResPostLogin,
   SReqGetResetPassword,
-  SReqHeadersAuthorization,
   SReqPostLogin,
   SReqPostResetPassword,
   SResGetSession,
   SResPostLogin,
 } from "shared/routes/auth.routes";
-import { SResError } from "shared/routes/common.routes";
+import {
+  IResError,
+  SReqHeadersAuthorization,
+  SResError,
+} from "shared/routes/common.routes";
 
 import config from "@/config";
 
@@ -41,7 +48,13 @@ export const authRoutes = ({ server }: { server: Server }) => {
   /**
    * Login
    */
-  server.post(
+  server.post<{
+    Body: IReqPostLogin;
+    Reply: {
+      200: IResPostLogin;
+      403: IResError;
+    };
+  }>(
     "/auth/login",
     {
       schema: {
@@ -64,10 +77,13 @@ export const authRoutes = ({ server }: { server: Server }) => {
       const token = createUserTokenSimple({ payload: { email: user.email } });
       await createSession({ token });
 
-      return response
-        .setCookie(config.session.cookieName, token, config.session.cookie)
-        .status(200)
-        .send(user as any); //IResPostLogin
+      return (
+        response
+          .setCookie(config.session.cookieName, token, config.session.cookie)
+          .status(200)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .send(user as any)
+      ); // Fixme type, looks like we're returning too much info here!
     }
   );
 
@@ -75,7 +91,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
     const token = request.cookies[config.session.cookieName];
 
     if (token) {
-      await deleteSession({ token });
+      await deleteSession(token);
 
       return response
         .clearCookie(config.session.cookieName, config.session.cookie)
@@ -86,7 +102,9 @@ export const authRoutes = ({ server }: { server: Server }) => {
     return response.status(200).send();
   });
 
-  server.get(
+  server.get<{
+    Querystring: IReqGetResetPassword;
+  }>(
     "/auth/reset-password",
     {
       schema: {
@@ -99,7 +117,9 @@ export const authRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.post(
+  server.post<{
+    Body: IReqPostResetPassword;
+  }>(
     "/auth/reset-password",
     {
       schema: {

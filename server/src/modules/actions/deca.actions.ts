@@ -2,11 +2,12 @@ import companyEmailValidator from "company-email-validator";
 // @ts-ignore
 import { SIRET_REGEX } from "shared/constants/regex";
 import { getSirenFromSiret } from "shared/helpers/common";
+import { IOrganisationDocument } from "shared/models/organisation.model";
 import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
 import { getDbCollection } from "../../common/utils/mongodbUtils";
 import {
-  createOrganisation,
+  findOrCreateOrganisation,
   findOrganisation,
   updateOrganisation,
 } from "./organisations.actions";
@@ -49,39 +50,37 @@ export const importDecaContent = async (emails: string[], siret: string) => {
   const siren = getSirenFromSiret(siret);
   const domains = [...new Set(uniqueEmails.map((e) => e.split("@")[1]))];
 
-  let organisation = await findOrganisation({ siren });
-
-  if (!organisation) {
-    const organisationId = await createOrganisation({
+  const organisation = await findOrCreateOrganisation(
+    { siren },
+    {
       siren,
       etablissements: [{ siret }],
       email_domains: domains,
-    });
-
-    organisation = await findOrganisation({ _id: organisationId });
-  } else {
-    const etablissement = organisation.etablissements?.find(
-      (e) => e.siret === siret
-    );
-
-    if (!etablissement) {
-      organisation.etablissements = organisation.etablissements ?? [];
-      organisation.etablissements?.push({ siret });
     }
+  );
 
-    const newDomains = domains.filter(
-      (domain) =>
-        !organisation?.email_domains?.includes(domain) &&
-        companyEmailValidator.isCompanyDomain(domain)
-    );
+  const updateOrganisationData: Partial<IOrganisationDocument> = {};
+  const etablissement = organisation.etablissements?.find(
+    (e) => e.siret === siret
+  );
 
-    if (newDomains.length) {
-      organisation.email_domains = organisation.email_domains ?? [];
-      organisation.email_domains?.push(...newDomains);
-    }
-
-    await updateOrganisation(organisation, organisation);
+  if (!etablissement) {
+    updateOrganisationData.etablissements = organisation.etablissements ?? [];
+    updateOrganisationData.etablissements.push({ siret });
   }
+
+  const newDomains = domains.filter(
+    (domain) =>
+      !organisation.email_domains?.includes(domain) &&
+      companyEmailValidator.isCompanyDomain(domain)
+  );
+
+  if (newDomains.length) {
+    updateOrganisationData.email_domains = organisation.email_domains ?? [];
+    updateOrganisationData.email_domains?.push(...newDomains);
+  }
+
+  await updateOrganisation(organisation, updateOrganisationData);
 
   await Promise.all(
     uniqueEmails.map((email) =>
@@ -91,7 +90,7 @@ export const importDecaContent = async (emails: string[], siret: string) => {
         },
         {
           $addToSet: {
-            organisations: organisation?._id ?? [],
+            organisations: organisation._id.toString(),
             sirets: siret,
           },
           $setOnInsert: {

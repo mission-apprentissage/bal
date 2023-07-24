@@ -9,15 +9,14 @@ export enum EnvEnum {
 }
 export const Env = z.nativeEnum(EnvEnum);
 
-export const ZResGetHealthCheck = () =>
-  z
-    .object({
-      name: z.string(),
-      version: z.string(),
-      env: Env,
-    })
-    .describe("API Health");
+export const ZResGetHealthCheck = z
+  .object({
+    name: z.string(),
+    version: z.string(),
+    env: Env,
+  })
+  .describe("API Health");
 
-export const SResGetHealthCheck = zodToJsonSchema(ZResGetHealthCheck());
+export const SResGetHealthCheck = zodToJsonSchema(ZResGetHealthCheck);
 
-export type IResGetHealthCheck = z.input<ReturnType<typeof ZResGetHealthCheck>>;
+export type IResGetHealthCheck = z.input<typeof ZResGetHealthCheck>;

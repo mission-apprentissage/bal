@@ -5,6 +5,8 @@ import {
   JSONSchema7TypeName,
 } from "json-schema";
 
+import { zObjectId } from "../../models/common";
+
 type MongoType = "object" | "array" | "number" | "boolean" | "string" | "null";
 type MongoBsonType =
   | "double"
@@ -118,9 +120,15 @@ export const jsonSchemaToMongoSchema = (schema: JSONSchema7): MongoSchema => {
   }
 
   if (schema.additionalProperties != null) {
-    result.additionalProperties = convertJSONSchema7Definition(
-      schema.additionalProperties
-    );
+    if (typeof schema.additionalProperties === "boolean") {
+      result.additionalProperties = schema.additionalProperties;
+    } else if (Object.keys(schema.additionalProperties).length === 0) {
+      result.additionalProperties = true;
+    } else {
+      result.additionalProperties = convertJSONSchema7Definition(
+        schema.additionalProperties
+      );
+    }
   }
 
   if (schema.allOf) {
@@ -204,9 +212,15 @@ export const jsonSchemaToMongoSchema = (schema: JSONSchema7): MongoSchema => {
     result.bsonType = "date";
   }
 
-  if (schema.format === "ObjectId") {
+  if (schema.$ref) {
+    if (schema.$ref !== "#/definitions/objectId") {
+      throw new Error("Unsupported ref " + schema.$ref);
+    }
     delete result.type;
     result.bsonType = "objectId";
+    if (!result.description && zObjectId.description) {
+      result.description = zObjectId.description;
+    }
   }
 
   return result;

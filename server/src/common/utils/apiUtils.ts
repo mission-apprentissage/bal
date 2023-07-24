@@ -3,8 +3,17 @@ import { RateLimiterMemory, RateLimiterQueue } from "rate-limiter-flexible";
 
 import { timeout } from "./asyncUtils";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const apiRateLimiter = (name: string, options: any = {}) => {
+interface ApiRateLimiterOptions {
+  nbRequests?: number;
+  durationInSeconds?: number;
+  maxQueueSize?: number;
+  timeout?: number;
+  client: AxiosInstance;
+}
+export const apiRateLimiter = (
+  name: string,
+  options: ApiRateLimiterOptions
+) => {
   const rateLimiter = new RateLimiterMemory({
     keyPrefix: name,
     points: options.nbRequests || 1,
@@ -15,10 +24,9 @@ export const apiRateLimiter = (name: string, options: any = {}) => {
     maxQueueSize: options.maxQueueSize || 25,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return async (callback: any) => {
+  return async <T>(callback: (AxiosInstance) => T): Promise<T> => {
     await timeout(queue.removeTokens(1), options.timeout || 10000);
-    return callback(options.client as AxiosInstance);
+    return callback(options.client);
   };
 };
 

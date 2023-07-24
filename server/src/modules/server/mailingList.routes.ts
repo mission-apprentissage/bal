@@ -3,8 +3,8 @@ import { IncomingMessage } from "node:http";
 import Boom from "@hapi/boom";
 import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
-import { IUser } from "shared/models/user.model";
 import {
+  IReqGetMailingList,
   SReqGetMailingList,
   SResGetMailingList,
   SResGetMailingLists,
@@ -23,23 +23,23 @@ import {
   findMailingLists,
 } from "../actions/mailingLists.actions";
 import { Server } from "./server";
+import { getUserFromRequest } from "./utils/auth.strategies";
 import { noop } from "./utils/upload.utils";
 
 export const mailingListRoutes = ({ server }: { server: Server }) => {
-  server.post(
+  server.post<{
+    Body: IReqGetMailingList;
+  }>(
     "/mailing-list",
     {
       schema: {
         body: SReqGetMailingList,
       } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const { source } = request.body;
-      const user = request.user as IUser;
+      const user = getUserFromRequest(request);
 
       try {
         await createMailingList({ user_id: user._id.toString(), source });
@@ -59,13 +59,10 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           200: SResGetMailingLists,
         },
       } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
-      const user = request.user as IUser;
+      const user = getUserFromRequest(request);
 
       const mailingLists = await findMailingLists(
         {
@@ -76,11 +73,13 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         }
       );
 
-      return response.status(200).send(mailingLists as any);
+      return response.status(200).send(mailingLists);
     }
   );
 
-  server.get(
+  server.get<{
+    Params: { id: string };
+  }>(
     "/mailing-lists/:id",
     {
       schema: {
@@ -93,10 +92,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           200: SResGetMailingList,
         },
       } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const { user } = request;
@@ -110,11 +106,11 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         throw Boom.forbidden("Forbidden");
       }
 
-      return response.status(200).send(mailingList as any);
+      return response.status(200).send(mailingList);
     }
   );
 
-  server.get(
+  server.get<{ Params: { id: string } }>(
     "/mailing-lists/:id/download",
     {
       schema: {
@@ -124,10 +120,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           required: ["id"],
         },
       } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const { user } = request;
@@ -161,6 +154,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       let fileNotFound = false;
       try {
         stream = await getFromStorage(document.chemin_fichier);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         if (error.message.includes("Status code 404")) {
           fileNotFound = true;
@@ -191,7 +185,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.delete(
+  server.delete<{ Params: { id: string } }>(
     "/mailing-list/:id",
     {
       schema: {
@@ -201,10 +195,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
           required: ["id"],
         },
       } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const { user } = request;

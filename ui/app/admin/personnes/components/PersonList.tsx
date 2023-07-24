@@ -85,7 +85,11 @@ const PersonList = () => {
               return organisation ? (
                 <Text
                   as={Link}
-                  href={PAGES.adminViewOrganisation(organisation._id).path}
+                  href={
+                    PAGES.adminViewOrganisation(
+                      organisation._id as unknown as string
+                    ).path
+                  }
                 >
                   {organisation.nom}
                 </Text>

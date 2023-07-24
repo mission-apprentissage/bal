@@ -1,25 +1,18 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-export const SParamsGetEmailPreview = {
-  type: "object",
-  properties: {
-    token: { type: "string" },
-  },
-  required: ["token"],
-} as const;
+export const ZParamsGetEmailPreview = z.object({ token: z.string() }).strict();
+export const SParamsGetEmailPreview = zodToJsonSchema(ZParamsGetEmailPreview);
+export type IParamsGetEmailPreview = z.input<typeof ZParamsGetEmailPreview>;
 
-export type IParamsGetEmailPreview = FromSchema<typeof SParamsGetEmailPreview>;
-
-export const SReqPostEmailsWebHook = {
-  type: "object",
-  properties: {
-    event: { type: "string" }, //https://developers.sendinblue.com/docs/transactional-webhooks
-    "message-id": { type: "string" },
-  },
-  required: ["event", "message-id"],
-} as const;
-
-export type IReqPostEmailsWebHook = FromSchema<typeof SReqPostEmailsWebHook>;
+export const ZReqPostEmailsWebHook = z
+  .object({
+    event: z.string(), //https://developers.sendinblue.com/docs/transactional-webhooks
+    "message-id": z.string(),
+  })
+  .strict();
+export const SReqPostEmailsWebHook = zodToJsonSchema(ZReqPostEmailsWebHook);
+export type IReqPostEmailsWebHook = z.input<typeof ZReqPostEmailsWebHook>;
 
 // export const SResEmailHTML = {
 //   type: "string",

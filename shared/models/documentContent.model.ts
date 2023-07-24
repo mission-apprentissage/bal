@@ -1,7 +1,8 @@
-import { FromSchema } from "json-schema-to-ts";
+import { WithId } from "mongodb";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-import { deserialize } from "..";
-import { IModelDescriptor } from "./common";
+import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
 
 const collectionName = "documentContents" as const;
 
@@ -10,38 +11,33 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ type_document: 1 }, { name: "type_document" }],
 ];
 
-export const SDocumentContent = {
-  type: "object",
-  properties: {
-    _id: { type: "string", format: "ObjectId" },
-    document_id: { type: "string" },
-    content: {
-      type: "object",
-    },
-    type_document: {
-      type: "string",
-      description: "Le type de document (exemple: DECA, etc..)",
-    },
-    updated_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date de mise à jour en base de données",
-    },
-    created_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date d'ajout en base de données",
-    },
-  },
-  required: ["_id", "document_id"],
-  additionalProperties: false,
-} as const;
+export const ZDocumentContent = z
+  .object({
+    _id: zObjectId,
+    document_id: z.string().describe("Identifiant du document"),
+    content: z.record(z.any()).optional().describe("Contenu du document"),
+    type_document: z
+      .string()
+      .optional()
+      .describe("Le type de document (exemple: DECA, etc..)"),
+    updated_at: z
+      .date()
+      .optional()
+      .describe("Date de mise à jour en base de données"),
+    created_at: z.date().optional().describe("Date d'ajout en base de données"),
+  })
+  .strict();
 
-export interface IDocumentContent
-  extends FromSchema<typeof SDocumentContent, { deserialize: deserialize }> {}
+export const SDocumentContent = zodToJsonSchema(
+  ZDocumentContent,
+  toJsonSchemaOptions
+);
+
+export type IDocumentContent = z.input<typeof ZDocumentContent>;
+export type IDocumentContentDocument = WithId<Omit<IDocumentContent, "_id">>;
 
 export default {
-  schema: SDocumentContent as any as IModelDescriptor["schema"],
+  schema: SDocumentContent as IModelDescriptor["schema"],
   indexes,
   collectionName,
 };

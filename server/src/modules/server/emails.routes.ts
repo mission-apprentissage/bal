@@ -1,6 +1,7 @@
 import { preValidationHookHandler } from "fastify";
 import {
   IParamsGetEmailPreview,
+  IReqPostEmailsWebHook,
   SParamsGetEmailPreview,
   SReqPostEmailsWebHook,
 } from "shared/routes/emails.routes";
@@ -28,7 +29,9 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
     done();
   };
 
-  server.get(
+  server.get<{
+    Params: IParamsGetEmailPreview;
+  }>(
     "/emails/:token/preview",
     {
       schema: {
@@ -37,10 +40,7 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
         //   200: SResEmailHTML,
         // },
       } as const,
-      preHandler: [
-        checkEmailToken,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      preHandler: [checkEmailToken],
     },
     async (request, response) => {
       const html = await renderEmail(request.params.token);
@@ -51,7 +51,9 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get(
+  server.get<{
+    Params: IParamsGetEmailPreview;
+  }>(
     "/emails/:token/markAsOpened",
     {
       schema: {
@@ -75,7 +77,9 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get(
+  server.get<{
+    Params: IParamsGetEmailPreview;
+  }>(
     "/emails/:token/unsubscribe",
     {
       schema: {
@@ -84,10 +88,7 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
         //   200: SResEmailHTML,
         // },
       } as const,
-      preHandler: [
-        checkEmailToken,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      preHandler: [checkEmailToken],
     },
     async (request, response) => {
       const { token } = request.params;
@@ -123,16 +124,15 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.post(
+  server.post<{
+    Body: IReqPostEmailsWebHook;
+  }>(
     "/emails/webhook",
     {
       schema: {
         body: SReqPostEmailsWebHook,
       } as const,
-      preHandler: [
-        server.auth([server.validateWebHookKey]),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      preHandler: [server.auth([server.validateWebHookKey])],
     },
     async (request, response) => {
       const { event, "message-id": messageId } = request.body;

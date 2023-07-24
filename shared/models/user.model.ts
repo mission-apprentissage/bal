@@ -1,7 +1,8 @@
-import { FromSchema } from "json-schema-to-ts";
+import { WithId } from "mongodb";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-import { deserialize } from "..";
-import { IModelDescriptor } from "./common";
+import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
 
 const collectionName = "users" as const;
 
@@ -22,40 +23,33 @@ const indexes: IModelDescriptor["indexes"] = [
   ],
 ];
 
-export const SUser = {
-  type: "object",
-  properties: {
-    _id: { type: "string", format: "ObjectId" },
-    email: { type: "string" },
-    password: { type: "string" },
-    person_id: { type: "string" },
-    is_admin: { type: "boolean" },
-    api_key: { type: "string" },
-    api_key_used_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date de denière utilisation de la clé api",
-    },
-    updated_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date de mise à jour en base de données",
-    },
-    created_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date d'ajout en base de données",
-    },
-  },
-  required: ["_id", "email", "password", "person_id"],
-  additionalProperties: false,
-} as const;
+export const ZUser = z
+  .object({
+    _id: zObjectId,
+    email: z.string().email().describe("Email de l'utilisateur"),
+    password: z.string().describe("Mot de passe de l'utilisateur"),
+    person_id: z.string().describe("Identifiant de la personne"),
+    is_admin: z.boolean().optional().describe("Est administrateur"),
+    api_key: z.string().optional().describe("Clé API"),
+    api_key_used_at: z
+      .date()
+      .nullish()
+      .describe("Date de dernière utilisation de la clé API"),
+    updated_at: z
+      .date()
+      .optional()
+      .describe("Date de mise à jour en base de données"),
+    created_at: z.date().optional().describe("Date d'ajout en base de données"),
+  })
+  .strict();
 
-export interface IUser
-  extends FromSchema<typeof SUser, { deserialize: deserialize }> {}
+export const SUser = zodToJsonSchema(ZUser, toJsonSchemaOptions);
+
+export type IUser = z.input<typeof ZUser>;
+export type IUserDocument = WithId<Omit<IUser, "_id">>;
 
 export default {
-  schema: SUser as any as IModelDescriptor["schema"],
+  schema: SUser as IModelDescriptor["schema"],
   indexes,
   collectionName,
 };

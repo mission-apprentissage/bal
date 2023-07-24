@@ -7,13 +7,17 @@ export const asyncForEach = async <T>(
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function timeout(promise: Promise<any>, millis: number) {
-  const timeout = new Promise((resolve, reject) =>
-    setTimeout(() => reject(`Timed out after ${millis} ms.`), millis)
+export function timeout<T>(promise: Promise<T>, millis: number): Promise<T> {
+  let timeoutID: undefined | NodeJS.Timeout;
+  const timeout: Promise<never> = new Promise((resolve, reject) => {
+    timeoutID = setTimeout(
+      () => reject(`Timed out after ${millis} ms.`),
+      millis
+    );
+  });
+  return Promise.race([promise, timeout]).finally(() =>
+    clearTimeout(timeoutID)
   );
-  // @ts-ignore
-  return Promise.race([promise, timeout]).finally(() => clearTimeout(timeout));
 }
 
 export async function sleep(durationMs: number): Promise<void> {

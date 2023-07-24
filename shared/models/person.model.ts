@@ -1,7 +1,8 @@
-import { FromSchema } from "json-schema-to-ts";
+import { WithId, WithoutId } from "mongodb";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-import { deserialize } from "..";
-import { IModelDescriptor } from "./common";
+import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
 
 const collectionName = "persons" as const;
 
@@ -21,59 +22,47 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ organisation_id: 1 }, { name: "organisation_id" }],
 ];
 
-export const SPerson = {
-  type: "object",
-  properties: {
-    _id: { type: "string", format: "ObjectId" },
-    email: { type: "string" },
-    civility: {
-      type: "string",
-      description: "civilité",
-      enum: ["Madame", "Monsieur"],
-    },
-    nom: { type: "string", description: "Le nom de la personne" },
-    prenom: { type: "string", description: "Le prénom de la personne" },
-    organisations: {
-      type: "array",
-      items: {
-        type: "string",
-      },
-    },
-    sirets: {
-      type: "array",
-      items: {
-        type: "string",
-      },
-      description:
-        "Liste de sirets recensé (sécurisation qualité de la donnée)",
-    },
-    _meta: {
-      type: "object",
-      properties: {
-        source: { type: "string" },
-      },
-      additionalProperties: true,
-    },
-    updated_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date de mise à jour en base de données",
-    },
-    created_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date d'ajout en base de données",
-    },
-  },
-  required: ["_id", "email"],
-  additionalProperties: false,
-} as const;
+export const ZPerson = z
+  .object({
+    _id: zObjectId,
+    email: z.string().email().describe("Email de la personne"),
+    civility: z.enum(["Madame", "Monsieur"]).optional().describe("civilité"),
+    nom: z.string().optional().describe("Le nom de la personne"),
+    prenom: z.string().optional().describe("Le prénom de la personne"),
+    organisations: z
+      .array(z.string().describe("Identifiant de l'organisation"))
+      .describe("Liste des organisations"),
+    sirets: z
+      .array(z.string())
+      .optional()
+      .describe("Liste de sirets recensé (sécurisation qualité de la donnée)"),
+    _meta: z
+      .object({
+        source: z.string().optional(),
+      })
+      .describe("Métadonnées")
+      .nonstrict()
+      .optional(),
+    updated_at: z
+      .date()
+      .describe("Date de mise à jour en base de données")
+      .optional(),
+    created_at: z.date().describe("Date d'ajout en base de données").optional(),
+  })
+  .required({
+    _id: true,
+    email: true,
+    organisation_id: true,
+  })
+  .strict();
 
-export interface IPerson
-  extends FromSchema<typeof SPerson, { deserialize: deserialize }> {}
+export const SPerson = zodToJsonSchema(ZPerson, toJsonSchemaOptions);
+
+export type IPerson = z.output<typeof ZPerson>;
+export type IPersonDocument = WithId<WithoutId<IPerson>>;
 
 export default {
-  schema: SPerson as any as IModelDescriptor["schema"],
+  schema: SPerson as IModelDescriptor["schema"],
   indexes,
   collectionName,
 };

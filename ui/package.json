@@ -49,6 +49,7 @@
     "@types/lodash.range": "3.2.7",
     "@types/react-datepicker": "4.11.2",
     "luxon": "^3.3.0",
-    "notion-types": "^6.16.0"
+    "notion-types": "^6.16.0",
+    "type-fest": "^4.0.0"
   }
 }

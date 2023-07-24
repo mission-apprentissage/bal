@@ -153,8 +153,7 @@ const MInput = IMaskMixin(({ inputRef, ...props }) => {
 
 // eslint-disable-next-line react/display-name
 const CustomDateInput = forwardRef(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ({ value, onChange, onFocus, locked, onClick, ...props }: any, ref) => {
+  ({ value, onChange, onFocus, locked, onClick, ...props }, ref) => {
     const actions = !locked
       ? { onClick: onClick, onFocus: onFocus }
       : {

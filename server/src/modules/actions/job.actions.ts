@@ -1,7 +1,12 @@
 import { Filter, FindOptions, MatchKeysAndValues, ObjectId } from "mongodb";
-import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
+import { IJobDocument, JOB_STATUS_LIST } from "shared/models/job.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
+
+type CreateJobParam = Pick<
+  IJobDocument,
+  "name" | "payload" | "scheduled_at" | "sync"
+>;
 
 /**
  * Création d'un job
@@ -11,8 +16,8 @@ export const createJob = async ({
   payload,
   scheduled_at = new Date(),
   sync = false,
-}: any) => {
-  const { insertedId: _id } = await getDbCollection("jobs").insertOne({
+}: CreateJobParam): Promise<IJobDocument> => {
+  const job = {
     name,
     status: sync ? JOB_STATUS_LIST.WILLSTART : JOB_STATUS_LIST.PENDING,
     ...(payload ? { payload } : {}),
@@ -20,22 +25,25 @@ export const createJob = async ({
     created_at: new Date(),
     scheduled_at,
     sync,
-  });
-  return findJob({ _id });
+  };
+  const { insertedId: _id } = await getDbCollection("jobs").insertOne(job);
+  return { ...job, _id };
 };
 
 export const findJob = async (
-  filter: Filter<IJob>,
-  options?: FindOptions<IJob>
-) => {
-  return await getDbCollection("jobs").findOne<IJob>(filter, options);
+  filter: Filter<IJobDocument>,
+  options?: FindOptions<IJobDocument>
+): Promise<IJobDocument | null> => {
+  return await getDbCollection("jobs").findOne(filter, options);
 };
 
 export const findJobs = async (
-  filter: Filter<IJob>,
-  options?: FindOptions<IJob>
+  filter: Filter<IJobDocument>,
+  options?: FindOptions<IJobDocument>
 ) => {
-  return await getDbCollection("jobs").find<IJob>(filter, options).toArray();
+  return await getDbCollection("jobs")
+    .find<IJobDocument>(filter, options)
+    .toArray();
 };
 
 /**
@@ -43,7 +51,7 @@ export const findJobs = async (
  */
 export const updateJob = async (
   _id: ObjectId,
-  data: MatchKeysAndValues<IJob>
+  data: MatchKeysAndValues<IJobDocument>
 ) => {
   return getDbCollection("jobs").updateOne(
     { _id },

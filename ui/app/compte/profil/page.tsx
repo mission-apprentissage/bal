@@ -81,7 +81,7 @@ const ProfilPage = () => {
           {user.api_key_used_at ? (
             <>
               {`Dernière utilisation le ${formatDate(
-                user.api_key_used_at,
+                user.api_key_used_at as unknown as string,
                 "PPP à p"
               )}`}
             </>

@@ -1,6 +1,7 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-import { deserialize } from "..";
+import { zObjectId } from "../models/common";
 
 export enum DOCUMENT_TYPES {
   DECA = "DECA",
@@ -9,92 +10,40 @@ export enum DOCUMENT_TYPES {
   VOEUX_AFFELNET_JUIN_2023 = "Voeux Affelnet Juin 2023",
 }
 
-export const SReqQueryPostAdminUpload = {
-  type: "object",
-  properties: {
-    type_document: {
-      type: "string",
-    },
-  },
-  required: ["type_document"],
-} as const;
+export const ZReqQueryPostAdminUpload = z
+  .object({
+    type_document: z.string(),
+  })
+  .strict();
 
-export type IReqQueryPostAdminUpload = FromSchema<
-  typeof SReqQueryPostAdminUpload
->;
+export const SReqQueryPostAdminUpload = zodToJsonSchema(
+  ZReqQueryPostAdminUpload
+);
+export type IReqQueryPostAdminUpload = z.input<typeof ZReqQueryPostAdminUpload>;
 
-export const SResPostAdminUpload = {
-  type: "object",
-  properties: {
-    _id: {
-      type: "string",
-      format: "ObjectId",
-    },
-    type_document: {
-      type: "string",
-    },
-    ext_fichier: {
-      type: "string",
-    },
-    nom_fichier: {
-      type: "string",
-    },
-    chemin_fichier: {
-      type: "string",
-    },
-    taille_fichier: {
-      type: "integer",
-    },
-    // dont send hash_secret, hash_fichier
-    import_progress: {
-      type: "number",
-    },
-    lines_count: {
-      type: "number",
-    },
-    added_by: {
-      type: "string",
-    },
-    updated_at: {
-      type: "string",
-      format: "date-time",
-    },
-    created_at: {
-      type: "string",
-      format: "date-time",
-    },
-  },
-  required: [
-    "_id",
-    "ext_fichier",
-    "nom_fichier",
-    "chemin_fichier",
-    "taille_fichier",
-    "added_by",
-    "created_at",
-  ],
-  additionalProperties: false,
-} as const;
+export const ZResPostAdminUpload = z
+  .object({
+    _id: zObjectId,
+    type_document: z.string().optional(),
+    ext_fichier: z.string(),
+    nom_fichier: z.string(),
+    chemin_fichier: z.string(),
+    taille_fichier: z.number(),
+    import_progress: z.number().optional(),
+    lines_count: z.number().optional(),
+    added_by: z.string(),
+    updated_at: z.date(),
+    created_at: z.date(),
+  })
+  .strict();
+export const SResPostAdminUpload = zodToJsonSchema(ZResPostAdminUpload);
+export type IResPostAdminUpload = z.input<typeof ZResPostAdminUpload>;
 
-export const SResGetDocuments = {
-  type: "array",
-  items: SResPostAdminUpload,
-} as const;
+export const ZResGetDocuments = z.array(ZResPostAdminUpload);
+export const SResGetDocuments = zodToJsonSchema(ZResGetDocuments);
+export type IResGetDocuments = z.input<typeof ZResGetDocuments>;
 
-export type IResPostAdminUpload = FromSchema<typeof SResPostAdminUpload>;
+export const ZResGetDocumentTypes = z.array(z.string());
+export const SResGetDocumentTypes = zodToJsonSchema(ZResGetDocumentTypes);
 
-export type IResGetDocuments = FromSchema<
-  typeof SResGetDocuments,
-  {
-    deserialize: deserialize;
-  }
->;
-
-export const SResGetDocumentTypes = {
-  type: "array",
-  items: {
-    type: "string",
-  },
-} as const;
-
-export type IResGetDocumentTypes = FromSchema<typeof SResGetDocumentTypes>;
+export type IResGetDocumentTypes = z.input<typeof ZResGetDocumentTypes>;

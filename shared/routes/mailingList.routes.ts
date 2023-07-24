@@ -1,24 +1,17 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-import { SJob } from "../models/job.model";
+import { SJob, ZJob } from "../models/job.model";
 
-export const SReqGetMailingList = {
-  type: "object",
-  properties: {
-    source: { type: "string" },
-  },
-  required: ["source"],
-} as const;
+export const ZReqGetMailingList = z.object({ source: z.string() }).strict();
 
-export type IReqGetMailingList = FromSchema<typeof SReqGetMailingList>;
+export const SReqGetMailingList = zodToJsonSchema(ZReqGetMailingList);
+export type IReqGetMailingList = z.input<typeof ZReqGetMailingList>;
 
-export const SResGetMailingLists = {
-  type: "array",
-  items: SJob,
-} as const;
+export const ZResGetMailingLists = z.array(ZJob);
+export const SResGetMailingLists = zodToJsonSchema(ZResGetMailingLists);
 
-export type IResGetMailingLists = FromSchema<typeof SResGetMailingLists>;
+export type IResGetMailingLists = z.input<typeof ZResGetMailingLists>;
 
 export const SResGetMailingList = SJob;
-
-export type IResGetMailingList = FromSchema<typeof SResGetMailingList>;
+export type IResGetMailingList = z.input<typeof ZJob>;

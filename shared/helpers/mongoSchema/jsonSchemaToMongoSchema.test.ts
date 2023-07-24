@@ -10,9 +10,7 @@ describe("jsonSchemaToMongoSchema", () => {
       type: "object",
       properties: {
         _id: {
-          type: "string",
-          format: "ObjectId",
-          description: "Identifiant du document",
+          $ref: "#/definitions/objectId",
         },
         type_document: {
           type: "string",
@@ -65,6 +63,10 @@ describe("jsonSchemaToMongoSchema", () => {
           format: "date-time",
           description: "Date d'ajout en base de données",
         },
+        _meta: {
+          type: "object",
+          additionalProperties: {},
+        },
       },
       required: [
         "_id",
@@ -86,7 +88,7 @@ describe("jsonSchemaToMongoSchema", () => {
       properties: {
         _id: {
           bsonType: "objectId",
-          description: "Identifiant du document",
+          description: "Identifiant unique",
         },
         type_document: {
           bsonType: "string",
@@ -136,6 +138,10 @@ describe("jsonSchemaToMongoSchema", () => {
         created_at: {
           bsonType: "date",
           description: "Date d'ajout en base de données",
+        },
+        _meta: {
+          bsonType: "object",
+          additionalProperties: true,
         },
       },
       required: [

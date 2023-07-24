@@ -17,7 +17,7 @@ const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
 z.setErrorMap(customErrorMap);
 
 export async function validateObject<Shape extends z.ZodRawShape>(
-  object: any,
+  object: unknown,
   schemaShape: Shape
 ): Promise<z.infer<z.ZodObject<Shape>>> {
   return await z.strictObject(schemaShape).parseAsync(object);
@@ -35,12 +35,12 @@ export const extensions = {
   uai: () => z.string().trim().regex(UAI_REGEX, "UAI invalide"), // e.g 0123456B
   code_naf: () =>
     z.preprocess(
-      (v: any) => (typeof v === "string" ? v.replace(".", "") : v), // parfois, le code naf contient un point
+      (v: unknown) => (typeof v === "string" ? v.replace(".", "") : v), // parfois, le code naf contient un point
       z.string().trim().toUpperCase().regex(CODE_NAF_REGEX, "NAF invalide") // e.g 1071D
     ),
   iso8601Date: () =>
     z.preprocess(
-      (v: any) =>
+      (v: unknown) =>
         typeof v === "string" && v.match(/^([0-9]{4})-([0-9]{2})-([0-9]{2})/)
           ? new Date(v.trim())
           : v,
@@ -51,7 +51,7 @@ export const extensions = {
     ),
   iso8601Datetime: () =>
     z.preprocess(
-      (v: any) =>
+      (v: unknown) =>
         typeof v === "string" && v.match(/^([0-9]{4})-([0-9]{2})-([0-9]{2})/)
           ? new Date(v.trim())
           : v,

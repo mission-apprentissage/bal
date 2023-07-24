@@ -1,6 +1,9 @@
 import { ObjectId, RootFilterOperators } from "mongodb";
 import { IOrganisation } from "shared/models/organisation.model";
-import { SReqParamsSearchPagination } from "shared/routes/common.routes";
+import {
+  IReqParamsSearchPagination,
+  SReqParamsSearchPagination,
+} from "shared/routes/common.routes";
 import {
   SResGetOrganisation,
   SResGetOrganisations,
@@ -14,18 +17,16 @@ import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 export const organisationAdminRoutes = ({ server }: { server: Server }) => {
-  server.get(
+  server.get<{
+    Querystring: IReqParamsSearchPagination;
+  }>(
     "/admin/organisations",
     {
       schema: {
         response: { 200: SResGetOrganisations },
         querystring: SReqParamsSearchPagination,
       } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       const filter: RootFilterOperators<IOrganisation> = {};
@@ -38,11 +39,11 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
 
       const organisations = await findOrganisations(filter);
 
-      return response.status(200).send(organisations as any);
+      return response.status(200).send(organisations);
     }
   );
 
-  server.get(
+  server.get<{ Params: { id: string } }>(
     "/admin/organisations/:id",
     {
       schema: {
@@ -53,18 +54,14 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
           required: ["id"],
         },
       } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       const organisation = await findOrganisation({
         _id: new ObjectId(request.params.id),
       });
 
-      return response.status(200).send(organisation as any); //IResGetOrganisation
+      return response.status(200).send(organisation); //IResGetOrganisation
     }
   );
 };

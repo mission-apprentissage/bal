@@ -1,8 +1,12 @@
 import Boom from "@hapi/boom";
 import { ObjectId, RootFilterOperators } from "mongodb";
-import { IUser } from "shared/models/user.model";
-import { SReqParamsSearchPagination } from "shared/routes/common.routes";
+import { IUserDocument } from "shared/models/user.model";
 import {
+  IReqParamsSearchPagination,
+  SReqParamsSearchPagination,
+} from "shared/routes/common.routes";
+import {
+  IReqPostUser,
   SReqPostUser,
   SResGetUser,
   SResGetUsers,
@@ -17,18 +21,16 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
   /**
    * Créer un utilisateur
    */
-  server.post(
+  server.post<{
+    Body: IReqPostUser;
+  }>(
     "/admin/user",
     {
       schema: {
         body: SReqPostUser,
         response: { 200: SResPostUser },
       } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       const user = await createUser(request.body);
@@ -37,25 +39,23 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
         throw Boom.badImplementation("Impossible de créer l'utilisateur");
       }
 
-      return response.status(200).send(user as any); //IResPostUser
+      return response.status(200).send(user); //IResPostUser
     }
   );
 
-  server.get(
+  server.get<{
+    Querystring: IReqParamsSearchPagination;
+  }>(
     "/admin/users",
     {
       schema: {
         response: { 200: SResGetUsers },
         querystring: SReqParamsSearchPagination,
       } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
-      const filter: RootFilterOperators<IUser> = {};
+      const filter: RootFilterOperators<IUserDocument> = {};
 
       const { q } = request.query;
 
@@ -65,11 +65,14 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
 
       const users = await findUsers(filter);
 
-      return response.status(200).send(users as any); //IResGetUsers
+      // Fixme: maybe we return too much data!!
+      return response.status(200).send(users); //IResGetUsers
     }
   );
 
-  server.get(
+  server.get<{
+    Params: { id: string };
+  }>(
     "/admin/users/:id",
     {
       schema: {
@@ -80,16 +83,13 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
           required: ["id"],
         },
       } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       const user = await findUser({ _id: new ObjectId(request.params.id) });
 
-      return response.status(200).send(user as any); //IResGetUser
+      // Fixme: maybe we return too much data!!
+      return response.status(200).send(user); //IResGetUser
     }
   );
 };

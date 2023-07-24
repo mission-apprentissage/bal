@@ -1,16 +1,16 @@
 import { IModelDescriptor } from "./common";
-import documentsModelDescriptor, { IDocument } from "./document.model";
+import documentsModelDescriptor, { IDocumentDocument } from "./document.model";
 import documentContentsModelDescriptor, {
-  IDocumentContent,
+  IDocumentContentDocument,
 } from "./documentContent.model";
-import eventsModelDescriptor, { IEvent } from "./events/event.model";
-import jobsModelDescriptor, { IJob } from "./job.model";
+import eventsModelDescriptor, { IEventDocument } from "./events/event.model";
+import jobsModelDescriptor, { IJobDocument } from "./job.model";
 import organisationsModelDescriptor, {
-  IOrganisation,
+  IOrganisationDocument,
 } from "./organisation.model";
-import personsModelDescriptor, { IPerson } from "./person.model";
-import sessionsModelDescriptor, { ISession } from "./session.model";
-import usersModelDescriptor, { IUser } from "./user.model";
+import personsModelDescriptor, { IPersonDocument } from "./person.model";
+import sessionsModelDescriptor, { ISessionDocument } from "./session.model";
+import usersModelDescriptor, { IUserDocument } from "./user.model";
 
 export const modelDescriptors: IModelDescriptor[] = [
   usersModelDescriptor,
@@ -24,12 +24,12 @@ export const modelDescriptors: IModelDescriptor[] = [
 ];
 
 export type IDocumentMap = {
-  users: Omit<IUser, "_id">;
-  jobs: Omit<IJob, "_id">;
-  organisations: Omit<IOrganisation, "_id">;
-  persons: Omit<IPerson, "_id">;
-  events: Omit<IEvent, "_id">;
-  sessions: Omit<ISession, "_id">;
-  documents: Omit<IDocument, "_id">;
-  documentContents: Omit<IDocumentContent, "_id">;
+  users: IUserDocument;
+  jobs: IJobDocument;
+  organisations: IOrganisationDocument;
+  persons: IPersonDocument;
+  events: IEventDocument;
+  sessions: ISessionDocument;
+  documents: IDocumentDocument;
+  documentContents: IDocumentContentDocument;
 };

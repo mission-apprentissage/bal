@@ -1,21 +1,13 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-import { deserialize } from "..";
-import { SOrganisation } from "../models/organisation.model";
+import { ZOrganisation } from "../models/organisation.model";
 
-export const SResGetOrganisation = SOrganisation;
+export const SResGetOrganisation = zodToJsonSchema(ZOrganisation);
 
-export type IResGetOrganisation = FromSchema<
-  typeof SResGetOrganisation,
-  { deserialize: deserialize }
->;
+export type IResGetOrganisation = z.input<typeof ZOrganisation>;
 
-export const SResGetOrganisations = {
-  type: "array",
-  items: SOrganisation,
-} as const;
+export const ZResGetOrganisations = z.array(ZOrganisation);
+export const SResGetOrganisations = zodToJsonSchema(ZResGetOrganisations);
 
-export type IResGetOrganisations = FromSchema<
-  typeof SResGetOrganisations,
-  { deserialize: deserialize }
->;
+export type IResGetOrganisations = z.input<typeof ZResGetOrganisations>;

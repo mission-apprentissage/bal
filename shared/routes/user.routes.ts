@@ -1,62 +1,42 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
-import { deserialize } from "..";
-import { SPerson } from "../models/person.model";
+import { ZPerson } from "../models/person.model";
+import { ZUser } from "../models/user.model";
 
-export const SReqPostUser = {
-  type: "object",
-  properties: {
-    email: { type: "string", format: "email" },
-    password: { type: "string" },
-    organisation_id: { type: "string" },
-  },
-  required: ["email", "password", "organisation_id"],
-} as const;
+export const ZReqPostUser = z
+  .object({
+    email: z.string().email(),
+    password: z.string(),
+    organisation_id: z.string(),
+  })
+  .strict();
 
-export type IReqPostUser = FromSchema<typeof SReqPostUser>;
+export const SReqPostUser = zodToJsonSchema(ZReqPostUser);
+export type IReqPostUser = z.input<typeof ZReqPostUser>;
 
-export const SResGetUser = {
-  type: "object",
-  properties: {
-    _id: { type: "string", format: "ObjectId" },
-    email: { type: "string" },
-    is_admin: { type: "boolean" },
-    api_key_used_at: { type: "string", format: "date-time" },
-    person: SPerson,
-  },
-  required: ["email"],
-  additionalProperties: false,
-} as const;
+export const ZResGetUser = ZUser.pick({
+  _id: true,
+  email: true,
+  is_admin: true,
+  api_key_used_at: true,
+})
+  .extend({
+    person: ZPerson.optional(),
+  })
+  .strict();
 
+export const SResGetUser = zodToJsonSchema(ZResGetUser);
 export const SResPostUser = SResGetUser;
 
-export type IResGetUser = FromSchema<
-  typeof SResGetUser,
-  {
-    deserialize: deserialize;
-  }
->;
-export type IResPostUser = FromSchema<
-  typeof SResPostUser,
-  {
-    deserialize: deserialize;
-  }
->;
+export type IResGetUser = z.input<typeof ZResGetUser>;
+export type IResPostUser = z.input<typeof ZResGetUser>;
 
-export const SResGetUsers = {
-  type: "array",
-  items: SResGetUser,
-} as const;
+export const ZResGetUsers = z.array(ZResGetUser);
+export const SResGetUsers = zodToJsonSchema(ZResGetUsers);
+export type IResGetUsers = z.input<typeof ZResGetUsers>;
 
-export type IResGetUsers = FromSchema<typeof SResGetUsers>;
+export const ZResGetGenerateApiKey = z.object({ api_key: z.string() }).strict();
+export const SResGetGenerateApiKey = zodToJsonSchema(ZResGetGenerateApiKey);
 
-export const SResGetGenerateApiKey = {
-  type: "object",
-  properties: {
-    api_key: { type: "string" },
-  },
-  required: ["api_key"],
-  additionalProperties: false,
-} as const;
-
-export type IResGetGenerateApiKey = FromSchema<typeof SResGetGenerateApiKey>;
+export type IResGetGenerateApiKey = z.input<typeof ZResGetGenerateApiKey>;
