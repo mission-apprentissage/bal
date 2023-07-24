@@ -1,11 +1,11 @@
 {
-    "title": "canSeeUploadPage",
+    "title": "can-access-upload-page",
     "selectorAttribute": "data-id",
     "steps": [
         {
             "type": "setViewport",
-            "width": 2064,
-            "height": 992,
+            "width": 1140,
+            "height": 1221,
             "deviceScaleFactor": 1,
             "isMobile": false,
             "hasTouch": false,
@@ -18,7 +18,7 @@
                 {
                     "type": "navigation",
                     "url": "https://bal-recette.apprentissage.beta.gouv.fr/",
-                    "title": ""
+                    "title": "BAL"
                 }
             ]
         },
@@ -27,37 +27,49 @@
             "target": "main",
             "selectors": [
                 [
-                    "#menu-button-\\:Rlab5femH1\\:"
+                    "#menu-button-\\:R1akmautjaH1\\:"
                 ],
                 [
-                    "xpath///*[@id=\"menu-button-:Rlab5femH1:\"]"
+                    "xpath///*[@id=\"menu-button-:R1akmautjaH1:\"]"
                 ],
                 [
-                    "pierce/#menu-button-\\:Rlab5femH1\\:"
+                    "pierce/#menu-button-\\:R1akmautjaH1\\:"
                 ]
             ],
-            "offsetY": 22,
-            "offsetX": 161
+            "offsetY": 18,
+            "offsetX": 167
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "[data-id='menuitem\\:admin\\:manage-files']"
+                ],
+                [
+                    "xpath///*[@data-id=\"menuitem:admin:manage-files\"]"
+                ],
+                [
+                    "pierce/[data-id='menuitem\\:admin\\:manage-files']"
+                ],
+                [
+                    "aria/Gestion des fichiers"
+                ]
+            ],
+            "offsetY": 16,
+            "offsetX": 153
         },
         {
             "type": "change",
             "target": "main",
-            "frame": [],
             "selectors": [
                 [
-                    "[data-id='menuitem\\:importfile']"
+                    "h2"
                 ],
-                [
-                    "xpath///*[@data-id=\"menuitem:importfile\"]"
-                ],
-                [
-                    "pierce/[data-id='menuitem\\:importfile']"
-                ],
-                [
-                    "aria/Import de fichier"
-                ]
+                ["aria/Gestion fichiers sources"]
             ],
-            "value": "Import de fichier"
+            "value": ">Gestion fichiers sources"
         }
+        
     ]
 }
