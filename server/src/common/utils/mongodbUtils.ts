@@ -6,7 +6,7 @@ import {
   MongoServerError,
   WithoutId,
 } from "mongodb";
-import { jsonSchemaToMongoSchema } from "shared/helpers/mongoSchema/jsonSchemaToMongoSchema";
+import { zodToMongoSchema } from "shared/helpers/mongoSchema/mongoSchemaBuilder";
 import { CollectionName, IModelDescriptor } from "shared/models/common";
 import { IDocumentMap, modelDescriptors } from "shared/models/models";
 
@@ -122,10 +122,10 @@ export const configureDbSchemaValidation = async (
   const db = getDatabase();
   ensureInitialization();
   await Promise.all(
-    modelDescriptors.map(async ({ collectionName, schema }) => {
+    modelDescriptors.map(async ({ collectionName, zod }) => {
       await createCollectionIfDoesNotExist(collectionName);
 
-      const convertedSchema = jsonSchemaToMongoSchema(schema);
+      const convertedSchema = zodToMongoSchema(zod);
 
       try {
         await db.command({

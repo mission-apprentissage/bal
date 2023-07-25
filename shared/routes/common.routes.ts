@@ -1,16 +1,19 @@
+import { Jsonify } from "type-fest";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
 export const ZResError = z
   .object({
-    code: z.string().optional(),
+    code: z.string().nullish(),
     message: z.string(),
+    name: z.string(),
     statusCode: z.number(),
   })
   .strict();
 
 export const SResError = zodToJsonSchema(ZResError);
 export type IResError = z.input<typeof ZResError>;
+export type IResErrorJson = Jsonify<z.output<typeof ZResError>>;
 
 export const ZReqParamsSearchPagination = z
   .object({
@@ -19,9 +22,6 @@ export const ZReqParamsSearchPagination = z
     q: z.string().optional(),
   })
   .strict();
-export const SReqParamsSearchPagination = zodToJsonSchema(
-  ZReqParamsSearchPagination
-);
 export type IReqParamsSearchPagination = z.input<
   typeof ZReqParamsSearchPagination
 >;
@@ -29,7 +29,3 @@ export type IReqParamsSearchPagination = z.input<
 export const ZReqHeadersAuthorization = z.object({
   Authorization: z.string().describe("Bearer token").optional(),
 });
-
-export const SReqHeadersAuthorization = zodToJsonSchema(
-  ZReqHeadersAuthorization
-);

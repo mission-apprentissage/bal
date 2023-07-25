@@ -1,14 +1,9 @@
 import { IncomingMessage } from "node:http";
 
-import Boom from "@hapi/boom";
+import Boom, { notFound } from "@hapi/boom";
 import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
-import {
-  IReqGetMailingList,
-  SReqGetMailingList,
-  SResGetMailingList,
-  SResGetMailingLists,
-} from "shared/routes/mailingList.routes";
+import { zRoutes } from "shared";
 import { Readable } from "stream";
 
 import logger from "../../common/logger";
@@ -27,14 +22,10 @@ import { getUserFromRequest } from "./utils/auth.strategies";
 import { noop } from "./utils/upload.utils";
 
 export const mailingListRoutes = ({ server }: { server: Server }) => {
-  server.post<{
-    Body: IReqGetMailingList;
-  }>(
+  server.post(
     "/mailing-list",
     {
-      schema: {
-        body: SReqGetMailingList,
-      } as const,
+      schema: zRoutes.post["/mailing-list"],
       preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
@@ -54,11 +45,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/mailing-lists",
     {
-      schema: {
-        response: {
-          200: SResGetMailingLists,
-        },
-      } as const,
+      schema: zRoutes.get["/mailing-lists"],
       preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
@@ -77,21 +64,10 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get<{
-    Params: { id: string };
-  }>(
+  server.get(
     "/mailing-lists/:id",
     {
-      schema: {
-        params: {
-          type: "object",
-          properties: { id: { type: "string" } },
-          required: ["id"],
-        },
-        response: {
-          200: SResGetMailingList,
-        },
-      } as const,
+      schema: zRoutes.get["/mailing-lists/:id"],
       preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
@@ -102,6 +78,10 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         _id: new ObjectId(id),
       });
 
+      if (!mailingList) {
+        throw notFound();
+      }
+
       if (mailingList?.payload?.user_id !== user?._id.toString()) {
         throw Boom.forbidden("Forbidden");
       }
@@ -110,16 +90,10 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get<{ Params: { id: string } }>(
+  server.get(
     "/mailing-lists/:id/download",
     {
-      schema: {
-        params: {
-          type: "object",
-          properties: { id: { type: "string" } },
-          required: ["id"],
-        },
-      } as const,
+      schema: zRoutes.get["/mailing-lists/:id/download"],
       preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
@@ -185,16 +159,10 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.delete<{ Params: { id: string } }>(
+  server.delete(
     "/mailing-list/:id",
     {
-      schema: {
-        params: {
-          type: "object",
-          properties: { id: { type: "string" } },
-          required: ["id"],
-        },
-      } as const,
+      schema: zRoutes.delete["/mailing-list/:id"],
       preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {

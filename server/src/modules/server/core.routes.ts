@@ -1,6 +1,7 @@
+import { zRoutes } from "shared";
+
 import config from "@/config";
 
-import { SResGetHealthCheck } from "../../../../shared/routes/core.routes";
 import packageJson from "../../../package.json";
 import { ensureInitialization } from "../../common/utils/mongodbUtils";
 import { Server } from "./server";
@@ -8,7 +9,7 @@ import { Server } from "./server";
 export const coreRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/healthcheck",
-    { schema: { response: { 200: SResGetHealthCheck } } },
+    { schema: zRoutes.get["/healthcheck"] },
     async (request, response) => {
       await ensureInitialization();
       response.status(200).send({
@@ -19,8 +20,10 @@ export const coreRoutes = ({ server }: { server: Server }) => {
     }
   );
   server.get(
-    "/test-sentry",
-    { schema: { response: { 200: SResGetHealthCheck } } },
+    "/healthcheck/sentry",
+    {
+      schema: zRoutes.get["/healthcheck/sentry"],
+    },
     async () => {
       throw new Error("testing sentry error");
     }

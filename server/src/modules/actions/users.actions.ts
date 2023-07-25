@@ -1,6 +1,5 @@
 import { Filter, ObjectId, UpdateFilter } from "mongodb";
-import { IPersonDocument } from "shared/models/person.model";
-import { IUserDocument } from "shared/models/user.model";
+import { IUser, IUserWithPerson } from "shared/models/user.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -31,10 +30,6 @@ const DEFAULT_UNWIND = {
   preserveNullAndEmptyArrays: true,
 };
 
-interface IUserDocumentWithPerson extends IUserDocument {
-  person: null | IPersonDocument;
-}
-
 export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   const person = await createPerson({
     email: data.email,
@@ -63,10 +58,10 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
 };
 
 export const findUsers = async (
-  filter: Filter<IUserDocument>
-): Promise<IUserDocumentWithPerson[]> => {
+  filter: Filter<IUser>
+): Promise<IUserWithPerson[]> => {
   const users = await getDbCollection("users")
-    .aggregate<IUserDocumentWithPerson>([
+    .aggregate<IUserWithPerson>([
       {
         $match: filter,
       },
@@ -83,10 +78,10 @@ export const findUsers = async (
 };
 
 export const findUser = async (
-  filter: Filter<IUserDocument>
-): Promise<IUserDocumentWithPerson | null> => {
+  filter: Filter<IUser>
+): Promise<IUserWithPerson | null> => {
   const user = await getDbCollection("users")
-    .aggregate<IUserDocumentWithPerson>([
+    .aggregate<IUserWithPerson>([
       {
         $match: filter,
       },
@@ -103,9 +98,9 @@ export const findUser = async (
 };
 
 export const updateUser = async (
-  user: IUserDocument,
-  data: Partial<IUserDocument>,
-  updateFilter: UpdateFilter<IUserDocument> = {}
+  user: IUser,
+  data: Partial<IUser>,
+  updateFilter: UpdateFilter<IUser> = {}
 ) => {
   return await getDbCollection("users").findOneAndUpdate(
     {
@@ -118,7 +113,7 @@ export const updateUser = async (
   );
 };
 
-export const generateApiKey = async (user: IUserDocument) => {
+export const generateApiKey = async (user: IUser) => {
   const generatedKey = generateKey();
   const secretHash = generateSecretHash(generatedKey);
 

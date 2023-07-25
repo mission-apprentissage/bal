@@ -1,13 +1,7 @@
-import { ObjectId, RootFilterOperators } from "mongodb";
+import { notFound } from "@hapi/boom";
+import { RootFilterOperators } from "mongodb";
+import { zRoutes } from "shared";
 import { IOrganisation } from "shared/models/organisation.model";
-import {
-  IReqParamsSearchPagination,
-  SReqParamsSearchPagination,
-} from "shared/routes/common.routes";
-import {
-  SResGetOrganisation,
-  SResGetOrganisations,
-} from "shared/routes/organisation.routes";
 
 import {
   findOrganisation,
@@ -17,15 +11,10 @@ import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 export const organisationAdminRoutes = ({ server }: { server: Server }) => {
-  server.get<{
-    Querystring: IReqParamsSearchPagination;
-  }>(
+  server.get(
     "/admin/organisations",
     {
-      schema: {
-        response: { 200: SResGetOrganisations },
-        querystring: SReqParamsSearchPagination,
-      } as const,
+      schema: zRoutes.get["/admin/organisations"],
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
@@ -43,25 +32,22 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get<{ Params: { id: string } }>(
+  server.get(
     "/admin/organisations/:id",
     {
-      schema: {
-        response: { 200: SResGetOrganisation },
-        params: {
-          type: "object",
-          properties: { id: { type: "string" } },
-          required: ["id"],
-        },
-      } as const,
+      schema: zRoutes.get["/admin/organisations/:id"],
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       const organisation = await findOrganisation({
-        _id: new ObjectId(request.params.id),
+        _id: request.params.id,
       });
 
-      return response.status(200).send(organisation); //IResGetOrganisation
+      if (!organisation) {
+        throw notFound();
+      }
+
+      return response.status(200).send(organisation);
     }
   );
 };

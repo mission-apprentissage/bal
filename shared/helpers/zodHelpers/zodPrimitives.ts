@@ -16,13 +16,6 @@ const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
 };
 z.setErrorMap(customErrorMap);
 
-export async function validateObject<Shape extends z.ZodRawShape>(
-  object: unknown,
-  schemaShape: Shape
-): Promise<z.infer<z.ZodObject<Shape>>> {
-  return await z.strictObject(schemaShape).parseAsync(object);
-}
-
 export const extensions = {
   siret: () =>
     z

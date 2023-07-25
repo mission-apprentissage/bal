@@ -1,8 +1,7 @@
-import { WithId } from "mongodb";
+import { Jsonify } from "type-fest";
 import { z } from "zod";
-import zodToJsonSchema from "zod-to-json-schema";
 
-import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
+import { IModelDescriptor, zObjectId } from "./common";
 
 const collectionName = "organisations" as const;
 
@@ -64,16 +63,11 @@ export const ZOrganisation = z
   })
   .strict();
 
-export const SOrganisation = zodToJsonSchema(
-  ZOrganisation,
-  toJsonSchemaOptions
-);
-
-export type IOrganisation = z.input<typeof ZOrganisation>;
-export type IOrganisationDocument = WithId<Omit<IOrganisation, "_id">>;
+export type IOrganisation = z.output<typeof ZOrganisation>;
+export type IOrganisationJson = Jsonify<z.input<typeof ZOrganisation>>;
 
 export default {
-  schema: SOrganisation as IModelDescriptor["schema"],
+  zod: ZOrganisation,
   indexes,
   collectionName,
 };

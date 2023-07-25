@@ -115,6 +115,7 @@ type IRegionPerId = {
 export const REGIONS_BY_ID: IRegionPerId = REGIONS.reduce((acc, region) => {
   acc[region.code] = region;
   return acc;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }, {} as any);
 
 export const DEPARTEMENTS = [

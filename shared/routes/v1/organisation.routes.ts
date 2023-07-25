@@ -1,35 +1,30 @@
 import { z } from "zod";
-import zodToJsonSchema from "zod-to-json-schema";
 
 import { extensions } from "../../helpers/zodHelpers/zodPrimitives";
+import { ZReqHeadersAuthorization } from "../common.routes";
 
-export const ZReqPostOrganisationValidation = z
-  .object({
-    email: z.string().trim().email("Email non valide"),
-    siret: extensions.siret(),
-  })
-  .describe("Organisation validation Request body");
-
-export type IReqPostOrganisationValidation = z.input<
-  typeof ZReqPostOrganisationValidation
->;
-
-export const SReqPostOrganisationValidation = zodToJsonSchema(
-  ZReqPostOrganisationValidation
-);
-
-export const ZResPostOrganisationValidation = z
-  .object({
-    is_valid: z.boolean(),
-    on: z.enum(["email", "domain"]).optional(),
-  })
-  .strict()
-  .describe("Organisation validation Response body");
-
-export const SResPostOrganisationValidation = zodToJsonSchema(
-  ZResPostOrganisationValidation
-);
-
-export type IResOrganisationValidation = z.input<
-  typeof ZResPostOrganisationValidation
->;
+export const zOrganisationV1Routes = {
+  get: {},
+  post: {
+    "/v1/organisation/validation": {
+      body: z
+        .object({
+          email: z.string().trim().email("Email non valide"),
+          siret: extensions.siret(),
+        })
+        .describe("Organisation validation Request body"),
+      headers: ZReqHeadersAuthorization,
+      response: {
+        "2xx": z
+          .object({
+            is_valid: z.boolean(),
+            on: z.enum(["email", "domain"]).optional(),
+          })
+          .strict()
+          .describe("Organisation validation Response body"),
+      },
+    },
+  },
+  put: {},
+  delete: {},
+};

@@ -87,7 +87,7 @@ function getEnv(): PublicConfig["env"] {
     case "local":
       return env;
     default:
-      throw new Error("invalid NEXT_PUBLIC_ENV env-vars");
+      throw new Error(`Invalid NEXT_PUBLIC_ENV env-vars ${env}`);
   }
 }
 

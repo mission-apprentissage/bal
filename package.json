@@ -23,8 +23,9 @@
     "e2e": "cypress open",
     "e2e:headless": "cypress run",
     "e2e:convert": "chrome-recorder cypress/records/admin/*.json --output=cypress/e2e/admin; chrome-recorder cypress/records/user/*.json --output=cypress/e2e/user",
-    "test": "yarn workspaces foreach -A --exclude mna-bal run test",
-    "test:ci": "yarn workspaces foreach -Ap --exclude mna-bal run test",
+    "test": "vitest --run",
+    "test:ci": "yarn test --coverage",
+    "test:watch": "vitest --watch",
     "typecheck": "yarn workspaces foreach -Av --exclude mna-bal run typecheck",
     "typecheck:ci": "yarn workspaces foreach -Apv --exclude mna-bal run typecheck"
   },
@@ -59,7 +60,9 @@
     "node-talisman": "^1.29.9",
     "prettier": "2.7.1",
     "semantic-release-slack-bot": "3.5.2",
-    "typescript": "4.5.2"
+    "typescript": "4.5.2",
+    "vite-tsconfig-paths": "^4.2.0",
+    "vitest": "^0.33.0"
   },
   "prettier": {
     "printWidth": 80,

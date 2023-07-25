@@ -1,9 +1,6 @@
 import { Filter, FindOptions, ObjectId, UpdateFilter } from "mongodb";
-import {
-  IOrganisation,
-  IOrganisationDocument,
-} from "shared/models/organisation.model";
-import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
+import { IPostRoutes, IResponse } from "shared";
+import { IOrganisation } from "shared/models/organisation.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -21,7 +18,7 @@ export const validation = async ({
 }: {
   email: string;
   siret: string;
-}): Promise<IResOrganisationValidation> => {
+}): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
   const testDeca = await getDecaVerification(siret, email);
 
   if (testDeca.is_valid) {
@@ -86,12 +83,12 @@ export const findOrganisations = async (filter: Filter<IOrganisation> = {}) => {
 };
 
 export const findOrganisation = async (
-  filter: Filter<IOrganisationDocument>,
+  filter: Filter<IOrganisation>,
   options?: FindOptions
 ) => {
   const organisation = await getDbCollection(
     "organisations"
-  ).findOne<IOrganisationDocument>(filter, options);
+  ).findOne<IOrganisation>(filter, options);
 
   return organisation;
 };
@@ -108,9 +105,9 @@ export const findOrganisationBySiret = async (
 };
 
 export const updatePerson = async (
-  organisation: IOrganisationDocument,
-  data: Partial<IOrganisationDocument>,
-  updateFilter: UpdateFilter<IOrganisationDocument> = {}
+  organisation: IOrganisation,
+  data: Partial<IOrganisation>,
+  updateFilter: UpdateFilter<IOrganisation> = {}
 ) => {
   return await getDbCollection("organisations").findOneAndUpdate(
     {

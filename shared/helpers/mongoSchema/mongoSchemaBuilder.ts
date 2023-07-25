@@ -4,6 +4,8 @@ import {
   JSONSchema7Type,
   JSONSchema7TypeName,
 } from "json-schema";
+import { ZodType } from "zod";
+import zodToJsonSchema from "zod-to-json-schema";
 
 import { zObjectId } from "../../models/common";
 
@@ -225,3 +227,13 @@ export const jsonSchemaToMongoSchema = (schema: JSONSchema7): MongoSchema => {
 
   return result;
 };
+
+export function zodToMongoSchema(input: ZodType): MongoSchema {
+  const jsonSchema = zodToJsonSchema(input, {
+    definitions: {
+      objectId: zObjectId,
+    },
+  }) as JSONSchema7;
+
+  return jsonSchemaToMongoSchema(jsonSchema);
+}

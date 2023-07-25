@@ -1,10 +1,6 @@
-import { preValidationHookHandler } from "fastify";
-import {
-  IParamsGetEmailPreview,
-  IReqPostEmailsWebHook,
-  SParamsGetEmailPreview,
-  SReqPostEmailsWebHook,
-} from "shared/routes/emails.routes";
+import { zRoutes } from "shared";
+import { zEmailParams } from "shared/routes/emails.routes";
+import z from "zod";
 
 import {
   checkIfEmailExists,
@@ -17,29 +13,17 @@ import {
 import { Server } from "./server";
 
 export const emailsRoutes = ({ server }: { server: Server }) => {
-  const checkEmailToken: preValidationHookHandler = async (
-    request,
-    reply,
-    done
-  ) => {
-    const { token } = request.params as IParamsGetEmailPreview;
+  async function checkEmailToken(request, reply) {
+    const { token } = request.params as z.infer<typeof zEmailParams>;
     if (!(await checkIfEmailExists(token))) {
       return reply.status(404).send("Non trouvé");
     }
-    done();
-  };
+  }
 
-  server.get<{
-    Params: IParamsGetEmailPreview;
-  }>(
+  server.get(
     "/emails/:token/preview",
     {
-      schema: {
-        params: SParamsGetEmailPreview,
-        // response: {
-        //   200: SResEmailHTML,
-        // },
-      } as const,
+      schema: zRoutes.get["/emails/:token/preview"],
       preHandler: [checkEmailToken],
     },
     async (request, response) => {
@@ -51,14 +35,10 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get<{
-    Params: IParamsGetEmailPreview;
-  }>(
+  server.get(
     "/emails/:token/markAsOpened",
     {
-      schema: {
-        params: SParamsGetEmailPreview,
-      } as const,
+      schema: zRoutes.get["/emails/:token/markAsOpened"],
     },
     async (request, response) => {
       const { token } = request.params;
@@ -77,17 +57,10 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get<{
-    Params: IParamsGetEmailPreview;
-  }>(
+  server.get(
     "/emails/:token/unsubscribe",
     {
-      schema: {
-        params: SParamsGetEmailPreview,
-        // response: {
-        //   200: SResEmailHTML,
-        // },
-      } as const,
+      schema: zRoutes.get["/emails/:token/unsubscribe"],
       preHandler: [checkEmailToken],
     },
     async (request, response) => {
@@ -124,14 +97,10 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.post<{
-    Body: IReqPostEmailsWebHook;
-  }>(
+  server.post(
     "/emails/webhook",
     {
-      schema: {
-        body: SReqPostEmailsWebHook,
-      } as const,
+      schema: zRoutes.post["/emails/webhook"],
       preHandler: [server.auth([server.validateWebHookKey])],
     },
     async (request, response) => {

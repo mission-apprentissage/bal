@@ -1,6 +1,5 @@
 import { Filter, UpdateFilter } from "mongodb";
-import { IOrganisationDocument } from "shared/models/organisation.model";
-import { IPerson, IPersonDocument } from "shared/models/person.model";
+import { IPerson, PersonWithOrganisation } from "shared/models/person.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -28,10 +27,6 @@ const DEFAULT_UNWIND = {
   preserveNullAndEmptyArrays: true,
 };
 
-interface PersonWithOrganisation extends IPersonDocument {
-  organisation: null | IOrganisationDocument;
-}
-
 export const createPerson = async (data: ICreatePerson) => {
   const now = new Date();
   const person = {
@@ -50,7 +45,7 @@ export const createPerson = async (data: ICreatePerson) => {
 };
 
 export const findPerson = async (
-  filter: Filter<IPersonDocument>
+  filter: Filter<IPerson>
 ): Promise<PersonWithOrganisation | null> => {
   const person = await getDbCollection("persons")
     .aggregate<PersonWithOrganisation>([
@@ -90,8 +85,8 @@ export const findPersons = async (
 };
 
 export const updatePerson = async (
-  person: IPersonDocument,
-  data: Partial<IPersonDocument>,
+  person: IPerson,
+  data: Partial<IPerson>,
   updateFilter: UpdateFilter<IPerson> = {}
 ) => {
   return await getDbCollection("persons").findOneAndUpdate(

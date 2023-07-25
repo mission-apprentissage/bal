@@ -1,7 +1,4 @@
 import { z } from "zod";
-import zodToJsonSchema from "zod-to-json-schema";
-
-import { toJsonSchemaOptions } from "../common";
 
 export const ZBalEmail = z
   .object({
@@ -42,11 +39,7 @@ export const ZBalEmail = z
   })
   .nonstrict();
 
-export const SBalEmail = zodToJsonSchema(ZBalEmail);
-
 export const ZBalEmails = z.array(ZBalEmail);
-
-export const SBalEmails = zodToJsonSchema(ZBalEmails);
 
 export const ZBalEmailsPayload = z
   .object({
@@ -55,11 +48,6 @@ export const ZBalEmailsPayload = z
   })
   .nonstrict();
 
-export const SBalEmailsPayload = zodToJsonSchema(
-  ZBalEmailsPayload,
-  toJsonSchemaOptions
-);
-
-export type IBalEmail = z.input<typeof ZBalEmail>;
-export type IBalEmails = z.input<typeof ZBalEmails>;
-export type IBalEmailsPayload = z.input<typeof ZBalEmailsPayload>;
+export type IBalEmail = z.output<typeof ZBalEmail>;
+export type IBalEmails = z.output<typeof ZBalEmails>;
+export type IBalEmailsPayload = z.output<typeof ZBalEmailsPayload>;

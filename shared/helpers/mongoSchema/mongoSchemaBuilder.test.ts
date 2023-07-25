@@ -2,7 +2,10 @@ import { JSONSchema7 } from "json-schema";
 import { describe, expect, it } from "vitest";
 
 import { modelDescriptors } from "../../models/models";
-import { jsonSchemaToMongoSchema } from "./jsonSchemaToMongoSchema";
+import {
+  jsonSchemaToMongoSchema,
+  zodToMongoSchema,
+} from "./mongoSchemaBuilder";
 
 describe("jsonSchemaToMongoSchema", () => {
   it("should convert complex schema", () => {
@@ -159,10 +162,12 @@ describe("jsonSchemaToMongoSchema", () => {
       additionalProperties: false,
     });
   });
+});
 
+describe("zodToMongoSchema", () => {
   modelDescriptors.forEach((descriptor) => {
     it(`should convert ${descriptor.collectionName} schema`, () => {
-      expect(jsonSchemaToMongoSchema(descriptor.schema)).toMatchSnapshot();
+      expect(zodToMongoSchema(descriptor.zod)).toMatchSnapshot();
     });
   });
 });

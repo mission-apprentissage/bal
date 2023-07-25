@@ -1,21 +1,21 @@
 import { Box, HStack } from "@chakra-ui/react";
 import { FC } from "react";
-import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
+import { IJobJson } from "shared/models/job.model";
 
 import Table from "../../../components/table/Table";
 import { Bin } from "../../../theme/icons/Bin";
 import { DownloadLine } from "../../../theme/icons/DownloadLine";
-import { api } from "../../../utils/api.utils";
+import { apiDelete } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 
 interface Props {
-  mailingLists?: IJob[];
+  mailingLists?: IJobJson[];
   onDelete?: () => void;
 }
 
 const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
   const handleDelete = async (mailingList_id: string) => {
-    await api.delete(`/mailing-list/${mailingList_id}`);
+    await apiDelete(`/mailing-list/:id`, { params: { id: mailingList_id } });
     onDelete?.();
   };
 
@@ -29,7 +29,8 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             id: "source",
             size: 100,
             header: () => "Source",
-            cell: ({ row }) => row.original.payload?.source,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            cell: ({ row }) => (row.original.payload as any)?.source,
           },
           status: {
             id: "status",
@@ -59,11 +60,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             cell: ({ row }) => {
               return (
                 row.original.created_at &&
-                formatDate(
-                  //@ts-ignore
-                  row.original.created_at as string,
-                  "dd/MM/yyyy à HH:mm"
-                )
+                formatDate(row.original.created_at, "dd/MM/yyyy à HH:mm")
               );
             },
           },
@@ -73,7 +70,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             size: 25,
             header: () => "Actions",
             cell: ({ row }) => {
-              if (row.original.status !== JOB_STATUS_LIST.FINISHED) {
+              if (row.original.status !== "finished") {
                 return null;
               }
 

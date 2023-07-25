@@ -1,8 +1,5 @@
 import { Filter, FindOptions, ObjectId } from "mongodb";
-import {
-  IDocumentContent,
-  IDocumentContentDocument,
-} from "shared/models/documentContent.model";
+import { IDocumentContent } from "shared/models/documentContent.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -23,32 +20,33 @@ export const createDocumentContent = async (data: TCreateDocumentContent) => {
 };
 
 export const findOneDocumentContent = async (
-  filter: Filter<IDocumentContentDocument>,
+  filter: Filter<IDocumentContent>,
   options?: FindOptions
 ) => {
-  return await getDbCollection(
-    "documentContents"
-  ).findOne<IDocumentContentDocument>(filter, options);
+  return await getDbCollection("documentContents").findOne<IDocumentContent>(
+    filter,
+    options
+  );
 };
 
 export const findDocumentContents = async (
-  filter: Filter<IDocumentContentDocument>,
+  filter: Filter<IDocumentContent>,
   options?: FindOptions
-): Promise<IDocumentContentDocument[]> => {
+): Promise<IDocumentContent[]> => {
   return await getDbCollection("documentContents")
     .find(filter, options)
     .toArray();
 };
 
 export const deleteDocumentContent = async (
-  filter: Filter<IDocumentContentDocument>
+  filter: Filter<IDocumentContent>
 ) => {
   await getDbCollection("documentContents").deleteMany(filter);
 };
 
 export const updateDocumentContent = async (
   _id: ObjectId,
-  data: Partial<IDocumentContentDocument>
+  data: Partial<IDocumentContent>
 ) => {
   return getDbCollection("documentContents").updateOne(
     { _id },

@@ -1,5 +1,5 @@
 import { config } from "dotenv";
 
 config({
-  path: "./server/.env.test",
+  path: "./ui/.env.test",
 });

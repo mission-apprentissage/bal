@@ -1,16 +1,16 @@
 import { IModelDescriptor } from "./common";
-import documentsModelDescriptor, { IDocumentDocument } from "./document.model";
+import documentsModelDescriptor, { IDocument } from "./document.model";
 import documentContentsModelDescriptor, {
-  IDocumentContentDocument,
+  IDocumentContent,
 } from "./documentContent.model";
-import eventsModelDescriptor, { IEventDocument } from "./events/event.model";
-import jobsModelDescriptor, { IJobDocument } from "./job.model";
+import eventsModelDescriptor, { IEvent } from "./events/event.model";
+import jobsModelDescriptor, { IJob } from "./job.model";
 import organisationsModelDescriptor, {
-  IOrganisationDocument,
+  IOrganisation,
 } from "./organisation.model";
-import personsModelDescriptor, { IPersonDocument } from "./person.model";
-import sessionsModelDescriptor, { ISessionDocument } from "./session.model";
-import usersModelDescriptor, { IUserDocument } from "./user.model";
+import personsModelDescriptor, { IPerson } from "./person.model";
+import sessionsModelDescriptor, { ISession } from "./session.model";
+import usersModelDescriptor, { IUser } from "./user.model";
 
 export const modelDescriptors: IModelDescriptor[] = [
   usersModelDescriptor,
@@ -24,12 +24,12 @@ export const modelDescriptors: IModelDescriptor[] = [
 ];
 
 export type IDocumentMap = {
-  users: IUserDocument;
-  jobs: IJobDocument;
-  organisations: IOrganisationDocument;
-  persons: IPersonDocument;
-  events: IEventDocument;
-  sessions: ISessionDocument;
-  documents: IDocumentDocument;
-  documentContents: IDocumentContentDocument;
+  users: IUser;
+  jobs: IJob;
+  organisations: IOrganisation;
+  persons: IPerson;
+  events: IEvent;
+  sessions: ISession;
+  documents: IDocument;
+  documentContents: IDocumentContent;
 };

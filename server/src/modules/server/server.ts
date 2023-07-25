@@ -2,35 +2,38 @@ import fastifyAuth, { FastifyAuthFunction } from "@fastify/auth";
 import fastifyCookie from "@fastify/cookie";
 import fastifyCors from "@fastify/cors";
 import fastifyMultipart from "@fastify/multipart";
-import fastifySwagger, { JSONObject } from "@fastify/swagger";
+import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
-import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 import { Boom, isBoom } from "@hapi/boom";
 import { captureException } from "@sentry/node";
 import fastify, {
   FastifyBaseLogger,
   FastifyError,
   FastifyInstance,
-  FastifySchema,
   FastifyServerOptions,
   RawReplyDefaultExpression,
   RawRequestDefaultExpression,
   RawServerDefault,
 } from "fastify";
+import {
+  createJsonSchemaTransform,
+  ResponseValidationError,
+  serializerCompiler,
+  validatorCompiler,
+  ZodTypeProvider,
+} from "fastify-type-provider-zod";
 import { IResError } from "shared/routes/common.routes";
 import { ZodError } from "zod";
 
 import pJson from "../../../package.json";
 import logger from "../../common/logger";
 import { initSentryFastify } from "../../common/services/sentry/sentry";
-import { organisationAdminRoutes } from "./admin/organisation.routes";
+import config from "../../config";
 import { personAdminRoutes } from "./admin/person.routes";
-import { uploadAdminRoutes } from "./admin/upload.routes";
 import { userAdminRoutes } from "./admin/user.routes";
 import { authRoutes } from "./auth.routes";
 import { coreRoutes } from "./core.routes";
 import { emailsRoutes } from "./emails.routes";
-import { mailingListRoutes } from "./mailingList.routes";
 import { userRoutes } from "./user.routes";
 import {
   authValidateJWT,
@@ -53,12 +56,24 @@ export interface Server
     RawRequestDefaultExpression<RawServerDefault>,
     RawReplyDefaultExpression<RawServerDefault>,
     FastifyBaseLogger,
-    JsonSchemaToTsProvider
+    ZodTypeProvider
   > {}
+
+function getZodMessageError(error: ZodError, context: string): string {
+  const normalizedContext = context ? `${context}.` : "";
+  return error.issues.reduce((acc, issue, i) => {
+    const path = issue.path.length === 0 ? "" : issue.path.join(".");
+    const delimiter = i === 0 ? "" : ", ";
+    return acc + `${delimiter}${normalizedContext}${path}: ${issue.message}`;
+  }, "");
+}
 
 export function build(opts: FastifyServerOptions = {}): Server {
   const app = fastify(opts);
   initSentryFastify(app);
+
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
 
   app.register(fastifySwagger, {
     swagger: {
@@ -76,12 +91,9 @@ export function build(opts: FastifyServerOptions = {}): Server {
         },
       },
     },
-    transform: ({ schema, url }) => {
-      const transformedSchema = { ...schema } as FastifySchema;
-      if (!url.includes("/v1") && url !== "/api/healthcheck")
-        transformedSchema.hide = true;
-      return { schema: transformedSchema as JSONObject, url };
-    },
+    transform: createJsonSchemaTransform({
+      skipList: ["/api/healthcheck", "/api/documentation"],
+    }),
   });
 
   app.register(fastifySwaggerUi, {
@@ -106,7 +118,7 @@ export function build(opts: FastifyServerOptions = {}): Server {
 
   app.setErrorHandler<
     FastifyError | Boom<unknown> | Error | ZodError,
-    { Reply: IResError }
+    { Reply: Record<number, IResError> }
   >((error, _request, reply) => {
     logger.error(error);
 
@@ -114,13 +126,22 @@ export function build(opts: FastifyServerOptions = {}): Server {
     let message = error.message;
     let name = error.name;
 
+    if (error.name === "ResponseValidationError") {
+      name = "Response Validation failed";
+      statusCode = 500;
+      if (config.env === "local") {
+        message = getZodMessageError(
+          (error as ResponseValidationError).details as ZodError,
+          "response"
+        );
+      }
+    }
     if (error instanceof ZodError) {
       name = "Validation failed";
-      message = error.issues.reduce((acc, issue, i) => {
-        const path = issue.path.length === 0 ? "" : issue.path.join(".");
-        const delimiter = i === 0 ? "" : ", ";
-        return acc + `${delimiter}${path}: ${issue.message}`;
-      }, "");
+      message = getZodMessageError(
+        error,
+        (error as unknown as FastifyError).validationContext ?? ""
+      );
     }
 
     if (isBoom(error)) {
@@ -138,26 +159,27 @@ export function build(opts: FastifyServerOptions = {}): Server {
     }
 
     return reply.status(statusCode).send({
-      message: error.message,
+      message,
       statusCode,
       name,
     });
   });
 
   app.register(
-    async (instance) => {
-      registerRoutes({ server: instance as Server });
+    async (instance: Server) => {
+      registerRoutes({ server: instance });
     },
     { prefix: "/api" }
   );
+
   app.register(
-    async (instance) => {
-      registerV1Routes({ server: instance as Server });
+    async (instance: Server) => {
+      registerV1Routes({ server: instance });
     },
     { prefix: "/api/v1" }
   );
 
-  return app;
+  return app.withTypeProvider<ZodTypeProvider>();
 }
 
 export const server = build({
@@ -169,7 +191,7 @@ export const server = build({
     },
   },
   trustProxy: 1,
-}).withTypeProvider<JsonSchemaToTsProvider>() as Server;
+});
 
 type RegisterRoutes = (opts: { server: Server }) => void;
 
@@ -180,9 +202,9 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
   emailsRoutes({ server });
   userAdminRoutes({ server });
   personAdminRoutes({ server });
-  organisationAdminRoutes({ server });
-  uploadAdminRoutes({ server });
-  mailingListRoutes({ server });
+  // organisationAdminRoutes({ server });
+  // uploadAdminRoutes({ server });
+  // mailingListRoutes({ server });
 };
 
 export const registerV1Routes: RegisterRoutes = ({ server }) => {

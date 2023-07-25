@@ -1,4 +1,4 @@
-import { IJobDocument, JOB_STATUS_LIST } from "shared/models/job.model";
+import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
 
 import logger from "@/common/logger";
 import { sleep } from "@/common/utils/asyncUtils";
@@ -40,7 +40,7 @@ export async function addJob(
 }
 
 async function runJob(
-  job: IJobDocument,
+  job: IJob,
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }
@@ -77,10 +77,13 @@ async function runJob(
           return;
         }
         case "migrations:create":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return createMigration(job.payload as any);
         case "import:document":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return handleDocumentFileContent(job.payload as any);
         case "generate:mailing-list":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return processMailingList(job.payload as any);
         default:
           return Promise.resolve();

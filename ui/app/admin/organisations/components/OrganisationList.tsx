@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { IResGetOrganisations } from "shared/routes/organisation.routes";
+import { IOrganisationJson } from "shared/models/organisation.model";
 
 import FormSearch from "../../../../components/formSearch/FormSearch";
 import Table from "../../../../components/table/Table";
 import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";
-import { api } from "../../../../utils/api.utils";
+import { apiGet } from "../../../../utils/api.utils";
 import {
   formatUrlWithNewParams,
   getSearchParamsForQuery,
@@ -23,15 +23,12 @@ const OrganisationList = () => {
     q: searchValue,
   } = getSearchParamsForQuery(searchParams);
 
-  const { data: organisations } = useQuery<IResGetOrganisations>({
+  const { data: organisations } = useQuery<IOrganisationJson[]>({
     queryKey: ["organistations", { searchValue, page, limit }],
-    queryFn: async () => {
-      const { data } = await api.get("/admin/organisations", {
-        params: { q: searchValue, page, limit },
-      });
-
-      return data;
-    },
+    queryFn: async () =>
+      apiGet("/admin/organisations", {
+        querystring: { q: searchValue, page, limit },
+      }),
   });
 
   const onSearch = (q: string) => {

@@ -3,11 +3,8 @@ import { pipeline } from "node:stream/promises";
 
 import { stringify } from "csv-stringify";
 import { Filter, FindOptions, ObjectId } from "mongodb";
-import {
-  IDocumentDocument,
-  IDocumentWithContent,
-} from "shared/models/document.model";
-import { IJobDocument } from "shared/models/job.model";
+import { IDocument, IDocumentWithContent } from "shared/models/document.model";
+import { IJob } from "shared/models/job.model";
 
 import logger from "@/common/logger";
 import * as crypto from "@/common/utils/cryptoUtils";
@@ -84,7 +81,7 @@ export const createMailingList = async (data: IMailingList) => {
   });
 };
 
-export const findMailingList = async (filter: Filter<IJobDocument>) => {
+export const findMailingList = async (filter: Filter<IJob>) => {
   return findJob({
     name: "generate:mailing-list",
     ...filter,
@@ -92,8 +89,8 @@ export const findMailingList = async (filter: Filter<IJobDocument>) => {
 };
 
 export const findMailingLists = async (
-  filter: Filter<IJobDocument>,
-  options?: FindOptions<IJobDocument>
+  filter: Filter<IJob>,
+  options?: FindOptions<IJob>
 ) => {
   return findJobs(filter, options);
 };
@@ -258,7 +255,7 @@ async function* getLine(cursor) {
   if (currentLine.email !== null) yield currentLine;
 }
 
-export const createMailingListFile = async (document: IDocumentDocument) => {
+export const createMailingListFile = async (document: IDocument) => {
   const documentContents = await getDbCollection("documentContents").find(
     {
       document_id: document._id.toString(),
@@ -325,7 +322,7 @@ export const createMailingListFile = async (document: IDocumentDocument) => {
   // });
 };
 
-export const deleteMailingList = async (mailingList: IJobDocument) => {
+export const deleteMailingList = async (mailingList: IJob) => {
   if (mailingList.payload?.document_id) {
     await deleteDocumentById(
       new ObjectId(mailingList.payload.document_id as string)

@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`jsonSchemaToMongoSchema > should convert documentContents schema 1`] = `
+exports[`zodToMongoSchema > should convert documentContents schema 1`] = `
 {
   "additionalProperties": false,
   "bsonType": "object",
@@ -38,7 +38,7 @@ exports[`jsonSchemaToMongoSchema > should convert documentContents schema 1`] = 
 }
 `;
 
-exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
+exports[`zodToMongoSchema > should convert documents schema 1`] = `
 {
   "additionalProperties": false,
   "bsonType": "object",
@@ -116,7 +116,7 @@ exports[`jsonSchemaToMongoSchema > should convert documents schema 1`] = `
 }
 `;
 
-exports[`jsonSchemaToMongoSchema > should convert events schema 1`] = `
+exports[`zodToMongoSchema > should convert events schema 1`] = `
 {
   "additionalProperties": true,
   "bsonType": "object",
@@ -241,7 +241,7 @@ exports[`jsonSchemaToMongoSchema > should convert events schema 1`] = `
 }
 `;
 
-exports[`jsonSchemaToMongoSchema > should convert jobs schema 1`] = `
+exports[`zodToMongoSchema > should convert jobs schema 1`] = `
 {
   "additionalProperties": false,
   "bsonType": "object",
@@ -310,7 +310,7 @@ exports[`jsonSchemaToMongoSchema > should convert jobs schema 1`] = `
 }
 `;
 
-exports[`jsonSchemaToMongoSchema > should convert organisations schema 1`] = `
+exports[`zodToMongoSchema > should convert organisations schema 1`] = `
 {
   "additionalProperties": false,
   "bsonType": "object",
@@ -381,7 +381,7 @@ exports[`jsonSchemaToMongoSchema > should convert organisations schema 1`] = `
 }
 `;
 
-exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
+exports[`zodToMongoSchema > should convert persons schema 1`] = `
 {
   "additionalProperties": false,
   "bsonType": "object",
@@ -448,7 +448,7 @@ exports[`jsonSchemaToMongoSchema > should convert persons schema 1`] = `
 }
 `;
 
-exports[`jsonSchemaToMongoSchema > should convert sessions schema 1`] = `
+exports[`zodToMongoSchema > should convert sessions schema 1`] = `
 {
   "additionalProperties": false,
   "bsonType": "object",
@@ -477,7 +477,7 @@ exports[`jsonSchemaToMongoSchema > should convert sessions schema 1`] = `
 }
 `;
 
-exports[`jsonSchemaToMongoSchema > should convert users schema 1`] = `
+exports[`zodToMongoSchema > should convert users schema 1`] = `
 {
   "additionalProperties": false,
   "bsonType": "object",
