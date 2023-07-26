@@ -1,6 +1,5 @@
 import { Jsonify } from "type-fest";
 import { z } from "zod";
-import zodToJsonSchema from "zod-to-json-schema";
 
 export const ZResError = z
   .object({
@@ -11,7 +10,6 @@ export const ZResError = z
   })
   .strict();
 
-export const SResError = zodToJsonSchema(ZResError);
 export type IResError = z.input<typeof ZResError>;
 export type IResErrorJson = Jsonify<z.output<typeof ZResError>>;
 

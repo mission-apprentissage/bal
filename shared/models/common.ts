@@ -19,8 +19,8 @@ export interface IModelDescriptor {
 }
 
 export const zObjectId = z
-  .string()
-  .length(24)
-  .transform((s) => new ObjectId(s))
-  .or(z.instanceof(ObjectId))
+  .custom<ObjectId | string>((v) => {
+    return ObjectId.isValid(v as any);
+  })
+  .transform((v) => new ObjectId(v))
   .describe("Identifiant unique");

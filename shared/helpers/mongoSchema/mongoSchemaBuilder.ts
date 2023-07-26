@@ -5,7 +5,7 @@ import {
   JSONSchema7TypeName,
 } from "json-schema";
 import { ZodType } from "zod";
-import zodToJsonSchema from "zod-to-json-schema";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
 import { zObjectId } from "../../models/common";
 

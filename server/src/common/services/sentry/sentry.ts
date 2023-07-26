@@ -64,7 +64,7 @@ export function initSentryFastify<T extends FastifyInstance>(app: T) {
         query_string: request.query,
       };
     },
-    ...getOptions(),
+    ...(getOptions() as any),
   };
 
   app.register(fastifySentryPlugin, options);
