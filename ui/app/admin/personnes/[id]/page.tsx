@@ -1,5 +1,3 @@
-import { headers } from "next/headers";
-
 import { apiGet } from "@/utils/api.utils";
 
 import PersonView from "./components/PersonView";
@@ -9,17 +7,9 @@ interface Props {
 }
 
 const AdminPersonViewPage = async ({ params }: Props) => {
-  const person = await apiGet(
-    `/admin/persons/:id`,
-    {
-      params,
-    },
-    {
-      headers: {
-        cookie: headers().get("cookie") ?? "",
-      },
-    }
-  );
+  const person = await apiGet(`/admin/persons/:id`, {
+    params,
+  });
 
   return <PersonView person={person} />;
 };

@@ -90,7 +90,7 @@ export type IDeleteRoutes = IRoutes["delete"];
 export interface IRouteSchema {
   body?: ZodType;
   querystring?: ZodType;
-  headers?: ZodType<Record<string, string> | undefined>;
+  headers?: ZodType<Record<string, string | undefined> | undefined>;
   params?: ZodType;
   response: { "2xx": ZodType };
 }
