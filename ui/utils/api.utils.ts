@@ -1,23 +1,50 @@
-import { IRequest, IResponse, IRoutes } from "shared";
+import { IRequest, IResponse, IRoutes, IRouteSchema } from "shared";
 import { IResErrorJson } from "shared/routes/common.routes";
+import z, { ZodType } from "zod";
 
 import { publicConfig } from "../config.public";
-
-const normalisedEndpoint = publicConfig.apiEndpoint.endsWith("/")
-  ? publicConfig.apiEndpoint.slice(0, -1)
-  : publicConfig.apiEndpoint;
-
-interface ExtraOptions {
-  headers?: {
-    cookie?: string;
-  };
-}
 
 type PathParam = Record<string, string>;
 type QueryString = Record<string, string | string[]>;
 interface WithQueryStringAndPathParam {
   params?: PathParam;
   querystring?: QueryString;
+}
+
+type Options = {
+  [Prop in keyof Omit<
+    IRouteSchema,
+    "response"
+  >]: IRouteSchema[Prop] extends ZodType
+    ? z.input<IRouteSchema[Prop]>
+    : undefined;
+};
+
+async function getHeaders(options: Options) {
+  const headers = new Headers();
+
+  if (options.headers) {
+    const h = options.headers;
+    Object.keys(h).forEach((name) => {
+      headers.append(name, h[name]);
+    });
+  }
+
+  try {
+    if (!global.window) {
+      // By default server-side we don't use headers
+      // But we need them for the api, as all routes are authenticated
+      const { headers: nextHeaders } = await import("next/headers");
+      const cookie = nextHeaders().get("cookie");
+      if (cookie) {
+        headers.append("cookie", cookie);
+      }
+    }
+  } catch (error) {
+    // We're in client, cookies will be includes
+  }
+
+  return headers;
 }
 
 /*
@@ -97,11 +124,17 @@ export function generateUrl(
   path: string,
   options: WithQueryStringAndPathParam = {}
 ): string {
-  return (
+  const normalisedEndpoint = publicConfig.apiEndpoint.endsWith("/")
+    ? publicConfig.apiEndpoint.slice(0, -1)
+    : publicConfig.apiEndpoint;
+
+  const url =
     normalisedEndpoint +
     generatePath(path, options.params) +
-    generateQueryString(options.querystring)
-  );
+    generateQueryString(options.querystring);
+  console.log("url", { url, normalisedEndpoint });
+
+  return url;
 }
 
 function getBody(headers: Headers, body?: BodyInit): BodyInit | null {
@@ -176,18 +209,11 @@ export class ApiError extends Error {
 export async function apiPost<
   P extends keyof IRoutes["post"],
   S extends IRoutes["post"][P] = IRoutes["post"][P]
->(
-  path: P,
-  options: IRequest<S>,
-  extra: ExtraOptions = {}
-): Promise<IResponse<S>> {
+>(path: P, options: IRequest<S>): Promise<IResponse<S>> {
   // TODO: Use a better cast
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const o: Record<string, any> = options;
-  const headers = new Headers({
-    ...extra.headers,
-    ...o.headers,
-  });
+  const o: any = options;
+  const headers = await getHeaders(options);
 
   if (!(o.body instanceof FormData)) {
     headers.append("Content-Type", "application/json");
@@ -211,18 +237,11 @@ export async function apiPost<
 export async function apiGet<
   P extends keyof IRoutes["get"],
   S extends IRoutes["get"][P] = IRoutes["get"][P]
->(
-  path: P,
-  options: IRequest<S>,
-  extra: ExtraOptions = {}
-): Promise<IResponse<S>> {
+>(path: P, options: IRequest<S>): Promise<IResponse<S>> {
   // TODO: Use a better cast
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const o: Record<string, any> = options;
-  const headers = new Headers({
-    ...extra.headers,
-    ...o.headers,
-  });
+  const headers = await getHeaders(options);
 
   const res = await fetch(generateUrl(path, options), {
     method: "GET",
@@ -241,18 +260,11 @@ export async function apiGet<
 export async function apiDelete<
   P extends keyof IRoutes["delete"],
   S extends IRoutes["delete"][P] = IRoutes["delete"][P]
->(
-  path: P,
-  options: IRequest<S>,
-  extra: ExtraOptions = {}
-): Promise<IResponse<S>> {
+>(path: P, options: IRequest<S>): Promise<IResponse<S>> {
   // TODO: Use a better cast
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const o: Record<string, any> = options;
-  const headers = new Headers({
-    ...extra.headers,
-    ...o?.headers,
-  });
+  const headers = await getHeaders(options);
 
   const res = await fetch(generateUrl(path, options), {
     method: "DELETE",

@@ -45,8 +45,13 @@ export const ZDocument = z
   })
   .strict();
 
+export const zDocumentPublic = ZDocument.omit({
+  hash_fichier: true,
+  hash_secret: true,
+});
+
 export type IDocument = z.output<typeof ZDocument>;
-export type IDocumentJson = Jsonify<z.input<typeof ZDocument>>;
+export type IDocumentJson = Jsonify<z.input<typeof zDocumentPublic>>;
 
 export interface IDocumentWithContent<TContent> extends IDocument {
   content: TContent;

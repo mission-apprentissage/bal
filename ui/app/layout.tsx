@@ -2,29 +2,20 @@ import "./globals.css";
 import "react-notion-x/src/styles.css";
 
 import { Metadata } from "next";
-import { headers } from "next/headers";
 import { PropsWithChildren } from "react";
 import { IUserPublic } from "shared/models/user.model";
 
-import { publicConfig } from "../config.public";
 import { AuthContextProvider } from "../context/AuthContext";
+import { apiGet } from "../utils/api.utils";
 
-async function getSession() {
+async function getSession(): Promise<IUserPublic | undefined> {
   try {
-    const response = await fetch(`${publicConfig.apiEndpoint}/auth/session`, {
-      headers: {
-        cookie: headers().get("cookie") ?? "",
-      },
+    const session: IUserPublic = await apiGet(`/auth/session`, {
+      headers: {},
     });
-
-    const session: IUserPublic = await response.json();
-
-    if (!response.ok) {
-      return;
-    }
-
     return session;
   } catch (error) {
+    console.log(error);
     return;
   }
 }
