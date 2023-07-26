@@ -11,6 +11,7 @@ import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
 import { Readable } from "stream";
+import { JsonObject } from "type-fest";
 
 import logger from "@/common/logger";
 import * as crypto from "@/common/utils/cryptoUtils";
@@ -259,7 +260,7 @@ export const extractDocumentContent = async ({
     parseCsv({
       delimiter,
     }),
-    writeData(async (json) => {
+    writeData(async (json: JsonObject) => {
       importedLength += Buffer.byteLength(
         JSON.stringify(Object.values(json)).replace(/^\[(.*)\]$/, "$1")
       );
@@ -366,7 +367,9 @@ export const deleteDocumentById = async (documentId: ObjectId) => {
   await getDbCollection("documents").deleteOne({ _id: document._id });
 };
 
-export const handleDocumentFileContent = async ({ document_id }) => {
+export const handleDocumentFileContent = async ({
+  document_id,
+}: Record<"document_id", ObjectId>) => {
   const document = await findDocument({
     _id: document_id,
   });

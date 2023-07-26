@@ -20,7 +20,13 @@ import { clear } from "./seed/clear";
 import { seed } from "./seed/seed";
 
 export async function addJob(
-  { name, payload = {}, scheduled_at = new Date(), sync = false },
+  {
+    name,
+    payload = {},
+    scheduled_at = new Date(),
+    sync = false,
+  }: Pick<IJob, "name"> &
+    Partial<Pick<IJob, "payload" | "scheduled_at" | "sync">>,
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }
@@ -94,7 +100,7 @@ async function runJob(
 }
 
 //abortSignal
-export async function processor() {
+export async function processor(): Promise<void> {
   logger.info(`Process jobs queue - looking for a job to execute`);
   const { value: nextJob } = await getDbCollection("jobs").findOneAndUpdate(
     { status: "pending", scheduled_at: { $lte: new Date() } },

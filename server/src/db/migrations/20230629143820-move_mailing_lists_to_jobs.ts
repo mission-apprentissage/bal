@@ -1,6 +1,6 @@
-import { Db } from "mongodb";
+import { Db, MongoClient } from "mongodb";
 
-export const up = async (db: Db, _client) => {
+export const up = async (db: Db, _client: MongoClient) => {
   const matchingCollections = await db
     .listCollections({ name: "mailingLists" })
     .toArray();
@@ -35,4 +35,4 @@ export const up = async (db: Db, _client) => {
   await db.dropCollection("mailingLists");
 };
 
-export const down = async (_db, _client) => {};
+export const down = async (_db: Db, _client: MongoClient) => {};

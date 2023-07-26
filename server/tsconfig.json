@@ -1,7 +1,6 @@
 {
   "include": ["./**/*.ts"],
   "exclude": ["**/node_modules", "coverage", "dist"],
-  "files": ["src/types.d.ts"],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
     /* Projects */
@@ -18,6 +17,7 @@
       "@tests/*": ["./tests/*"]
     },
     "resolveJsonModule": true,
+    "typeRoots": ["./types", "./node_modules/@types/"],
     /* JavaScript Support */
     "allowJs": false,
     /* Emit */
@@ -27,11 +27,12 @@
     "isolatedModules": true,
     /* Type Checking */
     "strict": true,
-    "noImplicitAny": false,
+    // "noImplicitAny": false,
     "noUnusedLocals": true,
     "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,
-    "noUncheckedIndexedAccess": true,
+    "useUnknownInCatchVariables": false,
+    "noUncheckedIndexedAccess": false,
     /* Completeness */
     "skipLibCheck": true,
     /* Output Formatting */

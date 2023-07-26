@@ -1,3 +1,4 @@
+import { FastifyReply, FastifyRequest } from "fastify";
 import { zRoutes } from "shared";
 import { zEmailParams } from "shared/routes/emails.routes";
 import z from "zod";
@@ -13,11 +14,15 @@ import {
 import { Server } from "./server";
 
 export const emailsRoutes = ({ server }: { server: Server }) => {
-  async function checkEmailToken(request, reply) {
+  async function checkEmailToken<T extends FastifyRequest>(
+    request: T,
+    reply: FastifyReply
+  ) {
     const { token } = request.params as z.infer<typeof zEmailParams>;
     if (!(await checkIfEmailExists(token))) {
       return reply.status(404).send("Non trouvé");
     }
+    return;
   }
 
   server.get(

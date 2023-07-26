@@ -1,7 +1,5 @@
-// @ts-ignore
 import Boom from "@hapi/boom";
 import { captureException } from "@sentry/node";
-import csvToJson from "convert-csv-to-json";
 import { parse } from "csv-parse";
 import { isEmpty, pickBy } from "lodash-es";
 import XLSX, { WorkSheet } from "xlsx";
@@ -45,16 +43,6 @@ export const getJsonFromXlsxData = (
     captureException(err);
     return null;
   }
-};
-
-export const getJsonFromCsvFile = (fileInputName: string, delimiter = ";") => {
-  csvToJson.fieldDelimiter(delimiter);
-  return csvToJson.getJsonFromCsv(fileInputName);
-};
-
-export const getJsonFromCsvData = <T>(data: string, delimiter = ";"): T[] => {
-  csvToJson.fieldDelimiter(delimiter);
-  return csvToJson.latin1Encoding().csvStringToJson(data);
 };
 
 export function parseCsv(options = {}) {
