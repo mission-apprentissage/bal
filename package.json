@@ -22,7 +22,7 @@
     "talisman:add-exception": "yarn node-talisman --githook pre-commit -i",
     "e2e": "cypress open",
     "e2e:headless": "cypress run",
-    "e2e:convert": "chrome-recorder cypress/records/admin/*.json --output=cypress/e2e/admin; chrome-recorder cypress/records/user/*.json --output=cypress/e2e/user",
+    "e2e:convert": "node cypress/convertRecords.mjs",
     "test": "vitest --run",
     "test:ci": "yarn test --coverage",
     "test:watch": "vitest --watch",

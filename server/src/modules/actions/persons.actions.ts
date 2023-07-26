@@ -53,6 +53,9 @@ export const findPerson = async (
         $match: filter,
       },
       {
+        $limit: 1,
+      },
+      {
         $lookup: DEFAULT_LOOKUP,
       },
       {
