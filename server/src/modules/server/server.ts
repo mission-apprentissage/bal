@@ -123,7 +123,8 @@ export function build(opts: FastifyServerOptions = {}): Server {
     logger.error(error);
 
     let statusCode = (error as FastifyError).statusCode ?? 500;
-    let message = error.message;
+    let message =
+      config.env === "local" ? error.message : "Internal Server Error";
     let name = error.name;
 
     if (error.name === "ResponseValidationError") {
@@ -148,7 +149,10 @@ export function build(opts: FastifyServerOptions = {}): Server {
       statusCode = error.output.statusCode;
 
       return reply.status(statusCode).send({
-        message,
+        message:
+          statusCode >= 500 && config.env !== "local"
+            ? "Internal Server Error"
+            : message,
         statusCode,
         name,
       });

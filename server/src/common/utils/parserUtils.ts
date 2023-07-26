@@ -1,9 +1,10 @@
 // @ts-ignore
+import Boom from "@hapi/boom";
 import { captureException } from "@sentry/node";
 import csvToJson from "convert-csv-to-json";
 import { parse } from "csv-parse";
 import { isEmpty, pickBy } from "lodash-es";
-import XLSX from "xlsx";
+import XLSX, { WorkSheet } from "xlsx";
 
 const readXLSXData = (
   data: unknown,
@@ -28,7 +29,15 @@ export const getJsonFromXlsxData = (
 ) => {
   try {
     const { sheet_name_list, workbook } = readXLSXData(data, readOpt);
-    const worksheet = workbook.Sheets[sheet_name_list[0]];
+
+    const firstSheet = sheet_name_list[0];
+    if (!firstSheet) {
+      throw Boom.badRequest(
+        "Le fichier excel ne contient aucune feuille de calcul"
+      );
+    }
+
+    const worksheet = workbook.Sheets[firstSheet] as WorkSheet;
     const json = XLSX.utils.sheet_to_json<unknown>(worksheet, opt);
 
     return json;

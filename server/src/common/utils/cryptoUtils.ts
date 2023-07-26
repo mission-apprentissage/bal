@@ -1,3 +1,4 @@
+import { internal } from "@hapi/boom";
 import checksumStream from "checksum-stream";
 import crypto from "crypto";
 
@@ -51,6 +52,10 @@ export function generateSecretHash(key: string) {
 
 export function compareKeys(storedKey: string, suppliedKey: string) {
   const [hashedPassword, salt] = storedKey.split(".");
+
+  if (!hashedPassword || !salt) {
+    throw internal("compareKeys: invalid storedKey");
+  }
 
   const buffer = crypto.scryptSync(suppliedKey, salt, 64);
   return crypto.timingSafeEqual(Buffer.from(hashedPassword, "hex"), buffer);

@@ -7,9 +7,9 @@ import {
   UpdateFilter,
 } from "mongodb";
 import { oleoduc, writeData } from "oleoduc";
+import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
-import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { Readable } from "stream";
 
 import logger from "@/common/logger";

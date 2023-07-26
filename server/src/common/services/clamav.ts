@@ -7,8 +7,15 @@ async function getClamscan(uri: string) {
     return promise;
   }
 
+  const [host, port] = uri.split(":");
+  if (!host) {
+    throw new Error("Clamav: Missing host");
+  }
+  if (!port) {
+    throw new Error("Clamav: Missing port");
+  }
+
   return new Promise<NodeClam>((resolve, reject) => {
-    const [host, port] = uri.split(":");
     tcpPortUsed
       .waitUntilUsedOnHost(parseInt(port), host, 500, 30000)
       .then(() => {

@@ -1,7 +1,7 @@
 import assert from "node:assert";
 
 import { ObjectId } from "mongodb";
-import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
+import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 import {

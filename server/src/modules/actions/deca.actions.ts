@@ -1,7 +1,7 @@
 import companyEmailValidator from "company-email-validator";
 import { IPostRoutes, IResponse } from "shared";
+import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { SIRET_REGEX } from "shared/constants/regex";
-import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 
 import { findOneDocumentContent } from "./documentContent.actions";
 

@@ -1,4 +1,4 @@
-import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
+import { IJob } from "shared/models/job.model";
 
 import logger from "@/common/logger";
 import { sleep } from "@/common/utils/asyncUtils";
@@ -97,8 +97,8 @@ async function runJob(
 export async function processor() {
   logger.info(`Process jobs queue - looking for a job to execute`);
   const { value: nextJob } = await getDbCollection("jobs").findOneAndUpdate(
-    { status: JOB_STATUS_LIST.PENDING, scheduled_at: { $lte: new Date() } },
-    { $set: { status: JOB_STATUS_LIST.WILLSTART } },
+    { status: "pending", scheduled_at: { $lte: new Date() } },
+    { $set: { status: "will_start" } },
     { sort: { scheduled_at: 1 } }
   );
 

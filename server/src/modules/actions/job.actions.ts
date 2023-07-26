@@ -1,5 +1,11 @@
-import { Filter, FindOptions, MatchKeysAndValues, ObjectId } from "mongodb";
-import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
+import {
+  Filter,
+  FindOptions,
+  MatchKeysAndValues,
+  ObjectId,
+  WithoutId,
+} from "mongodb";
+import { IJob } from "shared/models/job.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -14,9 +20,9 @@ export const createJob = async ({
   scheduled_at = new Date(),
   sync = false,
 }: CreateJobParam): Promise<IJob> => {
-  const job = {
+  const job: WithoutId<IJob> = {
     name,
-    status: sync ? JOB_STATUS_LIST.WILLSTART : JOB_STATUS_LIST.PENDING,
+    status: sync ? "will_start" : "pending",
     ...(payload ? { payload } : {}),
     updated_at: new Date(),
     created_at: new Date(),

@@ -4,7 +4,7 @@ import {
   runWithAsyncContext,
 } from "@sentry/node";
 import { formatDuration, intervalToDuration } from "date-fns";
-import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
+import { IJob } from "shared/models/job.model";
 
 import logger from "@/common/logger";
 import { updateJob } from "@/modules/actions/job.actions";
@@ -19,7 +19,7 @@ const runner = async (
   if (options.runningLogs) logger.info(`Job: ${job.name} Started`);
   const startDate = new Date();
   await updateJob(job._id, {
-    status: JOB_STATUS_LIST.RUNNING,
+    status: "running",
     started_at: startDate,
   });
   let error: Error | undefined = undefined;
@@ -43,7 +43,7 @@ const runner = async (
     intervalToDuration({ start: startDate, end: endDate })
   );
   await updateJob(job._id, {
-    status: error ? JOB_STATUS_LIST.ERRORED : JOB_STATUS_LIST.FINISHED,
+    status: error ? "errored" : "finished",
     output: { duration, result, error },
     ended_at: endDate,
   });
