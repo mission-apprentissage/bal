@@ -29,11 +29,14 @@ import pJson from "../../../package.json";
 import logger from "../../common/logger";
 import { initSentryFastify } from "../../common/services/sentry/sentry";
 import config from "../../config";
+import { organisationAdminRoutes } from "./admin/organisation.routes";
 import { personAdminRoutes } from "./admin/person.routes";
+import { uploadAdminRoutes } from "./admin/upload.routes";
 import { userAdminRoutes } from "./admin/user.routes";
 import { authRoutes } from "./auth.routes";
 import { coreRoutes } from "./core.routes";
 import { emailsRoutes } from "./emails.routes";
+import { mailingListRoutes } from "./mailingList.routes";
 import { userRoutes } from "./user.routes";
 import {
   authValidateJWT,
@@ -206,9 +209,9 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
   emailsRoutes({ server });
   userAdminRoutes({ server });
   personAdminRoutes({ server });
-  // organisationAdminRoutes({ server });
-  // uploadAdminRoutes({ server });
-  // mailingListRoutes({ server });
+  organisationAdminRoutes({ server });
+  uploadAdminRoutes({ server });
+  mailingListRoutes({ server });
 };
 
 export const registerV1Routes: RegisterRoutes = ({ server }) => {
