@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { ObjectId } from "bson";
 import { Jsonify } from "type-fest";
 import z, { ZodType } from "zod";
 

@@ -1,4 +1,5 @@
-import { CreateIndexesOptions, IndexSpecification, ObjectId } from "mongodb";
+import { ObjectId } from "bson";
+import type { CreateIndexesOptions, IndexSpecification } from "mongodb";
 import { z, ZodType } from "zod";
 
 export type CollectionName =
