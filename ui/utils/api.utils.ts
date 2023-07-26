@@ -132,7 +132,6 @@ export function generateUrl(
     normalisedEndpoint +
     generatePath(path, options.params) +
     generateQueryString(options.querystring);
-  console.log("url", { url, normalisedEndpoint });
 
   return url;
 }
