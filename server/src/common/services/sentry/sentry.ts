@@ -44,6 +44,7 @@ export function initSentryFastify<T extends FastifyInstance>(app: T) {
   const options: SentryPluginOptions = {
     setErrorHandler: false,
     extractUserData: (request: FastifyRequest): UserData => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const data: any = {
         segment: getUserSegment(request.user),
       };
