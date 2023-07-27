@@ -4,7 +4,7 @@ services:
   reverse_proxy:
     image: "nginxproxy/nginx-proxy"
     container_name: bal_reverse_proxy
-    restart: unless-stopped
+    restart: always
     deploy:
       resources:
         limits:
@@ -24,7 +24,7 @@ services:
   acme-companion:
     image: nginxproxy/acme-companion
     container_name: nginx-proxy-acme
-    restart: unless-stopped
+    restart: always
     volumes:
       - certs:/etc/nginx/certs:rw
       - acme:/etc/acme.sh
@@ -39,7 +39,7 @@ services:
   mongodb:
     image: mongo:6.0.2-focal
     container_name: bal_mongodb
-    restart: unless-stopped
+    restart: always
     deploy:
       resources:
         limits:
@@ -67,7 +67,7 @@ services:
       resources:
         limits:
           memory: 2g
-    restart: unless-stopped
+    restart: always
     networks:
       - bal_network
     volumes:
