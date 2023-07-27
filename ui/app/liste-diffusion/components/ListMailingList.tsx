@@ -5,7 +5,7 @@ import { IJobJson } from "shared/models/job.model";
 import Table from "../../../components/table/Table";
 import { Bin } from "../../../theme/icons/Bin";
 import { DownloadLine } from "../../../theme/icons/DownloadLine";
-import { apiDelete } from "../../../utils/api.utils";
+import { apiDelete, generateUrl } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 
 interface Props {
@@ -77,7 +77,11 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
               return (
                 <HStack spacing={4}>
                   <a
-                    href={`/api/mailing-lists/${row.original._id}/download`}
+                    href={generateUrl(`/mailing-lists/:id/download`, {
+                      params: {
+                        id: row.original._id,
+                      },
+                    })}
                     title="Télécharger le fichier"
                     target="_blank"
                     rel="noopener noreferrer"

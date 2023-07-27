@@ -35,7 +35,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       try {
         await createMailingList({ user_id: user._id.toString(), source });
 
-        return response.status(200).send();
+        return response.status(200).send({ success: true });
       } catch (error) {
         throw Boom.badData("Impossible de créer la liste de diffusion");
       }

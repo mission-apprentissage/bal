@@ -27,7 +27,7 @@ export const zMailingListRoutes = {
     "/mailing-list": {
       body: z.object({ source: z.string() }).strict(),
       response: {
-        "2xx": z.undefined(),
+        "2xx": z.object({ success: z.literal(true) }),
       },
     },
   },
@@ -36,7 +36,7 @@ export const zMailingListRoutes = {
     "/mailing-list/:id": {
       params: z.object({ id: zObjectId }).strict(),
       response: {
-        "2xx": z.undefined(),
+        "2xx": z.object({ success: z.literal(true) }),
       },
     },
   },
