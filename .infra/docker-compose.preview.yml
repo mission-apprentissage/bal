@@ -52,11 +52,12 @@ services:
     volumes:
       - /opt/bal/data/mongodb/db:/data/db
     healthcheck:
-      test: curl --fail -I http://localhost:3000/api/health || exit 1
-      interval: 15s
+      test:
+        ["CMD", "mongosh", "--eval", '''db.runCommand("ping").ok''', "--quiet"]
+      interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 6m
+      retries: 12
+      start_period: 10s
     labels:
       - autoheal=true
 
