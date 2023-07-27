@@ -53,7 +53,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: nginx
+        tag: docker.bal.{{env_type}}.nginx
         fluentd-async: "true"
 
   server:
@@ -72,7 +72,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: server
+        tag: docker.bal.{{env_type}}.server
         fluentd-async: "true"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:5000/api/healthcheck"]
@@ -97,7 +97,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: processor
+        tag: docker.bal.{{env_type}}.processor
         fluentd-async: "true"
 
   ui:
@@ -113,7 +113,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: ui
+        tag: docker.bal.{{env_type}}.ui
         fluentd-async: "true"
 
   metabase:
@@ -148,7 +148,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: metabase
+        tag: docker.bal.{{env_type}}.metabase
         fluentd-async: "true"
 
   clamav:
@@ -168,7 +168,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: clamav
+        tag: docker.bal.{{env_type}}.clamav
         fluentd-async: "true"
     volumes:
       - /opt/bal/data/clamav:/var/lib/clamav
@@ -210,14 +210,28 @@ services:
 
   fluentd:
     <<: *default
-    image: fluent/fluentd:v1.16
+    image: grafana/fluent-plugin-loki:main
     user: root
     volumes:
       - /opt/bal/configs/fluentd/conf:/fluentd/etc
       - /opt/bal/data/fluentd:/var/log/fluent
+      - /var/log:/var/log
+      # Needed for journald log ingestion:
+      - /etc/machine-id:/etc/machine-id
+      - /dev/log:/dev/log
+      - /var/run/systemd/journal/:/var/run/systemd/journal/
     ports:
       - "24224:24224"
       - "24224:24224/udp"
+    command:
+      - "fluentd"
+      - "-v"
+      - "-p"
+      - "/fluentd/plugins"
+    environment:
+      LOKI_URL: https://monitoring.apprentissage.beta.gouv.fr/loki
+      # LOKI_USERNAME:
+      # LOKI_PASSWORD:
 
 networks:
   bal_network:

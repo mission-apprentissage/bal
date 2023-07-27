@@ -11,6 +11,8 @@ import { IDocumentMap, modelDescriptors } from "shared/models/models";
 
 import logger from "@/common/logger";
 
+import config from "../../config";
+
 let mongodbClient: MongoClient | null = null;
 
 export const ensureInitialization = () => {
@@ -28,7 +30,7 @@ export const ensureInitialization = () => {
  */
 export const connectToMongodb = async (uri: string) => {
   const client = new MongoClient(uri, {
-    appName: "bal",
+    appName: config.appName,
   });
 
   client.on("connectionPoolReady", () => {
