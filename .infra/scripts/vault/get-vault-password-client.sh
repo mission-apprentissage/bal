@@ -60,4 +60,32 @@ function main() {
   gpgconf --kill gpg-agent
 }
 
+DOCUMENT_CONTENT=$(op document get .vault-password-bal --vault "mna-vault-passwords-common")
+vault_password_file="${SCRIPT_DIR}/../../vault/.vault-password.gpg"
+previous_vault_password_file="${SCRIPT_DIR}/../../vault/.vault-password-previous.gpg"
+readonly VAULT_FILE="${SCRIPT_DIR}/../../vault/vault.yml"
+
+if [ ! -f "$vault_password_file" ]; then
+    echo "$DOCUMENT_CONTENT" > "$vault_password_file"
+    echo "vault password créé avec succès."
+
+# Si le fichier existe et que son contenu est différent
+elif [ "$DOCUMENT_CONTENT" != "$(cat "${vault_password_file}")" ]; then
+    # Renommer l'ancien fichier
+    mv "$vault_password_file" "$previous_vault_password_file"
+    echo "vault-password existant renommé en .vault-password-previous.gpg."
+    
+    # Créer un nouveau fichier avec le contenu actuel
+    echo "$DOCUMENT_CONTENT" > "$vault_password_file"
+    echo "Nouveau vault-password créé avec succès."
+
+    ansible-vault rekey \
+    --vault-id "previous@${SCRIPT_DIR}/get-vault-password-client.sh" \
+    --new-vault-id "default@${SCRIPT_DIR}/get-vault-password-client.sh" \
+    "${VAULT_FILE}"
+
+   rm "${previous_vault_password_file}"
+fi
+
+
 main "$@"
