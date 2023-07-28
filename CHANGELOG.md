@@ -1,3 +1,32 @@
+# [1.49.0](https://github.com/mission-apprentissage/bal/compare/v1.48.0...v1.49.0) (2023-07-28)
+
+
+### Bug Fixes
+
+* _id object type ([a0a9452](https://github.com/mission-apprentissage/bal/commit/a0a9452d68108cc5997f8c452c943a58044e4d8b))
+* add missing routes ([9b40e98](https://github.com/mission-apprentissage/bal/commit/9b40e98daa10cd6deac7b90c124eb315166ff719))
+* api utils server-side & client-side compatible ([f9b6d59](https://github.com/mission-apprentissage/bal/commit/f9b6d59f329c8b8331472ab1aeee7c5d4db43edf))
+* empty additional props ([31d830f](https://github.com/mission-apprentissage/bal/commit/31d830f57b57e0b12171ddab81c8d9ce1704e8c7))
+* mailing-list routes ([0b5ae57](https://github.com/mission-apprentissage/bal/commit/0b5ae57aef16fbd58bd740bbabf3d6bd2f2e8e83))
+* metabase upgrade to v0.46.6.1 ([299b9b8](https://github.com/mission-apprentissage/bal/commit/299b9b81d8b5f5e000cb0eb993b1079edf1bea02))
+* nullable api_key_used_at ([b1815d2](https://github.com/mission-apprentissage/bal/commit/b1815d22e472579f931c863254292457a7332727))
+* revert schema changes ([15f34e7](https://github.com/mission-apprentissage/bal/commit/15f34e70c4e5a8d01e41849f8d0351e6f7dbaab2))
+* server type ([b238dfe](https://github.com/mission-apprentissage/bal/commit/b238dfe30d1206e71130571a8eedb49f552285c0))
+* tests snapshots ([1116d08](https://github.com/mission-apprentissage/bal/commit/1116d08a400b5b49dd781bc5cb7164c2b53af26c))
+* type ui ([82c8bbe](https://github.com/mission-apprentissage/bal/commit/82c8bbe71df1d24a0fbd76ad729d37eb5c496606))
+* types ([d4acb99](https://github.com/mission-apprentissage/bal/commit/d4acb997b56d1dd499ef6f691a6d7a378ae63ab8))
+* typo ([be377da](https://github.com/mission-apprentissage/bal/commit/be377da978b1ef224e640722ed014f05141fc5af))
+* typo ([#256](https://github.com/mission-apprentissage/bal/issues/256)) ([eeba2c6](https://github.com/mission-apprentissage/bal/commit/eeba2c6a29acaf255869b8b1f656454de971bd21))
+* use nullish ([1ee9952](https://github.com/mission-apprentissage/bal/commit/1ee9952f01ca16f8432fa1e9935e29ed80eda45f))
+
+
+### Features
+
+* cypress script with stop condition [skip ci] ([#250](https://github.com/mission-apprentissage/bal/issues/250)) ([6fe8c7a](https://github.com/mission-apprentissage/bal/commit/6fe8c7a51abb17cbe3902c220d3db84d688dea1f))
+* remove json schema ([f15e37e](https://github.com/mission-apprentissage/bal/commit/f15e37e761e7de90ca98ffbc18b10d051744cc8a))
+* schema zod ([0aa86c1](https://github.com/mission-apprentissage/bal/commit/0aa86c1f58f2deadc6360018fcb536f0c88f26dc))
+* schema zod ([#245](https://github.com/mission-apprentissage/bal/issues/245)) ([c1e03b5](https://github.com/mission-apprentissage/bal/commit/c1e03b58d8b2619f62278d16a283e46159a66915))
+
 # [1.48.0](https://github.com/mission-apprentissage/bal/compare/v1.47.2...v1.48.0) (2023-07-21)
 
 
