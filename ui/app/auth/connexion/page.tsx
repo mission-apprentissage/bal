@@ -17,15 +17,18 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { IReqPostLogin, IStatus } from "shared/routes/auth.routes";
+import { IBody, IPostRoutes } from "shared";
+import { IStatus } from "shared/routes/auth.routes";
 
 import Link from "../../../components/link/Link";
 import { useAuth } from "../../../context/AuthContext";
 import { AlertRounded } from "../../../theme/icons/AlertRounded";
 import { ShowPassword } from "../../../theme/icons/ShowPassword";
-import { api } from "../../../utils/api.utils";
+import { apiPost } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import { NavLink } from "../../components/NavLink";
+
+type Route = IPostRoutes["/auth/login"];
 
 const ConnexionPage = () => {
   const { push } = useRouter();
@@ -36,12 +39,11 @@ const ConnexionPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IReqPostLogin>();
+  } = useForm<IBody<Route>>();
 
-  const onSubmit: SubmitHandler<IReqPostLogin> = async (data) => {
+  const onSubmit: SubmitHandler<IBody<Route>> = async (data) => {
     try {
-      const response = await api.post("/auth/login", data);
-      setUser(response.data);
+      setUser(await apiPost("/auth/login", { body: data }));
     } catch (error) {
       setStatus({ error: true, message: "Impossible de se connecter." });
       console.error(error);

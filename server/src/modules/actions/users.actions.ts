@@ -1,5 +1,5 @@
 import { Filter, ObjectId, UpdateFilter } from "mongodb";
-import { IUser } from "shared/models/user.model";
+import { IUser, IUserWithPerson } from "shared/models/user.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -33,35 +33,35 @@ const DEFAULT_UNWIND = {
 export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   const person = await createPerson({
     email: data.email,
-    organisation_id,
+    organisations: [organisation_id],
     _meta: { source: "bal" },
   });
-
-  if (!person) {
-    throw new Error("Can't create person");
-  }
 
   const _id = new ObjectId();
 
   const password = hashPassword(data.password);
   const now = new Date();
-  const { insertedId: userId } = await getDbCollection("users").insertOne({
+  const user = {
     ...data,
     person_id: person._id.toString(),
     _id,
     password,
     updated_at: now,
     created_at: now,
-  });
+  };
+  const { insertedId: userId } = await getDbCollection("users").insertOne(user);
 
-  const user = await findUser({ _id: userId });
-
-  return user;
+  return {
+    ...user,
+    _id: userId,
+  };
 };
 
-export const findUsers = async (filter: Filter<IUser>) => {
+export const findUsers = async (
+  filter: Filter<IUser>
+): Promise<IUserWithPerson[]> => {
   const users = await getDbCollection("users")
-    .aggregate<IUser>([
+    .aggregate<IUserWithPerson>([
       {
         $match: filter,
       },
@@ -77,9 +77,11 @@ export const findUsers = async (filter: Filter<IUser>) => {
   return users;
 };
 
-export const findUser = async (filter: Filter<IUser>) => {
+export const findUser = async (
+  filter: Filter<IUser>
+): Promise<IUserWithPerson | null> => {
   const user = await getDbCollection("users")
-    .aggregate<IUser>([
+    .aggregate<IUserWithPerson>([
       {
         $match: filter,
       },

@@ -1,101 +1,64 @@
-import { FromSchema } from "json-schema-to-ts";
+import { Jsonify } from "type-fest";
+import { z } from "zod";
 
-import { deserialize } from "..";
-import { IModelDescriptor } from "./common";
+import { IModelDescriptor, zObjectId } from "./common";
 
 const collectionName = "documents" as const;
 
 const indexes: IModelDescriptor["indexes"] = [];
 
-export const SDocument = {
-  type: "object",
-  properties: {
-    _id: {
-      type: "string",
-      format: "ObjectId",
-      description: "Identifiant du document",
-    },
-    type_document: {
-      type: "string",
-      description: "Le type de document (exemple: DECA, etc..)",
-    },
-    ext_fichier: {
-      type: "string",
-      description: "Le type de fichier extension",
-      enum: ["xlsx", "xls", "csv"], // 10mb
-    },
-    nom_fichier: {
-      type: "string",
-      description: "Le nom de fichier",
-    },
-    chemin_fichier: {
-      type: "string",
-      description: "Chemin du fichier binaire",
-    },
-    taille_fichier: {
-      type: "integer",
-      description: "Taille du fichier en bytes",
-    },
-    hash_secret: {
-      type: "string",
-      description: "Hash fichier",
-    },
-    hash_fichier: {
-      type: "string",
-      description: "Checksum fichier",
-    },
-    import_progress: {
-      type: "number",
-      description: "Progress percentage (-1 not started)",
-    },
-    lines_count: {
-      type: "integer",
-      description: "Number of lines",
-    },
-    added_by: {
-      type: "string",
-      description: "Qui a ajouté le fichier",
-    },
-    updated_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date de mise à jour en base de données",
-    },
-    created_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date d'ajout en base de données",
-    },
-  },
-  required: [
-    "_id",
-    "type_document",
-    "ext_fichier",
-    "nom_fichier",
-    "chemin_fichier",
-    "taille_fichier",
-    "hash_secret",
-    "hash_fichier",
-    "added_by",
-    "created_at",
-  ],
-  additionalProperties: false,
-} as const;
+export const ZDocument = z
+  .object({
+    _id: zObjectId,
+    type_document: z
+      .string()
+      .describe("Le type de document (exemple: DECA, etc..)"),
+    ext_fichier: z
+      .enum(["xlsx", "xls", "csv"])
+      .describe("Le type de fichier extension"),
+    nom_fichier: z.string().describe("Le nom de fichier"),
+    chemin_fichier: z.string().describe("Chemin du fichier binaire"),
+    taille_fichier: z
+      .number()
+      .int()
+      .finite()
+      .describe("Taille du fichier en bytes"),
+    hash_secret: z.string().describe("Hash fichier"),
+    hash_fichier: z.string().describe("Checksum fichier"),
+    import_progress: z
+      .number()
+      .finite()
+      .optional()
+      .describe("Progress percentage (-1 not started)"),
+    lines_count: z
+      .number()
+      .int()
+      .finite()
+      .optional()
+      .describe("Number of lines"),
+    added_by: z.string().describe("Qui a ajouté le fichier"),
+    updated_at: z
+      .date()
+      .optional()
+      .describe("Date de mise à jour en base de données"),
+    created_at: z.date().describe("Date d'ajout en base de données"),
+  })
+  .strict();
 
-export interface IDocument
-  extends FromSchema<
-    typeof SDocument,
-    {
-      deserialize: deserialize;
-    }
-  > {}
+export const zDocumentPublic = ZDocument.omit({
+  hash_fichier: true,
+  hash_secret: true,
+});
+
+export type IDocument = z.output<typeof ZDocument>;
+export type IDocumentJson = Jsonify<z.input<typeof zDocumentPublic>>;
 
 export interface IDocumentWithContent<TContent> extends IDocument {
   content: TContent;
 }
 
 export default {
-  schema: SDocument as any as IModelDescriptor["schema"],
+  zod: ZDocument,
   indexes,
   collectionName,
 };

@@ -1,10 +1,7 @@
-import { ObjectId, RootFilterOperators } from "mongodb";
+import { notFound } from "@hapi/boom";
+import { RootFilterOperators } from "mongodb";
+import { zRoutes } from "shared";
 import { IOrganisation } from "shared/models/organisation.model";
-import { SReqParamsSearchPagination } from "shared/routes/common.routes";
-import {
-  SResGetOrganisation,
-  SResGetOrganisations,
-} from "shared/routes/organisation.routes";
 
 import {
   findOrganisation,
@@ -17,15 +14,8 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/admin/organisations",
     {
-      schema: {
-        response: { 200: SResGetOrganisations },
-        querystring: SReqParamsSearchPagination,
-      } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      schema: zRoutes.get["/admin/organisations"],
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       const filter: RootFilterOperators<IOrganisation> = {};
@@ -38,33 +28,26 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
 
       const organisations = await findOrganisations(filter);
 
-      return response.status(200).send(organisations as any);
+      return response.status(200).send(organisations);
     }
   );
 
   server.get(
     "/admin/organisations/:id",
     {
-      schema: {
-        response: { 200: SResGetOrganisation },
-        params: {
-          type: "object",
-          properties: { id: { type: "string" } },
-          required: ["id"],
-        },
-      } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      schema: zRoutes.get["/admin/organisations/:id"],
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       const organisation = await findOrganisation({
-        _id: new ObjectId(request.params.id),
+        _id: request.params.id,
       });
 
-      return response.status(200).send(organisation as any); //IResGetOrganisation
+      if (!organisation) {
+        throw notFound();
+      }
+
+      return response.status(200).send(organisation);
     }
   );
 };

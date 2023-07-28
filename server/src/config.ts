@@ -2,7 +2,10 @@ import env from "env-var";
 
 const config = {
   appName: env.get("APP_NAME").default("bal").asString(),
-  env: env.get("MNA_BAL_ENV").required().asString(),
+  env: env
+    .get("MNA_BAL_ENV")
+    .required()
+    .asEnum(["local", "recette", "production", "preview", "test"]),
   publicUrl: env.get("MNA_BAL_PUBLIC_URL").required().asString(),
   email: env
     .get("MNA_BAL_EMAIL")

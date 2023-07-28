@@ -1,35 +1,32 @@
 import { Box, Center, Heading, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { FC, useEffect, useState } from "react";
-import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
+import { IJobJson } from "shared/models/job.model";
 
-import { api } from "../../../utils/api.utils";
+import { apiGet } from "../../../utils/api.utils";
 
 interface Props {
-  mailingList: IJob;
+  mailingList: IJobJson;
   onDone: () => void;
 }
+
+const doneStatuses: IJobJson["status"][] = ["finished", "errored", "blocked"];
 
 const GeneratingMailingList: FC<Props> = ({
   mailingList: initialMailingList,
   onDone,
 }) => {
-  const [mailingList, setMailingList] = useState<IJob>(initialMailingList);
-  const progression = Math.ceil(
-    (mailingList.payload?.processed as number) ?? 0
-  );
+  const [mailingList, setMailingList] = useState<IJobJson>(initialMailingList);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const progression = Math.ceil((mailingList.payload as any)?.processed ?? 0);
 
   const fetchMailingList = async () => {
-    const { data } = await api.get(`/mailing-lists/${mailingList._id}`);
+    const data = await apiGet(`/mailing-lists/:id`, {
+      params: { id: mailingList._id },
+    });
     setMailingList(data);
 
-    if (
-      [
-        JOB_STATUS_LIST.FINISHED,
-        JOB_STATUS_LIST.ERRORED,
-        JOB_STATUS_LIST.BLOCKED,
-      ].includes(data.status)
-    ) {
+    if (doneStatuses.includes(data.status)) {
       onDone();
     }
   };

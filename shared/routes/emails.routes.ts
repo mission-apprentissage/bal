@@ -1,43 +1,41 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
 
-export const SParamsGetEmailPreview = {
-  type: "object",
-  properties: {
-    token: { type: "string" },
+export const zEmailParams = z.object({ token: z.string() }).strict();
+
+export const zEmailRoutes = {
+  get: {
+    "/emails/:token/preview": {
+      params: zEmailParams,
+      response: {
+        "2xx": z.unknown(),
+      },
+    },
+    "/emails/:token/markAsOpened": {
+      params: zEmailParams,
+      response: {
+        "2xx": z.unknown(),
+      },
+    },
+    "/emails/:token/unsubscribe": {
+      params: zEmailParams,
+      response: {
+        "2xx": z.unknown(),
+      },
+    },
   },
-  required: ["token"],
-} as const;
-
-export type IParamsGetEmailPreview = FromSchema<typeof SParamsGetEmailPreview>;
-
-export const SReqPostEmailsWebHook = {
-  type: "object",
-  properties: {
-    event: { type: "string" }, //https://developers.sendinblue.com/docs/transactional-webhooks
-    "message-id": { type: "string" },
+  post: {
+    "/emails/webhook": {
+      body: z
+        .object({
+          event: z.string(), //https://developers.sendinblue.com/docs/transactional-webhooks
+          "message-id": z.string(),
+        })
+        .strict(),
+      response: {
+        "2xx": z.unknown(),
+      },
+    },
   },
-  required: ["event", "message-id"],
-} as const;
-
-export type IReqPostEmailsWebHook = FromSchema<typeof SReqPostEmailsWebHook>;
-
-// export const SResEmailHTML = {
-//   type: "string",
-//   format: "buffer",
-// } as const;
-
-// export interface IResEmailHTML
-//   extends FromSchema<
-//     typeof SResEmailHTML,
-//     {
-//       deserialize: [
-//         {
-//           pattern: {
-//             type: "string";
-//             format: "buffer";
-//           };
-//           output: Buffer;
-//         }
-//       ];
-//     }
-//   > {}
+  put: {},
+  delete: {},
+};

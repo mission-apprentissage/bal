@@ -2,7 +2,7 @@
 
 import { Heading, ListItem, UnorderedList } from "@chakra-ui/react";
 import { FC } from "react";
-import { IResGetOrganisation } from "shared/routes/organisation.routes";
+import { IOrganisationJson } from "shared/models/organisation.model";
 
 import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
 import Table from "../../../../../components/table/Table";
@@ -11,7 +11,7 @@ import Breadcrumb, {
 } from "../../../../components/breadcrumb/Breadcrumb";
 
 interface Props {
-  organisation: IResGetOrganisation;
+  organisation: IOrganisationJson;
 }
 
 const OrganisationView: FC<Props> = ({ organisation }) => {
@@ -21,8 +21,7 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
         pages={[
           PAGES.homepage(),
           PAGES.adminOrganisations(),
-          // @ts-ignore
-          PAGES.adminViewOrganisation(organisation._id as string),
+          PAGES.adminViewOrganisation(organisation._id),
         ]}
       />
       <Heading as="h2" fontSize="2xl" mb={[3, 6]}>

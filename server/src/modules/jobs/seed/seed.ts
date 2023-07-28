@@ -13,23 +13,25 @@ export const seed = async () => {
     ?._id as ObjectId | undefined;
 
   if (!dinumOrganisationId) {
-    dinumOrganisationId = await createOrganisation({
-      nom: "Beta gouv",
-      email_domains: [
-        "beta.gouv.fr",
-        "recette.bal.apprentissage.beta.gouv.fr",
-        "preview.bal.apprentissage.beta.gouv.fr",
-        "test.fr",
-      ],
-      etablissements: [
-        {
-          nom: "Dinum",
-          siret: "13002526500013", // Siret Dinum
-          is_hq: true,
-          is_close: false,
-        },
-      ],
-    });
+    dinumOrganisationId = (
+      await createOrganisation({
+        nom: "Beta gouv",
+        email_domains: [
+          "beta.gouv.fr",
+          "recette.bal.apprentissage.beta.gouv.fr",
+          "preview.bal.apprentissage.beta.gouv.fr",
+          "test.fr",
+        ],
+        etablissements: [
+          {
+            nom: "Dinum",
+            siret: "13002526500013", // Siret Dinum
+            is_hq: true,
+            is_close: false,
+          },
+        ],
+      })
+    )._id;
   }
 
   if (config.env !== "production") {

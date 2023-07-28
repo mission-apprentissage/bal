@@ -2,12 +2,12 @@ import { Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { IResGetUsers } from "shared/routes/user.routes";
+import { IUserWithPersonPublic } from "shared/models/user.model";
 
 import FormSearch from "../../../../components/formSearch/FormSearch";
 import Table from "../../../../components/table/Table";
 import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";
-import { api } from "../../../../utils/api.utils";
+import { apiGet } from "../../../../utils/api.utils";
 import { formatDate } from "../../../../utils/date.utils";
 import {
   formatUrlWithNewParams,
@@ -26,11 +26,11 @@ const UserList = () => {
     q: searchValue,
   } = getSearchParamsForQuery(searchParams);
 
-  const { data: users } = useQuery<IResGetUsers>({
+  const { data: users } = useQuery<IUserWithPersonPublic[]>({
     queryKey: ["users", { searchValue, page, limit }],
     queryFn: async () => {
-      const { data } = await api.get("/admin/users", {
-        params: { q: searchValue, page, limit },
+      const data = await apiGet("/admin/users", {
+        querystring: { q: searchValue, page, limit },
       });
 
       return data;
@@ -74,7 +74,6 @@ const UserList = () => {
                   flexGrow={1}
                 >
                   <Text isTruncated maxWidth={400}>
-                    {/* @ts-ignore */}
                     {getPersonDisplayName(person)}
                   </Text>
                 </Text>
@@ -91,7 +90,9 @@ const UserList = () => {
             header: () => "Dernière utilisation API",
             cell: ({ row }) => {
               const date = row.original.api_key_used_at;
-              return date ? formatDate(date, "PPP à p") : "Jamais";
+              return date
+                ? formatDate(date as unknown as string, "PPP à p")
+                : "Jamais";
             },
           },
           actions: {

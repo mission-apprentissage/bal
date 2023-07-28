@@ -143,6 +143,14 @@ Cette commande exécutera tous les tests du projet et vous affichera les résult
 
 2. D'avoir lancé l'application car les tests utilisent la base de donnée.
 
+#### Snapshots
+
+Pour mettre à jour les snapshots, utilisez la commande suivante dans `/shared`
+
+```bash
+yarn test --update
+```
+
 ## Aller plus loin
 
 - [Développement](./docs/developping.md)

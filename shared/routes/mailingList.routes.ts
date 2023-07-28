@@ -1,24 +1,43 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
 
-import { SJob } from "../models/job.model";
+import { zObjectId } from "../models/common";
+import { ZJob } from "../models/job.model";
 
-export const SReqGetMailingList = {
-  type: "object",
-  properties: {
-    source: { type: "string" },
+export const zMailingListRoutes = {
+  get: {
+    "/mailing-lists": {
+      response: {
+        "2xx": z.array(ZJob),
+      },
+    },
+    "/mailing-lists/:id": {
+      params: z.object({ id: zObjectId }),
+      response: {
+        "2xx": ZJob,
+      },
+    },
+    "/mailing-lists/:id/download": {
+      params: z.object({ id: zObjectId }),
+      response: {
+        "2xx": z.unknown(),
+      },
+    },
   },
-  required: ["source"],
-} as const;
-
-export type IReqGetMailingList = FromSchema<typeof SReqGetMailingList>;
-
-export const SResGetMailingLists = {
-  type: "array",
-  items: SJob,
-} as const;
-
-export type IResGetMailingLists = FromSchema<typeof SResGetMailingLists>;
-
-export const SResGetMailingList = SJob;
-
-export type IResGetMailingList = FromSchema<typeof SResGetMailingList>;
+  post: {
+    "/mailing-list": {
+      body: z.object({ source: z.string() }).strict(),
+      response: {
+        "2xx": z.object({ success: z.literal(true) }),
+      },
+    },
+  },
+  put: {},
+  delete: {
+    "/mailing-list/:id": {
+      params: z.object({ id: zObjectId }).strict(),
+      response: {
+        "2xx": z.object({ success: z.literal(true) }),
+      },
+    },
+  },
+};

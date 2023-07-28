@@ -1,15 +1,16 @@
 "use client";
 import { Box, Heading } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { IResGetHealthCheck } from "shared/routes/core.routes";
+import { IGetRoutes, IResponse } from "shared";
 
-import { api } from "../../../utils/api.utils";
+import { apiGet } from "../../../utils/api.utils";
 
 const UsageHealthcheckPage = () => {
-  const [responseData, setResponseData] = useState<IResGetHealthCheck>();
+  const [responseData, setResponseData] =
+    useState<IResponse<IGetRoutes["/healthcheck"]>>();
   useEffect(() => {
-    api.get("/healthcheck").then((response) => {
-      setResponseData(response.data);
+    apiGet("/healthcheck", {}).then((data) => {
+      setResponseData(data);
     });
   }, []);
 

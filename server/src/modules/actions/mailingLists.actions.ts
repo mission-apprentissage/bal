@@ -2,8 +2,9 @@ import { Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 
 import { stringify } from "csv-stringify";
-import { Filter, FindOptions, ObjectId } from "mongodb";
+import { Filter, FindCursor, FindOptions, ObjectId } from "mongodb";
 import { IDocument, IDocumentWithContent } from "shared/models/document.model";
+import { IDocumentContent } from "shared/models/documentContent.model";
 import { IJob } from "shared/models/job.model";
 
 import logger from "@/common/logger";
@@ -59,6 +60,12 @@ interface OutputWish {
   lien_lba: string;
   libelle_etab_accueil: string;
   libelle_formation: string;
+}
+
+interface IContent extends OutputWish {
+  email: string;
+  nom_eleve: string;
+  prenom_eleve: string;
 }
 
 export const MAILING_LIST_DOCUMENT_PREFIX = "mailing-list";
@@ -222,37 +229,42 @@ const handleSourceVoeuxAffelnetParcoursup = async (
   }
 };
 
-async function* getLine(cursor) {
-  let currentLine = {
-    email: null,
-    nom_eleve: null,
-    prenom_eleve: null,
-    wishes: [] as OutputWish[],
-  };
-  for await (const {
-    content: { email, nom_eleve, prenom_eleve, ...rest },
-  } of cursor) {
-    if (
-      (currentLine.email !== null && email !== currentLine.email) ||
-      nom_eleve !== currentLine.nom_eleve ||
-      prenom_eleve !== currentLine.prenom_eleve
-    ) {
-      yield currentLine;
-      currentLine = {
-        email: null,
-        nom_eleve: null,
-        prenom_eleve: null,
-        wishes: [],
-      };
+interface ILine {
+  email: string;
+  nom_eleve: string;
+  prenom_eleve: string;
+  wishes: OutputWish[];
+}
+
+async function* getLine(cursor: FindCursor<IDocumentContent>) {
+  let currentLine: ILine | null = null;
+  for await (const { content } of cursor) {
+    if (!content) continue;
+
+    const { email, nom_eleve, prenom_eleve, ...rest } =
+      content as unknown as IContent;
+    if (currentLine !== null) {
+      if (
+        email !== currentLine.email ||
+        nom_eleve !== currentLine.nom_eleve ||
+        prenom_eleve !== currentLine.prenom_eleve
+      ) {
+        yield currentLine;
+        currentLine = null;
+      }
     }
 
-    currentLine.email = email;
-    currentLine.nom_eleve = nom_eleve;
-    currentLine.prenom_eleve = prenom_eleve;
-    currentLine.wishes.push(rest);
+    currentLine = {
+      email,
+      nom_eleve,
+      prenom_eleve,
+      wishes: [],
+    };
+
+    currentLine.wishes.push(rest as OutputWish);
   }
 
-  if (currentLine.email !== null) yield currentLine;
+  if (currentLine !== null) yield currentLine;
 }
 
 export const createMailingListFile = async (document: IDocument) => {
@@ -296,7 +308,7 @@ export const createMailingListFile = async (document: IDocument) => {
           "libelle_etab_accueil",
           "libelle_formation",
         ];
-        const flat = {
+        const flat: Record<string, string> = {
           email: line.email,
           nom_eleve: line.nom_eleve,
           prenom_eleve: line.prenom_eleve,

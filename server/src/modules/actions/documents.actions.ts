@@ -7,11 +7,11 @@ import {
   UpdateFilter,
 } from "mongodb";
 import { oleoduc, writeData } from "oleoduc";
-// @ts-ignore
+import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
-import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
 import { Readable } from "stream";
+import { JsonObject } from "type-fest";
 
 import logger from "@/common/logger";
 import * as crypto from "@/common/utils/cryptoUtils";
@@ -26,7 +26,11 @@ import {
 } from "../../common/utils/ovhUtils";
 import { parseCsv } from "../../common/utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
-import { parseContentLine } from "./deca.actions";
+import {
+  DECAParsedContentLine,
+  importDecaContent,
+  parseContentLine,
+} from "./deca.actions";
 import {
   createDocumentContent,
   deleteDocumentContent,
@@ -35,26 +39,30 @@ import { MAILING_LIST_DOCUMENT_PREFIX } from "./mailingLists.actions";
 
 const testMode = config.env === "test";
 
-interface ICreateDocument extends Omit<IDocument, "_id"> {
+interface ICreate extends Omit<IDocument, "_id"> {
   _id: ObjectId;
 }
 
-export const createDocument = async (data: ICreateDocument) => {
+export const createDocument = async (data: ICreate): Promise<IDocument> => {
   const now = new Date();
-  const { insertedId: _id } = await getDbCollection("documents").insertOne({
+  const doc = {
     ...data,
     updated_at: now,
     created_at: now,
-  });
+  };
+  const { insertedId } = await getDbCollection("documents").insertOne(doc);
 
-  return findDocument({ _id });
+  return {
+    ...doc,
+    _id: insertedId,
+  };
 };
 
 export const findDocument = async (
   filter: Filter<IDocument>,
   options?: FindOptions<IDocument>
-) => {
-  return await getDbCollection("documents").findOne<IDocument>(filter, options);
+): Promise<IDocument | null> => {
+  return await getDbCollection("documents").findOne(filter, options);
 };
 
 export const findDocuments = async (
@@ -81,7 +89,7 @@ export const updateDocument = async (
       returnDocument: "after",
     }
   );
-  return updated.value as IDocument | null;
+  return updated.value;
 };
 
 export const getDocumentTypes = async (): Promise<string[]> => {
@@ -134,7 +142,7 @@ export const createEmptyDocument = async (
     updated_at: new Date(),
     created_at: new Date(),
   });
-  return document as IDocument;
+  return document;
 };
 
 interface IUploadDocumentOptionsWithCreate {
@@ -231,6 +239,7 @@ export const extractDocumentContent = async ({
 }: {
   document: IDocument;
   delimiter?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formatter?: (line: any) => any;
 }) => {
   const stream = await getFromStorage(document.chemin_fichier);
@@ -255,7 +264,7 @@ export const extractDocumentContent = async ({
     parseCsv({
       delimiter,
     }),
-    writeData(async (json) => {
+    writeData(async (json: JsonObject) => {
       importedLength += Buffer.byteLength(
         JSON.stringify(Object.values(json)).replace(/^\[(.*)\]$/, "$1")
       );
@@ -332,6 +341,11 @@ export const importDocumentContent = async <
 
     if (!documentContent) continue;
 
+    if (document.type_document === DOCUMENT_TYPES.DECA) {
+      const decaContent = contentLine as unknown as DECAParsedContentLine;
+      await importDecaContent(decaContent.emails, decaContent.siret);
+    }
+
     documentContents = [...documentContents, documentContent];
   }
 
@@ -362,7 +376,9 @@ export const deleteDocumentById = async (documentId: ObjectId) => {
   await getDbCollection("documents").deleteOne({ _id: document._id });
 };
 
-export const handleDocumentFileContent = async ({ document_id }) => {
+export const handleDocumentFileContent = async ({
+  document_id,
+}: Record<"document_id", ObjectId>) => {
   const document = await findDocument({
     _id: document_id,
   });

@@ -1,17 +1,8 @@
 import { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
 import { ObjectId } from "mongodb";
+import { zRoutes } from "shared";
 import { IDocument } from "shared/models/document.model";
-import { SResError } from "shared/routes/common.routes";
-import {
-  IResGetDocuments,
-  IResGetDocumentTypes,
-  IResPostAdminUpload,
-  SReqQueryPostAdminUpload,
-  SResGetDocuments,
-  SResGetDocumentTypes,
-  SResPostAdminUpload,
-} from "shared/routes/upload.routes";
 
 import logger from "@/common/logger";
 
@@ -55,18 +46,8 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
   server.post(
     "/admin/upload",
     {
-      schema: {
-        querystring: SReqQueryPostAdminUpload,
-        response: {
-          200: SResPostAdminUpload,
-          401: SResError,
-        },
-      } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      schema: zRoutes.post["/admin/upload"],
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       const { type_document } = request.query;
@@ -113,9 +94,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           },
         });
 
-        return response
-          .status(200)
-          .send(document as unknown as IResPostAdminUpload);
+        return response.status(200).send(document);
       } catch (error) {
         const err = server.multipartErrors;
         logger.debug(err);
@@ -127,39 +106,23 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/admin/documents",
     {
-      schema: {
-        response: {
-          200: SResGetDocuments,
-        },
-      } as const,
-      preHandler: [
-        server.auth([server.validateSession]),
-        ensureUserIsAdmin,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ] as any,
+      schema: zRoutes.get["/admin/documents"],
+      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (_request, response) => {
-      const documents = (await findDocuments(
+      const documents = await findDocuments(
         { import_progress: { $exists: true } },
         { projection: { hash_secret: 0, hash_fichier: 0 } }
-      )) as IResGetDocuments;
+      );
 
-      return response.status(200).send(documents as any); // TODO
+      return response.status(200).send(documents);
     }
   );
 
-  server.delete<{
-    Params: { id: string };
-  }>(
+  server.delete(
     "/admin/document/:id",
     {
-      schema: {
-        params: {
-          type: "object",
-          properties: { id: { type: "string" } },
-          required: ["id"],
-        },
-      },
+      schema: zRoutes.delete["/admin/document/:id"],
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
@@ -169,18 +132,10 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get<{
-    Reply: {
-      200: IResGetDocumentTypes;
-    };
-  }>(
+  server.get(
     "/admin/documents/types",
     {
-      schema: {
-        response: {
-          200: SResGetDocumentTypes,
-        },
-      },
+      schema: zRoutes.get["/admin/documents/types"],
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (_request, response) => {

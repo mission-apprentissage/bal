@@ -1,14 +1,9 @@
 import { IncomingMessage } from "node:http";
 
-import Boom from "@hapi/boom";
+import Boom, { notFound } from "@hapi/boom";
 import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
-import { IUser } from "shared/models/user.model";
-import {
-  SReqGetMailingList,
-  SResGetMailingList,
-  SResGetMailingLists,
-} from "shared/routes/mailingList.routes";
+import { zRoutes } from "shared";
 import { Readable } from "stream";
 
 import logger from "../../common/logger";
@@ -23,28 +18,24 @@ import {
   findMailingLists,
 } from "../actions/mailingLists.actions";
 import { Server } from "./server";
+import { getUserFromRequest } from "./utils/auth.strategies";
 import { noop } from "./utils/upload.utils";
 
 export const mailingListRoutes = ({ server }: { server: Server }) => {
   server.post(
     "/mailing-list",
     {
-      schema: {
-        body: SReqGetMailingList,
-      } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      schema: zRoutes.post["/mailing-list"],
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const { source } = request.body;
-      const user = request.user as IUser;
+      const user = getUserFromRequest(request);
 
       try {
         await createMailingList({ user_id: user._id.toString(), source });
 
-        return response.status(200).send();
+        return response.status(200).send({ success: true });
       } catch (error) {
         throw Boom.badData("Impossible de créer la liste de diffusion");
       }
@@ -54,18 +45,11 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/mailing-lists",
     {
-      schema: {
-        response: {
-          200: SResGetMailingLists,
-        },
-      } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      schema: zRoutes.get["/mailing-lists"],
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
-      const user = request.user as IUser;
+      const user = getUserFromRequest(request);
 
       const mailingLists = await findMailingLists(
         {
@@ -76,27 +60,15 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         }
       );
 
-      return response.status(200).send(mailingLists as any);
+      return response.status(200).send(mailingLists);
     }
   );
 
   server.get(
     "/mailing-lists/:id",
     {
-      schema: {
-        params: {
-          type: "object",
-          properties: { id: { type: "string" } },
-          required: ["id"],
-        },
-        response: {
-          200: SResGetMailingList,
-        },
-      } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      schema: zRoutes.get["/mailing-lists/:id"],
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const { user } = request;
@@ -106,28 +78,23 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         _id: new ObjectId(id),
       });
 
+      if (!mailingList) {
+        throw notFound();
+      }
+
       if (mailingList?.payload?.user_id !== user?._id.toString()) {
         throw Boom.forbidden("Forbidden");
       }
 
-      return response.status(200).send(mailingList as any);
+      return response.status(200).send(mailingList);
     }
   );
 
   server.get(
     "/mailing-lists/:id/download",
     {
-      schema: {
-        params: {
-          type: "object",
-          properties: { id: { type: "string" } },
-          required: ["id"],
-        },
-      } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      schema: zRoutes.get["/mailing-lists/:id/download"],
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const { user } = request;
@@ -161,6 +128,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       let fileNotFound = false;
       try {
         stream = await getFromStorage(document.chemin_fichier);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         if (error.message.includes("Status code 404")) {
           fileNotFound = true;
@@ -194,17 +162,8 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
   server.delete(
     "/mailing-list/:id",
     {
-      schema: {
-        params: {
-          type: "object",
-          properties: { id: { type: "string" } },
-          required: ["id"],
-        },
-      } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      schema: zRoutes.delete["/mailing-list/:id"],
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
       const { user } = request;

@@ -3,28 +3,24 @@
 import { Box, Button, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import NavLink from "next/link";
-import { IDocument } from "shared/models/document.model";
+import { IDocumentJson } from "shared/models/document.model";
 
 import Table from "../../../components/table/Table";
 import { Bin } from "../../../theme/icons/Bin";
-import { api } from "../../../utils/api.utils";
+import { apiDelete, apiGet } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 import { formatBytes } from "../../../utils/file.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 
 const AdminImportPage = () => {
-  const { data: documentLists } = useQuery<IDocument[]>({
+  const { data: documentLists } = useQuery<IDocumentJson[]>({
     queryKey: ["documentLists"],
-    queryFn: async () => {
-      const { data } = await api.get("/admin/documents");
-
-      return data;
-    },
+    queryFn: async () => apiGet("/admin/documents", {}),
     refetchInterval: 1000,
   });
 
   const onDeleteDocument = async (document_id: string) => {
-    await api.delete(`/admin/document/${document_id}`);
+    await apiDelete(`/admin/document/:id`, { params: { id: document_id } });
   };
 
   return (
@@ -86,10 +82,7 @@ const AdminImportPage = () => {
               cell: ({ row }) => {
                 return (
                   row.original.created_at &&
-                  formatDate(
-                    row.original.created_at as any,
-                    "dd/MM/yyyy à HH:mm"
-                  )
+                  formatDate(row.original.created_at, "dd/MM/yyyy à HH:mm")
                 );
               },
             },

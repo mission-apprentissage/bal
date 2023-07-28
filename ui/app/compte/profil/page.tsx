@@ -8,13 +8,11 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { AxiosResponse } from "axios";
 import { useState } from "react";
-import { IResGetGenerateApiKey } from "shared/routes/user.routes";
 
 import { Dialog } from "../../../components/dialog/Dialog";
 import { useAuth } from "../../../context/AuthContext";
-import { api } from "../../../utils/api.utils";
+import { apiGet } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 
 const ProfilPage = () => {
@@ -37,12 +35,9 @@ const ProfilPage = () => {
 
   const generateApiKey = async () => {
     try {
-      const response = await api.get<
-        object,
-        AxiosResponse<IResGetGenerateApiKey>
-      >("/user/generate-api-key");
+      const data = await apiGet("/user/generate-api-key", {});
 
-      setApiKey(response.data.api_key);
+      setApiKey(data.api_key);
     } catch (error) {
       console.error(error);
       toast({
@@ -81,12 +76,12 @@ const ProfilPage = () => {
           {user.api_key_used_at ? (
             <>
               {`Dernière utilisation le ${formatDate(
-                user.api_key_used_at,
+                user.api_key_used_at as unknown as string,
                 "PPP à p"
               )}`}
             </>
           ) : (
-            <>Ce jeton n'a pas encore été utilisée</>
+            <>Ce jeton n'a pas encore été utilisé</>
           )}
         </Text>
       )}

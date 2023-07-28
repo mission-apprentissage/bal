@@ -1,13 +1,6 @@
-import Boom from "@hapi/boom";
-import {
-  SReqGetResetPassword,
-  SReqHeadersAuthorization,
-  SReqPostLogin,
-  SReqPostResetPassword,
-  SResGetSession,
-  SResPostLogin,
-} from "shared/routes/auth.routes";
-import { SResError } from "shared/routes/common.routes";
+import Boom, { forbidden } from "@hapi/boom";
+import { zRoutes } from "shared";
+import { IUserWithPerson, toPublicUser } from "shared/models/user.model";
 
 import config from "@/config";
 
@@ -27,14 +20,14 @@ export const authRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/auth/session",
     {
-      schema: {
-        response: { 200: SResGetSession },
-        headers: SReqHeadersAuthorization,
-      } as const,
+      schema: zRoutes.get["/auth/session"],
       preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
-      return response.status(200).send(request.user);
+      if (!request.user) {
+        throw forbidden();
+      }
+      return response.status(200).send(toPublicUser(request.user));
     }
   );
 
@@ -44,18 +37,15 @@ export const authRoutes = ({ server }: { server: Server }) => {
   server.post(
     "/auth/login",
     {
-      schema: {
-        body: SReqPostLogin,
-        response: {
-          200: SResPostLogin,
-          403: SResError,
-        },
-      } as const,
+      schema: zRoutes.post["/auth/login"],
     },
     async (request, response) => {
       const { email, password } = request.body;
 
-      const user = await verifyEmailPassword(email, password);
+      const user: IUserWithPerson | undefined = await verifyEmailPassword(
+        email,
+        password
+      );
 
       if (!user || !user._id) {
         throw Boom.forbidden("Identifiants incorrects");
@@ -67,31 +57,35 @@ export const authRoutes = ({ server }: { server: Server }) => {
       return response
         .setCookie(config.session.cookieName, token, config.session.cookie)
         .status(200)
-        .send(user as any); //IResPostLogin
+        .send(toPublicUser(user));
     }
   );
 
-  server.get("/auth/logout", {}, async (request, response) => {
-    const token = request.cookies[config.session.cookieName];
+  server.get(
+    "/auth/logout",
+    {
+      schema: zRoutes.get["/auth/logout"],
+    },
+    async (request, response) => {
+      const token = request.cookies[config.session.cookieName];
 
-    if (token) {
-      await deleteSession({ token });
+      if (token) {
+        await deleteSession(token);
 
-      return response
-        .clearCookie(config.session.cookieName, config.session.cookie)
-        .status(200)
-        .send();
+        return response
+          .clearCookie(config.session.cookieName, config.session.cookie)
+          .status(200)
+          .send();
+      }
+
+      return response.status(200).send();
     }
-
-    return response.status(200).send();
-  });
+  );
 
   server.get(
     "/auth/reset-password",
     {
-      schema: {
-        querystring: SReqGetResetPassword,
-      } as const,
+      schema: zRoutes.get["/auth/reset-password"],
     },
     async (request, response) => {
       await sendResetPasswordEmail(request.query.email);
@@ -102,12 +96,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
   server.post(
     "/auth/reset-password",
     {
-      schema: {
-        body: SReqPostResetPassword,
-        response: {
-          401: SResError,
-        },
-      } as const,
+      schema: zRoutes.post["/auth/reset-password"],
     },
     async (request, response) => {
       const { password, token } = request.body;
