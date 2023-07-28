@@ -20,6 +20,7 @@ export interface IModelDescriptor {
 
 export const zObjectId = z
   .custom<ObjectId | string>((v) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return ObjectId.isValid(v as any);
   })
   .transform((v) => new ObjectId(v))

@@ -1,11 +1,11 @@
-import { Filter, UpdateFilter } from "mongodb";
+import { Filter, UpdateFilter, WithoutId } from "mongodb";
 import { IPerson, PersonWithOrganisation } from "shared/models/person.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 type ICreatePerson = {
   email: string;
-  organisation_id: string;
+  organisations: string[];
   _meta: { [x: string]: unknown };
 };
 
@@ -29,7 +29,7 @@ const DEFAULT_UNWIND = {
 
 export const createPerson = async (data: ICreatePerson) => {
   const now = new Date();
-  const person = {
+  const person: WithoutId<IPerson> = {
     ...data,
     updated_at: now,
     created_at: now,

@@ -370,6 +370,10 @@ exports[`zodToMongoSchema > should convert organisations schema 1`] = `
       "bsonType": "string",
       "description": "Nom de l'organisation",
     },
+    "siren": {
+      "bsonType": "string",
+      "description": "Siren de l'organisation",
+    },
     "updated_at": {
       "bsonType": "date",
       "description": "Date de mise à jour en base de données",
@@ -420,9 +424,13 @@ exports[`zodToMongoSchema > should convert persons schema 1`] = `
       "bsonType": "string",
       "description": "Le nom de la personne",
     },
-    "organisation_id": {
-      "bsonType": "string",
-      "description": "Identifiant de l'organisation",
+    "organisations": {
+      "bsonType": "array",
+      "description": "Liste des organisations",
+      "items": {
+        "bsonType": "string",
+        "description": "Identifiant de l'organisation",
+      },
     },
     "prenom": {
       "bsonType": "string",
@@ -443,7 +451,7 @@ exports[`zodToMongoSchema > should convert persons schema 1`] = `
   "required": [
     "_id",
     "email",
-    "organisation_id",
+    "organisations",
   ],
 }
 `;

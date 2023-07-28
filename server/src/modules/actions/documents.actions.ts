@@ -26,7 +26,11 @@ import {
 } from "../../common/utils/ovhUtils";
 import { parseCsv } from "../../common/utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
-import { parseContentLine } from "./deca.actions";
+import {
+  DECAParsedContentLine,
+  importDecaContent,
+  parseContentLine,
+} from "./deca.actions";
 import {
   createDocumentContent,
   deleteDocumentContent,
@@ -336,6 +340,11 @@ export const importDocumentContent = async <
     });
 
     if (!documentContent) continue;
+
+    if (document.type_document === DOCUMENT_TYPES.DECA) {
+      const decaContent = contentLine as unknown as DECAParsedContentLine;
+      await importDecaContent(decaContent.emails, decaContent.siret);
+    }
 
     documentContents = [...documentContents, documentContent];
   }

@@ -1,23 +1,30 @@
 import companyEmailValidator from "company-email-validator";
 import { IPostRoutes, IResponse } from "shared";
-import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { SIRET_REGEX } from "shared/constants/regex";
+import { getSirenFromSiret } from "shared/helpers/common";
+import { IOrganisation } from "shared/models/organisation.model";
 
-import { findOneDocumentContent } from "./documentContent.actions";
+import { getDbCollection } from "../../common/utils/mongodbUtils";
+import {
+  findOrCreateOrganisation,
+  findOrganisation,
+  updateOrganisation,
+} from "./organisations.actions";
+import { findPerson } from "./persons.actions";
 
 interface ContentLine {
   SIRET: string;
   EMAIL?: string;
 }
 
-interface ParsedContentLine {
+export interface DECAParsedContentLine {
   siret: string;
   emails: string[];
 }
 
 export const parseContentLine = (
   line: ContentLine
-): ParsedContentLine | undefined => {
+): DECAParsedContentLine | undefined => {
   if (!line.EMAIL) return;
   if (!SIRET_REGEX.test(line.SIRET)) return;
 
@@ -37,6 +44,67 @@ export const parseContentLine = (
   return { siret, emails };
 };
 
+export const importDecaContent = async (emails: string[], siret: string) => {
+  const uniqueEmails = [...new Set(emails)];
+  const siren = getSirenFromSiret(siret);
+  const domains = [...new Set(uniqueEmails.map((e) => e.split("@")[1]))];
+
+  const organisation = await findOrCreateOrganisation(
+    { siren },
+    {
+      siren,
+      etablissements: [{ siret }],
+      email_domains: domains,
+    }
+  );
+
+  const updateOrganisationData: Partial<IOrganisation> = {};
+  const etablissement = organisation.etablissements?.find(
+    (e) => e.siret === siret
+  );
+
+  if (!etablissement) {
+    const etablissements = organisation.etablissements ?? [];
+    etablissements.push({ siret });
+    updateOrganisationData.etablissements = etablissements;
+  }
+
+  const newDomains = domains.filter(
+    (domain) =>
+      !organisation.email_domains?.includes(domain) &&
+      companyEmailValidator.isCompanyDomain(domain)
+  );
+
+  if (newDomains.length) {
+    updateOrganisationData.email_domains = organisation.email_domains ?? [];
+    updateOrganisationData.email_domains?.push(...newDomains);
+  }
+
+  await updateOrganisation(organisation, updateOrganisationData);
+
+  await Promise.all(
+    uniqueEmails.map((email) =>
+      getDbCollection("persons").updateOne(
+        {
+          email,
+        },
+        {
+          $addToSet: {
+            organisations: organisation._id.toString(),
+            sirets: siret,
+          },
+          $setOnInsert: {
+            email,
+          },
+        },
+        {
+          upsert: true,
+        }
+      )
+    )
+  );
+};
+
 export const getDecaVerification = async (
   siret: string,
   email: string
@@ -44,13 +112,12 @@ export const getDecaVerification = async (
   let is_valid = false;
   const isBlacklisted = !companyEmailValidator.isCompanyEmail(email);
   const [_user, domain] = email.split("@");
-  const siren = siret.substring(0, 9);
+  const siren = getSirenFromSiret(siret);
 
   // check siret / email
-  is_valid = !!(await findOneDocumentContent({
-    type_document: DOCUMENT_TYPES.DECA,
-    "content.siret": siret,
-    "content.emails": email,
+  is_valid = !!(await findPerson({
+    email: email,
+    sirets: siret,
   }));
 
   if (is_valid) {
@@ -62,10 +129,9 @@ export const getDecaVerification = async (
 
   // check siret / domain
   if (!isBlacklisted) {
-    is_valid = !!(await findOneDocumentContent({
-      type_document: DOCUMENT_TYPES.DECA,
-      "content.siret": siret,
-      "content.emails": { $regex: `.*@${domain}` },
+    is_valid = !!(await findOrganisation({
+      "etablissements.siret": siret,
+      email_domains: domain,
     }));
 
     if (is_valid) {
@@ -77,10 +143,9 @@ export const getDecaVerification = async (
   }
 
   // check siren / email
-  is_valid = !!(await findOneDocumentContent({
-    type_document: DOCUMENT_TYPES.DECA,
-    "content.siret": { $regex: `^${siren}` },
-    "content.emails": email,
+  is_valid = !!(await findPerson({
+    email: email,
+    sirets: { $regex: `^${siren}` },
   }));
 
   if (is_valid) {
@@ -92,10 +157,9 @@ export const getDecaVerification = async (
 
   // check siren / domain
   if (!isBlacklisted) {
-    is_valid = !!(await findOneDocumentContent({
-      type_document: DOCUMENT_TYPES.DECA,
-      "content.siret": { $regex: `^${siren}` },
-      "content.emails": { $regex: `.*@${domain}` },
+    is_valid = !!(await findOrganisation({
+      siren: siren,
+      email_domains: domain,
     }));
 
     if (is_valid) {

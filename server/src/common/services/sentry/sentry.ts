@@ -64,6 +64,7 @@ export function initSentryFastify<T extends FastifyInstance>(app: T) {
         query_string: request.query,
       };
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...(getOptions() as any),
   };
 

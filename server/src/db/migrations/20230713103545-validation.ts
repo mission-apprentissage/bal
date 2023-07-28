@@ -44,21 +44,21 @@ export const up = async (db: Db, _client: MongoClient) => {
     }
   );
 
-  const invalidPersonsCursor = db
-    .collection("persons")
-    .find({ organisation_id: null });
+  const personCursor = db.collection("persons").find({});
 
-  for await (const person of invalidPersonsCursor) {
-    const organisation = await db.collection("organisations").findOne({
-      email_domains: person.email.split("@")[1],
-    });
-    if (organisation) {
-      await db
-        .collection("persons")
-        .updateOne(
-          { _id: person._id },
-          { $set: { organisation_id: organisation._id.toString() } }
-        );
-    }
+  for await (const person of personCursor) {
+    const organisations = await db
+      .collection("organisations")
+      .find({
+        email_domains: person.email.split("@")[1],
+      })
+      .toArray();
+    await db.collection("persons").updateOne(
+      { _id: person._id },
+      { $set: { organisation: organisations.map((o) => o._id.toString()) } },
+      {
+        bypassDocumentValidation: true,
+      }
+    );
   }
 };

@@ -22,12 +22,15 @@ const indexes: IModelDescriptor["indexes"] = [
       },
     },
   ],
+  [{ siren: 1, email_domains: 1 }, { name: "siren_email_domains" }],
+  [{ "etablissements.siret": 1 }, { name: "siret" }],
 ];
 
 export const ZOrganisation = z
   .object({
     _id: zObjectId,
     nom: z.string().optional().describe("Nom de l'organisation"),
+    siren: z.string().optional().describe("Siren de l'organisation"),
     email_domains: z
       .array(z.string())
       .optional()

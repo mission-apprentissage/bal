@@ -33,7 +33,7 @@ const DEFAULT_UNWIND = {
 export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   const person = await createPerson({
     email: data.email,
-    organisation_id,
+    organisations: [organisation_id],
     _meta: { source: "bal" },
   });
 

@@ -1,5 +1,6 @@
-import { Filter, FindOptions, ObjectId, UpdateFilter } from "mongodb";
+import { Filter, FindOptions, UpdateFilter } from "mongodb";
 import { IPostRoutes, IResponse } from "shared";
+import { getSirenFromSiret } from "shared/helpers/common";
 import { IOrganisation } from "shared/models/organisation.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
@@ -25,7 +26,7 @@ export const validation = async ({
     return testDeca;
   }
 
-  const siren = siret.substring(0, 9);
+  const siren = getSirenFromSiret(siret);
   const testAkto = await getAktoVerification(siren, email);
   if (testAkto) {
     return {
@@ -55,19 +56,27 @@ export const validation = async ({
 };
 
 interface ICreateOrganisation extends Omit<IOrganisation, "_id"> {}
-export const createOrganisation = async (data: ICreateOrganisation) => {
-  const _id = new ObjectId();
+export const createOrganisation = async (
+  data: ICreateOrganisation
+): Promise<IOrganisation> => {
   const now = new Date();
+  const organisation = {
+    ...data,
+    updated_at: now,
+    created_at: now,
+  };
   const { insertedId: organisationId } = await getDbCollection(
     "organisations"
   ).insertOne({
     ...data,
-    _id,
     updated_at: now,
     created_at: now,
   });
 
-  return organisationId;
+  return {
+    ...organisation,
+    _id: organisationId,
+  };
 };
 
 export const findOrganisations = async (filter: Filter<IOrganisation> = {}) => {
@@ -89,6 +98,17 @@ export const findOrganisation = async (
   return organisation;
 };
 
+export const findOrCreateOrganisation = async (
+  filter: Filter<IOrganisation>,
+  data: ICreateOrganisation
+): Promise<IOrganisation> => {
+  const organisation = await findOrganisation(filter);
+
+  if (organisation) return organisation;
+
+  return createOrganisation(data);
+};
+
 export const findOrganisationBySiret = async (
   siret: string,
   options?: FindOptions
@@ -100,11 +120,15 @@ export const findOrganisationBySiret = async (
   return organisation;
 };
 
-export const updatePerson = async (
+export const updateOrganisation = async (
   organisation: IOrganisation,
   data: Partial<IOrganisation>,
   updateFilter: UpdateFilter<IOrganisation> = {}
 ) => {
+  if (Object.keys(data).length === 0) {
+    return organisation;
+  }
+
   return await getDbCollection("organisations").findOneAndUpdate(
     {
       _id: organisation._id,

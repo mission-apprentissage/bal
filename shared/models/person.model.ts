@@ -29,7 +29,9 @@ export const ZPerson = z
     civility: z.enum(["Madame", "Monsieur"]).optional().describe("civilité"),
     nom: z.string().optional().describe("Le nom de la personne"),
     prenom: z.string().optional().describe("Le prénom de la personne"),
-    organisation_id: z.string().describe("Identifiant de l'organisation"),
+    organisations: z
+      .array(z.string().describe("Identifiant de l'organisation"))
+      .describe("Liste des organisations"),
     sirets: z
       .array(z.string())
       .optional()
