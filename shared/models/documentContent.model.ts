@@ -1,8 +1,7 @@
-import { WithId } from "mongodb";
+import { Jsonify } from "type-fest";
 import { z } from "zod";
-import zodToJsonSchema from "zod-to-json-schema";
 
-import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
+import { IModelDescriptor, zObjectId } from "./common";
 
 const collectionName = "documentContents" as const;
 
@@ -15,7 +14,7 @@ export const ZDocumentContent = z
   .object({
     _id: zObjectId,
     document_id: z.string().describe("Identifiant du document"),
-    content: z.record(z.any()).optional().describe("Contenu du document"),
+    content: z.record(z.unknown()).optional().describe("Contenu du document"),
     type_document: z
       .string()
       .optional()
@@ -28,16 +27,11 @@ export const ZDocumentContent = z
   })
   .strict();
 
-export const SDocumentContent = zodToJsonSchema(
-  ZDocumentContent,
-  toJsonSchemaOptions
-);
-
-export type IDocumentContent = z.input<typeof ZDocumentContent>;
-export type IDocumentContentDocument = WithId<Omit<IDocumentContent, "_id">>;
+export type IDocumentContent = z.output<typeof ZDocumentContent>;
+export type IDocumentContentJsont = Jsonify<z.input<typeof ZDocumentContent>>;
 
 export default {
-  schema: SDocumentContent as IModelDescriptor["schema"],
+  zod: ZDocumentContent,
   indexes,
   collectionName,
 };

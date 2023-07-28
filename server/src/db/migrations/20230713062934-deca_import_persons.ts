@@ -1,5 +1,5 @@
 import { Db, MongoClient } from "mongodb";
-import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
+import { DOCUMENT_TYPES } from "shared/constants/documents";
 
 import { importDecaContent } from "../../modules/actions/deca.actions";
 

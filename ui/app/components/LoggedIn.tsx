@@ -13,16 +13,16 @@ import {
 import NavLink from "next/link";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
-import { IResGetSession } from "shared/routes/auth.routes";
+import { IUserPublic } from "shared/models/user.model";
 
 import { useAuth } from "../../context/AuthContext";
 import { Settings } from "../../theme/icons/Settings";
 import { Settings4Fill } from "../../theme/icons/Settings4Fill";
 import UserFill from "../../theme/icons/UserFill";
-import { api } from "../../utils/api.utils";
+import { apiGet } from "../../utils/api.utils";
 import { PAGES } from "./breadcrumb/Breadcrumb";
 interface Props {
-  user: IResGetSession;
+  user: IUserPublic;
 }
 
 const LoggedIn: FC<Props> = ({ user }) => {
@@ -30,7 +30,7 @@ const LoggedIn: FC<Props> = ({ user }) => {
   const { push } = useRouter();
 
   const handleLogout = async () => {
-    await api.get("/auth/logout");
+    await apiGet("/auth/logout", {});
     setUser();
     push("/");
   };
@@ -38,7 +38,13 @@ const LoggedIn: FC<Props> = ({ user }) => {
   return (
     <Box>
       <Menu placement="bottom">
-        <MenuButton as={Button} variant="pill" px={0} flexGrow={1}>
+        <MenuButton
+          as={Button}
+          variant="pill"
+          px={0}
+          flexGrow={1}
+          data-id="menu:user"
+        >
           <Flex maxWidth="226px">
             <UserFill mt="0.3rem" boxSize={4} />
             <Box display={["none", "block"]} ml={2}>

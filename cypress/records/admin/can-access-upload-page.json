@@ -1,0 +1,75 @@
+{
+    "title": "can-access-upload-page",
+    "selectorAttribute": "data-id",
+    "steps": [
+        {
+            "type": "setViewport",
+            "width": 1140,
+            "height": 1221,
+            "deviceScaleFactor": 1,
+            "isMobile": false,
+            "hasTouch": false,
+            "isLandscape": false
+        },
+        {
+            "type": "navigate",
+            "url": "https://bal-recette.apprentissage.beta.gouv.fr/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://bal-recette.apprentissage.beta.gouv.fr/",
+                    "title": "BAL"
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#menu-button-\\:R1akmautjaH1\\:"
+                ],
+                [
+                    "xpath///*[@id=\"menu-button-:R1akmautjaH1:\"]"
+                ],
+                [
+                    "pierce/#menu-button-\\:R1akmautjaH1\\:"
+                ]
+            ],
+            "offsetY": 18,
+            "offsetX": 167
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "[data-id='menuitem\\:admin\\:manage-files']"
+                ],
+                [
+                    "xpath///*[@data-id=\"menuitem:admin:manage-files\"]"
+                ],
+                [
+                    "pierce/[data-id='menuitem\\:admin\\:manage-files']"
+                ],
+                [
+                    "aria/Gestion des fichiers"
+                ]
+            ],
+            "offsetY": 16,
+            "offsetX": 153
+        },
+        {
+            "type": "change",
+            "target": "main",
+            "selectors": [
+                [
+                    "h2"
+                ],
+                ["aria/Gestion fichiers sources"]
+            ],
+            "value": ">Gestion fichiers sources"
+        }
+        
+    ]
+}

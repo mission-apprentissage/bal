@@ -7,11 +7,11 @@ import {
   UpdateFilter,
 } from "mongodb";
 import { oleoduc, writeData } from "oleoduc";
-// @ts-ignore
-import { IDocument, IDocumentDocument } from "shared/models/document.model";
-import { IDocumentContentDocument } from "shared/models/documentContent.model";
-import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
+import { DOCUMENT_TYPES } from "shared/constants/documents";
+import { IDocument } from "shared/models/document.model";
+import { IDocumentContent } from "shared/models/documentContent.model";
 import { Readable } from "stream";
+import { JsonObject } from "type-fest";
 
 import logger from "@/common/logger";
 import * as crypto from "@/common/utils/cryptoUtils";
@@ -39,13 +39,11 @@ import { MAILING_LIST_DOCUMENT_PREFIX } from "./mailingLists.actions";
 
 const testMode = config.env === "test";
 
-interface ICreateDocument extends Omit<IDocument, "_id"> {
+interface ICreate extends Omit<IDocument, "_id"> {
   _id: ObjectId;
 }
 
-export const createDocument = async (
-  data: ICreateDocument
-): Promise<IDocumentDocument> => {
+export const createDocument = async (data: ICreate): Promise<IDocument> => {
   const now = new Date();
   const doc = {
     ...data,
@@ -61,26 +59,26 @@ export const createDocument = async (
 };
 
 export const findDocument = async (
-  filter: Filter<IDocumentDocument>,
-  options?: FindOptions<IDocumentDocument>
-): Promise<IDocumentDocument | null> => {
+  filter: Filter<IDocument>,
+  options?: FindOptions<IDocument>
+): Promise<IDocument | null> => {
   return await getDbCollection("documents").findOne(filter, options);
 };
 
 export const findDocuments = async (
-  filter: Filter<IDocumentDocument>,
-  options?: FindOptions<IDocumentDocument>
+  filter: Filter<IDocument>,
+  options?: FindOptions<IDocument>
 ) => {
   const documents = await getDbCollection("documents")
-    .find<IDocumentDocument>(filter, options)
+    .find<IDocument>(filter, options)
     .toArray();
 
   return documents;
 };
 
 export const updateDocument = async (
-  filter: Filter<IDocumentDocument>,
-  update: UpdateFilter<IDocumentDocument>,
+  filter: Filter<IDocument>,
+  update: UpdateFilter<IDocument>,
   options?: FindOneAndUpdateOptions
 ) => {
   const updated = await getDbCollection("documents").findOneAndUpdate(
@@ -239,7 +237,7 @@ export const extractDocumentContent = async ({
   delimiter = ";",
   formatter = (line) => line,
 }: {
-  document: IDocumentDocument;
+  document: IDocument;
   delimiter?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formatter?: (line: any) => any;
@@ -266,7 +264,7 @@ export const extractDocumentContent = async ({
     parseCsv({
       delimiter,
     }),
-    writeData(async (json) => {
+    writeData(async (json: JsonObject) => {
       importedLength += Buffer.byteLength(
         JSON.stringify(Object.values(json)).replace(/^\[(.*)\]$/, "$1")
       );
@@ -322,11 +320,11 @@ export const importDocumentContent = async <
   TFileLine = unknown,
   TContentLine = unknown
 >(
-  document: IDocumentDocument,
+  document: IDocument,
   content: TFileLine[],
   formatter: (line: TFileLine) => TContentLine
 ) => {
-  let documentContents: IDocumentContentDocument[] = [];
+  let documentContents: IDocumentContent[] = [];
 
   for (const [_lineNumber, line] of content.entries()) {
     const contentLine = formatter(line);
@@ -378,7 +376,9 @@ export const deleteDocumentById = async (documentId: ObjectId) => {
   await getDbCollection("documents").deleteOne({ _id: document._id });
 };
 
-export const handleDocumentFileContent = async ({ document_id }) => {
+export const handleDocumentFileContent = async ({
+  document_id,
+}: Record<"document_id", ObjectId>) => {
   const document = await findDocument({
     _id: document_id,
   });

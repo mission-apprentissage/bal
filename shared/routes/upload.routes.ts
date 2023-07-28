@@ -1,49 +1,41 @@
 import { z } from "zod";
-import zodToJsonSchema from "zod-to-json-schema";
 
 import { zObjectId } from "../models/common";
+import { ZDocument, zDocumentPublic } from "../models/document.model";
 
-export enum DOCUMENT_TYPES {
-  DECA = "DECA",
-  VOEUX_PARCOURSUP_MAI_2023 = "Voeux Parcoursup Mai 2023",
-  VOEUX_AFFELNET_MAI_2023 = "Voeux Affelnet Mai 2023",
-  VOEUX_AFFELNET_JUIN_2023 = "Voeux Affelnet Juin 2023",
-}
-
-export const ZReqQueryPostAdminUpload = z
-  .object({
-    type_document: z.string(),
-  })
-  .strict();
-
-export const SReqQueryPostAdminUpload = zodToJsonSchema(
-  ZReqQueryPostAdminUpload
-);
-export type IReqQueryPostAdminUpload = z.input<typeof ZReqQueryPostAdminUpload>;
-
-export const ZResPostAdminUpload = z
-  .object({
-    _id: zObjectId,
-    type_document: z.string().optional(),
-    ext_fichier: z.string(),
-    nom_fichier: z.string(),
-    chemin_fichier: z.string(),
-    taille_fichier: z.number(),
-    import_progress: z.number().optional(),
-    lines_count: z.number().optional(),
-    added_by: z.string(),
-    updated_at: z.date(),
-    created_at: z.date(),
-  })
-  .strict();
-export const SResPostAdminUpload = zodToJsonSchema(ZResPostAdminUpload);
-export type IResPostAdminUpload = z.input<typeof ZResPostAdminUpload>;
-
-export const ZResGetDocuments = z.array(ZResPostAdminUpload);
-export const SResGetDocuments = zodToJsonSchema(ZResGetDocuments);
-export type IResGetDocuments = z.input<typeof ZResGetDocuments>;
-
-export const ZResGetDocumentTypes = z.array(z.string());
-export const SResGetDocumentTypes = zodToJsonSchema(ZResGetDocumentTypes);
-
-export type IResGetDocumentTypes = z.input<typeof ZResGetDocumentTypes>;
+export const zUploadRoutes = {
+  get: {
+    "/admin/documents": {
+      response: {
+        "2xx": z.array(zDocumentPublic),
+      },
+    },
+    "/admin/documents/types": {
+      response: {
+        "2xx": z.array(z.string()),
+      },
+    },
+  },
+  post: {
+    "/admin/upload": {
+      querystring: z
+        .object({
+          type_document: z.string(),
+        })
+        .strict(),
+      body: z.unknown(),
+      response: {
+        "2xx": ZDocument,
+      },
+    },
+  },
+  put: {},
+  delete: {
+    "/admin/document/:id": {
+      params: z.object({ id: zObjectId }).strict(),
+      response: {
+        "2xx": z.object({ success: z.boolean() }).strict(),
+      },
+    },
+  },
+};

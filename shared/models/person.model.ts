@@ -1,8 +1,8 @@
-import { WithId, WithoutId } from "mongodb";
+import { Jsonify } from "type-fest";
 import { z } from "zod";
-import zodToJsonSchema from "zod-to-json-schema";
 
-import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
+import { IModelDescriptor, zObjectId } from "./common";
+import { ZOrganisation } from "./organisation.model";
 
 const collectionName = "persons" as const;
 
@@ -49,20 +49,23 @@ export const ZPerson = z
       .optional(),
     created_at: z.date().describe("Date d'ajout en base de données").optional(),
   })
-  .required({
-    _id: true,
-    email: true,
-    organisation_id: true,
-  })
   .strict();
 
-export const SPerson = zodToJsonSchema(ZPerson, toJsonSchemaOptions);
+export const ZPersonWithOrganisation = ZPerson.extend({
+  organisation: ZOrganisation.nullish(),
+}).strict();
 
 export type IPerson = z.output<typeof ZPerson>;
-export type IPersonDocument = WithId<WithoutId<IPerson>>;
+export type IPersonJson = Jsonify<z.input<typeof ZPerson>>;
+
+// Make exact type
+export type PersonWithOrganisation = z.output<typeof ZPersonWithOrganisation>;
+export type PersonWithOrganisationJson = Jsonify<
+  z.input<typeof ZPersonWithOrganisation>
+>;
 
 export default {
-  schema: SPerson as IModelDescriptor["schema"],
+  zod: ZPerson,
   indexes,
   collectionName,
 };

@@ -3,7 +3,7 @@ import Boom from "@hapi/boom";
 import { FastifyRequest } from "fastify";
 import { JwtPayload } from "jsonwebtoken";
 import { ObjectId } from "mongodb";
-import { IUserDocument } from "shared/models/user.model";
+import { IUser } from "shared/models/user.model";
 
 import config from "@/config";
 
@@ -14,7 +14,7 @@ import { findUser, updateUser } from "../../actions/users.actions";
 
 declare module "fastify" {
   export interface FastifyRequest {
-    user?: IUserDocument;
+    user?: IUser;
   }
 }
 
@@ -92,7 +92,7 @@ export const authWebHookKey: FastifyAuthFunction = async (request, _reply) => {
   }
 };
 
-export function getUserFromRequest(request: FastifyRequest): IUserDocument {
+export function getUserFromRequest(request: FastifyRequest): IUser {
   if (!request.user) {
     throw Boom.forbidden();
   }

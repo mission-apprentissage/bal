@@ -15,14 +15,16 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { IReqPostResetPassword, IStatus } from "shared/routes/auth.routes";
+import { IPostRoutes } from "shared";
+import { IStatus } from "shared/routes/auth.routes";
 
 import Link from "../../../components/link/Link";
-import { api } from "../../../utils/api.utils";
+import { apiPost } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import { NavLink } from "../../components/NavLink";
 
-interface IFormValues extends IReqPostResetPassword {
+interface IFormValues
+  extends Zod.input<IPostRoutes["/auth/reset-password"]["body"]> {
   password_confirmation: string;
 }
 
@@ -31,7 +33,7 @@ const ModifierMotDePassePage = () => {
   const { push } = useRouter();
   const searchParams = useSearchParams();
 
-  const token = searchParams?.get("token");
+  const token = searchParams?.get("token") ?? "";
 
   const {
     register,
@@ -42,9 +44,11 @@ const ModifierMotDePassePage = () => {
 
   const onSubmit: SubmitHandler<IFormValues> = async ({ password }) => {
     try {
-      await api.post("/auth/reset-password", {
-        password,
-        token,
+      await apiPost("/auth/reset-password", {
+        body: {
+          password,
+          token,
+        },
       });
 
       setStatus({

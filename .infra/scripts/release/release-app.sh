@@ -14,7 +14,7 @@ else
 fi
 
 readonly next_version="${1}"
-readonly mode=${3:-$defaultMode}
+readonly mode=${2:-$defaultMode}
 
 ${SCRIPT_DIR}/bump-version.sh $next_version 
 ${SCRIPT_DIR}/build-images.sh $next_version $mode production recette

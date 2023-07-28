@@ -2,12 +2,12 @@ import { Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { IResGetPersons } from "shared/routes/person.routes";
+import { PersonWithOrganisationJson } from "shared/models/person.model";
 
 import FormSearch from "../../../../components/formSearch/FormSearch";
 import Table from "../../../../components/table/Table";
 import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";
-import { api } from "../../../../utils/api.utils";
+import { apiGet } from "../../../../utils/api.utils";
 import {
   formatUrlWithNewParams,
   getSearchParamsForQuery,
@@ -24,15 +24,12 @@ const PersonList = () => {
     q: searchValue,
   } = getSearchParamsForQuery(searchParams);
 
-  const { data: persons } = useQuery<IResGetPersons>({
+  const { data: persons } = useQuery<PersonWithOrganisationJson[]>({
     queryKey: ["persons", { searchValue, page, limit }],
-    queryFn: async () => {
-      const { data } = await api.get("/admin/persons", {
-        params: { q: searchValue, page, limit },
-      });
-
-      return data;
-    },
+    queryFn: async () =>
+      apiGet("/admin/persons", {
+        querystring: { q: searchValue, page, limit },
+      }),
   });
 
   const onSearch = (q: string) => {
@@ -102,7 +99,8 @@ const PersonList = () => {
             id: "source",
             size: 100,
             header: () => "Source",
-            cell: ({ row }) => row.original._meta?.source ?? "",
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            cell: ({ row }) => (row.original._meta as any)?.source ?? "",
           },
           actions: {
             id: "actions",

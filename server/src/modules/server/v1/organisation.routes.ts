@@ -1,55 +1,26 @@
 import Boom from "@hapi/boom";
-import { SReqHeadersAuthorization } from "shared/routes/common.routes";
-import {
-  IReqPostOrganisationValidation,
-  IResOrganisationValidation,
-  SReqPostOrganisationValidation,
-  SResPostOrganisationValidation,
-  ZReqPostOrganisationValidation,
-} from "shared/routes/v1/organisation.routes";
+import { zRoutes } from "shared";
 
 import config from "../../../config";
 import { validation } from "../../actions/organisations.actions";
 import { Server } from "../server";
 
 export const organisationRoutes = ({ server }: { server: Server }) => {
-  server.post<{
-    Body: IReqPostOrganisationValidation;
-    Reply: { 200: IResOrganisationValidation };
-  }>(
+  server.post(
     "/organisation/validation",
     {
-      schema: {
-        body: SReqPostOrganisationValidation,
-        response: {
-          200: SResPostOrganisationValidation,
-        },
-        headers: SReqHeadersAuthorization,
-        security: [
-          {
-            apiKey: [],
-          },
-        ],
-      },
+      schema: zRoutes.post["/v1/organisation/validation"],
       preHandler: [
         server.auth([
-          async (request, _reply, ...arg) => {
+          async function (request, ...arg) {
             if (
               request.headers.referer === `${config.publicUrl}/usage/validation`
             ) {
-              return server.validateSession(request, _reply, ...arg);
+              return this.validateSession(request, ...arg);
             }
-            return server.validateJWT(request, _reply, ...arg);
+            return this.validateJWT(request, ...arg);
           },
         ]),
-
-        async (request, _reply) => {
-          try {
-            await ZReqPostOrganisationValidation.parseAsync(request.body);
-          } catch (error) {
-            throw Boom.badRequest(error as Error);
-          }
-        },
       ],
     },
     async (request, response) => {

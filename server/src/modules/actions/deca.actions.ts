@@ -1,9 +1,8 @@
 import companyEmailValidator from "company-email-validator";
-// @ts-ignore
+import { IPostRoutes, IResponse } from "shared";
 import { SIRET_REGEX } from "shared/constants/regex";
 import { getSirenFromSiret } from "shared/helpers/common";
-import { IOrganisationDocument } from "shared/models/organisation.model";
-import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
+import { IOrganisation } from "shared/models/organisation.model";
 
 import { getDbCollection } from "../../common/utils/mongodbUtils";
 import {
@@ -59,14 +58,15 @@ export const importDecaContent = async (emails: string[], siret: string) => {
     }
   );
 
-  const updateOrganisationData: Partial<IOrganisationDocument> = {};
+  const updateOrganisationData: Partial<IOrganisation> = {};
   const etablissement = organisation.etablissements?.find(
     (e) => e.siret === siret
   );
 
   if (!etablissement) {
-    updateOrganisationData.etablissements = organisation.etablissements ?? [];
-    updateOrganisationData.etablissements.push({ siret });
+    const etablissements = organisation.etablissements ?? [];
+    etablissements.push({ siret });
+    updateOrganisationData.etablissements = etablissements;
   }
 
   const newDomains = domains.filter(
@@ -108,7 +108,7 @@ export const importDecaContent = async (emails: string[], siret: string) => {
 export const getDecaVerification = async (
   siret: string,
   email: string
-): Promise<IResOrganisationValidation> => {
+): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
   let is_valid = false;
   const isBlacklisted = !companyEmailValidator.isCompanyEmail(email);
   const [_user, domain] = email.split("@");

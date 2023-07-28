@@ -1,30 +1,28 @@
 "use client";
 import { Heading } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
+import { IJobJson } from "shared/models/job.model";
 
-import { api } from "../../utils/api.utils";
+import { apiGet } from "../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
 import Form from "./components/Form";
 import GeneratingMailingList from "./components/GeneratingMailingList";
 import ListMailingList from "./components/ListMailingList";
 
-const ListeDiffusionPage = () => {
-  const { data: mailingLists, refetch } = useQuery<IJob[]>({
-    queryKey: ["mailingLists"],
-    queryFn: async () => {
-      const { data } = await api.get("/mailing-lists");
+const inProgressStatuses: IJobJson["status"][] = [
+  "running",
+  "pending",
+  "will_start",
+];
 
-      return data;
-    },
+const ListeDiffusionPage = () => {
+  const { data: mailingLists, refetch } = useQuery<IJobJson[]>({
+    queryKey: ["mailingLists"],
+    queryFn: async () => apiGet("/mailing-lists", {}),
   });
 
   const generatingMailingList = mailingLists?.find((mailingList) =>
-    [
-      JOB_STATUS_LIST.RUNNING,
-      JOB_STATUS_LIST.PENDING,
-      JOB_STATUS_LIST.WILLSTART,
-    ].includes(mailingList.status as JOB_STATUS_LIST)
+    inProgressStatuses.includes(mailingList.status)
   );
 
   return (

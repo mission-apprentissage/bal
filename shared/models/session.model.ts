@@ -1,8 +1,7 @@
-import { WithId } from "mongodb";
+import { Jsonify } from "type-fest";
 import { z } from "zod";
-import zodToJsonSchema from "zod-to-json-schema";
 
-import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
+import { IModelDescriptor, zObjectId } from "./common";
 
 const collectionName = "sessions" as const;
 
@@ -20,13 +19,11 @@ export const ZSession = z
   })
   .strict();
 
-export const SSession = zodToJsonSchema(ZSession, toJsonSchemaOptions);
-
-export type ISession = z.input<typeof ZSession>;
-export type ISessionDocument = WithId<Omit<ISession, "_id">>;
+export type ISession = z.output<typeof ZSession>;
+export type ISessionJson = Jsonify<z.input<typeof ZSession>>;
 
 export default {
-  schema: SSession as IModelDescriptor["schema"],
+  zod: ZSession,
   indexes,
   collectionName,
 };

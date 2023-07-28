@@ -1,8 +1,7 @@
-import { WithId } from "mongodb";
+import { Jsonify } from "type-fest";
 import { z } from "zod";
-import zodToJsonSchema from "zod-to-json-schema";
 
-import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "./common";
+import { IModelDescriptor, zObjectId } from "./common";
 
 const collectionName = "documents" as const;
 
@@ -46,17 +45,20 @@ export const ZDocument = z
   })
   .strict();
 
-export const SDocument = zodToJsonSchema(ZDocument, toJsonSchemaOptions);
+export const zDocumentPublic = ZDocument.omit({
+  hash_fichier: true,
+  hash_secret: true,
+});
 
-export type IDocument = z.input<typeof ZDocument>;
+export type IDocument = z.output<typeof ZDocument>;
+export type IDocumentJson = Jsonify<z.input<typeof zDocumentPublic>>;
 
 export interface IDocumentWithContent<TContent> extends IDocument {
   content: TContent;
 }
-export type IDocumentDocument = WithId<Omit<IDocument, "_id">>;
 
 export default {
-  schema: SDocument as IModelDescriptor["schema"],
+  zod: ZDocument,
   indexes,
   collectionName,
 };

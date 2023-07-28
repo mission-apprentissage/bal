@@ -1,12 +1,15 @@
-import { Filter, FindOptions, MatchKeysAndValues, ObjectId } from "mongodb";
-import { IJobDocument, JOB_STATUS_LIST } from "shared/models/job.model";
+import {
+  Filter,
+  FindOptions,
+  MatchKeysAndValues,
+  ObjectId,
+  WithoutId,
+} from "mongodb";
+import { IJob } from "shared/models/job.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-type CreateJobParam = Pick<
-  IJobDocument,
-  "name" | "payload" | "scheduled_at" | "sync"
->;
+type CreateJobParam = Pick<IJob, "name" | "payload" | "scheduled_at" | "sync">;
 
 /**
  * Création d'un job
@@ -16,10 +19,10 @@ export const createJob = async ({
   payload,
   scheduled_at = new Date(),
   sync = false,
-}: CreateJobParam): Promise<IJobDocument> => {
-  const job = {
+}: CreateJobParam): Promise<IJob> => {
+  const job: WithoutId<IJob> = {
     name,
-    status: sync ? JOB_STATUS_LIST.WILLSTART : JOB_STATUS_LIST.PENDING,
+    status: sync ? "will_start" : "pending",
     ...(payload ? { payload } : {}),
     updated_at: new Date(),
     created_at: new Date(),
@@ -31,19 +34,17 @@ export const createJob = async ({
 };
 
 export const findJob = async (
-  filter: Filter<IJobDocument>,
-  options?: FindOptions<IJobDocument>
-): Promise<IJobDocument | null> => {
+  filter: Filter<IJob>,
+  options?: FindOptions<IJob>
+): Promise<IJob | null> => {
   return await getDbCollection("jobs").findOne(filter, options);
 };
 
 export const findJobs = async (
-  filter: Filter<IJobDocument>,
-  options?: FindOptions<IJobDocument>
-) => {
-  return await getDbCollection("jobs")
-    .find<IJobDocument>(filter, options)
-    .toArray();
+  filter: Filter<IJob>,
+  options?: FindOptions<IJob>
+): Promise<IJob[]> => {
+  return await getDbCollection("jobs").find<IJob>(filter, options).toArray();
 };
 
 /**
@@ -51,7 +52,7 @@ export const findJobs = async (
  */
 export const updateJob = async (
   _id: ObjectId,
-  data: MatchKeysAndValues<IJobDocument>
+  data: MatchKeysAndValues<IJob>
 ) => {
   return getDbCollection("jobs").updateOne(
     { _id },

@@ -1,4 +1,4 @@
-import { IJobDocument, JOB_STATUS_LIST } from "shared/models/job.model";
+import { IJob } from "shared/models/job.model";
 
 import logger from "@/common/logger";
 import { sleep } from "@/common/utils/asyncUtils";
@@ -20,7 +20,13 @@ import { clear } from "./seed/clear";
 import { seed } from "./seed/seed";
 
 export async function addJob(
-  { name, payload = {}, scheduled_at = new Date(), sync = false },
+  {
+    name,
+    payload = {},
+    scheduled_at = new Date(),
+    sync = false,
+  }: Pick<IJob, "name"> &
+    Partial<Pick<IJob, "payload" | "scheduled_at" | "sync">>,
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }
@@ -40,7 +46,7 @@ export async function addJob(
 }
 
 async function runJob(
-  job: IJobDocument,
+  job: IJob,
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }
@@ -77,10 +83,13 @@ async function runJob(
           return;
         }
         case "migrations:create":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return createMigration(job.payload as any);
         case "import:document":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return handleDocumentFileContent(job.payload as any);
         case "generate:mailing-list":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return processMailingList(job.payload as any);
         default:
           return Promise.resolve();
@@ -91,11 +100,11 @@ async function runJob(
 }
 
 //abortSignal
-export async function processor() {
+export async function processor(): Promise<void> {
   logger.info(`Process jobs queue - looking for a job to execute`);
   const { value: nextJob } = await getDbCollection("jobs").findOneAndUpdate(
-    { status: JOB_STATUS_LIST.PENDING, scheduled_at: { $lte: new Date() } },
-    { $set: { status: JOB_STATUS_LIST.WILLSTART } },
+    { status: "pending", scheduled_at: { $lte: new Date() } },
+    { $set: { status: "will_start" } },
     { sort: { scheduled_at: 1 } }
   );
 

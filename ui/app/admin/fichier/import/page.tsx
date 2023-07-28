@@ -14,24 +14,20 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { IGetRoutes, IPostRoutes, IResponse } from "shared";
 import { FILE_SIZE_LIMIT } from "shared/constants/index";
-import { IResError } from "shared/routes/common.routes";
-import {
-  IReqQueryPostAdminUpload,
-  IResGetDocumentTypes,
-} from "shared/routes/upload.routes";
 
 // import { AlertRounded } from "../../../../theme/icons/AlertRounded";
-import { api } from "../../../../utils/api.utils";
+import { apiGet, apiPost } from "../../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../../components/breadcrumb/Breadcrumb";
 import useToaster from "../../../components/hooks/useToaster";
 import { Dropzone } from "./components/Dropzone";
 
-interface FormValues extends IReqQueryPostAdminUpload {
+interface FormValues
+  extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
   file: File;
   has_new_type_document: boolean;
   new_type_document: string;
@@ -42,13 +38,11 @@ const AdminImportPage = () => {
   const { toastSuccess, toastError } = useToaster();
   const router = useRouter();
 
-  const { data: types = [] } = useQuery<IResGetDocumentTypes>({
+  const { data: types = [] } = useQuery<
+    IResponse<IGetRoutes["/admin/documents/types"]>
+  >({
     queryKey: ["documentTypes"],
-    queryFn: async () => {
-      const { data } = await api.get("/admin/documents/types");
-
-      return data;
-    },
+    queryFn: async () => apiGet("/admin/documents/types", {}),
   });
 
   const {
@@ -72,18 +66,20 @@ const AdminImportPage = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      await api.post("/admin/upload", formData, {
-        params: {
+      await apiPost("/admin/upload", {
+        querystring: {
           type_document: has_new_type_document
             ? new_type_document
             : type_document,
         },
+        body: formData,
       });
       toastSuccess("Fichier importé avec succès.");
       router.push(PAGES.adminFichier().path);
     } catch (error) {
-      const axiosError = error as AxiosError<IResError>;
-      toastError(axiosError.response?.data.message);
+      if (error instanceof Error) {
+        toastError(error.message);
+      }
       console.error(error);
     } finally {
       setIsSubmitting(false);

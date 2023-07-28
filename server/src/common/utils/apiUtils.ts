@@ -24,7 +24,7 @@ export const apiRateLimiter = (
     maxQueueSize: options.maxQueueSize || 25,
   });
 
-  return async <T>(callback: (AxiosInstance) => T): Promise<T> => {
+  return async <T>(callback: (i: AxiosInstance) => T): Promise<T> => {
     await timeout(queue.removeTokens(1), options.timeout || 10000);
     return callback(options.client);
   };

@@ -1,6 +1,6 @@
-import { IPerson } from "shared/models/person.model";
+import { IPersonJson } from "shared/models/person.model";
 
-export const getPersonDisplayName = (person: IPerson) => {
+export const getPersonDisplayName = (person: IPersonJson) => {
   if (person.nom || person.prenom) {
     return `${person.nom ?? ""} ${person.prenom ?? ""}`;
   }

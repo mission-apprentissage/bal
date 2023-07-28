@@ -1,13 +1,25 @@
 import { z } from "zod";
-import zodToJsonSchema from "zod-to-json-schema";
 
+import { zObjectId } from "../models/common";
 import { ZOrganisation } from "../models/organisation.model";
+import { ZReqParamsSearchPagination } from "./common.routes";
 
-export const SResGetOrganisation = zodToJsonSchema(ZOrganisation);
-
-export type IResGetOrganisation = z.input<typeof ZOrganisation>;
-
-export const ZResGetOrganisations = z.array(ZOrganisation);
-export const SResGetOrganisations = zodToJsonSchema(ZResGetOrganisations);
-
-export type IResGetOrganisations = z.input<typeof ZResGetOrganisations>;
+export const zAdminOrganisationRoutes = {
+  get: {
+    "/admin/organisations": {
+      querystring: ZReqParamsSearchPagination,
+      response: {
+        "2xx": z.array(ZOrganisation),
+      },
+    },
+    "/admin/organisations/:id": {
+      params: z.object({ id: zObjectId }).strict(),
+      response: {
+        "2xx": ZOrganisation,
+      },
+    },
+  },
+  post: {},
+  put: {},
+  delete: {},
+};

@@ -1,8 +1,7 @@
-import { WithId } from "mongodb";
+import { Jsonify } from "type-fest";
 import { z } from "zod";
-import zodToJsonSchema from "zod-to-json-schema";
 
-import { IModelDescriptor, toJsonSchemaOptions, zObjectId } from "../common";
+import { IModelDescriptor, zObjectId } from "../common";
 import { ZBalEmailsPayload } from "./bal_emails.event";
 
 const collectionName = "events" as const;
@@ -22,13 +21,11 @@ export const ZEvent = z
   })
   .nonstrict();
 
-export const SEvent = zodToJsonSchema(ZEvent, toJsonSchemaOptions);
-
-export type IEvent = z.input<typeof ZEvent>;
-export type IEventDocument = WithId<Omit<IEvent, "_id">>;
+export type IEvent = z.output<typeof ZEvent>;
+export type IEventJson = Jsonify<z.output<typeof ZEvent>>;
 
 export default {
-  schema: SEvent as IModelDescriptor["schema"],
+  zod: ZEvent,
   indexes,
   collectionName,
 };

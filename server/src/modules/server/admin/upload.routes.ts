@@ -1,17 +1,8 @@
 import { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
 import { ObjectId } from "mongodb";
+import { zRoutes } from "shared";
 import { IDocument } from "shared/models/document.model";
-import { SResError } from "shared/routes/common.routes";
-import {
-  IReqQueryPostAdminUpload,
-  IResGetDocumentTypes,
-  IResPostAdminUpload,
-  SReqQueryPostAdminUpload,
-  SResGetDocuments,
-  SResGetDocumentTypes,
-  SResPostAdminUpload,
-} from "shared/routes/upload.routes";
 
 import logger from "@/common/logger";
 
@@ -52,18 +43,10 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
   /**
    * Importer un fichier
    */
-  server.post<{
-    Querystring: IReqQueryPostAdminUpload;
-  }>(
+  server.post(
     "/admin/upload",
     {
-      schema: {
-        querystring: SReqQueryPostAdminUpload,
-        response: {
-          200: SResPostAdminUpload,
-          401: SResError,
-        },
-      } as const,
+      schema: zRoutes.post["/admin/upload"],
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
@@ -111,9 +94,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           },
         });
 
-        return response
-          .status(200)
-          .send(document as unknown as IResPostAdminUpload);
+        return response.status(200).send(document);
       } catch (error) {
         const err = server.multipartErrors;
         logger.debug(err);
@@ -125,11 +106,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/admin/documents",
     {
-      schema: {
-        response: {
-          200: SResGetDocuments,
-        },
-      } as const,
+      schema: zRoutes.get["/admin/documents"],
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (_request, response) => {
@@ -142,18 +119,10 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.delete<{
-    Params: { id: string };
-  }>(
+  server.delete(
     "/admin/document/:id",
     {
-      schema: {
-        params: {
-          type: "object",
-          properties: { id: { type: "string" } },
-          required: ["id"],
-        },
-      },
+      schema: zRoutes.delete["/admin/document/:id"],
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
@@ -163,18 +132,10 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  server.get<{
-    Reply: {
-      200: IResGetDocumentTypes;
-    };
-  }>(
+  server.get(
     "/admin/documents/types",
     {
-      schema: {
-        response: {
-          200: SResGetDocumentTypes,
-        },
-      },
+      schema: zRoutes.get["/admin/documents/types"],
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (_request, response) => {

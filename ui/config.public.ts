@@ -16,7 +16,7 @@ function getProductionPublicConfig(): PublicConfig {
     },
     env: "production",
     host,
-    apiEndpoint: `${host}/api`,
+    apiEndpoint: `https://${host}/api`,
   };
 }
 
@@ -56,7 +56,7 @@ function getPreviewPublicConfig(): PublicConfig {
 }
 
 function getLocalPublicConfig(): PublicConfig {
-  const host = "localhost";
+  const host = global.window ? "localhost" : "server:5000";
 
   return {
     sentry: {
@@ -87,7 +87,7 @@ function getEnv(): PublicConfig["env"] {
     case "local":
       return env;
     default:
-      throw new Error("invalid NEXT_PUBLIC_ENV env-vars");
+      throw new Error(`Invalid NEXT_PUBLIC_ENV env-vars ${env}`);
   }
 }
 

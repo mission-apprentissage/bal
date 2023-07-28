@@ -39,10 +39,11 @@ function addEmail(
   );
 }
 
-function addEmailMessageId(token, messageId) {
+function addEmailMessageId(token: string, messageId: string) {
   return getDbCollection("events").findOneAndUpdate(
     { "payload.emails.token": token, name: "bal_emails" },
     {
+      // @ts-ignore
       $addToSet: {
         "payload.emails.$.messageIds": messageId,
       },
@@ -57,7 +58,7 @@ function addEmailMessageId(token, messageId) {
   );
 }
 
-function addEmailError(token, e) {
+function addEmailError(token: string, e: Error) {
   return getDbCollection("events").findOneAndUpdate(
     { "payload.emails.token": token, name: "bal_emails" },
     {
@@ -73,7 +74,7 @@ function addEmailError(token, e) {
   );
 }
 
-export async function markEmailAsDelivered(messageId) {
+export async function markEmailAsDelivered(messageId: string) {
   return getDbCollection("events").findOneAndUpdate(
     { name: "bal_emails", "payload.emails.messageIds": messageId },
     {
@@ -88,7 +89,7 @@ export async function markEmailAsDelivered(messageId) {
   );
 }
 
-export async function markEmailAsFailed(messageId, type) {
+export async function markEmailAsFailed(messageId: string, type: string) {
   return getDbCollection("events").findOneAndUpdate(
     { name: "bal_emails", "payload.emails.messageIds": messageId },
     {
@@ -103,7 +104,7 @@ export async function markEmailAsFailed(messageId, type) {
   );
 }
 
-export async function markEmailAsOpened(token) {
+export async function markEmailAsOpened(token: string) {
   return getDbCollection("events").findOneAndUpdate(
     { "payload.emails.token": token, name: "bal_emails" },
     {
@@ -117,7 +118,7 @@ export async function markEmailAsOpened(token) {
 }
 
 // TODO
-export async function unsubscribeUser(id) {
+export async function unsubscribeUser(id: string) {
   return getDbCollection("events").findOneAndUpdate(
     {
       $or: [
@@ -156,7 +157,7 @@ export async function renderEmail(token: string) {
   );
 }
 
-export async function checkIfEmailExists(token) {
+export async function checkIfEmailExists(token: string) {
   const count = await getDbCollection("events").countDocuments({
     "payload.emails.token": token,
     name: "bal_emails",
@@ -181,7 +182,7 @@ export async function sendStoredEmail<T extends TemplateName>(
       template
     );
     await addEmailMessageId(emailToken, messageId);
-  } catch (err: unknown) {
+  } catch (err) {
     captureException(err);
     logger.error({ err, template: templateName }, "error sending email");
     await addEmailError(emailToken, err);

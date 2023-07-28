@@ -1,3 +1,18 @@
+# [1.48.0](https://github.com/mission-apprentissage/bal/compare/v1.47.2...v1.48.0) (2023-07-21)
+
+
+### Bug Fixes
+
+* make aggregate safer ([fe7b1a2](https://github.com/mission-apprentissage/bal/commit/fe7b1a22f674eda8bf5d91bb718e62f484e06d48))
+* make aggregate safer ([#253](https://github.com/mission-apprentissage/bal/issues/253)) ([c52dbf7](https://github.com/mission-apprentissage/bal/commit/c52dbf7bde1da49df5ab11ddd76adc4071a250c0))
+* ui build with env-vars ([c3a227a](https://github.com/mission-apprentissage/bal/commit/c3a227a6d7deca11bb103a5367d3f30f92bb7bdc))
+* ui build with env-vars [GENT-53] ([#248](https://github.com/mission-apprentissage/bal/issues/248)) ([7395ecb](https://github.com/mission-apprentissage/bal/commit/7395ecbe2997cc0aeb7464eea7ed1b5cb7ae00a3))
+
+
+### Features
+
+* add sentry in ui [GENT-35] ([#235](https://github.com/mission-apprentissage/bal/issues/235)) ([0a93108](https://github.com/mission-apprentissage/bal/commit/0a93108fa4a53951f7305fcff95a647bd113db57))
+
 ## [1.47.2](https://github.com/mission-apprentissage/bal/compare/v1.47.1...v1.47.2) (2023-07-20)
 
 
