@@ -4,7 +4,7 @@ services:
   reverse_proxy:
     image: "nginxproxy/nginx-proxy"
     container_name: bal_reverse_proxy
-    restart: unless-stopped
+    restart: always
     deploy:
       resources:
         limits:
@@ -24,7 +24,7 @@ services:
   acme-companion:
     image: nginxproxy/acme-companion
     container_name: nginx-proxy-acme
-    restart: unless-stopped
+    restart: always
     volumes:
       - certs:/etc/nginx/certs:rw
       - acme:/etc/acme.sh
@@ -39,7 +39,7 @@ services:
   mongodb:
     image: mongo:6.0.2-focal
     container_name: bal_mongodb
-    restart: unless-stopped
+    restart: always
     deploy:
       resources:
         limits:
@@ -51,6 +51,15 @@ services:
       - "127.0.0.1:27017:27017"
     volumes:
       - /opt/bal/data/mongodb/db:/data/db
+    healthcheck:
+      test:
+        ["CMD", "mongosh", "--eval", '''db.runCommand("ping").ok''', "--quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    labels:
+      - autoheal=true
 
   clamav:
     image: clamav/clamav:latest
@@ -59,16 +68,18 @@ services:
       resources:
         limits:
           memory: 2g
-    restart: unless-stopped
+    restart: always
     networks:
       - bal_network
+    volumes:
+      - /opt/bal/data/clamav:/var/lib/clamav
     healthcheck:
       test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
       interval: 60s
       retries: 3
       start_period: 6m
-    volumes:
-      - /opt/bal/data/clamav:/var/lib/clamav
+    labels:
+      - autoheal=true
 
   smtp:
     image: axllent/mailpit:v1.5.5
@@ -92,6 +103,12 @@ services:
       - VIRTUAL_PORT=8025
       - LETSENCRYPT_HOST=smtp.{{dns_name}}
       - LETSENCRYPT_EMAIL=misson.apprentissage.devops@gmail.com
+
+  autoheal:
+    image: willfarrell/autoheal:latest
+    container_name: bal_autoheal
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   conf:

@@ -4,7 +4,7 @@ services:
   server:
     image: "ghcr.io/mission-apprentissage/mna_bal_server:0.0.0-{{pr_number}}"
     container_name: bal_{{pr_number}}_server
-    restart: unless-stopped
+    restart: always
     deploy:
       resources:
         limits:
@@ -20,11 +20,19 @@ services:
     env_file: .env_server
     volumes:
       - server:/data
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:5000/api/healthcheck"]
+      interval: 10s
+      timeout: 30s
+      retries: 11
+      start_period: 10s
+    labels:
+      - autoheal=true
 
   ui:
     image: "ghcr.io/mission-apprentissage/mna_bal_ui:0.0.0-{{pr_number}}-preview"
     container_name: bal_{{pr_number}}_ui
-    restart: unless-stopped
+    restart: always
     deploy:
       resources:
         limits:
@@ -46,7 +54,7 @@ services:
       resources:
         limits:
           memory: 1g
-    restart: unless-stopped
+    restart: always
     networks:
       - bal_network
     env_file: .env_server
