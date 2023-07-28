@@ -10,13 +10,10 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
-import { IReqGetMailingList } from "shared/routes/mailingList.routes";
-import {
-  DOCUMENT_TYPES,
-  IResGetDocumentTypes,
-} from "shared/routes/upload.routes";
+import { IBody, IPostRoutes } from "shared";
+import { DOCUMENT_TYPES } from "shared/constants/documents";
 
-import { api } from "../../../utils/api.utils";
+import { apiGet, apiPost } from "../../../utils/api.utils";
 
 interface Props {
   onSuccess: () => void;
@@ -27,19 +24,19 @@ const Form: FC<Props> = ({ onSuccess }) => {
     handleSubmit,
     formState: { errors, isSubmitting },
     register,
-  } = useForm<IReqGetMailingList>();
+  } = useForm<IBody<IPostRoutes["/mailing-list"]>>();
 
-  const { data: types = [] } = useQuery<IResGetDocumentTypes>({
+  const { data: types = [] } = useQuery<string[]>({
     queryKey: ["documentTypes"],
     queryFn: async () => {
-      const { data } = await api.get("/admin/documents/types");
+      const data = await apiGet("/admin/documents/types", {});
 
       return data;
     },
   });
 
-  const onSubmit = async (data: IReqGetMailingList) => {
-    await api.post("/mailing-list", { source: data.source });
+  const onSubmit = async (data: IBody<IPostRoutes["/mailing-list"]>) => {
+    await apiPost("/mailing-list", { body: { source: data.source } });
 
     await onSuccess();
   };

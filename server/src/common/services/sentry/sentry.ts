@@ -1,6 +1,10 @@
-import f from "@immobiliarelabs/fastify-sentry";
+import fastifySentryPlugin, {
+  SentryPluginOptions,
+  UserData,
+} from "@immobiliarelabs/fastify-sentry";
 import { CaptureConsole, ExtraErrorData } from "@sentry/integrations";
 import * as Sentry from "@sentry/node";
+import { FastifyInstance, FastifyRequest } from "fastify";
 import { IUser } from "shared/models/user.model";
 
 import config from "../../../config";
@@ -36,24 +40,32 @@ function getUserSegment(user: IUser | void | null) {
   return user.is_admin ? "admin" : "user";
 }
 
-export function initSentryFastify(app) {
-  app.register(f, {
+export function initSentryFastify<T extends FastifyInstance>(app: T) {
+  const options: SentryPluginOptions = {
     setErrorHandler: false,
-    extractUserData: (request) => {
-      return {
-        id: request.user?._id.toString(),
-        email: request.user?.email,
+    extractUserData: (request: FastifyRequest): UserData => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const data: any = {
         segment: getUserSegment(request.user),
       };
+
+      if (request.user) {
+        data.id = request.user._id.toString();
+        data.email = request.user.email;
+      }
+
+      return data;
     },
-    extractRequestData: (request) => {
+    extractRequestData: (request: FastifyRequest) => {
       return {
         headers: request.headers,
         method: request.method,
         protocol: request.protocol,
-        query_string: request.query_string,
+        query_string: request.query,
       };
     },
-    ...getOptions(),
-  });
+    ...(getOptions() as any),
+  };
+
+  app.register(fastifySentryPlugin, options);
 }

@@ -14,12 +14,15 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { IReqGetResetPassword, IStatus } from "shared/routes/auth.routes";
+import { IGetRoutes, IQuery } from "shared";
+import { IStatus } from "shared/routes/auth.routes";
 
 import Link from "../../../components/link/Link";
-import { api } from "../../../utils/api.utils";
+import { apiGet } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import { NavLink } from "../../components/NavLink";
+
+type Route = IGetRoutes["/auth/reset-password"];
 
 const MotDePasseOubliePage = () => {
   const [status, setStatus] = useState<IStatus>();
@@ -28,12 +31,12 @@ const MotDePasseOubliePage = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<IReqGetResetPassword>();
+  } = useForm<IQuery<Route>>();
 
-  const onSubmit: SubmitHandler<IReqGetResetPassword> = async (data) => {
+  const onSubmit: SubmitHandler<IQuery<Route>> = async (data) => {
     try {
-      await api.get("/auth/reset-password", {
-        params: data,
+      await apiGet("/auth/reset-password", {
+        querystring: data,
       });
 
       setStatus({

@@ -1,6 +1,6 @@
 import { Filter, FindOptions, ObjectId, UpdateFilter } from "mongodb";
+import { IPostRoutes, IResponse } from "shared";
 import { IOrganisation } from "shared/models/organisation.model";
-import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -18,7 +18,7 @@ export const validation = async ({
 }: {
   email: string;
   siret: string;
-}): Promise<IResOrganisationValidation> => {
+}): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
   const testDeca = await getDecaVerification(siret, email);
 
   if (testDeca.is_valid) {

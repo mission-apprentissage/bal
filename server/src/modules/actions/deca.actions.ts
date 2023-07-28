@@ -1,8 +1,7 @@
 import companyEmailValidator from "company-email-validator";
-// @ts-ignore
+import { IPostRoutes, IResponse } from "shared";
+import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { SIRET_REGEX } from "shared/constants/regex";
-import { DOCUMENT_TYPES } from "shared/routes/upload.routes";
-import { IResOrganisationValidation } from "shared/routes/v1/organisation.routes";
 
 import { findOneDocumentContent } from "./documentContent.actions";
 
@@ -41,7 +40,7 @@ export const parseContentLine = (
 export const getDecaVerification = async (
   siret: string,
   email: string
-): Promise<IResOrganisationValidation> => {
+): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
   let is_valid = false;
   const isBlacklisted = !companyEmailValidator.isCompanyEmail(email);
   const [_user, domain] = email.split("@");

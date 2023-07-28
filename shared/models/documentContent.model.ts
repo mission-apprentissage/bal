@@ -1,7 +1,7 @@
-import { FromSchema } from "json-schema-to-ts";
+import { Jsonify } from "type-fest";
+import { z } from "zod";
 
-import { deserialize } from "..";
-import { IModelDescriptor } from "./common";
+import { IModelDescriptor, zObjectId } from "./common";
 
 const collectionName = "documentContents" as const;
 
@@ -10,38 +10,28 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ type_document: 1 }, { name: "type_document" }],
 ];
 
-export const SDocumentContent = {
-  type: "object",
-  properties: {
-    _id: { type: "string", format: "ObjectId" },
-    document_id: { type: "string" },
-    content: {
-      type: "object",
-    },
-    type_document: {
-      type: "string",
-      description: "Le type de document (exemple: DECA, etc..)",
-    },
-    updated_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date de mise à jour en base de données",
-    },
-    created_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date d'ajout en base de données",
-    },
-  },
-  required: ["_id", "document_id"],
-  additionalProperties: false,
-} as const;
+export const ZDocumentContent = z
+  .object({
+    _id: zObjectId,
+    document_id: z.string().describe("Identifiant du document"),
+    content: z.record(z.unknown()).optional().describe("Contenu du document"),
+    type_document: z
+      .string()
+      .optional()
+      .describe("Le type de document (exemple: DECA, etc..)"),
+    updated_at: z
+      .date()
+      .optional()
+      .describe("Date de mise à jour en base de données"),
+    created_at: z.date().optional().describe("Date d'ajout en base de données"),
+  })
+  .strict();
 
-export interface IDocumentContent
-  extends FromSchema<typeof SDocumentContent, { deserialize: deserialize }> {}
+export type IDocumentContent = z.output<typeof ZDocumentContent>;
+export type IDocumentContentJsont = Jsonify<z.input<typeof ZDocumentContent>>;
 
 export default {
-  schema: SDocumentContent as any as IModelDescriptor["schema"],
+  zod: ZDocumentContent,
   indexes,
   collectionName,
 };

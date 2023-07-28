@@ -3,7 +3,7 @@
 import { Heading, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { FC } from "react";
-import { IResGetUser } from "shared/routes/user.routes";
+import { IUserWithPersonPublic } from "shared/models/user.model";
 
 import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
 import { formatDate } from "../../../../../utils/date.utils";
@@ -13,7 +13,7 @@ import Breadcrumb, {
 import { getPersonDisplayName } from "../../../personnes/persons.format";
 
 interface Props {
-  user: IResGetUser;
+  user: IUserWithPersonPublic;
 }
 
 const UserView: FC<Props> = ({ user }) => {
@@ -23,8 +23,7 @@ const UserView: FC<Props> = ({ user }) => {
         pages={[
           PAGES.homepage(),
           PAGES.adminUsers(),
-          // @ts-ignore
-          PAGES.adminUserView(user._id as string),
+          PAGES.adminUserView(user._id),
         ]}
       />
       <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
@@ -46,7 +45,6 @@ const UserView: FC<Props> = ({ user }) => {
               if (!person) return null;
 
               return (
-                // @ts-ignore
                 <Text as={Link} href={PAGES.adminViewPerson(person._id).path}>
                   {getPersonDisplayName(person)}
                 </Text>
@@ -61,8 +59,7 @@ const UserView: FC<Props> = ({ user }) => {
             header: () => "Dernière utilisation API",
             cell: ({ api_key_used_at }) => {
               return api_key_used_at
-                ? // @ts-ignore
-                  formatDate(api_key_used_at, "PPP à p")
+                ? formatDate(api_key_used_at, "PPP à p")
                 : "Jamais";
             },
           },

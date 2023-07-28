@@ -1,4 +1,4 @@
-import { IJob, JOB_STATUS_LIST } from "shared/models/job.model";
+import { IJob } from "shared/models/job.model";
 
 import logger from "@/common/logger";
 import { sleep } from "@/common/utils/asyncUtils";
@@ -20,7 +20,13 @@ import { clear } from "./seed/clear";
 import { seed } from "./seed/seed";
 
 export async function addJob(
-  { name, payload = {}, scheduled_at = new Date(), sync = false }: any,
+  {
+    name,
+    payload = {},
+    scheduled_at = new Date(),
+    sync = false,
+  }: Pick<IJob, "name"> &
+    Partial<Pick<IJob, "payload" | "scheduled_at" | "sync">>,
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }
@@ -54,8 +60,10 @@ async function runJob(
         case "clear":
           return clear();
         case "users:create":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return createUser(job.payload as any);
         case "indexes:recreate":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return recreateIndexes(job.payload as any);
         case "db:validate":
           return validateModels();
@@ -75,10 +83,13 @@ async function runJob(
           return;
         }
         case "migrations:create":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return createMigration(job.payload as any);
         case "import:document":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return handleDocumentFileContent(job.payload as any);
         case "generate:mailing-list":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return processMailingList(job.payload as any);
         default:
           return Promise.resolve();
@@ -89,17 +100,17 @@ async function runJob(
 }
 
 //abortSignal
-export async function processor() {
+export async function processor(): Promise<void> {
   logger.info(`Process jobs queue - looking for a job to execute`);
-  const { value: nextJob } = (await getDbCollection("jobs").findOneAndUpdate(
-    { status: JOB_STATUS_LIST.PENDING, scheduled_at: { $lte: new Date() } },
-    { $set: { status: JOB_STATUS_LIST.WILLSTART } },
+  const { value: nextJob } = await getDbCollection("jobs").findOneAndUpdate(
+    { status: "pending", scheduled_at: { $lte: new Date() } },
+    { $set: { status: "will_start" } },
     { sort: { scheduled_at: 1 } }
-  )) as any;
+  );
 
   if (nextJob) {
     logger.info(`Process jobs queue - job ${nextJob.name} will start`);
-    await runJob(nextJob as IJob);
+    await runJob(nextJob);
   } else {
     await sleep(60000); // 1 min
   }

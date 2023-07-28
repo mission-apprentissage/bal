@@ -30,12 +30,11 @@ export function createMailerService(
 ) {
   async function sendEmailMessage(
     to: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    template: { subject: string; templateFile: string; data: any }
+    template: { subject: string; templateFile: string; data: { token: string } }
   ) {
     const { subject, data } = template;
 
-    const { messageId } = (await transporter.sendMail({
+    const { messageId } = await transporter.sendMail({
       from: `${config.email_from} <${config.email}>`,
       to,
       subject,
@@ -44,8 +43,7 @@ export function createMailerService(
         help: "https://mission-apprentissage.gitbook.io/general/les-services-en-devenir/accompagner-les-futurs-apprentis", // TODO [metier/tech]
         unsubscribe: getPublicUrl(`/api/emails/${data.token}/unsubscribe`),
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    })) as any;
+    });
 
     return messageId;
   }

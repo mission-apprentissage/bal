@@ -1,6 +1,4 @@
-import { headers } from "next/headers";
-
-import { api } from "@/utils/api.utils";
+import { apiGet } from "@/utils/api.utils";
 
 import OrganisationView from "./components/OrganisationView";
 
@@ -9,14 +7,9 @@ interface Props {
 }
 
 const AdminOrganisationViewPage = async ({ params }: Props) => {
-  const { data: organisation } = await api.get(
-    `/api/admin/organisations/${params.id}`,
-    {
-      headers: {
-        cookie: headers().get("cookie") ?? "",
-      },
-    }
-  );
+  const organisation = await apiGet(`/admin/organisations/:id`, {
+    params,
+  });
 
   return <OrganisationView organisation={organisation} />;
 };

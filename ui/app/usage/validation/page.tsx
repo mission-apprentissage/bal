@@ -9,36 +9,39 @@ import {
   Input,
   InputGroup,
 } from "@chakra-ui/react";
-import { AxiosError } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  IReqPostOrganisationValidation,
-  IResOrganisationValidation,
-} from "shared/routes/v1/organisation.routes";
+import { IBody, IPostRoutes, IResponse } from "shared";
 
-import { api } from "../../../utils/api.utils";
+import { apiPost } from "../../../utils/api.utils";
+
+type Route = IPostRoutes["/v1/organisation/validation"];
+type Req = IBody<Route>;
+type Res = IResponse<Route>;
 
 const UsageVerificationPage = () => {
-  const [requestData, setRequestData] =
-    useState<IReqPostOrganisationValidation>();
-  const [responseData, setResponseData] =
-    useState<IResOrganisationValidation>();
+  const [requestData, setRequestData] = useState<Req>();
+  const [responseData, setResponseData] = useState<Res | Error>();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IReqPostOrganisationValidation>();
+  } = useForm<Req>();
 
-  const onSubmit = async (data: IReqPostOrganisationValidation) => {
+  const onSubmit = async (body: Req) => {
     try {
-      setRequestData(data);
-      const response = await api.post("/v1/organisation/validation", data);
+      setRequestData(body);
+      const data = await apiPost("/v1/organisation/validation", {
+        body,
+        headers: { Authorization: "" },
+      });
 
-      setResponseData(response.data);
+      setResponseData(data);
     } catch (error) {
-      const axiosError = error as AxiosError<IResOrganisationValidation>;
-      setResponseData(axiosError.response?.data);
+      if (error instanceof Error) {
+        setResponseData(error);
+      }
+
       console.error(error);
     }
   };

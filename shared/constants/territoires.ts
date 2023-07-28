@@ -99,9 +99,20 @@ export const REGIONS = [
     nom: "Collectivité d'outre-mer",
     code: "00",
   },
-];
+] as const;
 
-export const REGIONS_BY_ID = REGIONS.reduce((acc, region) => {
+type Codes = typeof REGIONS[number]["code"];
+
+type IRegion<C extends Codes> = {
+  code: C;
+  nom: string;
+};
+
+type IRegionPerId = {
+  [C in Codes]: IRegion<C>;
+};
+
+export const REGIONS_BY_ID: IRegionPerId = REGIONS.reduce((acc, region) => {
   acc[region.code] = region;
   return acc;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -24,12 +24,12 @@ export const modelDescriptors: IModelDescriptor[] = [
 ];
 
 export type IDocumentMap = {
-  users: Omit<IUser, "_id">;
-  jobs: Omit<IJob, "_id">;
-  organisations: Omit<IOrganisation, "_id">;
-  persons: Omit<IPerson, "_id">;
-  events: Omit<IEvent, "_id">;
-  sessions: Omit<ISession, "_id">;
-  documents: Omit<IDocument, "_id">;
-  documentContents: Omit<IDocumentContent, "_id">;
+  users: IUser;
+  jobs: IJob;
+  organisations: IOrganisation;
+  persons: IPerson;
+  events: IEvent;
+  sessions: ISession;
+  documents: IDocument;
+  documentContents: IDocumentContent;
 };

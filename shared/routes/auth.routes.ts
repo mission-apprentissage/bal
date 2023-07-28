@@ -1,64 +1,60 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
 
-import { SResGetUser } from "./user.routes";
+import {
+  ZUser,
+  ZUserPublic,
+  zUserWithPersonPublic,
+} from "../models/user.model";
+import { ZReqHeadersAuthorization } from "./common.routes";
 
-/**
- * Session
- */
-
-export const SReqHeadersAuthorization = {
-  type: "object",
-  properties: {
-    Authorization: { type: "string" },
+export const zAuthRoutes = {
+  get: {
+    "/auth/reset-password": {
+      querystring: z.object({ email: z.string().email() }).strict(),
+      response: {
+        "2xx": z.undefined(),
+      },
+    },
+    "/auth/logout": {
+      response: {
+        "2xx": z.undefined(),
+      },
+    },
+    "/auth/session": {
+      response: {
+        "2xx": ZUserPublic,
+      },
+      headers: ZReqHeadersAuthorization,
+    },
   },
+  post: {
+    "/auth/reset-password": {
+      body: z
+        .object({
+          password: ZUser.shape.password,
+          token: z.string(),
+        })
+        .strict(),
+      response: {
+        "2xx": z.undefined(),
+      },
+    },
+    "/auth/login": {
+      body: z
+        .object({
+          email: ZUser.shape.email,
+          password: ZUser.shape.password,
+        })
+        .strict(),
+      response: {
+        "2xx": zUserWithPersonPublic,
+      },
+    },
+  },
+  put: {},
+  delete: {},
 };
 
-export const SResGetSession = SResGetUser;
-
-export type IResGetSession = FromSchema<typeof SResGetSession> & {
-  error?: string;
-};
-
-/**
- * Login
- */
-export const SReqPostLogin = {
-  type: "object",
-  properties: {
-    email: { type: "string", format: "email" },
-    password: { type: "string", format: "password" },
-  },
-  required: ["email", "password"],
-} as const;
-
-export type IReqPostLogin = FromSchema<typeof SReqPostLogin>;
-
-export const SResPostLogin = SResGetSession;
-export type IResPostLogin = FromSchema<typeof SResPostLogin>;
-
-/**
- * Reset password
- */
-export const SReqGetResetPassword = {
-  type: "object",
-  properties: {
-    email: { type: "string", format: "email" },
-  },
-  required: ["email"],
-} as const;
-
-export type IReqGetResetPassword = FromSchema<typeof SReqGetResetPassword>;
-
-export const SReqPostResetPassword = {
-  type: "object",
-  properties: {
-    password: { type: "string" },
-    token: { type: "string" },
-  },
-  required: ["password", "token"],
-} as const;
-
-export type IReqPostResetPassword = FromSchema<typeof SReqPostResetPassword>;
 export interface IStatus {
   error?: boolean;
   message?: string;

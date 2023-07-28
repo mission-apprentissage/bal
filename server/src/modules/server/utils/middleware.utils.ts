@@ -1,15 +1,10 @@
-import { preValidationHookHandler } from "fastify";
+import Boom from "@hapi/boom";
+import { FastifyRequest } from "fastify";
 
-/**
- * À utiliser après avoir authentifié l'utilisateur
- */
-export const ensureUserIsAdmin: preValidationHookHandler = async (
-  request,
-  reply
-) => {
+export async function ensureUserIsAdmin(request: FastifyRequest) {
   const { user } = request;
 
   if (!user?.is_admin) {
-    return reply.status(401).send("Non autorisé");
+    throw Boom.forbidden();
   }
-};
+}

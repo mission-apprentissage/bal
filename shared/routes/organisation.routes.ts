@@ -1,21 +1,25 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
 
-import { deserialize } from "..";
-import { SOrganisation } from "../models/organisation.model";
+import { zObjectId } from "../models/common";
+import { ZOrganisation } from "../models/organisation.model";
+import { ZReqParamsSearchPagination } from "./common.routes";
 
-export const SResGetOrganisation = SOrganisation;
-
-export type IResGetOrganisation = FromSchema<
-  typeof SResGetOrganisation,
-  { deserialize: deserialize }
->;
-
-export const SResGetOrganisations = {
-  type: "array",
-  items: SOrganisation,
-} as const;
-
-export type IResGetOrganisations = FromSchema<
-  typeof SResGetOrganisations,
-  { deserialize: deserialize }
->;
+export const zAdminOrganisationRoutes = {
+  get: {
+    "/admin/organisations": {
+      querystring: ZReqParamsSearchPagination,
+      response: {
+        "2xx": z.array(ZOrganisation),
+      },
+    },
+    "/admin/organisations/:id": {
+      params: z.object({ id: zObjectId }).strict(),
+      response: {
+        "2xx": ZOrganisation,
+      },
+    },
+  },
+  post: {},
+  put: {},
+  delete: {},
+};

@@ -6,11 +6,11 @@ import {
   useContext,
   useState,
 } from "react";
-import { IResGetSession } from "shared/routes/auth.routes";
+import { IUserPublic } from "shared/models/user.model";
 
 interface IAuthContext {
-  user?: IResGetSession;
-  setUser: (user?: IResGetSession) => void;
+  user?: IUserPublic;
+  setUser: (user?: IUserPublic) => void;
 }
 
 export const AuthContext = createContext<IAuthContext>({
@@ -19,11 +19,11 @@ export const AuthContext = createContext<IAuthContext>({
 });
 
 interface Props extends PropsWithChildren {
-  initialUser?: IResGetSession;
+  initialUser?: IUserPublic;
 }
 
 export const AuthContextProvider: FC<Props> = ({ initialUser, children }) => {
-  const [user, setUser] = useState<IResGetSession | undefined>(initialUser);
+  const [user, setUser] = useState<IUserPublic | undefined>(initialUser);
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>

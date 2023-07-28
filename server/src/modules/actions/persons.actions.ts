@@ -1,5 +1,5 @@
 import { Filter, UpdateFilter } from "mongodb";
-import { IPerson } from "shared/models/person.model";
+import { IPerson, PersonWithOrganisation } from "shared/models/person.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -29,20 +29,26 @@ const DEFAULT_UNWIND = {
 
 export const createPerson = async (data: ICreatePerson) => {
   const now = new Date();
-  const { insertedId: personId } = await getDbCollection("persons").insertOne({
+  const person = {
     ...data,
     updated_at: now,
     created_at: now,
-  });
+  };
+  const { insertedId: personId } = await getDbCollection("persons").insertOne(
+    person
+  );
 
-  const person = await findPerson({ _id: personId });
-
-  return person;
+  return {
+    ...person,
+    _id: personId,
+  };
 };
 
-export const findPerson = async (filter: Filter<IPerson>) => {
+export const findPerson = async (
+  filter: Filter<IPerson>
+): Promise<PersonWithOrganisation | null> => {
   const person = await getDbCollection("persons")
-    .aggregate<IPerson>([
+    .aggregate<PersonWithOrganisation>([
       {
         $match: filter,
       },
@@ -61,9 +67,11 @@ export const findPerson = async (filter: Filter<IPerson>) => {
   return person;
 };
 
-export const findPersons = async (filter: Filter<IPerson>) => {
+export const findPersons = async (
+  filter: Filter<IPerson>
+): Promise<PersonWithOrganisation[]> => {
   const persons = await getDbCollection("persons")
-    .aggregate<IPerson>([
+    .aggregate<PersonWithOrganisation>([
       {
         $match: filter,
       },

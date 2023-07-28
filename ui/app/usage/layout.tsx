@@ -35,10 +35,11 @@ const UsageLayout: FC<PropsWithChildren> = ({ children }) => {
       </Heading>
       <Tabs mb={8} index={index} onChange={handleChange}>
         <TabList>
-          {tabs.map((tab: any) => (
+          {tabs.map((tab) => (
             <Tab key={tab.path}>
               {tab.title}
-              {tab.secure && (
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {(tab as any).secure && (
                 <LockFill color={"grey.625"} boxSize="4" ml={2} mb="0.250em" />
               )}
             </Tab>

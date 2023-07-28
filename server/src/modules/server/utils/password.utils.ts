@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import crypto from "crypto";
 
 import config from "@/config";
@@ -35,8 +36,16 @@ export const verifyPassword = (
 ) => {
   const [hashedStoredPassword, _iterations, salt] = storedHash.split("$");
 
+  if (!hashedStoredPassword) {
+    throw Boom.internal("verifyPassword: Invalid stored hash");
+  }
+
   const hashedPasswordWithSalt = hashPassword(password, salt);
   const [hashedPassword] = hashedPasswordWithSalt.split("$");
+
+  if (!hashedPassword) {
+    throw Boom.internal("verifyPassword: Invalid hashed password");
+  }
 
   return crypto.timingSafeEqual(
     Buffer.from(hashedPassword),

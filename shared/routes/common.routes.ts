@@ -1,22 +1,29 @@
-import { FromSchema } from "json-schema-to-ts";
+import { Jsonify } from "type-fest";
+import { z } from "zod";
 
-export const SResError = {
-  type: "object",
-  properties: {
-    code: { type: "string" },
-    message: { type: "string" },
-    statusCode: { type: "number" },
-  },
-  required: ["message", "statusCode"],
-} as const;
+export const ZResError = z
+  .object({
+    code: z.string().nullish(),
+    message: z.string(),
+    name: z.string(),
+    statusCode: z.number(),
+  })
+  .strict();
 
-export type IResError = FromSchema<typeof SResError>;
+export type IResError = z.input<typeof ZResError>;
+export type IResErrorJson = Jsonify<z.output<typeof ZResError>>;
 
-export const SReqParamsSearchPagination = {
-  type: "object",
-  properties: {
-    page: { type: "number" },
-    limit: { type: "number" },
-    q: { type: "string" },
-  },
-} as const;
+export const ZReqParamsSearchPagination = z
+  .object({
+    page: z.number().optional(),
+    limit: z.number().optional(),
+    q: z.string().optional(),
+  })
+  .strict();
+export type IReqParamsSearchPagination = z.input<
+  typeof ZReqParamsSearchPagination
+>;
+
+export const ZReqHeadersAuthorization = z.object({
+  Authorization: z.string().describe("Bearer token").optional(),
+});

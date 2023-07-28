@@ -3,7 +3,7 @@ import { ISession } from "shared/models/session.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-type TCreateSession = Omit<ISession, "id">;
+type TCreateSession = Pick<ISession, "token">;
 
 export const createSession = async (data: TCreateSession) => {
   const now = new Date();
@@ -21,12 +21,12 @@ export const createSession = async (data: TCreateSession) => {
 export const getSession = async (
   filter: Filter<ISession>,
   options?: FindOptions
-) => {
-  return await getDbCollection("sessions").findOne<ISession>(filter, options);
+): Promise<ISession | null> => {
+  return await getDbCollection("sessions").findOne(filter, options);
 };
 
-export const deleteSession = async (session: ISession) => {
-  await getDbCollection("sessions").deleteMany(session);
+export const deleteSession = async (token: string) => {
+  await getDbCollection("sessions").deleteMany({ token });
 };
 
 export const updateSession = async (_id: ObjectId, data: Partial<ISession>) => {

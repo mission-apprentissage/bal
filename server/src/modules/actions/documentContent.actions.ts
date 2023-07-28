@@ -32,9 +32,9 @@ export const findOneDocumentContent = async (
 export const findDocumentContents = async (
   filter: Filter<IDocumentContent>,
   options?: FindOptions
-) => {
+): Promise<IDocumentContent[]> => {
   return await getDbCollection("documentContents")
-    .find<IDocumentContent[]>(filter, options)
+    .find(filter, options)
     .toArray();
 };
 

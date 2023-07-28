@@ -1,62 +1,50 @@
-import { FromSchema } from "json-schema-to-ts";
+import { z } from "zod";
 
-import { deserialize } from "..";
-import { SPerson } from "../models/person.model";
+import { zObjectId } from "../models/common";
+import { ZPerson } from "../models/person.model";
+import { ZUser, ZUserPublic } from "../models/user.model";
+import { ZReqParamsSearchPagination } from "./common.routes";
 
-export const SReqPostUser = {
-  type: "object",
-  properties: {
-    email: { type: "string", format: "email" },
-    password: { type: "string" },
-    organisation_id: { type: "string" },
+const zUserWithPerson = ZUserPublic.extend({
+  person: ZPerson.nullish(),
+});
+
+export const zUserAdminRoutes = {
+  get: {
+    "/admin/users": {
+      querystring: ZReqParamsSearchPagination,
+      response: { "2xx": z.array(zUserWithPerson) },
+    },
+    "/admin/users/:id": {
+      params: z.object({ id: zObjectId }).strict(),
+      response: { "2xx": zUserWithPerson },
+    },
   },
-  required: ["email", "password", "organisation_id"],
-} as const;
-
-export type IReqPostUser = FromSchema<typeof SReqPostUser>;
-
-export const SResGetUser = {
-  type: "object",
-  properties: {
-    _id: { type: "string", format: "ObjectId" },
-    email: { type: "string" },
-    is_admin: { type: "boolean" },
-    api_key_used_at: { type: "string", format: "date-time" },
-    person: SPerson,
+  post: {
+    "/admin/user": {
+      body: z.object({
+        email: ZUser.shape.email,
+        password: ZUser.shape.password,
+        organisation_id: z.string(),
+      }),
+      response: {
+        "2xx": ZUserPublic,
+      },
+    },
   },
-  required: ["email"],
-  additionalProperties: false,
+  put: {},
+  delete: {},
 } as const;
 
-export const SResPostUser = SResGetUser;
-
-export type IResGetUser = FromSchema<
-  typeof SResGetUser,
-  {
-    deserialize: deserialize;
-  }
->;
-export type IResPostUser = FromSchema<
-  typeof SResPostUser,
-  {
-    deserialize: deserialize;
-  }
->;
-
-export const SResGetUsers = {
-  type: "array",
-  items: SResGetUser,
-} as const;
-
-export type IResGetUsers = FromSchema<typeof SResGetUsers>;
-
-export const SResGetGenerateApiKey = {
-  type: "object",
-  properties: {
-    api_key: { type: "string" },
+export const zUserRoutes = {
+  get: {
+    "/user/generate-api-key": {
+      response: {
+        "2xx": z.object({ api_key: z.string() }).strict(),
+      },
+    },
   },
-  required: ["api_key"],
-  additionalProperties: false,
-} as const;
-
-export type IResGetGenerateApiKey = FromSchema<typeof SResGetGenerateApiKey>;
+  post: {},
+  put: {},
+  delete: {},
+};

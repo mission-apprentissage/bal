@@ -1,5 +1,5 @@
-import { IUser } from "shared/models/user.model";
-import { SResGetGenerateApiKey } from "shared/routes/user.routes";
+import { forbidden } from "@hapi/boom";
+import { zRoutes } from "shared";
 
 import { generateApiKey } from "../actions/users.actions";
 import { Server } from "./server";
@@ -11,17 +11,14 @@ export const userRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/user/generate-api-key",
     {
-      schema: {
-        response: { 200: SResGetGenerateApiKey },
-      } as const,
-      preHandler: server.auth([
-        server.validateSession,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ]) as any,
+      schema: zRoutes.get["/user/generate-api-key"],
+      preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
-      const api_key = await generateApiKey(request.user as IUser);
-
+      if (!request.user) {
+        throw forbidden();
+      }
+      const api_key = await generateApiKey(request.user);
       return response.status(200).send({ api_key });
     }
   );

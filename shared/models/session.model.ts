@@ -1,37 +1,29 @@
-import { FromSchema } from "json-schema-to-ts";
+import { Jsonify } from "type-fest";
+import { z } from "zod";
 
-import { deserialize } from "..";
-import { IModelDescriptor } from "./common";
+import { IModelDescriptor, zObjectId } from "./common";
 
 const collectionName = "sessions" as const;
 
 const indexes: IModelDescriptor["indexes"] = [];
 
-export const SSession = {
-  type: "object",
-  properties: {
-    _id: { type: "string", format: "ObjectId" },
-    token: { type: "string" },
-    updated_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date de mise à jour en base de données",
-    },
-    created_at: {
-      type: "string",
-      format: "date-time",
-      description: "Date d'ajout en base de données",
-    },
-  },
-  required: ["token"],
-  additionalProperties: false,
-} as const;
+export const ZSession = z
+  .object({
+    _id: zObjectId,
+    token: z.string().describe("Token de la session"),
+    updated_at: z
+      .date()
+      .optional()
+      .describe("Date de mise à jour en base de données"),
+    created_at: z.date().optional().describe("Date d'ajout en base de données"),
+  })
+  .strict();
 
-export interface ISession
-  extends FromSchema<typeof SSession, { deserialize: deserialize }> {}
+export type ISession = z.output<typeof ZSession>;
+export type ISessionJson = Jsonify<z.input<typeof ZSession>>;
 
 export default {
-  schema: SSession as any as IModelDescriptor["schema"],
+  zod: ZSession,
   indexes,
   collectionName,
 };
