@@ -1,3 +1,22 @@
+# [1.50.0](https://github.com/mission-apprentissage/bal/compare/v1.49.0...v1.50.0) (2023-07-28)
+
+
+### Bug Fixes
+
+* add missing index ([e9bf2ed](https://github.com/mission-apprentissage/bal/commit/e9bf2ed08b14a1667344ac762799f01e15aceba3))
+* index array ([344dab9](https://github.com/mission-apprentissage/bal/commit/344dab9c9c06d8624f2f6d9ec6fda34f5b0b4e4b))
+* review ([e3b1048](https://github.com/mission-apprentissage/bal/commit/e3b1048d850d2d2d5c06031b0568b6493087747d))
+* review ([a5c4b7a](https://github.com/mission-apprentissage/bal/commit/a5c4b7a0e0ea48865770b69bdfbc9fa9e3bcd69f))
+* tests ([4813187](https://github.com/mission-apprentissage/bal/commit/481318771d1723524f87f8791f24628b4870523d))
+* type ([45faeff](https://github.com/mission-apprentissage/bal/commit/45faeffdda1dd2006253ab0ede38711720b4fddd))
+* types ([d39b92c](https://github.com/mission-apprentissage/bal/commit/d39b92c7d082daaab78aef37458c3e8f67439226))
+
+
+### Features
+
+* optimisation validation ([c596296](https://github.com/mission-apprentissage/bal/commit/c59629691b1834f561b03e692d4129f65ae3ba67))
+* optimisation validation [GENT-33] ([#231](https://github.com/mission-apprentissage/bal/issues/231)) ([adea67c](https://github.com/mission-apprentissage/bal/commit/adea67cc86b308b28ba3d714b83334a16a1ee600))
+
 # [1.49.0](https://github.com/mission-apprentissage/bal/compare/v1.48.0...v1.49.0) (2023-07-28)
 
 
