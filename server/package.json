@@ -9,8 +9,8 @@
   "type": "module",
   "scripts": {
     "start": "node dist/index.js start",
-    "dev": "tsup src/index.ts src/db/migrations --watch ./src --watch ../shared/src --onSuccess 'yarn run start'",
-    "build": "tsup src/index.ts src/db/migrations",
+    "dev": "tsup src/index.ts src/db/migrations --watch ./src --watch ../shared/src --onSuccess 'yarn run start' --splitting",
+    "build": "tsup src/index.ts src/db/migrations --splitting",
     "typecheck": "tsc --noEmit",
     "migrations:create": "yarn cli migrations:create",
     "cli": "node dist/index.js"
