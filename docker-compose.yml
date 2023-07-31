@@ -17,13 +17,14 @@ x-node-image: &node-image
 services:
   reverse_proxy:
     <<: *default
-    image: ghcr.io/mission-apprentissage/mna_reverse_proxy:0.0.4-beta.12
+    image: ghcr.io/mission-apprentissage/mna_reverse_proxy:0.0.4-beta.13
     ports:
       - 80:80
       - 443:443
     environment:
       - SERVER_NAME=localhost
       - NGINX_ALWAYS_TLS_REDIRECT=false
+      - SSL_ENGINE=off
 
   ui:
     <<: *node-image
