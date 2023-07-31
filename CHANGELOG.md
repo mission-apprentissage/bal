@@ -1,3 +1,19 @@
+# [1.51.0](https://github.com/mission-apprentissage/bal/compare/v1.50.0...v1.51.0) (2023-07-31)
+
+
+### Bug Fixes
+
+* migrations build ([11a86b9](https://github.com/mission-apprentissage/bal/commit/11a86b90636777773c8cf555ed67f077c5368a8e))
+* migrations build ([#258](https://github.com/mission-apprentissage/bal/issues/258)) ([3a6fbd0](https://github.com/mission-apprentissage/bal/commit/3a6fbd0ace8203f5e00171362d02d2876cd8b6c2))
+
+
+### Features
+
+* configure fluentd ([d7d31dd](https://github.com/mission-apprentissage/bal/commit/d7d31ddb190b205d9b312372c4b7908f2213547a))
+* fluentd configuration ([#255](https://github.com/mission-apprentissage/bal/issues/255)) ([8149cf2](https://github.com/mission-apprentissage/bal/commit/8149cf2f7fe0d467d3d6ac97929c30e79b7d73bb))
+* use infra reverse_proxy ([8ece213](https://github.com/mission-apprentissage/bal/commit/8ece2137afa8f3e4aca6fd981d2011cc46413631))
+* use infra reverse_proxy ([#257](https://github.com/mission-apprentissage/bal/issues/257)) ([18232a2](https://github.com/mission-apprentissage/bal/commit/18232a235e99cfb92ee143e57d1e5d4b1a36be93))
+
 # [1.50.0](https://github.com/mission-apprentissage/bal/compare/v1.49.0...v1.50.0) (2023-07-28)
 
 
