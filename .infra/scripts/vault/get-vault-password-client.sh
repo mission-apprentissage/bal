@@ -28,16 +28,17 @@ elif [ ! -z "$DOCUMENT_CONTENT" ] && [ "$DOCUMENT_CONTENT" != "$(cat "${vault_pa
     echo "$DOCUMENT_CONTENT" > "$vault_password_file"
     echo "Nouveau vault-password créé avec succès."
 
-
-    vault_id=$(gpg --quiet --batch --use-agent --decrypt "${previous_vault_password_file}")
-    new_vault_id=$(gpg --quiet --batch --use-agent --decrypt "${vault_password_file}")
+    previous_vault_password_file_clear_text="${SCRIPT_DIR}/../../vault/prev_clear_text"
+    vault_password_file_clear_text="${SCRIPT_DIR}/../../vault/new_clear_text"
+    gpg --quiet --batch --use-agent --decrypt "${previous_vault_password_file}" > "${previous_vault_password_file_clear_text}"
+    gpg --quiet --batch --use-agent --decrypt "${vault_password_file}" > "${vault_password_file_clear_text}"
 
     ansible-vault rekey \
-    --vault-id "${vault_id}" \
-    --new-vault-id "${new_vault_id}" \
+    --vault-id "${previous_vault_password_file_clear_text}" \
+    --new-vault-id "${vault_password_file_clear_text}" \
     "${VAULT_FILE}"
 
-   rm "${previous_vault_password_file}"
+   rm "${previous_vault_password_file}" "${previous_vault_password_file_clear_text}" "${vault_password_file_clear_text}"
 fi
 
 ## Decrypt
