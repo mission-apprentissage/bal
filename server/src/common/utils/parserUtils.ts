@@ -50,6 +50,7 @@ export function parseCsv(options = {}) {
     trim: true,
     delimiter: ";",
     columns: true,
+    bom: true,
     relax_column_count: true,
     on_record: (record) => {
       return pickBy(record, (v) => {

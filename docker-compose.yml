@@ -17,24 +17,13 @@ x-node-image: &node-image
 services:
   reverse_proxy:
     <<: *default
+    image: ghcr.io/mission-apprentissage/mna_reverse_proxy:0.0.4-beta.12
     ports:
       - 80:80
       - 443:443
     environment:
-      - PARANOIA=1
-      - ANOMALY_INBOUND=5
-      - ANOMALY_OUTBOUND=4
-      - REPORTING_LEVEL=4
-      - DNS_SERVER=127.0.0.11
-      - PROXY=1
-      - SERVERNAME=localhost
-      - LOGLEVEL=warn
+      - SERVER_NAME=localhost
       - NGINX_ALWAYS_TLS_REDIRECT=false
-      - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
-    volumes:
-      - bal_nginx_data:/data
-    build:
-      context: reverse_proxy
 
   ui:
     <<: *node-image
@@ -84,7 +73,8 @@ services:
     volumes:
       - bal_mongodb_data:/data
     healthcheck:
-      test: ['CMD', 'mongosh', '--eval', "'db.runCommand(\"ping\").ok'", '--quiet']
+      test:
+        ["CMD", "mongosh", "--eval", '''db.runCommand("ping").ok''', "--quiet"]
       interval: 10s
       timeout: 5s
       retries: 12
@@ -116,9 +106,6 @@ volumes:
   bal_mongodb_data:
     driver: local
     name: bal_mongodb_data
-  bal_nginx_data:
-    driver: local
-    name: bal_nginx_data
   bal_server_data:
     driver: local
     name: bal_server_data

@@ -21,7 +21,7 @@ x-default: &default
 services:
   reverse_proxy:
     <<: *default
-    image: "ghcr.io/mission-apprentissage/mna_bal_reverse_proxy:{{reverse_proxy_version}}"
+    image: "ghcr.io/mission-apprentissage/mna_reverse_proxy:{{reverse_proxy_version}}"
     deploy:
       <<: *deploy-default
       resources:
@@ -33,27 +33,14 @@ services:
       - "443:443"
     environment:
       - SERVER_NAME={{dns_name}}
-      - NGINX_ALWAYS_TLS_REDIRECT=true
-      - PROXY_SSL_CERT=/ssl/fullchain.pem
-      - PROXY_SSL_CERT_KEY=/ssl/privkey.pem
-      - PARANOIA=1
-      - ANOMALY_INBOUND=5
-      - ANOMALY_OUTBOUND=4
-      - REPORTING_LEVEL=4
-      - DNS_SERVER=127.0.0.11
-      - PROXY=1
-      - SERVERNAME=localhost
-      - LOGLEVEL=warn
-      - NGINX_ALWAYS_TLS_REDIRECT=false
-      - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
     volumes:
-      - /opt/bal/data/nginx:/data
-      - /opt/bal/data/ssl:/ssl:ro
+      - /opt/bal/data/certbot/conf/:/etc/nginx/ssl/:ro
+      - /opt/bal/data/certbot/www:/var/www/certbot/:ro
     logging:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: nginx
+        tag: docker.bal.{{env_type}}.nginx
         fluentd-async: "true"
 
   server:
@@ -72,7 +59,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: server
+        tag: docker.bal.{{env_type}}.server
         fluentd-async: "true"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:5000/api/healthcheck"]
@@ -97,7 +84,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: processor
+        tag: docker.bal.{{env_type}}.processor
         fluentd-async: "true"
 
   ui:
@@ -113,7 +100,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: ui
+        tag: docker.bal.{{env_type}}.ui
         fluentd-async: "true"
 
   metabase:
@@ -148,7 +135,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: metabase
+        tag: docker.bal.{{env_type}}.metabase
         fluentd-async: "true"
 
   clamav:
@@ -168,7 +155,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: clamav
+        tag: docker.bal.{{env_type}}.clamav
         fluentd-async: "true"
     volumes:
       - /opt/bal/data/clamav:/var/lib/clamav
@@ -210,14 +197,28 @@ services:
 
   fluentd:
     <<: *default
-    image: fluent/fluentd:v1.16
+    image: grafana/fluent-plugin-loki:main
     user: root
     volumes:
       - /opt/bal/configs/fluentd/conf:/fluentd/etc
       - /opt/bal/data/fluentd:/var/log/fluent
+      - /var/log:/var/log
+      # Needed for journald log ingestion:
+      - /etc/machine-id:/etc/machine-id
+      - /dev/log:/dev/log
+      - /var/run/systemd/journal/:/var/run/systemd/journal/
     ports:
       - "24224:24224"
       - "24224:24224/udp"
+    command:
+      - "fluentd"
+      - "-v"
+      - "-p"
+      - "/fluentd/plugins"
+    environment:
+      LOKI_URL: https://monitoring.apprentissage.beta.gouv.fr/loki
+      # LOKI_USERNAME:
+      # LOKI_PASSWORD:
 
 networks:
   bal_network:

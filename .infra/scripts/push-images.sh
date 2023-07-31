@@ -70,12 +70,19 @@ case $response in
     ;;
 esac
 
-read -p "[ghcr.io] user ? : " u
-read -p "[ghcr.io] GH personnal token ? : " p
+echo -e '\n'
+read -p "Do you need to login to ghcr.io registry? [y/N]" response_login
 
-echo "Login sur le registry ..."
-echo $p | docker login ghcr.io -u "$u" --password-stdin
-echo "Logged!"
+case $response_login in
+  [yY][eE][sS]|[yY])
+    read -p "[ghcr.io] user ? : " u
+    read -p "[ghcr.io] GH personnal token ? : " p
+
+    echo "Login sur le registry ..."
+    echo $p | docker login ghcr.io -u "$u" --password-stdin
+    echo "Logged!"
+    ;;
+esac
 
 echo "Création des images docker locales (docker build)"
 

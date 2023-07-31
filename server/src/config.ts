@@ -1,7 +1,7 @@
 import env from "env-var";
 
 const config = {
-  appName: env.get("APP_NAME").default("BAL").asString(),
+  appName: env.get("APP_NAME").default("bal").asString(),
   env: env
     .get("MNA_BAL_ENV")
     .required()
