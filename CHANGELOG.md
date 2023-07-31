@@ -1,3 +1,17 @@
+# [1.53.0](https://github.com/mission-apprentissage/bal/compare/v1.52.0...v1.53.0) (2023-07-31)
+
+
+### Bug Fixes
+
+* rm echo ([ba1fd9c](https://github.com/mission-apprentissage/bal/commit/ba1fd9cd81909f104847e660ceb60e74463be6aa))
+* vault rekey ([6e33f3b](https://github.com/mission-apprentissage/bal/commit/6e33f3b0bcf53960c12320e1327c9240351fbfc1))
+
+
+### Features
+
+* adapt get-vault-password-client to always check vault-password update ([513743d](https://github.com/mission-apprentissage/bal/commit/513743dfe5f4d2fe264b45edeb2f7930b5a02d84))
+* move infra  ([#259](https://github.com/mission-apprentissage/bal/issues/259)) ([46079d4](https://github.com/mission-apprentissage/bal/commit/46079d4af6d11c1224cb89188b3c2786f7f8cc37))
+
 # [1.52.0](https://github.com/mission-apprentissage/bal/compare/v1.51.2...v1.52.0) (2023-07-31)
 
 
