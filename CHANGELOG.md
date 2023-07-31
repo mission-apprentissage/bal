@@ -1,3 +1,11 @@
+## [1.51.1](https://github.com/mission-apprentissage/bal/compare/v1.51.0...v1.51.1) (2023-07-31)
+
+
+### Bug Fixes
+
+* certbot config ([87e85c9](https://github.com/mission-apprentissage/bal/commit/87e85c91df7aa10955bcb1b7c3ed8bba659d7565))
+* certbot config ([#260](https://github.com/mission-apprentissage/bal/issues/260)) ([793f1c1](https://github.com/mission-apprentissage/bal/commit/793f1c109ef3d5de88cc59fa94872900cdc0a3a5))
+
 # [1.51.0](https://github.com/mission-apprentissage/bal/compare/v1.50.0...v1.51.0) (2023-07-31)
 
 
