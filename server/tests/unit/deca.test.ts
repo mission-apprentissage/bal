@@ -131,12 +131,14 @@ describe("DECA import", () => {
     const organisations = await findOrganisations({});
 
     assert.equal(persons.length, 2);
-    assert.ok(persons.find((p) => p.email === "test1@company.com"));
-    assert.ok(persons[0].sirets?.includes("12345678901234"));
-    assert.ok(persons[0].sirets?.includes("12345678900000"));
+    const p1 = persons.find((p) => p.email === "test1@company.com");
+    assert.ok(p1);
+    assert.ok(p1.sirets?.includes("12345678901234"));
+    assert.ok(p1.sirets?.includes("12345678900000"));
 
-    assert.ok(persons.find((p) => p.email === "test2@company.com"));
-    assert.ok(persons[1].sirets?.includes("12345678901234"));
+    const p2 = persons.find((p) => p.email === "test2@company.com");
+    assert.ok(p2);
+    assert.ok(p2.sirets?.includes("12345678901234"));
 
     assert.equal(organisations.length, 1);
     assert.equal(organisations[0].siren, "123456789");
