@@ -1,3 +1,11 @@
+# [1.52.0](https://github.com/mission-apprentissage/bal/compare/v1.51.2...v1.52.0) (2023-07-31)
+
+
+### Features
+
+* use mna fluentd ([0601bfe](https://github.com/mission-apprentissage/bal/commit/0601bfe32a5b0a52ec994e81080b1625f0ba4d80))
+* use mna fluentd ([#263](https://github.com/mission-apprentissage/bal/issues/263)) ([9496737](https://github.com/mission-apprentissage/bal/commit/9496737b37564c57044b7eeedc3d436954d21d9e))
+
 ## [1.51.2](https://github.com/mission-apprentissage/bal/compare/v1.51.1...v1.51.2) (2023-07-31)
 
 
