@@ -18,7 +18,7 @@ ansible-playbook \
     --limit "${ENV_FILTER}" \
     --vault-password-file="${SCRIPT_DIR}/vault/get-vault-password-client.sh" \
     ${ansible_become_default} \
-     "${SCRIPT_DIR}/../playbooks/deploy.yml" "$@"
+     "${SCRIPT_DIR}/../deploy.yml" "$@"
 }
 
 deploy "$@"
