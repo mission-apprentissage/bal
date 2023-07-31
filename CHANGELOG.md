@@ -1,3 +1,13 @@
+## [1.51.2](https://github.com/mission-apprentissage/bal/compare/v1.51.1...v1.51.2) (2023-07-31)
+
+
+### Bug Fixes
+
+* reverse_proxy healthcheck ([167ad8e](https://github.com/mission-apprentissage/bal/commit/167ad8e291a9d7a8c4468aa72ea8b4a237fc1c13))
+* reverse_proxy healthcheck ([#261](https://github.com/mission-apprentissage/bal/issues/261)) ([0d66140](https://github.com/mission-apprentissage/bal/commit/0d66140c5ad50b8f24e40eb2b078ec97af65731a))
+* tests ([1772e53](https://github.com/mission-apprentissage/bal/commit/1772e5356700fbca42af3255373b4589a9bb267c))
+* tests ([#262](https://github.com/mission-apprentissage/bal/issues/262)) ([54c655c](https://github.com/mission-apprentissage/bal/commit/54c655cba54e6102dfae0ea0e6746d4980bab065))
+
 ## [1.51.1](https://github.com/mission-apprentissage/bal/compare/v1.51.0...v1.51.1) (2023-07-31)
 
 
