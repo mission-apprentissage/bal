@@ -197,26 +197,11 @@ services:
 
   fluentd:
     <<: *default
-    image: grafana/fluent-plugin-loki:main
-    user: root
-    volumes:
-      - /opt/bal/configs/fluentd/conf:/fluentd/etc
-      - /opt/bal/data/fluentd:/var/log/fluent
-      - /var/log:/var/log
-      # Needed for journald log ingestion:
-      - /etc/machine-id:/etc/machine-id
-      - /dev/log:/dev/log
-      - /var/run/systemd/journal/:/var/run/systemd/journal/
+    image: "ghcr.io/mission-apprentissage/mna_fluentd:{{fluentd_version}}"
     ports:
       - "24224:24224"
       - "24224:24224/udp"
-    command:
-      - "fluentd"
-      - "-v"
-      - "-p"
-      - "/fluentd/plugins"
-    environment:
-      LOKI_URL: https://monitoring.apprentissage.beta.gouv.fr/loki
+    # environment:
       # LOKI_USERNAME:
       # LOKI_PASSWORD:
 
