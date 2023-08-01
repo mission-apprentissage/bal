@@ -11,6 +11,7 @@ export const ZJob = z
   .object({
     _id: zObjectId,
     name: z.string().describe("Le nom de la tâche"),
+    type: z.enum(["simple", "cron"]).describe("Type du job simple ou cron"),
     status: z
       .enum([
         "pending",
@@ -30,7 +31,11 @@ export const ZJob = z
       .record(z.unknown())
       .optional()
       .describe("Les valeurs de retours du job"),
-    scheduled_at: z.date().describe("Date de lancement programmée"),
+    cron_string: z
+      .string()
+      .optional()
+      .describe("standard cron string exemple: '*/2 * * * *'"),
+    scheduled_for: z.date().describe("Date de lancement programmée"),
     started_at: z.date().optional().describe("Date de lancement"),
     ended_at: z.date().optional().describe("Date de fin d'execution"),
     updated_at: z

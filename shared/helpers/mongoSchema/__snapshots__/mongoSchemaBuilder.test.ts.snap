@@ -272,7 +272,7 @@ exports[`zodToMongoSchema > should convert jobs schema 1`] = `
       "bsonType": "object",
       "description": "La donnée liéé à la tâche",
     },
-    "scheduled_at": {
+    "scheduled_for": {
       "bsonType": "date",
       "description": "Date de lancement programmée",
     },
@@ -305,7 +305,7 @@ exports[`zodToMongoSchema > should convert jobs schema 1`] = `
     "_id",
     "name",
     "status",
-    "scheduled_at",
+    "scheduled_for",
   ],
 }
 `;

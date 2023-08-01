@@ -37,6 +37,7 @@
     "commander": "10.0.0",
     "company-email-validator": "1.0.9",
     "convert-csv-to-json": "2.0.0",
+    "cron-parser": "4.8.1",
     "csv-parse": "5.4.0",
     "csv-stringify": "6.4.0",
     "date-fns": "^2.30.0",

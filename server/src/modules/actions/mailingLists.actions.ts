@@ -18,7 +18,7 @@ import {
   TrainingLinkData,
 } from "../../common/apis/lba";
 import { uploadToStorage } from "../../common/utils/ovhUtils";
-import { addJob } from "../jobs/jobs";
+import { addJob } from "../jobs/jobs_actions";
 import { noop } from "../server/utils/upload.utils";
 import {
   createEmptyDocument,

@@ -9,24 +9,31 @@ import { IJob } from "shared/models/job.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-type CreateJobParam = Pick<IJob, "name" | "payload" | "scheduled_at" | "sync">;
+type CreateJobParam = Pick<
+  IJob,
+  "name" | "type" | "cron_string" | "payload" | "scheduled_for" | "sync"
+>;
 
 /**
  * Création d'un job
  */
 export const createJob = async ({
   name,
+  type = "simple",
   payload,
-  scheduled_at = new Date(),
+  scheduled_for = new Date(),
   sync = false,
+  cron_string,
 }: CreateJobParam): Promise<IJob> => {
   const job: WithoutId<IJob> = {
     name,
+    type,
     status: sync ? "will_start" : "pending",
     ...(payload ? { payload } : {}),
+    ...(cron_string ? { cron_string } : {}),
     updated_at: new Date(),
     created_at: new Date(),
-    scheduled_at,
+    scheduled_for,
     sync,
   };
   const { insertedId: _id } = await getDbCollection("jobs").insertOne(job);

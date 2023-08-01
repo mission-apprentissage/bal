@@ -7,7 +7,59 @@ import { formatDuration, intervalToDuration } from "date-fns";
 import { IJob } from "shared/models/job.model";
 
 import logger from "@/common/logger";
+import { sleep } from "@/common/utils/asyncUtils";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
 import { updateJob } from "@/modules/actions/job.actions";
+
+import { createJob } from "../actions/job.actions";
+import { runJob } from "./jobs";
+
+export async function addJob(
+  {
+    name,
+    type = "simple",
+    payload = {},
+    scheduled_for = new Date(),
+    sync = false,
+  }: Pick<IJob, "name"> &
+    Partial<Pick<IJob, "type" | "payload" | "scheduled_for" | "sync">>,
+  options: { runningLogs: boolean } = {
+    runningLogs: true,
+  }
+): Promise<number> {
+  const job = await createJob({
+    name,
+    type,
+    payload,
+    scheduled_for,
+    sync,
+  });
+
+  if (sync && job) {
+    return runJob(job, options);
+  }
+
+  return 0;
+}
+
+//abortSignal
+export async function processor(): Promise<void> {
+  logger.info(`Process jobs queue - looking for a job to execute`);
+  const { value: nextJob } = await getDbCollection("jobs").findOneAndUpdate(
+    { type: "simple", status: "pending", scheduled_for: { $lte: new Date() } },
+    { $set: { status: "will_start" } },
+    { sort: { scheduled_for: 1 } }
+  );
+
+  if (nextJob) {
+    logger.info(`Process jobs queue - job ${nextJob.name} will start`);
+    await runJob(nextJob);
+  } else {
+    await sleep(45000); // 45 secondes
+  }
+
+  return processor();
+}
 
 const runner = async (
   job: IJob,
