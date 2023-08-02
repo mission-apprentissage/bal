@@ -5887,6 +5887,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cron-parser@npm:4.8.1":
+  version: 4.8.1
+  resolution: "cron-parser@npm:4.8.1"
+  dependencies:
+    luxon: ^3.2.1
+  checksum: e3e7b227cb45c8e3e16b5ceab9fd1b4769b878b430f009d5de26c3e20d4e0112fde6f90a663afbcd9cc2be92d73b6eefe2d939d1646f3a96704f73c63dd39b6f
+  languageName: node
+  linkType: hard
+
 "cross-spawn-async@npm:^2.1.1":
   version: 2.2.5
   resolution: "cross-spawn-async@npm:2.2.5"
@@ -10959,7 +10968,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:^3.3.0":
+"luxon@npm:^3.2.1, luxon@npm:^3.3.0":
   version: 3.3.0
   resolution: "luxon@npm:3.3.0"
   checksum: 50cf17a0dc155c3dcacbeae8c0b7e80db425e0ba97b9cbdf12a7fc142d841ff1ab1560919f033af46240ed44e2f70c49f76e3422524c7fc8bb8d81ca47c66187
@@ -15501,6 +15510,7 @@ __metadata:
     commander: 10.0.0
     company-email-validator: 1.0.9
     convert-csv-to-json: 2.0.0
+    cron-parser: 4.8.1
     csv-parse: 5.4.0
     csv-stringify: 6.4.0
     date-fns: ^2.30.0

@@ -26,7 +26,7 @@ export const up = async (db: Db, _client: MongoClient) => {
         sync: false,
         created_at: mailingList.created_at,
         updated_at: mailingList.updated_at,
-        scheduled_at: mailingList.created_at,
+        scheduled_for: mailingList.created_at,
         ended_at: mailingList.updated_at,
       });
     })
