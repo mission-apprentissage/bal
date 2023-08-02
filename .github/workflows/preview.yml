@@ -44,6 +44,7 @@ jobs:
           ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
           ANSIBLE_REMOTE_USER: ${{ secrets.DEPLOY_USERNAME }}
           ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
+          ANSIBLE_SUDO_PASS: ${{ secrets.DEPLOY_PASS }}
 
       - name: Preview Summary
         run: echo 'https://${{ github.event.pull_request.number }}.bal-preview.apprentissage.beta.gouv.fr/ 🚀' >> $GITHUB_STEP_SUMMARY
