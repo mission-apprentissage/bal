@@ -1,3 +1,12 @@
+# [1.55.0](https://github.com/mission-apprentissage/bal/compare/v1.54.2...v1.55.0) (2023-08-02)
+
+
+### Features
+
+* update deployment ([b877c9f](https://github.com/mission-apprentissage/bal/commit/b877c9fb31a8d099632eb059b894714271db73e1))
+* update deployment ([18aa188](https://github.com/mission-apprentissage/bal/commit/18aa18825e88219724173cf64b59b8d6ec1cc2c4))
+* update deployment according to new infra changes ([#269](https://github.com/mission-apprentissage/bal/issues/269)) ([eb0d291](https://github.com/mission-apprentissage/bal/commit/eb0d2915068fac6a0ae61d229c4e5b74acbeee8f))
+
 ## [1.54.2](https://github.com/mission-apprentissage/bal/compare/v1.54.1...v1.54.2) (2023-08-02)
 
 
