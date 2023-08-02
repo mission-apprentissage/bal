@@ -51,6 +51,7 @@ export async function cronsScheduler(): Promise<void> {
   const crons = await findJobs(
     {
       type: "cron",
+      //scheduled_for: { $lte: new Date() },
     },
     { sort: { scheduled_for: 1 } }
   );

@@ -5,7 +5,13 @@ import { IModelDescriptor, zObjectId } from "./common";
 
 const collectionName = "jobs" as const;
 
-const indexes: IModelDescriptor["indexes"] = [];
+const indexes: IModelDescriptor["indexes"] = [
+  [{ type: 1, scheduled_for: 1 }, { name: "type_scheduled_for" }],
+  [
+    { type: 1, status: 1, scheduled_for: 1 },
+    { name: "type_status_scheduled_for" },
+  ],
+];
 
 export const ZJob = z
   .object({
