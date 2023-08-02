@@ -1,122 +1,63 @@
 version: "3.8"
 
+x-default: &default
+  deploy:
+    resources:
+      limits:
+        memory: 256m
+  restart: always
+  networks:
+    - mna_network
+
+name: "bal_preview_{{pr_number}}"
+
 services:
-  reverse_proxy:
-    image: "nginxproxy/nginx-proxy"
-    container_name: bal_reverse_proxy
-    restart: always
-    deploy:
-      resources:
-        limits:
-          memory: 256m
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - bal_network
-    volumes:
-      - conf:/etc/nginx/conf.d
-      - vhost:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
-      - certs:/etc/nginx/certs:ro
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-
-  acme-companion:
-    image: nginxproxy/acme-companion
-    container_name: nginx-proxy-acme
-    restart: always
-    volumes:
-      - certs:/etc/nginx/certs:rw
-      - acme:/etc/acme.sh
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+  server:
+    <<: *default
+    image: "ghcr.io/mission-apprentissage/mna_bal_server:0.0.0-{{pr_number}}"
+    container_name: bal_{{pr_number}}_server
     environment:
-      - DEFAULT_EMAIL=misson.apprentissage.devops@gmail.com
-    volumes_from:
-      - reverse_proxy
-    networks:
-      - bal_network
-
-  mongodb:
-    image: mongo:6.0.2-focal
-    container_name: bal_mongodb
-    restart: always
-    deploy:
-      resources:
-        limits:
-          memory: 2g
-    networks:
-      - bal_network
-    # command: mongod --auth
-    ports:
-      - "127.0.0.1:27017:27017"
+      - VIRTUAL_HOST={{pr_number}}.bal-preview.apprentissage.beta.gouv.fr
+      - VIRTUAL_PATH=/api
+      - VIRTUAL_PORT=5000
+      - LETSENCRYPT_HOST={{pr_number}}.bal-preview.apprentissage.beta.gouv.fr
+      - LETSENCRYPT_EMAIL=misson.apprentissage.devops@gmail.com
+    env_file: .env_server
     volumes:
-      - /opt/bal/data/mongodb/db:/data/db
+      - server:/data
     healthcheck:
-      test:
-        ["CMD", "mongosh", "--eval", '''db.runCommand("ping").ok''', "--quiet"]
+      test: ["CMD", "curl", "--fail", "http://localhost:5000/api/healthcheck"]
       interval: 10s
-      timeout: 5s
-      retries: 12
+      timeout: 30s
+      retries: 11
       start_period: 10s
     labels:
       - autoheal=true
 
-  clamav:
-    image: clamav/clamav:latest
-    container_name: bal_clamav
-    deploy:
-      resources:
-        limits:
-          memory: 2g
-    restart: always
-    networks:
-      - bal_network
-    volumes:
-      - /opt/bal/data/clamav:/var/lib/clamav
-    healthcheck:
-      test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
-      interval: 60s
-      retries: 3
-      start_period: 6m
-    labels:
-      - autoheal=true
-
-  smtp:
-    image: axllent/mailpit:v1.5.5
-    container_name: bal_smtp
-    deploy:
-      resources:
-        limits:
-          memory: 128m
-    ports:
-      - 1025:1025
-    networks:
-      - bal_network
-    volumes:
-      - /opt/bal/data/smtp:/data
-      - /opt/bal/configs/mailpit/auth:/auth
+  ui:
+    <<: *default
+    image: "ghcr.io/mission-apprentissage/mna_bal_ui:0.0.0-{{pr_number}}-preview"
+    container_name: bal_{{pr_number}}_ui
     environment:
-      - MP_DATA_FILE=/data/mailpit.db
-      - MP_UI_AUTH_FILE=/auth
-      - VIRTUAL_HOST=smtp.{{dns_name}}
+      - VIRTUAL_HOST={{pr_number}}.bal-preview.apprentissage.beta.gouv.fr
       - VIRTUAL_PATH=/
-      - VIRTUAL_PORT=8025
-      - LETSENCRYPT_HOST=smtp.{{dns_name}}
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST={{pr_number}}.bal-preview.apprentissage.beta.gouv.fr
       - LETSENCRYPT_EMAIL=misson.apprentissage.devops@gmail.com
 
-  autoheal:
-    image: willfarrell/autoheal:latest
-    container_name: bal_autoheal
+  processor:
+    <<: *default
+    image: "ghcr.io/mission-apprentissage/mna_bal_server:0.0.0-{{pr_number}}"
+    container_name: bal_{{pr_number}}_processor
+    command: ["yarn", "cli", "processor"]
+    env_file: .env_server
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - server:/data
 
 volumes:
-  conf:
-  vhost:
-  html:
-  certs:
-  acme:
+  server:
 
 networks:
-  bal_network:
-    name: bal_network
+  mna_network:
+    name: mna_network
+    external: true

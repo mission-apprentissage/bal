@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly ENV_FILTER=${1:?"Merci de préciser un ou plusieurs environnements (ex. recette ou production)"}
 shift
 
@@ -18,15 +17,10 @@ function deploy() {
       exit 1
     fi
 
-    "${SCRIPT_DIR}/run-playbook.sh" "preview.yml" "$ENV_FILTER" --extra-var "pr_number=$PR_NUMBER"
+    "${ROOT_DIR}/.bin/infra/run-playbook.sh" "preview.yml" "$ENV_FILTER" --extra-var "pr_number=$PR_NUMBER"
   else
-    "${SCRIPT_DIR}/run-playbook.sh" "deploy.yml" "$ENV_FILTER"
+    "${ROOT_DIR}/.bin/infra/run-playbook.sh" "deploy.yml" "$ENV_FILTER"
   fi
 }
 
-# Do not show error log in CI
-if [[ -z "${CI:-}" ]]; then
-  deploy "$@"
-else
-  deploy "$@" 2> /dev/null
-fi;
+deploy "$@"

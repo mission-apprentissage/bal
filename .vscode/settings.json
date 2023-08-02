@@ -36,5 +36,7 @@
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "vitest.enable": true
+  "vitest.enable": true,
+  "vitest.commandLine": "yarn vitest",
+  "ansible.python.interpreterPath": "/opt/homebrew/bin/python3"
 }
