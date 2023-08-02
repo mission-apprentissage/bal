@@ -7,4 +7,4 @@ ansible all -i ./.infra/env.ini \
   -m template \
   -a "src=.infra/.env_server dest=.env_server" \
   --extra-vars "@.infra/vault/vault.yml" \
-  --vault-password-file=".infra/scripts/vault/get-vault-password-client.sh"
+  --vault-password-file=".infra/vault/get-vault-password-client.sh"

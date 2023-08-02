@@ -64,7 +64,7 @@ function infra:vault:encrypt() {
 }
 
 function infra:vault:password() {
-  "$ROOT_DIR/.infra/scripts/vault/get-vault-password-client.sh" "$@"
+  "$ROOT_DIR/.infra/vault/get-vault-password-client.sh" "$@"
 }
 
 function infra:vault:renew() {

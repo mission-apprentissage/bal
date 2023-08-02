@@ -28,8 +28,6 @@ elif [ ! -z "$DOCUMENT_CONTENT" ] && [ "$DOCUMENT_CONTENT" != "$(cat "${vault_pa
     echo "$DOCUMENT_CONTENT" > "$vault_password_file"
     # echo "Nouveau vault-password créé avec succès."
 
-
-
     previous_vault_password_file_clear_text="${SCRIPT_DIR}/prev_clear_text"
     vault_password_file_clear_text="${SCRIPT_DIR}/new_clear_text"
 
