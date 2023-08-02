@@ -111,7 +111,7 @@ services:
 
   fluentd:
     <<: *default
-    image: "ghcr.io/mission-apprentissage/mna_fluentd:0.0.4"
+    image: "ghcr.io/mission-apprentissage/mna_fluentd:0.0.1"
     ports:
       - "24224:24224"
       - "24224:24224/udp"

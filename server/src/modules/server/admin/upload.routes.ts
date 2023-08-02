@@ -14,7 +14,7 @@ import {
   getDocumentTypes,
   uploadFile,
 } from "../../actions/documents.actions";
-import { addJob } from "../../jobs/jobs";
+import { addJob } from "../../jobs/jobs_actions";
 import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
