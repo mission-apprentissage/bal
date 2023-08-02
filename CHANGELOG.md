@@ -1,3 +1,19 @@
+# [1.54.0](https://github.com/mission-apprentissage/bal/compare/v1.53.0...v1.54.0) (2023-08-02)
+
+
+### Bug Fixes
+
+* add migration job ([b0ced01](https://github.com/mission-apprentissage/bal/commit/b0ced01c9f434b71fa739b131ea15e7e85b04ff4))
+* review ([c70e395](https://github.com/mission-apprentissage/bal/commit/c70e395645a46d8bea63735ee9ad98e256c8e519))
+* review ([a5481bf](https://github.com/mission-apprentissage/bal/commit/a5481bf2326e2eeafb158b79bbbace59d209bcf0))
+
+
+### Features
+
+* add cron scheduler using jobs model ([354cf07](https://github.com/mission-apprentissage/bal/commit/354cf079aeff36193cd359232a9d28f95a400b60))
+* add cron scheduler using jobs model ([#266](https://github.com/mission-apprentissage/bal/issues/266)) ([5ae48ca](https://github.com/mission-apprentissage/bal/commit/5ae48ca8cf2e9ea046fd7ad76a675eb6c4dd86fb))
+* add ttl and start crons init ([503b3f4](https://github.com/mission-apprentissage/bal/commit/503b3f42ae3ef14c5ca4b80f9564c51572fd2b0b))
+
 # [1.53.0](https://github.com/mission-apprentissage/bal/compare/v1.52.0...v1.53.0) (2023-07-31)
 
 
