@@ -2,7 +2,7 @@ version: "3.8"
 
 x-default: &default
   networks:
-    - bal_network
+    - mna_network
   restart: unless-stopped
 
 x-node-image: &node-image
@@ -17,7 +17,7 @@ x-node-image: &node-image
 services:
   reverse_proxy:
     <<: *default
-    image: ghcr.io/mission-apprentissage/mna_reverse_proxy:0.0.4
+    image: ghcr.io/mission-apprentissage/mna_reverse_proxy:latest
     ports:
       - 80:80
       - 443:443
@@ -111,7 +111,7 @@ services:
 
   fluentd:
     <<: *default
-    image: "ghcr.io/mission-apprentissage/mna_fluentd:0.0.1"
+    image: "ghcr.io/mission-apprentissage/mna_fluentd:latest"
     ports:
       - "24224:24224"
       - "24224:24224/udp"
@@ -131,5 +131,5 @@ volumes:
     name: bal_clamav_data
 
 networks:
-  bal_network:
-    name: bal_network
+  mna_network:
+    name: mna_network

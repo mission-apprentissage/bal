@@ -3,16 +3,16 @@ set -euo pipefail
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-  # echo "Command line interface to view the vault password"
-  # echo "This file implements Ansible specifications third-party vault tools"
-  # echo "For more informations see https://docs.ansible.com/ansible/latest/user_guide/vault.html#storing-passwords-in-third-party-tools-with-vault-password-client-scripts"
+# echo "Command line interface to view the vault password"
+# echo "This file implements Ansible specifications third-party vault tools"
+# echo "For more informations see https://docs.ansible.com/ansible/latest/vault_guide/vault_managing_passwords.html#storing-passwords-in-third-party-tools-with-vault-password-client-scripts"
 
 ## CHECK UPDATES AND RENEW
 
 DOCUMENT_CONTENT=$(op document get .vault-password-bal --vault "mna-vault-passwords-common" || echo "")
-vault_password_file="${SCRIPT_DIR}/../../vault/.vault-password.gpg"
-previous_vault_password_file="${SCRIPT_DIR}/../../vault/.vault-password-previous.gpg"
-readonly VAULT_FILE="${SCRIPT_DIR}/../../vault/vault.yml"
+vault_password_file="${SCRIPT_DIR}/.vault-password.gpg"
+previous_vault_password_file="${SCRIPT_DIR}/.vault-password-previous.gpg"
+readonly VAULT_FILE="${SCRIPT_DIR}/vault.yml"
 
 if [ ! -f "$vault_password_file" ]; then
     echo "$DOCUMENT_CONTENT" > "$vault_password_file"
@@ -28,17 +28,25 @@ elif [ ! -z "$DOCUMENT_CONTENT" ] && [ "$DOCUMENT_CONTENT" != "$(cat "${vault_pa
     echo "$DOCUMENT_CONTENT" > "$vault_password_file"
     # echo "Nouveau vault-password créé avec succès."
 
-    previous_vault_password_file_clear_text="${SCRIPT_DIR}/../../vault/prev_clear_text"
-    vault_password_file_clear_text="${SCRIPT_DIR}/../../vault/new_clear_text"
+
+
+    previous_vault_password_file_clear_text="${SCRIPT_DIR}/prev_clear_text"
+    vault_password_file_clear_text="${SCRIPT_DIR}/new_clear_text"
+
+    delete_cleartext() {
+      rm -f "$previous_vault_password_file_clear_text" "$vault_password_file_clear_text"
+    }
+    trap delete_tempfiles EXIT
+
     gpg --quiet --batch --use-agent --decrypt "${previous_vault_password_file}" > "${previous_vault_password_file_clear_text}"
     gpg --quiet --batch --use-agent --decrypt "${vault_password_file}" > "${vault_password_file_clear_text}"
 
     ansible-vault rekey \
-    --vault-id "${previous_vault_password_file_clear_text}" \
-    --new-vault-id "${vault_password_file_clear_text}" \
-    "${VAULT_FILE}" > /dev/null
+      --vault-id "${previous_vault_password_file_clear_text}" \
+      --new-vault-id "${vault_password_file_clear_text}" \
+      "${VAULT_FILE}" > /dev/null
 
-   rm "${previous_vault_password_file}" "${previous_vault_password_file_clear_text}" "${vault_password_file_clear_text}"
+   delete_cleartext
 fi
 
 ## Decrypt

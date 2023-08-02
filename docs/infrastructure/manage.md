@@ -9,11 +9,8 @@
     - [Mise à jour via Github Action](#mise-à-jour-via-github-action)
     - [Mise à jour manuelle](#mise-à-jour-manuelle)
   - [Configuration initiale](#configuration-initiale)
-    - [Création d'une app OVH](#création-dune-app-ovh)
-    - [Création du VPS OVH](#création-du-vps-ovh)
-    - [Création du domaine name](#création-du-domaine-name)
+    - [Provision du server](#provision-du-server)
     - [Déclaration de l'environnement](#déclaration-de-lenvironnement)
-    - [Configuration de l'environnement](#configuration-de-lenvironnement)
   - [Release](#release)
     - [Release Reverse Proxy](#release-reverse-proxy)
     - [Release Application](#release-application)
@@ -93,36 +90,9 @@ nécessaire.
 
 **Important:** Cette section décris comment installer l'infrastructure sur un nouvel environnement. Pour la mise à jour de celui-ci, veuillez vous référer à la section [Mise à jour de la configuration](#mise-à-jour-de-la-configuration).
 
-### Création d'une app OVH
+### Provision du server
 
-OVH Europe https://eu.api.ovh.com/createApp/
-
-Conserver les informmations suivantes :
-
-- Application Key
-- Application Secret
-
-### Création du VPS OVH
-
-La première étape est de créer un VPS via l'interface d'OVH : https://www.ovhcloud.com/fr/vps/
-
-Une fois le VPS créé, il est nécessaire de configurer le firewall en lançant la commande :
-
-```bash
-mna-bal infra:firewall:update <nom de l'environnement> <app-key> <app-secret>
-```
-
-Lors de l'exécution de ce script, vous serez redirigé vers une page web vous demandant de vous authentifier afin de
-générer un jeton d'api. Vous devez donc avoir un compte OVH ayant le droit de gérer les instances de la Mission
-Apprentissage. Une fois authentifié, le script utilisera automatiquement ce jeton.
-
-Quand le script est terminé, vous pouvez aller sur l'interface
-OVH [https://www.ovh.com/manager/#/dedicated/ip](https://www.ovh.com/manager/#/dedicated/ip)
-afin de vérifier que le firewall a été activé pour l'ip du VPS.
-
-### Création du domaine name
-
-Créer un domain name pour le nouvel environment https://admin.alwaysdata.com/record/?domain=69636 `bal-<nom de l'environnement>.apprentissage.beta.gouv.fr`
+TODO: See infra repo
 
 ### Déclaration de l'environnement
 
@@ -135,7 +105,6 @@ dans ce fichier en renseignant les informations suivantes :
 [<nom de l'environnement>:vars]
 dns_name=bal-<nom de l'environnement>.apprentissage.beta.gouv.fr
 host_name=bal-<nom de l'environnement>
-update_sshd_config=true
 env_type=recette
 ```
 
@@ -143,33 +112,6 @@ Pour information, vous pouvez obtenir l'adresse ip du vps en consultant les emai
 service : https://www.ovh.com/manager/dedicated/#/useraccount/emails
 
 Editer le vault pour créer les env-vars liés à ce nouvel environnement (cf: [Edition du vault](#edition-du-vault))
-
-### Configuration de l'environnement
-
-Pour configurer l'environnement, il faut lancer la commande suivante :
-
-```bash
-ssh-keyscan <ip> >> ~/.ssh/known_hosts
-mna-bal infra:setup <nom_environnement> --user ubuntu --ask-pass
-```
-
-L'utilisateur `ubuntu` est un utilisateur créé par défaut par OVH, le mot de passe de ce compte est envoyé par email à
-l'administrateur du compte OVH et est également disponible dans les emails de
-service : https://www.ovh.com/manager/dedicated/#/useraccount/emails
-
-Une fois le script terminé, l'application est disponible à l'url qui correspond au `dns_name` dans le fichier `env.ini`
-
-Pour finaliser le création de l'environnement, vous devez vous connecter pour initialiser votre utilisateur :
-
-```bash
-ssh <nom_utilisateur>@<ip>
-```
-
-Enfin pour des questions de sécurité, vous devez supprimer l'utilisateur `ubuntu` :
-
-```bash
-mna-bal infra:user:remove --user <votre_nom_utilisateur> --extra-vars "username=ubuntu"
-```
 
 Vous pouvez maintenant poursuivre avec le [Deploiement de l'application](#deploiement-de-lapplication).
 

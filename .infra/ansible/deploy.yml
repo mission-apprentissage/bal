@@ -5,63 +5,72 @@
   vars_files:
     - "../vault/vault.yml"
   tasks:
-    - name: check du docker network
-      ansible.builtin.shell:
-        chdir: /opt/bal
-        cmd: docker network ls --filter name=bal_network -q
-      register: network
-    - debug:
-        var: network
+    - name: Création de l'arborescence /opt/app à partir de .infra/files
+      file:
+        path: "/opt/app/{{ item.path }}"
+        state: directory
+        mode: "{{ item.mode }}"
+      with_filetree: "{{inventory_dir}}/files"
+      when:
+        - item.state == 'directory'
+        # /app/tools is managed by infra
+        - item.path | regex_search('^tools/?') == none
 
-    - name: création du docker network
-      ansible.builtin.shell:
-        chdir: /opt/bal
-        cmd: docker network create -d overlay --attachable bal_network
-      when: network.stdout == ""
+    - name: Copie des fichiers de l'arborescence /opt/app à partir de .infra/files
+      ansible.builtin.template:
+        src: "{{ item.src }}"
+        dest: "/opt/app/{{ item.path }}"
+        mode: "{{ item.mode }}"
+      with_filetree: "{{inventory_dir}}/files"
+      when:
+        - item.state == 'file'
+        - item.path | basename != '.gitkeep'
+        # /app/tools is managed by infra
+        - item.path | regex_search('^tools/?') == none
 
     - name: copy server env file
       ansible.builtin.template:
         src: "{{ item }}"
-        dest: "/opt/bal/.env_server"
+        dest: "/opt/app/.env_server"
       with_fileglob:
         - "../.env_server"
 
     - name: copy du fichier docker compose
       ansible.builtin.template:
         src: "{{ item }}"
-        dest: "/opt/bal/docker-compose.yml"
+        dest: "/opt/app/docker-compose.yml"
       with_fileglob:
         - "../docker-compose.yml"
 
     - name: copy du fichier recette docker compose
       ansible.builtin.template:
         src: "{{ item }}"
-        dest: "/opt/bal/docker-compose.recette.yml"
+        dest: "/opt/app/docker-compose.recette.yml"
       with_fileglob:
         - "../docker-compose.recette.yml"
       when: env_type == 'recette'
 
     - name: Récupération des images docker
       shell:
-        chdir: /opt/bal
+        chdir: /opt/app
         cmd: "sudo docker compose pull"
 
     - name: Récupération du status de la stack
       shell:
-        chdir: /opt/bal
+        chdir: /opt/app
         cmd: docker stack ls --format json
       register: stack_status
 
     - name: Récupération du status des migrations
       shell:
-        chdir: /opt/bal
-        cmd: "sudo /opt/bal/tools/migrations/migrations-status.sh"
+        chdir: /opt/app
+        cmd: "sudo /opt/app/tools/migrations/migrations-status.sh"
       register: migration_status_output
       when: stack_status.stdout != ""
 
     - name: "Shutdown processor"
       shell:
-        chdir: /opt/bal
+        chdir: /opt/app
         cmd: "sudo docker service scale bal_processor=0"
       when:
         - stack_status.stdout != ""
@@ -69,15 +78,15 @@
 
     - name: "Activation du mode maintenance pour effectuer la migration"
       shell:
-        chdir: /opt/bal
-        cmd: "sudo /opt/bal/tools/maintenance/maintenance-on.sh"
+        chdir: /opt/app
+        cmd: "sudo /opt/app/tools/maintenance/maintenance-on.sh"
       when:
         - stack_status.stdout != ""
         - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'
 
     - name: "Shutdown server"
       shell:
-        chdir: /opt/bal
+        chdir: /opt/app
         cmd: "sudo docker service scale bal_server=0"
       when:
         - stack_status.stdout != ""
@@ -85,22 +94,24 @@
 
     - name: Lancement des migrations
       shell:
-        chdir: /opt/bal
-        cmd: "sudo /opt/bal/tools/migrations/migrations-up.sh"
+        chdir: /opt/app
+        cmd: "sudo /opt/app/tools/migrations/migrations-up.sh"
       when:
         - stack_status.stdout != ""
         - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'
+      async: 1800
+      poll: 10
 
     - name: Lancement de l'application {{env_type}}
       shell:
-        chdir: /opt/bal
+        chdir: /opt/app
         cmd: "sudo docker stack deploy -c docker-compose.yml -c docker-compose.recette.yml bal"
       register: docker_deploy_output
       when: env_type == 'recette'
 
     - name: Lancement de l'application {{env_type}}
       shell:
-        chdir: /opt/bal
+        chdir: /opt/app
         cmd: "sudo docker stack deploy -c docker-compose.yml bal"
       register: docker_deploy_output
       when: env_type == 'production'
@@ -110,22 +121,28 @@
 
     - name: Attente du deploiement
       shell:
-        chdir: /opt/bal
+        chdir: /opt/app
         cmd: "sudo docker run --rm -v /var/run/docker.sock:/var/run/docker.sock sudobmitch/docker-stack-wait bal"
-      timeout: 900
+      async: 1800
+      poll: 10
+
+    - name: "Verification des certificats SSL"
+      shell:
+        chdir: /opt/app
+        cmd: "sudo /opt/app/tools/ssl/renew-certificate.sh {{dns_name}}"
 
     - name: "Setup de la Metabase"
       shell:
-        chdir: /opt/bal
-        cmd: "sudo /opt/bal/tools/metabase/setup-metabase.sh"
+        chdir: /opt/app
+        cmd: "sudo bash /opt/app/configs/metabase/setup-metabase.sh"
       timeout: 900
 
     - name: "Prune Docker"
       shell:
-        chdir: /opt/bal
+        chdir: /opt/app
         cmd: "sudo docker system prune --all --force"
 
     - name: "Désactivation du mode maintenance"
       shell:
-        chdir: /opt/bal
-        cmd: "sudo /opt/bal/tools/maintenance/maintenance-off.sh"
+        chdir: /opt/app
+        cmd: "sudo /opt/app/tools/maintenance/maintenance-off.sh"
