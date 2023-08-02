@@ -1,3 +1,40 @@
+## [1.54.1](https://github.com/mission-apprentissage/bal/compare/v1.54.0...v1.54.1) (2023-08-02)
+
+
+### Bug Fixes
+
+* comment every 2 minutes crondef ([4a1f07c](https://github.com/mission-apprentissage/bal/commit/4a1f07c3ea40e62afc24cba573addab0e1a3a9e3))
+
+# [1.54.0](https://github.com/mission-apprentissage/bal/compare/v1.53.0...v1.54.0) (2023-08-02)
+
+
+### Bug Fixes
+
+* add migration job ([b0ced01](https://github.com/mission-apprentissage/bal/commit/b0ced01c9f434b71fa739b131ea15e7e85b04ff4))
+* review ([c70e395](https://github.com/mission-apprentissage/bal/commit/c70e395645a46d8bea63735ee9ad98e256c8e519))
+* review ([a5481bf](https://github.com/mission-apprentissage/bal/commit/a5481bf2326e2eeafb158b79bbbace59d209bcf0))
+
+
+### Features
+
+* add cron scheduler using jobs model ([354cf07](https://github.com/mission-apprentissage/bal/commit/354cf079aeff36193cd359232a9d28f95a400b60))
+* add cron scheduler using jobs model ([#266](https://github.com/mission-apprentissage/bal/issues/266)) ([5ae48ca](https://github.com/mission-apprentissage/bal/commit/5ae48ca8cf2e9ea046fd7ad76a675eb6c4dd86fb))
+* add ttl and start crons init ([503b3f4](https://github.com/mission-apprentissage/bal/commit/503b3f42ae3ef14c5ca4b80f9564c51572fd2b0b))
+
+# [1.53.0](https://github.com/mission-apprentissage/bal/compare/v1.52.0...v1.53.0) (2023-07-31)
+
+
+### Bug Fixes
+
+* rm echo ([ba1fd9c](https://github.com/mission-apprentissage/bal/commit/ba1fd9cd81909f104847e660ceb60e74463be6aa))
+* vault rekey ([6e33f3b](https://github.com/mission-apprentissage/bal/commit/6e33f3b0bcf53960c12320e1327c9240351fbfc1))
+
+
+### Features
+
+* adapt get-vault-password-client to always check vault-password update ([513743d](https://github.com/mission-apprentissage/bal/commit/513743dfe5f4d2fe264b45edeb2f7930b5a02d84))
+* move infra  ([#259](https://github.com/mission-apprentissage/bal/issues/259)) ([46079d4](https://github.com/mission-apprentissage/bal/commit/46079d4af6d11c1224cb89188b3c2786f7f8cc37))
+
 # [1.52.0](https://github.com/mission-apprentissage/bal/compare/v1.51.2...v1.52.0) (2023-07-31)
 
 

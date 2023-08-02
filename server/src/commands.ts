@@ -10,7 +10,7 @@ import {
   closeSentry,
   initSentryProcessor,
 } from "./common/services/sentry/sentry";
-import { addJob, processor } from "./modules/jobs/jobs";
+import { addJob, processor } from "./modules/jobs/jobs_actions";
 
 program
   .configureHelp({
@@ -72,6 +72,13 @@ program
   .action(async () => {
     logger.info(`Process jobs queue - start`);
     initSentryProcessor();
+    await addJob(
+      {
+        name: "crons:init",
+        sync: true,
+      },
+      { runningLogs: true }
+    );
     await processor();
   });
 

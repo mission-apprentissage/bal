@@ -254,6 +254,10 @@ exports[`zodToMongoSchema > should convert jobs schema 1`] = `
       "bsonType": "date",
       "description": "Date d'ajout en base de données",
     },
+    "cron_string": {
+      "bsonType": "string",
+      "description": "standard cron string exemple: '*/2 * * * *'",
+    },
     "ended_at": {
       "bsonType": "date",
       "description": "Date de fin d'execution",
@@ -272,7 +276,7 @@ exports[`zodToMongoSchema > should convert jobs schema 1`] = `
       "bsonType": "object",
       "description": "La donnée liéé à la tâche",
     },
-    "scheduled_at": {
+    "scheduled_for": {
       "bsonType": "date",
       "description": "Date de lancement programmée",
     },
@@ -296,6 +300,15 @@ exports[`zodToMongoSchema > should convert jobs schema 1`] = `
       "bsonType": "bool",
       "description": "Si le job est synchrone",
     },
+    "type": {
+      "bsonType": "string",
+      "description": "Type du job simple ou cron",
+      "enum": [
+        "simple",
+        "cron",
+        "cron_task",
+      ],
+    },
     "updated_at": {
       "bsonType": "date",
       "description": "Date de mise à jour en base de données",
@@ -304,8 +317,9 @@ exports[`zodToMongoSchema > should convert jobs schema 1`] = `
   "required": [
     "_id",
     "name",
+    "type",
     "status",
-    "scheduled_at",
+    "scheduled_for",
   ],
 }
 `;
