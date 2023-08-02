@@ -42,120 +42,120 @@ function Help_local() {
    echo
 }
 
-function local_bin_install() {
+function local:bin:install() {
   sudo ln -fs "${ROOT_DIR}/.bin/mna-bal" /usr/local/bin/mna-bal
 }
 
-function local_completion_zsh() {
+function local:completion:zsh() {
   sudo mkdir -p /usr/local/share/zsh/site-functions
   sudo ln -fs "${ROOT_DIR}/.bin/zsh-completion" /usr/local/share/zsh/site-functions/_mna-bal
   sudo rm -f ~/.zcompdump
 }
 
-function local_start() {
+function local:start() {
   docker compose up -d --remove-orphans --build "$@"
 }
 
-function local_stop() {
+function local:stop() {
   docker compose down "$@"
 }
 
-function local_clean() {
-  local_stop
+function local:clean() {
+  local:stop
   docker system prune --force --volumes "$@"
 }
 
-function local_debug() {
+function local:debug() {
   docker compose -f docker-compose.yml -f docker-compose.debug.yml up -d --remove-orphans --build "$@"
 }
 
-function local_docker_run() {
+function local:docker:run() {
   docker compose run --rm -it --build -e NODE_OPTIONS='--enable-source-maps' "$@"
 }
 
-function local_docker_sh() {
+function local:docker:sh() {
   service=${1:?'Service name required'}
   shift
-  local_docker_run $service sh "$@"
+  local:docker:run $service sh "$@"
 }
 
-function local_server_run() {
-  local_docker_run server "$@"
+function local:server:run() {
+  local:docker:run server "$@"
 }
 
-function local_server_sh() {
-  local_server_run sh "$@"
+function local:server:sh() {
+  local:server:run sh "$@"
 }
 
-function local_server_cli() {
-  local_server_run yarn run cli "$@"
+function local:server:cli() {
+  local:server:run yarn run cli "$@"
 }
 
-function local_server_seed() {
-  local_server_cli seed "$@"
+function local:server:seed() {
+  local:server:cli seed "$@"
 }
 
-function local_server_migrations_status() {
-  local_server_cli migrations:status "$@"
+function local:server_migrations:status() {
+  local:server:cli migrations:status "$@"
 }
 
-function local_server_migrations_up() {
-  local_server_cli migrations:up "$@"
+function local:server_migrations:up() {
+  local:server:cli migrations:up "$@"
 }
 
-function local_server_migrations_create() {
-  local_server_cli migrations:create "$@"
+function local:server_migrations:create() {
+  local:server:cli migrations:create "$@"
 }
 
-function local_test() {
+function local:test() {
   yarn test "$@"
 }
 
-function local_test_server() {
+function local:test:server() {
   yarn --cwd server test "$@"
 }
 
-function local_test_server_watch() {
+function local:test_server:watch() {
   yarn --cwd server test -w "$@"
 }
 
-function local_test_shared() {
+function local:test:shared() {
   yarn --cwd shared test "$@"
 }
 
-function local_test_shared_watch() {
+function local:test_shared:watch() {
   yarn --cwd shared test -w "$@"
 }
 
-function local_lint() {
+function local:lint() {
   yarn lint --fix "$@"
 }
 
-function local_install() {
+function local:install() {
   yarn install "$@"
 }
 
-function local_prettier_fix() {
+function local:prettier:fix() {
   yarn prettier:fix "$@"
 }
 
-function local_typecheck() {
+function local:typecheck() {
   yarn typecheck "$@"
 }
 
-function local_typecheck_server() {
+function local:typecheck:server() {
   yarn --cwd server typecheck "$@"
 }
 
-function local_typecheck_shared() {
+function local:typecheck:shared() {
   yarn --cwd shared typecheck "$@"
 }
 
-function local_typecheck_ui() {
+function local:typecheck:ui() {
   yarn --cwd ui typecheck "$@"
 }
 
 
-function local_env_update() {
+function local:env:update() {
   EDITOR='code -w' "$ROOT_DIR/.infra/scripts/vault/setup-local-env.sh" "$@"
 }

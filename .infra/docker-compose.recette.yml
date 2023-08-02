@@ -14,10 +14,10 @@ services:
     ports:
       - 1025:1025
     networks:
-      - bal_network
+      - mna_network
     volumes:
-      - /opt/bal/data/smtp:/data
-      - /opt/bal/configs/mailpit/auth:/auth
+      - /opt/app/data/smtp:/data
+      - /opt/app/configs/mailpit/auth:/auth
     environment:
       - MP_DATA_FILE=/data/mailpit.db
       - MP_UI_AUTH_FILE=/auth

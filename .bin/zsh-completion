@@ -32,9 +32,6 @@ _mna-bal_completion() {
    "local\:docker\:run:'Run a one-off command on the provided service'"
    "local\:docker\:sh:'Start interactive session in the provided service'"
 
-   "infra\:setup:'Setup infra on environnement <env>'"
-   "infra\:setup\:prod:'Setup infra on production'"
-   "infra\:setup\:recette:'Setup infra on recette'"
    "infra\:release\:images:'Build & Push Docker image releases'"
    "infra\:deploy:'Deploy application to <env>'"
    "infra\:deploy\:prod:'Deploy application to production'"
