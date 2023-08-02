@@ -39,8 +39,11 @@ jobs:
           sudo pipx inject ansible-core jmespath
 
       - name: Run playbook
-        run: |
-          ansible-playbook -i ".infra/env.ini" --limit preview --vault-password-file=".infra/.vault_pwd.txt"  --extra-vars "pr_number=${{ github.event.pull_request.number }} ansible_sudo_pass=${{ secrets.DEPLOY_PASS }}" ".infra/playbooks/preview.yml" --user ${{ secrets.DEPLOY_USERNAME }}
+        run: .bin/mna-bal infra:deploy preview "${{ github.event.pull_request.number }}"
+        env:
+          ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
+          ANSIBLE_REMOTE_USER: ${{ secrets.DEPLOY_USERNAME }}
+          ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
 
       - name: Preview Summary
         run: echo 'https://${{ github.event.pull_request.number }}.bal-preview.apprentissage.beta.gouv.fr/ 🚀' >> $GITHUB_STEP_SUMMARY
