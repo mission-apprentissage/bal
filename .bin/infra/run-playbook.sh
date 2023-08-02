@@ -54,6 +54,7 @@ function runPlaybook() {
       --limit "${ENV_FILTER}" \
       "${ansible_extra_opts[@]}" \
       "${ROOT_DIR}/.infra/ansible/${PLAYBOOK_NAME}" \
+      -vvv \
       "$@"
 }
 
