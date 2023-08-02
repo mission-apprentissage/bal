@@ -40,14 +40,14 @@ export const CRONS: Record<string, CronDef> = {
       return stderr ? 1 : 0;
     },
   },
-  "Run every 2 minutes dummy": {
-    name: "Run every 2 minutes dummy",
-    cron_string: "*/2 * * * *",
-    handler: async () => {
-      logger.info(`Dummy 2 minutes`);
-      return 0;
-    },
-  },
+  // "Run every 2 minutes dummy": {
+  //   name: "Run every 2 minutes dummy",
+  //   cron_string: "*/2 * * * *",
+  //   handler: async () => {
+  //     logger.info(`Dummy 2 minutes`);
+  //     return 0;
+  //   },
+  // },
 };
 
 export async function runJob(
