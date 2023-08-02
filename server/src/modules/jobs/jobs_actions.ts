@@ -46,7 +46,11 @@ export async function addJob(
 export async function processor(): Promise<void> {
   logger.info(`Process jobs queue - looking for a job to execute`);
   const { value: nextJob } = await getDbCollection("jobs").findOneAndUpdate(
-    { type: "simple", status: "pending", scheduled_for: { $lte: new Date() } },
+    {
+      type: { $in: ["simple", "cron_task"] },
+      status: "pending",
+      scheduled_for: { $lte: new Date() },
+    },
     { $set: { status: "will_start" } },
     { sort: { scheduled_for: 1 } }
   );

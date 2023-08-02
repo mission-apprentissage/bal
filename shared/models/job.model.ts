@@ -17,7 +17,9 @@ export const ZJob = z
   .object({
     _id: zObjectId,
     name: z.string().describe("Le nom de la tâche"),
-    type: z.enum(["simple", "cron"]).describe("Type du job simple ou cron"),
+    type: z
+      .enum(["simple", "cron", "cron_task"])
+      .describe("Type du job simple ou cron"),
     status: z
       .enum([
         "pending",

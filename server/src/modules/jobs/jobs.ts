@@ -21,7 +21,13 @@ import { addJob, executeJob } from "./jobs_actions";
 import { clear } from "./seed/clear";
 import { seed } from "./seed/seed";
 
-export const CRONS = {
+interface CronDef {
+  name: string;
+  cron_string: string;
+  handler: () => Promise<number>;
+}
+
+export const CRONS: Record<string, CronDef> = {
   "Run daily jobs each day at 02h30": {
     name: "Run daily jobs each day at 02h30",
     cron_string: "30 2 * * *",
@@ -31,6 +37,7 @@ export const CRONS = {
       );
       logger.info("stdout:", stdout);
       logger.error("stderr:", stderr);
+      return stderr ? 1 : 0;
     },
   },
   "Run every 2 minutes dummy": {
@@ -38,6 +45,7 @@ export const CRONS = {
     cron_string: "*/2 * * * *",
     handler: async () => {
       logger.info(`Dummy 2 minutes`);
+      return 0;
     },
   },
 };
@@ -51,6 +59,9 @@ export async function runJob(
   return executeJob(
     job,
     async () => {
+      if (job.type === "cron_task") {
+        return CRONS[job.name].handler();
+      }
       switch (job.name) {
         case "seed":
           return seed();
@@ -84,14 +95,10 @@ export async function runJob(
           return createMigration(job.payload as any);
         case "crons:init": {
           await cronsInit();
-          await addJob({ name: "crons:scheduler" });
           return;
         }
         case "crons:scheduler":
           return cronsScheduler();
-        case job.name.match(/^cron_/)?.input:
-          // @ts-ignore
-          return CRONS[job.name.replace(/^(cron_)/, "")].handler();
 
         // BELOW SPECIFIC TO PRODUCT
         case "import:document":
