@@ -1,3 +1,10 @@
+## [1.54.1](https://github.com/mission-apprentissage/bal/compare/v1.54.0...v1.54.1) (2023-08-02)
+
+
+### Bug Fixes
+
+* comment every 2 minutes crondef ([4a1f07c](https://github.com/mission-apprentissage/bal/commit/4a1f07c3ea40e62afc24cba573addab0e1a3a9e3))
+
 # [1.54.0](https://github.com/mission-apprentissage/bal/compare/v1.53.0...v1.54.0) (2023-08-02)
 
 
