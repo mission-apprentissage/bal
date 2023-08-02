@@ -34,7 +34,7 @@ elif [ ! -z "$DOCUMENT_CONTENT" ] && [ "$DOCUMENT_CONTENT" != "$(cat "${vault_pa
     delete_cleartext() {
       rm -f "$previous_vault_password_file_clear_text" "$vault_password_file_clear_text"
     }
-    trap delete_tempfiles EXIT
+    trap delete_cleartext EXIT
 
     gpg --quiet --batch --use-agent --decrypt "${previous_vault_password_file}" > "${previous_vault_password_file_clear_text}"
     gpg --quiet --batch --use-agent --decrypt "${vault_password_file}" > "${vault_password_file_clear_text}"
