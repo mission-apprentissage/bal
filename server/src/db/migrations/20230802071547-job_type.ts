@@ -11,7 +11,7 @@ export const up = async (db: Db, _client: MongoClient) => {
         },
       },
       {
-        $unset: ["$scheduled_at"],
+        $unset: ["scheduled_at"],
       },
     ],
     {
