@@ -306,6 +306,7 @@ exports[`zodToMongoSchema > should convert jobs schema 1`] = `
       "enum": [
         "simple",
         "cron",
+        "cron_task",
       ],
     },
     "updated_at": {

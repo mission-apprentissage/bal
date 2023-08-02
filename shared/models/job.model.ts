@@ -11,6 +11,7 @@ const indexes: IModelDescriptor["indexes"] = [
     { type: 1, status: 1, scheduled_for: 1 },
     { name: "type_status_scheduled_for" },
   ],
+  [{ ended_at: 1 }, { expireAfterSeconds: 3600 * 24 * 90 }], // 3 mois
 ];
 
 export const ZJob = z

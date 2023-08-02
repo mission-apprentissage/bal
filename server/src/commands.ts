@@ -72,23 +72,14 @@ program
   .action(async () => {
     logger.info(`Process jobs queue - start`);
     initSentryProcessor();
-    await processor();
-  });
-
-program
-  .command("crons:init")
-  .description("Run initialise crons")
-  .action(async () => {
-    const exitCode = await addJob(
+    await addJob(
       {
         name: "crons:init",
         sync: true,
       },
       { runningLogs: true }
     );
-    if (exitCode) {
-      program.error("Command failed", { exitCode });
-    }
+    await processor();
   });
 
 program
