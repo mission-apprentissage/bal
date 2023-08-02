@@ -1,3 +1,14 @@
+## [1.54.2](https://github.com/mission-apprentissage/bal/compare/v1.54.1...v1.54.2) (2023-08-02)
+
+
+### Bug Fixes
+
+* setup-metabase script ([9231a09](https://github.com/mission-apprentissage/bal/commit/9231a096421a24d50287e379f8e6ea2029eef0f7))
+* setup-metabase script ([#265](https://github.com/mission-apprentissage/bal/issues/265)) ([71e1b67](https://github.com/mission-apprentissage/bal/commit/71e1b67bc0a34cd4f605cd520467947e4fe5d726))
+* setup-metabase.sh ([26802ba](https://github.com/mission-apprentissage/bal/commit/26802baa4bcbf8019d1c5bdab800dc0e4e1b0628))
+* setup-metabase.sh ([#268](https://github.com/mission-apprentissage/bal/issues/268)) ([2ba3a9b](https://github.com/mission-apprentissage/bal/commit/2ba3a9b05196cca6d626f6611cd5213ce0cefca1))
+* typo migration ([8cd7c7f](https://github.com/mission-apprentissage/bal/commit/8cd7c7fdbba275d5a6e6cd960c6e976be1364334))
+
 ## [1.54.1](https://github.com/mission-apprentissage/bal/compare/v1.54.0...v1.54.1) (2023-08-02)
 
 
