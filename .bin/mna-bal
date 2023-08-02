@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(dirname -- "$( readlink -f -- "$0"; )")"
-readonly ROOT_DIR="$(dirname "${SCRIPT_DIR}")"
+export SCRIPT_DIR="$(dirname -- "$( readlink -f -- "$0"; )")"
+export ROOT_DIR="$(dirname "${SCRIPT_DIR}")"
 
 source "${SCRIPT_DIR}/local/local.sh"
 source "${SCRIPT_DIR}/infra/infra.sh"
@@ -36,147 +36,10 @@ if [ -z "$command" ]; then
 fi;
 shift
 
-case $command in
-  'local:bin:install')
-    local_bin_install "$@"
-    ;;
-  'local:completion:zsh')
-    local_completion_zsh "$@"
-    ;;
-  'local:start')
-    local_start "$@"
-    ;;
-  'local:stop')
-    local_stop "$@"
-    ;;
-  'local:clean')
-    local_clean "$@"
-    ;;
-  'local:debug')
-    local_debug "$@"
-    ;;
-  'local:server:run')
-    local_server_run "$@"
-    ;;
-  'local:server:sh')
-    local_server_sh "$@"
-    ;;
-  'local:server:cli')
-    local_server_cli "$@"
-    ;;
-  'local:server:seed')
-    local_server_seed "$@"
-    ;;
-  'local:server:migrations:status')
-    local_server_migrations_status "$@"
-    ;;
-  'local:server:migrations:up')
-    local_server_migrations_up "$@"
-    ;;
-  'local:server:migrations:create')
-    local_server_migrations_create "$@"
-    ;;
-  'local:test')
-    local_test "$@"
-    ;;
-  'local:test:server')
-    local_test_server "$@"
-    ;;
-  'local:test:server:watch')
-    local_test_server_watch "$@"
-    ;;
-  'local:test:shared')
-    local_test_shared "$@"
-    ;;
-  'local:test:shared:watch')
-    local_test_shared_watch "$@"
-    ;;
-  'local:lint')
-    local_lint "$@"
-    ;;
-  'local:install')
-    local_install "$@"
-    ;;
-  'local:prettier:fix')
-    local_prettier_fix "$@"
-    ;;
-  'local:typecheck')
-    local_typecheck "$@"
-    ;;
-  'local:typecheck:server')
-    local_typecheck_server "$@"
-    ;;
-  'local:typecheck:ui')
-    local_typecheck_ui "$@"
-    ;;
-  'local:typecheck:shared')
-    local_typecheck_shared "$@"
-    ;;
-  'local:vault:edit')
-    local_vault_edit "$@"
-    ;;
-  'local:env:update')
-    local_env_update "$@"
-    ;;
-  'local:docker:run')
-    local_docker_run "$@"
-    ;;
-  'local:docker:sh')
-    local_docker_sh "$@"
-    ;;
+if [[ `command -v $command` != $command ]]; then
+  echo "Err: Command '$command' not found"
+  echo
+  Help
+fi;
 
-  'infra:setup')
-    infra_setup "$@"
-    ;;
-  'infra:setup:prod')
-    infra_setup_prod "$@"
-    ;;
-  'infra:setup:recette')
-    infra_setup_recette "$@"
-    ;;
-  'infra:release:images')
-    infra_release_images "$@"
-    ;;
-  'infra:deploy')
-    infra_deploy "$@"
-    ;;
-  'infra:deploy:prod')
-    infra_deploy_prod "$@"
-    ;;
-  'infra:deploy:recette')
-    infra_deploy_recette "$@"
-    ;;
-  'infra:vault:edit')
-    infra_vault_edit "$@"
-    ;;
-  'infra:vault:generate')
-    infra_vault_generate "$@"
-    ;;
-  'infra:vault:encrypt')
-    infra_vault_encrypt "$@"
-    ;;
-  'infra:vault:password')
-    infra_vault_password "$@"
-    ;;
-  'infra:vault:renew')
-    infra_vault_renew "$@"
-    ;;
-  'infra:user:remove')
-    infra_user_remove "$@"
-    ;;
-  'infra:firewall:update')
-    infra_firewall_update "$@"
-    ;;
-  'infra:logs:ls')
-    infra_logs_ls "$@"
-    ;;
-  'infra:logs:dl:local')
-    infra_logs_dl_local "$@"
-    ;;
-  'infra:logs:rm:local')
-    infra_logs_rm_local "$@"
-    ;;
-  *)
-    Help
-    ;;
-esac
+$command "$@"

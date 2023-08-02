@@ -11,9 +11,6 @@ function Help_infra() {
    echo 
    echo "Commands"
 
-   echo "  infra:setup <env> --user <your_username>                                            Setup infra on environnement <env>"
-   echo "  infra:setup:prod --user <your_username>                                             Setup infra on production"
-   echo "  infra:setup:recette --user <your_username>                                          Setup infra on recette"
    echo "  infra:release:images                                                                Build & Push Docker image releases"
    echo "  infra:deploy <env> --user <your_username>                                           Deploy application to <env>"
    echo "  infra:deploy:prod --user <your_username>                                            Deploy application to production"
@@ -32,71 +29,59 @@ function Help_infra() {
    echo
 }
 
-function infra_setup() {
-  "$ROOT_DIR/.infra/scripts/setup-vm.sh" "$@"
-}
-
-function infra_setup_prod() {
-  infra_setup production "$@"
-}
-
-function infra_setup_recette() {
-  infra_setup recette "$@"
-}
-
-function infra_release_images() {
+function infra:release:images() {
   "$ROOT_DIR/.infra/scripts/push-images.sh" "$@"
 }
 
-function infra_deploy() {
-  "$ROOT_DIR/.infra/scripts/deploy-app.sh" "$@"
+function infra:deploy() {
+  "$SCRIPT_DIR/infra/deploy-app.sh" "$@"
 }
 
-function infra_deploy_prod() {
-  infra_deploy production "$@"
+function infra:deploy:prod() {
+  infra:deploy production "$@"
 }
 
-function infra_deploy_recette() {
-  infra_deploy recette "$@"
+function infra:deploy:recette() {
+  infra:deploy recette "$@"
 }
 
-function infra_vault_edit() {
+function infra:vault:edit() {
   editor=${EDITOR:-'code -w'}
   EDITOR=$editor "$ROOT_DIR/.infra/scripts/vault/edit-vault.sh" "$@"
 }
 
-function infra_vault_generate() {
+function infra:vault:generate() {
   "$ROOT_DIR/.infra/scripts/vault/generate-vault-password.sh" "$@"
 }
 
-function infra_vault_encrypt() {
+function infra:vault:encrypt() {
   "$ROOT_DIR/.infra/scripts/vault/encrypt-vault.sh" "$@"
 }
 
-function infra_vault_password() {
+function infra:vault:password() {
   "$ROOT_DIR/.infra/scripts/vault/get-vault-password-client.sh" "$@"
 }
 
-function infra_vault_renew() {
+function infra:vault:renew() {
   "$ROOT_DIR/.infra/scripts/vault/renew-vault.sh" "$@"
 }
 
-function infra_user_remove() {
+function infra:user:remove() {
   "$ROOT_DIR/.infra/scripts/clean.sh" <nom_environnement> "$@"
 }
 
-function infra_firewall_update() {
+function infra:firewall:update() {
   "$ROOT_DIR/.infra/scripts/ovh/create-firewall.sh" "$@"
 }
 
-function infra_logs_ls() {
+function infra:logs:ls() {
   "$ROOT_DIR/.infra/scripts/monitoring/download_logs.sh" ls "$@"
 }
 
-function infra_logs_dl_local() {
+function infra:logs_dl:local() {
   "$ROOT_DIR/.infra/scripts/monitoring/download_logs.sh" dl "$@"
 }
 
-function infra_logs_rm_local() {
+function infra:logs_rm:local() {
   "$ROOT_DIR/.infra/scripts/monitoring/download_logs.sh" rm "$@"
 }

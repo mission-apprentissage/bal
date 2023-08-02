@@ -15,13 +15,12 @@ x-deploy-default: &deploy-default
 
 x-default: &default
   networks:
-    - bal_network
-
+    - mna_network
 
 services:
   reverse_proxy:
     <<: *default
-    image: "ghcr.io/mission-apprentissage/mna_reverse_proxy:{{reverse_proxy_version}}"
+    image: ghcr.io/mission-apprentissage/mna_reverse_proxy:{{reverse_proxy_version}}
     deploy:
       <<: *deploy-default
       resources:
@@ -34,8 +33,8 @@ services:
     environment:
       - SERVER_NAME={{dns_name}}
     volumes:
-      - /opt/bal/data/certbot/conf/:/etc/nginx/ssl/:ro
-      - /opt/bal/data/certbot/www:/var/www/certbot/:ro
+      - /opt/app/data/certbot/conf/:/etc/nginx/ssl/:ro
+      - /opt/app/data/certbot/www/:/var/www/certbot/:ro
     logging:
       driver: "fluentd"
       options:
@@ -45,7 +44,7 @@ services:
 
   server:
     <<: *default
-    image: "ghcr.io/mission-apprentissage/mna_bal_server:{{app_version}}"
+    image: ghcr.io/mission-apprentissage/mna_bal_server:{{app_version}}
     deploy:
       <<: *deploy-default
       resources:
@@ -54,7 +53,7 @@ services:
       replicas: 2
     env_file: .env_server
     volumes:
-      - /opt/bal/data/server:/data
+      - /opt/app/data/server:/data
     logging:
       driver: "fluentd"
       options:
@@ -70,7 +69,7 @@ services:
 
   processor:
     <<: *default
-    image: "ghcr.io/mission-apprentissage/mna_bal_server:{{app_version}}"
+    image: ghcr.io/mission-apprentissage/mna_bal_server:{{app_version}}
     deploy:
       <<: *deploy-default
       resources:
@@ -79,7 +78,7 @@ services:
     command: ["yarn", "cli", "processor"]
     env_file: .env_server
     volumes:
-      - /opt/bal/data/server:/data
+      - /opt/app/data/server:/data
     logging:
       driver: "fluentd"
       options:
@@ -89,7 +88,7 @@ services:
 
   ui:
     <<: *default
-    image: "ghcr.io/mission-apprentissage/mna_bal_ui:{{app_version}}-{{env_type}}"
+    image: ghcr.io/mission-apprentissage/mna_bal_ui:{{app_version}}-{{env_type}}
     deploy:
       <<: *deploy-default
       resources:
@@ -158,7 +157,7 @@ services:
         tag: docker.bal.{{env_type}}.clamav
         fluentd-async: "true"
     volumes:
-      - /opt/bal/data/clamav:/var/lib/clamav
+      - /opt/app/data/clamav:/var/lib/clamav
 
   nodeexporter:
     <<: *default
@@ -177,7 +176,7 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/rootfs:ro
-      - /opt/bal/data/cron:/var/cron-exporter:rw
+      - /opt/app/data/cron:/var/cron-exporter:rw
 
   cadvisor:
     <<: *default
@@ -197,7 +196,7 @@ services:
 
   fluentd:
     <<: *default
-    image: "ghcr.io/mission-apprentissage/mna_fluentd:{{fluentd_version}}"
+    image: ghcr.io/mission-apprentissage/mna_fluentd:{{fluentd_version}}
     ports:
       - "24224:24224"
       - "24224:24224/udp"
@@ -206,8 +205,8 @@ services:
       # LOKI_PASSWORD:
 
 networks:
-  bal_network:
-    name: bal_network
+  mna_network:
+    name: mna_network
     attachable: true
     external: true
     driver: overlay
