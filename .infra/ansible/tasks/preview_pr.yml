@@ -29,10 +29,8 @@
 
     - name: "[{{ pr_number }}] creation du fichier docker compose"
       ansible.builtin.template:
-        src: "{{ item }}"
+        src: "{{inventory_dir}}/docker-compose.preview.yml"
         dest: "/opt/app/projects/{{ pr_number }}/docker-compose.yml"
-      with_fileglob:
-        - "../docker-compose.preview-app.yml"
 
     - name: "[{{ pr_number }}] Clone du repository"
       git:
