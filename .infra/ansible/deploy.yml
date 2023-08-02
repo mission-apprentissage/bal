@@ -105,14 +105,14 @@
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/app
-        cmd: "sudo docker stack deploy -c docker-compose.yml -c docker-compose.recette.yml bal"
+        cmd: "sudo docker stack deploy -c docker-compose.system.yml -c docker-compose.yml -c docker-compose.recette.yml bal"
       register: docker_deploy_output
       when: env_type == 'recette'
 
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/app
-        cmd: "sudo docker stack deploy -c docker-compose.yml bal"
+        cmd: "sudo docker stack deploy -c docker-compose.system.yml -c docker-compose.yml bal"
       register: docker_deploy_output
       when: env_type == 'production'
 
