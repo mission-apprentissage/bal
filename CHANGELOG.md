@@ -1,6 +1,5 @@
 # [1.56.0](https://github.com/mission-apprentissage/bal/compare/v1.55.0...v1.56.0) (2023-08-03)
 
-
 ### Bug Fixes
 
 * deploy preview ([1bef752](https://github.com/mission-apprentissage/bal/commit/1bef7524e25967c9db2392f8268636c6528b71fb))

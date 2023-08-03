@@ -1,12 +1,7 @@
 version: "3.8"
 
-x-default: &default
-  networks:
-    - mna_network
-  restart: unless-stopped
-
 x-node-image: &node-image
-  <<: *default
+  restart: unless-stopped
   build:
     context: .
     dockerfile: Dockerfile
@@ -16,8 +11,8 @@ x-node-image: &node-image
 
 services:
   reverse_proxy:
-    <<: *default
     image: ghcr.io/mission-apprentissage/mna_reverse_proxy:latest
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
@@ -57,18 +52,13 @@ services:
     volumes:
       - ./:/app/:z
       - bal_server_data:/data
-    depends_on:
-      mongodb:
-        condition: service_healthy
-      clamav:
-        condition: service_healthy
     working_dir: "/app/server"
     expose:
       - "5000"
 
   mongodb:
-    <<: *default
     image: mongo:6.0.2-focal
+    restart: unless-stopped
     ports:
       - "127.0.0.1:27017:27017"
     volumes:
@@ -82,8 +72,8 @@ services:
       start_period: 10s
 
   clamav:
-    <<: *default
     image: clamav/clamav:latest
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
       interval: 60s
@@ -93,8 +83,8 @@ services:
       - bal_clamav_data:/var/lib/clamav
 
   smtp:
-    <<: *default
     image: axllent/mailpit:v1.5.5
+    restart: unless-stopped
     ports:
       - 1025:1025
       - 8025:8025
@@ -102,13 +92,6 @@ services:
       - MP_DATA_FILE=/data/mailpit.db
     volumes:
       - bal_smtp_data:/data
-
-  fluentd:
-    <<: *default
-    image: "ghcr.io/mission-apprentissage/mna_fluentd:latest"
-    ports:
-      - "24224:24224"
-      - "24224:24224/udp"
 
 volumes:
   bal_mongodb_data:
@@ -123,7 +106,3 @@ volumes:
   bal_clamav_data:
     driver: local
     name: bal_clamav_data
-
-networks:
-  mna_network:
-    name: mna_network
