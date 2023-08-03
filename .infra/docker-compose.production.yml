@@ -17,7 +17,6 @@ x-default: &default
   networks:
     - mna_network
 
-
 services:
   server:
     <<: *default
