@@ -32,28 +32,34 @@ elif [ ! -z "$DOCUMENT_CONTENT" ] && [ "$DOCUMENT_CONTENT" != "$(cat "${vault_pa
     vault_password_file_clear_text="${SCRIPT_DIR}/new_clear_text"
 
     delete_cleartext() {
-      rm -f "$previous_vault_password_file_clear_text" "$vault_password_file_clear_text"
+      rm -f "$previous_vault_password_file_clear_text" "$vault_password_file_clear_text" "${previous_vault_password_file}"
     }
     trap delete_cleartext EXIT
 
     gpg --quiet --batch --use-agent --decrypt "${previous_vault_password_file}" > "${previous_vault_password_file_clear_text}"
     gpg --quiet --batch --use-agent --decrypt "${vault_password_file}" > "${vault_password_file_clear_text}"
-
+    
     ansible-vault rekey \
-      --vault-id "${previous_vault_password_file_clear_text}" \
-      --new-vault-id "${vault_password_file_clear_text}" \
-      "${VAULT_FILE}" > /dev/null
+    --vault-id "${previous_vault_password_file_clear_text}" \
+    --new-vault-id "${vault_password_file_clear_text}" \
+    "${VAULT_FILE}" > /dev/null || true
 
-   delete_cleartext
+    delete_cleartext
 fi
 
-## Decrypt
 
-if test -f "${vault_password_file}"; then
-  gpg --quiet --batch --use-agent --decrypt "${vault_password_file}"
-else
-  #Allows to run playbooks with --vault-password-file even if password has not been yet generated
-  echo "not-yet-generated"
-fi
+decrypt_password() {
+  ## Decrypt
 
-gpgconf --kill gpg-agent
+  if test -f "${vault_password_file}"; then
+    gpg --quiet --batch --use-agent --decrypt "${vault_password_file}"
+  else
+    #Allows to run playbooks with --vault-password-file even if password has not been yet generated
+    echo "not-yet-generated"
+  fi
+
+  gpgconf --kill gpg-agent
+}
+
+
+decrypt_password
