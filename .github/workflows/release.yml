@@ -133,7 +133,7 @@ jobs:
       app_version: ${{ needs.release.outputs.VERSION }}
     secrets:
       DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-      SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+      SSH_KNOWN_HOSTS: ${{ vars.SSH_KNOWN_HOSTS }}
       DEPLOY_USERNAME: ${{ secrets.DEPLOY_USERNAME }}
       DEPLOY_PASS: ${{ secrets.DEPLOY_PASS }}
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
