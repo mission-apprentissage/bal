@@ -60,7 +60,7 @@ fileignoreconfig:
 - filename: .infra/vault/get-vault-password-client.sh
   checksum: eba1fb641bb63fbc0c7a23700b9f15e653ddb8706134d8eb6428f2991f423004
 - filename: .infra/vault/vault.yml
-  checksum: 333ac8cea2a0103bf93ab6e255406d1484b3de68a6828a866043e2889ef3ed26
+  checksum: 339fd966e32012d672ddc4e384ff8ed428be18dd6a3ef72451cc843957c787d8
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh

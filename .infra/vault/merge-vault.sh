@@ -3,7 +3,7 @@
 set -e
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly VAULT_FILE="${SCRIPT_DIR}/../../vault/vault.yml"
+readonly VAULT_FILE="${SCRIPT_DIR}/vault.yml"
 
 ancestor_version=$1
 current_version=$2
