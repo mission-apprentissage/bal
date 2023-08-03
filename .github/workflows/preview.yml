@@ -40,10 +40,7 @@ jobs:
 
       - name: Run playbook
         run: |
-          ls .infra/.vault_pwd.txt
-          ls ${{github.workspace}}
-          pwd
-          ansible-playbook -i ".infra/env.ini" --limit preview --vault-password-file .infra/.vault_pwd.txt --extra-vars "pr_number=${{ github.event.pull_request.number }} ansible_sudo_pass=${{ secrets.DEPLOY_PASS }}" ".infra/ansible/preview.yml" --user ${{ secrets.DEPLOY_USERNAME }}
+          ansible-playbook -i ".infra/env.ini" --limit preview --vault-password-file ${{github.workspace}}/.infra/.vault_pwd.txt --extra-vars "pr_number=${{ github.event.pull_request.number }} ansible_sudo_pass=${{ secrets.DEPLOY_PASS }}" ".infra/ansible/preview.yml" --user ${{ secrets.DEPLOY_USERNAME }} -vvvv
         # env:
         # ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
         # ANSIBLE_REMOTE_USER: ${{ secrets.DEPLOY_USERNAME }}
