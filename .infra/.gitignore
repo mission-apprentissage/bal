@@ -141,3 +141,4 @@ yarn-error.log
 scripts/ovh/ovh-nodejs-client/.yarn/
 # /app/tools is managed by infra
 files/tools
+files/system

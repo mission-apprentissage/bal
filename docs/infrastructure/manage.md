@@ -70,12 +70,6 @@ La mise à jour dépend de l'etat local de votre environnement, il est recommand
 
 ### Mise à jour manuelle
 
-Pour configurer un environnement, il faut lancer la commande suivante :
-
-```bash
-mna-bal infra:setup <nom_environnement> --user <nom_utilisateur>
-```
-
 Il est possible de mettre à jour et déployer uniquement la partie applicative de l'application en lançant le script
 
 ```bash

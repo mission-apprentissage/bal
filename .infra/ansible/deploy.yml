@@ -15,6 +15,7 @@
         - item.state == 'directory'
         # /app/tools is managed by infra
         - item.path | regex_search('^tools/?') == none
+        - item.path | regex_search('^system/?') == none
 
     - name: Copie des fichiers de l'arborescence /opt/app à partir de .infra/files
       ansible.builtin.template:
@@ -27,6 +28,7 @@
         - item.path | basename != '.gitkeep'
         # /app/tools is managed by infra
         - item.path | regex_search('^tools/?') == none
+        - item.path | regex_search('^system/?') == none
 
     - name: copy server env file
       ansible.builtin.template:
@@ -50,10 +52,17 @@
         - "../docker-compose.recette.yml"
       when: env_type == 'recette'
 
-    - name: Récupération des images docker
+    - name: Récupération des images docker recette
       shell:
         chdir: /opt/app
-        cmd: "sudo docker compose pull"
+        cmd: "sudo docker compose -f docker-compose-system.yml -f docker-compose.yml -f docker-compose.recette.yml pull"
+      when: env_type == 'recette'
+
+    - name: Récupération des images docker production
+      shell:
+        chdir: /opt/app
+        cmd: "sudo docker compose -f docker-compose-system.yml -f docker-compose.yml pull"
+      when: env_type == 'production'
 
     - name: Récupération du status de la stack
       shell:
@@ -105,14 +114,14 @@
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/app
-        cmd: "sudo docker stack deploy -c docker-compose.system.yml -c docker-compose.yml -c docker-compose.recette.yml bal"
+        cmd: "sudo docker stack deploy -c docker-compose-system.yml -c docker-compose.yml -c docker-compose.recette.yml bal"
       register: docker_deploy_output
       when: env_type == 'recette'
 
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/app
-        cmd: "sudo docker stack deploy -c docker-compose.system.yml -c docker-compose.yml bal"
+        cmd: "sudo docker stack deploy -c docker-compose-system.yml -c docker-compose.yml bal"
       register: docker_deploy_output
       when: env_type == 'production'
 
