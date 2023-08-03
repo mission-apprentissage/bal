@@ -70,12 +70,6 @@ La mise à jour dépend de l'etat local de votre environnement, il est recommand
 
 ### Mise à jour manuelle
 
-Pour configurer un environnement, il faut lancer la commande suivante :
-
-```bash
-mna-bal infra:setup <nom_environnement> --user <nom_utilisateur>
-```
-
 Il est possible de mettre à jour et déployer uniquement la partie applicative de l'application en lançant le script
 
 ```bash
@@ -149,7 +143,6 @@ Une fois connecté, le script construira et poussera les images Docker locales s
 
 Le déploiement dépend de l'etat local de votre environnement, il est recommandé de mettre à jour l'environnement via la Github Action `Deployment` qui peut etre lancée depuis l'interface Github.
 
-
 ### Déploiement Manuel
 
 ```bash
@@ -205,7 +198,6 @@ Ensuite il vous faudra mettre à jour les fichiers `habilitations.yml` & `.vault
 
 Il est vivement recommander de stocker toutes les variables d'environnement sensibles (ex: token) dans un vault Ansible.
 Le fichier `.infra/vault/vault.yaml` contient déjà les données jugées sensibles.
-
 
 ### Création du vault
 

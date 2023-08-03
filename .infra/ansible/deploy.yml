@@ -15,6 +15,7 @@
         - item.state == 'directory'
         # /app/tools is managed by infra
         - item.path | regex_search('^tools/?') == none
+        - item.path | regex_search('^system/?') == none
 
     - name: Copie des fichiers de l'arborescence /opt/app à partir de .infra/files
       ansible.builtin.template:
@@ -27,6 +28,7 @@
         - item.path | basename != '.gitkeep'
         # /app/tools is managed by infra
         - item.path | regex_search('^tools/?') == none
+        - item.path | regex_search('^system/?') == none
 
     - name: copy server env file
       ansible.builtin.template:
@@ -38,9 +40,9 @@
     - name: copy du fichier docker compose
       ansible.builtin.template:
         src: "{{ item }}"
-        dest: "/opt/app/docker-compose.yml"
+        dest: "/opt/app/docker-compose.production.yml"
       with_fileglob:
-        - "../docker-compose.yml"
+        - "../docker-compose.production.yml"
 
     - name: copy du fichier recette docker compose
       ansible.builtin.template:
@@ -50,7 +52,13 @@
         - "../docker-compose.recette.yml"
       when: env_type == 'recette'
 
-    - name: Récupération des images docker
+    - name: Création du docker-compose.yml {{env_type}}
+      shell:
+        chdir: /opt/app
+        cmd: 'sudo docker compose $(for file in $(ls docker-compose.*.yml); do echo -n "-f $file "; done) config -o  docker-compose.yml'
+      register: docker_deploy_output
+
+    - name: Récupération des images docker recette
       shell:
         chdir: /opt/app
         cmd: "sudo docker compose pull"
@@ -105,16 +113,8 @@
     - name: Lancement de l'application {{env_type}}
       shell:
         chdir: /opt/app
-        cmd: "sudo docker stack deploy -c docker-compose.yml -c docker-compose.recette.yml bal"
+        cmd: 'sudo docker stack deploy $(for file in $(ls docker-compose.*.yml); do echo -n "-c $file "; done) bal'
       register: docker_deploy_output
-      when: env_type == 'recette'
-
-    - name: Lancement de l'application {{env_type}}
-      shell:
-        chdir: /opt/app
-        cmd: "sudo docker stack deploy -c docker-compose.yml bal"
-      register: docker_deploy_output
-      when: env_type == 'production'
 
     - debug:
         var: docker_deploy_output
