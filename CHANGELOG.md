@@ -1,3 +1,11 @@
+## [1.56.1](https://github.com/mission-apprentissage/bal/compare/v1.56.0...v1.56.1) (2023-08-03)
+
+
+### Bug Fixes
+
+* cleanup preview ([6f987a3](https://github.com/mission-apprentissage/bal/commit/6f987a3526acd0d39021358caecd5e0af7203981))
+* cleanup preview ([#271](https://github.com/mission-apprentissage/bal/issues/271)) ([0099c71](https://github.com/mission-apprentissage/bal/commit/0099c71ab677c51c5473e98957e8cb531fa46dfd))
+
 # [1.56.0](https://github.com/mission-apprentissage/bal/compare/v1.55.0...v1.56.0) (2023-08-03)
 
 
