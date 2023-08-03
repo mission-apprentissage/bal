@@ -1,3 +1,19 @@
+# [1.57.0](https://github.com/mission-apprentissage/bal/compare/v1.56.1...v1.57.0) (2023-08-03)
+
+
+### Bug Fixes
+
+* catch rekey fail and continue ([d28c180](https://github.com/mission-apprentissage/bal/commit/d28c1804397743353672637dd19d9f1e27b80c1e))
+* edit vault ? ([4da24d3](https://github.com/mission-apprentissage/bal/commit/4da24d31b9212ca280a8bfc74496f804f4c5ab77))
+* path to get-vault-password-client.sh ([092c8f8](https://github.com/mission-apprentissage/bal/commit/092c8f8ac199066f68b993fd9d4b380c01a3dcb0))
+
+
+### Features
+
+* add docker-compose.system.yml to docker stack ([e884289](https://github.com/mission-apprentissage/bal/commit/e884289eee1b9ac61ce1e27991fccd6c3acfe501))
+* Les services systemes sont installés lors de la provision du server ([#272](https://github.com/mission-apprentissage/bal/issues/272)) ([d9c28ef](https://github.com/mission-apprentissage/bal/commit/d9c28ef1f1d660158d5459243dab7308bf8ced3e))
+* setup ([85ac6b7](https://github.com/mission-apprentissage/bal/commit/85ac6b76bd3a1e4c2bbac2c253188e4b037bb36c))
+
 ## [1.56.1](https://github.com/mission-apprentissage/bal/compare/v1.56.0...v1.56.1) (2023-08-03)
 
 
