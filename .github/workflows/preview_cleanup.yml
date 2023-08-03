@@ -19,7 +19,7 @@ jobs:
         with:
           name: github_actions
           key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+          known_hosts: ${{ vars.SSH_KNOWN_HOSTS }}
           config: |
             Host *
               IdentityFile ~/.ssh/github_actions
@@ -32,5 +32,8 @@ jobs:
           sudo pipx inject ansible-core jmespath
 
       - name: Run playbook
-        run: |
-          ansible-playbook -i ".infra/env.ini" --limit preview --vault-password-file=".infra/.vault_pwd.txt" --extra-vars "ansible_sudo_pass=${{ secrets.DEPLOY_PASS }}" ".infra/playbooks/preview_cleanup.yml" --user ${{ secrets.DEPLOY_USERNAME }}
+        run: .bin/mna-bal infra:preview:cleanup "${{ github.event.pull_request.number }}"
+        env:
+          ANSIBLE_VAULT_PASSWORD_FILE: ${{ github.workspace }}/.infra/.vault_pwd.txt
+          ANSIBLE_REMOTE_USER: ${{ secrets.DEPLOY_USERNAME }}
+          ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}

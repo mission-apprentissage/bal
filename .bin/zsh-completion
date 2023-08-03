@@ -36,6 +36,7 @@ _mna-bal_completion() {
    "infra\:deploy:'Deploy application to <env>'"
    "infra\:deploy\:prod:'Deploy application to production'"
    "infra\:deploy\:recette:'Deploy application to recette'"
+   "infra\:preview\:cleanup:'Remove preview from close pull-requests'"
    "infra\:vault\:edit:'Edit vault file'"
    "infra\:vault\:generate:'Generate vault file'"
    "infra\:vault\:encrypt:'Encrypt vault file'"

@@ -25,12 +25,6 @@ services:
       - SERVER_NAME=localhost
       - NGINX_ALWAYS_TLS_REDIRECT=false
       - SSL_ENGINE=off
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: docker.bal.local.nginx
-        fluentd-async: "true"
 
   ui:
     <<: *node-image

@@ -15,6 +15,7 @@ function Help_infra() {
    echo "  infra:deploy <env> --user <your_username>                                           Deploy application to <env>"
    echo "  infra:deploy:prod --user <your_username>                                            Deploy application to production"
    echo "  infra:deploy:recette --user <your_username>                                         Deploy application to recette"
+   echo "  infra:preview:cleanup --user <your_username>                                        Remove preview from close pull-requests"
    echo "  infra:vault:edit                                                                    Edit vault file"
    echo "  infra:vault:generate                                                                Generate vault file"
    echo "  infra:vault:encrypt                                                                 Encrypt vault file"
@@ -45,6 +46,10 @@ function infra:deploy:recette() {
   infra:deploy recette "$@"
 }
 
+function infra:preview:cleanup() {
+  "${ROOT_DIR}/.bin/infra/run-playbook.sh" "preview_cleanup.yml" "preview"
+}
+
 function infra:vault:edit() {
   editor=${EDITOR:-'code -w'}
   EDITOR=$editor "$ROOT_DIR/.infra/scripts/vault/edit-vault.sh" "$@"
@@ -59,7 +64,7 @@ function infra:vault:encrypt() {
 }
 
 function infra:vault:password() {
-  "$ROOT_DIR/.infra/scripts/vault/get-vault-password-client.sh" "$@"
+  "$ROOT_DIR/.infra/vault/get-vault-password-client.sh" "$@"
 }
 
 function infra:vault:renew() {
