@@ -7,6 +7,8 @@ fileignoreconfig:
   checksum: ede576e2f5dfef9b31e127aec3f757e5b7ad0c5f78214d796ad30da1c2f2e46a
 - filename: .github/workflows/preview.yml
   checksum: f6f0ddbd4c2498156e171b972840d4ff318681c6ef1920c0b8adc3f3e129e912
+- filename: .github/workflows/preview_cleanup.yml
+  checksum: 67819990fb55317219099160544287ce92abebd9f45cd3d4d9d80b8870c4c568
 - filename: .github/workflows/publish.yml
   checksum: cf87922f9cd1d8f4bb965920800187860609408c64406991a6dfad0ab79cc6aa
 - filename: .github/workflows/release.yml

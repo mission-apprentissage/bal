@@ -32,8 +32,8 @@ jobs:
           sudo pipx inject ansible-core jmespath
 
       - name: Run playbook
-        run: .bin/mna-bal infra:preview:cleanup "${{ github.event.pull_request.number }}"
+        run: .bin/mna-bal infra:preview:cleanup
         env:
-          ANSIBLE_VAULT_PASSWORD_FILE: ${{ github.workspace }}/.infra/.vault_pwd.txt
+          ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
           ANSIBLE_REMOTE_USER: ${{ secrets.DEPLOY_USERNAME }}
           ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
