@@ -4,7 +4,7 @@ fileignoreconfig:
 - filename: '*.test.ts'
   checksum: b5e6d6b59416f7359265e17c991135e67a2f7564a46697e05a83b0925032c98d
 - filename: .github/workflows/_deploy.yml
-  checksum: ede576e2f5dfef9b31e127aec3f757e5b7ad0c5f78214d796ad30da1c2f2e46a
+  checksum: f5e875545f9aaf94e535fb41dcf56b94c6c47be46a97e5bdfb39a36c2c42f7aa
 - filename: .github/workflows/preview.yml
   checksum: f6f0ddbd4c2498156e171b972840d4ff318681c6ef1920c0b8adc3f3e129e912
 - filename: .github/workflows/preview_cleanup.yml
@@ -17,17 +17,20 @@ fileignoreconfig:
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/.env_server
   checksum: 6af84bb7aa4a9867d0fb6a0f73cf6f0325483c440dc8dc018c08a6d34d9eb48c
-  ignore_detectors: [filename]
+  ignore_detectors:
+  - filename
 - filename: .infra/.env_ui
   checksum: 0dd94c954d75fd19bbe669eef8238c703d9fb8bea4025358071f9fae6140ac85
-  ignore_detectors: [filename]
+  ignore_detectors:
+  - filename
 - filename: .infra/README.md
   checksum: 46ff20cd40c93c0580c896707afadccc37486909997213c452393d8179d12a3d
 - filename: .infra/ansible/roles/setup/files/app/.overrides/common/docker-compose.common.yml
   checksum: c2a10f20a22c2df9c97be935509f0119799be6467fe797399bd589fae2d10388
 - filename: .infra/ansible/roles/setup/files/app/.overrides/production/docker-compose.env.yml
   checksum: a0e0aee8350df735bf9e13b4d19a3ec0b2a11c742e3ed4681d2d2cc5d672994f
-  ignore_detectors: [filename]
+  ignore_detectors:
+  - filename
 - filename: .infra/ansible/roles/setup/files/app/mongodb/docker-entrypoint-initdb.d/01_create_users.js
   checksum: f8af7aa98f4242b1c472c53f85f3d62a14a1239e7259ec0fec837ee09c7df989
 - filename: .infra/ansible/roles/setup/files/app/tools/metabase/backup-metabase.sh
@@ -68,7 +71,9 @@ fileignoreconfig:
   checksum: 339fd966e32012d672ddc4e384ff8ed428be18dd6a3ef72451cc843957c787d8
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
-  ignore_detectors: [filecontent, filesize]
+  ignore_detectors:
+  - filecontent
+  - filesize
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
