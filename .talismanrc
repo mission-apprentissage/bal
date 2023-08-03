@@ -44,7 +44,7 @@ fileignoreconfig:
 - filename: .infra/docker-compose.recette.yml
   checksum: 1b26e5f3e3d4f30ddd5eb53bf09dffe27867beec422d64e4caad783acf31fbae
 - filename: .infra/env.ini
-  checksum: 7b67eb1075a6964a7bb9dd52cd155e806b27aea6728b8e4abd9f003e221b8616
+  checksum: c13be33d52ad55c9e51d4db08f6ab7f8b96ed655a418101605939883b64bf17f
 - filename: .infra/scripts/deploy-app.sh
   checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
 - filename: .infra/scripts/ovh/create-backup-partition.sh
@@ -61,6 +61,8 @@ fileignoreconfig:
   checksum: eba1fb641bb63fbc0c7a23700b9f15e653ddb8706134d8eb6428f2991f423004
 - filename: .infra/vault/vault.yml
   checksum: 339fd966e32012d672ddc4e384ff8ed428be18dd6a3ef72451cc843957c787d8
+- filename: CHANGELOG.md
+  checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh

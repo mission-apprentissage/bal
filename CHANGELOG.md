@@ -1,3 +1,19 @@
+# [1.56.0](https://github.com/mission-apprentissage/bal/compare/v1.55.0...v1.56.0) (2023-08-03)
+
+
+### Bug Fixes
+
+* deploy preview ([1bef752](https://github.com/mission-apprentissage/bal/commit/1bef7524e25967c9db2392f8268636c6528b71fb))
+* get vault password client ([bfc99c1](https://github.com/mission-apprentissage/bal/commit/bfc99c1677bb59ca5132075de32fe01f5b124890))
+* preview github action ([a84e43e](https://github.com/mission-apprentissage/bal/commit/a84e43e27c4b12e7df53bf2156f73bb61cb131c4))
+* use github vars SSH_KNOWN_HOST ([511cbad](https://github.com/mission-apprentissage/bal/commit/511cbad4365d705dc1c73313a891dff92fef3c44))
+
+
+### Features
+
+* deploy preview ([c3e920b](https://github.com/mission-apprentissage/bal/commit/c3e920bfd3b996f05c89deaf87727a2e38808d6f))
+* preview deployment ([#270](https://github.com/mission-apprentissage/bal/issues/270)) ([a37b1ea](https://github.com/mission-apprentissage/bal/commit/a37b1ea703575f08f907b5c24ddc8e5467810eaf))
+
 # [1.55.0](https://github.com/mission-apprentissage/bal/compare/v1.54.2...v1.55.0) (2023-08-02)
 
 
