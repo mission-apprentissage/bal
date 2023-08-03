@@ -149,7 +149,6 @@ Une fois connecté, le script construira et poussera les images Docker locales s
 
 Le déploiement dépend de l'etat local de votre environnement, il est recommandé de mettre à jour l'environnement via la Github Action `Deployment` qui peut etre lancée depuis l'interface Github.
 
-
 ### Déploiement Manuel
 
 ```bash
@@ -205,7 +204,6 @@ Ensuite il vous faudra mettre à jour les fichiers `habilitations.yml` & `.vault
 
 Il est vivement recommander de stocker toutes les variables d'environnement sensibles (ex: token) dans un vault Ansible.
 Le fichier `.infra/vault/vault.yaml` contient déjà les données jugées sensibles.
-
 
 ### Création du vault
 

@@ -55,6 +55,8 @@ fileignoreconfig:
   checksum: 86baa73f9c5559afc69f12d124d9895a104869cfb8fe396568f88954351a38b5
 - filename: .infra/scripts/vault/renew-vault.sh
   checksum: 86ee05100090183153d43671fd74bddf0552793dfe0f2a9a01c137d3cb248487
+- filename: .infra/scripts/vault/setup-local-env.sh
+  checksum: 34b52dc02a854da1d83402603eb0dd9eec165c0e4a2db61dbe620cbe29dbee12
 - filename: .infra/vault/get-vault-password-client.sh
   checksum: eba1fb641bb63fbc0c7a23700b9f15e653ddb8706134d8eb6428f2991f423004
 - filename: .infra/vault/vault.yml
