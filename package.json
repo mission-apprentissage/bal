@@ -29,7 +29,7 @@
     "prettier:fix": "prettier --write ./ui ./server",
     "prettier:check": "prettier --check ./ui ./server",
     "release": "semantic-release",
-    "release:images": "",
+    "release:images": "./.bin/mna-bal release:images",
     "prepare": "husky install",
     "talisman:add-exception": "yarn node-talisman --githook pre-commit -i",
     "e2e": "cypress open",

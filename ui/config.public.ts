@@ -2,6 +2,7 @@ export interface PublicConfig {
   sentry: {
     dsn: string;
   };
+  host: string;
   apiEndpoint: string;
   env: "local" | "preview" | "recette" | "production";
 }
@@ -13,6 +14,7 @@ function getProductionPublicConfig(): PublicConfig {
     sentry: {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
+    host,
     env: "production",
     apiEndpoint: `https://${host}/api`,
   };
@@ -25,6 +27,7 @@ function getRecettePublicConfig(): PublicConfig {
     sentry: {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
+    host,
     env: "recette",
     apiEndpoint: `https://${host}/api`,
   };
@@ -46,6 +49,7 @@ function getPreviewPublicConfig(): PublicConfig {
     sentry: {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
+    host,
     env: "preview",
     apiEndpoint: `https://${host}/api`,
   };
@@ -58,6 +62,7 @@ function getLocalPublicConfig(): PublicConfig {
     sentry: {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
+    host,
     env: "local",
     apiEndpoint: `http://${host}:${process.env.API_PORT ?? 5000}/api`,
   };
