@@ -5,8 +5,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --no-lint",
-    "start": "next start",
-    "docker-dev": "yarn dev",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

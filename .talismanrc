@@ -67,6 +67,8 @@ fileignoreconfig:
   checksum: 34b52dc02a854da1d83402603eb0dd9eec165c0e4a2db61dbe620cbe29dbee12
 - filename: .infra/vault/get-vault-password-client.sh
   checksum: eba1fb641bb63fbc0c7a23700b9f15e653ddb8706134d8eb6428f2991f423004
+- filename: .infra/vault/setup-local-env.sh
+  checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
   checksum: 339fd966e32012d672ddc4e384ff8ed428be18dd6a3ef72451cc843957c787d8
 - filename: CHANGELOG.md
@@ -78,10 +80,14 @@ fileignoreconfig:
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
   checksum: 6b3f6df5ce466087bbef64dd4bdf04a064aa1d49c464d93af04627632ccbab4d
+- filename: server/.env.local.example
+  checksum: 5c34a9160463fad01fd6fed76b1f5f5de78c73524a0615348c8c198ed8b15e0f
 - filename: server/.env.test
   checksum: 7df7b9cccc051413dceaed2d59f4a1c7b9bee3e387ea568134f68972431878c3
 - filename: server/config/config.ts
   checksum: dee90e5b9ea1162aaffc204bd46a7801f8abba89fddd3f7077990321299ff3bf
+- filename: server/dev/load-env.mjs
+  checksum: 9b24e1858aceefd0aa80a557e94f340a3f07308443be5dccebcb224ad31a7de0
 - filename: server/src/app.ts
   checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
 - filename: server/src/modules/actions/organisation.actions.ts
@@ -106,6 +112,8 @@ fileignoreconfig:
   checksum: 573464801f84a37b522e4e21b0f9536fd318fa2e018f739296fbe3c769269e89
 - filename: server/tests/data/opcoEp.ts
   checksum: 8d1f421390c62fce249bf9efa7bb0688c6c9aa97375dd83d45f28c7d2246bf42
+- filename: ui/.env.local.example
+  checksum: bc2c4b87084d70a679bb31f86a3981b9db3b95fe118cf3bdfc130a36cfddf607
 - filename: ui/Dockerfile
   checksum: 2eb89b135a7f55f39ba6781b377b5e58948e8e1686be9a22257b10b8245c42f0
 - filename: ui/Dockerfile.preview

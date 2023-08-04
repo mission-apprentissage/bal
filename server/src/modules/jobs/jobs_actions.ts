@@ -42,9 +42,12 @@ export async function addJob(
   return 0;
 }
 
-//abortSignal
-export async function processor(): Promise<void> {
-  logger.info(`Process jobs queue - looking for a job to execute`);
+export async function processor(signal: AbortSignal): Promise<void> {
+  if (signal.aborted) {
+    return;
+  }
+
+  logger.debug(`Process jobs queue - looking for a job to execute`);
   const { value: nextJob } = await getDbCollection("jobs").findOneAndUpdate(
     {
       type: { $in: ["simple", "cron_task"] },
@@ -59,10 +62,10 @@ export async function processor(): Promise<void> {
     logger.info(`Process jobs queue - job ${nextJob.name} will start`);
     await runJob(nextJob);
   } else {
-    await sleep(45000); // 45 secondes
+    await sleep(45_000, signal); // 45 secondes
   }
 
-  return processor();
+  return processor(signal);
 }
 
 const runner = async (

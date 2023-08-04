@@ -39,7 +39,7 @@ jobs:
           sudo pipx inject ansible-core jmespath
 
       - name: Run playbook
-        run: .bin/mna-bal infra:deploy preview "${{ github.event.pull_request.number }}"
+        run: yarn deploy preview "${{ github.event.pull_request.number }}"
         env:
           ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
           ANSIBLE_REMOTE_USER: ${{ secrets.DEPLOY_USERNAME }}

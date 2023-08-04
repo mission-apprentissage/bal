@@ -5,24 +5,7 @@ set -euo pipefail
 export SCRIPT_DIR="$(dirname -- "$( readlink -f -- "$0"; )")"
 export ROOT_DIR="$(dirname "${SCRIPT_DIR}")"
 
-source "${SCRIPT_DIR}/local/local.sh"
-source "${SCRIPT_DIR}/infra/infra.sh"
-
-################################################################################
-# Help                                                                         #
-################################################################################
-function Help()
-{
-   # Display Help
-   echo "Execute commands to manage BAL project"
-   echo
-   echo "Usage: .bin/mna-bal [command]"
-   echo 
-   Help_local
-   Help_infra
-
-   exit 1
-}
+source "${SCRIPT_DIR}/commands.sh"
 
 ################################################################################
 ################################################################################

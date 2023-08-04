@@ -2,6 +2,7 @@ import env from "env-var";
 
 const config = {
   appName: env.get("APP_NAME").default("bal").asString(),
+  port: env.get("PORT").default(5000).asPortNumber(),
   env: env
     .get("MNA_BAL_ENV")
     .required()

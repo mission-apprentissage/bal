@@ -9,9 +9,7 @@ COPY ui/package.json ui/package.json
 COPY server/package.json server/package.json
 COPY shared/package.json shared/package.json
 
-ARG YARN_FLAGS
-
-RUN yarn install ${YARN_FLAGS}
+RUN yarn install --immutable
 
 FROM builder_root as root
 WORKDIR /app

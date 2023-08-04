@@ -12,6 +12,7 @@
     - [Lancement de l'application](#lancement-de-lapplication)
     - [Hydratation du projet en local](#hydratation-du-projet-en-local)
     - [Exécution des tests](#exécution-des-tests)
+      - [Snapshots](#snapshots)
   - [Aller plus loin](#aller-plus-loin)
 
 ## Fiche Produit
@@ -80,39 +81,29 @@ Voici les étapes pour créer votre clé GPG :
 Avant de lancer l'application, assurez-vous d'installer toutes les dépendances nécessaires en exécutant la commande suivante :
 
 ```bash
-yarn install
+yarn setup
 ```
-
-Vous pouvez également utiliser la commande `.bin/mna-bal local:install`
 
 Cette commande mettra à jour les dépendances du projet.
 
-> **Note** : Pour que vos changements se reflètent dans votre application locale, vous devez exécuter la commande `.bin/mna-bal local:start`.
+Le script vous demandera plusieurs fois la phrase secrète de votre clé GPG pour décrypter les variables d'environnement du vault.
 
 ### Developpement CLI mna-bal
 
 Les principales opérations sont regroupée dans un CLI `.bin/mna-bal`, il est possible de liste l'ensemble des commandes disponible via `.bin/mna-bal help`.
 
-Il est également possible d'installer globallement l'exécutable via la commande `.bin/mna-bal local:bin:install` une fois installé il est possible d'utiliser la CLI via `mna-bal help` directement (n'oubliez pas d'ouvrir une nouvelle session de votre terminal).
-
-Enfin si vous utilisez ZSH, vous pouvez installer le support du tab-completion de la commande via `mna-bal local:completion:zsh` puis `compinit -C`
+Il est également possible d'installer globallement l'exécutable via la commande `.bin/mna-bal bin:setup` upuis `compinit -C` ne fois installé il est possible d'utiliser la CLI via `mna-bal help` directement (n'oubliez pas d'ouvrir une nouvelle session de votre terminal).
 
 ### Variables d'environnement local
 
-Avant de lancer l'application, il vous faudra récupérer les variables d'environnement localement. Pour cela veuillez exécuter la commande suivante :
-
-```bash
-.bin/mna-bal local:env:update
-```
-
-Le script vous demandera plusieurs fois la phrase secrète de votre clé GPG pour décrypter les variables d'environnement du vault.
+Les variables d'environnement local du server sont stocké dans le vault (peut contenir des secrets). Si vous souhaitez overwwrite certaines variables ou changer le port de l'api par exemple, il est possible de créer un fichier `server/.env.local` et `ui/.env.local`
 
 ### Lancement de l'application
 
 Pour démarrer l'application en mode local, exécutez la commande suivante :
 
 ```bash
-.bin/mna-bal local:start
+yarn dev
 ```
 
 Cette commande démarre les containers définis dans le fichier `docker-compose.yml`.
@@ -124,7 +115,7 @@ Une fois l'application démarrée, vous pourrez y accéder via l'URL [http://loc
 Pour créer des jeux de test facilement il suffit de lancer les commandes suivante :
 
 ```bash
-.bin/mna-bal local:server:seed
+yarn seed
 ```
 
 ### Exécution des tests
@@ -132,7 +123,7 @@ Pour créer des jeux de test facilement il suffit de lancer les commandes suivan
 Pour exécuter les tests localement, utilisez la commande suivante :
 
 ```bash
-.bin/mna-bal local:test
+yarn test
 ```
 
 Cette commande exécutera tous les tests du projet et vous affichera les résultats.

@@ -10,7 +10,6 @@
   - [Typescript](#typescript)
     - [Arrêt de l'application](#arrêt-de-lapplication)
     - [Suppression de la stack](#suppression-de-la-stack)
-    - [Execution de commandes depuis les conteneurs](#execution-de-commandes-depuis-les-conteneurs)
       - [Server CLI](#server-cli)
     - [Emails](#emails)
     - [Debugger sous VSCode](#debugger-sous-vscode)
@@ -71,7 +70,7 @@ Pour refleter les changements, il faudra relancer les applications via la comman
 Un linter (via ESLint) est mis en place dans le projet, pour le lancer :
 
 ```bash
-mna-bal local:lint
+yarn lint
 ```
 
 **Note:** eslint est run automatiquement à chaque commit
@@ -81,7 +80,7 @@ mna-bal local:lint
 Prettier est mis en place dans le projet, pour le lancer :
 
 ```bash
-mna-bal local:prettier:fix
+yarn prettier:fix
 ```
 
 **Note:** eslint est run automatiquement à chaque commit
@@ -91,7 +90,7 @@ mna-bal local:prettier:fix
 L'application utilise TypeScript, pour vérifier que les erreurs liés au type veuillez lancer:
 
 ```bash
-mna-bal local:typecheck
+yarn typecheck
 ```
 
 ### Arrêt de l'application
@@ -99,7 +98,7 @@ mna-bal local:typecheck
 Il est possible de stopper l'application en lancant la commande suivante :
 
 ```bash
-mna-bal local:stop
+yarn services:stop
 ```
 
 ### Suppression de la stack
@@ -107,22 +106,9 @@ mna-bal local:stop
 Pour supprimer l'ensemble de la stack et tuer tous les conteneurs il suffit de lancer la commande suivante :
 
 ```bash
-mna-bal local:clean
+yarn services:clean
 ```
 
-### Execution de commandes depuis les conteneurs
-
-Il est possible de lancer une session interractive dans un conteneur via la commande suivante:
-
-```bash
-mna-bal local:docker:sh <nom-du-servive>
-```
-
-De meme il est possible de lancer des commandes directements:
-
-```bash
-mna-bal local:docker:run <nom-du-servive> <command>
-```
 
 #### Server CLI
 
@@ -138,7 +124,7 @@ Vous pouvez utiliser la cli du server, dans la session interactive `docker compo
 Il est aussi possible de lancer ces commandes sans session interactive comme par example: 
 
 ```bash
-mna-bal local:server:cli --help
+yarn cli --help
 ```
 
 ### Emails
