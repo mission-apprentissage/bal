@@ -53,6 +53,8 @@ fileignoreconfig:
   checksum: 1b26e5f3e3d4f30ddd5eb53bf09dffe27867beec422d64e4caad783acf31fbae
 - filename: .infra/env.ini
   checksum: c13be33d52ad55c9e51d4db08f6ab7f8b96ed655a418101605939883b64bf17f
+- filename: .infra/env_infra.ini
+  checksum: 14d1d16fa923ea8671334c3dc5940874e7e1382234fb1c2476c5d8e9aa4d8b86
 - filename: .infra/scripts/deploy-app.sh
   checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
 - filename: .infra/scripts/ovh/create-backup-partition.sh
