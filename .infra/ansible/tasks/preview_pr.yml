@@ -80,7 +80,7 @@
     - name: "[{{ pr_number }}] Seed database"
       shell:
         chdir: "/opt/app/projects/{{ pr_number }}"
-        cmd: "docker compose run --rm server yarn docker:cli seed --sync"
+        cmd: "docker compose run --rm server yarn docker:cli seed"
 
     - name: "[{{ pr_number }}] Preview URL"
       debug:
