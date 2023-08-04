@@ -1,0 +1,23 @@
+{
+  "autorun": true,
+  "terminals": [
+    {
+      "name": "Server",
+      "description": "This run the server",
+      "focus": true,
+      "command": "echo \"Hello World\""
+    },
+    {
+      "name": "Multi",
+      "commands": [
+        "echo \"Did you know?\"",
+        "echo \"You can execute multiple commands\""
+      ]
+    },
+    {
+      "name": "Single - No execution",
+      "execute": false,
+      "command": "echo  \"Press enter to run me\""
+    }
+  ]
+}
