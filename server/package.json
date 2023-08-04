@@ -12,8 +12,7 @@
     "build": "tsup src/index.ts src/db/migrations --splitting",
     "typecheck": "tsc --noEmit",
     "cli": "node dist/dev.js",
-    "docker:cli": "node dist/index.js",
-    "docker:start": "yarn docker:cli start"
+    "docker:cli": "node dist/index.js"
   },
   "dependencies": {
     "@fastify/auth": "4.3.0",

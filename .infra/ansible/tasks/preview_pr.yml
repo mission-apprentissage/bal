@@ -75,12 +75,12 @@
     - name: "[{{ pr_number }}] Execute MongoDB migrations"
       shell:
         chdir: "/opt/app/projects/{{ pr_number }}"
-        cmd: "docker compose run --rm server yarn cli migrations:up"
+        cmd: "docker compose run --rm server yarn docker:cli migrations:up"
 
     - name: "[{{ pr_number }}] Seed database"
       shell:
         chdir: "/opt/app/projects/{{ pr_number }}"
-        cmd: "docker compose run --rm server yarn cli seed --sync"
+        cmd: "docker compose run --rm server yarn docker:cli seed --sync"
 
     - name: "[{{ pr_number }}] Preview URL"
       debug:
