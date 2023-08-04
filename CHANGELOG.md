@@ -1,3 +1,10 @@
+# [1.58.0](https://github.com/mission-apprentissage/bal/compare/v1.57.0...v1.58.0) (2023-08-04)
+
+
+### Features
+
+* update metabase security ([989990c](https://github.com/mission-apprentissage/bal/commit/989990ce926fcbb26220ab625da86f87f2c19edf))
+
 # [1.57.0](https://github.com/mission-apprentissage/bal/compare/v1.56.1...v1.57.0) (2023-08-03)
 
 
