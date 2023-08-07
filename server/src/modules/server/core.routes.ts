@@ -2,7 +2,6 @@ import { zRoutes } from "shared";
 
 import config from "@/config";
 
-import packageJson from "../../../package.json";
 import { ensureInitialization } from "../../common/utils/mongodbUtils";
 import { Server } from "./server";
 
@@ -14,7 +13,7 @@ export const coreRoutes = ({ server }: { server: Server }) => {
       await ensureInitialization();
       response.status(200).send({
         name: "[BAL] Apprentissage API",
-        version: packageJson.version,
+        version: config.version,
         env: config.env,
       });
     }

@@ -39,6 +39,8 @@ RUN apk add --update \
   && rm -rf /var/cache/apk/*
 
 ENV NODE_ENV production
+ARG PUBLIC_VERSION
+ENV PUBLIC_VERSION=$PUBLIC_VERSION
 
 COPY --from=builder_server /app/server ./server
 COPY --from=builder_server /app/shared ./shared

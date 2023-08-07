@@ -14,19 +14,19 @@ on:
         description: app version
         type: string
         required: true
-        default: 1.59.1
+        default: latest
   workflow_call:
     inputs:
       environment:
         description: The environment to deploy to
         type: string
-        default: 1.59.1
+        default: latest
         required: false
       app_version:
         description: app version
         type: string
         required: false
-        default: 1.59.1
+        default: latest
     secrets:
       DEPLOY_SSH_PRIVATE_KEY:
         description: SSH private key
