@@ -1,3 +1,17 @@
+# [1.59.0](https://github.com/mission-apprentissage/bal/compare/v1.58.0...v1.59.0) (2023-08-07)
+
+
+### Bug Fixes
+
+* local dev env ([1938659](https://github.com/mission-apprentissage/bal/commit/1938659ba8f0d374ac0b0fa7c34e738dff511f80))
+* tests ([a85c2a0](https://github.com/mission-apprentissage/bal/commit/a85c2a098a4204ff50724be10f8be357750dc4b7))
+* yarn cli ([ad46d6d](https://github.com/mission-apprentissage/bal/commit/ad46d6d402ec958c0fea9853cd6ccd86b653dc16))
+
+
+### Features
+
+* remove docker ([#275](https://github.com/mission-apprentissage/bal/issues/275)) ([86b78ab](https://github.com/mission-apprentissage/bal/commit/86b78ab2bdb82a8475e163b242376798ebb239de))
+
 # [1.58.0](https://github.com/mission-apprentissage/bal/compare/v1.57.0...v1.58.0) (2023-08-04)
 
 
