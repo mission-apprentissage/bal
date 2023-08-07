@@ -19,7 +19,7 @@ function deploy() {
 
     "${ROOT_DIR}/.bin/scripts/run-playbook.sh" "preview.yml" "$ENV_FILTER" --extra-var "pr_number=$PR_NUMBER"
   else
-    "${ROOT_DIR}/.bin/scripts/run-playbook.sh" "deploy.yml" "$ENV_FILTER"
+    "${ROOT_DIR}/.bin/scripts/run-playbook.sh" "deploy.yml" "$ENV_FILTER" "$@"
   fi
 }
 
