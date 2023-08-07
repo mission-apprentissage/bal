@@ -70,7 +70,7 @@ fileignoreconfig:
 - filename: .infra/vault/setup-local-env.sh
   checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: 339fd966e32012d672ddc4e384ff8ed428be18dd6a3ef72451cc843957c787d8
+  checksum: 5244c8d016a7131cab79ab3c2748299751ceda781ace51add7f81bc5c9577fbf
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:
@@ -81,7 +81,7 @@ fileignoreconfig:
 - filename: git-hooks/prepare-release.sh
   checksum: 6b3f6df5ce466087bbef64dd4bdf04a064aa1d49c464d93af04627632ccbab4d
 - filename: server/.env.local.example
-  checksum: 5c34a9160463fad01fd6fed76b1f5f5de78c73524a0615348c8c198ed8b15e0f
+  checksum: b760092fca0bbc8ba8c1d1d162b0461b992de867cbfde3dc4556226a1129e484
 - filename: server/.env.test
   checksum: 7df7b9cccc051413dceaed2d59f4a1c7b9bee3e387ea568134f68972431878c3
 - filename: server/config/config.ts
@@ -112,6 +112,8 @@ fileignoreconfig:
   checksum: 573464801f84a37b522e4e21b0f9536fd318fa2e018f739296fbe3c769269e89
 - filename: server/tests/data/opcoEp.ts
   checksum: 8d1f421390c62fce249bf9efa7bb0688c6c9aa97375dd83d45f28c7d2246bf42
+- filename: ui/.env
+  checksum: 36cfa5591cf1dcf75cc7fb3be6980cc26a393786f0afffdcca92573c448b3148
 - filename: ui/.env.local.example
   checksum: bc2c4b87084d70a679bb31f86a3981b9db3b95fe118cf3bdfc130a36cfddf607
 - filename: ui/Dockerfile

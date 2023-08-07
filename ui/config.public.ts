@@ -57,14 +57,15 @@ function getPreviewPublicConfig(): PublicConfig {
 
 function getLocalPublicConfig(): PublicConfig {
   const host = "localhost";
-
   return {
     sentry: {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
     host,
     env: "local",
-    apiEndpoint: `http://${host}:${process.env.API_PORT ?? 5000}/api`,
+    apiEndpoint: `http://${host}:${
+      process.env.NEXT_PUBLIC_API_PORT ?? 5000
+    }/api`,
   };
 }
 

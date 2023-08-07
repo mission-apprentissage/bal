@@ -81,6 +81,7 @@ Voici les étapes pour créer votre clé GPG :
 Avant de lancer l'application, assurez-vous d'installer toutes les dépendances nécessaires en exécutant la commande suivante :
 
 ```bash
+yarn
 yarn setup
 ```
 
