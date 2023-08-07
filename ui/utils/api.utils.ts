@@ -220,8 +220,12 @@ export async function apiPost<
 
   const res = await fetch(generateUrl(path, o), {
     method: "POST",
-    mode: "same-origin",
-    credentials: "same-origin",
+    ...(publicConfig.env === "local"
+      ? {}
+      : {
+          mode: "same-origin",
+          credentials: "same-origin",
+        }),
     body: getBody(headers, o?.body),
     headers,
   });
@@ -244,8 +248,12 @@ export async function apiGet<
 
   const res = await fetch(generateUrl(path, options), {
     method: "GET",
-    mode: "same-origin",
-    credentials: "same-origin",
+    ...(publicConfig.env === "local"
+      ? {}
+      : {
+          mode: "same-origin",
+          credentials: "same-origin",
+        }),
     headers,
   });
 
@@ -267,8 +275,12 @@ export async function apiDelete<
 
   const res = await fetch(generateUrl(path, options), {
     method: "DELETE",
-    mode: "same-origin",
-    credentials: "same-origin",
+    ...(publicConfig.env === "local"
+      ? {}
+      : {
+          mode: "same-origin",
+          credentials: "same-origin",
+        }),
     headers,
   });
 

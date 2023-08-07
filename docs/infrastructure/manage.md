@@ -73,8 +73,8 @@ La mise à jour dépend de l'etat local de votre environnement, il est recommand
 Il est possible de mettre à jour et déployer uniquement la partie applicative de l'application en lançant le script
 
 ```bash
-mna-bal infra:deploy <nom_environnement> --user <nom_utilisateur>
-mna-bal infra:deploy <nom_environnement> --extra-vars=app_version=<app_image_version> --user <nom_utilisateur>
+yarn deploy <nom_environnement> --user <nom_utilisateur>
+yarn deploy <nom_environnement> --extra-vars=app_version=<app_image_version> --user <nom_utilisateur>
 ```
 
 Pour information si votre utilisateur local porte le même nom que l'utilisateur distant alors `--user` n'est pas
@@ -126,7 +126,7 @@ Si vous souhaitez effectuer une release manuelle veuillez vous référé à la s
 Pour créer une nouvelle version stable veuillez utiliser la commande suivante:
 
 ```bash
-mna-bal infra:release:images
+yarn release:images
 ```
 
 Le script vous demandera si vous souhaitez créer et pousser les images pour "Reverse Proxy" et "App". Pour chaque image, il vous proposera automatiquement la prochaine version patch selon le versioning sémantique, mais vous pourrez également saisir une version personnalisée si vous le souhaitez.
@@ -146,7 +146,7 @@ Le déploiement dépend de l'etat local de votre environnement, il est recommand
 ### Déploiement Manuel
 
 ```bash
-mna-bal infra:deploy <nom-de-lenvironnement> --user <nom_utilisateur>
+yarn deploy <nom-de-lenvironnement> --user <nom_utilisateur>
 ```
 
 **Note:** La version déployée sera celle défini dans votre `.infra/env.ini` local.
@@ -240,15 +240,15 @@ Si vous voulez éditer le vault, le plus simple est d'utiliser un plugin pour vo
 Quand vous allez ouvrir le fichier, un mot de passe vous sera demandé. Pour l'obtenir, executez la commande suivante
 
 ```bash
-  mna-bal infra:vault:password
+yarn vault:password
 ```
 
 Vous pouvez également éditer directement le fichier en ligne de commande sans afficher en clair le mot de passe :
 
 ```bash
-   EDITOR=vim mna-bal infra:vault:edit
+   EDITOR=vim yarn vault:edit
    ou
-   EDITOR="code -w" mna-bal infra:vault:edit
+   EDITOR="code -w" yarn vault:edit
 ```
 
 > Par défaut le script utilisera `code -w` si `$EDITOR` n'est pas défini

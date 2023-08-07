@@ -10,6 +10,7 @@ import {
   closeSentry,
   initSentryProcessor,
 } from "./common/services/sentry/sentry";
+import config from "./config";
 import { addJob, processor } from "./modules/jobs/jobs_actions";
 
 program
@@ -21,40 +22,80 @@ program
     await closeSentry();
   });
 
+async function startProcessor() {
+  logger.info(`Process jobs queue - start`);
+  await addJob(
+    {
+      name: "crons:init",
+      sync: true,
+    },
+    { runningLogs: true }
+  );
+  const abortController = new AbortController();
+
+  await Promise.race([
+    processor(abortController.signal),
+    new Promise((resolve, reject) => {
+      let shutdownInProgress = false;
+      ["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
+        (process as NodeJS.EventEmitter).on(signal, async () => {
+          if (shutdownInProgress) {
+            const message = `Server shut down (FORCED) (signal=${signal})`;
+            logger.warn(message);
+            reject(new Error(message));
+            return;
+          }
+
+          shutdownInProgress = true;
+          logger.info(`Processor is shutting down (signal=${signal})`);
+          abortController.abort();
+        });
+      });
+    }),
+  ]);
+
+  await processor(abortController.signal);
+  logger.info(`Processor shut down`);
+}
+
 program
   .command("start")
+  .option("--withProcessor", "Exécution du processor également")
   .description("Démarre le serveur HTTP")
-  .action(async () => {
+  .action(async ({ withProcessor = false }) => {
     try {
-      await server.listen({ port: 5000, host: "0.0.0.0" });
-      logger.info(`Server ready and listening on port ${5000}`);
+      await server.listen({ port: config.port, host: "0.0.0.0" });
+      logger.info(`Server ready and listening on port ${config.port}`);
+      if (withProcessor) {
+        await startProcessor();
+      }
     } catch (err) {
       logger.error(err);
       captureException(err);
       throw err;
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       let shutdownInProgress = false;
       ["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
         (process as NodeJS.EventEmitter).on(signal, async () => {
           try {
             if (shutdownInProgress) {
-              const message = `application shut down (FORCED) (signal=${signal})`;
+              const message = `Server shut down (FORCED) (signal=${signal})`;
               logger.warn(message);
               reject(new Error(message));
               return;
             }
 
             shutdownInProgress = true;
-            logger.warn(`application shutting down (signal=${signal})`);
+            logger.warn(`Server shutting down (signal=${signal})`);
             await HttpTerminator({
               server: server.server,
               maxWaitTimeout: 50_000,
               logger: logger,
             }).terminate();
             await closeMongodbConnection();
-            logger.warn("application shut down");
+            logger.warn("Server shut down");
             resolve();
           } catch (err) {
             captureException(err);
@@ -70,16 +111,8 @@ program
   .command("processor")
   .description("Run job processor")
   .action(async () => {
-    logger.info(`Process jobs queue - start`);
     initSentryProcessor();
-    await addJob(
-      {
-        name: "crons:init",
-        sync: true,
-      },
-      { runningLogs: true }
-    );
-    await processor();
+    return startProcessor();
   });
 
 program
@@ -110,12 +143,11 @@ program
 program
   .command("seed")
   .description("Seed database")
-  .option("-s, --sync", "Run job synchronously")
-  .action(async ({ sync }) => {
+  .action(async () => {
     const exitCode = await addJob(
       {
         name: "seed",
-        sync,
+        sync: true,
       },
       { runningLogs: true }
     );

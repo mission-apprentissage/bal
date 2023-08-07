@@ -67,8 +67,10 @@ fileignoreconfig:
   checksum: 34b52dc02a854da1d83402603eb0dd9eec165c0e4a2db61dbe620cbe29dbee12
 - filename: .infra/vault/get-vault-password-client.sh
   checksum: eba1fb641bb63fbc0c7a23700b9f15e653ddb8706134d8eb6428f2991f423004
+- filename: .infra/vault/setup-local-env.sh
+  checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: 339fd966e32012d672ddc4e384ff8ed428be18dd6a3ef72451cc843957c787d8
+  checksum: 5244c8d016a7131cab79ab3c2748299751ceda781ace51add7f81bc5c9577fbf
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:
@@ -78,10 +80,14 @@ fileignoreconfig:
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
   checksum: 6b3f6df5ce466087bbef64dd4bdf04a064aa1d49c464d93af04627632ccbab4d
+- filename: server/.env.local.example
+  checksum: b760092fca0bbc8ba8c1d1d162b0461b992de867cbfde3dc4556226a1129e484
 - filename: server/.env.test
   checksum: 7df7b9cccc051413dceaed2d59f4a1c7b9bee3e387ea568134f68972431878c3
 - filename: server/config/config.ts
   checksum: dee90e5b9ea1162aaffc204bd46a7801f8abba89fddd3f7077990321299ff3bf
+- filename: server/dev/load-env.mjs
+  checksum: 9b24e1858aceefd0aa80a557e94f340a3f07308443be5dccebcb224ad31a7de0
 - filename: server/src/app.ts
   checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
 - filename: server/src/modules/actions/organisation.actions.ts
@@ -106,6 +112,10 @@ fileignoreconfig:
   checksum: 573464801f84a37b522e4e21b0f9536fd318fa2e018f739296fbe3c769269e89
 - filename: server/tests/data/opcoEp.ts
   checksum: 8d1f421390c62fce249bf9efa7bb0688c6c9aa97375dd83d45f28c7d2246bf42
+- filename: ui/.env
+  checksum: 36cfa5591cf1dcf75cc7fb3be6980cc26a393786f0afffdcca92573c448b3148
+- filename: ui/.env.local.example
+  checksum: bc2c4b87084d70a679bb31f86a3981b9db3b95fe118cf3bdfc130a36cfddf607
 - filename: ui/Dockerfile
   checksum: 2eb89b135a7f55f39ba6781b377b5e58948e8e1686be9a22257b10b8245c42f0
 - filename: ui/Dockerfile.preview

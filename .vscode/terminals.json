@@ -1,0 +1,22 @@
+{
+  "autorun": false,
+  "terminals": [
+    {
+      "name": "Server",
+      "focus": true,
+      "description": "This run the server",
+      "command": "yarn server:dev"
+    },
+    {
+      "name": "Cli",
+      "description": "Cli",
+      "execute": false,
+      "command": "yarn cli"
+    },
+    {
+      "name": "Ui",
+      "description": "This run the ui",
+      "command": "yarn workspace ui dev"
+    }
+  ]
+}

@@ -72,7 +72,7 @@
     - name: Récupération du status des migrations
       shell:
         chdir: /opt/app
-        cmd: "sudo /opt/app/tools/migrations/migrations-status.sh"
+        cmd: "sudo /opt/app/scripts/migrations-status.sh"
       register: migration_status_output
       when: stack_status.stdout != ""
 
@@ -103,7 +103,7 @@
     - name: Lancement des migrations
       shell:
         chdir: /opt/app
-        cmd: "sudo /opt/app/tools/migrations/migrations-up.sh"
+        cmd: "sudo /opt/app/scripts/migrations-up.sh"
       when:
         - stack_status.stdout != ""
         - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'

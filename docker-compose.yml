@@ -1,61 +1,6 @@
 version: "3.8"
 
-x-node-image: &node-image
-  restart: unless-stopped
-  build:
-    context: .
-    dockerfile: Dockerfile
-    target: builder_root
-  volumes:
-    - ./:/app/:z
-
 services:
-  reverse_proxy:
-    image: ghcr.io/mission-apprentissage/mna_reverse_proxy:latest
-    restart: unless-stopped
-    ports:
-      - 80:80
-      - 443:443
-    environment:
-      - SERVER_NAME=localhost
-      - NGINX_ALWAYS_TLS_REDIRECT=false
-      - SSL_ENGINE=off
-
-  ui:
-    <<: *node-image
-    stdin_open: true
-    working_dir: "/app/ui"
-    expose:
-      - "3000"
-    command: ["yarn", "dev"]
-
-  server:
-    <<: *node-image
-    depends_on:
-      mongodb:
-        condition: service_healthy
-      smtp:
-        condition: service_started
-    env_file: .env_server
-    volumes:
-      - ./:/app/:z
-      - bal_server_data:/data
-    working_dir: "/app/server"
-    expose:
-      - "5000"
-    command: ["yarn", "dev"]
-
-  processor:
-    <<: *node-image
-    command: ["yarn", "cli", "processor"]
-    env_file: .env_server
-    volumes:
-      - ./:/app/:z
-      - bal_server_data:/data
-    working_dir: "/app/server"
-    expose:
-      - "5000"
-
   mongodb:
     image: mongo:6.0.2-focal
     restart: unless-stopped
@@ -79,6 +24,8 @@ services:
       interval: 60s
       retries: 3
       start_period: 6m
+    ports:
+      - 3310:3310
     volumes:
       - bal_clamav_data:/var/lib/clamav
 
@@ -97,9 +44,6 @@ volumes:
   bal_mongodb_data:
     driver: local
     name: bal_mongodb_data
-  bal_server_data:
-    driver: local
-    name: bal_server_data
   bal_smtp_data:
     driver: local
     name: bal_smtp_data

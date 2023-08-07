@@ -14,8 +14,8 @@ function getProductionPublicConfig(): PublicConfig {
     sentry: {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
-    env: "production",
     host,
+    env: "production",
     apiEndpoint: `https://${host}/api`,
   };
 }
@@ -27,8 +27,8 @@ function getRecettePublicConfig(): PublicConfig {
     sentry: {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
-    env: "recette",
     host,
+    env: "recette",
     apiEndpoint: `https://${host}/api`,
   };
 }
@@ -49,22 +49,23 @@ function getPreviewPublicConfig(): PublicConfig {
     sentry: {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
-    env: "preview",
     host,
+    env: "preview",
     apiEndpoint: `https://${host}/api`,
   };
 }
 
 function getLocalPublicConfig(): PublicConfig {
-  const host = global.window ? "localhost" : "server:5000";
-
+  const host = "localhost";
   return {
     sentry: {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
+    host,
     env: "local",
-    host: "localhost",
-    apiEndpoint: `http://${host}/api`,
+    apiEndpoint: `http://${host}:${
+      process.env.NEXT_PUBLIC_API_PORT ?? 5000
+    }/api`,
   };
 }
 
