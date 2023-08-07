@@ -1,3 +1,10 @@
+## [1.59.1](https://github.com/mission-apprentissage/bal/compare/v1.59.0...v1.59.1) (2023-08-07)
+
+
+### Bug Fixes
+
+* docker processor command ([5d2f8f0](https://github.com/mission-apprentissage/bal/commit/5d2f8f082801e498de0a77194e8ee1fba8c47785))
+
 # [1.59.0](https://github.com/mission-apprentissage/bal/compare/v1.58.0...v1.59.0) (2023-08-07)
 
 
