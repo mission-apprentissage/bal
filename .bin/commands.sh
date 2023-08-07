@@ -10,6 +10,7 @@ function Help() {
    echo "  release:interactive                                                                Build & Push Docker image releases"
    echo "  release:app                                                                Build & Push Docker image releases"
    echo "  deploy <env> --user <your_username>                                           Deploy application to <env>"
+   echo "  preview:build                                                                Build preview"
    echo "  preview:cleanup --user <your_username>                                        Remove preview from close pull-requests"
    echo "  vault:edit                                                                    Edit vault file"
    echo "  vault:password                                                                Show vault password"
@@ -39,6 +40,10 @@ function release:app() {
 
 function deploy() {
   "${ROOT_DIR}/.bin/scripts/deploy-app.sh" "$@"
+}
+
+function preview:build() {
+  "${ROOT_DIR}/.bin/scripts/build-images.sh" "$@"
 }
 
 function preview:cleanup() {
