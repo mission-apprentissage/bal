@@ -7,7 +7,8 @@ function Help() {
    echo "Commands"
    echo "  bin:setup                                               Installs mna-bal binary with zsh completion on system"
    echo "  init:env                                                Update local env files using values from vault file"
-   echo "  release:images                                                                Build & Push Docker image releases"
+   echo "  release:interactive                                                                Build & Push Docker image releases"
+   echo "  release:app                                                                Build & Push Docker image releases"
    echo "  deploy <env> --user <your_username>                                           Deploy application to <env>"
    echo "  preview:cleanup --user <your_username>                                        Remove preview from close pull-requests"
    echo "  vault:edit                                                                    Edit vault file"
@@ -28,12 +29,12 @@ function init:env() {
   "$ROOT_DIR/.infra/vault/setup-local-env.sh" "$@"
 }
 
-function release:images() {
-  "$ROOT_DIR/.infra/scripts/push-images.sh" "$@"
+function release:interactive() {
+  "$ROOT_DIR/.bin/scripts/release-interactive.sh" "$@"
 }
 
-function release:images() {
-  "$ROOT_DIR/.infra/scripts/push-images.sh" "$@"
+function release:app() {
+  "$ROOT_DIR/.bin/scripts/release-app.sh" "$@"
 }
 
 function deploy() {

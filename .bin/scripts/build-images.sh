@@ -1,24 +1,35 @@
 #!/bin/bash
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly ROOT_DIR="${SCRIPT_DIR}/../../.."
-
-cd ${ROOT_DIR}
-
 next_version="${1:?"Veuillez préciser la version"}"
 mode=${2:?"Veuillez préciser le mode <push|load>"}
 shift 2
+
+get_channel() {
+  local version="$1"
+  channel=$(echo "$version" | cut -d '-' -f 2)
+
+  if [ -z "$channel" ]; then
+    channel="latest"
+  fi
+
+  echo $channel
+}
 
 if [[ $# == "0" ]]; then
   echo "Veuillez spécifier les environnements à build (production, recette, preview, local)"
   exit 1;
 fi;
 
+set +e
+docker buildx create --name mna --driver docker-container --bootstrap --use 2> /dev/null
+set -e
+
 SHARED_OPS="\
         --platform linux/amd64 \
         --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
-        --label "org.opencontainers.image.licenses=MIT"
+        --label "org.opencontainers.image.licenses=MIT" \
+        --builder mna \
 "
 
 CACHE_OPTS=""
@@ -31,7 +42,7 @@ if [[ ! -z "${CI:-}" ]]; then
 fi
 
 echo "Build all stages in parallel and cache yarn installs"
-docker build . \
+docker build "${ROOT_DIR}" \
         --target root \
         $SHARED_OPS \
         $CACHE_OPTS
@@ -40,13 +51,16 @@ docker build . \
 names=()
 pids=()
 
+channel=$(get_channel $next_version)
+
 for env in "$@"
 do
   echo "Start building ui:$next_version with mode=$mode; env=$env"
-  docker build . \
+  docker build "${ROOT_DIR}" \
     --build-arg PUBLIC_ENV="$env" \
     --build-arg PUBLIC_VERSION="$next_version" \
     --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$next_version-$env" \
+    --tag ghcr.io/mission-apprentissage/mna_bal_ui:"$channel-$env" \
     --label "org.opencontainers.image.description=Ui bal" \
     --target ui \
     --${mode} \
@@ -58,9 +72,10 @@ do
 done
 
 echo "Start building server:$next_version with mode=$mode"
-docker build . \
+docker build "${ROOT_DIR}" \
         --build-arg PUBLIC_VERSION="$next_version" \
         --tag ghcr.io/mission-apprentissage/mna_bal_server:"$next_version" \
+        --tag ghcr.io/mission-apprentissage/mna_bal_server:"$channel" \
         --label "org.opencontainers.image.description=Server bal" \
         --target server \
         --${mode} \
@@ -84,17 +99,3 @@ if [ "$final_code" -gt 0 ]; then
   echo "One or more background processes failed."
   exit 1
 fi
-
-if [[ $(uname) = "Darwin" ]]; then
-  sed -i '' "s/app_version=.*/app_version=$next_version/" ".infra/env.ini"
-else
-  sed -i'' "s/app_version=.*/app_version=$next_version/" ".infra/env.ini"
-fi
-echo "Bump app version in .infra/env.ini : $next_version"
-
-if [[ $(uname) = "Darwin" ]]; then
-  sed -i '' "s/default:.*/default: $next_version/" ".github/workflows/_deploy.yml"
-else
-  sed -i'' "s/default:.*/default: $next_version/" ".github/workflows/_deploy.yml"
-fi
-echo "Bump app version in _deploy.yml : $next_version"

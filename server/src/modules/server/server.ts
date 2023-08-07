@@ -25,7 +25,6 @@ import {
 import { IResError } from "shared/routes/common.routes";
 import { ZodError } from "zod";
 
-import pJson from "../../../package.json";
 import logger from "../../common/logger";
 import { initSentryFastify } from "../../common/services/sentry/sentry";
 import config from "../../config";
@@ -82,7 +81,7 @@ export function build(opts: FastifyServerOptions = {}): Server {
     swagger: {
       info: {
         title: "API documentation BAL",
-        version: pJson.version,
+        version: config.version,
       },
       consumes: ["application/json"],
       produces: ["application/json"],

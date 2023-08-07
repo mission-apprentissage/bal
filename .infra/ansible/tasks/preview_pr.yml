@@ -50,11 +50,6 @@
       with_items:
         - "/opt/app/repository"
 
-    - name: "[{{ pr_number }}] Bump version 0.0.0-{{ pr_number }}"
-      shell:
-        cmd: "bash .infra/scripts/release/bump-version.sh 0.0.0-{{ pr_number }}"
-        chdir: /opt/app/repository
-
     - name: "[{{ pr_number }}] Build local images 0.0.0-{{ pr_number }}"
       shell:
         cmd: "bash .infra/scripts/release/build-images.sh 0.0.0-{{ pr_number }} load preview"
