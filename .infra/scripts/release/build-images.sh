@@ -16,7 +16,6 @@ if [[ $# == "0" ]]; then
 fi;
 
 SHARED_OPS="\
-        --build-arg YARN_FLAGS="--immutable" \
         --platform linux/amd64 \
         --label "org.opencontainers.image.source=https://github.com/mission-apprentissage/bal" \
         --label "org.opencontainers.image.licenses=MIT"

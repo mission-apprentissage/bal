@@ -11,6 +11,6 @@ export default defineConfig({
   noExternal: ["shared"],
   // Do not include bson which is using top-level await
   // This could be supported in future when using nodejs16 module in tsconfig
-  external: ["bson", "mongodb"],
+  external: ["bson", "mongodb", "dotenv"],
   clean: true,
 });

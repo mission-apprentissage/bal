@@ -23,7 +23,9 @@ const contentSecurityPolicy = `
       };
       script-src-attr 'none';
       style-src 'self' https:  https: *.plausible.io 'unsafe-inline';
-      connect-src 'self' https://geo.api.gouv.fr/ https://plausible.io  https://sentry.apprentissage.beta.gouv.fr;
+      connect-src 'self' https://geo.api.gouv.fr/ https://plausible.io  https://sentry.apprentissage.beta.gouv.fr ${
+        process.env.NEXT_PUBLIC_ENV === "local" ? "http://localhost:5001/" : ""
+      };
       upgrade-insecure-requests;
 `;
 

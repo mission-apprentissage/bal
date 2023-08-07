@@ -8,12 +8,11 @@
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
-    "start": "node dist/index.js start",
-    "dev": "tsup src/index.ts src/db/migrations --watch ./src --watch ../shared/src --onSuccess 'yarn run start' --splitting",
+    "dev": "tsup src/dev.ts src/db/migrations --watch ./src --watch ../shared/src --onSuccess 'yarn cli start --withProcessor' --splitting",
     "build": "tsup src/index.ts src/db/migrations --splitting",
     "typecheck": "tsc --noEmit",
-    "migrations:create": "yarn cli migrations:create",
-    "cli": "node dist/index.js"
+    "cli": "node dist/dev.js",
+    "docker:cli": "node dist/index.js"
   },
   "dependencies": {
     "@fastify/auth": "4.3.0",

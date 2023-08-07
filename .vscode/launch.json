@@ -5,30 +5,28 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach Server",
-      "port": 9229,
-      "request": "attach",
+      "name": "Server: Debug",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/server",
       "skipFiles": [
         "<node_internals>/**",
         "**/node_modules/**",
         "**/$KNOWN_TOOLS$/**"
       ],
-      "type": "node",
-      "localRoot": "${workspaceFolder}",
-      "remoteRoot": "/app"
     },
     {
-      "name": "Attach Processor",
-      "port": 9230,
-      "request": "attach",
+      "name": "Ui: Debug Server-Side",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/ui",
       "skipFiles": [
         "<node_internals>/**",
         "**/node_modules/**",
         "**/$KNOWN_TOOLS$/**"
       ],
-      "type": "node",
-      "localRoot": "${workspaceFolder}",
-      "remoteRoot": "/app"
     },
   ]
 }

@@ -1,23 +1,22 @@
 {
-  "autorun": true,
+  "autorun": false,
   "terminals": [
     {
       "name": "Server",
-      "description": "This run the server",
       "focus": true,
-      "command": "echo \"Hello World\""
+      "description": "This run the server",
+      "command": "yarn server:dev"
     },
     {
-      "name": "Multi",
-      "commands": [
-        "echo \"Did you know?\"",
-        "echo \"You can execute multiple commands\""
-      ]
-    },
-    {
-      "name": "Single - No execution",
+      "name": "Cli",
+      "description": "Cli",
       "execute": false,
-      "command": "echo  \"Press enter to run me\""
+      "command": "yarn cli"
+    },
+    {
+      "name": "Ui",
+      "description": "This run the ui",
+      "command": "yarn workspace ui dev"
     }
   ]
 }
