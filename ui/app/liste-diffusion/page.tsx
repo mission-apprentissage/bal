@@ -1,11 +1,11 @@
 "use client";
-import { Heading } from "@chakra-ui/react";
+import { Button, Flex, Heading } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import NextLink from "next/link";
 import { IJobJson } from "shared/models/job.model";
 
 import { apiGet } from "../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
-import Form from "./components/Form";
 import GeneratingMailingList from "./components/GeneratingMailingList";
 import ListMailingList from "./components/ListMailingList";
 
@@ -28,17 +28,25 @@ const ListeDiffusionPage = () => {
   return (
     <>
       <Breadcrumb pages={[PAGES.homepage(), PAGES.listeDiffusion()]} />
-      <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
-        Liste de diffusion
-      </Heading>
 
-      {generatingMailingList ? (
+      <Flex mt={8} flexDirection="row">
+        <Heading as="h2" fontSize="2xl" flexGrow={1}>
+          Mes Listes de diffusion
+        </Heading>
+        <Button
+          variant="primary"
+          as={NextLink}
+          href="/liste-diffusion/nouvelle-liste"
+        >
+          + Créer nouvelle liste
+        </Button>
+      </Flex>
+
+      {generatingMailingList && (
         <GeneratingMailingList
           mailingList={generatingMailingList}
           onDone={refetch}
         />
-      ) : (
-        <Form onSuccess={refetch} />
       )}
 
       <ListMailingList mailingLists={mailingLists} onDelete={refetch} />

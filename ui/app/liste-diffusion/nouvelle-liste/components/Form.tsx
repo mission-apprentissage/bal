@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
 
-import { apiGet, apiPost } from "../../../utils/api.utils";
+import { apiGet, apiPost } from "../../../../utils/api.utils";
 
 interface Props {
   onSuccess: () => void;
@@ -44,7 +44,7 @@ const Form: FC<Props> = ({ onSuccess }) => {
   const validTypes = types.filter((t) => t !== DOCUMENT_TYPES.DECA);
 
   return (
-    <Box w={{ base: "100%", md: "50%" }}>
+    <Box w={{ base: "100%", md: "50%" }} mt={5}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box>
           <FormControl

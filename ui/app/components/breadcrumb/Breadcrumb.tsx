@@ -97,6 +97,10 @@ export const PAGES = {
     title: "Liste de diffusion",
     path: "/liste-diffusion",
   }),
+  nouvelleListe: () => ({
+    title: "Créer une nouvelle liste",
+    path: "/liste-diffusion/nouvelle-liste",
+  }),
 };
 
 interface Page {
