@@ -33,7 +33,7 @@ const ModifierMotDePassePage = () => {
   const { push } = useRouter();
   const searchParams = useSearchParams();
 
-  const token = searchParams?.get("token") ?? "";
+  const token = searchParams?.get("passwordToken") ?? "";
 
   const {
     register,
@@ -81,7 +81,7 @@ const ModifierMotDePassePage = () => {
         borderColor="blue_france.light"
       >
         <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
-          Modifiez votre mot de passe {token}
+          Modifiez votre mot de passe
         </Heading>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box>
