@@ -75,10 +75,10 @@ export const authRoutes = ({ server }: { server: Server }) => {
         return response
           .clearCookie(config.session.cookieName, config.session.cookie)
           .status(200)
-          .send();
+          .send({});
       }
 
-      return response.status(200).send();
+      return response.status(200).send({});
     }
   );
 
@@ -89,7 +89,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       await sendResetPasswordEmail(request.query.email);
-      return response.status(200).send();
+      return response.status(200).send({});
     }
   );
 
@@ -104,7 +104,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
       try {
         await resetPassword(password, token);
 
-        return response.status(200).send();
+        return response.status(200).send({});
       } catch (error) {
         throw Boom.badData("Jeton invalide");
       }

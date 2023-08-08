@@ -5,19 +5,19 @@ import {
   ZUserPublic,
   zUserWithPersonPublic,
 } from "../models/user.model";
-import { ZReqHeadersAuthorization } from "./common.routes";
+import { ZReqHeadersAuthorization, ZResOk } from "./common.routes";
 
 export const zAuthRoutes = {
   get: {
     "/auth/reset-password": {
       querystring: z.object({ email: z.string().email() }).strict(),
       response: {
-        "2xx": z.undefined(),
+        "2xx": ZResOk,
       },
     },
     "/auth/logout": {
       response: {
-        "2xx": z.undefined(),
+        "2xx": ZResOk,
       },
     },
     "/auth/session": {
@@ -36,7 +36,7 @@ export const zAuthRoutes = {
         })
         .strict(),
       response: {
-        "2xx": z.undefined(),
+        "2xx": ZResOk,
       },
     },
     "/auth/login": {
