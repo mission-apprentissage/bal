@@ -221,7 +221,10 @@ export async function apiPost<
   const res = await fetch(generateUrl(path, o), {
     method: "POST",
     ...(publicConfig.env === "local"
-      ? {}
+      ? {
+          mode: "cors",
+          credentials: "include",
+        }
       : {
           mode: "same-origin",
           credentials: "same-origin",
@@ -249,7 +252,10 @@ export async function apiGet<
   const res = await fetch(generateUrl(path, options), {
     method: "GET",
     ...(publicConfig.env === "local"
-      ? {}
+      ? {
+          mode: "cors",
+          credentials: "include",
+        }
       : {
           mode: "same-origin",
           credentials: "same-origin",
@@ -276,7 +282,10 @@ export async function apiDelete<
   const res = await fetch(generateUrl(path, options), {
     method: "DELETE",
     ...(publicConfig.env === "local"
-      ? {}
+      ? {
+          mode: "cors",
+          credentials: "include",
+        }
       : {
           mode: "same-origin",
           credentials: "same-origin",
