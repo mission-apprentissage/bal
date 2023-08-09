@@ -4,6 +4,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Heading,
   HStack,
   Select,
 } from "@chakra-ui/react";
@@ -13,13 +14,13 @@ import { useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
 
-import { apiGet, apiPost } from "../../../../utils/api.utils";
+import { apiGet } from "../../../../utils/api.utils";
 
 interface Props {
-  onSuccess: () => void;
+  onSuccess: (data: IBody<IPostRoutes["/mailing-list"]>) => void;
 }
 
-const Form: FC<Props> = ({ onSuccess }) => {
+const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess }) => {
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -36,15 +37,19 @@ const Form: FC<Props> = ({ onSuccess }) => {
   });
 
   const onSubmit = async (data: IBody<IPostRoutes["/mailing-list"]>) => {
-    await apiPost("/mailing-list", { body: { source: data.source } });
+    // await apiPost("/mailing-list", { body: { source: data.source } });
 
-    await onSuccess();
+    await onSuccess({ source: data.source });
   };
 
   const validTypes = types.filter((t) => t !== DOCUMENT_TYPES.DECA);
 
   return (
     <Box w={{ base: "100%", md: "50%" }} mt={5}>
+      <Heading as="h4" fontSize="ml" mt={8}>
+        Champs d'identification et de contact
+      </Heading>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box>
           <FormControl
@@ -73,7 +78,7 @@ const Form: FC<Props> = ({ onSuccess }) => {
 
         <HStack spacing="4w" mt={8}>
           <Button variant="primary" type="submit" isLoading={isSubmitting}>
-            Générer la liste
+            Confirmer
           </Button>
         </HStack>
       </form>
@@ -81,4 +86,4 @@ const Form: FC<Props> = ({ onSuccess }) => {
   );
 };
 
-export default Form;
+export default ChoixColonnesIdentifiant;

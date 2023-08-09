@@ -1,8 +1,10 @@
 "use client";
 import { Heading } from "@chakra-ui/react";
+import { IBody, IPostRoutes } from "shared";
 
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
-import Form from "./components/Form";
+// import ChoixColonnesIdentifiant from "./components/ChoixColonnesIdentifiant";
+import ChoixSource from "./components/ChoixSource";
 
 const NouvelleListePage = () => {
   return (
@@ -19,7 +21,16 @@ const NouvelleListePage = () => {
         Créer nouvelle liste
       </Heading>
 
-      <Form onSuccess={() => {}} />
+      <ChoixSource
+        onSuccess={({ source }: IBody<IPostRoutes["/mailing-list"]>) => {
+          console.log(source);
+        }}
+      />
+      {/* <ChoixColonnesIdentifiant
+        onSuccess={({ source }: IBody<IPostRoutes["/mailing-list"]>) => {
+          console.log(source);
+        }}
+      /> */}
     </>
   );
 };
