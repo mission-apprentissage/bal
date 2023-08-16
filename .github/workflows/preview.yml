@@ -46,7 +46,7 @@ jobs:
           ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
 
       - name: Preview Summary
-        run: echo 'https://${{ github.event.pull_request.number }}.bal-preview.apprentissage.beta.gouv.fr/ 🚀' >> $GITHUB_STEP_SUMMARY
+        run: echo 'https://${{ github.event.pull_request.number }}-bal-preview.apprentissage.beta.gouv.fr/ 🚀' >> $GITHUB_STEP_SUMMARY
 
       - name: Comment PR Preview
         if: github.event.pull_request.state != 'closed'
@@ -54,6 +54,6 @@ jobs:
         with:
           message: |
             # :rocket: Prévisualisation
-            ## https://${{ github.event.pull_request.number }}.bal-preview.apprentissage.beta.gouv.fr/
+            ## https://${{ github.event.pull_request.number }}-bal-preview.apprentissage.beta.gouv.fr/
           comment_tag: execution
           mode: recreate
