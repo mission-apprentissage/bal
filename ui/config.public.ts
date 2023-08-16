@@ -43,7 +43,7 @@ function getPreviewPublicConfig(): PublicConfig {
     );
   }
 
-  const host = `${matches[1]}-bal-preview.apprentissage.beta.gouv.fr`;
+  const host = `${matches[1]}.bal-preview.apprentissage.beta.gouv.fr`;
 
   return {
     sentry: {
