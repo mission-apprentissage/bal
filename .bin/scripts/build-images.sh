@@ -9,7 +9,7 @@ get_channel() {
   local version="$1"
   channel=$(echo "$version" | cut -d '-' -f 2)
 
-  if [ -z "$channel" ]; then
+  if [ "$channel" == "$version" ]; then
     channel="latest"
   fi
 
@@ -55,7 +55,7 @@ channel=$(get_channel $next_version)
 
 for env in "$@"
 do
-  echo "Start building ui:$next_version with mode=$mode; env=$env"
+  echo "Start building ui:$next_version with mode=$mode; env=$env; channel=$channel"
   docker build "${ROOT_DIR}" \
     --build-arg PUBLIC_ENV="$env" \
     --build-arg PUBLIC_VERSION="$next_version" \
@@ -71,7 +71,7 @@ do
   names+=("ui-$env")
 done
 
-echo "Start building server:$next_version with mode=$mode"
+echo "Start building server:$next_version with mode=$mode; channel=$channel"
 docker build "${ROOT_DIR}" \
         --build-arg PUBLIC_VERSION="$next_version" \
         --tag ghcr.io/mission-apprentissage/mna_bal_server:"$next_version" \

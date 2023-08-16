@@ -1,12 +1,22 @@
 *
+
 !/server
+/server/.env
+/server/.env.local
+
 !/shared
+
 !/ui
+!/ui/.env
+/ui/.next
+
 !/package.json
-!/.yarn
+!/.yarn/cache
+!/.yarn/plugins
+!/.yarn/releases
+!/.yarn/versions
 !/yarn.lock
 !/.yarnrc.yml
-!/ui/.env
 
 .git/
 .infra
