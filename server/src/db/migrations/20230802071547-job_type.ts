@@ -7,7 +7,9 @@ export const up = async (db: Db, _client: MongoClient) => {
       {
         $set: {
           type: "simple",
-          scheduled_for: "$scheduled_at",
+          scheduled_for: {
+            $ifNull: ["$scheduled_at", "$started_at", "$created_at", "$$NOW"],
+          },
         },
       },
       {
