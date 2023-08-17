@@ -1,4 +1,4 @@
-import { verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 import logger from "@/common/logger";
 import { sendEmail } from "@/common/services/mailer/mailer";
@@ -54,7 +54,7 @@ export const sendResetPasswordEmail = async (email: string) => {
 };
 
 export const resetPassword = async (password: string, token: string) => {
-  const decoded = verify(token, config.auth.resetPasswordToken.jwtSecret);
+  const decoded = jwt.verify(token, config.auth.resetPasswordToken.jwtSecret);
 
   if (!decoded || !decoded.sub) {
     throw new Error("Invalid token");

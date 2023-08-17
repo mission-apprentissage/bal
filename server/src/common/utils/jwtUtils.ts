@@ -1,4 +1,4 @@
-import jwt, { SignOptions, verify } from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 
 import config from "@/config";
 
@@ -65,5 +65,5 @@ export const createUserToken = (
 };
 
 export const decodeToken = (token: string, type: TokenType = "user") => {
-  return verify(token, config.auth[type].jwtSecret);
+  return jwt.verify(token, config.auth[type].jwtSecret);
 };

@@ -22,7 +22,7 @@ program
     await closeSentry();
   });
 
-async function startProcessor() {
+async function startProcessor(signal: AbortSignal) {
   logger.info(`Process jobs queue - start`);
   await addJob(
     {
@@ -31,31 +31,35 @@ async function startProcessor() {
     },
     { runningLogs: true }
   );
+
+  await processor(signal);
+  logger.info(`Processor shut down`);
+}
+
+function createProcessExitSignal() {
   const abortController = new AbortController();
 
-  await Promise.race([
-    processor(abortController.signal),
-    new Promise((resolve, reject) => {
-      let shutdownInProgress = false;
-      ["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
-        (process as NodeJS.EventEmitter).on(signal, async () => {
-          if (shutdownInProgress) {
-            const message = `Server shut down (FORCED) (signal=${signal})`;
-            logger.warn(message);
-            reject(new Error(message));
-            return;
-          }
+  let shutdownInProgress = false;
+  ["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
+    (process as NodeJS.EventEmitter).on(signal, async () => {
+      try {
+        if (shutdownInProgress) {
+          const message = `Server shut down (FORCED) (signal=${signal})`;
+          logger.warn(message);
+          process.exit(1);
+        }
 
-          shutdownInProgress = true;
-          logger.info(`Processor is shutting down (signal=${signal})`);
-          abortController.abort();
-        });
-      });
-    }),
-  ]);
+        shutdownInProgress = true;
+        logger.info(`Server is shutting down (signal=${signal})`);
+        abortController.abort();
+      } catch (err) {
+        captureException(err);
+        logger.error({ err }, "error during shutdown");
+      }
+    });
+  });
 
-  await processor(abortController.signal);
-  logger.info(`Processor shut down`);
+  return abortController.signal;
 }
 
 program
@@ -64,47 +68,32 @@ program
   .description("Démarre le serveur HTTP")
   .action(async ({ withProcessor = false }) => {
     try {
-      await server.listen({ port: config.port, host: "0.0.0.0" });
-      logger.info(`Server ready and listening on port ${config.port}`);
+      const signal = createProcessExitSignal();
+      signal.addEventListener("abort", async () => {
+        await HttpTerminator({
+          server: server.server,
+          maxWaitTimeout: 50_000,
+          logger: logger,
+        }).terminate();
+        logger.warn("Server shut down");
+      });
+
+      const tasks = [
+        server.listen({ port: config.port, host: "0.0.0.0" }).then(() => {
+          logger.info(`Server ready and listening on port ${config.port}`);
+        }),
+      ];
+
       if (withProcessor) {
-        await startProcessor();
+        tasks.push(startProcessor(signal));
       }
+
+      await Promise.all(tasks);
     } catch (err) {
       logger.error(err);
       captureException(err);
       throw err;
     }
-
-    return new Promise<void>((resolve, reject) => {
-      let shutdownInProgress = false;
-      ["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
-        (process as NodeJS.EventEmitter).on(signal, async () => {
-          try {
-            if (shutdownInProgress) {
-              const message = `Server shut down (FORCED) (signal=${signal})`;
-              logger.warn(message);
-              reject(new Error(message));
-              return;
-            }
-
-            shutdownInProgress = true;
-            logger.warn(`Server shutting down (signal=${signal})`);
-            await HttpTerminator({
-              server: server.server,
-              maxWaitTimeout: 50_000,
-              logger: logger,
-            }).terminate();
-            await closeMongodbConnection();
-            logger.warn("Server shut down");
-            resolve();
-          } catch (err) {
-            captureException(err);
-            logger.error({ err }, "error during shutdown");
-            reject(err);
-          }
-        });
-      });
-    });
   });
 
 program
@@ -112,7 +101,8 @@ program
   .description("Run job processor")
   .action(async () => {
     initSentryProcessor();
-    return startProcessor();
+    const signal = createProcessExitSignal();
+    await startProcessor(signal);
   });
 
 program

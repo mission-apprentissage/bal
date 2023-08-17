@@ -220,15 +220,8 @@ export async function apiPost<
 
   const res = await fetch(generateUrl(path, o), {
     method: "POST",
-    ...(publicConfig.env === "local"
-      ? {
-          mode: "cors",
-          credentials: "include",
-        }
-      : {
-          mode: "same-origin",
-          credentials: "same-origin",
-        }),
+    mode: publicConfig.env === "local" ? "cors" : "same-origin",
+    credentials: publicConfig.env === "local" ? "include" : "same-origin",
     body: getBody(headers, o?.body),
     headers,
   });
@@ -251,15 +244,8 @@ export async function apiGet<
 
   const res = await fetch(generateUrl(path, options), {
     method: "GET",
-    ...(publicConfig.env === "local"
-      ? {
-          mode: "cors",
-          credentials: "include",
-        }
-      : {
-          mode: "same-origin",
-          credentials: "same-origin",
-        }),
+    mode: publicConfig.env !== "local" ? "cors" : "same-origin",
+    credentials: publicConfig.env !== "local" ? "include" : "same-origin",
     headers,
   });
 
@@ -281,15 +267,8 @@ export async function apiDelete<
 
   const res = await fetch(generateUrl(path, options), {
     method: "DELETE",
-    ...(publicConfig.env === "local"
-      ? {
-          mode: "cors",
-          credentials: "include",
-        }
-      : {
-          mode: "same-origin",
-          credentials: "same-origin",
-        }),
+    mode: publicConfig.env === "local" ? "cors" : "same-origin",
+    credentials: publicConfig.env === "local" ? "include" : "same-origin",
     headers,
   });
 
