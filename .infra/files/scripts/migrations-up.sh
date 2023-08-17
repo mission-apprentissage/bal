@@ -12,7 +12,7 @@ fi
 
 run_migrations(){
     echo "Application des migrations ..."
-    docker compose run --rm --no-deps server yarn docker:cli migrations:up 2>&1 | tee "$LOG_FILEPATH"
+    docker compose run --rm --no-deps server yarn cli migrations:up 2>&1 | tee "$LOG_FILEPATH"
 } 
 
 run_migrations

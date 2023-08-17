@@ -1,4 +1,4 @@
-FROM node:18-alpine as builder_root
+FROM node:20-alpine as builder_root
 WORKDIR /app
 RUN yarn set version 3.3.1
 COPY .yarn /app/.yarn

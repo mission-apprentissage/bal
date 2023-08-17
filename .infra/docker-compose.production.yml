@@ -51,7 +51,7 @@ services:
       resources:
         limits:
           memory: 1g
-    command: ["yarn", "docker:cli", "processor"]
+    command: ["yarn", "cli", "processor"]
     env_file: .env_server
     volumes:
       - /opt/app/data/server:/data
