@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { basename } from "node:path";
 
 import { defineConfig } from "tsup";
 
@@ -10,7 +11,9 @@ export default defineConfig((options) => {
   };
 
   for (const file of files) {
-    entry[`db/migrations/${file}`] = `src/db/migrations/${file}`;
+    entry[
+      `db/migrations/${basename(file, ".ts")}`
+    ] = `src/db/migrations/${file}`;
   }
 
   return {

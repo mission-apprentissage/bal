@@ -25,11 +25,19 @@ export const up = async (db: Db, _client: MongoClient) => {
     .collection("documentContents")
     .find({ type_document: DOCUMENT_TYPES.DECA });
 
+  let batch = [];
   for await (const documentContent of documentContentsCursor) {
-    await importDecaContent(
-      documentContent.content.emails,
-      documentContent.content.siret
+    batch.push(
+      importDecaContent(
+        documentContent.content.emails,
+        documentContent.content.siret
+      )
     );
+
+    if (batch.length > 10_000) {
+      await Promise.all(batch);
+      batch = [];
+    }
   }
 };
 
