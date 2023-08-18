@@ -1,4 +1,5 @@
-import { Filter, FindOptions, UpdateFilter } from "mongodb";
+import { internal } from "@hapi/boom";
+import { Filter, FindOptions } from "mongodb";
 import { IPostRoutes, IResponse } from "shared";
 import { getSirenFromSiret } from "shared/helpers/common";
 import { IOrganisation } from "shared/models/organisation.model";
@@ -102,11 +103,24 @@ export const findOrCreateOrganisation = async (
   filter: Filter<IOrganisation>,
   data: ICreateOrganisation
 ): Promise<IOrganisation> => {
-  const organisation = await findOrganisation(filter);
+  const now = new Date();
+  const organisation = await getDbCollection("organisations").findOneAndUpdate(
+    filter,
+    {
+      $setOnInsert: {
+        ...data,
+        updated_at: now,
+        created_at: now,
+      },
+    },
+    { returnDocument: "after", upsert: true, includeResultMetadata: false }
+  );
 
-  if (organisation) return organisation;
+  if (organisation === null) {
+    throw internal("fail to create organisation");
+  }
 
-  return createOrganisation(data);
+  return organisation;
 };
 
 export const findOrganisationBySiret = async (
@@ -122,8 +136,7 @@ export const findOrganisationBySiret = async (
 
 export const updateOrganisation = async (
   organisation: IOrganisation,
-  data: Partial<IOrganisation>,
-  updateFilter: UpdateFilter<IOrganisation> = {}
+  data: Partial<IOrganisation>
 ) => {
   if (Object.keys(data).length === 0) {
     return organisation;
@@ -135,7 +148,7 @@ export const updateOrganisation = async (
     },
     {
       $set: { ...data, updated_at: new Date() },
-      ...updateFilter,
-    }
+    },
+    { returnDocument: "after" }
   );
 };
