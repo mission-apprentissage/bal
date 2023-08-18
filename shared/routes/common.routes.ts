@@ -15,8 +15,14 @@ export type IResErrorJson = Jsonify<z.output<typeof ZResError>>;
 
 export const ZReqParamsSearchPagination = z
   .object({
-    page: z.number().optional(),
-    limit: z.number().optional(),
+    page: z.preprocess(
+      (v) => parseInt(v as string, 10),
+      z.number().positive().optional()
+    ),
+    limit: z.preprocess(
+      (v) => parseInt(v as string, 10),
+      z.number().positive().optional()
+    ),
     q: z.string().optional(),
   })
   .strict();
