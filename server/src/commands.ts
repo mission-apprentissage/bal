@@ -69,18 +69,32 @@ program
   .action(async ({ withProcessor = false }) => {
     try {
       const signal = createProcessExitSignal();
-      signal.addEventListener("abort", async () => {
-        await HttpTerminator({
-          server: server.server,
-          maxWaitTimeout: 50_000,
-          logger: logger,
-        }).terminate();
-        logger.warn("Server shut down");
+
+      await server.listen({ port: config.port, host: "0.0.0.0" });
+      logger.info(`Server ready and listening on port ${config.port}`);
+
+      const terminator = HttpTerminator({
+        server: server.server,
+        maxWaitTimeout: 50_000,
+        logger: logger,
       });
 
+      if (signal.aborted) {
+        await terminator.terminate();
+        return;
+      }
+
       const tasks = [
-        server.listen({ port: config.port, host: "0.0.0.0" }).then(() => {
-          logger.info(`Server ready and listening on port ${config.port}`);
+        new Promise<void>((resolve, reject) => {
+          signal.addEventListener("abort", async () => {
+            try {
+              await terminator.terminate();
+              logger.warn("Server shut down");
+              resolve();
+            } catch (err) {
+              reject(err);
+            }
+          });
         }),
       ];
 
