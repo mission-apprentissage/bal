@@ -38,7 +38,7 @@ describe("countInvalidDocuments", () => {
   });
 
   it("should return invalid documents count", async () => {
-    getDatabase()
+    await getDatabase()
       .collection("shipping")
       .insertMany(
         [
@@ -67,7 +67,7 @@ describe("countInvalidDocuments", () => {
   });
 
   it("should return 0 when documents are valid", async () => {
-    getDatabase()
+    await getDatabase()
       .collection("shipping")
       .insertMany(
         [
@@ -127,7 +127,7 @@ describe("validateDocuments", () => {
   });
 
   it("should reject when at least one document is invalid", async () => {
-    getDatabase()
+    await getDatabase()
       .collection("shipping")
       .insertMany(
         [
@@ -158,7 +158,7 @@ describe("validateDocuments", () => {
   });
 
   it("should resolves when all documents are valid", async () => {
-    getDatabase()
+    await getDatabase()
       .collection("shipping")
       .insertMany(
         [

@@ -22,4 +22,5 @@
 .infra
 **/dist
 **/coverage
+**/node_modules
 */tests
