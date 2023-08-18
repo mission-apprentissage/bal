@@ -33,7 +33,7 @@ export const CRONS: Record<string, CronDef> = {
     cron_string: "30 2 * * *",
     handler: async () => {
       const { stdout, stderr } = await exec(
-        "/opt/app/run-dummy-outside-job.sh"
+        "/opt/app/scripts/run-dummy-outside-job.sh"
       );
       logger.info("stdout:", stdout);
       logger.error("stderr:", stderr);
