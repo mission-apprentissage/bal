@@ -126,6 +126,11 @@
       async: 1800
       poll: 10
 
+    - name: "Reload du Reverse Proxy"
+      shell:
+        chdir: /opt/app
+        cmd: "sudo /opt/app/tools/reload-proxy.sh"
+
     - name: "Verification des certificats SSL"
       shell:
         chdir: /opt/app
