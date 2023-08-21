@@ -23,7 +23,7 @@ function bin:setup() {
 
   sudo mkdir -p /usr/local/share/zsh/site-functions
   sudo ln -fs "${ROOT_DIR}/.bin/zsh-completion" /usr/local/share/zsh/site-functions/_mna-bal
-  sudo rm -f ~/.zcompdump
+  sudo rm -f ~/.zcompdump*
 }
 
 function init:env() {
