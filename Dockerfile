@@ -1,4 +1,4 @@
-FROM node:18-alpine as builder_root
+FROM node:20-alpine as builder_root
 WORKDIR /app
 RUN yarn set version 3.3.1
 COPY .yarn /app/.yarn
@@ -32,7 +32,7 @@ RUN yarn --cwd server build
 RUN yarn workspaces focus --all --production
 
 # Production image, copy all the files and run next
-FROM node:18-alpine AS server
+FROM node:20-alpine AS server
 WORKDIR /app
 RUN apk add --update \
   curl \
@@ -75,7 +75,7 @@ ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
 RUN yarn --cwd ui build
 
 # Production image, copy all the files and run next
-FROM node:18-alpine AS ui
+FROM node:20-alpine AS ui
 WORKDIR /app
 
 ENV NODE_ENV production

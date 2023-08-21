@@ -116,11 +116,18 @@ export function build(opts: FastifyServerOptions = {}): Server {
 
   app.register(fastifyMultipart);
   app.register(fastifyAuth);
-  app.register(fastifyCors, {});
+  app.register(fastifyCors, {
+    ...(config.env === "local"
+      ? {
+          origin: true,
+          credentials: true,
+        }
+      : {}),
+  });
 
   app.setErrorHandler<
     FastifyError | Boom<unknown> | Error | ZodError,
-    { Reply: Record<number, IResError> }
+    { Reply: IResError }
   >((error, _request, reply) => {
     logger.error(error);
 

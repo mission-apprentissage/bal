@@ -19,7 +19,6 @@ const indexes: IModelDescriptor["indexes"] = [
       },
     },
   ],
-  [{ organisation_id: 1 }, { name: "organisation_id" }],
 ];
 
 export const ZPerson = z

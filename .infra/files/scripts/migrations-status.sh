@@ -2,4 +2,4 @@
 set -euo pipefail
 #Needs to be run as sudo
 
-docker compose run --rm --no-deps server yarn docker:cli migrations:status
+docker compose run --rm --no-deps server yarn cli migrations:status

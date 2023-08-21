@@ -32,6 +32,17 @@
         src: "{{inventory_dir}}/docker-compose.preview.yml"
         dest: "/opt/app/projects/{{ pr_number }}/docker-compose.yml"
 
+    - name: "Check if repository exists"
+      stat:
+        path: "/opt/app/repository"
+      register: check_stat
+
+    - name: "Pruning repository references"
+      shell:
+        chdir: "/opt/app/repository"
+        cmd: git remote prune origin
+      when: check_stat.stat.exists
+
     - name: "[{{ pr_number }}] Clone du repository"
       git:
         repo: "git@github.com:mission-apprentissage/{{repo_name}}.git"
@@ -70,12 +81,12 @@
     - name: "[{{ pr_number }}] Execute MongoDB migrations"
       shell:
         chdir: "/opt/app/projects/{{ pr_number }}"
-        cmd: "docker compose run --rm server yarn docker:cli migrations:up"
+        cmd: "docker compose run --rm server yarn cli migrations:up"
 
     - name: "[{{ pr_number }}] Seed database"
       shell:
         chdir: "/opt/app/projects/{{ pr_number }}"
-        cmd: "docker compose run --rm server yarn docker:cli seed"
+        cmd: "docker compose run --rm server yarn cli seed"
 
     - name: "[{{ pr_number }}] Preview URL"
       debug:

@@ -289,7 +289,7 @@ Pour l'installer il faut exécuter les commandes suivantes
 ```bash
 git config --local merge.ansible-vault.driver "./.infra/scripts/vault/merge-vault.sh %O %A %B"
 git config --local merge.ansible-vault.name "ansible-vault merge driver"
-git config --local diff.ansible-vault.textconv "ansible-vault decrypt --vault-password-file='.infra/vault/get-vault-password-client.sh'"
+git config --local diff.ansible-vault.textconv "ansible-vault decrypt --vault-password-file='.infra/vault/get-vault-password-client.sh' --output -"
 git config --local diff.ansible-vault.cachetextconv "false"
 ```
 
