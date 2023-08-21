@@ -244,8 +244,8 @@ export async function apiGet<
 
   const res = await fetch(generateUrl(path, options), {
     method: "GET",
-    mode: publicConfig.env !== "local" ? "cors" : "same-origin",
-    credentials: publicConfig.env !== "local" ? "include" : "same-origin",
+    mode: publicConfig.env === "local" ? "cors" : "same-origin",
+    credentials: publicConfig.env === "local" ? "include" : "same-origin",
     headers,
   });
 
