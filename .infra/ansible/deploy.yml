@@ -82,7 +82,7 @@
         cmd: "sudo docker service scale bal_processor=0"
       when:
         - stack_status.stdout != ""
-        - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'
+        - '"migrations-status=synced" not in migration_status_output.stdout_lines'
 
     - name: "Activation du mode maintenance pour effectuer la migration"
       shell:
@@ -90,7 +90,7 @@
         cmd: "sudo /opt/app/tools/maintenance/maintenance-on.sh"
       when:
         - stack_status.stdout != ""
-        - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'
+        - '"migrations-status=synced" not in migration_status_output.stdout_lines'
 
     - name: "Shutdown server"
       shell:
@@ -98,7 +98,7 @@
         cmd: "sudo docker service scale bal_server=0"
       when:
         - stack_status.stdout != ""
-        - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'
+        - '"migrations-status=synced" not in migration_status_output.stdout_lines'
 
     - name: Lancement des migrations
       shell:
@@ -106,7 +106,7 @@
         cmd: "sudo /opt/app/scripts/migrations-up.sh"
       when:
         - stack_status.stdout != ""
-        - migration_status_output.stdout_lines[-2] != 'migrations-status=synced'
+        - '"migrations-status=synced" not in migration_status_output.stdout_lines'
       async: 1800
       poll: 10
 

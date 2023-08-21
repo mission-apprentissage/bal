@@ -13,8 +13,6 @@ RUN yarn install --immutable
 
 FROM builder_root as root
 WORKDIR /app
-# Cache is not needed anymore
-RUN rm -rf .yarn/cache
 
 ##############################################################
 ######################    SERVER    ##########################
@@ -30,6 +28,8 @@ COPY ./shared ./shared
 RUN yarn --cwd server build
 # Removing dev dependencies
 RUN yarn workspaces focus --all --production
+# Cache is not needed anymore
+RUN rm -rf .yarn/cache
 
 # Production image, copy all the files and run next
 FROM node:20-alpine AS server
@@ -73,6 +73,8 @@ ARG PUBLIC_ENV
 ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
 
 RUN yarn --cwd ui build
+# Cache is not needed anymore
+RUN rm -rf .yarn/cache
 
 # Production image, copy all the files and run next
 FROM node:20-alpine AS ui

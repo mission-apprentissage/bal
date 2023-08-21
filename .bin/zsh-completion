@@ -13,6 +13,7 @@ _mna-bal_completion() {
    "preview\:build:'Build preview from open pull-requests'"
    "preview\:cleanup:'Remove preview from close pull-requests'"
    "vault\:edit:'Edit vault file'"
+   "vault\:password:'Get vault password'"
   )
 
   # Set completion behavior based on the current word
