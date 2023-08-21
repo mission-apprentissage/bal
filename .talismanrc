@@ -3,6 +3,8 @@ fileignoreconfig:
   checksum: 9e0290e41389acecddebce27c63d2af3687ece2b8ea5ce61ab33617c74728536
 - filename: '*.test.ts'
   checksum: b5e6d6b59416f7359265e17c991135e67a2f7564a46697e05a83b0925032c98d
+- filename: .bin/scripts/setup-local-env.sh
+  checksum: 4bb90296fab07d4c645e2dae35f0e397e073764e944865a55e6339aec0a707f3
 - filename: .github/workflows/_deploy.yml
   checksum: f5e875545f9aaf94e535fb41dcf56b94c6c47be46a97e5bdfb39a36c2c42f7aa
 - filename: .github/workflows/preview.yml

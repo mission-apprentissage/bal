@@ -27,34 +27,34 @@ function bin:setup() {
 }
 
 function init:env() {
-  "$ROOT_DIR/.infra/vault/setup-local-env.sh" "$@"
+  "${SCRIPT_DIR}/setup-local-env.sh" "$@"
 }
 
 function release:interactive() {
-  "$ROOT_DIR/.bin/scripts/release-interactive.sh" "$@"
+  "${SCRIPT_DIR}/release-interactive.sh" "$@"
 }
 
 function release:app() {
-  "$ROOT_DIR/.bin/scripts/release-app.sh" "$@"
+  "${SCRIPT_DIR}/release-app.sh" "$@"
 }
 
 function deploy() {
-  "${ROOT_DIR}/.bin/scripts/deploy-app.sh" "$@"
+  "${SCRIPT_DIR}/deploy-app.sh" "$@"
 }
 
 function preview:build() {
-  "${ROOT_DIR}/.bin/scripts/build-images.sh" "$@"
+  "${SCRIPT_DIR}/build-images.sh" "$@"
 }
 
 function preview:cleanup() {
-  "${ROOT_DIR}/.bin/scripts/run-playbook.sh" "preview_cleanup.yml" "preview"
+  "${SCRIPT_DIR}/run-playbook.sh" "preview_cleanup.yml" "preview"
 }
 
 function vault:edit() {
   editor=${EDITOR:-'code -w'}
-  EDITOR=$editor "$ROOT_DIR/.infra/vault/edit-vault.sh" "$@"
+  EDITOR=$editor "${SCRIPT_DIR}/edit-vault.sh" "$@"
 }
 
 function vault:password() {
-  "$ROOT_DIR/.infra/vault/get-vault-password-client.sh" "$@"
+  "${SCRIPT_DIR}/get-vault-password-client.sh" "$@"
 }

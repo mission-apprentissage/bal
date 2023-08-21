@@ -45,7 +45,7 @@ function runPlaybook() {
 
   # This env-vars is used by CI to decrypt
   if [[ -z "${ANSIBLE_VAULT_PASSWORD_FILE:-}" ]]; then
-    ansible_extra_opts+=("--vault-password-file" "${ROOT_DIR}/.infra/vault/get-vault-password-client.sh")
+    ansible_extra_opts+=("--vault-password-file" "${SCRIPT_DIR}/get-vault-password-client.sh")
   else
     echo "Récupération de la passphrase depuis l'environnement variable ANSIBLE_VAULT_PASSWORD_FILE" 
   fi

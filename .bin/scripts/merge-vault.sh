@@ -3,7 +3,10 @@
 set -e
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly VAULT_FILE="${SCRIPT_DIR}/vault.yml"
+readonly BIN_DIR="$(dirname "${SCRIPT_DIR}")"
+readonly ROOT_DIR="$(dirname "${BIN_DIR}")"
+readonly VAULT_DIR="${ROOT_DIR}/.infra/vault"
+readonly VAULT_FILE="${VAULT_DIR}/vault.yml"
 
 ancestor_version=$1
 current_version=$2
@@ -20,7 +23,7 @@ delete_tempfiles() {
 }
 trap delete_tempfiles EXIT
 
-.infra/vault/get-vault-password-client.sh > $pass_file
+${SCRIPT_DIR}/get-vault-password-client.sh > $pass_file
 ansible-vault decrypt --vault-password-file="$pass_file" --output "$ancestor_tempfile" "$ancestor_version"
 ansible-vault decrypt --vault-password-file="$pass_file" --output "$current_tempfile" "$current_version"
 ansible-vault decrypt --vault-password-file="$pass_file" --output "$other_tempfile" "$other_version"

@@ -1,18 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # echo "Command line interface to view the vault password"
 # echo "This file implements Ansible specifications third-party vault tools"
 # echo "For more informations see https://docs.ansible.com/ansible/latest/vault_guide/vault_managing_passwords.html#storing-passwords-in-third-party-tools-with-vault-password-client-scripts"
 
 ## CHECK UPDATES AND RENEW
 
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly BIN_DIR="$(dirname "${SCRIPT_DIR}")"
+readonly ROOT_DIR="$(dirname "${BIN_DIR}")"
+readonly VAULT_DIR="${ROOT_DIR}/.infra/vault"
+readonly VAULT_FILE="${VAULT_DIR}/vault.yml"
+
 DOCUMENT_CONTENT=$(op document get .vault-password-bal --vault "mna-vault-passwords-common" || echo "")
-vault_password_file="${SCRIPT_DIR}/.vault-password.gpg"
-previous_vault_password_file="${SCRIPT_DIR}/.vault-password-previous.gpg"
-readonly VAULT_FILE="${SCRIPT_DIR}/vault.yml"
+vault_password_file="${VAULT_DIR}/.vault-password.gpg"
+previous_vault_password_file="${VAULT_DIR}/.vault-password-previous.gpg"
 
 if [ ! -f "$vault_password_file" ]; then
     echo "$DOCUMENT_CONTENT" > "$vault_password_file"
@@ -28,8 +31,8 @@ elif [ ! -z "$DOCUMENT_CONTENT" ] && [ "$DOCUMENT_CONTENT" != "$(cat "${vault_pa
     echo "$DOCUMENT_CONTENT" > "$vault_password_file"
     # echo "Nouveau vault-password créé avec succès."
 
-    previous_vault_password_file_clear_text="${SCRIPT_DIR}/prev_clear_text"
-    vault_password_file_clear_text="${SCRIPT_DIR}/new_clear_text"
+    previous_vault_password_file_clear_text="${VAULT_DIR}/prev_clear_text"
+    vault_password_file_clear_text="${VAULT_DIR}/new_clear_text"
 
     delete_cleartext() {
       rm -f "$previous_vault_password_file_clear_text" "$vault_password_file_clear_text" "${previous_vault_password_file}"
