@@ -10,6 +10,7 @@ import logger from "../../common/logger";
 import * as crypto from "../../common/utils/cryptoUtils";
 import { getFromStorage } from "../../common/utils/ovhUtils";
 import { findDocument } from "../actions/documents.actions";
+import { findJob } from "../actions/job.actions";
 import {
   createMailingList,
   createMailingListFile,
@@ -29,11 +30,13 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
-      const { source } = request.body;
       const user = getUserFromRequest(request);
 
       try {
-        await createMailingList({ user_id: user._id.toString(), source });
+        await createMailingList({
+          added_by: user._id.toString(),
+          ...request.body,
+        });
 
         return response.status(200).send({ success: true });
       } catch (error) {
@@ -53,7 +56,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
 
       const mailingLists = await findMailingLists(
         {
-          "payload.user_id": user._id.toString(),
+          added_by: user._id.toString(),
         },
         {
           sort: { created_at: -1 },
@@ -82,11 +85,48 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         throw notFound();
       }
 
-      if (mailingList?.payload?.user_id !== user?._id.toString()) {
+      if (mailingList?.added_by !== user?._id.toString()) {
         throw Boom.forbidden("Forbidden");
       }
 
       return response.status(200).send(mailingList);
+    }
+  );
+
+  server.get(
+    "/mailing-lists/:id/progress",
+    {
+      schema: zRoutes.get["/mailing-lists/:id/progress"],
+      preHandler: server.auth([server.validateSession]),
+    },
+    async (request, response) => {
+      const user = getUserFromRequest(request);
+      const { id } = request.params;
+
+      const mailingList = await findMailingList({
+        _id: new ObjectId(id),
+        added_by: user._id.toString(),
+      });
+
+      if (!mailingList) {
+        throw Boom.forbidden("Forbidden");
+      }
+
+      const job = await findJob({
+        "payload.mailing_list_id": mailingList._id.toString(),
+      });
+
+      if (!job) {
+        throw Boom.notFound("Job not found");
+      }
+
+      const { processed, processed_count } = job.payload || {};
+
+      return response.status(200).send({
+        status: job.status,
+        processed: (processed as number) ?? 0,
+        processed_count: (processed_count as number) ?? 0,
+      });
     }
   );
 
@@ -97,11 +137,12 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
-      const { user } = request;
+      const user = getUserFromRequest(request);
       const { id } = request.params;
 
       const mailingList = await findMailingList({
         _id: new ObjectId(id),
+        added_by: user._id.toString(),
       });
 
       /**
@@ -110,14 +151,14 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
        */
 
       if (
-        !mailingList?.payload?.document_id ||
-        user?._id.toString() !== mailingList.payload?.user_id
+        !mailingList?.document_id ||
+        user?._id.toString() !== mailingList?.added_by
       ) {
         throw Boom.forbidden("Forbidden");
       }
 
       const document = await findDocument({
-        _id: new ObjectId(mailingList.payload.document_id as string),
+        _id: new ObjectId(mailingList.document_id as string),
       });
 
       if (!document) {
@@ -139,7 +180,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
 
       if (fileNotFound) {
         logger.info("file not found");
-        await createMailingListFile(document);
+        await createMailingListFile(mailingList, document);
         stream = await getFromStorage(document.chemin_fichier);
       }
 
@@ -166,17 +207,14 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       preHandler: server.auth([server.validateSession]),
     },
     async (request, response) => {
-      const { user } = request;
+      const user = getUserFromRequest(request);
       const { id } = request.params;
 
       const mailingList = await findMailingList({
         _id: new ObjectId(id),
       });
 
-      if (
-        !mailingList ||
-        user?._id.toString() !== mailingList?.payload?.user_id
-      ) {
+      if (!mailingList || user._id.toString() !== mailingList?.added_by) {
         throw Boom.forbidden("Forbidden");
       }
 

@@ -5,10 +5,11 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
+  Input,
   Select,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
@@ -26,26 +27,17 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
     register,
   } = useForm<IBody<IPostRoutes["/mailing-list"]>>();
 
-  const [previewClicked, setPreviewClicked] = useState(false);
-
   const { data: types = [] } = useQuery<string[]>({
     queryKey: ["documentTypes"],
     queryFn: async () => {
-      const data = await apiGet("/admin/documents/types", {});
+      const data = await apiGet("/documents/types", {});
 
       return data;
     },
   });
 
-  const onSelectSource = async () => {
-    // Get preview source
-
-    setPreviewClicked(true);
-  };
   const onSubmit = async (data: IBody<IPostRoutes["/mailing-list"]>) => {
-    // await apiPost("/mailing-list", { body: { source: data.source } });
-
-    await onSuccess({ source: data.source });
+    onSuccess(data);
   };
 
   const validTypes = types.filter((t) => t !== DOCUMENT_TYPES.DECA);
@@ -54,6 +46,14 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
     <Box w={{ base: "100%", md: "50%" }} mt={5}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box>
+          <FormControl isInvalid={!!errors.campaign_name} mb={5}>
+            <FormLabel>Nom de la campagne</FormLabel>
+            <Input
+              placeholder="Campagne voeux 2023"
+              {...register("campaign_name", { required: "Nom de la campagne" })}
+            />
+            <FormErrorMessage>{errors.campaign_name?.message}</FormErrorMessage>
+          </FormControl>
           <FormControl
             isInvalid={!!errors.source}
             mb={5}
@@ -78,23 +78,10 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
           </FormControl>
         </Box>
 
-        {previewClicked && <Box>TODO: Prévisualisation ICI...</Box>}
-
         <HStack spacing="4w" mt={8}>
-          {!previewClicked && (
-            <Button
-              variant="primary"
-              onClick={onSelectSource}
-              isLoading={isSubmitting}
-            >
-              Suivant
-            </Button>
-          )}
-          {previewClicked && (
-            <Button variant="primary" type="submit" isLoading={isSubmitting}>
-              Confirmer
-            </Button>
-          )}
+          <Button variant="primary" type="submit" isLoading={isSubmitting}>
+            Suivant
+          </Button>
         </HStack>
       </form>
     </Box>

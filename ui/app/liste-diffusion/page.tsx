@@ -2,27 +2,21 @@
 import { Button, Flex, Heading } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import NextLink from "next/link";
-import { IJobJson } from "shared/models/job.model";
+import { IMailingListJson } from "shared/models/mailingList.model";
 
 import { apiGet } from "../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
 import GeneratingMailingList from "./components/GeneratingMailingList";
 import ListMailingList from "./components/ListMailingList";
 
-const inProgressStatuses: IJobJson["status"][] = [
-  "running",
-  "pending",
-  "will_start",
-];
-
 const ListeDiffusionPage = () => {
-  const { data: mailingLists, refetch } = useQuery<IJobJson[]>({
+  const { data: mailingLists = [], refetch } = useQuery<IMailingListJson[]>({
     queryKey: ["mailingLists"],
     queryFn: async () => apiGet("/mailing-lists", {}),
   });
 
-  const generatingMailingList = mailingLists?.find((mailingList) =>
-    inProgressStatuses.includes(mailingList.status)
+  const generatingMailingList = mailingLists?.find(
+    (ml) => ml.status === "processing"
   );
 
   return (
@@ -42,7 +36,7 @@ const ListeDiffusionPage = () => {
         </Button>
       </Flex>
 
-      {generatingMailingList && (
+      {!!generatingMailingList && (
         <GeneratingMailingList
           mailingList={generatingMailingList}
           onDone={refetch}

@@ -34,6 +34,7 @@ import { uploadAdminRoutes } from "./admin/upload.routes";
 import { userAdminRoutes } from "./admin/user.routes";
 import { authRoutes } from "./auth.routes";
 import { coreRoutes } from "./core.routes";
+import { documentsRoutes } from "./documents.routes";
 import { emailsRoutes } from "./emails.routes";
 import { mailingListRoutes } from "./mailingList.routes";
 import { userRoutes } from "./user.routes";
@@ -218,6 +219,7 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
   organisationAdminRoutes({ server });
   uploadAdminRoutes({ server });
   mailingListRoutes({ server });
+  documentsRoutes({ server });
 };
 
 export const registerV1Routes: RegisterRoutes = ({ server }) => {

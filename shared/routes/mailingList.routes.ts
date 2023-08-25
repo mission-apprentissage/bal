@@ -1,19 +1,19 @@
 import { z } from "zod";
 
 import { zObjectId } from "../models/common";
-import { ZJob } from "../models/job.model";
+import { ZMailingList } from "../models/mailingList.model";
 
 export const zMailingListRoutes = {
   get: {
     "/mailing-lists": {
       response: {
-        "2xx": z.array(ZJob),
+        "2xx": z.array(ZMailingList),
       },
     },
     "/mailing-lists/:id": {
       params: z.object({ id: zObjectId }),
       response: {
-        "2xx": ZJob,
+        "2xx": ZMailingList,
       },
     },
     "/mailing-lists/:id/download": {
@@ -22,10 +22,42 @@ export const zMailingListRoutes = {
         "2xx": z.unknown(),
       },
     },
+    "/mailing-lists/:id/progress": {
+      params: z.object({ id: zObjectId }),
+      response: {
+        "2xx": z.object({
+          status: z.enum([
+            "pending",
+            "will_start",
+            "running",
+            "finished",
+            "blocked",
+            "errored",
+          ]),
+          processed: z.number(),
+          processed_count: z.number(),
+        }),
+      },
+    },
   },
   post: {
     "/mailing-list": {
-      body: z.object({ source: z.string() }).strict(),
+      body: z
+        .object({
+          source: z.string(),
+          campaign_name: z.string(),
+          email: z.string(),
+          secondary_email: z.string().optional(),
+          identifier_columns: z.array(z.string()),
+          output_columns: z.array(
+            z.object({
+              column: z.string(),
+              output: z.string(),
+              grouped: z.boolean(),
+            })
+          ),
+        })
+        .strict(),
       response: {
         "2xx": z.object({ success: z.literal(true) }),
       },

@@ -105,6 +105,28 @@ export const getDocumentTypes = async (): Promise<string[]> => {
   });
 };
 
+export const getDocumentColumns = async (type: string): Promise<string[]> => {
+  // get all keys from document content
+  const aggregationPipeline = [
+    { $match: { type_document: type } },
+    { $project: { keys: { $objectToArray: "$content" } } },
+    { $unwind: "$keys" },
+    { $group: { _id: null, uniqueKeys: { $addToSet: "$keys.k" } } },
+    { $unwind: "$uniqueKeys" },
+    { $sort: { uniqueKeys: 1 } }, // Sort keys alphabetically
+  ];
+
+  const result = await getDbCollection("documentContents")
+    .aggregate(aggregationPipeline)
+    .toArray();
+
+  if (!result.length) {
+    return [];
+  }
+
+  return result.map((item) => item.uniqueKeys);
+};
+
 interface ICreateEmptyDocumentOptions {
   type_document: string;
   fileSize?: number;

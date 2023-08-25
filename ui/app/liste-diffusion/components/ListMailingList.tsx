@@ -1,6 +1,6 @@
 import { Box, HStack } from "@chakra-ui/react";
 import { FC } from "react";
-import { IJobJson } from "shared/models/job.model";
+import { IMailingListJson } from "shared/models/mailingList.model";
 
 import Table from "../../../components/table/Table";
 import { Bin } from "../../../theme/icons/Bin";
@@ -9,7 +9,7 @@ import { apiDelete, generateUrl } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 
 interface Props {
-  mailingLists?: IJobJson[];
+  mailingLists?: IMailingListJson[];
   onDelete?: () => void;
 }
 
@@ -29,29 +29,11 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             id: "source",
             size: 100,
             header: () => "Source",
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            cell: ({ row }) => (row.original.payload as any)?.source,
           },
-          status: {
-            id: "status",
+          campaign_name: {
+            id: "campaign_name",
             size: 100,
-            header: () => "Statut",
-            cell: ({ row }) => {
-              return (
-                <>
-                  {
-                    {
-                      pending: "En attente",
-                      will_start: "Programmé",
-                      running: "En cours",
-                      finished: "Terminé",
-                      blocked: "Bloqué",
-                      errored: "Erreur",
-                    }[row.original.status]
-                  }
-                </>
-              );
-            },
+            header: () => "Nom de la campagne",
           },
           date: {
             id: "date",
@@ -70,9 +52,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             size: 25,
             header: () => "Actions",
             cell: ({ row }) => {
-              if (row.original.status !== "finished") {
-                return null;
-              }
+              if (row.original.status !== "done") return null;
 
               return (
                 <HStack spacing={4}>
