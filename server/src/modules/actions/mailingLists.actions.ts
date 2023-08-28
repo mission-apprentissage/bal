@@ -14,7 +14,12 @@ import logger from "@/common/logger";
 import * as crypto from "@/common/utils/cryptoUtils";
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-import { LIMIT_TRAINING_LINKS_PER_REQUEST } from "../../common/apis/lba";
+import {
+  getTrainingLinks,
+  LIMIT_TRAINING_LINKS_PER_REQUEST,
+  TrainingLink,
+  TrainingLinkData,
+} from "../../common/apis/lba";
 import { uploadToStorage } from "../../common/utils/ovhUtils";
 import { addJob } from "../jobs/jobs_actions";
 import { noop } from "../server/utils/upload.utils";
@@ -31,6 +36,7 @@ import { findJob, updateJob } from "./job.actions";
  */
 
 export const MAILING_LIST_DOCUMENT_PREFIX = "mailing-list";
+export const MAILING_LIST_WEBHOOK_LBA = "WEBHOOK_LBA";
 
 export const createMailingList = async (
   data: Omit<IMailingList, "_id" | "status">
@@ -145,53 +151,6 @@ const handleSourceVoeuxAffelnetParcoursup = async (
 
     const output = await formatOutput(mailingList, wishes);
 
-    // const data: TrainingLinkData[] = wishes.map((w) => ({
-    //   id: w._id.toString(),
-    //   cle_ministere_educatif: w.content?.cle_ministere_educatif ?? "",
-    //   mef: w.content?.code_mef ?? "",
-    //   code_postal: w.content?.code_postal ?? "",
-    //   uai: w.content?.code_uai_etab_accueil ?? "",
-    //   cfd: w.content?.cfd ?? "", // pas présent dans le fichier
-    //   rncp: w.content?.rncp ?? "", // pas présent dans le fichier
-    // }));
-
-    // const trainingLinks = (await getTrainingLinks(data)) as TrainingLink[];
-
-    // const toDuplicate: (TrainingLink & WishContent & { email?: string })[] = [];
-    // const trainingLinksWithWishes = trainingLinks
-    //   .map((tl) => {
-    //     const wish = wishes.find((w) => w._id.toString() === tl.id);
-    //     const {
-    //       mail_responsable_1,
-    //       mail_responsable_2,
-    //       nom_eleve,
-    //       prenom_1,
-    //       prenom_2,
-    //       prenom_3,
-    //       libelle_etab_accueil,
-    //       libelle_formation,
-    //     } = wish?.content ?? {};
-
-    //     // filtrer les emails invalides
-    //     const emails = [
-    //       ...new Set([mail_responsable_1, mail_responsable_2]),
-    //     ].filter((e) => EMAIL_REGEX.test(e ?? ""));
-
-    //     const wishData = {
-    //       ...tl,
-    //       email: emails?.[0] ?? "",
-    //       nom_eleve: nom_eleve ?? "",
-    //       prenom_eleve: [prenom_1 ?? "", prenom_2 ?? "", prenom_3 ?? ""]
-    //         .join(" ")
-    //         .trim(),
-    //       libelle_etab_accueil: libelle_etab_accueil ?? "",
-    //       libelle_formation: libelle_formation ?? "",
-    //     };
-
-    //     return wishData;
-    //   })
-    //   .flat();
-
     await importDocumentContent(outputDocument, output, (line) => line);
 
     processed += wishes.length;
@@ -222,7 +181,19 @@ const formatOutput = async (
   documentContents: IDocumentContent[]
 ) => {
   const toDuplicate: unknown[] = [];
-  const data = documentContents.map((documentContent) => {
+  let data = documentContents;
+  let outputColumns = mailingList.output_columns;
+  const needsLbaData = outputColumns
+    .map((c) => c.column)
+    .includes(MAILING_LIST_WEBHOOK_LBA);
+
+  if (needsLbaData) {
+    data = await mergeLbaData(data);
+  }
+
+  outputColumns = getOutputColumnsWithLba(mailingList);
+
+  const rows = data.map((documentContent) => {
     const { email, secondary_email } = mailingList;
 
     const primaryEmail = (documentContent?.content?.[email] as string) ?? "";
@@ -239,7 +210,7 @@ const formatOutput = async (
       email: emails?.[0],
     };
 
-    for (const outputColumn of mailingList.output_columns) {
+    for (const outputColumn of outputColumns) {
       const outputColumnName = outputColumn.output;
       const outputColumnValue =
         documentContent?.content?.[outputColumn.column] ?? "";
@@ -249,9 +220,36 @@ const formatOutput = async (
     if (emails.length === 2) {
       toDuplicate.push({ ...outputRow, email: emails[1] });
     }
+
+    return outputRow;
   });
 
-  return [...data, ...toDuplicate];
+  return [...rows, ...toDuplicate];
+};
+
+const mergeLbaData = async (documentContents: IDocumentContent[]) => {
+  const payload: TrainingLinkData[] = documentContents.map((content) => ({
+    id: content._id.toString(),
+    cle_ministere_educatif:
+      (content.content?.cle_ministere_educatif as string) ?? "",
+    mef: (content.content?.code_mef as string) ?? "",
+    code_postal: (content.content?.code_postal as string) ?? "",
+    uai: (content.content?.code_uai_etab_accueil as string) ?? "",
+    cfd: (content.content?.cfd as string) ?? "", // pas présent dans le fichier
+    rncp: (content.content?.rncp as string) ?? "", // pas présent dans le fichier
+  }));
+
+  const trainingLinks = (await getTrainingLinks(payload)) as TrainingLink[];
+
+  return documentContents.map((dc) => {
+    const trainingLink = trainingLinks.find(
+      (tl) => tl.id === dc._id.toString()
+    );
+
+    const content = { ...dc.content, ...trainingLink };
+
+    return { ...dc, content };
+  });
 };
 
 async function* getLine(
@@ -287,7 +285,7 @@ async function* getLine(
       currentLine[identifier] = content[identifier];
     }
 
-    const notIdentifiers = mailingList.output_columns
+    const notIdentifiers = getOutputColumnsWithLba(mailingList)
       .filter((c) => !identifiers.includes(c.output))
       .map((c) => c.output);
 
@@ -304,6 +302,33 @@ async function* getLine(
 
   if (currentLine !== null) yield currentLine;
 }
+
+const getOutputColumnsWithLba = (mailingList: IMailingList) => {
+  const outputColumns = mailingList.output_columns;
+  const needsLbaData = outputColumns.find(
+    (c) => c.column === MAILING_LIST_WEBHOOK_LBA
+  );
+
+  if (!needsLbaData) return outputColumns;
+
+  return [
+    ...outputColumns,
+    // LBA columns
+    { column: "lien_lba", output: "lien_lba", grouped: true },
+    { column: "lien_prdv", output: "lien_prdv", grouped: true },
+    {
+      column: "libelle_etab_accueil",
+      output: "libelle_etab_accueil",
+      grouped: true,
+    },
+    {
+      column: "libelle_formation",
+      output: "libelle_formation",
+      grouped: true,
+    },
+    // remove WEBHOOK_LBA column
+  ].filter((c) => c.column !== MAILING_LIST_WEBHOOK_LBA);
+};
 
 export const createMailingListFile = async (
   mailingList: IMailingList,
@@ -351,7 +376,8 @@ export const createMailingListFile = async (
       transform(line, _encoding, callback) {
         if (progress % 100 === 0) console.log(progress);
         progress++;
-        const keys = mailingList.output_columns
+        const outputColumns = getOutputColumnsWithLba(mailingList);
+        const keys = outputColumns
           .filter((c) => c.grouped)
           .map((c) => c.output);
 
@@ -359,7 +385,7 @@ export const createMailingListFile = async (
           email: line.email,
         };
 
-        const ungrouped = mailingList.output_columns
+        const ungrouped = outputColumns
           .filter((c) => !c.grouped)
           .map((c) => c.output);
 
