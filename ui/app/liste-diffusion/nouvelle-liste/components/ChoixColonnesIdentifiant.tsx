@@ -5,6 +5,7 @@ import {
   FormErrorMessage,
   HStack,
   Select,
+  Text,
 } from "@chakra-ui/react";
 import { FC } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -58,7 +59,12 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
   };
 
   return (
-    <Box mt={5}>
+    <Box>
+      <Text mb={4}>
+        Les champs obligatoires serviront comme identifiants uniques. Les champs
+        de courriel facultatifs correspondent aux courriels supplémentaires à
+        qui la campagne sera envoyée.
+      </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
         <MailingListSectionRow>
           <MailingListSectionCell>
@@ -73,7 +79,9 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
         </MailingListSectionRow>
 
         <MailingListSectionRow>
-          <MailingListSectionCell>Email</MailingListSectionCell>
+          <MailingListSectionCell>
+            Email<Text color="red">*</Text>
+          </MailingListSectionCell>
           <MailingListSectionCell>
             <FormControl isInvalid={!!errors.email} isDisabled={isSubmitting}>
               <Select
@@ -103,7 +111,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
             >
               <Select
                 isInvalid={!!errors.secondary_email}
-                placeholder="Choisir l'email"
+                placeholder="Choisir l'email secondaire"
                 {...register("secondary_email")}
               >
                 {columns.map((column) => (
@@ -127,7 +135,6 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
                 isInvalid={!!errors.identifier_columns?.[index]}
                 isDisabled={isSubmitting}
               >
-                {/* <FormLabel>Colonne</FormLabel> */}
                 <Select
                   isInvalid={!!errors.identifier_columns?.[index]}
                   placeholder="Colonne"
@@ -155,7 +162,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
         ))}
         <Box display="flex" justifyContent="center">
           <Button variant="secondary" onClick={() => append({ name: "" })}>
-            +
+            + Ajouter un champ
           </Button>
         </Box>
         <HStack spacing="4w" mt={8}>

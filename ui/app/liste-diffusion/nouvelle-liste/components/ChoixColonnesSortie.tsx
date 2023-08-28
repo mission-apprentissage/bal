@@ -8,11 +8,14 @@ import {
   HStack,
   Input,
   Select,
+  Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import { FC } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 
+import { TooltipIcon } from "../../../../theme/icons/Tooltip";
 import { apiPost } from "../../../../utils/api.utils";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
@@ -62,7 +65,7 @@ const ChoixColonnesSortie: FC<Props> = ({
       source,
       campaign_name: campaignName,
       identifier_columns: identifierColumns,
-      output_columns: [],
+      output_columns: [{ output: "email", column: email, grouped: false }],
     },
   });
   const { fields, append } = useFieldArray({
@@ -72,17 +75,26 @@ const ChoixColonnesSortie: FC<Props> = ({
 
   const onSubmit = async (data: IBody<IPostRoutes["/mailing-list"]>) => {
     await apiPost("/mailing-list", { body: data });
-    console.log(data);
+
     onSuccess(data);
   };
 
   return (
-    <Box mt={5}>
+    <Box>
+      <Text mb={4}>
+        Veuillez sélectionner les champs du fichier d’entrée que vous souhaitez
+        avoir dans le fichier de sortie. Exemple : libellé établissement et
+        libellée formation. Vous pouvez ajouter plusieurs.
+      </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((field, index) => (
           <MailingListSectionRow key={field.id}>
             <MailingListSectionCell>
-              <FormControl isInvalid={!!errors.campaign_name} mb={5}>
+              <FormControl
+                isInvalid={!!errors.campaign_name}
+                mb={5}
+                isDisabled={index === 0 || isSubmitting}
+              >
                 <FormLabel>Nom de sortie</FormLabel>
                 <Input
                   placeholder="Campagne voeux 2023"
@@ -98,7 +110,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                 key={field.id}
                 isInvalid={!!errors.identifier_columns?.[index]}
                 mb={5}
-                isDisabled={isSubmitting}
+                isDisabled={index === 0 || isSubmitting}
               >
                 <FormLabel>Colonne</FormLabel>
                 <Select
@@ -117,11 +129,19 @@ const ChoixColonnesSortie: FC<Props> = ({
               </FormControl>
             </MailingListSectionCell>
             <MailingListSectionCell>
-              <FormControl mb={5} isDisabled={isSubmitting}>
+              <FormControl mb={5} isDisabled={index === 0 || isSubmitting}>
                 <Checkbox
                   {...register(`output_columns.${index}.grouped` as const)}
                 >
                   Ne pas écraser
+                  <Tooltip
+                    label="Ajoutera des colonnes prefixées par _ pour chacun des champs du groupe NE_PAS_ECRASER"
+                    fontSize="md"
+                  >
+                    <span>
+                      <TooltipIcon ml={2} />
+                    </span>
+                  </Tooltip>
                 </Checkbox>
               </FormControl>
             </MailingListSectionCell>
@@ -133,7 +153,7 @@ const ChoixColonnesSortie: FC<Props> = ({
             variant="secondary"
             onClick={() => append({ output: "", column: "", grouped: false })}
           >
-            +
+            + Ajouter un champ
           </Button>
         </Box>
 

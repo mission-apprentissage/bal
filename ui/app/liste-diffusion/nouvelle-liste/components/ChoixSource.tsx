@@ -40,7 +40,7 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
   };
 
   return (
-    <Box w={{ base: "100%", md: "50%" }} mt={5}>
+    <Box w={{ base: "100%", md: "50%" }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box>
           <FormControl isInvalid={!!errors.campaign_name} mb={5}>
