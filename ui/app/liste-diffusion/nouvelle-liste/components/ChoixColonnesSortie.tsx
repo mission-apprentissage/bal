@@ -4,7 +4,6 @@ import {
   Checkbox,
   FormControl,
   FormErrorMessage,
-  FormLabel,
   HStack,
   Input,
   Select,
@@ -46,12 +45,14 @@ const ChoixColonnesSortie: FC<Props> = ({
     formState: { errors, isSubmitting },
     register,
     control,
+    watch,
   } = useForm<IBody<IPostRoutes["/mailing-list"]>>({
     defaultValues: {
       source,
       campaign_name: campaignName,
       identifier_columns: identifierColumns,
       output_columns: [
+        { output: "email", column: email, grouped: false },
         {
           output: "",
           column: "",
@@ -65,7 +66,7 @@ const ChoixColonnesSortie: FC<Props> = ({
       source,
       campaign_name: campaignName,
       identifier_columns: identifierColumns,
-      output_columns: [{ output: "email", column: email, grouped: false }],
+      output_columns: [],
     },
   });
   const { fields, append } = useFieldArray({
@@ -79,6 +80,8 @@ const ChoixColonnesSortie: FC<Props> = ({
     onSuccess(data);
   };
 
+  const outputColumns = watch("output_columns");
+
   return (
     <Box>
       <Text mb={4}>
@@ -87,6 +90,12 @@ const ChoixColonnesSortie: FC<Props> = ({
         libellée formation. Vous pouvez ajouter plusieurs.
       </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <MailingListSectionRow>
+          <MailingListSectionCell>Nom de sortie</MailingListSectionCell>
+          <MailingListSectionCell>
+            En-têtes des colonnes (fichier source)
+          </MailingListSectionCell>
+        </MailingListSectionRow>
         {fields.map((field, index) => (
           <MailingListSectionRow key={field.id}>
             <MailingListSectionCell>
@@ -95,7 +104,6 @@ const ChoixColonnesSortie: FC<Props> = ({
                 mb={5}
                 isDisabled={index === 0 || isSubmitting}
               >
-                <FormLabel>Nom de sortie</FormLabel>
                 <Input
                   placeholder="Campagne voeux 2023"
                   {...register(`output_columns.${index}.output` as const)}
@@ -112,16 +120,33 @@ const ChoixColonnesSortie: FC<Props> = ({
                 mb={5}
                 isDisabled={index === 0 || isSubmitting}
               >
-                <FormLabel>Colonne</FormLabel>
                 <Select
                   isInvalid={!!errors.identifier_columns?.[index]}
                   placeholder="Colonne"
                   {...register(`output_columns.${index}.column` as const)}
                 >
-                  {columns.map((column) => (
-                    <option key={column}>{column}</option>
-                  ))}
-                  <option value="WEBHOOK_LBA">WEBHOOK_LBA</option>
+                  <optgroup label="BAL">
+                    <option
+                      value="WEBHOOK_LBA"
+                      disabled={
+                        !!outputColumns.find((c) => c.column === "WEBHOOK_LBA")
+                      }
+                    >
+                      WEBHOOK_LBA
+                    </option>
+                  </optgroup>
+                  <optgroup label={source}>
+                    {columns.map((column) => (
+                      <option
+                        key={column}
+                        disabled={
+                          !!outputColumns.find((c) => c.column === column)
+                        }
+                      >
+                        {column}
+                      </option>
+                    ))}
+                  </optgroup>
                 </Select>
                 <FormErrorMessage>
                   {errors.identifier_columns?.[index]?.message}
