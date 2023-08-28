@@ -138,7 +138,12 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
                 <Select
                   isInvalid={!!errors.identifier_columns?.[index]}
                   placeholder="Colonne"
-                  {...register(`identifier_columns.${index}.name`)}
+                  {...register(`identifier_columns.${index}.name`, {
+                    required: "Obligatoire",
+                    validate: (value) => {
+                      return value && columns.includes(value);
+                    },
+                  })}
                 >
                   {columns.map((column) => (
                     <option
@@ -152,7 +157,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
                   ))}
                 </Select>
                 <FormErrorMessage>
-                  {errors.identifier_columns?.[index]?.message}
+                  {errors.identifier_columns?.[index]?.name?.message}
                 </FormErrorMessage>
               </FormControl>
             </MailingListSectionCell>

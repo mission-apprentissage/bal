@@ -66,7 +66,14 @@ const ChoixColonnesSortie: FC<Props> = ({
       source,
       campaign_name: campaignName,
       identifier_columns: identifierColumns,
-      output_columns: [],
+      output_columns: [
+        { output: "email", column: email, grouped: false },
+        {
+          output: "",
+          column: "",
+          grouped: false,
+        },
+      ],
     },
   });
   const { fields, append } = useFieldArray({
@@ -100,30 +107,36 @@ const ChoixColonnesSortie: FC<Props> = ({
           <MailingListSectionRow key={field.id}>
             <MailingListSectionCell>
               <FormControl
-                isInvalid={!!errors.campaign_name}
+                isInvalid={!!errors.output_columns?.[index]?.output}
                 mb={5}
                 isDisabled={index === 0 || isSubmitting}
               >
                 <Input
-                  placeholder="Campagne voeux 2023"
-                  {...register(`output_columns.${index}.output` as const)}
+                  {...register(`output_columns.${index}.output` as const, {
+                    required: "Obligatoire",
+                  })}
                 />
                 <FormErrorMessage>
-                  {errors.campaign_name?.message}
+                  {errors.output_columns?.[index]?.output?.message}
                 </FormErrorMessage>
               </FormControl>
             </MailingListSectionCell>
             <MailingListSectionCell>
               <FormControl
                 key={field.id}
-                isInvalid={!!errors.identifier_columns?.[index]}
+                isInvalid={!!errors.output_columns?.[index]?.column}
                 mb={5}
                 isDisabled={index === 0 || isSubmitting}
               >
                 <Select
-                  isInvalid={!!errors.identifier_columns?.[index]}
+                  isInvalid={!!errors.output_columns?.[index]}
                   placeholder="Colonne"
-                  {...register(`output_columns.${index}.column` as const)}
+                  {...register(`output_columns.${index}.column` as const, {
+                    required: "Obligatoire",
+                    validate: (value) => {
+                      return value && columns.includes(value);
+                    },
+                  })}
                 >
                   <optgroup label="BAL">
                     <option
@@ -149,7 +162,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                   </optgroup>
                 </Select>
                 <FormErrorMessage>
-                  {errors.identifier_columns?.[index]?.message}
+                  {errors.output_columns?.[index]?.column?.message}
                 </FormErrorMessage>
               </FormControl>
             </MailingListSectionCell>
