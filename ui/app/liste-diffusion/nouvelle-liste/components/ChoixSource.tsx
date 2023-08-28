@@ -12,7 +12,6 @@ import { useQuery } from "@tanstack/react-query";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
-import { DOCUMENT_TYPES } from "shared/constants/documents";
 
 import { apiGet } from "../../../../utils/api.utils";
 
@@ -40,8 +39,6 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
     onSuccess(data);
   };
 
-  const validTypes = types.filter((t) => t !== DOCUMENT_TYPES.DECA);
-
   return (
     <Box w={{ base: "100%", md: "50%" }} mt={5}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -66,11 +63,11 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
               {...register("source", {
                 required: "Obligatoire: Vous devez choisir la source",
                 validate: (value) => {
-                  return value && validTypes.includes(value);
+                  return value && types.includes(value);
                 },
               })}
             >
-              {validTypes.map((type) => (
+              {types.map((type) => (
                 <option key={type}>{type}</option>
               ))}
             </Select>
