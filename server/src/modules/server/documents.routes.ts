@@ -2,6 +2,7 @@ import { zRoutes } from "shared";
 
 import {
   getDocumentColumns,
+  getDocumentSample,
   getDocumentTypes,
 } from "../actions/documents.actions";
 import { Server } from "./server";
@@ -27,10 +28,22 @@ export const documentsRoutes = ({ server }: { server: Server }) => {
       preHandler: [server.auth([server.validateSession])],
     },
     async (request, response) => {
-      console.log(request.query);
       const types = await getDocumentColumns(request.query.type);
 
       return response.status(200).send(types);
+    }
+  );
+
+  server.get(
+    "/documents/sample",
+    {
+      schema: zRoutes.get["/documents/sample"],
+      preHandler: [server.auth([server.validateSession])],
+    },
+    async (request, response) => {
+      const sample = await getDocumentSample(request.query.type);
+
+      return response.status(200).send(sample);
     }
   );
 };

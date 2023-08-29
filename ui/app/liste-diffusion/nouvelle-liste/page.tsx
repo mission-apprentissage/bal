@@ -1,40 +1,32 @@
 "use client";
 import { Accordion, Heading } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IBody, IPostRoutes } from "shared";
+import { IDocumentContentJson } from "shared/models/documentContent.model";
 
-import { apiGet } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import ChoixColonnesIdentifiant from "./components/ChoixColonnesIdentifiant";
 import ChoixColonnesSortie from "./components/ChoixColonnesSortie";
-import ChoixSource from "./components/ChoixSource";
+import ChoixSource, { IChoseSourceForm } from "./components/ChoixSource";
 import CreateMailingListSection from "./components/CreateMailingListSection";
 
 const NouvelleListePage = () => {
   const [step, setStep] = useState<number>(0);
   const [source, setSource] = useState<string>();
   const [campaignName, setCampaignName] = useState<string>();
+  const [columns, setColumns] = useState<string[]>([]);
+  const [sample, setSample] = useState<IDocumentContentJson[]>([]);
   const [identifierColumns, setIdentifierColumns] = useState<string[]>();
   const [email, setEmail] = useState<string>();
   const [secondaryEmail, setSecondaryEmail] = useState<string | undefined>();
   const { push } = useRouter();
 
-  const { data: columns = [] } = useQuery<string[]>({
-    queryKey: ["documentColumns", source],
-    queryFn: async () => {
-      const data = await apiGet("/documents/columns", {
-        querystring: { type: source ?? "" },
-      });
-
-      return data;
-    },
-  });
-
-  const handleSourceSelection = (data: IBody<IPostRoutes["/mailing-list"]>) => {
+  const handleSourceSelection = (data: IChoseSourceForm) => {
     setSource(data.source);
     setCampaignName(data.campaign_name);
+    setSample(data.sample);
+    setColumns(data.columns);
     setStep(1);
   };
 
@@ -77,6 +69,7 @@ const NouvelleListePage = () => {
             columns={columns}
             onSuccess={handleIdentifierColumnsSelection}
             onCancel={() => setStep(0)}
+            sample={sample}
           />
         </CreateMailingListSection>
         <CreateMailingListSection title="Champs à afficher dans le fichier de sortie">

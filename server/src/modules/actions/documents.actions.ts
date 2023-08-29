@@ -127,6 +127,15 @@ export const getDocumentColumns = async (type: string): Promise<string[]> => {
   return result.map((item) => item.uniqueKeys);
 };
 
+export const getDocumentSample = async (
+  type: string
+): Promise<IDocumentContent[]> => {
+  return await getDbCollection("documentContents")
+    .find({ type_document: type })
+    .limit(10)
+    .toArray();
+};
+
 interface ICreateEmptyDocumentOptions {
   type_document: string;
   fileSize?: number;

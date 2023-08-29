@@ -10,6 +10,7 @@ import {
 import { FC } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
+import { IDocumentContentJson } from "shared/models/documentContent.model";
 
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
@@ -22,6 +23,7 @@ interface Props {
     >
   ) => void;
   columns: string[];
+  sample: IDocumentContentJson[];
   onCancel: () => void;
 }
 
@@ -35,6 +37,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
   onSuccess,
   columns,
   onCancel,
+  sample,
 }) => {
   const {
     handleSubmit,
@@ -52,10 +55,22 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
 
   const watchEmail = watch("email");
   const watchSecondaryEmail = watch("secondary_email");
+  const watchIdentifierColumns = watch("identifier_columns");
 
   const onSubmit = async (data: IIdentifierColumnForm) => {
     const identifierColumns = data.identifier_columns.map((ic) => ic.name);
     onSuccess({ ...data, identifier_columns: identifierColumns });
+  };
+
+  const getDataFromSample = (key: string) => {
+    return (
+      sample
+        // @ts-ignore
+        .map((row) => row?.content?.[key] ?? "")
+        .filter((value) => value && value !== "")
+        .slice(0, 3)
+        .join(", ")
+    );
   };
 
   return (
@@ -101,7 +116,9 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
               <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
           </MailingListSectionCell>
-          <MailingListSectionCell></MailingListSectionCell>
+          <MailingListSectionCell>
+            {watchEmail && getDataFromSample(watchEmail)}
+          </MailingListSectionCell>
           <MailingListSectionCell>Email secondaire</MailingListSectionCell>
           <MailingListSectionCell>
             <FormControl
@@ -125,11 +142,14 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
               </FormErrorMessage>
             </FormControl>
           </MailingListSectionCell>
-          <MailingListSectionCell></MailingListSectionCell>
+          <MailingListSectionCell>
+            {watchSecondaryEmail && getDataFromSample(watchSecondaryEmail)}
+          </MailingListSectionCell>
         </MailingListSectionRow>
 
         {fields.map((field, index) => (
           <MailingListSectionRow key={field.id}>
+            <MailingListSectionCell />
             <MailingListSectionCell>
               <FormControl
                 isInvalid={!!errors.identifier_columns?.[index]}
@@ -161,8 +181,10 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
                 </FormErrorMessage>
               </FormControl>
             </MailingListSectionCell>
-            <MailingListSectionCell></MailingListSectionCell>
-            <MailingListSectionCell></MailingListSectionCell>
+            <MailingListSectionCell>
+              {watchIdentifierColumns?.[index]?.name &&
+                getDataFromSample(watchIdentifierColumns?.[index]?.name)}
+            </MailingListSectionCell>
           </MailingListSectionRow>
         ))}
         <Box display="flex" justifyContent="center">
