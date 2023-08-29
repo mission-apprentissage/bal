@@ -113,18 +113,13 @@ export const getDocumentColumns = async (type: string): Promise<string[]> => {
     { $unwind: "$keys" },
     { $group: { _id: null, uniqueKeys: { $addToSet: "$keys.k" } } },
     { $unwind: "$uniqueKeys" },
-    { $sort: { uniqueKeys: 1 } }, // Sort keys alphabetically
   ];
 
   const result = await getDbCollection("documentContents")
     .aggregate(aggregationPipeline)
     .toArray();
 
-  if (!result.length) {
-    return [];
-  }
-
-  return result.map((item) => item.uniqueKeys);
+  return result.map((item) => item.uniqueKeys).sort();
 };
 
 export const getDocumentSample = async (
