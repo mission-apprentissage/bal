@@ -1,9 +1,11 @@
+import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   FormControl,
   FormErrorMessage,
   HStack,
+  IconButton,
   Select,
   Text,
 } from "@chakra-ui/react";
@@ -48,7 +50,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
   } = useForm<IIdentifierColumnForm>({
     defaultValues: { identifier_columns: [] },
   });
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "identifier_columns",
   });
@@ -116,9 +118,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
               <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
           </MailingListSectionCell>
-          <MailingListSectionCell>
-            {watchEmail && getDataFromSample(watchEmail)}
-          </MailingListSectionCell>
+          <MailingListSectionCell></MailingListSectionCell>
           <MailingListSectionCell>Email secondaire</MailingListSectionCell>
           <MailingListSectionCell>
             <FormControl
@@ -184,6 +184,13 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
             <MailingListSectionCell>
               {watchIdentifierColumns?.[index]?.name &&
                 getDataFromSample(watchIdentifierColumns?.[index]?.name)}
+
+              <IconButton
+                marginLeft="auto"
+                aria-label="Supprimer"
+                onClick={() => remove(index)}
+                icon={<DeleteIcon />}
+              />
             </MailingListSectionCell>
           </MailingListSectionRow>
         ))}

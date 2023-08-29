@@ -1,3 +1,4 @@
+import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -5,6 +6,7 @@ import {
   FormControl,
   FormErrorMessage,
   HStack,
+  IconButton,
   Input,
   Select,
   Text,
@@ -78,7 +80,7 @@ const ChoixColonnesSortie: FC<Props> = ({
       ],
     },
   });
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "output_columns",
   });
@@ -184,6 +186,14 @@ const ChoixColonnesSortie: FC<Props> = ({
                   </Tooltip>
                 </Checkbox>
               </FormControl>
+              {index !== 0 && (
+                <IconButton
+                  marginLeft="auto"
+                  aria-label="Supprimer"
+                  onClick={() => remove(index)}
+                  icon={<DeleteIcon />}
+                />
+              )}
             </MailingListSectionCell>
           </MailingListSectionRow>
         ))}
