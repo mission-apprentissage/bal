@@ -12,7 +12,7 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 
@@ -50,6 +50,7 @@ const ChoixColonnesSortie: FC<Props> = ({
     register,
     control,
     watch,
+    setValue,
   } = useForm<IBody<IPostRoutes["/mailing-list"]>>({
     defaultValues: {
       source,
@@ -93,6 +94,16 @@ const ChoixColonnesSortie: FC<Props> = ({
 
   const outputColumns = watch("output_columns");
 
+  const webhookLbaColumnIndex = outputColumns.findIndex(
+    (c) => c.column === WEBHOOK_LBA
+  );
+
+  useEffect(() => {
+    if (webhookLbaColumnIndex !== -1) {
+      setValue(`output_columns.${webhookLbaColumnIndex}.output`, WEBHOOK_LBA);
+    }
+  }, [webhookLbaColumnIndex]);
+
   return (
     <Box>
       <Text mb={4}>
@@ -113,10 +124,14 @@ const ChoixColonnesSortie: FC<Props> = ({
               <FormControl
                 isInvalid={!!errors.output_columns?.[index]?.output}
                 mb={5}
-                isDisabled={index === 0 || isSubmitting}
+                isDisabled={
+                  index === 0 ||
+                  outputColumns[index].column === WEBHOOK_LBA ||
+                  isSubmitting
+                }
               >
                 <Input
-                  {...register(`output_columns.${index}.output` as const, {
+                  {...register(`output_columns.${index}.output`, {
                     required: "Obligatoire",
                   })}
                 />
@@ -135,7 +150,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                 <Select
                   isInvalid={!!errors.output_columns?.[index]}
                   placeholder="Colonne"
-                  {...register(`output_columns.${index}.column` as const, {
+                  {...register(`output_columns.${index}.column`, {
                     required: "Obligatoire",
                     validate: (value) => {
                       return value && [...columns, WEBHOOK_LBA].includes(value);
@@ -149,7 +164,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                         !!outputColumns.find((c) => c.column === WEBHOOK_LBA)
                       }
                     >
-                      WEBHOOK_LBA
+                      {WEBHOOK_LBA}
                     </option>
                   </optgroup>
                   <optgroup label={source}>
@@ -159,8 +174,10 @@ const ChoixColonnesSortie: FC<Props> = ({
                         disabled={
                           !!outputColumns.find((c) => c.column === column)
                         }
+                        value={column}
                       >
                         {column}
+                        {index === 0 && secondaryEmail && `, ${secondaryEmail}`}
                       </option>
                     ))}
                   </optgroup>

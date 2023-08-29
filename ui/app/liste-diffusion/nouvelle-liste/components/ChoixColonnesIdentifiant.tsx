@@ -8,12 +8,14 @@ import {
   IconButton,
   Select,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import { FC } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
 
+import { TooltipIcon } from "../../../../theme/icons/Tooltip";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
 
@@ -119,7 +121,20 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
             </FormControl>
           </MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
-          <MailingListSectionCell>Email secondaire</MailingListSectionCell>
+          <MailingListSectionCell>ou</MailingListSectionCell>
+          <MailingListSectionCell></MailingListSectionCell>
+          <MailingListSectionCell></MailingListSectionCell>
+          <MailingListSectionCell>
+            Email secondaire{" "}
+            <Tooltip
+              label="L'email secondaire est facultatif. Une adresse email secondaire différente dupliquera la ligne dans le fichier de sortie."
+              fontSize="md"
+            >
+              <span>
+                <TooltipIcon ml={2} />
+              </span>
+            </Tooltip>
+          </MailingListSectionCell>
           <MailingListSectionCell>
             <FormControl
               isInvalid={!!errors.secondary_email}
@@ -168,9 +183,11 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
                   {columns.map((column) => (
                     <option
                       key={column}
-                      disabled={[watchEmail, watchSecondaryEmail].includes(
-                        column
-                      )}
+                      disabled={[
+                        watchEmail,
+                        watchSecondaryEmail,
+                        ...watchIdentifierColumns.map((ic) => ic.name),
+                      ].includes(column)}
                     >
                       {column}
                     </option>
