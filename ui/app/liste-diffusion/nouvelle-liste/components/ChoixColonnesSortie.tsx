@@ -19,6 +19,8 @@ import { apiPost } from "../../../../utils/api.utils";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
 
+const WEBHOOK_LBA = "WEBHOOK_LBA";
+
 interface Props {
   onSuccess: (data: IBody<IPostRoutes["/mailing-list"]>) => void;
   onCancel: () => void;
@@ -134,15 +136,15 @@ const ChoixColonnesSortie: FC<Props> = ({
                   {...register(`output_columns.${index}.column` as const, {
                     required: "Obligatoire",
                     validate: (value) => {
-                      return value && columns.includes(value);
+                      return value && [...columns, WEBHOOK_LBA].includes(value);
                     },
                   })}
                 >
                   <optgroup label="BAL">
                     <option
-                      value="WEBHOOK_LBA"
+                      value={WEBHOOK_LBA}
                       disabled={
-                        !!outputColumns.find((c) => c.column === "WEBHOOK_LBA")
+                        !!outputColumns.find((c) => c.column === WEBHOOK_LBA)
                       }
                     >
                       WEBHOOK_LBA
