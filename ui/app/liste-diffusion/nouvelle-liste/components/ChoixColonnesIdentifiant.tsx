@@ -120,7 +120,9 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
               <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
           </MailingListSectionCell>
-          <MailingListSectionCell></MailingListSectionCell>
+          <MailingListSectionCell>
+            {watchEmail && getDataFromSample(watchEmail)}
+          </MailingListSectionCell>
           <MailingListSectionCell>ou</MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>

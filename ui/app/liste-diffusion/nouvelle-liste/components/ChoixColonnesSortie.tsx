@@ -100,7 +100,10 @@ const ChoixColonnesSortie: FC<Props> = ({
 
   useEffect(() => {
     if (webhookLbaColumnIndex !== -1) {
-      setValue(`output_columns.${webhookLbaColumnIndex}.output`, WEBHOOK_LBA);
+      setValue(
+        `output_columns.${webhookLbaColumnIndex}.output`,
+        "lien_lba, lien_prdv"
+      );
     }
   }, [webhookLbaColumnIndex]);
 
