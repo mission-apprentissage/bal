@@ -79,6 +79,7 @@ const NouvelleListePage = () => {
             identifierColumns &&
             email && (
               <ChoixColonnesSortie
+                sample={sample}
                 columns={columns}
                 source={source}
                 campaignName={campaignName}

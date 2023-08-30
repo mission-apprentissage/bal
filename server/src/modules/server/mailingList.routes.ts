@@ -184,9 +184,11 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         stream = await getFromStorage(document.chemin_fichier);
       }
 
+      const fileName = `liste-diffusion-${mailingList.campaign_name}-${mailingList.source}.csv`;
+
       response.raw.writeHead(200, {
         "Content-Type": "application/octet-stream",
-        "Content-Disposition": `attachment; filename="${document.nom_fichier}"`,
+        "Content-Disposition": `attachment; filename="${fileName}"`,
       });
 
       await oleoduc(

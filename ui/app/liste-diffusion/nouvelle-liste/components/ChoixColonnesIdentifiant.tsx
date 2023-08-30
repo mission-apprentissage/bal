@@ -16,6 +16,7 @@ import { IBody, IPostRoutes } from "shared";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
 
 import { TooltipIcon } from "../../../../theme/icons/Tooltip";
+import { getDataFromSample } from "../mailingLists.utils";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
 
@@ -66,17 +67,6 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
     onSuccess({ ...data, identifier_columns: identifierColumns });
   };
 
-  const getDataFromSample = (key: string) => {
-    return (
-      sample
-        // @ts-ignore
-        .map((row) => row?.content?.[key] ?? "")
-        .filter((value) => value && value !== "")
-        .slice(0, 3)
-        .join(", ")
-    );
-  };
-
   return (
     <Box>
       <Text mb={4}>
@@ -121,7 +111,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
             </FormControl>
           </MailingListSectionCell>
           <MailingListSectionCell>
-            {watchEmail && getDataFromSample(watchEmail)}
+            {watchEmail && getDataFromSample(sample, watchEmail)}
           </MailingListSectionCell>
           <MailingListSectionCell>ou</MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
@@ -140,7 +130,6 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
           <MailingListSectionCell>
             <FormControl
               isInvalid={!!errors.secondary_email}
-              mb={5}
               isDisabled={isSubmitting}
             >
               <Select
@@ -160,7 +149,8 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
             </FormControl>
           </MailingListSectionCell>
           <MailingListSectionCell>
-            {watchSecondaryEmail && getDataFromSample(watchSecondaryEmail)}
+            {watchSecondaryEmail &&
+              getDataFromSample(sample, watchSecondaryEmail)}
           </MailingListSectionCell>
         </MailingListSectionRow>
 
@@ -202,7 +192,10 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
             </MailingListSectionCell>
             <MailingListSectionCell>
               {watchIdentifierColumns?.[index]?.name &&
-                getDataFromSample(watchIdentifierColumns?.[index]?.name)}
+                getDataFromSample(
+                  sample,
+                  watchIdentifierColumns?.[index]?.name
+                )}
 
               <IconButton
                 marginLeft="auto"

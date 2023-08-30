@@ -15,9 +15,11 @@ import {
 import { FC, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
+import { IDocumentContentJson } from "shared/models/documentContent.model";
 
 import { TooltipIcon } from "../../../../theme/icons/Tooltip";
 import { apiPost } from "../../../../utils/api.utils";
+import { getDataFromSample } from "../mailingLists.utils";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
 
@@ -32,6 +34,7 @@ interface Props {
   identifierColumns: string[];
   email: string;
   secondaryEmail?: string;
+  sample: IDocumentContentJson[];
 }
 
 const ChoixColonnesSortie: FC<Props> = ({
@@ -43,6 +46,7 @@ const ChoixColonnesSortie: FC<Props> = ({
   source,
   email,
   secondaryEmail,
+  sample,
 }) => {
   const {
     handleSubmit,
@@ -110,23 +114,26 @@ const ChoixColonnesSortie: FC<Props> = ({
   return (
     <Box>
       <Text mb={4}>
-        Veuillez sélectionner les champs du fichier d’entrée que vous souhaitez
-        avoir dans le fichier de sortie. Exemple : libellé établissement et
-        libellée formation. Vous pouvez ajouter plusieurs.
+        Sélectionnez le ou les champs du fichier d’entrée que vous voulez
+        retrouver dans votre fichier de sortie. (Exemple : libellé établissement
+        et libellé formation).
       </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <MailingListSectionRow>
+        <MailingListSectionRow nbColumns={4}>
           <MailingListSectionCell>Nom de sortie</MailingListSectionCell>
           <MailingListSectionCell>
             En-têtes des colonnes (fichier source)
           </MailingListSectionCell>
+          <MailingListSectionCell>Ne pas écraser</MailingListSectionCell>
+          <MailingListSectionCell>
+            3 premières lignes de données
+          </MailingListSectionCell>
         </MailingListSectionRow>
         {fields.map((field, index) => (
-          <MailingListSectionRow key={field.id}>
+          <MailingListSectionRow key={field.id} nbColumns={4}>
             <MailingListSectionCell>
               <FormControl
                 isInvalid={!!errors.output_columns?.[index]?.output}
-                mb={5}
                 isDisabled={
                   index === 0 ||
                   outputColumns[index].column === WEBHOOK_LBA ||
@@ -134,6 +141,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                 }
               >
                 <Input
+                  placeholder="Nom de sortie"
                   {...register(`output_columns.${index}.output`, {
                     required: "Obligatoire",
                   })}
@@ -147,7 +155,6 @@ const ChoixColonnesSortie: FC<Props> = ({
               <FormControl
                 key={field.id}
                 isInvalid={!!errors.output_columns?.[index]?.column}
-                mb={5}
                 isDisabled={index === 0 || isSubmitting}
               >
                 <Select
@@ -191,29 +198,35 @@ const ChoixColonnesSortie: FC<Props> = ({
               </FormControl>
             </MailingListSectionCell>
             <MailingListSectionCell>
-              <FormControl mb={5} isDisabled={index === 0 || isSubmitting}>
-                <Checkbox
-                  {...register(`output_columns.${index}.grouped` as const)}
-                >
-                  Ne pas écraser
-                  <Tooltip
-                    label="Ajoutera des colonnes prefixées par _ pour chacun des champs du groupe NE_PAS_ECRASER"
-                    fontSize="md"
-                  >
-                    <span>
-                      <TooltipIcon ml={2} />
-                    </span>
-                  </Tooltip>
-                </Checkbox>
-              </FormControl>
               {index !== 0 && (
-                <IconButton
-                  marginLeft="auto"
-                  aria-label="Supprimer"
-                  onClick={() => remove(index)}
-                  icon={<DeleteIcon />}
-                />
+                <>
+                  <FormControl isDisabled={index === 0 || isSubmitting}>
+                    <Checkbox
+                      {...register(`output_columns.${index}.grouped` as const)}
+                    >
+                      Ne pas écraser
+                      <Tooltip
+                        label="Ajoutera des colonnes prefixées par _ pour chacun des champs du groupe NE_PAS_ECRASER"
+                        fontSize="md"
+                      >
+                        <span>
+                          <TooltipIcon ml={2} />
+                        </span>
+                      </Tooltip>
+                    </Checkbox>
+                  </FormControl>
+                </>
               )}
+            </MailingListSectionCell>
+            <MailingListSectionCell>
+              {outputColumns[index].column &&
+                getDataFromSample(sample, outputColumns[index].column)}
+              <IconButton
+                marginLeft="auto"
+                aria-label="Supprimer"
+                onClick={() => remove(index)}
+                icon={<DeleteIcon />}
+              />
             </MailingListSectionCell>
           </MailingListSectionRow>
         ))}
