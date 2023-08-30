@@ -8,7 +8,6 @@ const Checkbox = {
         background: "blue_france.main",
         color: "white",
         borderColor: "grey.50",
-        border: "1px",
         _hover: {
           background: "blue_france.main",
           borderColor: "grey.50",
