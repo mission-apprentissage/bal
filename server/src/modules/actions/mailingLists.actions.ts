@@ -97,12 +97,6 @@ export const processMailingList = async (payload: IPayload) => {
 
   if (!mailingList) throw new Error("Mailing list not found");
 
-  return handleSourceVoeuxAffelnetParcoursup(mailingList);
-};
-
-const handleSourceVoeuxAffelnetParcoursup = async (
-  mailingList: IMailingList
-) => {
   const job = await findJob({
     "payload.mailing_list_id": mailingList._id.toString(),
   });
@@ -211,6 +205,9 @@ const formatOutput = async (
     };
 
     for (const outputColumn of outputColumns) {
+      // avoid overriding email column
+      if (outputColumn.column === "email") continue;
+
       const outputColumnName = outputColumn.output;
       const outputColumnValue =
         documentContent?.content?.[outputColumn.column] ?? "";
@@ -266,23 +263,24 @@ async function* getLine(
     const identifiers = ["email", ...identifiersOutput];
 
     if (currentLine !== null) {
-      for (const identifier of identifiers) {
-        if (
-          currentLine?.[identifier] &&
-          currentLine?.[identifier] !== content[identifier]
-        ) {
-          yield currentLine;
-          currentLine = null;
-        }
+      const areIdentifiersEqual = identifiers.every(
+        (column) => content[column] === currentLine?.[column]
+      );
+
+      if (!areIdentifiersEqual) {
+        yield currentLine;
+        currentLine = null;
       }
     }
 
-    currentLine = {
-      wishes: [],
-    };
+    if (currentLine === null) {
+      currentLine = {
+        wishes: [],
+      };
 
-    for (const identifier of identifiers) {
-      currentLine[identifier] = content[identifier];
+      for (const identifier of identifiers) {
+        currentLine[identifier] = content[identifier];
+      }
     }
 
     const notIdentifiers = getOutputColumnsWithLba(mailingList)
@@ -334,7 +332,7 @@ export const createMailingListFile = async (
   mailingList: IMailingList,
   document: IDocument
 ) => {
-  const groupBy = mailingList.output_columns
+  const identifierColumns = mailingList.output_columns
     .filter((c) => mailingList.identifier_columns.includes(c.column))
     .map((c) => c.output);
 
@@ -342,7 +340,7 @@ export const createMailingListFile = async (
     "content.email": 1,
   };
 
-  for (const column of groupBy) {
+  for (const column of identifierColumns) {
     sort[`content.${column}`] = 1;
   }
 
