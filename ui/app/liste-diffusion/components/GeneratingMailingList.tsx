@@ -51,9 +51,8 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
         Veuillez patienter pendant la génération de votre liste de diffusion
       </Text>
       <Text mb="2">
-        Vous serez redirigé vers vos listes de diffusion une fois l’opération
-        terminée. Cette opération peut durer jusqu’à 2 heures selon la taille du
-        fichier, vous pouvez quitter cette page et revenir plus tard.
+        Cette opération peut durer jusqu’à 2 heures selon la taille du fichier,
+        vous pouvez quitter cette page et revenir plus tard.
       </Text>
       <Text mb="2">Progression : {progression} %</Text>
     </Box>

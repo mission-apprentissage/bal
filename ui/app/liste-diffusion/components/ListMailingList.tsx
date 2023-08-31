@@ -1,7 +1,8 @@
-import { Box, HStack } from "@chakra-ui/react";
-import { FC } from "react";
+import { Box, HStack, Text } from "@chakra-ui/react";
+import { FC, useState } from "react";
 import { IMailingListJson } from "shared/models/mailingList.model";
 
+import { Dialog } from "../../../components/dialog/Dialog";
 import Table from "../../../components/table/Table";
 import { Bin } from "../../../theme/icons/Bin";
 import { DownloadLine } from "../../../theme/icons/DownloadLine";
@@ -14,9 +15,19 @@ interface Props {
 }
 
 const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
-  const handleDelete = async (mailingList_id: string) => {
-    await apiDelete(`/mailing-list/:id`, { params: { id: mailingList_id } });
-    onDelete?.();
+  const [toDelete, setToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      if (!toDelete) throw new Error("Nothing to delete");
+      await apiDelete(`/mailing-list/:id`, { params: { id: toDelete } });
+      onDelete?.();
+    } finally {
+      setToDelete(null);
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -72,7 +83,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
                     boxSize="5"
                     color="red_marianne"
                     cursor="pointer"
-                    onClick={() => handleDelete(row.original._id.toString())}
+                    onClick={() => setToDelete(row.original._id)}
                   />
                 </HStack>
               );
@@ -80,6 +91,30 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
           },
         }}
       />
+      <Dialog
+        title="Supprimer la liste de diffusion"
+        modalProps={{
+          onClose: () => setToDelete(null),
+          isOpen: !!toDelete,
+        }}
+        cancelButtonProps={{
+          children: "Conserver le fichier",
+          onClick: () => setToDelete(null),
+          isDisabled: isDeleting,
+        }}
+        proceedButtonProps={{
+          children: "Supprimer le fichier",
+          onClick: () => {
+            handleDelete();
+          },
+          isLoading: isDeleting,
+        }}
+      >
+        <Text>
+          Vous allez supprimer la liste de diffusion. Cette action est
+          irréversible.
+        </Text>
+      </Dialog>
     </Box>
   );
 };
