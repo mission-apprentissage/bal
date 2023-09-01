@@ -28,7 +28,7 @@ export const ZDocumentContent = z
   .strict();
 
 export type IDocumentContent = z.output<typeof ZDocumentContent>;
-export type IDocumentContentJsont = Jsonify<z.input<typeof ZDocumentContent>>;
+export type IDocumentContentJson = Jsonify<z.input<typeof ZDocumentContent>>;
 
 export default {
   zod: ZDocumentContent,

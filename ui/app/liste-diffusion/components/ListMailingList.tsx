@@ -1,7 +1,8 @@
-import { Box, HStack } from "@chakra-ui/react";
-import { FC } from "react";
-import { IJobJson } from "shared/models/job.model";
+import { Box, HStack, Text } from "@chakra-ui/react";
+import { FC, useState } from "react";
+import { IMailingListJson } from "shared/models/mailingList.model";
 
+import { Dialog } from "../../../components/dialog/Dialog";
 import Table from "../../../components/table/Table";
 import { Bin } from "../../../theme/icons/Bin";
 import { DownloadLine } from "../../../theme/icons/DownloadLine";
@@ -9,14 +10,24 @@ import { apiDelete, generateUrl } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 
 interface Props {
-  mailingLists?: IJobJson[];
+  mailingLists?: IMailingListJson[];
   onDelete?: () => void;
 }
 
 const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
-  const handleDelete = async (mailingList_id: string) => {
-    await apiDelete(`/mailing-list/:id`, { params: { id: mailingList_id } });
-    onDelete?.();
+  const [toDelete, setToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      if (!toDelete) throw new Error("Nothing to delete");
+      await apiDelete(`/mailing-list/:id`, { params: { id: toDelete } });
+      onDelete?.();
+    } finally {
+      setToDelete(null);
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -29,29 +40,11 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             id: "source",
             size: 100,
             header: () => "Source",
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            cell: ({ row }) => (row.original.payload as any)?.source,
           },
-          status: {
-            id: "status",
+          campaign_name: {
+            id: "campaign_name",
             size: 100,
-            header: () => "Statut",
-            cell: ({ row }) => {
-              return (
-                <>
-                  {
-                    {
-                      pending: "En attente",
-                      will_start: "Programmé",
-                      running: "En cours",
-                      finished: "Terminé",
-                      blocked: "Bloqué",
-                      errored: "Erreur",
-                    }[row.original.status]
-                  }
-                </>
-              );
-            },
+            header: () => "Nom de la campagne",
           },
           date: {
             id: "date",
@@ -70,9 +63,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             size: 25,
             header: () => "Actions",
             cell: ({ row }) => {
-              if (row.original.status !== "finished") {
-                return null;
-              }
+              if (row.original.status !== "done") return null;
 
               return (
                 <HStack spacing={4}>
@@ -92,7 +83,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
                     boxSize="5"
                     color="red_marianne"
                     cursor="pointer"
-                    onClick={() => handleDelete(row.original._id.toString())}
+                    onClick={() => setToDelete(row.original._id)}
                   />
                 </HStack>
               );
@@ -100,6 +91,30 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
           },
         }}
       />
+      <Dialog
+        title="Supprimer la liste de diffusion"
+        modalProps={{
+          onClose: () => setToDelete(null),
+          isOpen: !!toDelete,
+        }}
+        cancelButtonProps={{
+          children: "Conserver le fichier",
+          onClick: () => setToDelete(null),
+          isDisabled: isDeleting,
+        }}
+        proceedButtonProps={{
+          children: "Supprimer le fichier",
+          onClick: () => {
+            handleDelete();
+          },
+          isLoading: isDeleting,
+        }}
+      >
+        <Text>
+          Vous allez supprimer la liste de diffusion. Cette action est
+          irréversible.
+        </Text>
+      </Dialog>
     </Box>
   );
 };

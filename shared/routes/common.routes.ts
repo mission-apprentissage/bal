@@ -10,6 +10,8 @@ export const ZResError = z
   })
   .strict();
 
+export const ZResOk = z.object({}).strict();
+
 export type IResError = z.input<typeof ZResError>;
 export type IResErrorJson = Jsonify<z.output<typeof ZResError>>;
 

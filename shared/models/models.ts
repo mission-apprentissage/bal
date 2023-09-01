@@ -5,6 +5,7 @@ import documentContentsModelDescriptor, {
 } from "./documentContent.model";
 import eventsModelDescriptor, { IEvent } from "./events/event.model";
 import jobsModelDescriptor, { IJob } from "./job.model";
+import { IMailingList } from "./mailingList.model";
 import organisationsModelDescriptor, {
   IOrganisation,
 } from "./organisation.model";
@@ -32,4 +33,5 @@ export type IDocumentMap = {
   sessions: ISession;
   documents: IDocument;
   documentContents: IDocumentContent;
+  mailingLists: IMailingList;
 };

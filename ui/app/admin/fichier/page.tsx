@@ -3,8 +3,10 @@
 import { Box, Button, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import NavLink from "next/link";
+import { useState } from "react";
 import { IDocumentJson } from "shared/models/document.model";
 
+import { Dialog } from "../../../components/dialog/Dialog";
 import Table from "../../../components/table/Table";
 import { Bin } from "../../../theme/icons/Bin";
 import { apiDelete, apiGet } from "../../../utils/api.utils";
@@ -13,14 +15,24 @@ import { formatBytes } from "../../../utils/file.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 
 const AdminImportPage = () => {
+  const [toDelete, setToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const { data: documentLists } = useQuery<IDocumentJson[]>({
     queryKey: ["documentLists"],
     queryFn: async () => apiGet("/admin/documents", {}),
     refetchInterval: 1000,
   });
 
-  const onDeleteDocument = async (document_id: string) => {
-    await apiDelete(`/admin/document/:id`, { params: { id: document_id } });
+  const onDeleteDocument = async () => {
+    setIsDeleting(true);
+    try {
+      if (!toDelete) throw new Error("Nothing to delete");
+      await apiDelete(`/admin/document/:id`, { params: { id: toDelete } });
+    } finally {
+      setToDelete(null);
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -112,15 +124,36 @@ const AdminImportPage = () => {
                     boxSize="5"
                     color="red_marianne"
                     cursor="pointer"
-                    onClick={() =>
-                      onDeleteDocument(row.original._id.toString())
-                    }
+                    onClick={() => setToDelete(row.original._id.toString())}
                   />
                 );
               },
             },
           }}
         />
+        <Dialog
+          title="Supprimer le document"
+          modalProps={{
+            onClose: () => setToDelete(null),
+            isOpen: !!toDelete,
+          }}
+          cancelButtonProps={{
+            children: "Conserver le document",
+            onClick: () => setToDelete(null),
+            isDisabled: isDeleting,
+          }}
+          proceedButtonProps={{
+            children: "Supprimer le document",
+            onClick: () => {
+              onDeleteDocument();
+            },
+            isLoading: isDeleting,
+          }}
+        >
+          <Text>
+            Vous allez supprimer le document. Cette action est irréversible.
+          </Text>
+        </Dialog>
       </Box>
     </>
   );

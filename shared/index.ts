@@ -4,6 +4,7 @@ import z, { ZodType } from "zod";
 
 import { zAuthRoutes } from "./routes/auth.routes";
 import { zCoreRoutes } from "./routes/core.routes";
+import { zDocumentRoutes } from "./routes/document.routes";
 import { zEmailRoutes } from "./routes/emails.routes";
 import { zMailingListRoutes } from "./routes/mailingList.routes";
 import { zAdminOrganisationRoutes } from "./routes/organisation.routes";
@@ -38,6 +39,7 @@ export const zRoutes = {
     ...zEmailRoutes.get,
     ...zPersonRoutes.get,
     ...zUploadRoutes.get,
+    ...zDocumentRoutes.get,
     ...zAdminOrganisationRoutes.get,
     ...zOrganisationV1Routes.get,
     ...zMailingListRoutes.get,

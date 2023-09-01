@@ -10,7 +10,8 @@ export type CollectionName =
   | "events"
   | "sessions"
   | "documents"
-  | "documentContents";
+  | "documentContents"
+  | "mailingLists";
 
 export interface IModelDescriptor {
   zod: ZodType;
