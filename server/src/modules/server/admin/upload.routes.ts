@@ -82,12 +82,14 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           mimetype: data.mimetype,
         });
 
-        await addJob({
-          name: "import:document",
-          payload: {
-            document_id: document._id,
-          },
-        });
+        if (request.query?.import_content === "true") {
+          await addJob({
+            name: "import:document",
+            payload: {
+              document_id: document._id,
+            },
+          });
+        }
 
         return response.status(200).send(document);
       } catch (error) {

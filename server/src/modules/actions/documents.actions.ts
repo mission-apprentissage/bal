@@ -17,9 +17,15 @@ import { clamav } from "@/services";
 import { deleteFromStorage, getFromStorage, uploadToStorage } from "../../common/utils/ovhUtils";
 import { parseCsv } from "../../common/utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
+import {
+  IConstructysParsedContentLine,
+  importConstructysContent,
+  parseConstructysContentLine,
+} from "./constructys.actions";
 import { DECAParsedContentLine, importDecaContent, parseContentLine } from "./deca.actions";
 import { createDocumentContent, deleteDocumentContent } from "./documentContent.actions";
 import { MAILING_LIST_DOCUMENT_PREFIX } from "./mailingLists.actions";
+import { importOcapiatContent, IOcapiatParsedContentLine } from "./ocapiat.actions";
 
 const testMode = config.env === "test";
 
@@ -404,6 +410,21 @@ export const importDocumentContent = async <TFileLine = unknown, TContentLine = 
       continue;
     }
 
+    if (document.type_document === DOCUMENT_TYPES.DECA) {
+      const decaContent = contentLine as unknown as DECAParsedContentLine;
+      await importDecaContent(decaContent.emails, decaContent.siret);
+    }
+
+    if (document.type_document === DOCUMENT_TYPES.OCAPIAT) {
+      await importOcapiatContent(contentLine as unknown as IOcapiatParsedContentLine);
+      return [];
+    }
+
+    if (document.type_document === DOCUMENT_TYPES.CONSTRUCTYS) {
+      await importConstructysContent(contentLine as unknown as IConstructysParsedContentLine);
+      return [];
+    }
+
     const documentContent = await createDocumentContent({
       content: contentLine,
       document_id: document._id.toString(),
@@ -411,11 +432,6 @@ export const importDocumentContent = async <TFileLine = unknown, TContentLine = 
     });
 
     if (!documentContent) continue;
-
-    if (document.type_document === DOCUMENT_TYPES.DECA) {
-      const decaContent = contentLine as unknown as DECAParsedContentLine;
-      await importDecaContent(decaContent.emails, decaContent.siret);
-    }
 
     documentContents = [...documentContents, documentContent];
   }
@@ -460,6 +476,12 @@ export const handleDocumentFileContent = async ({ document_id }: Record<"documen
         document,
         delimiter: "|",
         formatter: parseContentLine,
+      });
+      break;
+    case DOCUMENT_TYPES.CONSTRUCTYS:
+      await extractDocumentContent({
+        document,
+        formatter: parseConstructysContentLine,
       });
       break;
 

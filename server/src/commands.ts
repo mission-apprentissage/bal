@@ -1,6 +1,7 @@
 import { captureException } from "@sentry/node";
 import { program } from "commander";
 import HttpTerminator from "lil-http-terminator";
+import { ObjectId } from "mongodb";
 
 import logger from "@/common/logger";
 import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
@@ -250,6 +251,22 @@ program
     const exitCode = await addJob({
       name: "indexes:recreate",
       payload: { drop },
+      sync,
+    });
+    if (exitCode) {
+      program.error("Command failed", { exitCode });
+    }
+  });
+
+program
+  .command("import:document")
+  .description("Import document content")
+  .requiredOption("-dId, --documentId <string>", "Document Id")
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ documentId, sync }) => {
+    const exitCode = await addJob({
+      name: "import:document",
+      payload: { document_id: new ObjectId(documentId) },
       sync,
     });
     if (exitCode) {
