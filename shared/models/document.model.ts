@@ -25,6 +25,7 @@ export const ZDocument = z
       .describe("Taille du fichier en bytes"),
     hash_secret: z.string().describe("Hash fichier"),
     hash_fichier: z.string().describe("Checksum fichier"),
+    columns: z.array(z.string()).optional().describe("Liste des colonnes"),
     import_progress: z
       .number()
       .finite()

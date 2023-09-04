@@ -11,7 +11,10 @@ import {
 } from "@/modules/jobs/migrations/migrations";
 
 import logger from "../../common/logger";
-import { handleDocumentFileContent } from "../actions/documents.actions";
+import {
+  handleDocumentFileContent,
+  saveDocumentsColumns,
+} from "../actions/documents.actions";
 import { processMailingList } from "../actions/mailingLists.actions";
 import { createUser } from "../actions/users.actions";
 import { cronsInit, cronsScheduler } from "./crons_actions";
@@ -104,6 +107,9 @@ export async function runJob(
         case "import:document":
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return handleDocumentFileContent(job.payload as any);
+        case "documents:save-columns":
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          return saveDocumentsColumns();
         case "generate:mailing-list":
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return processMailingList(job.payload as any);

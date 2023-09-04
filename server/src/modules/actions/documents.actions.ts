@@ -105,14 +105,70 @@ export const getDocumentTypes = async (): Promise<string[]> => {
   });
 };
 
+export const saveDocumentsColumns = async () => {
+  const documents = await findDocuments({});
+
+  await Promise.all(documents.map((document) => saveDocumentColumns(document)));
+};
+
+export const saveDocumentColumns = async (document: IDocument) => {
+  try {
+    const stream = await getFromStorage(document.chemin_fichier);
+
+    await oleoduc(
+      stream,
+      crypto.isCipherAvailable()
+        ? crypto.decipher(document.hash_secret)
+        : noop(),
+      // get only 1 record to get the columns
+      parseCsv({
+        to: 1,
+        on_record: (record: unknown) => record,
+      }),
+      writeData(async (json: JsonObject) => {
+        const columns = Object.keys(json).sort();
+        await updateDocument(
+          { _id: document._id },
+          {
+            $set: {
+              columns,
+            },
+          }
+        );
+      })
+    );
+  } catch (error) {
+    logger.error(
+      `Error while saving document columns for document ${document._id.toString()}`
+    );
+  }
+};
+
 export const getDocumentColumns = async (type: string): Promise<string[]> => {
+  const document = await findDocument({ type_document: type });
+
+  if (!document) {
+    return [];
+  }
+
+  if (document.columns) {
+    return document.columns;
+  }
+
   // get all keys from document content
   const aggregationPipeline = [
-    { $match: { type_document: type } },
+    { $match: { document_id: document._id.toString() } },
     { $project: { keys: { $objectToArray: "$content" } } },
     { $unwind: "$keys" },
-    { $group: { _id: null, uniqueKeys: { $addToSet: "$keys.k" } } },
+    { $sort: { "keys.k": 1 } }, // Sort keys alphabetically
+    {
+      $group: {
+        _id: null,
+        uniqueKeys: { $addToSet: "$keys.k" },
+      },
+    },
     { $unwind: "$uniqueKeys" },
+    { $sort: { uniqueKeys: 1 } }, // Sort unique keys alphabetically
   ];
 
   const result = await getDbCollection("documentContents")
@@ -254,6 +310,8 @@ export const uploadFile = async (
       created_at: new Date(),
     });
   }
+
+  await saveDocumentColumns(doc);
 
   return documentId;
 };
