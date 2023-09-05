@@ -112,6 +112,7 @@ export const saveDocumentsColumns = async () => {
 };
 
 export const saveDocumentColumns = async (document: IDocument) => {
+  let columns: string[] = [];
   try {
     const stream = await getFromStorage(document.chemin_fichier);
 
@@ -126,7 +127,10 @@ export const saveDocumentColumns = async (document: IDocument) => {
         on_record: (record: unknown) => record,
       }),
       writeData(async (json: JsonObject) => {
-        const columns = Object.keys(json).sort();
+        columns = Object.keys(json)
+          .sort()
+          .filter((key) => key !== "");
+
         await updateDocument(
           { _id: document._id },
           {
@@ -137,10 +141,13 @@ export const saveDocumentColumns = async (document: IDocument) => {
         );
       })
     );
+
+    return columns;
   } catch (error) {
     logger.error(
       `Error while saving document columns for document ${document._id.toString()}`
     );
+    return [];
   }
 };
 
@@ -153,6 +160,12 @@ export const getDocumentColumns = async (type: string): Promise<string[]> => {
 
   if (document.columns) {
     return document.columns;
+  }
+
+  let columns = await saveDocumentColumns(document);
+
+  if (columns.length) {
+    return columns;
   }
 
   // get all keys from document content
@@ -175,7 +188,21 @@ export const getDocumentColumns = async (type: string): Promise<string[]> => {
     .aggregate(aggregationPipeline)
     .toArray();
 
-  return result.map((item) => item.uniqueKeys).sort();
+  columns = result
+    .map((item) => item.uniqueKeys)
+    .sort()
+    .filter((key) => key !== "");
+
+  await updateDocument(
+    { _id: document._id },
+    {
+      $set: {
+        columns: columns,
+      },
+    }
+  );
+
+  return columns;
 };
 
 export const getDocumentSample = async (
