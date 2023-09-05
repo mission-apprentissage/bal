@@ -2,7 +2,7 @@ import { getDbCollection } from "../../../common/utils/mongodbUtils";
 import config from "../../../config";
 
 export const clear = async () => {
-  if (!["recette", "sandbox"].includes(config.env)) {
+  if (!["recette", "sandbox", "local"].includes(config.env)) {
     return;
   }
 

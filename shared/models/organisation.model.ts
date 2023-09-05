@@ -48,7 +48,7 @@ export const ZOrganisation = z
       .describe("Liste des établissements"),
     _meta: z
       .object({
-        source: z.string().optional(),
+        sources: z.array(z.string()).optional(),
       })
       .nonstrict()
       .optional()

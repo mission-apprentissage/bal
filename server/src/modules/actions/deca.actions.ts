@@ -1,11 +1,14 @@
 import companyEmailValidator from "company-email-validator";
 import { IPostRoutes, IResponse } from "shared";
+import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { SIRET_REGEX } from "shared/constants/regex";
 import { getSirenFromSiret } from "shared/helpers/common";
-import { IOrganisation } from "shared/models/organisation.model";
 
 import { getDbCollection } from "../../common/utils/mongodbUtils";
-import { findOrCreateOrganisation, findOrganisation, updateOrganisation } from "./organisations.actions";
+import {
+  findOrganisation,
+  updateOrganisationData,
+} from "./organisations.actions";
 import { findPerson } from "./persons.actions";
 
 interface ContentLine {
@@ -41,34 +44,12 @@ export const importDecaContent = async (emails: string[], siret: string) => {
   const siren = getSirenFromSiret(siret);
   const domains = [...new Set(uniqueEmails.map((e) => e.split("@")[1]))];
 
-  const organisation = await findOrCreateOrganisation(
-    { siren },
-    {
-      siren,
-      etablissements: [{ siret }],
-      email_domains: domains,
-    }
-  );
-
-  const updateOrganisationData: Partial<IOrganisation> = {};
-  const etablissement = organisation.etablissements?.find((e) => e.siret === siret);
-
-  if (!etablissement) {
-    const etablissements = organisation.etablissements ?? [];
-    etablissements.push({ siret });
-    updateOrganisationData.etablissements = etablissements;
-  }
-
-  const newDomains = domains.filter(
-    (domain) => !organisation.email_domains?.includes(domain) && companyEmailValidator.isCompanyDomain(domain)
-  );
-
-  if (newDomains.length) {
-    updateOrganisationData.email_domains = organisation.email_domains ?? [];
-    updateOrganisationData.email_domains?.push(...newDomains);
-  }
-
-  await updateOrganisation(organisation, updateOrganisationData);
+  const organisation = await updateOrganisationData({
+    siren,
+    sirets: [siret],
+    email_domains: domains,
+    source: DOCUMENT_TYPES.DECA,
+  });
 
   await Promise.all(
     uniqueEmails.map((email) =>
@@ -78,7 +59,7 @@ export const importDecaContent = async (emails: string[], siret: string) => {
         },
         {
           $addToSet: {
-            organisations: organisation._id.toString(),
+            ...(organisation && { organisations: organisation._id.toString() }),
             sirets: siret,
           },
           $setOnInsert: {

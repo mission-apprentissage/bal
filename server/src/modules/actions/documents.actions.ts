@@ -25,7 +25,7 @@ import {
 import { DECAParsedContentLine, importDecaContent, parseContentLine } from "./deca.actions";
 import { createDocumentContent, deleteDocumentContent } from "./documentContent.actions";
 import { MAILING_LIST_DOCUMENT_PREFIX } from "./mailingLists.actions";
-import { importOcapiatContent, IOcapiatParsedContentLine } from "./ocapiat.actions";
+import { importOcapiatContent, IOcapiatParsedContentLine, parseOcapiatContentLine } from "./ocapiat.actions";
 
 const testMode = config.env === "test";
 
@@ -476,6 +476,12 @@ export const handleDocumentFileContent = async ({ document_id }: Record<"documen
         document,
         delimiter: "|",
         formatter: parseContentLine,
+      });
+      break;
+    case DOCUMENT_TYPES.OCAPIAT:
+      await extractDocumentContent({
+        document,
+        formatter: parseOcapiatContentLine,
       });
       break;
     case DOCUMENT_TYPES.CONSTRUCTYS:

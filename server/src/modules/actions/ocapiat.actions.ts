@@ -2,16 +2,16 @@ import companyEmailValidator from "company-email-validator";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { getSirenFromSiret } from "shared/helpers/common";
 
-import { findOrCreateOrganisation } from "./organisations.actions";
-import { createPerson } from "./persons.actions";
+import { getDbCollection } from "../../common/utils/mongodbUtils";
+import { updateOrganisationData } from "./organisations.actions";
 
 export interface IOcapiatParsedContentLine {
-  "RÈgion INSEE"?: string;
+  "Région INSEE"?: string;
   "GUH Etablissement"?: string;
   "Code OPSI"?: string;
   Siret?: string;
   "Raison sociale"?: string;
-  DÈpartement?: string;
+  Département?: string;
   "Etablissement Sous Contrat"?: string;
   "Nom du groupe"?: string;
   "Effectif Etab moyen annuel"?: string;
@@ -23,13 +23,28 @@ export interface IOcapiatParsedContentLine {
   Conseiller?: string;
   Civilite?: string;
   "Nom du contact"?: string;
-  "PrÈnom du contact"?: string;
+  "Prénom du contact"?: string;
   "Titre du contact"?: string;
   "Fonction du contact"?: string;
-  "TÈl contact"?: string;
+  "Tél contact"?: string;
   "Mobile contact"?: string;
-  "Email du contact": string;
+  "Email du contact"?: string;
 }
+
+export const parseOcapiatContentLine = (
+  line: IOcapiatParsedContentLine
+): IOcapiatParsedContentLine | undefined => {
+  // remove attributes where value is "-" considered empty
+  const content = Object.entries(line).reduce<IOcapiatParsedContentLine>(
+    (acc, [key, value]) => ({
+      ...acc,
+      ...(value === "-" ? {} : { [key]: value }),
+    }),
+    {}
+  );
+
+  return content;
+};
 
 export const importOcapiatContent = async (
   content: IOcapiatParsedContentLine
@@ -39,31 +54,47 @@ export const importOcapiatContent = async (
   const email = content?.["Email du contact"];
   let domains: string[] = [];
 
-  if (companyEmailValidator.isCompanyEmail(email)) {
+  if (email && companyEmailValidator.isCompanyEmail(email)) {
     domains = [email.split("@")[1]];
   }
 
-  // create organisation
-  const organisation = await findOrCreateOrganisation(
-    { siren },
-    {
-      siren,
-      etablissements: [{ siret }],
-      email_domains: domains,
-      _meta: {
-        source: DOCUMENT_TYPES.OCAPIAT,
-      },
-    }
-  );
-
-  // create person
-  await createPerson({
-    email: email,
-    organisations: [organisation?._id.toString()],
-    _meta: {
-      source: DOCUMENT_TYPES.OCAPIAT,
-    },
+  const organisation = await updateOrganisationData({
+    siren,
+    sirets: [siret],
+    email_domains: domains,
+    source: DOCUMENT_TYPES.OCAPIAT,
   });
 
-  // todo handle already existing resources
+  if (!email) return;
+
+  const date = new Date();
+
+  getDbCollection("persons").updateOne(
+    {
+      email,
+    },
+    {
+      $set: {
+        updated_at: date,
+      },
+      $addToSet: {
+        ...(organisation && { organisations: organisation._id.toString() }),
+        sirets: siret,
+        "_meta.sources": DOCUMENT_TYPES.OCAPIAT,
+      },
+      $setOnInsert: {
+        email,
+        ...(content?.["Nom du contact"] && {
+          nom: content?.["Nom du contact"],
+        }),
+        ...(content?.["Prénom du contact"] && {
+          prenom: content?.["Prénom du contact"],
+        }),
+        created_at: date,
+      },
+    },
+    {
+      upsert: true,
+    }
+  );
 };
