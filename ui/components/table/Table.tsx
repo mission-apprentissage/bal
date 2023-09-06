@@ -1,4 +1,4 @@
-import { Box, BoxProps, Button, Divider, HStack, Text } from "@chakra-ui/react";
+import { Table as DSFRTable } from "@codegouvfr/react-dsfr/Table";
 import {
   AccessorFn,
   CellContext,
@@ -17,11 +17,9 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { StyledTable } from "./table.styled";
-
-interface Props<TData> extends BoxProps {
+interface Props<TData> {
   data: TData[];
   onRowClick?: (rowId: string) => void;
   columns: {
@@ -51,9 +49,7 @@ interface Props<TData> extends BoxProps {
 
 const Table = <TData extends object>({
   data,
-  onRowClick,
   columns: columnsDef,
-  renderSubComponent,
   getRowCanExpand,
   searchValue,
   onCountItemsChange,
@@ -66,9 +62,8 @@ const Table = <TData extends object>({
   enableSorting,
   onSortingChange,
   sorting,
-  pageSizes = [5, 10, 20, 30, 40, 50],
+
   pageCount,
-  ...props
 }: Props<TData>) => {
   const [globalFilter, setGlobalFilter] = useState(searchValue);
   const countItems = useRef(data.length);
@@ -124,146 +119,18 @@ const Table = <TData extends object>({
     return null;
   }
 
-  return (
-    <StyledTable className="flex flex-col">
-      <Box as="table" flex={1} fontSize="delta" w="100%" {...props}>
-        <Box as="thead">
-          {table.getHeaderGroups().map((headerGroup, key) => (
-            <Box as="tr" key={key} borderBottom="3px solid" borderColor="blue_france.main">
-              {headerGroup.headers.map((header) => {
-                return (
-                  <Box
-                    as="th"
-                    key={header.id}
-                    fontWeight="bold"
-                    fontSize="0.9rem"
-                    overflow="hidden"
-                    borderColor="grey.50"
-                    color="grey.50"
-                    textAlign="left"
-                    {...{
-                      colSpan: header.colSpan,
-                      style: {
-                        width: header.getSize(),
-                      },
-                    }}
-                  >
-                    {header.isPlaceholder ? null : (
-                      <div
-                        {...{
-                          className: header.column.getCanSort() ? "cursor-pointer select-none" : "",
-                          onClick: header.column.getToggleSortingHandler(),
-                        }}
-                      >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {{
-                          asc: " 🔼",
-                          desc: " 🔽",
-                        }[header.column.getIsSorted() as never] ?? null}
-                      </div>
-                    )}
-                  </Box>
-                );
-              })}
-            </Box>
-          ))}
-        </Box>
-        <Box as="tbody">
-          {table.getCoreRowModel().rows.map((row, j) => {
-            return (
-              <Fragment key={row.id}>
-                <Box
-                  as="tr"
-                  bg={j % 2 === 0 ? "grey_alt_light" : "white"}
-                  py="3"
-                  data-rowindex={row.id}
-                  onClick={() => onRowClick?.(row.id)}
-                >
-                  {/* first row is a normal row */}
-                  {row.getVisibleCells().map((cell) => {
-                    return (
-                      <Box as="td" key={cell.id} overflow="hidden">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </Box>
-                    );
-                  })}
-                </Box>
-                {row.getIsExpanded() && renderSubComponent && (
-                  <Box as="tr">
-                    {/* 2nd row is a custom 1 cell row */}
-                    <Box as="td" colSpan={row.getVisibleCells().length}>
-                      {renderSubComponent({ row })}
-                    </Box>
-                  </Box>
-                )}
-              </Fragment>
-            );
-          })}
-        </Box>
-      </Box>
-      {pagination && data.length > 5 && (
-        <>
-          <Divider my={2} />
-          <HStack spacing={3} justifyContent="space-between">
-            <HStack spacing={3}>
-              <Button variant="unstyled" onClick={() => table.setPageIndex(0)} isDisabled={!table.getCanPreviousPage()}>
-                <Box className="ri-skip-back-fill" mt="0.250rem !important" />
-              </Button>
-              <Button variant="unstyled" onClick={() => table.previousPage()} isDisabled={!table.getCanPreviousPage()}>
-                <HStack>
-                  <Box as="i" className="ri-arrow-left-s-line" mt="0.250rem !important" />
-                  <Text>Page précédente </Text>
-                </HStack>
-              </Button>
+  const headers = table
+    .getHeaderGroups()
+    .map((headerGroup) =>
+      headerGroup.headers.map((header) => flexRender(header.column.columnDef.header, header.getContext()))
+    )
+    .flat();
 
-              <Box px={5}>
-                <Button
-                  {...{
-                    bg: "blue_france.main",
-                    color: "white",
-                    pointerEvents: "none",
-                  }}
-                >
-                  {table.getState().pagination.pageIndex + 1}
-                </Button>
-              </Box>
+  const rows = table
+    .getCoreRowModel()
+    .rows.map((row) => row.getVisibleCells().map((cell) => flexRender(cell.column.columnDef.cell, cell.getContext())));
 
-              <Button variant="unstyled" onClick={() => table.nextPage()} isDisabled={!table.getCanNextPage()}>
-                <HStack>
-                  <Text>Page suivante </Text>
-                  <Box as="i" className="ri-arrow-right-s-line" mt="0.250rem !important" />
-                </HStack>
-              </Button>
-              <Button
-                variant="unstyled"
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                isDisabled={!table.getCanNextPage()}
-              >
-                <Box className="ri-skip-forward-fill" mt="0.250rem !important" />
-              </Button>
-            </HStack>
-
-            <HStack spacing={3} justifyContent="flex-end">
-              <Box pt={2}>
-                <select
-                  value={table.getState().pagination.pageSize}
-                  onChange={(e) => {
-                    table.setPageSize(Number(e.target.value));
-                  }}
-                >
-                  {pageSizes.map((pageSize) => (
-                    <option key={pageSize} value={pageSize}>
-                      Voir par {pageSize}
-                    </option>
-                  ))}
-                </select>
-              </Box>
-            </HStack>
-          </HStack>
-        </>
-      )}
-    </StyledTable>
-  );
+  return <DSFRTable fixed data={rows} headers={headers} />;
 };
 
 export default Table;

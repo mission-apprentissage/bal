@@ -50,8 +50,6 @@ const AdminImportPage = () => {
       </Flex>
       <Box mt={8} mb={16}>
         <Table
-          fontSize="0.9rem"
-          mt={4}
           data={documentLists || []}
           columns={{
             type_document: {

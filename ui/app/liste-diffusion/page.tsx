@@ -1,7 +1,7 @@
 "use client";
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import NextLink from "next/link";
 import { IMailingListJson } from "shared/models/mailingList.model";
 
 import { apiGet } from "../../utils/api.utils";
@@ -19,16 +19,20 @@ const ListeDiffusionPage = () => {
 
   return (
     <>
-      <Breadcrumb pages={[PAGES.homepage(), PAGES.listeDiffusion()]} />
+      <Breadcrumb pages={[PAGES.listeDiffusion()]} />
 
-      <Flex mt={8} flexDirection="row">
-        <Heading as="h2" fontSize="2xl" flexGrow={1}>
-          Mes Listes de diffusion
-        </Heading>
-        <Button variant="primary" as={NextLink} href="/liste-diffusion/nouvelle-liste">
+      <Box display="flex" flexDirection="row">
+        <Typography flexGrow={1} variant="h2">
+          Mes listes de diffusion
+        </Typography>
+        <Button
+          linkProps={{
+            href: PAGES.nouvelleListe().path,
+          }}
+        >
           + Créer nouvelle liste
         </Button>
-      </Flex>
+      </Box>
 
       {!!generatingMailingList && <GeneratingMailingList mailingList={generatingMailingList} onDone={refetch} />}
 
