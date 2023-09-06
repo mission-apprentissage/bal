@@ -1,7 +1,8 @@
 "use client";
 
 import { CacheProvider } from "@chakra-ui/next-js";
-import { Box, ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
+import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
@@ -27,11 +28,11 @@ const RootTemplate: FC<Props> = ({ children }) => {
       <QueryClientProvider client={queryClient}>
         <CacheProvider>
           <ChakraProvider theme={theme}>
-            <Header />
-            <Box minH={"40vh"}>
-              <Section my={8}>{children}</Section>
-            </Box>
-            <Footer />
+            <MuiDsfrThemeProvider>
+              <Header />
+              <Section>{children}</Section>
+              <Footer />
+            </MuiDsfrThemeProvider>
           </ChakraProvider>
         </CacheProvider>
       </QueryClientProvider>

@@ -1,11 +1,23 @@
-import { Header as DSFRHeader } from "@codegouvfr/react-dsfr/Header";
+import {
+  Header as DSFRHeader,
+  HeaderProps,
+} from "@codegouvfr/react-dsfr/Header";
 import { MainNavigationProps } from "@codegouvfr/react-dsfr/MainNavigation";
+import { useRouter } from "next/navigation";
 
 import { useAuth } from "../../context/AuthContext";
+import { apiGet } from "../../utils/api.utils";
 import { PAGES } from "./breadcrumb/Breadcrumb";
 
 export const Header = () => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
+  const { push } = useRouter();
+
+  const handleLogout = async () => {
+    await apiGet("/auth/logout", {});
+    setUser();
+    push("/");
+  };
 
   let navigation: MainNavigationProps.Item[] = [
     {
@@ -81,6 +93,33 @@ export const Header = () => {
     ];
   }
 
+  const loggedOut: HeaderProps.QuickAccessItem[] = [
+    {
+      iconId: "ri-account-box-line",
+      linkProps: {
+        href: PAGES.connexion().path,
+      },
+      text: "Se connecter",
+    },
+  ];
+
+  const loggedIn: HeaderProps.QuickAccessItem[] = [
+    {
+      linkProps: {
+        href: PAGES.compteProfil().path,
+      },
+      iconId: "ri-account-box-line",
+      text: "Mon compte",
+    },
+    {
+      buttonProps: {
+        onClick: handleLogout,
+      },
+      text: "Se deconnecter",
+      iconId: "ri-logout-box-line",
+    },
+  ];
+
   return (
     <DSFRHeader
       brandTop={
@@ -94,23 +133,7 @@ export const Header = () => {
         href: "/",
         title: "Accueil - BAL",
       }}
-      quickAccessItems={[
-        user
-          ? {
-              linkProps: {
-                href: PAGES.compteProfil().path,
-              },
-              iconId: "ri-account-box-line",
-              text: "Mon compte",
-            }
-          : {
-              iconId: "ri-account-box-line",
-              linkProps: {
-                href: PAGES.connexion().path,
-              },
-              text: "Se connecter",
-            },
-      ]}
+      quickAccessItems={user ? loggedIn : loggedOut}
       serviceTitle="BAL"
       navigation={navigation}
     />
