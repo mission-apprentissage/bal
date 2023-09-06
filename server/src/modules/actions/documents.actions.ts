@@ -1,4 +1,5 @@
 import { captureException } from "@sentry/node";
+import { Options } from "csv-parse";
 import {
   Filter,
   FindOneAndUpdateOptions,
@@ -105,6 +106,21 @@ export const getDocumentTypes = async (): Promise<string[]> => {
   });
 };
 
+export const readDocumentContent = async (
+  document: IDocument,
+  options: Options = {},
+  callback: (line: JsonObject) => void
+) => {
+  const stream = await getFromStorage(document.chemin_fichier);
+
+  await oleoduc(
+    stream,
+    crypto.isCipherAvailable() ? crypto.decipher(document.hash_secret) : noop(),
+    parseCsv(options),
+    writeData(callback)
+  );
+};
+
 export const saveDocumentsColumns = async () => {
   const documents = await findDocuments({});
 
@@ -114,19 +130,14 @@ export const saveDocumentsColumns = async () => {
 export const saveDocumentColumns = async (document: IDocument) => {
   let columns: string[] = [];
   try {
-    const stream = await getFromStorage(document.chemin_fichier);
-
-    await oleoduc(
-      stream,
-      crypto.isCipherAvailable()
-        ? crypto.decipher(document.hash_secret)
-        : noop(),
-      // get only 1 record to get the columns
-      parseCsv({
+    await readDocumentContent(
+      document,
+      {
+        // get only 1 record to get the columns
         to: 1,
         on_record: (record: unknown) => record,
-      }),
-      writeData(async (json: JsonObject) => {
+      },
+      async (json: JsonObject) => {
         columns = Object.keys(json)
           .sort()
           .filter((key) => key !== "");
@@ -139,7 +150,7 @@ export const saveDocumentColumns = async (document: IDocument) => {
             },
           }
         );
-      })
+      }
     );
 
     return columns;
@@ -353,8 +364,6 @@ export const extractDocumentContent = async ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formatter?: (line: any) => any;
 }) => {
-  const stream = await getFromStorage(document.chemin_fichier);
-
   logger.info("conversion csv to json started");
   await updateDocument(
     { _id: document._id },
@@ -369,13 +378,13 @@ export const extractDocumentContent = async ({
   let importedLines = 0;
   let importedLength = 0;
   let currentPercent = 0;
-  await oleoduc(
-    stream,
-    crypto.isCipherAvailable() ? crypto.decipher(document.hash_secret) : noop(),
-    parseCsv({
+
+  await readDocumentContent(
+    document,
+    {
       delimiter,
-    }),
-    writeData(async (json: JsonObject) => {
+    },
+    async (json: JsonObject) => {
       importedLength += Buffer.byteLength(
         JSON.stringify(Object.values(json)).replace(/^\[(.*)\]$/, "$1")
       );
@@ -388,8 +397,9 @@ export const extractDocumentContent = async ({
         currentPercent
       );
       await importDocumentContent(document, [json], formatter);
-    })
+    }
   );
+
   await updateDocument(
     { _id: document._id },
     {
