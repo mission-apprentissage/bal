@@ -78,11 +78,12 @@ const PersonList = () => {
             },
           },
           source: {
-            id: "source",
+            id: "sources",
             size: 100,
-            header: () => "Source",
+            header: () => "Sources",
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            cell: ({ row }) => (row.original._meta as any)?.source ?? "",
+            cell: ({ row }) =>
+              (row.original._meta as any)?.sources?.join(", ") ?? "",
           },
           actions: {
             id: "actions",
