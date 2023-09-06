@@ -128,9 +128,7 @@ fileignoreconfig:
 - filename: ui/app/cgu/components/Cgu.tsx
   checksum: 06b32f3875b997d0c5199f60b89a31c6392eb0f081cf2801404fb75a11884dac
 - filename: ui/app/components/Footer.tsx
-  checksum: 0467f77da9e5e2ac6086cef53ee620def51fc539c1b3efb240e29b8bb62998f2
-- filename: ui/app/components/FooterLogo.tsx
-  checksum: 0c7cf76e0a78293e20ab70bdefa060de3fb45edb6e14b40c45fc8b80250e9d53
+  checksum: 8c4c956726034bc225a0a3b5b1f2738cf771ad4028a4c0134fd3f76486811fb6
 - filename: ui/app/components/breadcrumb/Breadcrumb.tsx
   checksum: c8a647325f6337637ed5a66346ed20905bc27388c4aa2b6509c798ccc15ecc49
 - filename: ui/app/page.tsx

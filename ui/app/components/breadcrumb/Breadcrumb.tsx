@@ -46,7 +46,7 @@ export const PAGES = {
     path: "/compte/profil",
   }),
   adminFichier: () => ({
-    title: "Fichier source",
+    title: "Gestion des fichiers",
     path: "/admin/fichier",
   }),
   adminImport: () => ({
@@ -54,7 +54,7 @@ export const PAGES = {
     path: "/admin/fichier/import",
   }),
   adminUsers: () => ({
-    title: "Utilisateurs",
+    title: "Gestion des utilisateurs",
     path: "/admin/utilisateurs",
   }),
   adminUserView: (id: string) => ({
@@ -62,7 +62,7 @@ export const PAGES = {
     path: `/admin/utilisateur/${id}`,
   }),
   adminPersons: () => ({
-    title: "Personnes",
+    title: "Gestion des personnes",
     path: "/admin/personnes",
   }),
   adminViewPerson: (id: string) => ({
@@ -70,7 +70,7 @@ export const PAGES = {
     path: `/admin/personnes/${id}`,
   }),
   adminOrganisations: () => ({
-    title: "Organisations",
+    title: "Gestion des organisations",
     path: "/admin/organisations",
   }),
   adminViewOrganisation: (id: string) => ({
