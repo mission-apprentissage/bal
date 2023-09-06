@@ -1,11 +1,10 @@
 "use client";
 
-import { fr } from "@codegouvfr/react-dsfr";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { PasswordInput } from "@codegouvfr/react-dsfr/blocks/PasswordInput";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Box, styled } from "@mui/material";
+import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,19 +15,9 @@ import { IStatus } from "shared/routes/auth.routes";
 import { useAuth } from "../../../context/AuthContext";
 import { apiPost } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
+import FormContainer from "../components/FormContainer";
 
 type Route = IPostRoutes["/auth/login"];
-
-const StyledBox = styled("div")(({ theme }) => ({
-  padding: theme.spacing(4),
-  marginBottom: theme.spacing(4),
-  border: "1px solid",
-  borderColor: fr.colors.decisions.border.actionLow.blueFrance.default,
-
-  [theme.breakpoints.up("md")]: {
-    width: "50%",
-  },
-}));
 
 const ConnexionPage = () => {
   const { push } = useRouter();
@@ -63,17 +52,17 @@ const ConnexionPage = () => {
   return (
     <>
       <Breadcrumb pages={[PAGES.connexion()]} />
-      <StyledBox>
+      <FormContainer>
         <Typography variant="h2" gutterBottom>
           Connectez-vous
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Input
-            hintText=""
             label="Email (votre identifiant)"
             state={errors.email ? "error" : "default"}
             stateRelatedMessage={errors.email?.message}
             nativeInputProps={{
+              placeholder: "prenom.nom@courriel.fr",
               ...register("email", { required: "Email obligatoire" }),
             }}
           />
@@ -91,6 +80,7 @@ const ConnexionPage = () => {
                 : []
             }
             nativeInputProps={{
+              placeholder: "****************",
               ...register("password", {
                 required: "Mot de passe obligatoire",
               }),
@@ -111,7 +101,7 @@ const ConnexionPage = () => {
             </Button>
           </Box>
         </form>
-      </StyledBox>
+      </FormContainer>
     </>
   );
 };

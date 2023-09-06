@@ -120,11 +120,11 @@ fileignoreconfig:
 - filename: ui/Dockerfile.preview
   checksum: 03cd37123382c0779373482a2e362c991164ba294fff77a2989cc7d2ca2816cc
 - filename: ui/app/auth/connexion/page.tsx
-  checksum: 82b92aab62afde9952eef3052f76aaacf1b14aa94e9b2057d8ab4688c7b7240d
+  checksum: a2131c94803d35f354c09e40c5bff4eb33763290e1cab8569ed57c3d2d07d7e7
 - filename: ui/app/auth/modifier-mot-de-passe/page.tsx
   checksum: f6e44cbee7ba781129c86e1d21755fb3817c696b2be1c8b40a6e081fa6178c64
 - filename: ui/app/auth/mot-de-passe-oublie/page.tsx
-  checksum: 7aa0490dfb40b32ff93421bd55c7c69d02c372a65d9200e43224aaaaaa170646
+  checksum: 795d2c6beef95a07d0ca787276f8398c4c44c79844f3f4c28e918e67df0b6d75
 - filename: ui/app/cgu/components/Cgu.tsx
   checksum: 06b32f3875b997d0c5199f60b89a31c6392eb0f081cf2801404fb75a11884dac
 - filename: ui/app/components/Footer.tsx

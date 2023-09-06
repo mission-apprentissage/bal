@@ -1,26 +1,18 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-  HStack,
-  Input,
-  Text,
-} from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { Typography } from "@mui/material";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IGetRoutes, IQuery } from "shared";
 import { IStatus } from "shared/routes/auth.routes";
 
-import Link from "../../../components/link/Link";
 import { apiGet } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
-import { NavLink } from "../../components/NavLink";
+import FormContainer from "../components/FormContainer";
 
 type Route = IGetRoutes["/auth/reset-password"];
 
@@ -45,50 +37,55 @@ const MotDePasseOubliePage = () => {
       });
       reset();
     } catch (error) {
+      const errorMessage = (error as Record<string, string>)?.message;
+
       setStatus({
         error: true,
         message:
+          errorMessage ??
           "Impossible de réinitialiser votre mot de passe. Vérifiez que vous avez bien saisi votre adresse email.",
       });
+
       console.error(error);
     }
   };
 
   return (
     <>
-      <Breadcrumb pages={[PAGES.homepage(), PAGES.connexion(), PAGES.motDePasseOublie()]} />
-      <Flex
-        flexDirection="column"
-        p={12}
-        w={{ base: "100%", md: "50%" }}
-        h="100%"
-        border="1px solid"
-        borderColor="blue_france.light"
-      >
-        <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
+      <Breadcrumb pages={[PAGES.connexion(), PAGES.motDePasseOublie()]} />
+      <FormContainer>
+        <Typography variant="h2" gutterBottom>
           Mot de passe oublié
-        </Heading>
+        </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box>
-            <FormControl isInvalid={!!errors.email} isRequired mb={5}>
-              <FormLabel>Votre email</FormLabel>
-              <Input placeholder="prenom.nom@courriel.fr" {...register("email", { required: "Email obligatoire" })} />
-              <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-            </FormControl>
-            <Text color={status?.error ? "error_main" : "info_main"} mt={2}>
-              {status?.message}
-            </Text>
-          </Box>
-          <HStack spacing="4w" mt={8}>
-            <Button variant="primary" type="submit">
+          <Input
+            label="Votre email"
+            state={errors.email ? "error" : "default"}
+            stateRelatedMessage={errors.email?.message}
+            nativeInputProps={{
+              placeholder: "prenom.nom@courriel.fr",
+              ...register("email", { required: "Email obligatoire" }),
+            }}
+          />
+
+          {status?.message && (
+            <Alert description={status.message} severity="error" small />
+          )}
+          <Box mt={2}>
+            <Button type="submit">
               Recevoir un courriel de ré-initialisation
             </Button>
-            <Link href="/auth/connexion" as={NavLink} color="grey.425">
+            <Button
+              linkProps={{
+                href: PAGES.connexion().path,
+              }}
+              priority="tertiary no outline"
+            >
               Annuler
-            </Link>
-          </HStack>
+            </Button>
+          </Box>
         </form>
-      </Flex>
+      </FormContainer>
     </>
   );
 };
