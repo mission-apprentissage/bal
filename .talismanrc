@@ -136,9 +136,7 @@ fileignoreconfig:
 - filename: ui/app/politique-confidentialite/components/PolitiqueConfidentialite.tsx
   checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
 - filename: ui/app/usage/validation/page.tsx
-  checksum: 25ddd9d8e46cec2447d74b2363a75ac775ed3982466ad21ed21d7feda1683fba
-- filename: ui/app/usage/verification/page.tsx
-  checksum: 3bcde7fc38236a4b6bf921ffc94ed471344054036b9b9e8d8ffd32283608544d
+  checksum: 2123980fbc1470fc2791b08e838ad20207483a7770301014c3e44ac80f660c09
 scopeconfig:
 - scope: node
 custom_patterns:

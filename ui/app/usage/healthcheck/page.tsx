@@ -1,9 +1,12 @@
 "use client";
-import { Box, Heading } from "@chakra-ui/react";
+
+import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { IGetRoutes, IResponse } from "shared";
 
 import { apiGet } from "../../../utils/api.utils";
+import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
+import ViewData from "../components/ViewData";
 
 const UsageHealthcheckPage = () => {
   const [responseData, setResponseData] = useState<IResponse<IGetRoutes["/healthcheck"]>>();
@@ -15,22 +18,15 @@ const UsageHealthcheckPage = () => {
 
   return (
     <>
-      <Heading as="h3" fontSize="lg" mb={[3, 6]}>
+      <Breadcrumb pages={[PAGES.usageApi(), PAGES.usageApiHealthcheck()]} />
+      <Typography variant="h2" gutterBottom>
+        Tester l'API
+      </Typography>
+      <Typography variant="h4" gutterBottom>
         POST api/healthcheck
-      </Heading>
+      </Typography>
 
-      {responseData && (
-        <Box mt={4}>
-          <Heading size="sm" mb={2}>
-            Réponse
-          </Heading>
-          <Box mt={2} p={2} bgColor="grey.975">
-            <pre>
-              <p>{JSON.stringify(responseData, null, "\t")}</p>
-            </pre>
-          </Box>
-        </Box>
-      )}
+      <ViewData title="Réponse" data={responseData} />
     </>
   );
 };
