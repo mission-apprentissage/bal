@@ -345,8 +345,11 @@ exports[`zodToMongoSchema > should convert organisations schema 1`] = `
       "bsonType": "object",
       "description": "Métadonnées",
       "properties": {
-        "source": {
-          "bsonType": "string",
+        "sources": {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "string",
+          },
         },
       },
     },
@@ -420,8 +423,11 @@ exports[`zodToMongoSchema > should convert persons schema 1`] = `
       "bsonType": "object",
       "description": "Métadonnées",
       "properties": {
-        "source": {
-          "bsonType": "string",
+        "sources": {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "string",
+          },
         },
       },
     },
