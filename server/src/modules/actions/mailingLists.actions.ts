@@ -83,7 +83,7 @@ export const updateMailingList = async (
  * ACTIONS
  */
 
-const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 interface IPayload {
   mailing_list_id: string;
