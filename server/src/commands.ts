@@ -260,6 +260,20 @@ program
     }
   });
 
+program
+  .command("documents:save-columns")
+  .description("Gets columns from documents and save them in database")
+  .option("-s, --sync", "Run job synchronously")
+  .action(async ({ sync }) => {
+    const exitCode = await addJob({
+      name: "documents:save-columns",
+      sync,
+    });
+    if (exitCode) {
+      program.error("Command failed", { exitCode });
+    }
+  });
+
 program.hook("preAction", (_, actionCommand) => {
   const command = actionCommand.name();
   // on définit le module du logger en global pour distinguer les logs des jobs

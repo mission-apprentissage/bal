@@ -1,6 +1,6 @@
 import Boom from "@hapi/boom";
 import { captureException } from "@sentry/node";
-import { parse } from "csv-parse";
+import { Options, parse } from "csv-parse";
 import { isEmpty, pickBy } from "lodash-es";
 import XLSX, { WorkSheet } from "xlsx";
 
@@ -45,7 +45,7 @@ export const getJsonFromXlsxData = (
   }
 };
 
-export function parseCsv(options = {}) {
+export function parseCsv(options: Options = {}) {
   return parse({
     trim: true,
     delimiter: ";",

@@ -1,4 +1,5 @@
 import { captureException } from "@sentry/node";
+import { Options } from "csv-parse";
 import {
   Filter,
   FindOneAndUpdateOptions,
@@ -105,21 +106,114 @@ export const getDocumentTypes = async (): Promise<string[]> => {
   });
 };
 
+export const readDocumentContent = async (
+  document: IDocument,
+  options: Options = {},
+  callback: (line: JsonObject) => void
+) => {
+  const stream = await getFromStorage(document.chemin_fichier);
+
+  await oleoduc(
+    stream,
+    crypto.isCipherAvailable() ? crypto.decipher(document.hash_secret) : noop(),
+    parseCsv(options),
+    writeData(callback)
+  );
+};
+
+export const saveDocumentsColumns = async () => {
+  const documents = await findDocuments({});
+
+  await Promise.all(documents.map((document) => saveDocumentColumns(document)));
+};
+
+export const saveDocumentColumns = async (document: IDocument) => {
+  let columns: string[] = [];
+  try {
+    await readDocumentContent(
+      document,
+      {
+        // get only 1 record to get the columns
+        to: 1,
+        on_record: (record: unknown) => record,
+      },
+      async (json: JsonObject) => {
+        columns = Object.keys(json)
+          .sort()
+          .filter((key) => key !== "");
+
+        await updateDocument(
+          { _id: document._id },
+          {
+            $set: {
+              columns,
+            },
+          }
+        );
+      }
+    );
+
+    return columns;
+  } catch (error) {
+    logger.error(
+      `Error while saving document columns for document ${document._id.toString()}`
+    );
+    return [];
+  }
+};
+
 export const getDocumentColumns = async (type: string): Promise<string[]> => {
+  const document = await findDocument({ type_document: type });
+
+  if (!document) {
+    return [];
+  }
+
+  if (document.columns) {
+    return document.columns;
+  }
+
+  let columns = await saveDocumentColumns(document);
+
+  if (columns.length) {
+    return columns;
+  }
+
   // get all keys from document content
   const aggregationPipeline = [
-    { $match: { type_document: type } },
+    { $match: { document_id: document._id.toString() } },
     { $project: { keys: { $objectToArray: "$content" } } },
     { $unwind: "$keys" },
-    { $group: { _id: null, uniqueKeys: { $addToSet: "$keys.k" } } },
+    { $sort: { "keys.k": 1 } }, // Sort keys alphabetically
+    {
+      $group: {
+        _id: null,
+        uniqueKeys: { $addToSet: "$keys.k" },
+      },
+    },
     { $unwind: "$uniqueKeys" },
+    { $sort: { uniqueKeys: 1 } }, // Sort unique keys alphabetically
   ];
 
   const result = await getDbCollection("documentContents")
     .aggregate(aggregationPipeline)
     .toArray();
 
-  return result.map((item) => item.uniqueKeys).sort();
+  columns = result
+    .map((item) => item.uniqueKeys)
+    .sort()
+    .filter((key) => key !== "");
+
+  await updateDocument(
+    { _id: document._id },
+    {
+      $set: {
+        columns: columns,
+      },
+    }
+  );
+
+  return columns;
 };
 
 export const getDocumentSample = async (
@@ -255,6 +349,8 @@ export const uploadFile = async (
     });
   }
 
+  await saveDocumentColumns(doc);
+
   return documentId;
 };
 
@@ -268,8 +364,6 @@ export const extractDocumentContent = async ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formatter?: (line: any) => any;
 }) => {
-  const stream = await getFromStorage(document.chemin_fichier);
-
   logger.info("conversion csv to json started");
   await updateDocument(
     { _id: document._id },
@@ -284,13 +378,13 @@ export const extractDocumentContent = async ({
   let importedLines = 0;
   let importedLength = 0;
   let currentPercent = 0;
-  await oleoduc(
-    stream,
-    crypto.isCipherAvailable() ? crypto.decipher(document.hash_secret) : noop(),
-    parseCsv({
+
+  await readDocumentContent(
+    document,
+    {
       delimiter,
-    }),
-    writeData(async (json: JsonObject) => {
+    },
+    async (json: JsonObject) => {
       importedLength += Buffer.byteLength(
         JSON.stringify(Object.values(json)).replace(/^\[(.*)\]$/, "$1")
       );
@@ -303,8 +397,9 @@ export const extractDocumentContent = async ({
         currentPercent
       );
       await importDocumentContent(document, [json], formatter);
-    })
+    }
   );
+
   await updateDocument(
     { _id: document._id },
     {

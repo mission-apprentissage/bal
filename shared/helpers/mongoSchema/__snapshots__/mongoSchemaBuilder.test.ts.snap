@@ -55,6 +55,13 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
       "bsonType": "string",
       "description": "Chemin du fichier binaire",
     },
+    "columns": {
+      "bsonType": "array",
+      "description": "Liste des colonnes",
+      "items": {
+        "bsonType": "string",
+      },
+    },
     "created_at": {
       "bsonType": "date",
       "description": "Date d'ajout en base de données",
