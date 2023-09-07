@@ -83,8 +83,7 @@ export const updateMailingList = async (
  * ACTIONS
  */
 
-const EMAIL_REGEX =
-  /^(?:[a-zA-Z0-9])([-_0-9a-zA-Z]+(\.[-_0-9a-zA-Z]+)*|^"([\001-\010\013\014\016-\037!#-[\]-\177]|\\[\001-011\013\014\016-\177])*")@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}\.?$/;
+const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 interface IPayload {
   mailing_list_id: string;
@@ -190,23 +189,22 @@ const formatOutput = async (
   const rows = data.map((documentContent) => {
     const { email, secondary_email } = mailingList;
 
-    const primaryEmail = (documentContent?.content?.[email] as string) ?? "";
+    const primaryEmail = documentContent?.content?.[email] as string;
     const secondaryEmail =
-      (secondary_email &&
-        (documentContent?.content?.[secondary_email] as string)) ??
-      "";
+      secondary_email &&
+      (documentContent?.content?.[secondary_email] as string);
     // filtrer les emails invalides et doublons
     const emails = [...new Set([primaryEmail, secondaryEmail])].filter((e) =>
       EMAIL_REGEX.test(e ?? "")
     );
 
     const outputRow: Record<string, string> = {
-      email: emails?.[0],
+      email: emails?.[0] ?? "",
     };
 
     for (const outputColumn of outputColumns) {
       // avoid overriding email column
-      if (outputColumn.column === "email") continue;
+      if (outputColumn.output === "email") continue;
 
       const outputColumnName = outputColumn.output;
       const outputColumnValue =
