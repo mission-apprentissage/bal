@@ -1,23 +1,13 @@
-import { DeleteIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControl,
-  FormErrorMessage,
-  HStack,
-  IconButton,
-  Input,
-  Select,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react";
+import Button from "@codegouvfr/react-dsfr/Button";
+import Input from "@codegouvfr/react-dsfr/Input";
+import Select from "@codegouvfr/react-dsfr/Select";
+import { Box, Tooltip, Typography } from "@mui/material";
 import { FC, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
 
-import { TooltipIcon } from "../../../../theme/icons/Tooltip";
+import ToggleSwitchInput from "../../../../components/form/ToggleSwitchInput";
 import { apiPost } from "../../../../utils/api.utils";
 import { getDataFromSample } from "../mailingLists.utils";
 import MailingListSectionCell from "./MailingListSectionCell";
@@ -37,6 +27,8 @@ interface Props {
   sample: IDocumentContentJson[];
 }
 
+type FormValues = IBody<IPostRoutes["/mailing-list"]>;
+
 const ChoixColonnesSortie: FC<Props> = ({
   onSuccess,
   onCancel,
@@ -55,7 +47,7 @@ const ChoixColonnesSortie: FC<Props> = ({
     control,
     watch,
     setValue,
-  } = useForm<IBody<IPostRoutes["/mailing-list"]>>({
+  } = useForm<FormValues>({
     defaultValues: {
       source,
       campaign_name: campaignName,
@@ -102,117 +94,177 @@ const ChoixColonnesSortie: FC<Props> = ({
 
   useEffect(() => {
     if (webhookLbaColumnIndex !== -1) {
-      setValue(`output_columns.${webhookLbaColumnIndex}.output`, "lien_lba, lien_prdv");
+      setValue(
+        `output_columns.${webhookLbaColumnIndex}.output`,
+        "lien_lba, lien_prdv"
+      );
+      setValue(`output_columns.${webhookLbaColumnIndex}.grouped`, true);
     }
   }, [webhookLbaColumnIndex]);
 
   return (
     <Box>
-      <Text mb={4}>
-        Sélectionnez le ou les champs du fichier d’entrée que vous voulez retrouver dans votre fichier de sortie.
-        (Exemple : libellé établissement et libellé formation).
-      </Text>
+      <Typography mb={4}>
+        Sélectionnez le ou les champs du fichier d’entrée que vous voulez
+        retrouver dans votre fichier de sortie. (Exemple : libellé établissement
+        et libellé formation).
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <MailingListSectionRow nbColumns={4}>
-          <MailingListSectionCell>Nom de sortie</MailingListSectionCell>
-          <MailingListSectionCell>En-têtes des colonnes (fichier source)</MailingListSectionCell>
-          <MailingListSectionCell>Ne pas écraser</MailingListSectionCell>
-          <MailingListSectionCell>3 premières lignes de données</MailingListSectionCell>
+        <MailingListSectionRow>
+          <MailingListSectionCell xs={3}>Nom de sortie</MailingListSectionCell>
+          <MailingListSectionCell xs={3}>
+            En-têtes des colonnes (fichier source)
+          </MailingListSectionCell>
+          <MailingListSectionCell xs={3}>Ne pas écraser</MailingListSectionCell>
+          <MailingListSectionCell xs={3}>
+            3 premières lignes de données
+          </MailingListSectionCell>
         </MailingListSectionRow>
         {fields.map((field, index) => (
-          <MailingListSectionRow key={field.id} nbColumns={4}>
-            <MailingListSectionCell>
-              <FormControl
-                isInvalid={!!errors.output_columns?.[index]?.output}
-                isDisabled={index === 0 || outputColumns[index].column === WEBHOOK_LBA || isSubmitting}
-              >
-                <Input
-                  placeholder="Nom de sortie"
-                  {...register(`output_columns.${index}.output`, {
+          <MailingListSectionRow key={field.id}>
+            <MailingListSectionCell xs={3}>
+              <Input
+                label=""
+                state={
+                  errors.output_columns?.[index]?.output?.message
+                    ? "error"
+                    : "default"
+                }
+                stateRelatedMessage={
+                  errors.output_columns?.[index]?.output?.message
+                }
+                disabled={
+                  index === 0 ||
+                  outputColumns[index].column === WEBHOOK_LBA ||
+                  isSubmitting
+                }
+                nativeInputProps={{
+                  placeholder: "Nom de sortie",
+                  ...register(`output_columns.${index}.output`, {
                     required: "Obligatoire",
-                  })}
-                />
-                <FormErrorMessage>{errors.output_columns?.[index]?.output?.message}</FormErrorMessage>
-              </FormControl>
+                  }),
+                }}
+              />
             </MailingListSectionCell>
-            <MailingListSectionCell>
-              <FormControl
-                key={field.id}
-                isInvalid={!!errors.output_columns?.[index]?.column}
-                isDisabled={index === 0 || isSubmitting}
-              >
-                <Select
-                  isInvalid={!!errors.output_columns?.[index]}
-                  placeholder="Colonne"
-                  {...register(`output_columns.${index}.column`, {
+            <MailingListSectionCell xs={3}>
+              <Select
+                label=""
+                disabled={index === 0 || isSubmitting}
+                state={
+                  errors.output_columns?.[index]?.column?.message
+                    ? "error"
+                    : "default"
+                }
+                stateRelatedMessage={
+                  errors.output_columns?.[index]?.column?.message
+                }
+                nativeSelectProps={{
+                  ...register(`output_columns.${index}.column`, {
                     required: "Obligatoire",
                     validate: (value) => {
                       return value && [...columns, WEBHOOK_LBA].includes(value);
                     },
-                  })}
-                >
-                  <optgroup label="BAL">
-                    <option value={WEBHOOK_LBA} disabled={!!outputColumns.find((c) => c.column === WEBHOOK_LBA)}>
-                      {WEBHOOK_LBA}
+                  }),
+                }}
+              >
+                <option value="" disabled hidden>
+                  Colonne
+                </option>
+                <optgroup label="BAL">
+                  <option
+                    value={WEBHOOK_LBA}
+                    disabled={
+                      !!outputColumns.find((c) => c.column === WEBHOOK_LBA)
+                    }
+                  >
+                    {WEBHOOK_LBA}
+                  </option>
+                </optgroup>
+                <optgroup label={source}>
+                  {columns.map((column) => (
+                    <option
+                      key={column}
+                      disabled={
+                        !!outputColumns.find((c) => c.column === column)
+                      }
+                      value={column}
+                    >
+                      {column}
+                      {index === 0 && secondaryEmail && `, ${secondaryEmail}`}
                     </option>
-                  </optgroup>
-                  <optgroup label={source}>
-                    {columns.map((column) => (
-                      <option key={column} disabled={!!outputColumns.find((c) => c.column === column)} value={column}>
-                        {column}
-                        {index === 0 && secondaryEmail && `, ${secondaryEmail}`}
-                      </option>
-                    ))}
-                  </optgroup>
-                </Select>
-                <FormErrorMessage>{errors.output_columns?.[index]?.column?.message}</FormErrorMessage>
-              </FormControl>
+                  ))}
+                </optgroup>
+              </Select>
             </MailingListSectionCell>
-            <MailingListSectionCell>
+            <MailingListSectionCell xs={3}>
               {index !== 0 && (
                 <>
-                  <FormControl isDisabled={index === 0 || isSubmitting}>
-                    <Checkbox {...register(`output_columns.${index}.grouped` as const)}>
-                      Ne pas écraser
-                      <Tooltip
-                        label="Ajoutera des colonnes prefixées par _ pour chacun des champs du groupe NE_PAS_ECRASER"
-                        fontSize="md"
-                      >
-                        <span>
-                          <TooltipIcon ml={2} />
-                        </span>
-                      </Tooltip>
-                    </Checkbox>
-                  </FormControl>
+                  <ToggleSwitchInput
+                    control={control}
+                    {...register(`output_columns.${index}.grouped` as const)}
+                    toggleSwitchProps={{
+                      showCheckedHint: false,
+                      disabled:
+                        outputColumns[index].column === WEBHOOK_LBA ||
+                        isSubmitting,
+                      label: (
+                        <Typography whiteSpace="nowrap">
+                          Ne pas écraser
+                          <Tooltip title="Ajoutera des colonnes prefixées par _ pour chacun des champs du groupe NE_PAS_ECRASER">
+                            <Box
+                              component="i"
+                              ml={1}
+                              className="ri-information-line"
+                            />
+                          </Tooltip>
+                        </Typography>
+                      ),
+                      inputTitle: "Ne pas écraser",
+                    }}
+                  />
                 </>
               )}
             </MailingListSectionCell>
-            <MailingListSectionCell>
-              {outputColumns[index].column && getDataFromSample(sample, outputColumns[index].column)}
-              <IconButton
-                marginLeft="auto"
-                aria-label="Supprimer"
-                onClick={() => remove(index)}
-                icon={<DeleteIcon />}
-              />
+            <MailingListSectionCell xs={3}>
+              {outputColumns[index].column &&
+                getDataFromSample(sample, outputColumns[index].column)}
+              {index !== 0 && (
+                <Box ml="auto">
+                  <Button
+                    iconId="ri-delete-bin-line"
+                    onClick={() => remove(index)}
+                    priority="tertiary no outline"
+                    title="Supprimer"
+                  />
+                </Box>
+              )}
             </MailingListSectionCell>
           </MailingListSectionRow>
         ))}
 
         <Box display="flex" justifyContent="center">
-          <Button variant="secondary" onClick={() => append({ output: "", column: "", grouped: false })}>
+          <Button
+            priority="secondary"
+            onClick={() => append({ output: "", column: "", grouped: false })}
+          >
             + Ajouter un champ
           </Button>
         </Box>
 
-        <HStack spacing="4w" mt={8}>
-          <Button isLoading={isSubmitting} onClick={onCancel}>
-            Retour
-          </Button>
-          <Button variant="primary" type="submit" isLoading={isSubmitting}>
+        <Box>
+          <Box mx={2} display="inline-block">
+            <Button
+              priority="tertiary"
+              disabled={isSubmitting}
+              onClick={onCancel}
+            >
+              Retour
+            </Button>
+          </Box>
+          <Button type="submit" disabled={isSubmitting}>
             Confirmer
           </Button>
-        </HStack>
+        </Box>
       </form>
     </Box>
   );

@@ -1,4 +1,4 @@
-import { Table as DSFRTable } from "@codegouvfr/react-dsfr/Table";
+import { Table as DSFRTable, TableProps } from "@codegouvfr/react-dsfr/Table";
 import {
   AccessorFn,
   CellContext,
@@ -19,7 +19,7 @@ import {
 } from "@tanstack/react-table";
 import React, { useEffect, useRef, useState } from "react";
 
-interface Props<TData> {
+interface Props<TData> extends Omit<TableProps, "data"> {
   data: TData[];
   onRowClick?: (rowId: string) => void;
   columns: {
@@ -64,6 +64,7 @@ const Table = <TData extends object>({
   sorting,
 
   pageCount,
+  ...props
 }: Props<TData>) => {
   const [globalFilter, setGlobalFilter] = useState(searchValue);
   const countItems = useRef(data.length);
@@ -130,7 +131,7 @@ const Table = <TData extends object>({
     .getCoreRowModel()
     .rows.map((row) => row.getVisibleCells().map((cell) => flexRender(cell.column.columnDef.cell, cell.getContext())));
 
-  return <DSFRTable fixed data={rows} headers={headers} />;
+  return <DSFRTable data={rows} headers={headers} {...props} />;
 };
 
 export default Table;

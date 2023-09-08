@@ -1,4 +1,5 @@
 import Button from "@codegouvfr/react-dsfr/Button";
+import { Download } from "@codegouvfr/react-dsfr/Download";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { FC, useState } from "react";
 import { IMailingListJson } from "shared/models/mailingList.model";
@@ -37,6 +38,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
   return (
     <>
       <Table
+        fixed
         data={mailingLists || []}
         columns={{
           source: {
@@ -67,8 +69,9 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
 
               return (
                 <>
-                  <Button
-                    iconId="ri-download-line"
+                  <Download
+                    details=""
+                    label="Télécharger"
                     linkProps={{
                       href: generateUrl(`/mailing-lists/:id/download`, {
                         params: {
@@ -76,11 +79,8 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
                         },
                       }),
                     }}
-                    priority="tertiary no outline"
-                    title="Label button"
-                  >
-                    Télécharger
-                  </Button>
+                    style={{ display: "inline-block", margin: 0, padding: 0 }}
+                  />
 
                   <Button
                     iconId="ri-delete-bin-line"

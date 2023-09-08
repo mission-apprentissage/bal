@@ -1,4 +1,7 @@
-import { Box, Button, FormControl, FormErrorMessage, FormLabel, HStack, Input, Select, Text } from "@chakra-ui/react";
+import Button from "@codegouvfr/react-dsfr/Button";
+import Input from "@codegouvfr/react-dsfr/Input";
+import Select from "@codegouvfr/react-dsfr/Select";
+import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { CellContext, ColumnDefTemplate } from "@tanstack/react-table";
 import { FC } from "react";
@@ -25,7 +28,7 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
     formState: { errors, isSubmitting },
     register,
     watch,
-  } = useForm<IChoseSourceForm>();
+  } = useForm<IChoseSourceForm>({ defaultValues: { source: "" } });
   const watchSource = watch("source");
 
   const { data: types = [] } = useQuery<string[]>({
@@ -49,7 +52,7 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
     },
   });
 
-  const { data: sample = [] } = useQuery<IDocumentContentJson[]>({
+  const { data: sample = [], isFetching } = useQuery<IDocumentContentJson[]>({
     queryKey: ["documentSample", watchSource],
     queryFn: async () => {
       if (!watchSource) return [];
@@ -87,56 +90,55 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box w={{ base: "100%", md: "50%" }}>
+        <Box my={2}>
           <Box>
-            <FormControl isInvalid={!!errors.campaign_name} mb={5}>
-              <FormLabel>Nom de la campagne</FormLabel>
-              <Input
-                placeholder="Campagne voeux 2023"
-                {...register("campaign_name", {
-                  required: "Nom de la campagne",
-                })}
-              />
-              <FormErrorMessage>{errors.campaign_name?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={!!errors.source} mb={5} isDisabled={isSubmitting}>
-              <FormLabel>Source</FormLabel>
-              <Select
-                isInvalid={!!errors.source}
-                placeholder="Choisir la source"
-                {...register("source", {
-                  required: "Obligatoire: Vous devez choisir la source",
+            <Input
+              label="Nom de la campagne"
+              state={errors.campaign_name ? "error" : "default"}
+              stateRelatedMessage={errors.campaign_name?.message}
+              nativeInputProps={{
+                placeholder: "Campagne voeux 2023",
+                ...register("campaign_name", {
+                  required: "Veuillez saisir le nom de la campagne",
+                }),
+              }}
+            />
+            <Select
+              label="Label"
+              state={errors.source ? "error" : "default"}
+              stateRelatedMessage={errors.source?.message}
+              nativeSelectProps={{
+                ...register("source", {
+                  required: "Veuillez selectionner la source",
                   validate: (value) => {
                     return value && types.includes(value);
                   },
-                })}
-              >
-                {types.map((type) => (
-                  <option key={type}>{type}</option>
-                ))}
-              </Select>
-              <FormErrorMessage>{errors.source?.message}</FormErrorMessage>
-            </FormControl>
+                }),
+              }}
+            >
+              <option value="" disabled hidden>
+                Selectionner la source
+              </option>
+              {types.map((type) => (
+                <option key={type}>{type}</option>
+              ))}
+            </Select>
           </Box>
         </Box>
 
-        {watchSource && (
-          <Box>
+        {watchSource && !isFetching && (
+          <Box my={2}>
             {sample.length > 0 ? (
-              <Box overflow="scroll">
-                <Table mt={4} data={sample} columns={tableColumns} />
-              </Box>
+              <Table noScroll={false} data={sample} columns={tableColumns} />
             ) : (
-              <Text>Cette source ne comporte aucune donnée</Text>
+              <Typography>Cette source ne comporte aucune donnée</Typography>
             )}
           </Box>
         )}
 
-        <HStack spacing="4w" mt={8}>
-          <Button variant="primary" type="submit" isLoading={isSubmitting}>
-            Suivant
-          </Button>
-        </HStack>
+        <Button type="submit" disabled={isSubmitting}>
+          Suivant
+        </Button>
       </form>
     </Box>
   );
