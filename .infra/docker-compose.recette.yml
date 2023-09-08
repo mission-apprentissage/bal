@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   smtp:
-    image: axllent/mailpit:v1.5.5
+    image: axllent/mailpit:latest
     deploy:
       resources:
         limits:
@@ -13,6 +13,7 @@ services:
         parallelism: 0
     ports:
       - 1025:1025
+      - 8025:8025
     networks:
       - mna_network
     volumes:
