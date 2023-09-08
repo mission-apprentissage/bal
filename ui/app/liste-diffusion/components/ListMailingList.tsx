@@ -1,3 +1,4 @@
+import { fr } from "@codegouvfr/react-dsfr";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Download } from "@codegouvfr/react-dsfr/Download";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
@@ -90,6 +91,10 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
                     }}
                     priority="tertiary no outline"
                     title="Supprimer"
+                    style={{
+                      color:
+                        fr.colors.decisions.text.actionHigh.redMarianne.default,
+                    }}
                   />
                 </>
               );

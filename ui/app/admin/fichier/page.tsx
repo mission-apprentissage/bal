@@ -1,18 +1,23 @@
 "use client";
 
-import { Box, Button, Flex, Heading, HStack, Text } from "@chakra-ui/react";
+import { fr } from "@codegouvfr/react-dsfr";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import NavLink from "next/link";
 import { useState } from "react";
 import { IDocumentJson } from "shared/models/document.model";
 
-import { Dialog } from "../../../components/dialog/Dialog";
 import Table from "../../../components/table/Table";
-import { Bin } from "../../../theme/icons/Bin";
 import { apiDelete, apiGet } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 import { formatBytes } from "../../../utils/file.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
+
+const modal = createModal({
+  id: "delete-document-modal",
+  isOpenedByDefault: false,
+});
 
 const AdminImportPage = () => {
   const [toDelete, setToDelete] = useState<string | null>(null);
@@ -32,23 +37,27 @@ const AdminImportPage = () => {
     } finally {
       setToDelete(null);
       setIsDeleting(false);
+      modal.close();
     }
   };
 
   return (
     <>
-      <Breadcrumb pages={[PAGES.homepage(), PAGES.adminFichier()]} />
-      <Flex as="nav" align="center" justify="space-between" wrap="wrap" w="100%" alignItems="flex-start">
-        <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
+      <Breadcrumb pages={[PAGES.adminFichier()]} />
+      <Box display="flex" flexDirection="row">
+        <Typography flexGrow={1} variant="h2">
           Gestion fichiers sources
-        </Heading>
-        <HStack spacing={4}>
-          <Button variant="secondary" href="/admin/fichier/import" size="md" as={NavLink}>
-            <Text as="span">+ Ajouter un fichier</Text>
-          </Button>
-        </HStack>
-      </Flex>
-      <Box mt={8} mb={16}>
+        </Typography>
+        <Button
+          linkProps={{
+            href: PAGES.adminImport().path,
+          }}
+        >
+          + Ajouter un fichier
+        </Button>
+      </Box>
+
+      <Box my={4}>
         <Table
           data={documentLists || []}
           columns={{
@@ -101,38 +110,42 @@ const AdminImportPage = () => {
                 )
                   return null;
                 return (
-                  <Bin
-                    boxSize="5"
-                    color="red_marianne"
-                    cursor="pointer"
-                    onClick={() => setToDelete(row.original._id.toString())}
+                  <Button
+                    iconId="ri-delete-bin-line"
+                    onClick={() => {
+                      setToDelete(row.original._id.toString());
+                      modal.open();
+                    }}
+                    priority="tertiary no outline"
+                    title="Supprimer"
+                    style={{
+                      color: fr.colors.decisions.text.actionHigh.redMarianne.default,
+                    }}
                   />
                 );
               },
             },
           }}
         />
-        <Dialog
+        <modal.Component
           title="Supprimer le document"
-          modalProps={{
-            onClose: () => setToDelete(null),
-            isOpen: !!toDelete,
-          }}
-          cancelButtonProps={{
-            children: "Conserver le document",
-            onClick: () => setToDelete(null),
-            isDisabled: isDeleting,
-          }}
-          proceedButtonProps={{
-            children: "Supprimer le document",
-            onClick: () => {
-              onDeleteDocument();
+          buttons={[
+            {
+              children: "Conserver le document",
+              disabled: isDeleting,
             },
-            isLoading: isDeleting,
-          }}
+            {
+              iconId: "ri-delete-bin-line",
+              onClick: () => {
+                onDeleteDocument();
+              },
+              children: "Supprimer le document",
+              disabled: isDeleting,
+            },
+          ]}
         >
-          <Text>Vous allez supprimer le document. Cette action est irréversible.</Text>
-        </Dialog>
+          Vous allez supprimer le document. Cette action est irréversible.
+        </modal.Component>
       </Box>
     </>
   );

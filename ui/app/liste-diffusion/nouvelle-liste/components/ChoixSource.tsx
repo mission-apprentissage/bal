@@ -104,7 +104,7 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
               }}
             />
             <Select
-              label="Label"
+              label="Source"
               state={errors.source ? "error" : "default"}
               stateRelatedMessage={errors.source?.message}
               nativeSelectProps={{

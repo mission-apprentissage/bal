@@ -1,37 +1,37 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  Checkbox,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-  HStack,
-  Input,
-  Select,
-} from "@chakra-ui/react";
+import Button from "@codegouvfr/react-dsfr/Button";
+import Input from "@codegouvfr/react-dsfr/Input";
+import Select from "@codegouvfr/react-dsfr/Select";
+import { Upload as DSFRUpload } from "@codegouvfr/react-dsfr/Upload";
+import { Box, styled, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IGetRoutes, IPostRoutes, IResponse } from "shared";
-import { FILE_SIZE_LIMIT } from "shared/constants/index";
 
-// import { AlertRounded } from "../../../../theme/icons/AlertRounded";
+import ToggleSwitchInput from "../../../../components/form/ToggleSwitchInput";
 import { apiGet, apiPost } from "../../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../../components/breadcrumb/Breadcrumb";
 import useToaster from "../../../components/hooks/useToaster";
-import { Dropzone } from "./components/Dropzone";
 
-interface FormValues extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
-  file: File;
+interface FormValues
+  extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
+  file: FileList;
   should_import_content: boolean;
   has_new_type_document: boolean;
   new_type_document: string;
 }
+
+const FormContainer = styled("div")(({ theme }) => ({
+  marginTop: theme.spacing(4),
+  marginBottom: theme.spacing(4),
+
+  [theme.breakpoints.up("md")]: {
+    width: "50%",
+  },
+}));
 
 const AdminImportPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,8 +47,9 @@ const AdminImportPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
+
     watch,
+    control,
   } = useForm<FormValues>({
     defaultValues: {
       type_document: "",
@@ -69,7 +70,7 @@ const AdminImportPage = () => {
     setIsSubmitting(true);
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", file[0]);
 
       await apiPost("/admin/upload", {
         querystring: {
@@ -92,86 +93,95 @@ const AdminImportPage = () => {
 
   return (
     <>
-      <Breadcrumb pages={[PAGES.homepage(), PAGES.adminFichier(), PAGES.adminImport()]} />
-      <Flex flexDirection="column" p={12} w={{ base: "100%", md: "65%" }} h="100%">
-        <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
-          Importer un fichier
-        </Heading>
+      <Breadcrumb pages={[PAGES.adminFichier(), PAGES.adminImport()]} />
+      <Typography variant="h2">Importer un fichier</Typography>
+      <FormContainer>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box>
-            <FormControl isInvalid={!!errors.type_document} mb={5} isDisabled={hasNewTypeDocument || isSubmitting}>
-              <FormLabel>Type de document</FormLabel>
-              <Select
-                isInvalid={!!errors.type_document}
-                placeholder="Choisir un type de document"
-                {...register("type_document", {
-                  required: !hasNewTypeDocument,
-                })}
-              >
-                {types?.map((type) => <option key={type}>{type}</option>)}
-              </Select>
-              <FormErrorMessage>
-                Obligatoire: Vous devez choisir le type de fichier que vous souhaitez importer
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl mb={5} isDisabled={isSubmitting}>
-              <Checkbox {...register("has_new_type_document")}>
-                Je souhaite ajouter un nouveau type de document
-              </Checkbox>
-            </FormControl>
+          <Select
+            label="Type de document"
+            disabled={hasNewTypeDocument || isSubmitting}
+            state={errors.type_document ? "error" : "default"}
+            stateRelatedMessage={errors.type_document?.message}
+            nativeSelectProps={{
+              ...register("type_document", {
+                required: !hasNewTypeDocument && "Obligatoire",
+              }),
+            }}
+          >
+            <option value="" disabled hidden>
+              Choisir un type de document
+            </option>
+            {types?.map((type) => (
+              <option key={type}>{type}</option>
+            ))}
+          </Select>
 
-            {hasNewTypeDocument && (
-              <FormControl isInvalid={!!errors.new_type_document} mb={5} isDisabled={isSubmitting}>
-                <FormLabel>Nom de votre type de document</FormLabel>
-                <Input
-                  placeholder="Source de données"
-                  {...register("new_type_document", {
-                    required: "Obligatoire: Veuillez saisir le nom de votre type de document",
-                  })}
-                />
-                <FormErrorMessage>{errors.new_type_document?.message}</FormErrorMessage>
-              </FormControl>
-            )}
-            <FormControl mb={5} isDisabled={isSubmitting}>
-              <Checkbox {...register("should_import_content")}>Importer le contenu</Checkbox>
-            </FormControl>
+          <ToggleSwitchInput
+            control={control}
+            {...register("has_new_type_document")}
+            toggleSwitchProps={{
+              showCheckedHint: false,
+              disabled: isSubmitting,
+              label: "Je souhaite ajouter un nouveau type de document",
+              inputTitle: "Je souhaite ajouter un nouveau type de document",
+            }}
+          />
 
-            <FormControl isInvalid={!!errors.file} mb={5} isDisabled={isSubmitting}>
-              <FormLabel>Fichier</FormLabel>
-              <Input
-                {...register("file", {
-                  required: "Obligatoire: Vous devez ajouter un fichier à importer",
-                })}
-                hidden
-              />
-              <Dropzone
-                options={{
-                  maxFiles: 1,
-                  onDrop: (files) => {
-                    setValue("file", files[0]);
+          {hasNewTypeDocument && (
+            <Input
+              label="Nom de votre type de document"
+              disabled={isSubmitting}
+              state={errors.new_type_document ? "error" : "default"}
+              stateRelatedMessage={errors.new_type_document?.message}
+              nativeInputProps={{
+                placeholder: "Source de données",
+                ...register("new_type_document", {
+                  required: "Veuillez saisir le nom de votre type de document",
+                }),
+              }}
+            />
+          )}
+          <ToggleSwitchInput
+            control={control}
+            {...register("should_import_content")}
+            toggleSwitchProps={{
+              showCheckedHint: false,
+              disabled: isSubmitting,
+              label: "Importer le contenu",
+              inputTitle: "Importer le contenu",
+            }}
+          />
+
+          <DSFRUpload
+            hint="(.csv, maximum 100mb)"
+            disabled={isSubmitting}
+            state={errors.file ? "error" : "default"}
+            stateRelatedMessage={errors.file?.message}
+            nativeInputProps={{
+              accept:
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.xlsx,application/vnd.ms-excel,.xls,.csv, text/csv",
+              ...register("file", {
+                required:
+                  "Obligatoire: Vous devez ajouter un fichier à importer",
+                validate: {
+                  notEmpty: (value) => {
+                    return (
+                      (value && value.length > 0) ||
+                      "Obligatoire: Vous devez ajouter un fichier à importer"
+                    );
                   },
-                  onDropRejected: () => {
-                    console.log("rejected");
-                  },
-                  accept: {
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
-                    "application/vnd.ms-excel": [".xls", ".csv"],
-                    "text/csv": [".csv"],
-                  },
-                  maxSize: FILE_SIZE_LIMIT,
-                }}
-                isDisabled={isSubmitting}
-              />
-              <FormErrorMessage>{errors.file?.message}</FormErrorMessage>
-            </FormControl>
-          </Box>
-          <HStack spacing="4w" mt={8}>
-            <Button variant="primary" type="submit" isLoading={isSubmitting} loadingText="En cours d'import">
+                },
+              }),
+            }}
+          />
+
+          <Box my={4}>
+            <Button type="submit" disabled={isSubmitting}>
               Importer le fichier
             </Button>
-          </HStack>
+          </Box>
         </form>
-      </Flex>
+      </FormContainer>
     </>
   );
 };
