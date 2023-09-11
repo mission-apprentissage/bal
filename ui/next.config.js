@@ -13,7 +13,7 @@ const contentSecurityPolicy = `
       default-src 'self' https://plausible.io;
       base-uri 'self';
       block-all-mixed-content;
-      font-src 'self'  https: data:;
+      font-src 'self' https: data:;
       frame-ancestors 'self';
       frame-src 'self' https://plausible.io;
       img-src 'self' https://www.notion.so data: ;
@@ -30,15 +30,15 @@ const contentSecurityPolicy = `
 `;
 
 const nextConfig = {
-  transpilePackages: ['shared'],
+  transpilePackages: ["shared"],
   poweredByHeader: false,
   swcMinify: true,
   experimental: {
     appDir: true,
-    outputFileTracingRoot: path.join(__dirname, '../'),
+    outputFileTracingRoot: path.join(__dirname, "../"),
     // typedRoutes: true,
   },
-  output: 'standalone',
+  output: "standalone",
   async headers() {
     return [
       {
@@ -56,7 +56,7 @@ const nextConfig = {
     hideSourceMaps: false,
     widenClientFileUpload: true,
   },
-}
+};
 
 // const sentryWebpackPluginOptions = {
 //   org: "sentry",
@@ -87,6 +87,6 @@ const nextConfig = {
 // };
 
 module.exports = withSentryConfig(
-  withPlausibleProxy()(nextConfig),
+  withPlausibleProxy()(nextConfig)
   // sentryWebpackPluginOptions,
 );

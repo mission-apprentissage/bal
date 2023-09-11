@@ -1,13 +1,9 @@
 {
   "env": {
-    "es2021": true,
+    "es2022": true,
     "node": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -16,13 +12,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": [
-    "react",
-    "@typescript-eslint",
-    "simple-import-sort",
-    "import",
-    "unused-imports"
-  ],
+  "plugins": ["react", "@typescript-eslint", "simple-import-sort", "import", "unused-imports"],
   "rules": {
     "simple-import-sort/imports": "error",
     "react/react-in-jsx-scope": "off",
