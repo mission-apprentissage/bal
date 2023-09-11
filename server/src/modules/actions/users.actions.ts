@@ -17,8 +17,14 @@ type ICreateUser = {
 
 const DEFAULT_LOOKUP = {
   from: "persons",
-  localField: "person_id",
-  foreignField: "_id",
+  let: { personId: { $toObjectId: "$person_id" } },
+  pipeline: [
+    {
+      $match: {
+        $expr: { $eq: ["$_id", "$$personId"] },
+      },
+    },
+  ],
   as: "person",
 };
 

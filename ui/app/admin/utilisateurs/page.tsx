@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading } from "@chakra-ui/react";
+import { Typography } from "@mui/material";
 
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import UserList from "./components/UserList";
@@ -8,10 +8,10 @@ import UserList from "./components/UserList";
 const AdminUsersPage = () => {
   return (
     <>
-      <Breadcrumb pages={[PAGES.homepage(), PAGES.adminUsers()]} />
-      <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
+      <Breadcrumb pages={[PAGES.adminUsers()]} />
+      <Typography variant="h2" gutterBottom>
         Gestion des utilisateurs
-      </Heading>
+      </Typography>
       <UserList />
     </>
   );

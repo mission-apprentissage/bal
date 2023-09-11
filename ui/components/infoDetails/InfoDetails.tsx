@@ -1,7 +1,5 @@
-import { Box, HStack, VStack } from "@chakra-ui/react";
+import { Box, Grid, Typography } from "@mui/material";
 import React from "react";
-
-import { StyledInfoDetails } from "./infoDetails.styled";
 
 interface Props<TData> {
   title?: string;
@@ -19,27 +17,31 @@ interface Props<TData> {
  */
 const InfoDetails = <TData,>({ title, rows, data }: Props<TData>) => {
   return (
-    <StyledInfoDetails>
+    <Box my={4}>
       {title && (
-        <Box as="h2" fontSize="xl" fontWeight="semibold" mb={4}>
+        <Typography variant="h3" gutterBottom>
           {title}
-        </Box>
+        </Typography>
       )}
-      {Object.entries(rows).map(([key, { header, cell }]) => {
-        const dataKey = key as keyof TData;
-        const value = data[dataKey];
+      <Grid container spacing={2}>
+        {Object.entries(rows).map(([key, { header, cell }]) => {
+          const dataKey = key as keyof TData;
+          const value = data[dataKey];
 
-        return (
-          <VStack key={key} gap={6} alignItems="baseline">
-            <HStack mb={4} alignItems="baseline">
-              <Box w="300px">{header?.() ?? key} </Box>
-              {/* @ts-ignore */}
-              <div>{cell?.(data) ?? value}</div>
-            </HStack>
-          </VStack>
-        );
-      })}
-    </StyledInfoDetails>
+          return (
+            <>
+              <Grid item xs={6} md={3} display="flex" alignItems="center">
+                {header?.() ?? key}
+              </Grid>
+              <Grid item xs={6} md={9} display="flex" alignItems="center">
+                {/* @ts-ignore */}
+                {cell?.(data) ?? value}
+              </Grid>
+            </>
+          );
+        })}
+      </Grid>
+    </Box>
   );
 };
 

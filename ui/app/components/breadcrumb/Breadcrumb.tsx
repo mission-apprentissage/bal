@@ -56,7 +56,7 @@ export const PAGES = {
   }),
   adminUserView: (id: string) => ({
     title: "Fiche utilisateur",
-    path: `/admin/utilisateur/${id}`,
+    path: `/admin/utilisateurs/${id}`,
   }),
   adminPersons: () => ({
     title: "Gestion des personnes",
