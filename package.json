@@ -29,9 +29,9 @@
     "services:start": "docker compose up --remove-orphans -d",
     "services:stop": "docker compose down",
     "services:clean": "yarn services:stop; docker system prune --volumes",
-    "lint": "eslint .",
-    "prettier:fix": "prettier --write ./ui ./server",
-    "prettier:check": "prettier --check ./ui ./server",
+    "lint": "eslint --ignore-path .gitignore --cache .",
+    "prettier:fix": "prettier --write -u .",
+    "prettier:check": "prettier --check -u .",
     "release": "semantic-release",
     "release:interactive": "./.bin/mna-bal release:interactive",
     "prepare": "husky install",
@@ -86,15 +86,18 @@
     "vitest": "^0.34.2"
   },
   "prettier": {
-    "printWidth": 80,
+    "printWidth": 120,
     "bracketSpacing": true,
     "trailingComma": "es5",
     "arrowParens": "always"
   },
   "lint-staged": {
-    "*.{ts,js,tsx}": [
-      "eslint .",
-      "prettier ./ui ./server"
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --ignore-path .gitignore --cache --fix",
+      "prettier --write -u"
+    ],
+    "*": [
+      "prettier --write -u"
     ]
   },
   "packageManager": "yarn@3.6.1"

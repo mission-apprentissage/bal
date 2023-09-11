@@ -1,7 +1,6 @@
 module.exports = {
   branches: ["main", { name: "next", channel: "next", prerelease: "rc" }],
   repositoryUrl: "https://github.com/mission-apprentissage/bal.git",
-  allowOutdatedBranch: true,
   plugins: [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
