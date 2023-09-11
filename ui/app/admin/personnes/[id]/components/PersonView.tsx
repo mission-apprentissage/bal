@@ -1,7 +1,5 @@
-"use client";
-
-import { Heading, Text } from "@chakra-ui/react";
-import Link from "next/link";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { Typography } from "@mui/material";
 import { FC } from "react";
 import { PersonWithOrganisationJson } from "shared/models/person.model";
 
@@ -16,11 +14,14 @@ const PersonView: FC<Props> = ({ person }) => {
   return (
     <>
       <Breadcrumb
-        pages={[PAGES.homepage(), PAGES.adminPersons(), PAGES.adminViewPerson(person._id as unknown as string)]}
+        pages={[
+          PAGES.adminPersons(),
+          PAGES.adminViewPerson(person._id as unknown as string),
+        ]}
       />
-      <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
+      <Typography variant="h2" gutterBottom>
         Fiche personne
-      </Heading>
+      </Typography>
 
       <InfoDetails
         data={person}
@@ -43,12 +44,20 @@ const PersonView: FC<Props> = ({ person }) => {
           organisation: {
             header: () => "Organisation",
             cell: ({ organisation }) => {
-              return organisation ? (
-                <Text as={Link} href={PAGES.adminViewOrganisation(organisation._id as unknown as string).path}>
+              if (!organisation) return null;
+              return (
+                <Button
+                  iconId="fr-icon-arrow-right-line"
+                  iconPosition="right"
+                  linkProps={{
+                    href: PAGES.adminViewOrganisation(
+                      organisation._id as unknown as string
+                    ).path,
+                  }}
+                  priority="tertiary no outline"
+                >
                   {organisation.nom}
-                </Text>
-              ) : (
-                ""
+                </Button>
               );
             },
           },

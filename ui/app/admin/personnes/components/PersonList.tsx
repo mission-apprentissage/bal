@@ -1,12 +1,11 @@
-import { Text } from "@chakra-ui/react";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PersonWithOrganisationJson } from "shared/models/person.model";
 
-import FormSearch from "../../../../components/formSearch/FormSearch";
+import SearchBar from "../../../../components/SearchBar";
 import Table from "../../../../components/table/Table";
-import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";
 import { apiGet } from "../../../../utils/api.utils";
 import { formatUrlWithNewParams, getSearchParamsForQuery } from "../../../../utils/query.utils";
 import { PAGES } from "../../../components/breadcrumb/Breadcrumb";
@@ -37,9 +36,10 @@ const PersonList = () => {
 
   return (
     <>
-      <FormSearch onSearch={onSearch} defaultValue={searchValue} />
+      <SearchBar onButtonClick={onSearch} defaultValue={searchValue} />
+
       <Table
-        mt={4}
+        fixed
         data={persons || []}
         columns={{
           name: {
@@ -67,13 +67,11 @@ const PersonList = () => {
             header: () => "Organisation",
             cell: ({ row }) => {
               const { organisation } = row.original;
-
-              return organisation ? (
-                <Text as={Link} href={PAGES.adminViewOrganisation(organisation._id as unknown as string).path}>
+              if (!organisation) return null;
+              return (
+                <Link href={PAGES.adminViewOrganisation(organisation._id as unknown as string).path}>
                   {organisation.nom}
-                </Text>
-              ) : (
-                ""
+                </Link>
               );
             },
           },
@@ -89,9 +87,14 @@ const PersonList = () => {
             size: 25,
             header: () => "",
             cell: ({ row }) => (
-              <Link href={`/admin/personnes/${row.original._id}`}>
-                <ArrowRightLine w="1w" />
-              </Link>
+              <Button
+                iconId="fr-icon-arrow-right-line"
+                linkProps={{
+                  href: PAGES.adminViewPerson(row.original._id).path,
+                }}
+                priority="tertiary no outline"
+                title="Voir la personne"
+              />
             ),
           },
         }}
