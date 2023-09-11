@@ -1,8 +1,9 @@
-import { Box, Flex, Heading, HStack, Link, Text } from "@chakra-ui/react";
+import { getLink } from "@codegouvfr/react-dsfr/link";
+import { Summary } from "@codegouvfr/react-dsfr/Summary";
+import { Grid, Typography } from "@mui/material";
 import React, { FC, useEffect } from "react";
 
 import Section from "../../components/section/Section";
-import Summary from "../../components/summary/Summary";
 
 export const cguVersion = "v0.1";
 
@@ -18,42 +19,39 @@ const anchors = {
   MiseAjourDesConditionsUtilisation: "mise-a-jour-des-conditions-utilisation",
 };
 
-const SummaryData = [
+const summaryData = [
   {
-    anchorTitle: "Article 1",
-    anchorName: "Champ d’application",
+    anchorName: "Article 1 - Champ d’application",
     anchorLink: "champ-application",
   },
-  { anchorTitle: "Article 2", anchorName: "Objet", anchorLink: "objet" },
+  { anchorName: "Article 2 - Objet", anchorLink: "objet" },
   {
-    anchorTitle: "Article 3",
-    anchorName: "Définitions",
+    anchorName: "Article 3 - Définitions",
     anchorLink: "definition",
   },
   {
-    anchorTitle: "Article 4",
-    anchorName: "Fonctionnalités liées aux comptes des utilisateurs",
+    anchorName:
+      "Article 4 - Fonctionnalités liées aux comptes des utilisateurs",
     anchorLink: "fonctionnalite-liees-aux-comptes-des-utilisateurs",
   },
   {
-    anchorTitle: "Article 5",
-    anchorName: "Présentation des services",
+    anchorName: "Article 5 - Présentation des services",
     anchorLink: "presentation-des-services",
   },
-  { anchorTitle: "Article 6", anchorName: "Sécurité", anchorLink: "securite" },
   {
-    anchorTitle: "Article 7",
-    anchorName: "Hyperliens",
+    anchorName: "Article 6 - Sécurité",
+    anchorLink: "securite",
+  },
+  {
+    anchorName: "Article 7 - Hyperliens",
     anchorLink: "hyperliens",
   },
   {
-    anchorTitle: "Article 8",
-    anchorName: "Responsabilités",
+    anchorName: "Article 8 - Responsabilités",
     anchorLink: "responsabilites",
   },
   {
-    anchorTitle: "Article 9",
-    anchorName: "Mise à jour des conditions d'utilisation",
+    anchorName: "Article 9 - Mise à jour des conditions d'utilisation",
     anchorLink: "mise-a-jour-des-conditions-utilisation",
   },
 ];
@@ -62,72 +60,65 @@ interface Props {
   onLoad?: () => void;
 }
 
+const { Link } = getLink();
+
 const Cgu: FC<Props> = ({ onLoad }) => {
   useEffect(() => {
     onLoad?.();
   }, [onLoad]);
 
   return (
-    <HStack
-      mt="4w"
-      spacing={["0", "0", "0", "6w"]}
-      flexDirection={["column", "column", "column", "row"]}
-      alignItems={["normal", "normal", "normal", "center"]}
-    >
-      <Summary>
-        <Flex flexDirection="column" fontSize="zeta">
-          {SummaryData.map((item) => (
-            <Link
-              key={item.anchorName}
-              padding="1w"
-              href={`#${item.anchorLink}`}
-              _hover={{ textDecoration: "none", bg: "grey.950" }}
-            >
-              <Text>
-                <Text as="span" fontWeight="700">
-                  {item.anchorTitle}.
-                </Text>{" "}
-                {item.anchorName}
-              </Text>
-            </Link>
-          ))}
-        </Flex>
-      </Summary>
-      <Box>
-        <Section pt="0">
-          <Heading textStyle="h2" color="grey.50" mt={5}>
-            CONDITIONS GÉNÉRALES D&apos;UTILISATION
-          </Heading>
-          <Text>Dernière mise à jour le : 3 novembre 2022 - {cguVersion} </Text>
-          <Text mt={4}>
-            Les présentes conditions générales d’utilisation (dites « CGU ») définissent les conditions d’accès et
-            d’utilisation des Services par l’Utilisateur.
-          </Text>
-        </Section>
-        <Section mt={4} id={anchors.ChampApplication}>
-          <Heading as={"h3"} textStyle="h6" mb={5}>
+    <Grid container spacing={2}>
+      <Grid item xs={12} lg={3}>
+        <Summary
+          links={summaryData.map((item) => ({
+            linkProps: {
+              href: `#${item.anchorLink}`,
+            },
+            text: item.anchorName,
+          }))}
+        />
+      </Grid>
+      <Grid item xs={12} lg={9}>
+        <Typography variant="h2" gutterBottom>
+          CONDITIONS GÉNÉRALES D&apos;UTILISATION
+        </Typography>
+        <Typography>
+          Dernière mise à jour le : 3 novembre 2022 - {cguVersion}{" "}
+        </Typography>
+        <Typography>
+          Les présentes conditions générales d’utilisation (dites « CGU »)
+          définissent les conditions d’accès et d’utilisation des Services par
+          l’Utilisateur.
+        </Typography>
+
+        <Section id={anchors.ChampApplication}>
+          <Typography variant="h3" gutterBottom>
             Article 1 – Champ d’application
-          </Heading>
-          <Text>
-            Le tableau de bord est d’accès libre et gratuit à tout Utilisateur. La simple visite du tableau de bord
-            suppose l’acceptation par tout Utilisateur des présentes conditions générales d’utilisation.
-          </Text>
+          </Typography>
+          <Typography>
+            Le tableau de bord est d’accès libre et gratuit à tout Utilisateur.
+            La simple visite du tableau de bord suppose l’acceptation par tout
+            Utilisateur des présentes conditions générales d’utilisation.
+          </Typography>
         </Section>
-        <Section mt={4} id={anchors.Objet}>
-          <Heading as={"h3"} textStyle="h6" mb={5}>
+        <Section id={anchors.Objet}>
+          <Typography variant="h3" gutterBottom>
             Article 2 – Objet
-          </Heading>
-          <Text>
-            Le tableau de bord a pour objectif de mettre à disposition des différents acteurs les données clés de
-            l’apprentissage en temps réel.
-          </Text>
+          </Typography>
+          <Typography>
+            Le tableau de bord a pour objectif de mettre à disposition des
+            différents acteurs les données clés de l’apprentissage en temps
+            réel.
+          </Typography>
         </Section>
-        <Section mt={4} id={anchors.Definition}>
-          <Heading as={"h3"} textStyle="h6" mb={5}>
+        <Section id={anchors.Definition}>
+          <Typography variant="h3" gutterBottom>
             Article 3 – Définitions
-          </Heading>
-          <Text>
-            Les termes ci-dessous définis ont entre les parties la signification suivante :
+          </Typography>
+          <Typography>
+            Les termes ci-dessous définis ont entre les parties la signification
+            suivante :
             <br />
             <br />
             <strong>« Utilisateur »</strong> : toute personne ayant accès aux services du tableau de bord
@@ -146,15 +137,16 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             données.
             <br />
             <br />
-          </Text>
+          </Typography>
         </Section>
-        <Section mt={4} id={anchors.FonctionnaliteLieesAuxComptesDesUtilisateurs}>
-          <Heading as={"h3"} textStyle="h6" mb={5}>
+        <Section id={anchors.FonctionnaliteLieesAuxComptesDesUtilisateurs}>
+          <Typography variant="h3" gutterBottom>
             Article 4 – Fonctionnalités liées aux comptes des utilisateurs
-          </Heading>
-          <Text>
-            L&apos;accès à certaines données du tableau de bord est restreint à une inscription à un compte :
-            <Link color="primary" href="https://cfas.apprentissage.beta.gouv.fr/login">
+          </Typography>
+          <Typography>
+            L&apos;accès à certaines données du tableau de bord est restreint à
+            une inscription à un compte :
+            <Link href="https://cfas.apprentissage.beta.gouv.fr/login">
               https://cfas.apprentissage.beta.gouv.fr/login
             </Link>
             . Les services proposés ne sont accessibles qu&apos;aux seuls utilisateurs munis d&apos;un identifiant
@@ -181,15 +173,16 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             majuscules, minuscules, chiffres, et caractères spéciaux.
             <br />
             <br />
-            En cas d&apos;oubli de son mot de passe ou de compromission, l’utilisateur utilise la fonctionnalité « oubli
-            de mot de passe » et suit les instructions fournies par le tableau de bord.
-          </Text>
+            En cas d&apos;oubli de son mot de passe ou de compromission,
+            l’utilisateur utilise la fonctionnalité « oubli de mot de passe » et
+            suit les instructions fournies par le tableau de bord.
+          </Typography>
         </Section>
-        <Section mt={4} id={anchors.PresentationDesServices}>
-          <Heading as={"h3"} textStyle="h6" mb={5}>
+        <Section id={anchors.PresentationDesServices}>
+          <Typography variant="h3" gutterBottom>
             Article 5 – Présentation des services
-          </Heading>
-          <Text>
+          </Typography>
+          <Typography>
             Le tableau de bord permet aux utilisateurs :
             <br />
             <br />
@@ -220,18 +213,21 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             d&apos;accessibilité. Cette liste n&apos;est pas limitative.
             <br />
             <br />
-            Dans ce cas, la Mission interministérielle de l’apprentissage peut indiquer une date de réouverture du
-            compte ou d&apos;accessibilité à un ou plusieurs services.
-          </Text>
+            Dans ce cas, la Mission interministérielle de l’apprentissage peut
+            indiquer une date de réouverture du compte ou d&apos;accessibilité à
+            un ou plusieurs services.
+          </Typography>
         </Section>
-        <Section mt={4} id={anchors.Securite}>
-          <Heading as={"h3"} textStyle="h6" mb={5}>
+        <Section id={anchors.Securite}>
+          <Typography variant="h3" gutterBottom>
             Article 6 - Sécurité
-          </Heading>
-          <Text>
-            Le tableau de bord comporte un accès sécurisé qui permet de consulter certaines données. Tout accès
-            frauduleux est interdit et sanctionné pénalement. Il en est de même pour toute entrave ou altération du
-            fonctionnement de ce système, ou en cas d&apos;introduction, de suppression ou de modification des données
+          </Typography>
+          <Typography>
+            Le tableau de bord comporte un accès sécurisé qui permet de
+            consulter certaines données. Tout accès frauduleux est interdit et
+            sanctionné pénalement. Il en est de même pour toute entrave ou
+            altération du fonctionnement de ce système, ou en cas
+            d&apos;introduction, de suppression ou de modification des données
             qui y sont contenues.
             <br />
             <br />
@@ -239,17 +235,20 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             à ne pas introduire de virus ou toute autre technologie nuisible au tableau de bord.
             <br />
             <br />
-            La Mission interministérielle de l’apprentissage fait ses meilleurs efforts, conformément aux règles de
-            l&apos;art, pour sécuriser le service eu égard à la complexité de l&apos;internet.
-          </Text>
+            La Mission interministérielle de l’apprentissage fait ses meilleurs
+            efforts, conformément aux règles de l&apos;art, pour sécuriser le
+            service eu égard à la complexité de l&apos;internet.
+          </Typography>
         </Section>
-        <Section mt={4} id={anchors.Hyperliens}>
-          <Heading as={"h3"} textStyle="h6" mb={5}>
+        <Section id={anchors.Hyperliens}>
+          <Typography variant="h3" gutterBottom>
             Article 7 – Hyperliens
-          </Heading>
-          <Text>
-            La Mission interministérielle de l’apprentissage se réserve la possibilité de mettre en place des hyperliens
-            sur le tableau de bord donnant accès à des pages internet autres que celles de son interface.
+          </Typography>
+          <Typography>
+            La Mission interministérielle de l’apprentissage se réserve la
+            possibilité de mettre en place des hyperliens sur le tableau de bord
+            donnant accès à des pages internet autres que celles de son
+            interface.
             <br />
             <br />
             Les utilisateurs sont formellement informés que les sites auxquels ils peuvent accéder par
@@ -262,21 +261,25 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             ressources présentes sur le réseau.
             <br />
             <br />
-            La Mission interministérielle de l’apprentissage décline toute responsabilité quant au contenu des
-            informations fournies sur ces ressources présentes sur le réseau au titre de l&apos;activation des liens
-            hypertextes.
-          </Text>
+            La Mission interministérielle de l’apprentissage décline toute
+            responsabilité quant au contenu des informations fournies sur ces
+            ressources présentes sur le réseau au titre de l&apos;activation des
+            liens hypertextes.
+          </Typography>
         </Section>
-        <Section mt={4} id={anchors.Responsabilites}>
-          <Heading as={"h3"} textStyle="h6" mb={5}>
+        <Section id={anchors.Responsabilites}>
+          <Typography variant="h3" gutterBottom>
             Article 8 – Responsabilités
-          </Heading>
-          <Text as={"h4"} fontSize="20px" fontWeight="700" mb={5}>
-            8.1. Limites de la responsabilité de la Mission interministérielle de l’apprentissage
-          </Text>
-          <Text>
-            La Mission interministérielle de l’apprentissage ne saurait être tenue pour responsable des conséquences
-            provoquées par le caractère erroné ou frauduleux des informations fournies par l&apos;utilisateur.
+          </Typography>
+          <Typography variant="h4" gutterBottom>
+            8.1. Limites de la responsabilité de la Mission interministérielle
+            de l’apprentissage
+          </Typography>
+          <Typography>
+            La Mission interministérielle de l’apprentissage ne saurait être
+            tenue pour responsable des conséquences provoquées par le caractère
+            erroné ou frauduleux des informations fournies par
+            l&apos;utilisateur.
             <br />
             <br />
             L&apos;utilisateur reste en toute circonstance responsable de l&apos;utilisation qu&apos;il fait des
@@ -305,12 +308,12 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             en cas d&apos;indisponibilité temporaire ou totale de tout ou partie de l&apos;accès au tableau de bord,
             d&apos;une difficulté liée au temps de réponse et d&apos;une manière générale, d&apos;un défaut de
             performance quelconque.
-          </Text>
+          </Typography>
           <br />
-          <Text as={"h4"} fontSize="20px" fontWeight="700" mt={4}>
+          <Typography variant="h4" gutterBottom>
             8.2. Responsabilité des utilisateurs
-          </Text>
-          <Text>
+          </Typography>
+          <Typography>
             <br />
             L&apos;utilisateur s&apos;engage à utiliser le tableau de bord et les services, ainsi que l&apos;ensemble
             des informations auxquelles il pourra avoir accès en conformité avec les stipulations des présentes
@@ -370,23 +373,25 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             tableau de bord.
             <br />
             <br />
-            Toute tentative d&apos;accès non autorisé aux services, à d&apos;autres comptes, aux systèmes informatiques
-            ou à d&apos;autres réseaux connectés ou à l&apos;un des services via le piratage ou toute autre méthode est
-            interdite.
-          </Text>
+            Toute tentative d&apos;accès non autorisé aux services, à
+            d&apos;autres comptes, aux systèmes informatiques ou à d&apos;autres
+            réseaux connectés ou à l&apos;un des services via le piratage ou
+            toute autre méthode est interdite.
+          </Typography>
         </Section>
-        <Section mt={4} id={anchors.MiseAjourDesConditionsUtilisation}>
-          <Heading as={"h3"} textStyle="h6" mb={5}>
+        <Section id={anchors.MiseAjourDesConditionsUtilisation}>
+          <Typography variant="h3" gutterBottom>
             Article 9 – Mise à jour des conditions d’utilisation
-          </Heading>
-          <Text>
-            Les termes des CGU doivent être acceptés au moment de la connexion. Toute modification des CGU réalisée en
-            fonction des modifications apportées au site, de l’évolution de la législation ou pour tout autre motif jugé
-            nécessaire, nécessite votre consentement.
-          </Text>
+          </Typography>
+          <Typography>
+            Les termes des CGU doivent être acceptés au moment de la connexion.
+            Toute modification des CGU réalisée en fonction des modifications
+            apportées au site, de l’évolution de la législation ou pour tout
+            autre motif jugé nécessaire, nécessite votre consentement.
+          </Typography>
         </Section>
-      </Box>
-    </HStack>
+      </Grid>
+    </Grid>
   );
 };
 

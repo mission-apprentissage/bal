@@ -6,7 +6,7 @@ import DonneesPersonnelles from "./components/DonneesPersonnelles";
 const DonneesPersonnellesPage = () => {
   return (
     <>
-      <Breadcrumb pages={[PAGES.homepage(), PAGES.donneesPersonnelles()]} />
+      <Breadcrumb pages={[PAGES.donneesPersonnelles()]} />
       <DonneesPersonnelles />
     </>
   );

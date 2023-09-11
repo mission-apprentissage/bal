@@ -6,7 +6,7 @@ import MentionsLegales from "./components/MentionLegales";
 const MentionsLegalesPage = () => {
   return (
     <>
-      <Breadcrumb pages={[PAGES.homepage(), PAGES.mentionsLegales()]} />
+      <Breadcrumb pages={[PAGES.mentionsLegales()]} />
       <MentionsLegales />
     </>
   );

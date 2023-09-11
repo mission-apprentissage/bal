@@ -3,6 +3,7 @@
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider } from "@chakra-ui/react";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
+import { Container } from "@mui/material";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
@@ -13,7 +14,6 @@ import { theme } from "../theme/theme";
 import { queryClient } from "../utils/query.utils";
 import Footer from "./components/Footer";
 import { Header } from "./components/Header";
-import Section from "./components/section/Section";
 
 interface Props {
   children: React.ReactNode;
@@ -30,7 +30,7 @@ const RootTemplate: FC<Props> = ({ children }) => {
           <ChakraProvider theme={theme}>
             <MuiDsfrThemeProvider>
               <Header />
-              <Section>{children}</Section>
+              <Container maxWidth="xl">{children}</Container>
               <Footer />
             </MuiDsfrThemeProvider>
           </ChakraProvider>

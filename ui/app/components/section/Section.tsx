@@ -1,12 +1,12 @@
-import { Container, ContainerProps } from "@mui/material";
+import { Box, BoxProps } from "@mui/material";
 import { FC } from "react";
 
-interface Props extends ContainerProps {
+interface Props extends BoxProps {
   children: React.ReactNode;
 }
 
 const Section: FC<Props> = ({ children }) => {
-  return <Container maxWidth="xl">{children}</Container>;
+  return <Box my={3}>{children}</Box>;
 };
 
 export default Section;

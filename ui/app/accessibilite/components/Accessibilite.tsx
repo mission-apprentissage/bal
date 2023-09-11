@@ -1,19 +1,22 @@
-import { Box, Heading, Link, ListItem, Text, UnorderedList } from "@chakra-ui/react";
+import { getLink } from "@codegouvfr/react-dsfr/link";
+import { Typography } from "@mui/material";
 import React from "react";
 
-import ExternalLinkLine from "../../../components/link/ExternalLinkLine";
 import { PAGES } from "../../components/breadcrumb/Breadcrumb";
+import Section from "../../components/section/Section";
 
 const Accessibilite = () => {
+  const { Link } = getLink();
   return (
-    <Box>
-      <Heading as={"h2"} textStyle="h6" mb={2}>
+    <>
+      <Typography variant="h2" gutterBottom>
         {PAGES.accessibilite().title}
-      </Heading>
-      <Box>
-        <Text>
-          L&apos;initiative internationale pour l&apos;accessibilité du Web (Web Accessiblility Initiative) définit
-          l&apos;accessibilité du Web comme suit :<br />
+      </Typography>
+      <Section>
+        <Typography>
+          L&apos;initiative internationale pour l&apos;accessibilité du Web (Web
+          Accessiblility Initiative) définit l&apos;accessibilité du Web comme
+          suit :<br />
           <br />
           L&apos;accessibilité du Web signifie que les personnes en situation de handicap peuvent utiliser le Web. Plus
           précisément, qu&apos;elles peuvent percevoir, comprendre, naviguer et interagir avec le Web, et qu&apos;elles
@@ -37,83 +40,85 @@ const Accessibilite = () => {
           Le site Catalogue de l&apos;offre de formation en apprentissage est en cours d&apos;optimisation afin de le
           rendre conforme au{" "}
           <Link
-            href={"https://www.numerique.gouv.fr/publications/rgaa-accessibilite"}
-            textDecoration={"underline"}
-            isExternal
+            href={
+              "https://www.numerique.gouv.fr/publications/rgaa-accessibilite"
+            }
           >
-            RGAA v3 <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+            RGAA v3{" "}
           </Link>
           .
           <br />
           La déclaration de conformité sera publiée ultérieurement.
-        </Text>
-      </Box>
-      <Box mt={4}>
-        <Heading as={"h3"} textStyle="h6" mb={2}>
+        </Typography>
+      </Section>
+      <Section>
+        <Typography variant="h3" gutterBottom>
           Nos engagements
-        </Heading>
-        <Text>
-          Audit de mise en conformité (en cours) pour nous aider à détecter les potentiels oublis d&apos;accessibilité.
+        </Typography>
+        <Typography>
+          Audit de mise en conformité (en cours) pour nous aider à détecter les
+          potentiels oublis d&apos;accessibilité.
           <br />
           Déclaration d&apos;accessibilité (en cours) pour expliquer en toute transparence notre démarche.
           <br />
           Mise à jour de cette page pour vous tenir informés de notre progression.
           <br />
-          <br />
-          Nos équipes ont ainsi travaillé sur les contrastes de couleur, la présentation et la structure de
-          l&apos;information ou la clarté des formulaires.
-          <br />
+          Nos équipes ont ainsi travaillé sur les contrastes de couleur, la
+          présentation et la structure de l&apos;information ou la clarté des
+          formulaires.
           <br />
           Des améliorations vont être apportées régulièrement.
-        </Text>
-      </Box>
-      <Box mt={4}>
-        <Text>
-          Pour en savoir plus sur la politique d&apos;accessibilité numérique de l&apos;État :{" "}
+        </Typography>
+      </Section>
+      <Section>
+        <Typography>
+          Pour en savoir plus sur la politique d&apos;accessibilité numérique de
+          l&apos;État :{" "}
           <Link
-            href={"https://www.numerique.gouv.fr/publications/rgaa-accessibilite/"}
-            textDecoration={"underline"}
-            isExternal
+            href={
+              "https://www.numerique.gouv.fr/publications/rgaa-accessibilite/"
+            }
           >
             https://www.numerique.gouv.fr/publications/rgaa-accessibilite/{" "}
-            <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
           </Link>
-        </Text>
-      </Box>
-      <Box mt={4}>
-        <Heading as={"h3"} textStyle="h6" mb={2}>
+        </Typography>
+      </Section>
+      <Section>
+        <Typography variant="h3" gutterBottom>
           Voie de recours
-        </Heading>
-        <Box>
-          Cette procédure est à utiliser dans le cas suivant : vous avez signalé au responsable du site internet un
-          défaut d&apos;accessibilité qui vous empêche d&apos;accéder à un contenu ou à un des services du portail et
-          vous n&apos;avez pas obtenu de réponse satisfaisante.
+        </Typography>
+        <Typography>
+          Cette procédure est à utiliser dans le cas suivant : vous avez signalé
+          au responsable du site internet un défaut d&apos;accessibilité qui
+          vous empêche d&apos;accéder à un contenu ou à un des services du
+          portail et vous n&apos;avez pas obtenu de réponse satisfaisante.
           <br />
           <br />
           Vous pouvez :
-          <UnorderedList stylePosition="inside">
-            <ListItem>
+          <ul>
+            <li>
               Écrire un message au{" "}
-              <Link href={"https://formulaire.defenseurdesdroits.fr/"} textDecoration={"underline"} isExternal>
-                Défenseur des droits <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+              <Link href={"https://formulaire.defenseurdesdroits.fr/"}>
+                Défenseur des droits{" "}
               </Link>
-            </ListItem>
-            <ListItem>
+            </li>
+            <li>
               Contacter le délégué du{" "}
-              <Link href={"https://www.defenseurdesdroits.fr/saisir/delegues"} textDecoration={"underline"} isExternal>
-                Défenseur des droits dans votre région <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} />
+              <Link href={"https://www.defenseurdesdroits.fr/saisir/delegues"}>
+                Défenseur des droits dans votre région{" "}
               </Link>
-            </ListItem>
-            <ListItem>
-              Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) :<br />
+            </li>
+            <li>
+              Envoyer un courrier par la poste (gratuit, ne pas mettre de
+              timbre) :<br />
               Défenseur des droits
               <br />
               Libre réponse 71120 75342 Paris CEDEX 07
-            </ListItem>
-          </UnorderedList>
-        </Box>
-      </Box>
-    </Box>
+            </li>
+          </ul>
+        </Typography>
+      </Section>
+    </>
   );
 };
 

@@ -13,7 +13,7 @@ const APP_VERSION = process.env.NEXT_PUBLIC_VERSION;
 const Footer = () => {
   return (
     <DSFRFooter
-      accessibility="non compliant"
+      accessibility="partially compliant"
       contentDescription={
         <span>
           Mandatée par plusieurs ministères, la{" "}
