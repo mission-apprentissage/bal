@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading, ListItem, UnorderedList } from "@chakra-ui/react";
+import { Typography } from "@mui/material";
 import { FC } from "react";
 import { IOrganisationJson } from "shared/models/organisation.model";
 
@@ -15,12 +15,10 @@ interface Props {
 const OrganisationView: FC<Props> = ({ organisation }) => {
   return (
     <>
-      <Breadcrumb
-        pages={[PAGES.homepage(), PAGES.adminOrganisations(), PAGES.adminViewOrganisation(organisation._id)]}
-      />
-      <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
+      <Breadcrumb pages={[PAGES.adminOrganisations(), PAGES.adminViewOrganisation(organisation._id)]} />
+      <Typography variant="h2" gutterBottom>
         Fiche organisation
-      </Heading>
+      </Typography>
 
       <InfoDetails
         data={organisation}
@@ -35,21 +33,22 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
             header: () => "Domaines",
             cell: ({ email_domains }) => {
               return (
-                <UnorderedList>
-                  {email_domains?.map((domain: string) => <ListItem key={domain}>{domain}</ListItem>)}
-                </UnorderedList>
+                <ul>
+                  {email_domains?.map((domain: string) => (
+                    <li key={domain}>{domain}</li>
+                  ))}
+                </ul>
               );
             },
           },
         }}
       />
 
-      <Heading as="h3" fontSize="xl" mb={[3, 6]}>
+      <Typography variant="h3" gutterBottom>
         Établissements
-      </Heading>
+      </Typography>
 
       <Table
-        mt={4}
         data={organisation.etablissements ?? []}
         columns={{
           nom: {

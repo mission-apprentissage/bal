@@ -1,11 +1,10 @@
+import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IOrganisationJson } from "shared/models/organisation.model";
 
-import FormSearch from "../../../../components/formSearch/FormSearch";
+import SearchBar from "../../../../components/SearchBar";
 import Table from "../../../../components/table/Table";
-import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";
 import { apiGet } from "../../../../utils/api.utils";
 import { formatUrlWithNewParams, getSearchParamsForQuery } from "../../../../utils/query.utils";
 import { PAGES } from "../../../components/breadcrumb/Breadcrumb";
@@ -36,9 +35,10 @@ const OrganisationList = () => {
 
   return (
     <>
-      <FormSearch onSearch={onSearch} defaultValue={searchValue} />
+      <SearchBar onButtonClick={onSearch} defaultValue={searchValue} />
+
       <Table
-        mt={4}
+        fixed
         data={organisations || []}
         columns={{
           nom: {
@@ -57,9 +57,14 @@ const OrganisationList = () => {
             size: 25,
             header: () => "",
             cell: ({ row }) => (
-              <Link href={`/admin/organisations/${row.original._id}`}>
-                <ArrowRightLine w="1w" />
-              </Link>
+              <Button
+                iconId="fr-icon-arrow-right-line"
+                linkProps={{
+                  href: PAGES.adminViewOrganisation(row.original._id).path,
+                }}
+                priority="tertiary no outline"
+                title="Voir l'organisation"
+              />
             ),
           },
         }}
