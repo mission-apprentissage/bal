@@ -40,7 +40,7 @@
     "e2e:headless": "cypress run",
     "e2e:convert": "node cypress/convertRecords.mjs",
     "test": "vitest",
-    "test:ci": "yarn test --run --coverage",
+    "test:ci": "yarn test --run --coverage.include='ui' --coverage.include='server/src' --coverage.include='shared' --coverage.provider='v8' --coverage.enabled --coverage.all --coverage.exclude='**/tests' --coverage.exclude='**/.next'",
     "test:watch": "vitest --watch",
     "typecheck": "yarn foreach:parallel run typecheck",
     "typecheck:ci": "yarn foreach:ci run typecheck",
