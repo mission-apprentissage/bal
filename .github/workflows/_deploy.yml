@@ -9,7 +9,6 @@ on:
         options:
           - production
           - recette
-          - test
       app_version:
         description: app version
         type: string
@@ -30,12 +29,6 @@ on:
     secrets:
       DEPLOY_SSH_PRIVATE_KEY:
         description: SSH private key
-        required: true
-      SSH_KNOWN_HOSTS:
-        description: SSH known hosts list
-        required: true
-      DEPLOY_USERNAME:
-        description: SSH USER TO DEPLOY
         required: true
       DEPLOY_PASS:
         description: SSH PWD TO DEPLOY
@@ -62,7 +55,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Checkout project
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -81,7 +74,7 @@ jobs:
         run: .bin/mna-bal deploy ${{ inputs.environment }} --extra-vars "app_version=${{ inputs.app_version }}"
         env:
           ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
-          ANSIBLE_REMOTE_USER: ${{ secrets.DEPLOY_USERNAME }}
+          ANSIBLE_REMOTE_USER: deploy
           ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
 
       - name: Notify failure on Slack
