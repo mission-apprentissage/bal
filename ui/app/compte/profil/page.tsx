@@ -1,26 +1,33 @@
 "use client";
-import { Box, Button, Input, InputGroup, InputRightElement, Text, useToast } from "@chakra-ui/react";
+
+import Button from "@codegouvfr/react-dsfr/Button";
+import Input from "@codegouvfr/react-dsfr/Input";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 
-import { Dialog } from "../../../components/dialog/Dialog";
+import Toast, { useToast } from "../../../components/toast/Toast";
 import { useAuth } from "../../../context/AuthContext";
 import { apiGet } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
+import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
+
+const modal = createModal({
+  id: "generate-api-key",
+  isOpenedByDefault: false,
+});
 
 const ProfilPage = () => {
   const { user } = useAuth();
-  const [isGenerateTokenOpen, setIsGenerateTokenOpen] = useState(false);
   const [apiKey, setApiKey] = useState<string | undefined>();
-  const toast = useToast();
+  const { toast, setToast, close } = useToast();
 
   const handleClick = () => {
     if (apiKey) {
       navigator.clipboard.writeText(apiKey);
-      toast({
-        title: "Jeton API copié dans le presse-papier.",
-        status: "success",
-        duration: 4000,
-        isClosable: true,
+      setToast({
+        severity: "success",
+        message: "Jeton API copié dans le presse-papier.",
       });
     }
   };
@@ -32,71 +39,83 @@ const ProfilPage = () => {
       setApiKey(data.api_key);
     } catch (error) {
       console.error(error);
-      toast({
-        title: "Impossible de générer un jeton API",
-        status: "error",
-        duration: 4000,
-        isClosable: true,
+      setToast({
+        severity: "error",
+        message: "Une erreur est survenue lors de la génération du jeton API.",
       });
     } finally {
-      setIsGenerateTokenOpen(false);
+      modal.close();
     }
   };
 
   if (!user) return null;
 
   return (
-    <Box>
-      <Text>Jeton API</Text>
-      <InputGroup size="md" mt={4}>
-        <Input pr="5rem" type="text" value={apiKey ?? "****************************************"} readOnly />
-        <InputRightElement width="5rem">
-          {apiKey && (
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              Copier
-            </Button>
-          )}
-        </InputRightElement>
-      </InputGroup>
+    <>
+      <Breadcrumb pages={[PAGES.compteProfil()]} />
+      <Typography variant="h2" gutterBottom>
+        Jeton API
+      </Typography>
+      <Input
+        label="Jeton API"
+        nativeInputProps={{
+          value: apiKey ?? "****************************************",
+        }}
+      />
+      {apiKey && (
+        <>
+          <Typography gutterBottom>
+            Ce jeton n'est visible qu'une fois, il est recommandé de le stocker
+            dans un endroit sécurisé.
+          </Typography>
+          <Box my={2}>
+            <Button onClick={handleClick}>Copier</Button>
+          </Box>
+        </>
+      )}
+
       {!apiKey && (
-        <Text mt={4}>
+        <Typography>
           {user.api_key_used_at ? (
             <>{`Dernière utilisation le ${formatDate(user.api_key_used_at as unknown as string, "PPP à p")}`}</>
           ) : (
             <>Ce jeton n'a pas encore été utilisé</>
           )}
-        </Text>
+        </Typography>
       )}
 
-      <Box mt={4}>
-        {!apiKey ? (
-          <>
-            <Dialog
-              title="Générer un nouveau jeton API"
-              modalProps={{
-                onClose: () => setIsGenerateTokenOpen(false),
-                isOpen: isGenerateTokenOpen,
-              }}
-              cancelButtonProps={{
-                onClick: () => setIsGenerateTokenOpen(false),
-              }}
-              proceedButtonProps={{
-                onClick: generateApiKey,
-              }}
-            >
-              <Text>
-                Êtes-vous sûr de vouloir générer un nouveau jeton API ? Le jeton existant ne sera plus utilisable.
-              </Text>
-            </Dialog>
-            <Button variant="primary" onClick={() => setIsGenerateTokenOpen(true)}>
-              Générer un nouveau jeton API
-            </Button>
-          </>
-        ) : (
-          <Text>Ce jeton n'est visible qu'une fois, il est recommandé de le stocker dans un endroit sécurisé.</Text>
-        )}
-      </Box>
-    </Box>
+      <modal.Component
+        title="Générer un nouveau jeton API"
+        buttons={[
+          {
+            children: "Annuler",
+          },
+          {
+            onClick: () => {
+              generateApiKey();
+            },
+            children: "Générer",
+          },
+        ]}
+      >
+        Êtes-vous sûr de vouloir générer un nouveau jeton API ? Le jeton
+        existant ne sera plus utilisable.
+      </modal.Component>
+
+      {!apiKey && (
+        <Box my={2}>
+          <Button onClick={() => modal.open()}>
+            Générer un nouveau jeton API
+          </Button>
+        </Box>
+      )}
+
+      <Toast
+        severity={toast?.severity}
+        message={toast?.message}
+        onClose={close}
+      />
+    </>
   );
 };
 

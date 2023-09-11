@@ -1,11 +1,11 @@
 "use client";
-import { Center, Spinner } from "@chakra-ui/react";
+import { Box, CircularProgress } from "@mui/material";
 
 export default function Loading() {
   // You can add any UI inside Loading, including a Skeleton.
   return (
-    <Center mt={4}>
-      <Spinner></Spinner>
-    </Center>
+    <Box my={4} display="flex" justifyContent="center" alignItems="center">
+      <CircularProgress />
+    </Box>
   );
 }

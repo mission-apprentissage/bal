@@ -1,7 +1,5 @@
 "use client";
 
-import { CacheProvider } from "@chakra-ui/next-js";
-import { ChakraProvider } from "@chakra-ui/react";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
 import { Container } from "@mui/material";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -10,7 +8,6 @@ import PlausibleProvider from "next-plausible";
 import { FC, useRef } from "react";
 
 import { publicConfig } from "../config.public";
-import { theme } from "../theme/theme";
 import { queryClient } from "../utils/query.utils";
 import Footer from "./components/Footer";
 import { Header } from "./components/Header";
@@ -26,15 +23,11 @@ const RootTemplate: FC<Props> = ({ children }) => {
   return (
     <PlausibleProvider trackLocalhost={false} enabled={tracking.current} domain={publicConfig.host}>
       <QueryClientProvider client={queryClient}>
-        <CacheProvider>
-          <ChakraProvider theme={theme}>
-            <MuiDsfrThemeProvider>
-              <Header />
-              <Container maxWidth="xl">{children}</Container>
-              <Footer />
-            </MuiDsfrThemeProvider>
-          </ChakraProvider>
-        </CacheProvider>
+        <MuiDsfrThemeProvider>
+          <Header />
+          <Container maxWidth="xl">{children}</Container>
+          <Footer />
+        </MuiDsfrThemeProvider>
       </QueryClientProvider>
     </PlausibleProvider>
   );

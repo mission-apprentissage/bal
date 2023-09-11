@@ -1,10 +1,9 @@
 "use client";
 
-import { Box } from "@chakra-ui/react";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import PasswordInput from "@codegouvfr/react-dsfr/blocks/PasswordInput";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";

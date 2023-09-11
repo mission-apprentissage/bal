@@ -14,9 +14,6 @@
     "prebuild": "only-include-used-icons"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.1.0",
-    "@chakra-ui/next-js": "^2.1.5",
-    "@chakra-ui/react": "^2.8.0",
     "@codegouvfr/react-dsfr": "^0.75.4",
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
@@ -28,7 +25,6 @@
     "@types/node": "18.11.18",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
-    "chakra-ui-markdown-renderer": "^4.1.0",
     "client-only": "^0.0.1",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.16.0",
@@ -51,7 +47,6 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "@chakra-ui/theme": "^3.2.0",
     "@types/lodash.range": "3.2.7",
     "@types/react-datepicker": "^4.15.0",
     "luxon": "^3.4.0",

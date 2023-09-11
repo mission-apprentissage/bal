@@ -1,8 +1,7 @@
-import { Icon, IconProps } from "@chakra-ui/react";
 import React, { FC } from "react";
 
-export const NotFound: FC<IconProps> = (props) => (
-  <Icon width="191px" height="113px" viewBox="0 0 191 113" {...props}>
+export const NotFound: FC = () => (
+  <svg viewBox="0 0 191 113">
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -413,5 +412,5 @@ export const NotFound: FC<IconProps> = (props) => (
       d="M189.871 111.373C190.079 111.373 190.248 111.541 190.248 111.749C190.248 111.95 190.091 112.114 189.894 112.125L189.871 112.126H1.3674C1.15937 112.126 0.990723 111.957 0.990723 111.749C0.990723 111.549 1.14754 111.385 1.34527 111.373L1.3674 111.373H189.871Z"
       fill="#2E186A"
     />
-  </Icon>
+  </svg>
 );

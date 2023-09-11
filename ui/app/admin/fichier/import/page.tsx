@@ -12,9 +12,9 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { IGetRoutes, IPostRoutes, IResponse } from "shared";
 
 import ToggleSwitchInput from "../../../../components/form/ToggleSwitchInput";
+import Toast, { useToast } from "../../../../components/toast/Toast";
 import { apiGet, apiPost } from "../../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../../components/breadcrumb/Breadcrumb";
-import useToaster from "../../../components/hooks/useToaster";
 
 interface FormValues
   extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
@@ -35,7 +35,8 @@ const FormContainer = styled("div")(({ theme }) => ({
 
 const AdminImportPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toastSuccess, toastError } = useToaster();
+  const { toast, setToast } = useToast();
+
   const router = useRouter();
 
   const { data: types = [] } = useQuery<IResponse<IGetRoutes["/admin/documents/types"]>>({
@@ -79,11 +80,15 @@ const AdminImportPage = () => {
         },
         body: formData,
       });
-      toastSuccess("Fichier importé avec succès.");
+
+      setToast({
+        severity: "success",
+        message: "Fichier importé avec succès.",
+      });
       router.push(PAGES.adminFichier().path);
     } catch (error) {
       if (error instanceof Error) {
-        toastError(error.message);
+        setToast({ severity: "error", message: error.message });
       }
       console.error(error);
     } finally {
@@ -181,6 +186,7 @@ const AdminImportPage = () => {
             </Button>
           </Box>
         </form>
+        <Toast severity={toast?.severity} message={toast?.message} />
       </FormContainer>
     </>
   );
