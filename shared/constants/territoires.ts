@@ -101,7 +101,7 @@ export const REGIONS = [
   },
 ] as const;
 
-type Codes = typeof REGIONS[number]["code"];
+type Codes = (typeof REGIONS)[number]["code"];
 
 type IRegion<C extends Codes> = {
   code: C;

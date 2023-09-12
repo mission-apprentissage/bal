@@ -9,10 +9,7 @@ import Table from "../../../../components/table/Table";
 import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";
 import { apiGet } from "../../../../utils/api.utils";
 import { formatDate } from "../../../../utils/date.utils";
-import {
-  formatUrlWithNewParams,
-  getSearchParamsForQuery,
-} from "../../../../utils/query.utils";
+import { formatUrlWithNewParams, getSearchParamsForQuery } from "../../../../utils/query.utils";
 import { PAGES } from "../../../components/breadcrumb/Breadcrumb";
 import { getPersonDisplayName } from "../../personnes/persons.format";
 
@@ -20,11 +17,7 @@ const UserList = () => {
   const searchParams = useSearchParams();
   const { push } = useRouter();
 
-  const {
-    page: page,
-    limit: limit,
-    q: searchValue,
-  } = getSearchParamsForQuery(searchParams);
+  const { page: page, limit: limit, q: searchValue } = getSearchParamsForQuery(searchParams);
 
   const { data: users } = useQuery<IUserWithPersonPublic[]>({
     queryKey: ["users", { searchValue, page, limit }],
@@ -68,11 +61,7 @@ const UserList = () => {
               if (!person) return null;
 
               return (
-                <Text
-                  as={Link}
-                  href={`/admin/personnes/${person._id}`}
-                  flexGrow={1}
-                >
+                <Text as={Link} href={`/admin/personnes/${person._id}`} flexGrow={1}>
                   <Text isTruncated maxWidth={400}>
                     {getPersonDisplayName(person)}
                   </Text>
@@ -90,9 +79,7 @@ const UserList = () => {
             header: () => "Dernière utilisation API",
             cell: ({ row }) => {
               const date = row.original.api_key_used_at;
-              return date
-                ? formatDate(date as unknown as string, "PPP à p")
-                : "Jamais";
+              return date ? formatDate(date as unknown as string, "PPP à p") : "Jamais";
             },
           },
           actions: {

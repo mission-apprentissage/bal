@@ -18,7 +18,6 @@
       - [Server Test](#server-test)
   - [Aller plus loin](#aller-plus-loin)
 
-
 ## Pré-requis
 
 - Docker
@@ -109,19 +108,19 @@ Pour supprimer l'ensemble de la stack et tuer tous les conteneurs il suffit de l
 yarn services:clean
 ```
 
-
 #### Server CLI
 
 De manière général, il est recommandé d'utiliser une session interactive.
 
 Vous pouvez utiliser la cli du server, dans la session interactive `docker compose run --rm -it server sh`:
+
 - `yarn cli --help`: List l'ensemble des commandes disponibles
 - `yarn cli seed`: Seed de la database
 - `yarn cli migrations:status`: Vérification du status des migrations
 - `yarn cli migrations:up`: Execution des migrations
 - `yarn cli migrations:create`: Creation d'une nouvelle migration
 
-Il est aussi possible de lancer ces commandes sans session interactive comme par example: 
+Il est aussi possible de lancer ces commandes sans session interactive comme par example:
 
 ```bash
 yarn cli --help

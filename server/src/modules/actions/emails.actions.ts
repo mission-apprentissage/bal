@@ -121,10 +121,7 @@ export async function markEmailAsOpened(token: string) {
 export async function unsubscribeUser(id: string) {
   return getDbCollection("events").findOneAndUpdate(
     {
-      $or: [
-        { "payload.emails.token": id },
-        { "payload.emails.payload.recipient.email": id },
-      ],
+      $or: [{ "payload.emails.token": id }, { "payload.emails.payload.recipient.email": id }],
       name: "bal_emails",
     },
     {
@@ -177,10 +174,7 @@ export async function sendStoredEmail<T extends TemplateName>(
   try {
     template.data.token = emailToken;
     await addEmail(person_id, emailToken, templateName, payload);
-    const messageId = await mailer.sendEmailMessage(
-      payload.recipient.email,
-      template
-    );
+    const messageId = await mailer.sendEmailMessage(payload.recipient.email, template);
     await addEmailMessageId(emailToken, messageId);
   } catch (err) {
     captureException(err);

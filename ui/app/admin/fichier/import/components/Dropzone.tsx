@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  HStack,
-  Input,
-  List,
-  ListItem,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, HStack, Input, List, ListItem, Text } from "@chakra-ui/react";
 import { FC, useMemo, useState } from "react";
 import { DropEvent, DropzoneOptions, useDropzone } from "react-dropzone";
 
@@ -40,11 +32,7 @@ interface Props {
 export const Dropzone: FC<Props> = ({ options, isDisabled }) => {
   const [files, setFiles] = useState<File[]>([]);
 
-  const onDrop: DropzoneOptions["onDrop"] = (
-    acceptedFiles,
-    fileRejections,
-    event
-  ) => {
+  const onDrop: DropzoneOptions["onDrop"] = (acceptedFiles, fileRejections, event) => {
     setFiles(acceptedFiles);
     options.onDrop?.(acceptedFiles, fileRejections, event);
   };
@@ -76,12 +64,7 @@ export const Dropzone: FC<Props> = ({ options, isDisabled }) => {
         <List w="full">
           {files.map((file) => {
             return (
-              <ListItem
-                key={file.name}
-                borderBottom="solid 1px"
-                borderColor="grey.925"
-                pb={3}
-              >
+              <ListItem key={file.name} borderBottom="solid 1px" borderColor="grey.925" pb={3}>
                 <HStack>
                   <File boxSize="5" color="blue_france.main" />
                   <Box flexGrow={1}>
@@ -90,12 +73,7 @@ export const Dropzone: FC<Props> = ({ options, isDisabled }) => {
                     </Text>
                   </Box>
                   {!isDisabled && (
-                    <Bin
-                      boxSize="5"
-                      color="red_marianne"
-                      cursor="pointer"
-                      onClick={() => handleDelete(file)}
-                    />
+                    <Bin boxSize="5" color="red_marianne" cursor="pointer" onClick={() => handleDelete(file)} />
                   )}
                 </HStack>
               </ListItem>
@@ -111,8 +89,8 @@ export const Dropzone: FC<Props> = ({ options, isDisabled }) => {
             <>
               <DownloadLine boxSize="4" color="blue_france.main" mb={4} />
               <Text color="grey.425">
-                Glissez le fichier dans cette zone ou cliquez sur le bouton pour
-                ajouter un document depuis votre disque dur
+                Glissez le fichier dans cette zone ou cliquez sur le bouton pour ajouter un document depuis votre disque
+                dur
               </Text>
               <Text color="grey.425">(.csv, maximum 100mb)</Text>
               <Button size="md" variant="secondary" mt={4}>

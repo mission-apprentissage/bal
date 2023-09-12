@@ -28,13 +28,8 @@ export const ZPerson = z
     civility: z.enum(["Madame", "Monsieur"]).optional().describe("civilité"),
     nom: z.string().optional().describe("Le nom de la personne"),
     prenom: z.string().optional().describe("Le prénom de la personne"),
-    organisations: z
-      .array(z.string().describe("Identifiant de l'organisation"))
-      .describe("Liste des organisations"),
-    sirets: z
-      .array(z.string())
-      .optional()
-      .describe("Liste de sirets recensé (sécurisation qualité de la donnée)"),
+    organisations: z.array(z.string().describe("Identifiant de l'organisation")).describe("Liste des organisations"),
+    sirets: z.array(z.string()).optional().describe("Liste de sirets recensé (sécurisation qualité de la donnée)"),
     _meta: z
       .object({
         source: z.string().optional(),
@@ -42,10 +37,7 @@ export const ZPerson = z
       .describe("Métadonnées")
       .nonstrict()
       .optional(),
-    updated_at: z
-      .date()
-      .describe("Date de mise à jour en base de données")
-      .optional(),
+    updated_at: z.date().describe("Date de mise à jour en base de données").optional(),
     created_at: z.date().describe("Date d'ajout en base de données").optional(),
   })
   .strict();
@@ -59,9 +51,7 @@ export type IPersonJson = Jsonify<z.input<typeof ZPerson>>;
 
 // Make exact type
 export type PersonWithOrganisation = z.output<typeof ZPersonWithOrganisation>;
-export type PersonWithOrganisationJson = Jsonify<
-  z.input<typeof ZPersonWithOrganisation>
->;
+export type PersonWithOrganisationJson = Jsonify<z.input<typeof ZPersonWithOrganisation>>;
 
 export default {
   zod: ZPerson,

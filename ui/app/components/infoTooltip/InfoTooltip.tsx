@@ -43,21 +43,11 @@ interface Props extends PopoverContentProps {
 }
 
 const InfoTooltip: FC<Props> = memo(
-  ({
-    description,
-    descriptionComponent,
-    label,
-    history,
-    noHistory = true,
-    ...rest
-  }) => {
+  ({ description, descriptionComponent, label, history, noHistory = true, ...rest }) => {
     return (
       <Popover placement="bottom">
         <PopoverTrigger>
-          <IconButton
-            icon={<TooltipIcon color={"grey.200"} w="23px" h="23px" />}
-            aria-label={"tooltip"}
-          />
+          <IconButton icon={<TooltipIcon color={"grey.200"} w="23px" h="23px" />} aria-label={"tooltip"} />
         </PopoverTrigger>
         <PopoverContent {...rest}>
           <PopoverArrow />
@@ -75,20 +65,8 @@ const InfoTooltip: FC<Props> = memo(
                       </ReactMarkdown>
                     </Text>
                   ) : (
-                    <Link
-                      href={part.href}
-                      fontSize="md"
-                      key={i}
-                      textDecoration={"underline"}
-                      isExternal
-                    >
-                      {part.linkText}{" "}
-                      <ExternalLinkLine
-                        w={"0.75rem"}
-                        h={"0.75rem"}
-                        mb={"0.125rem"}
-                        ml={"0.125rem"}
-                      />
+                    <Link href={part.href} fontSize="md" key={i} textDecoration={"underline"} isExternal>
+                      {part.linkText} <ExternalLinkLine w={"0.75rem"} h={"0.75rem"} mb={"0.125rem"} ml={"0.125rem"} />
                     </Link>
                   );
                 })}
@@ -121,9 +99,7 @@ const InfoTooltip: FC<Props> = memo(
                             {entry.role}
                           </Badge>
                         </Flex>
-                        <Text textStyle="xs">
-                          {prettyPrintDate(entry.when)}
-                        </Text>
+                        <Text textStyle="xs">{prettyPrintDate(entry.when)}</Text>
                       </Flex>
                       <Text textStyle="sm" mt="0">
                         A modifié(e) la valeur du champ par {entry.to}

@@ -1,7 +1,6 @@
 import * as Yup from "yup";
 
-export const isEmptyValue = (value: unknown) =>
-  value === "" || value === undefined || value === null;
+export const isEmptyValue = (value: unknown) => value === "" || value === undefined || value === null;
 
 interface Field {
   required?: boolean;
@@ -18,22 +17,12 @@ interface Field {
   minLength?: number;
 }
 
-export const validField = async ({
-  field,
-  value,
-}: {
-  field: Field;
-  value: string;
-}): Promise<{ error?: string }> => {
+export const validField = async ({ field, value }: { field: Field; value: string }): Promise<{ error?: string }> => {
   if (field.required && isEmptyValue(value)) {
     return { error: field.requiredMessage ?? "Ce champ est obligatoire" };
   }
 
-  if (
-    field.fieldType === "phone" &&
-    field.extra?.countryCode === "fr" &&
-    value.length !== 12
-  ) {
+  if (field.fieldType === "phone" && field.extra?.countryCode === "fr" && value.length !== 12) {
     return { error: "Le numéro de téléphone n'est pas au bon format" };
   }
 
@@ -60,9 +49,7 @@ export const validField = async ({
   return (await field?.validate?.({ value })) ?? {};
 };
 
-const emailValidator = Yup.string().email(
-  "Le courriel doit être au format correct"
-);
+const emailValidator = Yup.string().email("Le courriel doit être au format correct");
 const isValidEmail = async (value: string) => {
   try {
     await emailValidator.validate(value);

@@ -1,7 +1,4 @@
-import fastifySentryPlugin, {
-  SentryPluginOptions,
-  UserData,
-} from "@immobiliarelabs/fastify-sentry";
+import fastifySentryPlugin, { SentryPluginOptions, UserData } from "@immobiliarelabs/fastify-sentry";
 import { CaptureConsole, ExtraErrorData } from "@sentry/integrations";
 import * as Sentry from "@sentry/node";
 import { FastifyInstance, FastifyRequest } from "fastify";

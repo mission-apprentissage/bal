@@ -6,9 +6,7 @@ import PolitiqueConfidentialite from "./components/PolitiqueConfidentialite";
 const PolitiqueConfidentialitePage = () => {
   return (
     <>
-      <Breadcrumb
-        pages={[PAGES.homepage(), PAGES.politiqueConfidentialite()]}
-      />
+      <Breadcrumb pages={[PAGES.homepage(), PAGES.politiqueConfidentialite()]} />
       <PolitiqueConfidentialite />
     </>
   );

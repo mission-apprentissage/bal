@@ -6,9 +6,7 @@ import { IOrganisationJson } from "shared/models/organisation.model";
 
 import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
 import Table from "../../../../../components/table/Table";
-import Breadcrumb, {
-  PAGES,
-} from "../../../../components/breadcrumb/Breadcrumb";
+import Breadcrumb, { PAGES } from "../../../../components/breadcrumb/Breadcrumb";
 
 interface Props {
   organisation: IOrganisationJson;
@@ -18,11 +16,7 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
   return (
     <>
       <Breadcrumb
-        pages={[
-          PAGES.homepage(),
-          PAGES.adminOrganisations(),
-          PAGES.adminViewOrganisation(organisation._id),
-        ]}
+        pages={[PAGES.homepage(), PAGES.adminOrganisations(), PAGES.adminViewOrganisation(organisation._id)]}
       />
       <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
         Fiche organisation

@@ -41,20 +41,13 @@ export const getTrainingLinks = async (data: TrainingLinkData[]) => {
   return executeWithRateLimiting(async (client: AxiosInstance) => {
     console.log(`Request fired with ${data.length} items`);
     try {
-      const { data: links } = await client.post<TrainingLink[]>(
-        `/api/trainingLinks`,
-        data
-      );
+      const { data: links } = await client.post<TrainingLink[]>(`/api/trainingLinks`, data);
       console.log(`Request success with ${links.length} items`);
 
       return links;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      throw new ApiError(
-        "Api LBA",
-        `${error.message}`,
-        error.code || error.response?.status
-      );
+      throw new ApiError("Api LBA", `${error.message}`, error.code || error.response?.status);
     }
   });
 };

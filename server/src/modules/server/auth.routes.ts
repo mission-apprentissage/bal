@@ -5,11 +5,7 @@ import { IUserWithPerson, toPublicUser } from "shared/models/user.model";
 import config from "@/config";
 
 import { createUserTokenSimple } from "../../common/utils/jwtUtils";
-import {
-  resetPassword,
-  sendResetPasswordEmail,
-  verifyEmailPassword,
-} from "../actions/auth.actions";
+import { resetPassword, sendResetPasswordEmail, verifyEmailPassword } from "../actions/auth.actions";
 import { createSession, deleteSession } from "../actions/sessions.actions";
 import { Server } from "./server";
 
@@ -42,10 +38,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const { email, password } = request.body;
 
-      const user: IUserWithPerson | undefined = await verifyEmailPassword(
-        email,
-        password
-      );
+      const user: IUserWithPerson | undefined = await verifyEmailPassword(email, password);
 
       if (!user || !user._id) {
         throw Boom.forbidden("Identifiants incorrects");
@@ -72,10 +65,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
       if (token) {
         await deleteSession(token);
 
-        return response
-          .clearCookie(config.session.cookieName, config.session.cookie)
-          .status(200)
-          .send({});
+        return response.clearCookie(config.session.cookieName, config.session.cookie).status(200).send({});
       }
 
       return response.status(200).send({});

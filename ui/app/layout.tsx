@@ -41,9 +41,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="fr">
       <body>
-        <AuthContextProvider initialUser={session}>
-          {children}
-        </AuthContextProvider>
+        <AuthContextProvider initialUser={session}>{children}</AuthContextProvider>
       </body>
     </html>
   );

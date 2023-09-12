@@ -2,11 +2,7 @@ import assert from "node:assert";
 
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
-import {
-  getDecaVerification,
-  importDecaContent,
-  parseContentLine,
-} from "../../src/modules/actions/deca.actions";
+import { getDecaVerification, importDecaContent, parseContentLine } from "../../src/modules/actions/deca.actions";
 import { findOrganisations } from "../../src/modules/actions/organisations.actions";
 import { findPersons } from "../../src/modules/actions/persons.actions";
 import { useMongo } from "../utils/mongo.utils";
@@ -121,10 +117,7 @@ describe("DECA import", () => {
   });
 
   it("should import DECA content", async () => {
-    await importDecaContent(
-      ["test1@company.com", "test2@company.com"],
-      "12345678901234"
-    );
+    await importDecaContent(["test1@company.com", "test2@company.com"], "12345678901234");
     await importDecaContent(["test1@company.com"], "12345678900000");
 
     const persons = await findPersons({});
@@ -147,12 +140,8 @@ describe("DECA import", () => {
     assert.ok(organisations[0].email_domains?.includes("company.com"));
 
     assert.equal(organisations[0].etablissements?.length, 2);
-    assert.ok(
-      organisations[0].etablissements?.find((e) => e.siret === "12345678901234")
-    );
-    assert.ok(
-      organisations[0].etablissements?.find((e) => e.siret === "12345678900000")
-    );
+    assert.ok(organisations[0].etablissements?.find((e) => e.siret === "12345678901234"));
+    assert.ok(organisations[0].etablissements?.find((e) => e.siret === "12345678900000"));
   });
 });
 
@@ -172,115 +161,67 @@ describe("DECA verification", () => {
   });
 
   it("should be valid SIRET email", async () => {
-    await importDecaContent(
-      ["test1@company.com", "test2@company.com"],
-      "12345678901234"
-    );
+    await importDecaContent(["test1@company.com", "test2@company.com"], "12345678901234");
 
-    assert.deepEqual(
-      await getDecaVerification("12345678901234", "test1@company.com"),
-      {
-        is_valid: true,
-        on: "email",
-      }
-    );
+    assert.deepEqual(await getDecaVerification("12345678901234", "test1@company.com"), {
+      is_valid: true,
+      on: "email",
+    });
 
-    await importDecaContent(
-      ["test1@gmail.com", "test2@company.com"],
-      "12345678901234"
-    );
+    await importDecaContent(["test1@gmail.com", "test2@company.com"], "12345678901234");
 
-    assert.deepEqual(
-      await getDecaVerification("12345678901234", "test1@gmail.com"),
-      {
-        is_valid: true,
-        on: "email",
-      }
-    );
+    assert.deepEqual(await getDecaVerification("12345678901234", "test1@gmail.com"), {
+      is_valid: true,
+      on: "email",
+    });
   });
 
   it("should be valid SIRET domain", async () => {
-    await importDecaContent(
-      ["test1@company.com", "test2@company.com"],
-      "12345678901234"
-    );
+    await importDecaContent(["test1@company.com", "test2@company.com"], "12345678901234");
 
-    assert.deepEqual(
-      await getDecaVerification("12345678901234", "test3@company.com"),
-      {
-        is_valid: true,
-        on: "domain",
-      }
-    );
+    assert.deepEqual(await getDecaVerification("12345678901234", "test3@company.com"), {
+      is_valid: true,
+      on: "domain",
+    });
   });
 
   it("should be valid SIREN email", async () => {
-    await importDecaContent(
-      ["test1@company.com", "test2@company.com"],
-      "12345678901234"
-    );
+    await importDecaContent(["test1@company.com", "test2@company.com"], "12345678901234");
 
-    assert.deepEqual(
-      await getDecaVerification("12345678999999", "test2@company.com"),
-      {
-        is_valid: true,
-        on: "email",
-      }
-    );
-    await importDecaContent(
-      ["test1@gmail.com", "test2@company.com"],
-      "12345678901234"
-    );
+    assert.deepEqual(await getDecaVerification("12345678999999", "test2@company.com"), {
+      is_valid: true,
+      on: "email",
+    });
+    await importDecaContent(["test1@gmail.com", "test2@company.com"], "12345678901234");
 
-    assert.deepEqual(
-      await getDecaVerification("12345678999999", "test1@gmail.com"),
-      {
-        is_valid: true,
-        on: "email",
-      }
-    );
+    assert.deepEqual(await getDecaVerification("12345678999999", "test1@gmail.com"), {
+      is_valid: true,
+      on: "email",
+    });
   });
 
   it("should be valid SIREN domain", async () => {
-    await importDecaContent(
-      ["test1@company.com", "test2@company.com"],
-      "12345678901234"
-    );
+    await importDecaContent(["test1@company.com", "test2@company.com"], "12345678901234");
 
-    assert.deepEqual(
-      await getDecaVerification("12345678999999", "test3@company.com"),
-      {
-        is_valid: true,
-        on: "domain",
-      }
-    );
+    assert.deepEqual(await getDecaVerification("12345678999999", "test3@company.com"), {
+      is_valid: true,
+      on: "domain",
+    });
   });
 
   it("should not be valid SIRET domain if blacklisted", async () => {
-    await importDecaContent(
-      ["test1@gmail.com", "test2@company.com"],
-      "12345678901234"
-    );
+    await importDecaContent(["test1@gmail.com", "test2@company.com"], "12345678901234");
 
-    assert.deepEqual(
-      await getDecaVerification("12345678901234", "test3@gmail.com"),
-      {
-        is_valid: false,
-      }
-    );
+    assert.deepEqual(await getDecaVerification("12345678901234", "test3@gmail.com"), {
+      is_valid: false,
+    });
   });
 
   it("should not be valid SIREN domain if blacklisted", async () => {
-    await importDecaContent(
-      ["test1@gmail.com", "test2@company.com"],
-      "12345678901234"
-    );
+    await importDecaContent(["test1@gmail.com", "test2@company.com"], "12345678901234");
 
-    assert.deepEqual(
-      await getDecaVerification("12345678999999", "test3@gmail.com"),
-      {
-        is_valid: false,
-      }
-    );
+    assert.deepEqual(await getDecaVerification("12345678999999", "test3@gmail.com"), {
+      is_valid: false,
+    });
   });
 });

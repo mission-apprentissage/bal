@@ -3,19 +3,11 @@ import cronParser from "cron-parser";
 import logger from "@/common/logger";
 
 import { getDbCollection } from "../../common/utils/mongodbUtils";
-import {
-  createJob,
-  findJob,
-  findJobs,
-  updateJob,
-} from "../actions/job.actions";
+import { createJob, findJob, findJobs, updateJob } from "../actions/job.actions";
 import { CRONS } from "./jobs";
 import { addJob } from "./jobs_actions";
 
-function parseCronString(
-  cronString: string,
-  options: { currentDate: string } | object = {}
-) {
+function parseCronString(cronString: string, options: { currentDate: string } | object = {}) {
   return cronParser.parseExpression(cronString, {
     tz: "Europe/Paris",
     ...options,

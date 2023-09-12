@@ -2,10 +2,7 @@ import { JSONSchema7 } from "json-schema";
 import { describe, expect, it } from "vitest";
 
 import { modelDescriptors } from "../../models/models";
-import {
-  jsonSchemaToMongoSchema,
-  zodToMongoSchema,
-} from "./mongoSchemaBuilder";
+import { jsonSchemaToMongoSchema, zodToMongoSchema } from "./mongoSchemaBuilder";
 
 describe("jsonSchemaToMongoSchema", () => {
   it("should convert complex schema", () => {

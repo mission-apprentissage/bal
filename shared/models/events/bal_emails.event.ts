@@ -21,15 +21,7 @@ export const ZBalEmail = z
         z
           .object({
             err_type: z
-              .enum([
-                "fatal",
-                "soft_bounce",
-                "hard_bounce",
-                "complaint",
-                "invalid_email",
-                "blocked",
-                "error",
-              ])
+              .enum(["fatal", "soft_bounce", "hard_bounce", "complaint", "invalid_email", "blocked", "error"])
               .optional(),
             message: z.string().optional(),
           })

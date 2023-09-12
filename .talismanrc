@@ -1,8 +1,6 @@
 fileignoreconfig:
 - filename: '*.mjml.ejs'
   checksum: 9e0290e41389acecddebce27c63d2af3687ece2b8ea5ce61ab33617c74728536
-- filename: '*.test.ts'
-  checksum: b5e6d6b59416f7359265e17c991135e67a2f7564a46697e05a83b0925032c98d
 - filename: .bin/scripts/setup-local-env.sh
   checksum: 4bb90296fab07d4c645e2dae35f0e397e073764e944865a55e6339aec0a707f3
 - filename: .github/workflows/_deploy.yml
@@ -19,20 +17,17 @@ fileignoreconfig:
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/.env_server
   checksum: 6af84bb7aa4a9867d0fb6a0f73cf6f0325483c440dc8dc018c08a6d34d9eb48c
-  ignore_detectors:
-  - filename
+  ignore_detectors: [filename]
 - filename: .infra/.env_ui
   checksum: 0dd94c954d75fd19bbe669eef8238c703d9fb8bea4025358071f9fae6140ac85
-  ignore_detectors:
-  - filename
+  ignore_detectors: [filename]
 - filename: .infra/README.md
   checksum: 46ff20cd40c93c0580c896707afadccc37486909997213c452393d8179d12a3d
 - filename: .infra/ansible/roles/setup/files/app/.overrides/common/docker-compose.common.yml
   checksum: c2a10f20a22c2df9c97be935509f0119799be6467fe797399bd589fae2d10388
 - filename: .infra/ansible/roles/setup/files/app/.overrides/production/docker-compose.env.yml
   checksum: a0e0aee8350df735bf9e13b4d19a3ec0b2a11c742e3ed4681d2d2cc5d672994f
-  ignore_detectors:
-  - filename
+  ignore_detectors: [filename]
 - filename: .infra/ansible/roles/setup/files/app/mongodb/docker-entrypoint-initdb.d/01_create_users.js
   checksum: f8af7aa98f4242b1c472c53f85f3d62a14a1239e7259ec0fec837ee09c7df989
 - filename: .infra/ansible/roles/setup/files/app/tools/metabase/backup-metabase.sh
@@ -75,9 +70,7 @@ fileignoreconfig:
   checksum: 5244c8d016a7131cab79ab3c2748299751ceda781ace51add7f81bc5c9577fbf
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
-  ignore_detectors:
-  - filecontent
-  - filesize
+  ignore_detectors: [filecontent, filesize]
 - filename: encrypted.txt
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
@@ -92,6 +85,8 @@ fileignoreconfig:
   checksum: 9b24e1858aceefd0aa80a557e94f340a3f07308443be5dccebcb224ad31a7de0
 - filename: server/src/app.ts
   checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
+- filename: server/src/config.ts
+  checksum: df9536cab06a9da8e128d093d87af4c4c4ebfe4c069261a2c668b9e064c07cf8
 - filename: server/src/modules/actions/organisation.actions.ts
   checksum: 321ded7dbfda62fd68c7a3f8f7702b495204c618bb5cf347d1754273458488d1
 - filename: server/src/modules/actions/users.actions.ts
@@ -103,7 +98,7 @@ fileignoreconfig:
 - filename: server/src/modules/server/index.ts
   checksum: e9d1bc8dfc528ec8786f21af1d8ec5ecb290bb5f8b6b63275f744dc5b27673e3
 - filename: server/src/modules/server/utils/password.utils.ts
-  checksum: 740439c7594c8ddcaff9011b2f0ddf0344c3794eb0f721e0d03afde3c60e61a5
+  checksum: 0a93a4c08d4af16e4cad3696eb091f87e493ba739015338c7b1646e1d77c987e
 - filename: server/src/utils/cryptoUtils.ts
   checksum: e3e123d712465ed963965b5fa36f8d7a15364bbc7107d9d15bef2cc670483d42
 - filename: server/src/utils/jwtUtils.ts
@@ -114,6 +109,8 @@ fileignoreconfig:
   checksum: 573464801f84a37b522e4e21b0f9536fd318fa2e018f739296fbe3c769269e89
 - filename: server/tests/data/opcoEp.ts
   checksum: 8d1f421390c62fce249bf9efa7bb0688c6c9aa97375dd83d45f28c7d2246bf42
+- filename: server/tests/unit/deca.test.ts
+  checksum: e10531aed92c66bf3a44ba55e94b841fff1a75d0b4ee9160e644e0df81053595
 - filename: ui/.env
   checksum: 36cfa5591cf1dcf75cc7fb3be6980cc26a393786f0afffdcca92573c448b3148
 - filename: ui/.env.local.example
@@ -123,13 +120,13 @@ fileignoreconfig:
 - filename: ui/Dockerfile.preview
   checksum: 03cd37123382c0779373482a2e362c991164ba294fff77a2989cc7d2ca2816cc
 - filename: ui/app/auth/connexion/page.tsx
-  checksum: dc9ca3eb6ef33cfeb8f0f5f0e4e53df6aee43a876efa6fde450ab42effe64f94
+  checksum: 82b92aab62afde9952eef3052f76aaacf1b14aa94e9b2057d8ab4688c7b7240d
 - filename: ui/app/auth/modifier-mot-de-passe/page.tsx
   checksum: f6e44cbee7ba781129c86e1d21755fb3817c696b2be1c8b40a6e081fa6178c64
 - filename: ui/app/auth/mot-de-passe-oublie/page.tsx
-  checksum: 0ba4627fdcf5ee2d2230c06582e124333a65d4be293e2b11fb8fcd019c09eb57
+  checksum: 7aa0490dfb40b32ff93421bd55c7c69d02c372a65d9200e43224aaaaaa170646
 - filename: ui/app/cgu/components/Cgu.tsx
-  checksum: 3feb1e295f0c4758ff7915f10a4bc5b9855c5655947b5def17408d0a06c02e53
+  checksum: 06b32f3875b997d0c5199f60b89a31c6392eb0f081cf2801404fb75a11884dac
 - filename: ui/app/components/Footer.tsx
   checksum: 0467f77da9e5e2ac6086cef53ee620def51fc539c1b3efb240e29b8bb62998f2
 - filename: ui/app/components/FooterLogo.tsx
@@ -137,9 +134,11 @@ fileignoreconfig:
 - filename: ui/app/components/breadcrumb/Breadcrumb.tsx
   checksum: c8a647325f6337637ed5a66346ed20905bc27388c4aa2b6509c798ccc15ecc49
 - filename: ui/app/page.tsx
-  checksum: cf217ab807836c31825bae1ee0dff9848f685c574b688c3427261fe065b749fc
+  checksum: 9b1b40ed22c2bb3502a9ad01f5b9b49466b062458982021c0cf3207db068b4c9
 - filename: ui/app/politique-confidentialite/components/PolitiqueConfidentialite.tsx
   checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
+- filename: ui/app/usage/validation/page.tsx
+  checksum: 25ddd9d8e46cec2447d74b2363a75ac775ed3982466ad21ed21d7feda1683fba
 - filename: ui/app/usage/verification/page.tsx
   checksum: 3bcde7fc38236a4b6bf921ffc94ed471344054036b9b9e8d8ffd32283608544d
 scopeconfig:

@@ -3,10 +3,7 @@ import { IUser, IUserWithPerson } from "shared/models/user.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-import {
-  generateKey,
-  generateSecretHash,
-} from "../../common/utils/cryptoUtils";
+import { generateKey, generateSecretHash } from "../../common/utils/cryptoUtils";
 import { createUserTokenSimple } from "../../common/utils/jwtUtils";
 import { hashPassword } from "../server/utils/password.utils";
 import { createPerson } from "./persons.actions";
@@ -57,9 +54,7 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   };
 };
 
-export const findUsers = async (
-  filter: Filter<IUser>
-): Promise<IUserWithPerson[]> => {
+export const findUsers = async (filter: Filter<IUser>): Promise<IUserWithPerson[]> => {
   const users = await getDbCollection("users")
     .aggregate<IUserWithPerson>([
       {
@@ -77,9 +72,7 @@ export const findUsers = async (
   return users;
 };
 
-export const findUser = async (
-  filter: Filter<IUser>
-): Promise<IUserWithPerson | null> => {
+export const findUser = async (filter: Filter<IUser>): Promise<IUserWithPerson | null> => {
   const user = await getDbCollection("users")
     .aggregate<IUserWithPerson>([
       {
@@ -97,11 +90,7 @@ export const findUser = async (
   return user;
 };
 
-export const updateUser = async (
-  user: IUser,
-  data: Partial<IUser>,
-  updateFilter: UpdateFilter<IUser> = {}
-) => {
+export const updateUser = async (user: IUser, data: Partial<IUser>, updateFilter: UpdateFilter<IUser> = {}) => {
   return await getDbCollection("users").findOneAndUpdate(
     {
       _id: user._id,
@@ -117,11 +106,7 @@ export const generateApiKey = async (user: IUser) => {
   const generatedKey = generateKey();
   const secretHash = generateSecretHash(generatedKey);
 
-  await updateUser(
-    user,
-    { api_key: secretHash },
-    { $unset: { api_key_used_at: true } }
-  );
+  await updateUser(user, { api_key: secretHash }, { $unset: { api_key_used_at: true } });
 
   const token = createUserTokenSimple({
     payload: { _id: user._id, api_key: generatedKey },

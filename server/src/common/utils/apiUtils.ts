@@ -10,10 +10,7 @@ interface ApiRateLimiterOptions {
   timeout?: number;
   client: AxiosInstance;
 }
-export const apiRateLimiter = (
-  name: string,
-  options: ApiRateLimiterOptions
-) => {
+export const apiRateLimiter = (name: string, options: ApiRateLimiterOptions) => {
   const rateLimiter = new RateLimiterMemory({
     keyPrefix: name,
     points: options.nbRequests || 1,

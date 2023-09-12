@@ -5,11 +5,7 @@ import { getSirenFromSiret } from "shared/helpers/common";
 import { IOrganisation } from "shared/models/organisation.model";
 
 import { getDbCollection } from "../../common/utils/mongodbUtils";
-import {
-  findOrCreateOrganisation,
-  findOrganisation,
-  updateOrganisation,
-} from "./organisations.actions";
+import { findOrCreateOrganisation, findOrganisation, updateOrganisation } from "./organisations.actions";
 import { findPerson } from "./persons.actions";
 
 interface ContentLine {
@@ -22,9 +18,7 @@ export interface DECAParsedContentLine {
   emails: string[];
 }
 
-export const parseContentLine = (
-  line: ContentLine
-): DECAParsedContentLine | undefined => {
+export const parseContentLine = (line: ContentLine): DECAParsedContentLine | undefined => {
   if (!line.EMAIL) return;
   if (!SIRET_REGEX.test(line.SIRET)) return;
 
@@ -33,9 +27,7 @@ export const parseContentLine = (
   // remove {}
   const cleanedEmailLine = line.EMAIL?.replace(/[{}]/g, "") ?? "";
   // split emails and remove non valid emails
-  let emails = cleanedEmailLine
-    .split(",")
-    .filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
+  let emails = cleanedEmailLine.split(",").filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
   // remove duplicates
   emails = [...new Set(emails)];
 
@@ -59,9 +51,7 @@ export const importDecaContent = async (emails: string[], siret: string) => {
   );
 
   const updateOrganisationData: Partial<IOrganisation> = {};
-  const etablissement = organisation.etablissements?.find(
-    (e) => e.siret === siret
-  );
+  const etablissement = organisation.etablissements?.find((e) => e.siret === siret);
 
   if (!etablissement) {
     const etablissements = organisation.etablissements ?? [];
@@ -70,9 +60,7 @@ export const importDecaContent = async (emails: string[], siret: string) => {
   }
 
   const newDomains = domains.filter(
-    (domain) =>
-      !organisation.email_domains?.includes(domain) &&
-      companyEmailValidator.isCompanyDomain(domain)
+    (domain) => !organisation.email_domains?.includes(domain) && companyEmailValidator.isCompanyDomain(domain)
   );
 
   if (newDomains.length) {

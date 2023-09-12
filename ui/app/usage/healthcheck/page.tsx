@@ -6,8 +6,7 @@ import { IGetRoutes, IResponse } from "shared";
 import { apiGet } from "../../../utils/api.utils";
 
 const UsageHealthcheckPage = () => {
-  const [responseData, setResponseData] =
-    useState<IResponse<IGetRoutes["/healthcheck"]>>();
+  const [responseData, setResponseData] = useState<IResponse<IGetRoutes["/healthcheck"]>>();
   useEffect(() => {
     apiGet("/healthcheck", {}).then((data) => {
       setResponseData(data);

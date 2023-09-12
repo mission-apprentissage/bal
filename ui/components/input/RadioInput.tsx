@@ -25,12 +25,8 @@ export const RadioInput: FC<Props> = (props) => {
 
   const { labelValueMap, valueLabelMap } = useMemo(() => {
     return {
-      labelValueMap: Object.fromEntries(
-        options.map((option) => [option.label, option.value])
-      ),
-      valueLabelMap: Object.fromEntries(
-        options.map((option) => [option.value, option.label])
-      ),
+      labelValueMap: Object.fromEntries(options.map((option) => [option.label, option.value])),
+      valueLabelMap: Object.fromEntries(options.map((option) => [option.value, option.label])),
     };
   }, [options]);
 

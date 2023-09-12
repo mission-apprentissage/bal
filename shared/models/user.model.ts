@@ -31,14 +31,8 @@ export const ZUser = z
     person_id: z.string().describe("Identifiant de la personne"),
     is_admin: z.boolean().optional().describe("Est administrateur"),
     api_key: z.string().optional().describe("Clé API"),
-    api_key_used_at: z
-      .date()
-      .nullish()
-      .describe("Date de dernière utilisation de la clé API"),
-    updated_at: z
-      .date()
-      .optional()
-      .describe("Date de mise à jour en base de données"),
+    api_key_used_at: z.date().nullish().describe("Date de dernière utilisation de la clé API"),
+    updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
     created_at: z.date().optional().describe("Date d'ajout en base de données"),
   })
   .strict();
@@ -64,9 +58,7 @@ export interface IUserWithPerson extends IUser {
 export const zUserWithPersonPublic = ZUserPublic.extend({
   person: ZPerson.nullish(),
 });
-export type IUserWithPersonPublic = Jsonify<
-  z.output<typeof zUserWithPersonPublic>
->;
+export type IUserWithPersonPublic = Jsonify<z.output<typeof zUserWithPersonPublic>>;
 
 export function toPublicUser(user: IUser): z.output<typeof ZUserPublic> {
   return {

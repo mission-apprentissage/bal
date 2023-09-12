@@ -32,7 +32,5 @@ export const SIRET_REGEX = new RegExp(SIRET_REGEX_PATTERN);
 export const CODE_NAF_REGEX = new RegExp(CODE_NAF_REGEX_PATTERN);
 export const UAI_REGEX = new RegExp(UAI_REGEX_PATTERN);
 
-export const isValidCFD = (cfd: string) =>
-  typeof cfd === "string" && CFD_REGEX.test(cfd);
-export const isValidINE = (ine: string) =>
-  typeof ine === "string" && INE_REGEX.test(ine);
+export const isValidCFD = (cfd: string) => typeof cfd === "string" && CFD_REGEX.test(cfd);
+export const isValidINE = (ine: string) => typeof ine === "string" && INE_REGEX.test(ine);

@@ -18,10 +18,7 @@ export const createSession = async (data: TCreateSession) => {
   return session;
 };
 
-export const getSession = async (
-  filter: Filter<ISession>,
-  options?: FindOptions
-): Promise<ISession | null> => {
+export const getSession = async (filter: Filter<ISession>, options?: FindOptions): Promise<ISession | null> => {
   return await getDbCollection("sessions").findOne(filter, options);
 };
 
@@ -30,8 +27,5 @@ export const deleteSession = async (token: string) => {
 };
 
 export const updateSession = async (_id: ObjectId, data: Partial<ISession>) => {
-  return getDbCollection("sessions").updateOne(
-    { _id },
-    { $set: { ...data, updated_at: new Date() } }
-  );
+  return getDbCollection("sessions").updateOne({ _id }, { $set: { ...data, updated_at: new Date() } });
 };

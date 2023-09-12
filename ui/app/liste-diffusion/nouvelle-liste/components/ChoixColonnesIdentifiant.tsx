@@ -22,10 +22,7 @@ import MailingListSectionRow from "./MailingListSectionRow";
 
 interface Props {
   onSuccess: (
-    data: Pick<
-      IBody<IPostRoutes["/mailing-list"]>,
-      "email" | "secondary_email" | "identifier_columns"
-    >
+    data: Pick<IBody<IPostRoutes["/mailing-list"]>, "email" | "secondary_email" | "identifier_columns">
   ) => void;
   columns: string[];
   sample: IDocumentContentJson[];
@@ -38,12 +35,7 @@ interface IIdentifierColumnForm {
   identifier_columns: { name: string }[];
 }
 
-const ChoixColonnesIdentifiant: FC<Props> = ({
-  onSuccess,
-  columns,
-  onCancel,
-  sample,
-}) => {
+const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sample }) => {
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -70,21 +62,14 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
   return (
     <Box>
       <Text mb={4}>
-        Les champs obligatoires serviront comme identifiants uniques. Les champs
-        de courriel facultatifs correspondent aux courriels supplémentaires à
-        qui la campagne sera envoyée.
+        Les champs obligatoires serviront comme identifiants uniques. Les champs de courriel facultatifs correspondent
+        aux courriels supplémentaires à qui la campagne sera envoyée.
       </Text>
       <form onSubmit={handleSubmit(onSubmit)}>
         <MailingListSectionRow>
-          <MailingListSectionCell>
-            Informations demandées
-          </MailingListSectionCell>
-          <MailingListSectionCell>
-            En-têtes des colonnes (fichier source)
-          </MailingListSectionCell>
-          <MailingListSectionCell>
-            3 premières lignes de données
-          </MailingListSectionCell>
+          <MailingListSectionCell>Informations demandées</MailingListSectionCell>
+          <MailingListSectionCell>En-têtes des colonnes (fichier source)</MailingListSectionCell>
+          <MailingListSectionCell>3 premières lignes de données</MailingListSectionCell>
         </MailingListSectionRow>
 
         <MailingListSectionRow>
@@ -110,9 +95,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
               <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
           </MailingListSectionCell>
-          <MailingListSectionCell>
-            {watchEmail && getDataFromSample(sample, watchEmail)}
-          </MailingListSectionCell>
+          <MailingListSectionCell>{watchEmail && getDataFromSample(sample, watchEmail)}</MailingListSectionCell>
           <MailingListSectionCell>ou</MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
@@ -128,10 +111,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
             </Tooltip>
           </MailingListSectionCell>
           <MailingListSectionCell>
-            <FormControl
-              isInvalid={!!errors.secondary_email}
-              isDisabled={isSubmitting}
-            >
+            <FormControl isInvalid={!!errors.secondary_email} isDisabled={isSubmitting}>
               <Select
                 isInvalid={!!errors.secondary_email}
                 placeholder="Choisir l'email secondaire"
@@ -143,14 +123,11 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
                   </option>
                 ))}
               </Select>
-              <FormErrorMessage>
-                {errors.secondary_email?.message}
-              </FormErrorMessage>
+              <FormErrorMessage>{errors.secondary_email?.message}</FormErrorMessage>
             </FormControl>
           </MailingListSectionCell>
           <MailingListSectionCell>
-            {watchSecondaryEmail &&
-              getDataFromSample(sample, watchSecondaryEmail)}
+            {watchSecondaryEmail && getDataFromSample(sample, watchSecondaryEmail)}
           </MailingListSectionCell>
         </MailingListSectionRow>
 
@@ -158,10 +135,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
           <MailingListSectionRow key={field.id}>
             <MailingListSectionCell />
             <MailingListSectionCell>
-              <FormControl
-                isInvalid={!!errors.identifier_columns?.[index]}
-                isDisabled={isSubmitting}
-              >
+              <FormControl isInvalid={!!errors.identifier_columns?.[index]} isDisabled={isSubmitting}>
                 <Select
                   isInvalid={!!errors.identifier_columns?.[index]}
                   placeholder="Colonne"
@@ -185,17 +159,12 @@ const ChoixColonnesIdentifiant: FC<Props> = ({
                     </option>
                   ))}
                 </Select>
-                <FormErrorMessage>
-                  {errors.identifier_columns?.[index]?.name?.message}
-                </FormErrorMessage>
+                <FormErrorMessage>{errors.identifier_columns?.[index]?.name?.message}</FormErrorMessage>
               </FormControl>
             </MailingListSectionCell>
             <MailingListSectionCell>
               {watchIdentifierColumns?.[index]?.name &&
-                getDataFromSample(
-                  sample,
-                  watchIdentifierColumns?.[index]?.name
-                )}
+                getDataFromSample(sample, watchIdentifierColumns?.[index]?.name)}
 
               <IconButton
                 marginLeft="auto"

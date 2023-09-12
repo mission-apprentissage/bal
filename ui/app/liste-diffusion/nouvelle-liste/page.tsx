@@ -31,10 +31,7 @@ const NouvelleListePage = () => {
   };
 
   const handleIdentifierColumnsSelection = (
-    data: Pick<
-      IBody<IPostRoutes["/mailing-list"]>,
-      "email" | "secondary_email" | "identifier_columns"
-    >
+    data: Pick<IBody<IPostRoutes["/mailing-list"]>, "email" | "secondary_email" | "identifier_columns">
   ) => {
     setIdentifierColumns(data.identifier_columns);
     setEmail(data.email);
@@ -48,13 +45,7 @@ const NouvelleListePage = () => {
 
   return (
     <>
-      <Breadcrumb
-        pages={[
-          PAGES.homepage(),
-          PAGES.listeDiffusion(),
-          PAGES.nouvelleListe(),
-        ]}
-      />
+      <Breadcrumb pages={[PAGES.homepage(), PAGES.listeDiffusion(), PAGES.nouvelleListe()]} />
 
       <Heading as="h2" fontSize="2xl" mt={8} mb={4}>
         Créer nouvelle liste
@@ -73,23 +64,19 @@ const NouvelleListePage = () => {
           />
         </CreateMailingListSection>
         <CreateMailingListSection title="Champs à afficher dans le fichier de sortie">
-          {campaignName &&
-            source &&
-            !!columns.length &&
-            identifierColumns &&
-            email && (
-              <ChoixColonnesSortie
-                sample={sample}
-                columns={columns}
-                source={source}
-                campaignName={campaignName}
-                identifierColumns={identifierColumns}
-                onSuccess={handleOutputColumnsSelection}
-                email={email}
-                secondaryEmail={secondaryEmail}
-                onCancel={() => setStep(1)}
-              />
-            )}
+          {campaignName && source && !!columns.length && identifierColumns && email && (
+            <ChoixColonnesSortie
+              sample={sample}
+              columns={columns}
+              source={source}
+              campaignName={campaignName}
+              identifierColumns={identifierColumns}
+              onSuccess={handleOutputColumnsSelection}
+              email={email}
+              secondaryEmail={secondaryEmail}
+              onCancel={() => setStep(1)}
+            />
+          )}
         </CreateMailingListSection>
       </Accordion>
     </>

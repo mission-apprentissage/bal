@@ -2,10 +2,7 @@ import { Db, MongoClient } from "mongodb";
 import { MAILING_LIST_STATUS } from "shared/models/mailingList.model";
 
 export const up = async (db: Db, _client: MongoClient) => {
-  const jobs = await db
-    .collection("jobs")
-    .find({ name: "generate:mailing-list" })
-    .toArray();
+  const jobs = await db.collection("jobs").find({ name: "generate:mailing-list" }).toArray();
 
   await Promise.all(
     jobs.map(async (job) => {

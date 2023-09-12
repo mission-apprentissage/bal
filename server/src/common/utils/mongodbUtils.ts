@@ -1,11 +1,5 @@
 import { captureException } from "@sentry/node";
-import {
-  Collection,
-  CollectionInfo,
-  MongoClient,
-  MongoServerError,
-  WithoutId,
-} from "mongodb";
+import { Collection, CollectionInfo, MongoClient, MongoServerError, WithoutId } from "mongodb";
 import { zodToMongoSchema } from "shared/helpers/mongoSchema/mongoSchemaBuilder";
 import { CollectionName, IModelDescriptor } from "shared/models/common";
 import { IDocumentMap, modelDescriptors } from "shared/models/models";
@@ -18,9 +12,7 @@ let mongodbClient: MongoClient | null = null;
 
 export const ensureInitialization = () => {
   if (!mongodbClient) {
-    throw new Error(
-      "Database connection does not exist. Please call connectToMongodb before."
-    );
+    throw new Error("Database connection does not exist. Please call connectToMongodb before.");
   }
   return mongodbClient;
 };
@@ -62,9 +54,7 @@ export const getDatabase = () => {
   return ensureInitialization().db();
 };
 
-export const getDbCollection = <K extends CollectionName>(
-  name: K
-): Collection<WithoutId<IDocumentMap[K]>> => {
+export const getDbCollection = <K extends CollectionName>(name: K): Collection<WithoutId<IDocumentMap[K]>> => {
   return ensureInitialization().db().collection(name);
 };
 
@@ -80,14 +70,10 @@ export const getDbCollectionIndexes = async (name: CollectionName) => {
  * Création d'une collection si elle n'existe pas
  * @param {string} collectionName
  */
-const createCollectionIfDoesNotExist = async (
-  collectionName: CollectionName
-) => {
+const createCollectionIfDoesNotExist = async (collectionName: CollectionName) => {
   const db = getDatabase();
   const collectionsInDb = await db.listCollections().toArray();
-  const collectionExistsInDb = collectionsInDb
-    .map(({ name }) => name)
-    .includes(collectionName);
+  const collectionExistsInDb = collectionsInDb.map(({ name }) => name).includes(collectionName);
 
   if (!collectionExistsInDb) {
     try {
@@ -106,21 +92,14 @@ const createCollectionIfDoesNotExist = async (
  * @param {*} collectionName
  * @returns
  */
-export const collectionExistInDb = (
-  collectionsInDb: CollectionInfo[],
-  collectionName: string
-) =>
-  collectionsInDb
-    .map(({ name }: { name: string }) => name)
-    .includes(collectionName);
+export const collectionExistInDb = (collectionsInDb: CollectionInfo[], collectionName: string) =>
+  collectionsInDb.map(({ name }: { name: string }) => name).includes(collectionName);
 
 /**
  * Config de la validation
  * @param {*} modelDescriptors
  */
-export const configureDbSchemaValidation = async (
-  modelDescriptors: IModelDescriptor[]
-) => {
+export const configureDbSchemaValidation = async (modelDescriptors: IModelDescriptor[]) => {
   const db = getDatabase();
   ensureInitialization();
   await Promise.all(
@@ -177,15 +156,10 @@ export const createIndexes = async () => {
     await Promise.all(
       descriptor.indexes.map(async ([index, options]) => {
         try {
-          await getDbCollection(descriptor.collectionName).createIndex(
-            index,
-            options
-          );
+          await getDbCollection(descriptor.collectionName).createIndex(index, options);
         } catch (err) {
           captureException(err);
-          logger.error(
-            `Error creating indexes for ${descriptor.collectionName}: ${err}`
-          );
+          logger.error(`Error creating indexes for ${descriptor.collectionName}: ${err}`);
         }
       })
     );
@@ -193,9 +167,7 @@ export const createIndexes = async () => {
 };
 
 export const dropIndexes = async () => {
-  const collections = (await getCollectionList()).map(
-    (collection) => collection.name
-  );
+  const collections = (await getCollectionList()).map((collection) => collection.name);
   for (const descriptor of modelDescriptors) {
     logger.info(`Drop indexes for collection ${descriptor.collectionName}`);
     if (collections.includes(descriptor.collectionName)) {

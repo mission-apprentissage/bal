@@ -11,10 +11,7 @@ import {
 } from "@/modules/jobs/migrations/migrations";
 
 import logger from "../../common/logger";
-import {
-  handleDocumentFileContent,
-  saveDocumentsColumns,
-} from "../actions/documents.actions";
+import { handleDocumentFileContent, saveDocumentsColumns } from "../actions/documents.actions";
 import { processMailingList } from "../actions/mailingLists.actions";
 import { createUser } from "../actions/users.actions";
 import { cronsInit, cronsScheduler } from "./crons_actions";
@@ -35,9 +32,7 @@ export const CRONS: Record<string, CronDef> = {
     name: "Run daily jobs each day at 02h30",
     cron_string: "30 2 * * *",
     handler: async () => {
-      const { stdout, stderr } = await exec(
-        "/opt/app/scripts/run-dummy-outside-job.sh"
-      );
+      const { stdout, stderr } = await exec("/opt/app/scripts/run-dummy-outside-job.sh");
       logger.info("stdout:", stdout);
       logger.error("stderr:", stderr);
       return stderr ? 1 : 0;
@@ -86,11 +81,7 @@ export async function runJob(
         }
         case "migrations:status": {
           const pendingMigrations = await statusMigration();
-          console.log(
-            `migrations-status=${
-              pendingMigrations === 0 ? "synced" : "pending"
-            }`
-          );
+          console.log(`migrations-status=${pendingMigrations === 0 ? "synced" : "pending"}`);
           return;
         }
         case "migrations:create":

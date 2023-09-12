@@ -30,9 +30,7 @@ export const getJsonFromXlsxData = (
 
     const firstSheet = sheet_name_list[0];
     if (!firstSheet) {
-      throw Boom.badRequest(
-        "Le fichier excel ne contient aucune feuille de calcul"
-      );
+      throw Boom.badRequest("Le fichier excel ne contient aucune feuille de calcul");
     }
 
     const worksheet = workbook.Sheets[firstSheet] as WorkSheet;

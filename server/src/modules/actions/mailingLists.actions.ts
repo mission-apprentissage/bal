@@ -5,10 +5,7 @@ import { stringify } from "csv-stringify";
 import { Filter, FindCursor, FindOptions, ObjectId, Sort } from "mongodb";
 import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
-import {
-  IMailingList,
-  MAILING_LIST_STATUS,
-} from "shared/models/mailingList.model";
+import { IMailingList, MAILING_LIST_STATUS } from "shared/models/mailingList.model";
 
 import logger from "@/common/logger";
 import * as crypto from "@/common/utils/cryptoUtils";
@@ -23,12 +20,7 @@ import {
 import { uploadToStorage } from "../../common/utils/ovhUtils";
 import { addJob } from "../jobs/jobs_actions";
 import { noop } from "../server/utils/upload.utils";
-import {
-  createEmptyDocument,
-  deleteDocumentById,
-  findDocument,
-  importDocumentContent,
-} from "./documents.actions";
+import { createEmptyDocument, deleteDocumentById, findDocument, importDocumentContent } from "./documents.actions";
 import { findJob, updateJob } from "./job.actions";
 
 /**
@@ -38,13 +30,9 @@ import { findJob, updateJob } from "./job.actions";
 export const MAILING_LIST_DOCUMENT_PREFIX = "mailing-list";
 export const MAILING_LIST_WEBHOOK_LBA = "WEBHOOK_LBA";
 
-export const createMailingList = async (
-  data: Omit<IMailingList, "_id" | "status">
-) => {
+export const createMailingList = async (data: Omit<IMailingList, "_id" | "status">) => {
   const now = new Date();
-  const { insertedId: mailingListId } = await getDbCollection(
-    "mailingLists"
-  ).insertOne({
+  const { insertedId: mailingListId } = await getDbCollection("mailingLists").insertOne({
     ...data,
     status: MAILING_LIST_STATUS.PROCESSING,
     updated_at: now,
@@ -63,17 +51,11 @@ export const findMailingList = async (filter: Filter<IMailingList>) => {
   return getDbCollection("mailingLists").findOne<IMailingList>(filter);
 };
 
-export const findMailingLists = async (
-  filter: Filter<IMailingList>,
-  options?: FindOptions<IMailingList>
-) => {
+export const findMailingLists = async (filter: Filter<IMailingList>, options?: FindOptions<IMailingList>) => {
   return getDbCollection("mailingLists").find(filter, options).toArray();
 };
 
-export const updateMailingList = async (
-  filter: Filter<IMailingList>,
-  data: Partial<IMailingList>
-) => {
+export const updateMailingList = async (filter: Filter<IMailingList>, data: Partial<IMailingList>) => {
   return getDbCollection("mailingLists").updateOne(filter, {
     $set: { ...data, updated_at: new Date() },
   });
@@ -111,17 +93,12 @@ export const processMailingList = async (payload: IPayload) => {
   // create output document
   const outputDocument = await createEmptyDocument({
     type_document: `${MAILING_LIST_DOCUMENT_PREFIX}-${mailingList.source}`,
-    filename: `${MAILING_LIST_DOCUMENT_PREFIX}-${
-      mailingList.source
-    }-${new ObjectId()}.csv`,
+    filename: `${MAILING_LIST_DOCUMENT_PREFIX}-${mailingList.source}-${new ObjectId()}.csv`,
   });
 
   if (!outputDocument) throw new Error("Output document not found");
 
-  await updateMailingList(
-    { _id: mailingList._id },
-    { document_id: outputDocument._id.toString() }
-  );
+  await updateMailingList({ _id: mailingList._id }, { document_id: outputDocument._id.toString() });
 
   const batchSize = LIMIT_TRAINING_LINKS_PER_REQUEST;
   let skip = 0;
@@ -149,9 +126,7 @@ export const processMailingList = async (payload: IPayload) => {
     processed += wishes.length;
 
     await updateJob(job._id, {
-      "payload.processed": document.lines_count
-        ? (processed / document.lines_count) * 100
-        : 0,
+      "payload.processed": document.lines_count ? (processed / document.lines_count) * 100 : 0,
       "payload.processed_count": processed,
     });
     // Check if there are more documents to retrieve
@@ -159,26 +134,18 @@ export const processMailingList = async (payload: IPayload) => {
       skip += batchSize;
     } else {
       hasMore = false;
-      await updateMailingList(
-        { _id: mailingList._id },
-        { status: MAILING_LIST_STATUS.DONE }
-      );
+      await updateMailingList({ _id: mailingList._id }, { status: MAILING_LIST_STATUS.DONE });
 
       logger.info("All documents retrieved");
     }
   }
 };
 
-const formatOutput = async (
-  mailingList: IMailingList,
-  documentContents: IDocumentContent[]
-) => {
+const formatOutput = async (mailingList: IMailingList, documentContents: IDocumentContent[]) => {
   const toDuplicate: unknown[] = [];
   let data = documentContents;
   let outputColumns = mailingList.output_columns;
-  const needsLbaData = outputColumns
-    .map((c) => c.column)
-    .includes(MAILING_LIST_WEBHOOK_LBA);
+  const needsLbaData = outputColumns.map((c) => c.column).includes(MAILING_LIST_WEBHOOK_LBA);
 
   if (needsLbaData) {
     data = await mergeLbaData(data);
@@ -190,13 +157,9 @@ const formatOutput = async (
     const { email, secondary_email } = mailingList;
 
     const primaryEmail = documentContent?.content?.[email] as string;
-    const secondaryEmail =
-      secondary_email &&
-      (documentContent?.content?.[secondary_email] as string);
+    const secondaryEmail = secondary_email && (documentContent?.content?.[secondary_email] as string);
     // filtrer les emails invalides et doublons
-    const emails = [...new Set([primaryEmail, secondaryEmail])].filter((e) =>
-      EMAIL_REGEX.test(e ?? "")
-    );
+    const emails = [...new Set([primaryEmail, secondaryEmail])].filter((e) => EMAIL_REGEX.test(e ?? ""));
 
     const outputRow: Record<string, string> = {
       email: emails?.[0] ?? "",
@@ -207,8 +170,7 @@ const formatOutput = async (
       if (outputColumn.output === "email") continue;
 
       const outputColumnName = outputColumn.output;
-      const outputColumnValue =
-        documentContent?.content?.[outputColumn.column] ?? "";
+      const outputColumnValue = documentContent?.content?.[outputColumn.column] ?? "";
       outputRow[outputColumnName] = outputColumnValue as string;
     }
 
@@ -225,8 +187,7 @@ const formatOutput = async (
 const mergeLbaData = async (documentContents: IDocumentContent[]) => {
   const payload: TrainingLinkData[] = documentContents.map((content) => ({
     id: content._id.toString(),
-    cle_ministere_educatif:
-      (content.content?.cle_ministere_educatif as string) ?? "",
+    cle_ministere_educatif: (content.content?.cle_ministere_educatif as string) ?? "",
     mef: (content.content?.code_mef as string) ?? "",
     code_postal: (content.content?.code_postal as string) ?? "",
     uai: (content.content?.code_uai_etab_accueil as string) ?? "",
@@ -237,9 +198,7 @@ const mergeLbaData = async (documentContents: IDocumentContent[]) => {
   const trainingLinks = (await getTrainingLinks(payload)) as TrainingLink[];
 
   return documentContents.map((dc) => {
-    const trainingLink = trainingLinks.find(
-      (tl) => tl.id === dc._id.toString()
-    );
+    const trainingLink = trainingLinks.find((tl) => tl.id === dc._id.toString());
 
     const content = { ...dc.content, ...trainingLink };
 
@@ -247,12 +206,8 @@ const mergeLbaData = async (documentContents: IDocumentContent[]) => {
   });
 };
 
-async function* getLine(
-  mailingList: IMailingList,
-  cursor: FindCursor<IDocumentContent>
-) {
-  let currentLine: (Record<string, unknown> & { wishes: unknown[] }) | null =
-    null;
+async function* getLine(mailingList: IMailingList, cursor: FindCursor<IDocumentContent>) {
+  let currentLine: (Record<string, unknown> & { wishes: unknown[] }) | null = null;
   for await (const { content } of cursor) {
     if (!content) continue;
     const identifiersOutput = mailingList.output_columns
@@ -261,9 +216,7 @@ async function* getLine(
     const identifiers = ["email", ...identifiersOutput];
 
     if (currentLine !== null) {
-      const areIdentifiersEqual = identifiers.every(
-        (column) => content[column] === currentLine?.[column]
-      );
+      const areIdentifiersEqual = identifiers.every((column) => content[column] === currentLine?.[column]);
 
       if (!areIdentifiersEqual) {
         yield currentLine;
@@ -301,9 +254,7 @@ async function* getLine(
 
 const getOutputColumnsWithLba = (mailingList: IMailingList) => {
   const outputColumns = mailingList.output_columns;
-  const needsLbaData = outputColumns.find(
-    (c) => c.column === MAILING_LIST_WEBHOOK_LBA
-  );
+  const needsLbaData = outputColumns.find((c) => c.column === MAILING_LIST_WEBHOOK_LBA);
 
   if (!needsLbaData) return outputColumns;
 
@@ -326,10 +277,7 @@ const getOutputColumnsWithLba = (mailingList: IMailingList) => {
   ].filter((c) => c.column !== MAILING_LIST_WEBHOOK_LBA);
 };
 
-export const createMailingListFile = async (
-  mailingList: IMailingList,
-  document: IDocument
-) => {
+export const createMailingListFile = async (mailingList: IMailingList, document: IDocument) => {
   const identifierColumns = mailingList.output_columns
     .filter((c) => mailingList.identifier_columns.includes(c.column))
     .map((c) => c.output);
@@ -373,17 +321,13 @@ export const createMailingListFile = async (
         if (progress % 100 === 0) console.log(progress);
         progress++;
         const outputColumns = getOutputColumnsWithLba(mailingList);
-        const keys = outputColumns
-          .filter((c) => c.grouped)
-          .map((c) => c.output);
+        const keys = outputColumns.filter((c) => c.grouped).map((c) => c.output);
 
         const flat: Record<string, string> = {
           email: line.email,
         };
 
-        const ungrouped = outputColumns
-          .filter((c) => !c.grouped)
-          .map((c) => c.output);
+        const ungrouped = outputColumns.filter((c) => !c.grouped).map((c) => c.output);
 
         for (const key of ungrouped) {
           flat[key] = line?.[key] ?? line.wishes[0]?.[key] ?? "";

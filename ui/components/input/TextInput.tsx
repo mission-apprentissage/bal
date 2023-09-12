@@ -69,13 +69,7 @@ export const TextInput: FC<Props> = (props) => {
           disabled={locked}
           onChange={handleChange}
           value={value}
-          placeholder={
-            placeholder
-              ? placeholder
-              : example
-              ? `Exemple : ${example}`
-              : description
-          }
+          placeholder={placeholder ? placeholder : example ? `Exemple : ${example}` : description}
           mask={mask}
           maskBlocks={maskBlocks}
           unmask={unmask}
@@ -95,13 +89,7 @@ export const TextInput: FC<Props> = (props) => {
           step={1}
           onChange={handleChange}
           value={value}
-          placeholder={
-            placeholder
-              ? placeholder
-              : example
-              ? `Exemple : ${example}`
-              : description
-          }
+          placeholder={placeholder ? placeholder : example ? `Exemple : ${example}` : description}
           minLength={minLength}
           maxLength={maxLength}
           min={min}

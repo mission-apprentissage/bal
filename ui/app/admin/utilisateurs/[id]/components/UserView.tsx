@@ -7,9 +7,7 @@ import { IUserWithPersonPublic } from "shared/models/user.model";
 
 import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
 import { formatDate } from "../../../../../utils/date.utils";
-import Breadcrumb, {
-  PAGES,
-} from "../../../../components/breadcrumb/Breadcrumb";
+import Breadcrumb, { PAGES } from "../../../../components/breadcrumb/Breadcrumb";
 import { getPersonDisplayName } from "../../../personnes/persons.format";
 
 interface Props {
@@ -19,13 +17,7 @@ interface Props {
 const UserView: FC<Props> = ({ user }) => {
   return (
     <>
-      <Breadcrumb
-        pages={[
-          PAGES.homepage(),
-          PAGES.adminUsers(),
-          PAGES.adminUserView(user._id),
-        ]}
-      />
+      <Breadcrumb pages={[PAGES.homepage(), PAGES.adminUsers(), PAGES.adminUserView(user._id)]} />
       <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
         Fiche utilisateur
       </Heading>
@@ -58,9 +50,7 @@ const UserView: FC<Props> = ({ user }) => {
           api_key_used_at: {
             header: () => "Dernière utilisation API",
             cell: ({ api_key_used_at }) => {
-              return api_key_used_at
-                ? formatDate(api_key_used_at, "PPP à p")
-                : "Jamais";
+              return api_key_used_at ? formatDate(api_key_used_at, "PPP à p") : "Jamais";
             },
           },
         }}

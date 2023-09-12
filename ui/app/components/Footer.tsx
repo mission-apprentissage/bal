@@ -1,14 +1,4 @@
-import {
-  Box,
-  Container,
-  Flex,
-  Grid,
-  GridItem,
-  Image,
-  List,
-  ListItem,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, Grid, GridItem, Image, List, ListItem, Text } from "@chakra-ui/react";
 // import { usePlausible } from "next-plausible";
 import React from "react";
 
@@ -21,18 +11,8 @@ const Footer = () => {
   // const plausible = usePlausible();
 
   return (
-    <Box
-      borderTop="1px solid"
-      borderColor="blue_france.main"
-      color="#1E1E1E"
-      fontSize="zeta"
-      w="full"
-    >
-      <Container
-        maxWidth={"container.xl"}
-        pt={["0", "0", "0", "2.5rem"]}
-        pb={["4w", "4w", "2w", "2w"]}
-      >
+    <Box borderTop="1px solid" borderColor="blue_france.main" color="#1E1E1E" fontSize="zeta" w="full">
+      <Container maxWidth={"container.xl"} pt={["0", "0", "0", "2.5rem"]} pb={["4w", "4w", "2w", "2w"]}>
         <Grid templateColumns={{ base: "1fr", lg: "repeat(4, 1fr)" }}>
           <GridItem colSpan={{ base: 1, lg: 1 }}>
             <Image
@@ -50,29 +30,20 @@ const Footer = () => {
             display="flex"
             alignItems="center"
           >
-            <Image
-              src="/images/france_relance.svg"
-              alt="France relance"
-              width="81"
-              height="81"
-              userSelect="none"
-            />
+            <Image src="/images/france_relance.svg" alt="France relance" width="81" height="81" userSelect="none" />
           </GridItem>
           <GridItem colSpan={{ base: 1, lg: 2 }} mt={{ base: 8, lg: 0 }}>
             <Box alignSelf="center" flex="1">
               <Text>
                 Mandatée par plusieurs ministères, la{" "}
                 <Link
-                  href={
-                    "https://beta.gouv.fr/startups/?incubateur=mission-apprentissage"
-                  }
+                  href={"https://beta.gouv.fr/startups/?incubateur=mission-apprentissage"}
                   textDecoration={"underline"}
                   isExternal
                 >
                   Mission interministérielle pour l&apos;apprentissage
                 </Link>{" "}
-                développe plusieurs services destinés à faciliter les entrées en
-                apprentissage.
+                développe plusieurs services destinés à faciliter les entrées en apprentissage.
               </Text>
               <br />
               <List
@@ -84,11 +55,7 @@ const Footer = () => {
                 display="flex"
               >
                 <ListItem>
-                  <Link
-                    href="https://www.legifrance.gouv.fr/"
-                    mr={4}
-                    isExternal
-                  >
+                  <Link href="https://www.legifrance.gouv.fr/" mr={4} isExternal>
                     legifrance.gouv.fr
                   </Link>
                 </ListItem>
@@ -139,9 +106,7 @@ const Footer = () => {
                   marginRight: "0.5rem",
                 }}
               >
-                <Link href={"/accessibilite"}>
-                  Accessibilité : Non conforme
-                </Link>
+                <Link href={"/accessibilite"}>Accessibilité : Non conforme</Link>
               </ListItem>
               <ListItem
                 _after={{
@@ -159,9 +124,7 @@ const Footer = () => {
                   marginRight: "0.5rem",
                 }}
               >
-                <Link href={"/cgu"}>
-                  Conditions générales d&apos;utilisation
-                </Link>
+                <Link href={"/cgu"}>Conditions générales d&apos;utilisation</Link>
               </ListItem>
               <ListItem
                 _after={{
@@ -208,9 +171,7 @@ const Footer = () => {
                   marginRight: "0.5rem",
                 }}
               >
-                <Link href={"/politique-confidentialite"}>
-                  Politique de confidentialité
-                </Link>
+                <Link href={"/politique-confidentialite"}>Politique de confidentialité</Link>
               </ListItem>
               <ListItem
                 _after={{
@@ -221,12 +182,7 @@ const Footer = () => {
               >
                 <Link href="https://beta.gouv.fr/startups" isExternal>
                   À propos
-                  <ExternalLinkLine
-                    w={"0.55rem"}
-                    h={"0.55rem"}
-                    mb={"0.125rem"}
-                    ml={1}
-                  />
+                  <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />
                 </Link>
               </ListItem>
               <ListItem
@@ -236,17 +192,9 @@ const Footer = () => {
                   marginRight: "0.5rem",
                 }}
               >
-                <Link
-                  href="https://github.com/mission-apprentissage/bal/blob/main/CHANGELOG.md"
-                  isExternal
-                >
+                <Link href="https://github.com/mission-apprentissage/bal/blob/main/CHANGELOG.md" isExternal>
                   Journal des évolutions
-                  <ExternalLinkLine
-                    w={"0.55rem"}
-                    h={"0.55rem"}
-                    mb={"0.125rem"}
-                    ml={1}
-                  />
+                  <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />
                 </Link>
               </ListItem>
               <ListItem
@@ -256,23 +204,14 @@ const Footer = () => {
                   marginRight: "0.5rem",
                 }}
               >
-                <Link
-                  href="https://github.com/mission-apprentissage/bal"
-                  isExternal
-                >
+                <Link href="https://github.com/mission-apprentissage/bal" isExternal>
                   Code source
-                  <ExternalLinkLine
-                    w={"0.55rem"}
-                    h={"0.55rem"}
-                    mb={"0.125rem"}
-                    ml={1}
-                  />
+                  <ExternalLinkLine w={"0.55rem"} h={"0.55rem"} mb={"0.125rem"} ml={1} />
                 </Link>
               </ListItem>
             </List>
             <Text textStyle="xs" mt={[2, 2, 0]}>
-              {APP_VERSION && `v.${APP_VERSION} `}© République française{" "}
-              {new Date().getFullYear()}
+              {APP_VERSION && `v.${APP_VERSION} `}© République française {new Date().getFullYear()}
             </Text>
           </Flex>
         </Container>

@@ -3,22 +3,12 @@ import assert from "node:assert";
 import nock from "nock";
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
-import {
-  createUser,
-  generateApiKey,
-} from "../../src/modules/actions/users.actions";
+import { createUser, generateApiKey } from "../../src/modules/actions/users.actions";
 import { build } from "../../src/modules/server/server";
 import { aktoValid } from "../data/akto";
-import {
-  opcoEpInvalid,
-  opcoEpValidDomain,
-  opcoEpValidEmail,
-} from "../data/opcoEp";
+import { opcoEpInvalid, opcoEpValidDomain, opcoEpValidEmail } from "../data/opcoEp";
 import { aktoTokenMock, aktoVerificationMock } from "../utils/mocks/akto.mock";
-import {
-  opcoEpTokenMock,
-  opcoEpVerificationMock,
-} from "../utils/mocks/opcoEp.mock";
+import { opcoEpTokenMock, opcoEpVerificationMock } from "../utils/mocks/opcoEp.mock";
 import { useMongo } from "../utils/mongo.utils";
 
 const app = build();
@@ -52,10 +42,7 @@ describe("Organisations", () => {
   describe("Validation Akto", () => {
     it("should be valid for correct email and domain", async () => {
       const tokenMock = aktoTokenMock();
-      const verificationMock = aktoVerificationMock(
-        aktoValid.email,
-        aktoValid.siren
-      );
+      const verificationMock = aktoVerificationMock(aktoValid.email, aktoValid.siren);
 
       const response = await app.inject({
         method: "POST",
@@ -80,16 +67,10 @@ describe("Organisations", () => {
   describe("Validation OPCO EP", () => {
     it("should be valid for correct email and domain", async () => {
       const tokenMock = opcoEpTokenMock();
-      const verificationMock = opcoEpVerificationMock(
-        opcoEpValidEmail.email,
-        opcoEpValidEmail.siret
-      );
+      const verificationMock = opcoEpVerificationMock(opcoEpValidEmail.email, opcoEpValidEmail.siret);
 
       const tokenMockAkto = aktoTokenMock();
-      const verificationMockAkto = aktoVerificationMock(
-        opcoEpValidEmail.email,
-        opcoEpValidEmail.siret.substring(0, 9)
-      );
+      const verificationMockAkto = aktoVerificationMock(opcoEpValidEmail.email, opcoEpValidEmail.siret.substring(0, 9));
 
       const response = await app.inject({
         method: "POST",
@@ -112,10 +93,7 @@ describe("Organisations", () => {
 
     it("should be valid for correct domain", async () => {
       const tokenMock = opcoEpTokenMock();
-      const verificationMock = opcoEpVerificationMock(
-        opcoEpValidDomain.email,
-        opcoEpValidDomain.siret
-      );
+      const verificationMock = opcoEpVerificationMock(opcoEpValidDomain.email, opcoEpValidDomain.siret);
 
       const tokenMockAkto = aktoTokenMock();
       const verificationMockAkto = aktoVerificationMock(
@@ -144,16 +122,10 @@ describe("Organisations", () => {
 
     it("should not be valid for incorrect email and domain", async () => {
       const tokenMock = opcoEpTokenMock();
-      const verificationMock = opcoEpVerificationMock(
-        opcoEpInvalid.email,
-        opcoEpInvalid.siret
-      );
+      const verificationMock = opcoEpVerificationMock(opcoEpInvalid.email, opcoEpInvalid.siret);
 
       const tokenMockAkto = aktoTokenMock();
-      const verificationMockAkto = aktoVerificationMock(
-        opcoEpInvalid.email,
-        opcoEpInvalid.siret.substring(0, 9)
-      );
+      const verificationMockAkto = aktoVerificationMock(opcoEpInvalid.email, opcoEpInvalid.siret.substring(0, 9));
 
       const response = await app.inject({
         method: "POST",

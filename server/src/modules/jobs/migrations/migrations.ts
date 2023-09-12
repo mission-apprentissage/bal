@@ -1,11 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 
-import {
-  config,
-  create as mcreate,
-  status as mstatus,
-  up as mup,
-} from "migrate-mongo";
+import { config, create as mcreate, status as mstatus, up as mup } from "migrate-mongo";
 import path from "path";
 
 import { __dirname } from "@/common/utils/esmUtils";
@@ -62,12 +57,9 @@ export async function status(): Promise<number> {
 
   // @ts-ignore
   const migrationStatus = await mstatus(client.db());
-  migrationStatus.forEach(({ fileName, appliedAt }) =>
-    console.log(fileName, ":", appliedAt)
-  );
+  migrationStatus.forEach(({ fileName, appliedAt }) => console.log(fileName, ":", appliedAt));
 
-  return migrationStatus.filter(({ appliedAt }) => appliedAt === "PENDING")
-    .length;
+  return migrationStatus.filter(({ appliedAt }) => appliedAt === "PENDING").length;
 }
 
 export async function create({ description }: { description: string }) {
@@ -84,10 +76,7 @@ export async function create({ description }: { description: string }) {
   });
   const newContent =
     'import { Db, MongoClient } from "mongodb";\n\n' +
-    content.replaceAll(
-      "async (db, client)",
-      "async (_db: Db, _client: MongoClient)"
-    );
+    content.replaceAll("async (db, client)", "async (_db: Db, _client: MongoClient)");
 
   await writeFile(file, newContent, { encoding: "utf-8" });
   console.log("Created:", fileName);

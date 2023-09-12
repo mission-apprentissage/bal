@@ -31,16 +31,10 @@ export const Select: FC<Props> = (props) => {
   };
 
   const { labelValueMap, valueLabelMap } = useMemo(() => {
-    const flatOptions = options[0].options
-      ? options.flatMap((group) => group.options)
-      : options;
+    const flatOptions = options[0].options ? options.flatMap((group) => group.options) : options;
     return {
-      labelValueMap: Object.fromEntries(
-        flatOptions.map((option) => [option.label, option.value])
-      ),
-      valueLabelMap: Object.fromEntries(
-        flatOptions.map((option) => [option.value, option.label])
-      ),
+      labelValueMap: Object.fromEntries(flatOptions.map((option) => [option.label, option.value])),
+      valueLabelMap: Object.fromEntries(flatOptions.map((option) => [option.value, option.label])),
     };
   }, [options]);
 
@@ -67,11 +61,7 @@ export const Select: FC<Props> = (props) => {
                 <optgroup label={group.name} key={k}>
                   {group.options.map((option, j) => {
                     return (
-                      <option
-                        key={j}
-                        value={option.label}
-                        disabled={option.locked}
-                      >
+                      <option key={j} value={option.label} disabled={option.locked}>
                         {option.label}
                       </option>
                     );

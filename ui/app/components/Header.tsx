@@ -1,13 +1,4 @@
-import {
-  Box,
-  Container,
-  Flex,
-  Heading,
-  HStack,
-  Img,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, HStack, Img, Text, VStack } from "@chakra-ui/react";
 
 import Link from "../../components/link/Link";
 import { useAuth } from "../../context/AuthContext";
@@ -22,13 +13,7 @@ export const Header = () => {
     <VStack
       zIndex={1}
       spacing="0"
-      divider={
-        <Box
-          width="100%"
-          borderBottom="1px solid"
-          borderBottomColor="grey.850"
-        />
-      }
+      divider={<Box width="100%" borderBottom="1px solid" borderBottomColor="grey.850" />}
       align={"start"}
       boxShadow="0 2px 3px rgba(0,0,18,0.16)"
     >

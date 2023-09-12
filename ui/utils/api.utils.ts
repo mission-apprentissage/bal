@@ -12,10 +12,7 @@ interface WithQueryStringAndPathParam {
 }
 
 type Options = {
-  [Prop in keyof Omit<
-    IRouteSchema,
-    "response"
-  >]: IRouteSchema[Prop] extends ZodType
+  [Prop in keyof Omit<IRouteSchema, "response">]: IRouteSchema[Prop] extends ZodType
     ? z.input<IRouteSchema[Prop]>
     : undefined;
 };
@@ -62,18 +59,14 @@ async function getHeaders(options: Options) {
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-export function generatePath(
-  originalPath: string,
-  params: PathParam = {}
-): string {
+export function generatePath(originalPath: string, params: PathParam = {}): string {
   let path: string = originalPath;
   if (path.endsWith("*") && path !== "*" && !path.endsWith("/*")) {
     path = path.replace(/\*$/, "/*");
   }
   const prefix = path.startsWith("/") ? "/" : "";
 
-  const stringify = (p: unknown) =>
-    p == null ? "" : typeof p === "string" ? p : String(p);
+  const stringify = (p: unknown) => (p == null ? "" : typeof p === "string" ? p : String(p));
 
   const segments = path
     .split(/\/+/)
@@ -120,18 +113,12 @@ export function generateQueryString(query: QueryString = {}): string {
   return `?${searchParams.toString()}`;
 }
 
-export function generateUrl(
-  path: string,
-  options: WithQueryStringAndPathParam = {}
-): string {
+export function generateUrl(path: string, options: WithQueryStringAndPathParam = {}): string {
   const normalisedEndpoint = publicConfig.apiEndpoint.endsWith("/")
     ? publicConfig.apiEndpoint.slice(0, -1)
     : publicConfig.apiEndpoint;
 
-  const url =
-    normalisedEndpoint +
-    generatePath(path, options.params) +
-    generateQueryString(options.querystring);
+  const url = normalisedEndpoint + generatePath(path, options.params) + generateQueryString(options.querystring);
 
   return url;
 }
@@ -141,9 +128,7 @@ function getBody(headers: Headers, body?: BodyInit): BodyInit | null {
     return null;
   }
 
-  return headers.get("Content-Type") === "application/json"
-    ? JSON.stringify(body)
-    : body;
+  return headers.get("Content-Type") === "application/json" ? JSON.stringify(body) : body;
 }
 
 export interface ApiErrorContext {
@@ -205,10 +190,10 @@ export class ApiError extends Error {
   }
 }
 
-export async function apiPost<
-  P extends keyof IRoutes["post"],
-  S extends IRoutes["post"][P] = IRoutes["post"][P]
->(path: P, options: IRequest<S>): Promise<IResponse<S>> {
+export async function apiPost<P extends keyof IRoutes["post"], S extends IRoutes["post"][P] = IRoutes["post"][P]>(
+  path: P,
+  options: IRequest<S>
+): Promise<IResponse<S>> {
   // TODO: Use a better cast
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const o: any = options;
@@ -233,10 +218,10 @@ export async function apiPost<
   return res.json();
 }
 
-export async function apiGet<
-  P extends keyof IRoutes["get"],
-  S extends IRoutes["get"][P] = IRoutes["get"][P]
->(path: P, options: IRequest<S>): Promise<IResponse<S>> {
+export async function apiGet<P extends keyof IRoutes["get"], S extends IRoutes["get"][P] = IRoutes["get"][P]>(
+  path: P,
+  options: IRequest<S>
+): Promise<IResponse<S>> {
   // TODO: Use a better cast
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const o: Record<string, any> = options;

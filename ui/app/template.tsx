@@ -23,11 +23,7 @@ const RootTemplate: FC<Props> = ({ children }) => {
   const tracking = useRef(searchParams?.get("notracking") !== "true");
 
   return (
-    <PlausibleProvider
-      trackLocalhost={false}
-      enabled={tracking.current}
-      domain={publicConfig.host}
-    >
+    <PlausibleProvider trackLocalhost={false} enabled={tracking.current} domain={publicConfig.host}>
       <QueryClientProvider client={queryClient}>
         <CacheProvider>
           <ChakraProvider theme={theme}>

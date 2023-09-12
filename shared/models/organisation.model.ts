@@ -32,19 +32,13 @@ export const ZOrganisation = z
     _id: zObjectId,
     nom: z.string().optional().describe("Nom de l'organisation"),
     siren: z.string().optional().describe("Siren de l'organisation"),
-    email_domains: z
-      .array(z.string())
-      .optional()
-      .describe("Liste des domaines email"),
+    email_domains: z.array(z.string()).optional().describe("Liste des domaines email"),
     etablissements: z
       .array(
         z
           .object({
             nom: z.string().optional().describe("Nom de l'établissement"),
-            siret: z
-              .string()
-              .optional()
-              .describe("Siret actif de l'établissement"),
+            siret: z.string().optional().describe("Siret actif de l'établissement"),
             is_hq: z.boolean().optional().describe("Siège social"),
             is_close: z.boolean().optional().describe("Est fermé"),
           })
@@ -59,10 +53,7 @@ export const ZOrganisation = z
       .nonstrict()
       .optional()
       .describe("Métadonnées"),
-    updated_at: z
-      .date()
-      .optional()
-      .describe("Date de mise à jour en base de données"),
+    updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
     created_at: z.date().optional().describe("Date d'ajout en base de données"),
   })
   .strict();

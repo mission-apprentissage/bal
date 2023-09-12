@@ -3,11 +3,7 @@ import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
 import path from "path";
-import {
-  TemplateName,
-  TemplatePayloads,
-  TemplateTitleFuncs,
-} from "shared/mailer";
+import { TemplateName, TemplatePayloads, TemplateTitleFuncs } from "shared/mailer";
 
 import config from "@/config";
 
@@ -17,9 +13,7 @@ import { __dirname } from "../../utils/esmUtils";
 
 function createTransporter(smtp: SMTPTransport) {
   const needsAuthentication = !!smtp.auth.user;
-  const transporter = nodemailer.createTransport(
-    needsAuthentication ? smtp : omit(smtp, ["auth"])
-  );
+  const transporter = nodemailer.createTransport(needsAuthentication ? smtp : omit(smtp, ["auth"]));
   transporter.use("compile", htmlToText());
   return transporter;
 }
@@ -70,10 +64,7 @@ export async function sendEmail<T extends TemplateName>(
   });
 }
 
-export function getEmailInfos<T extends TemplateName>(
-  template: T,
-  payload: TemplatePayloads[T]
-) {
+export function getEmailInfos<T extends TemplateName>(template: T, payload: TemplatePayloads[T]) {
   return {
     subject: templatesTitleFuncs[template](payload),
     templateFile: path.join(

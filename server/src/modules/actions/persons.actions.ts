@@ -34,9 +34,7 @@ export const createPerson = async (data: ICreatePerson) => {
     updated_at: now,
     created_at: now,
   };
-  const { insertedId: personId } = await getDbCollection("persons").insertOne(
-    person
-  );
+  const { insertedId: personId } = await getDbCollection("persons").insertOne(person);
 
   return {
     ...person,
@@ -44,9 +42,7 @@ export const createPerson = async (data: ICreatePerson) => {
   };
 };
 
-export const findPerson = async (
-  filter: Filter<IPerson>
-): Promise<PersonWithOrganisation | null> => {
+export const findPerson = async (filter: Filter<IPerson>): Promise<PersonWithOrganisation | null> => {
   const person = await getDbCollection("persons")
     .aggregate<PersonWithOrganisation>([
       {
@@ -67,9 +63,7 @@ export const findPerson = async (
   return person;
 };
 
-export const findPersons = async (
-  filter: Filter<IPerson>
-): Promise<PersonWithOrganisation[]> => {
+export const findPersons = async (filter: Filter<IPerson>): Promise<PersonWithOrganisation[]> => {
   const persons = await getDbCollection("persons")
     .aggregate<PersonWithOrganisation>([
       {

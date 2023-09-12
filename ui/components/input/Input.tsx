@@ -1,14 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // @ts-nocheck
-import {
-  Box,
-  FormControl,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  HStack,
-  InputGroup,
-} from "@chakra-ui/react";
+import { Box, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, InputGroup } from "@chakra-ui/react";
 import React, { memo, useCallback, useMemo, useState } from "react";
 
 import InfoTooltip from "../../app/components/infoTooltip/InfoTooltip";
@@ -136,16 +128,7 @@ export const Input = memo(
 );
 
 export const InputField = memo(({ mt, mb, ml, mr, w, ...props }: any) => {
-  const {
-    name,
-    label,
-    locked,
-    isRequired,
-    error,
-    description,
-    fieldType = "text",
-    warning,
-  } = props;
+  const { name, label, locked, isRequired, error, description, fieldType = "text", warning } = props;
   const Component = TypesMapping[fieldType] ?? (() => <></>);
 
   return (
@@ -159,9 +142,7 @@ export const InputField = memo(({ mt, mb, ml, mr, w, ...props }: any) => {
       w={w}
       id={name.replaceAll(".", "_")}
     >
-      {!NoLabel[fieldType] && label && (
-        <FormLabel color={locked ? "grey.625" : "grey.50"}>{label}</FormLabel>
-      )}
+      {!NoLabel[fieldType] && label && <FormLabel color={locked ? "grey.625" : "grey.50"}>{label}</FormLabel>}
       <HStack align="center">
         <InputGroup id={`${name}_group_input`} isolation="auto">
           <Component {...props} />
@@ -173,15 +154,9 @@ export const InputField = memo(({ mt, mb, ml, mr, w, ...props }: any) => {
         )}
       </HStack>
       {warning && (
-        <FormHelperText color={"warning_main"}>
-          {typeof warning !== "function" ? warning : warning()}
-        </FormHelperText>
+        <FormHelperText color={"warning_main"}>{typeof warning !== "function" ? warning : warning()}</FormHelperText>
       )}
-      {error && (
-        <FormErrorMessage>
-          {typeof error !== "function" ? error : error()}
-        </FormErrorMessage>
-      )}
+      {error && <FormErrorMessage>{typeof error !== "function" ? error : error()}</FormErrorMessage>}
     </FormControl>
   );
 });
