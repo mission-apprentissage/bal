@@ -22,22 +22,14 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add("loginAsUser", () => {
-  cy.request(
-    "POST",
-    "https://bal-recette.apprentissage.beta.gouv.fr/api/auth/login",
-    {
-      email: Cypress.env("email_user"),
-      password: Cypress.env("password_user"),
-    }
-  );
+  cy.request("POST", "https://bal-recette.apprentissage.beta.gouv.fr/api/auth/login", {
+    email: Cypress.env("email_user"),
+    password: Cypress.env("password_user"),
+  });
 });
 Cypress.Commands.add("loginAsAdmin", () => {
-  cy.request(
-    "POST",
-    "https://bal-recette.apprentissage.beta.gouv.fr/api/auth/login",
-    {
-      email: Cypress.env("email_admin"),
-      password: Cypress.env("password_admin"),
-    }
-  );
+  cy.request("POST", "https://bal-recette.apprentissage.beta.gouv.fr/api/auth/login", {
+    email: Cypress.env("email_admin"),
+    password: Cypress.env("password_admin"),
+  });
 });

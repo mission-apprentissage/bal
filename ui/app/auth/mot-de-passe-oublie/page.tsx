@@ -41,8 +41,7 @@ const MotDePasseOubliePage = () => {
 
       setStatus({
         error: false,
-        message:
-          "Vous allez recevoir un lien vous permettant de réinitialiser votre mot de passe.",
+        message: "Vous allez recevoir un lien vous permettant de réinitialiser votre mot de passe.",
       });
       reset();
     } catch (error) {
@@ -57,9 +56,7 @@ const MotDePasseOubliePage = () => {
 
   return (
     <>
-      <Breadcrumb
-        pages={[PAGES.homepage(), PAGES.connexion(), PAGES.motDePasseOublie()]}
-      />
+      <Breadcrumb pages={[PAGES.homepage(), PAGES.connexion(), PAGES.motDePasseOublie()]} />
       <Flex
         flexDirection="column"
         p={12}
@@ -75,10 +72,7 @@ const MotDePasseOubliePage = () => {
           <Box>
             <FormControl isInvalid={!!errors.email} isRequired mb={5}>
               <FormLabel>Votre email</FormLabel>
-              <Input
-                placeholder="prenom.nom@courriel.fr"
-                {...register("email", { required: "Email obligatoire" })}
-              />
+              <Input placeholder="prenom.nom@courriel.fr" {...register("email", { required: "Email obligatoire" })} />
               <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
             <Text color={status?.error ? "error_main" : "info_main"} mt={2}>

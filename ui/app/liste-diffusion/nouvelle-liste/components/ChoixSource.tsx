@@ -1,14 +1,4 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  HStack,
-  Input,
-  Select,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, FormControl, FormErrorMessage, FormLabel, HStack, Input, Select, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { CellContext, ColumnDefTemplate } from "@tanstack/react-table";
 import { FC } from "react";
@@ -107,15 +97,9 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
                   required: "Nom de la campagne",
                 })}
               />
-              <FormErrorMessage>
-                {errors.campaign_name?.message}
-              </FormErrorMessage>
+              <FormErrorMessage>{errors.campaign_name?.message}</FormErrorMessage>
             </FormControl>
-            <FormControl
-              isInvalid={!!errors.source}
-              mb={5}
-              isDisabled={isSubmitting}
-            >
+            <FormControl isInvalid={!!errors.source} mb={5} isDisabled={isSubmitting}>
               <FormLabel>Source</FormLabel>
               <Select
                 isInvalid={!!errors.source}

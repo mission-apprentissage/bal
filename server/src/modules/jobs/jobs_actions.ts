@@ -1,8 +1,4 @@
-import {
-  captureException,
-  getCurrentHub,
-  runWithAsyncContext,
-} from "@sentry/node";
+import { captureException, getCurrentHub, runWithAsyncContext } from "@sentry/node";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { IJob } from "shared/models/job.model";
 
@@ -21,8 +17,7 @@ export async function addJob(
     payload = {},
     scheduled_for = new Date(),
     sync = false,
-  }: Pick<IJob, "name"> &
-    Partial<Pick<IJob, "type" | "payload" | "scheduled_for" | "sync">>,
+  }: Pick<IJob, "name"> & Partial<Pick<IJob, "type" | "payload" | "scheduled_for" | "sync">>,
   options: { runningLogs: boolean } = {
     runningLogs: true,
   }
@@ -89,18 +84,12 @@ const runner = async (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     captureException(err);
-    if (options.runningLogs)
-      logger.error(
-        { err, writeErrors: err.writeErrors, error: err },
-        "job error"
-      );
+    if (options.runningLogs) logger.error({ err, writeErrors: err.writeErrors, error: err }, "job error");
     error = err?.toString();
   }
 
   const endDate = new Date();
-  const duration = formatDuration(
-    intervalToDuration({ start: startDate, end: endDate })
-  );
+  const duration = formatDuration(intervalToDuration({ start: startDate, end: endDate }));
   await updateJob(job._id, {
     status: error ? "errored" : "finished",
     output: { duration, result, error },
@@ -109,10 +98,7 @@ const runner = async (
   if (options.runningLogs) logger.info(`Job: ${job.name} Ended`);
 
   if (error) {
-    if (options.runningLogs)
-      logger.error(
-        error.constructor.name === "EnvVarError" ? error.message : error
-      );
+    if (options.runningLogs) logger.error(error.constructor.name === "EnvVarError" ? error.message : error);
   }
 
   return error ? 1 : 0;
@@ -140,11 +126,7 @@ export function executeJob(
     try {
       return await runner(job, jobFunc, options);
     } finally {
-      transaction.setMeasurement(
-        "job.execute",
-        Date.now() - start,
-        "millisecond"
-      );
+      transaction.setMeasurement("job.execute", Date.now() - start, "millisecond");
       transaction.finish();
     }
   });

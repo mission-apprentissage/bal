@@ -41,11 +41,7 @@ const getToken = async () => {
     return response.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    throw new ApiError(
-      "Api Opco Ep token",
-      error.message,
-      error.code || error.response?.status
-    );
+    throw new ApiError("Api Opco Ep token", error.message, error.code || error.response?.status);
   }
 };
 
@@ -97,10 +93,6 @@ export const getOpcoEpVerification = async (siret: string, email: string) => {
     return data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    throw new ApiError(
-      "Api Opco Ep",
-      error.message,
-      error.code || error.response?.status
-    );
+    throw new ApiError("Api Opco Ep", error.message, error.code || error.response?.status);
   }
 };

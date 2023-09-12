@@ -45,6 +45,7 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 .coverage
+coverage
 
 # nyc test coverage
 .nyc_output
@@ -157,3 +158,5 @@ sdk/lib
 node_modules.tar.gz
 /.env_server
 vault-tmp-*.*
+
+ui/next-env.d.ts

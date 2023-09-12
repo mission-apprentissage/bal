@@ -1,13 +1,5 @@
 "use client";
-import {
-  Box,
-  Button,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Button, Input, InputGroup, InputRightElement, Text, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 
 import { Dialog } from "../../../components/dialog/Dialog";
@@ -57,12 +49,7 @@ const ProfilPage = () => {
     <Box>
       <Text>Jeton API</Text>
       <InputGroup size="md" mt={4}>
-        <Input
-          pr="5rem"
-          type="text"
-          value={apiKey ?? "****************************************"}
-          readOnly
-        />
+        <Input pr="5rem" type="text" value={apiKey ?? "****************************************"} readOnly />
         <InputRightElement width="5rem">
           {apiKey && (
             <Button h="1.75rem" size="sm" onClick={handleClick}>
@@ -74,12 +61,7 @@ const ProfilPage = () => {
       {!apiKey && (
         <Text mt={4}>
           {user.api_key_used_at ? (
-            <>
-              {`Dernière utilisation le ${formatDate(
-                user.api_key_used_at as unknown as string,
-                "PPP à p"
-              )}`}
-            </>
+            <>{`Dernière utilisation le ${formatDate(user.api_key_used_at as unknown as string, "PPP à p")}`}</>
           ) : (
             <>Ce jeton n'a pas encore été utilisé</>
           )}
@@ -103,22 +85,15 @@ const ProfilPage = () => {
               }}
             >
               <Text>
-                Êtes-vous sûr de vouloir générer un nouveau jeton API ? Le jeton
-                existant ne sera plus utilisable.
+                Êtes-vous sûr de vouloir générer un nouveau jeton API ? Le jeton existant ne sera plus utilisable.
               </Text>
             </Dialog>
-            <Button
-              variant="primary"
-              onClick={() => setIsGenerateTokenOpen(true)}
-            >
+            <Button variant="primary" onClick={() => setIsGenerateTokenOpen(true)}>
               Générer un nouveau jeton API
             </Button>
           </>
         ) : (
-          <Text>
-            Ce jeton n'est visible qu'une fois, il est recommandé de le stocker
-            dans un endroit sécurisé.
-          </Text>
+          <Text>Ce jeton n'est visible qu'une fois, il est recommandé de le stocker dans un endroit sécurisé.</Text>
         )}
       </Box>
     </Box>

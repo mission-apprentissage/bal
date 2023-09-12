@@ -1,8 +1,4 @@
-import {
-  Breadcrumb as ChakraBreadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-} from "@chakra-ui/react";
+import { Breadcrumb as ChakraBreadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import NavLink from "next/link";
 import React, { FC } from "react";
 
@@ -124,11 +120,7 @@ const Breadcrumb: FC<Props> = ({ pages }) => {
         if (index === pages.length - 1 || !page.path) {
           return (
             <BreadcrumbItem key={page.title} isCurrentPage>
-              <BreadcrumbLink
-                textDecoration="none"
-                _hover={{ textDecoration: "none" }}
-                cursor="default"
-              >
+              <BreadcrumbLink textDecoration="none" _hover={{ textDecoration: "none" }} cursor="default">
                 {page.title}
               </BreadcrumbLink>
             </BreadcrumbItem>

@@ -8,21 +8,14 @@ import FormSearch from "../../../../components/formSearch/FormSearch";
 import Table from "../../../../components/table/Table";
 import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";
 import { apiGet } from "../../../../utils/api.utils";
-import {
-  formatUrlWithNewParams,
-  getSearchParamsForQuery,
-} from "../../../../utils/query.utils";
+import { formatUrlWithNewParams, getSearchParamsForQuery } from "../../../../utils/query.utils";
 import { PAGES } from "../../../components/breadcrumb/Breadcrumb";
 
 const PersonList = () => {
   const searchParams = useSearchParams();
   const { push } = useRouter();
 
-  const {
-    page: page,
-    limit: limit,
-    q: searchValue,
-  } = getSearchParamsForQuery(searchParams);
+  const { page: page, limit: limit, q: searchValue } = getSearchParamsForQuery(searchParams);
 
   const { data: persons } = useQuery<PersonWithOrganisationJson[]>({
     queryKey: ["persons", { searchValue, page, limit }],
@@ -33,15 +26,11 @@ const PersonList = () => {
   });
 
   const onSearch = (q: string) => {
-    const url = formatUrlWithNewParams(
-      PAGES.adminPersons().path,
-      searchParams,
-      {
-        q,
-        page,
-        limit,
-      }
-    );
+    const url = formatUrlWithNewParams(PAGES.adminPersons().path, searchParams, {
+      q,
+      page,
+      limit,
+    });
 
     push(url);
   };
@@ -80,14 +69,7 @@ const PersonList = () => {
               const { organisation } = row.original;
 
               return organisation ? (
-                <Text
-                  as={Link}
-                  href={
-                    PAGES.adminViewOrganisation(
-                      organisation._id as unknown as string
-                    ).path
-                  }
-                >
+                <Text as={Link} href={PAGES.adminViewOrganisation(organisation._id as unknown as string).path}>
                   {organisation.nom}
                 </Text>
               ) : (

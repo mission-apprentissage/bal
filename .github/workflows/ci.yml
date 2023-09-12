@@ -1,14 +1,17 @@
 name: CI
+
 on:
   workflow_call:
     secrets:
       CODECOV_TOKEN:
         description: Code coverrage token
         required: true
-    outputs:
-      status:
-        description: Whether deployment succeeded or not
-        value: ${{ jobs.deploy.outputs.status }}
+    inputs:
+      coverage:
+        required: false
+        type: boolean
+        default: false
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -19,7 +22,7 @@ jobs:
           - "27017:27017"
     steps:
       - name: Checkout project
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - uses: actions/setup-node@v3
         with:
@@ -48,8 +51,17 @@ jobs:
 
       - name: test
         run: yarn test:ci
+        if: ${{ !inputs.coverage }}
+
+      - name: test with coverage
+        run: yarn test:ci:coverage
+        if: ${{ inputs.coverage }}
+
+      - name: prettier
+        run: yarn prettier:check
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+        if: ${{ inputs.coverage }}

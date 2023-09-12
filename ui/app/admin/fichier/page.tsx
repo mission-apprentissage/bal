@@ -38,24 +38,12 @@ const AdminImportPage = () => {
   return (
     <>
       <Breadcrumb pages={[PAGES.homepage(), PAGES.adminFichier()]} />
-      <Flex
-        as="nav"
-        align="center"
-        justify="space-between"
-        wrap="wrap"
-        w="100%"
-        alignItems="flex-start"
-      >
+      <Flex as="nav" align="center" justify="space-between" wrap="wrap" w="100%" alignItems="flex-start">
         <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
           Gestion fichiers sources
         </Heading>
         <HStack spacing={4}>
-          <Button
-            variant="secondary"
-            href="/admin/fichier/import"
-            size="md"
-            as={NavLink}
-          >
+          <Button variant="secondary" href="/admin/fichier/import" size="md" as={NavLink}>
             <Text as="span">+ Ajouter un fichier</Text>
           </Button>
         </HStack>
@@ -92,10 +80,7 @@ const AdminImportPage = () => {
               size: 70,
               header: () => "Date d'import",
               cell: ({ row }) => {
-                return (
-                  row.original.created_at &&
-                  formatDate(row.original.created_at, "dd/MM/yyyy à HH:mm")
-                );
+                return row.original.created_at && formatDate(row.original.created_at, "dd/MM/yyyy à HH:mm");
               },
             },
             status: {
@@ -104,9 +89,7 @@ const AdminImportPage = () => {
               header: () => "Statut",
               cell: ({ row }) => {
                 if (row.original.import_progress === 100) return "Terminé";
-                return `En cours d'importation ${row.original.import_progress?.toPrecision(
-                  2
-                )}%`;
+                return `En cours d'importation ${row.original.import_progress?.toPrecision(2)}%`;
               },
             },
             actions: {
@@ -150,9 +133,7 @@ const AdminImportPage = () => {
             isLoading: isDeleting,
           }}
         >
-          <Text>
-            Vous allez supprimer le document. Cette action est irréversible.
-          </Text>
+          <Text>Vous allez supprimer le document. Cette action est irréversible.</Text>
         </Dialog>
       </Box>
     </>

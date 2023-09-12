@@ -100,9 +100,7 @@ export const MaskedInput: FC<Props> = (props) => {
       else
         acc[item.name] = {
           mask: item.mask,
-          ...(item.placeholderChar
-            ? { placeholderChar: item.placeholderChar }
-            : {}),
+          ...(item.placeholderChar ? { placeholderChar: item.placeholderChar } : {}),
         };
       return acc;
     }, {} as Blocks);

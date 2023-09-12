@@ -1,13 +1,6 @@
 "use client";
 import { CacheProvider } from "@chakra-ui/next-js";
-import {
-  Box,
-  ChakraProvider,
-  Heading,
-  Link,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, ChakraProvider, Heading, Link, Stack, Text } from "@chakra-ui/react";
 import { Metadata } from "next";
 import PlausibleProvider from "next-plausible";
 
@@ -30,20 +23,8 @@ export default async function NotFoundPage() {
           <Header />
           <Box minH={"40vh"}>
             <Section my={8}>
-              <Box
-                w="100%"
-                pt={[4, 8]}
-                px={[1, 1, 6, 8]}
-                color="grey.50"
-                paddingY="4w"
-              >
-                <Box
-                  border="1px solid"
-                  borderColor="blue_france.light"
-                  padding="4w"
-                  marginTop="6w"
-                  w="100%"
-                >
+              <Box w="100%" pt={[4, 8]} px={[1, 1, 6, 8]} color="grey.50" paddingY="4w">
+                <Box border="1px solid" borderColor="blue_france.light" padding="4w" marginTop="6w" w="100%">
                   <Stack alignItems="center" spacing="4w">
                     <NotFound />
                     <Heading fontSize="28px" fontWeight="bold">
@@ -62,12 +43,7 @@ export default async function NotFoundPage() {
                       }}
                       color="blue_france.main"
                     >
-                      <Box
-                        as="i"
-                        className="ri-arrow-left-line"
-                        marginRight="1w"
-                        verticalAlign="middle"
-                      />
+                      <Box as="i" className="ri-arrow-left-line" marginRight="1w" verticalAlign="middle" />
                       <Box as="span" verticalAlign="middle">
                         Retourner à la page d&apos;accueil
                       </Box>

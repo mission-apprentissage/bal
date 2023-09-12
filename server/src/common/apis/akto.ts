@@ -38,11 +38,7 @@ const getToken = async () => {
     return response.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    throw new ApiError(
-      "Api Akto token",
-      error.message,
-      error.code || error.response?.status
-    );
+    throw new ApiError("Api Akto token", error.message, error.code || error.response?.status);
   }
 };
 
@@ -56,22 +52,15 @@ export const getAktoVerification = async (siren: string, email: string) => {
   const token_akto = await getToken();
 
   try {
-    const { data } = await axiosClient.get(
-      `/Relations/Validation?email=${email}&siren=${siren}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token_akto.access_token}`,
-        },
-      }
-    );
+    const { data } = await axiosClient.get(`/Relations/Validation?email=${email}&siren=${siren}`, {
+      headers: {
+        Authorization: `Bearer ${token_akto.access_token}`,
+      },
+    });
 
     return data.data.match;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    throw new ApiError(
-      "Api Akto",
-      error.message,
-      error.code || error.response?.status
-    );
+    throw new ApiError("Api Akto", error.message, error.code || error.response?.status);
   }
 };

@@ -15,9 +15,7 @@ const ListeDiffusionPage = () => {
     queryFn: async () => apiGet("/mailing-lists", {}),
   });
 
-  const generatingMailingList = mailingLists?.find(
-    (ml) => ml.status === "processing"
-  );
+  const generatingMailingList = mailingLists?.find((ml) => ml.status === "processing");
 
   return (
     <>
@@ -27,21 +25,12 @@ const ListeDiffusionPage = () => {
         <Heading as="h2" fontSize="2xl" flexGrow={1}>
           Mes Listes de diffusion
         </Heading>
-        <Button
-          variant="primary"
-          as={NextLink}
-          href="/liste-diffusion/nouvelle-liste"
-        >
+        <Button variant="primary" as={NextLink} href="/liste-diffusion/nouvelle-liste">
           + Créer nouvelle liste
         </Button>
       </Flex>
 
-      {!!generatingMailingList && (
-        <GeneratingMailingList
-          mailingList={generatingMailingList}
-          onDone={refetch}
-        />
-      )}
+      {!!generatingMailingList && <GeneratingMailingList mailingList={generatingMailingList} onDone={refetch} />}
 
       <ListMailingList mailingLists={mailingLists} onDelete={refetch} />
     </>

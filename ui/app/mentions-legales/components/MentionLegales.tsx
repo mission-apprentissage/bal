@@ -78,9 +78,8 @@ const MentionsLegales = () => {
             Éditeur du site
           </Heading>
           <Text>
-            Ce site est édité par la Délégation Générale à l’Emploi et à la
-            Formation Professionnelle (DGEFP) et la Mission interministérielle
-            de l’apprentissage.
+            Ce site est édité par la Délégation Générale à l’Emploi et à la Formation Professionnelle (DGEFP) et la
+            Mission interministérielle de l’apprentissage.
             <br />
             <br />
             10-18 place des 5 Martyrs du Lycée Buffon
@@ -92,8 +91,8 @@ const MentionsLegales = () => {
             Directeur de la publication
           </Heading>
           <Text>
-            Le Directeur de la publication est Monsieur Bruno Lucas, Délégué
-            général à l’Emploi et à la Formation Professionnelle.
+            Le Directeur de la publication est Monsieur Bruno Lucas, Délégué général à l’Emploi et à la Formation
+            Professionnelle.
           </Text>
         </Section>
         <Section mt={4} id={anchors.HebergementDuSite}>
@@ -110,9 +109,8 @@ const MentionsLegales = () => {
             Standard : 09.72.10.07
             <br />
             <br />
-            La conception et la réalisation du site sont effectuée par La
-            Mission Interministérielle pour l’apprentissage, située à l’adresse
-            suivante :
+            La conception et la réalisation du site sont effectuée par La Mission Interministérielle pour
+            l’apprentissage, située à l’adresse suivante :
             <br />
             Beta.gouv
             <br />
@@ -126,9 +124,8 @@ const MentionsLegales = () => {
             Accessibilité
           </Heading>
           <Text>
-            La conformité aux normes d’accessibilité numérique est un objectif
-            ultérieur mais nous tâchons de rendre ce site accessible à toutes et
-            à tous.
+            La conformité aux normes d’accessibilité numérique est un objectif ultérieur mais nous tâchons de rendre ce
+            site accessible à toutes et à tous.
           </Text>
         </Section>
         <Section mt={4} id={anchors.SignalerUnDyfonctionnement}>
@@ -136,13 +133,11 @@ const MentionsLegales = () => {
             Signaler un dysfonctionnement
           </Heading>
           <Text>
-            Si vous rencontrez un défaut d’accessibilité vous empêchant
-            d’accéder à un contenu ou une fonctionnalité du site, merci de nous
-            en faire part.
+            Si vous rencontrez un défaut d’accessibilité vous empêchant d’accéder à un contenu ou une fonctionnalité du
+            site, merci de nous en faire part.
             <br />
-            Si vous n’obtenez pas de réponse rapide de notre part, vous êtes en
-            droit de faire parvenir vos doléances ou une demande de saisine au
-            Défenseur des droits.
+            Si vous n’obtenez pas de réponse rapide de notre part, vous êtes en droit de faire parvenir vos doléances ou
+            une demande de saisine au Défenseur des droits.
           </Text>
         </Section>
       </Box>

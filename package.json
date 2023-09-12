@@ -2,7 +2,7 @@
   "name": "mna-bal",
   "description": "[MNA] BAL",
   "repository": "https://github.com/mission-apprentissage/bal.git",
-  "version": "1.35.5",
+  "version": "0.0.0",
   "author": "MNA",
   "license": "MIT",
   "private": true,
@@ -29,9 +29,9 @@
     "services:start": "docker compose up --remove-orphans -d",
     "services:stop": "docker compose down",
     "services:clean": "yarn services:stop; docker system prune --volumes",
-    "lint": "eslint .",
-    "prettier:fix": "prettier --write ./ui ./server",
-    "prettier:check": "prettier --check ./ui ./server",
+    "lint": "eslint --ignore-path .gitignore --cache .",
+    "prettier:fix": "prettier --write -u .",
+    "prettier:check": "prettier --check -u .",
     "release": "semantic-release",
     "release:interactive": "./.bin/mna-bal release:interactive",
     "prepare": "husky install",
@@ -40,7 +40,8 @@
     "e2e:headless": "cypress run",
     "e2e:convert": "node cypress/convertRecords.mjs",
     "test": "vitest",
-    "test:ci": "yarn test --run --coverage",
+    "test:ci": "yarn test --run",
+    "test:ci:coverage": "yarn test:ci --coverage.include='ui' --coverage.include='server/src' --coverage.include='shared' --coverage.provider='v8' --coverage.enabled --coverage.all --coverage.exclude='**/tests' --coverage.exclude='**/.next'",
     "test:watch": "vitest --watch",
     "typecheck": "yarn foreach:parallel run typecheck",
     "typecheck:ci": "yarn foreach:ci run typecheck",
@@ -60,7 +61,6 @@
     "@cypress/chrome-recorder": "^2.3.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "@vitest/coverage-v8": "^0.34.2",
@@ -69,6 +69,7 @@
     "eslint": "^8.47.0",
     "eslint-config-next": "^13.4.17",
     "eslint-import-resolver-typescript": "^3.6.0",
+    "eslint-plugin-cypress": "^2.14.0",
     "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-mocha": "^10.1.0",
@@ -76,9 +77,9 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^8.0.3",
-    "lint-staged": "^11.2.6",
+    "lint-staged": "^14.0.1",
     "node-talisman": "^1.29.10",
-    "prettier": "^2.8.8",
+    "prettier": "^3.0.3",
     "semantic-release": "^21.0.7",
     "semantic-release-slack-bot": "^3.5.3",
     "typescript": "^5.1.6",
@@ -86,15 +87,18 @@
     "vitest": "^0.34.2"
   },
   "prettier": {
-    "printWidth": 80,
+    "printWidth": 120,
     "bracketSpacing": true,
     "trailingComma": "es5",
     "arrowParens": "always"
   },
   "lint-staged": {
-    "*.{ts,js,tsx}": [
-      "eslint .",
-      "prettier ./ui ./server"
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --ignore-path .gitignore --cache --fix",
+      "prettier --write -u"
+    ],
+    "*": [
+      "prettier --write -u"
     ]
   },
   "packageManager": "yarn@3.6.1"

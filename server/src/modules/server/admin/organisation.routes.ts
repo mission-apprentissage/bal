@@ -3,10 +3,7 @@ import { RootFilterOperators } from "mongodb";
 import { zRoutes } from "shared";
 import { IOrganisation } from "shared/models/organisation.model";
 
-import {
-  findOrganisation,
-  findOrganisations,
-} from "../../actions/organisations.actions";
+import { findOrganisation, findOrganisations } from "../../actions/organisations.actions";
 import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 

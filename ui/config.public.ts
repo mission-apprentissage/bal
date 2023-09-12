@@ -38,9 +38,7 @@ function getPreviewPublicConfig(): PublicConfig {
   const matches = version.match(/^0\.0\.0-(\d+)$/);
 
   if (!matches) {
-    throw new Error(
-      `getPreviewPublicConfig: invalid preview version ${version}`
-    );
+    throw new Error(`getPreviewPublicConfig: invalid preview version ${version}`);
   }
 
   const host = `${matches[1]}.bal-preview.apprentissage.beta.gouv.fr`;
@@ -63,9 +61,7 @@ function getLocalPublicConfig(): PublicConfig {
     },
     host,
     env: "local",
-    apiEndpoint: `http://${host}:${
-      process.env.NEXT_PUBLIC_API_PORT ?? 5000
-    }/api`,
+    apiEndpoint: `http://${host}:${process.env.NEXT_PUBLIC_API_PORT ?? 5000}/api`,
   };
 }
 

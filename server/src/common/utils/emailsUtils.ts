@@ -9,11 +9,7 @@ export function getPublicUrl(path: string) {
 
 export async function generateHtml(
   to: string,
-  {
-    subject,
-    templateFile,
-    data,
-  }: { subject: string; templateFile: string; data: unknown }
+  { subject, templateFile, data }: { subject: string; templateFile: string; data: unknown }
 ) {
   const buffer = await ejs.renderFile(templateFile, {
     to,

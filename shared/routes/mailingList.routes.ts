@@ -26,14 +26,7 @@ export const zMailingListRoutes = {
       params: z.object({ id: zObjectId }),
       response: {
         "2xx": z.object({
-          status: z.enum([
-            "pending",
-            "will_start",
-            "running",
-            "finished",
-            "blocked",
-            "errored",
-          ]),
+          status: z.enum(["pending", "will_start", "running", "finished", "blocked", "errored"]),
           processed: z.number(),
           processed_count: z.number(),
         }),

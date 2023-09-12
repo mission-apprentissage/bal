@@ -72,10 +72,7 @@ const ConnexionPage = () => {
           <Box>
             <FormControl isInvalid={!!errors.email} mb={5}>
               <FormLabel>Email (votre identifiant)</FormLabel>
-              <Input
-                placeholder="prenom.nom@courriel.fr"
-                {...register("email", { required: "Email obligatoire" })}
-              />
+              <Input placeholder="prenom.nom@courriel.fr" {...register("email", { required: "Email obligatoire" })} />
               <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
 
@@ -90,11 +87,7 @@ const ConnexionPage = () => {
                   })}
                 />
                 <InputRightElement width="2.5rem">
-                  <ShowPassword
-                    boxSize={5}
-                    onClick={() => setShowPassword((current) => !current)}
-                    cursor="pointer"
-                  />
+                  <ShowPassword boxSize={5} onClick={() => setShowPassword((current) => !current)} cursor="pointer" />
                 </InputRightElement>
               </InputGroup>
 
@@ -112,11 +105,7 @@ const ConnexionPage = () => {
             <Button variant="primary" type="submit">
               Connexion
             </Button>
-            <Link
-              href="/auth/mot-de-passe-oublie"
-              as={NavLink}
-              color="grey.425"
-            >
+            <Link href="/auth/mot-de-passe-oublie" as={NavLink} color="grey.425">
               Mot de passe oublié
             </Link>
           </HStack>

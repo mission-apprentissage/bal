@@ -150,10 +150,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
        * et si celle-ci est générée
        */
 
-      if (
-        !mailingList?.document_id ||
-        user?._id.toString() !== mailingList?.added_by
-      ) {
+      if (!mailingList?.document_id || user?._id.toString() !== mailingList?.added_by) {
         throw Boom.forbidden("Forbidden");
       }
 
@@ -194,9 +191,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       await oleoduc(
         // @ts-ignore
         stream,
-        crypto.isCipherAvailable()
-          ? crypto.decipher(document.hash_secret)
-          : noop(),
+        crypto.isCipherAvailable() ? crypto.decipher(document.hash_secret) : noop(),
         response.raw
       );
     }

@@ -47,12 +47,10 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
       <Heading as="h3" fontSize="3xl" mb="2">
         Génération en cours...
       </Heading>
+      <Text mb="2">Veuillez patienter pendant la génération de votre liste de diffusion</Text>
       <Text mb="2">
-        Veuillez patienter pendant la génération de votre liste de diffusion
-      </Text>
-      <Text mb="2">
-        Cette opération peut durer jusqu’à 2 heures selon la taille du fichier,
-        vous pouvez quitter cette page et revenir plus tard.
+        Cette opération peut durer jusqu’à 2 heures selon la taille du fichier, vous pouvez quitter cette page et
+        revenir plus tard.
       </Text>
       <Text mb="2">Progression : {progression} %</Text>
     </Box>

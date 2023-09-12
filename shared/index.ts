@@ -27,7 +27,7 @@ export type deserialize = [
       format: "ObjectId";
     };
     output: ObjectId;
-  }
+  },
 ];
 
 export const zRoutes = {
@@ -97,29 +97,18 @@ export interface IRouteSchema {
   response: { "2xx": ZodType };
 }
 
-export type IResponse<S extends IRouteSchema> =
-  S["response"]["2xx"] extends ZodType
-    ? Jsonify<z.output<S["response"]["2xx"]>>
-    : never;
-
-export type IBody<S extends IRouteSchema> = S["body"] extends ZodType
-  ? z.input<S["body"]>
+export type IResponse<S extends IRouteSchema> = S["response"]["2xx"] extends ZodType
+  ? Jsonify<z.output<S["response"]["2xx"]>>
   : never;
 
-export type IQuery<S extends IRouteSchema> = S["querystring"] extends ZodType
-  ? z.input<S["querystring"]>
-  : never;
+export type IBody<S extends IRouteSchema> = S["body"] extends ZodType ? z.input<S["body"]> : never;
 
-export type IParam<S extends IRouteSchema> = S["params"] extends ZodType
-  ? z.input<S["params"]>
-  : never;
+export type IQuery<S extends IRouteSchema> = S["querystring"] extends ZodType ? z.input<S["querystring"]> : never;
 
-export type IHeaders<S extends IRouteSchema> = S["headers"] extends ZodType
-  ? z.input<S["headers"]>
-  : never;
+export type IParam<S extends IRouteSchema> = S["params"] extends ZodType ? z.input<S["params"]> : never;
+
+export type IHeaders<S extends IRouteSchema> = S["headers"] extends ZodType ? z.input<S["headers"]> : never;
 
 export type IRequest<S extends IRouteSchema> = {
-  [Prop in keyof Omit<S, "response">]: S[Prop] extends ZodType
-    ? z.input<S[Prop]>
-    : never;
+  [Prop in keyof Omit<S, "response">]: S[Prop] extends ZodType ? z.input<S[Prop]> : never;
 };

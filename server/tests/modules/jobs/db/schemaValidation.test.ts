@@ -1,10 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 import { getDatabase } from "../../../../src/common/utils/mongodbUtils";
-import {
-  countInvalidDocuments,
-  validateDocuments,
-} from "../../../../src/modules/jobs/db/schemaValidation";
+import { countInvalidDocuments, validateDocuments } from "../../../../src/modules/jobs/db/schemaValidation";
 import { useMongo } from "../../../utils/mongo.utils";
 
 describe("countInvalidDocuments", () => {
@@ -20,8 +17,7 @@ describe("countInvalidDocuments", () => {
           properties: {
             country: {
               enum: ["France", "United Kingdom", "United States"],
-              description:
-                "Must be either France, United Kingdom, or United States",
+              description: "Must be either France, United Kingdom, or United States",
             },
           },
         },
@@ -109,8 +105,7 @@ describe("validateDocuments", () => {
           properties: {
             country: {
               enum: ["France", "United Kingdom", "United States"],
-              description:
-                "Must be either France, United Kingdom, or United States",
+              description: "Must be either France, United Kingdom, or United States",
             },
           },
         },

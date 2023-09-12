@@ -23,8 +23,7 @@ import { apiPost } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import { NavLink } from "../../components/NavLink";
 
-interface IFormValues
-  extends Zod.input<IPostRoutes["/auth/reset-password"]["body"]> {
+interface IFormValues extends Zod.input<IPostRoutes["/auth/reset-password"]["body"]> {
   password_confirmation: string;
 }
 

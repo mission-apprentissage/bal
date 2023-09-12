@@ -2,15 +2,11 @@ import { ObjectId } from "mongodb";
 
 import config from "@/config";
 
-import {
-  createOrganisation,
-  findOrganisationBySiret,
-} from "../../actions/organisations.actions";
+import { createOrganisation, findOrganisationBySiret } from "../../actions/organisations.actions";
 import { createUser, findUser } from "../../actions/users.actions";
 
 export const seed = async () => {
-  let dinumOrganisationId = (await findOrganisationBySiret("13002526500013"))
-    ?._id as ObjectId | undefined;
+  let dinumOrganisationId = (await findOrganisationBySiret("13002526500013"))?._id as ObjectId | undefined;
 
   if (!dinumOrganisationId) {
     dinumOrganisationId = (

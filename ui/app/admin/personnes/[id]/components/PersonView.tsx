@@ -6,9 +6,7 @@ import { FC } from "react";
 import { PersonWithOrganisationJson } from "shared/models/person.model";
 
 import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
-import Breadcrumb, {
-  PAGES,
-} from "../../../../components/breadcrumb/Breadcrumb";
+import Breadcrumb, { PAGES } from "../../../../components/breadcrumb/Breadcrumb";
 
 interface Props {
   person: PersonWithOrganisationJson;
@@ -18,11 +16,7 @@ const PersonView: FC<Props> = ({ person }) => {
   return (
     <>
       <Breadcrumb
-        pages={[
-          PAGES.homepage(),
-          PAGES.adminPersons(),
-          PAGES.adminViewPerson(person._id as unknown as string),
-        ]}
+        pages={[PAGES.homepage(), PAGES.adminPersons(), PAGES.adminViewPerson(person._id as unknown as string)]}
       />
       <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
         Fiche personne
@@ -50,14 +44,7 @@ const PersonView: FC<Props> = ({ person }) => {
             header: () => "Organisation",
             cell: ({ organisation }) => {
               return organisation ? (
-                <Text
-                  as={Link}
-                  href={
-                    PAGES.adminViewOrganisation(
-                      organisation._id as unknown as string
-                    ).path
-                  }
-                >
+                <Text as={Link} href={PAGES.adminViewOrganisation(organisation._id as unknown as string).path}>
                   {organisation.nom}
                 </Text>
               ) : (

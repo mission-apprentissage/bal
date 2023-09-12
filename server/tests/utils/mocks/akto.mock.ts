@@ -3,10 +3,7 @@ import querystring from "querystring";
 
 import config from "@/config";
 
-import {
-  AKTO_API_BASE_URL,
-  AKTO_AUTH_BASE_URL,
-} from "../../../src/common/apis/akto";
+import { AKTO_API_BASE_URL, AKTO_AUTH_BASE_URL } from "../../../src/common/apis/akto";
 import { aktoMatch, aktoNotMatch, aktoToken, aktoValid } from "../../data/akto";
 
 export const aktoTokenMock = () => {
@@ -30,9 +27,5 @@ export const aktoVerificationMock = (email: string, siren: string) => {
   if (email === aktoValid.email && siren === aktoValid.siren) {
     response = aktoMatch;
   }
-  return nock(AKTO_API_BASE_URL)
-    .persist()
-    .get("/Relations/Validation")
-    .query({ email, siren })
-    .reply(200, response);
+  return nock(AKTO_API_BASE_URL).persist().get("/Relations/Validation").query({ email, siren }).reply(200, response);
 };

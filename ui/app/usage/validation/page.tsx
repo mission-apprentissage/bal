@@ -1,14 +1,5 @@
 "use client";
-import {
-  Box,
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-  Input,
-  InputGroup,
-} from "@chakra-ui/react";
+import { Box, Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, InputGroup } from "@chakra-ui/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IBody, IPostRoutes, IResponse } from "shared";
@@ -56,17 +47,12 @@ const UsageVerificationPage = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl isInvalid={!!errors.email} mb={5}>
             <FormLabel>Email</FormLabel>
-            <Input
-              placeholder="prenom.nom@courriel.fr"
-              {...register("email", { required: "Email obligatoire" })}
-            />
+            <Input placeholder="prenom.nom@courriel.fr" {...register("email", { required: "Email obligatoire" })} />
             <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
           </FormControl>
 
           <FormControl isInvalid={!!errors.siret} mb={5}>
-            <FormLabel>
-              Un SIRET au format valide est composé de 14 chiffres
-            </FormLabel>
+            <FormLabel>Un SIRET au format valide est composé de 14 chiffres</FormLabel>
             <InputGroup size="md">
               <Input
                 placeholder="98765432400019"

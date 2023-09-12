@@ -1,12 +1,6 @@
 import { captureException } from "@sentry/node";
 import { Options } from "csv-parse";
-import {
-  Filter,
-  FindOneAndUpdateOptions,
-  FindOptions,
-  ObjectId,
-  UpdateFilter,
-} from "mongodb";
+import { Filter, FindOneAndUpdateOptions, FindOptions, ObjectId, UpdateFilter } from "mongodb";
 import { oleoduc, writeData } from "oleoduc";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { IDocument } from "shared/models/document.model";
@@ -20,22 +14,11 @@ import { getDbCollection } from "@/common/utils/mongodbUtils";
 import config from "@/config";
 import { clamav } from "@/services";
 
-import {
-  deleteFromStorage,
-  getFromStorage,
-  uploadToStorage,
-} from "../../common/utils/ovhUtils";
+import { deleteFromStorage, getFromStorage, uploadToStorage } from "../../common/utils/ovhUtils";
 import { parseCsv } from "../../common/utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
-import {
-  DECAParsedContentLine,
-  importDecaContent,
-  parseContentLine,
-} from "./deca.actions";
-import {
-  createDocumentContent,
-  deleteDocumentContent,
-} from "./documentContent.actions";
+import { DECAParsedContentLine, importDecaContent, parseContentLine } from "./deca.actions";
+import { createDocumentContent, deleteDocumentContent } from "./documentContent.actions";
 import { MAILING_LIST_DOCUMENT_PREFIX } from "./mailingLists.actions";
 
 const testMode = config.env === "test";
@@ -66,13 +49,8 @@ export const findDocument = async (
   return await getDbCollection("documents").findOne(filter, options);
 };
 
-export const findDocuments = async (
-  filter: Filter<IDocument>,
-  options?: FindOptions<IDocument>
-) => {
-  const documents = await getDbCollection("documents")
-    .find<IDocument>(filter, options)
-    .toArray();
+export const findDocuments = async (filter: Filter<IDocument>, options?: FindOptions<IDocument>) => {
+  const documents = await getDbCollection("documents").find<IDocument>(filter, options).toArray();
 
   return documents;
 };
@@ -82,14 +60,10 @@ export const updateDocument = async (
   update: UpdateFilter<IDocument>,
   options?: FindOneAndUpdateOptions
 ) => {
-  const updated = await getDbCollection("documents").findOneAndUpdate(
-    filter,
-    update,
-    {
-      ...options,
-      returnDocument: "after",
-    }
-  );
+  const updated = await getDbCollection("documents").findOneAndUpdate(filter, update, {
+    ...options,
+    returnDocument: "after",
+  });
   return updated.value;
 };
 
@@ -155,9 +129,7 @@ export const saveDocumentColumns = async (document: IDocument) => {
 
     return columns;
   } catch (error) {
-    logger.error(
-      `Error while saving document columns for document ${document._id.toString()}`
-    );
+    logger.error(`Error while saving document columns for document ${document._id.toString()}`);
     return [];
   }
 };
@@ -195,9 +167,7 @@ export const getDocumentColumns = async (type: string): Promise<string[]> => {
     { $sort: { uniqueKeys: 1 } }, // Sort unique keys alphabetically
   ];
 
-  const result = await getDbCollection("documentContents")
-    .aggregate(aggregationPipeline)
-    .toArray();
+  const result = await getDbCollection("documentContents").aggregate(aggregationPipeline).toArray();
 
   columns = result
     .map((item) => item.uniqueKeys)
@@ -216,13 +186,8 @@ export const getDocumentColumns = async (type: string): Promise<string[]> => {
   return columns;
 };
 
-export const getDocumentSample = async (
-  type: string
-): Promise<IDocumentContent[]> => {
-  return await getDbCollection("documentContents")
-    .find({ type_document: type })
-    .limit(10)
-    .toArray();
+export const getDocumentSample = async (type: string): Promise<IDocumentContent[]> => {
+  return await getDbCollection("documentContents").find({ type_document: type }).limit(10).toArray();
 };
 
 interface ICreateEmptyDocumentOptions {
@@ -233,9 +198,7 @@ interface ICreateEmptyDocumentOptions {
   createDocumentDb?: boolean;
 }
 
-export const createEmptyDocument = async (
-  options: ICreateEmptyDocumentOptions
-) => {
+export const createEmptyDocument = async (options: ICreateEmptyDocumentOptions) => {
   const documentId = new ObjectId();
   const documentHash = crypto.generateKey();
   const path = `uploads/${documentId}/${options.filename}`;
@@ -244,9 +207,7 @@ export const createEmptyDocument = async (
     throw new Error("Missing filename");
   }
 
-  const extFichier = options.filename
-    .split(".")
-    .at(-1) as IDocument["ext_fichier"];
+  const extFichier = options.filename.split(".").at(-1) as IDocument["ext_fichier"];
 
   const document = await createDocument({
     _id: documentId,
@@ -282,9 +243,7 @@ export const uploadFile = async (
   added_by: string,
   stream: Readable,
   documentId: ObjectId = new ObjectId(),
-  options:
-    | IUploadDocumentOptionsWithCreate
-    | IUploadDocumentOptionsWithoutCreate
+  options: IUploadDocumentOptionsWithCreate | IUploadDocumentOptionsWithoutCreate
 ) => {
   const doc = await findDocument({ _id: documentId });
   if (!doc) {
@@ -318,9 +277,7 @@ export const uploadFile = async (
   if (isInfected) {
     if (!testMode) {
       const listViruses = viruses.join(",");
-      logger.error(
-        `Uploaded file ${path} is infected by ${listViruses}. Deleting file from storage...`
-      );
+      logger.error(`Uploaded file ${path} is infected by ${listViruses}. Deleting file from storage...`);
 
       await deleteFromStorage(path);
     }
@@ -334,9 +291,7 @@ export const uploadFile = async (
     await createDocument({
       _id: documentId,
       type_document: options.type_document,
-      ext_fichier: options.filename
-        .split(".")
-        .pop() as IDocument["ext_fichier"],
+      ext_fichier: options.filename.split(".").pop() as IDocument["ext_fichier"],
       nom_fichier: options.filename,
       chemin_fichier: path,
       import_progress: 0,
@@ -385,9 +340,7 @@ export const extractDocumentContent = async ({
       delimiter,
     },
     async (json: JsonObject) => {
-      importedLength += Buffer.byteLength(
-        JSON.stringify(Object.values(json)).replace(/^\[(.*)\]$/, "$1")
-      );
+      importedLength += Buffer.byteLength(JSON.stringify(Object.values(json)).replace(/^\[(.*)\]$/, "$1"));
       importedLines += 1;
       currentPercent = await updateImportProgress(
         document._id,
@@ -437,10 +390,7 @@ export const updateImportProgress = async (
   return newCurrentPercent;
 };
 
-export const importDocumentContent = async <
-  TFileLine = unknown,
-  TContentLine = unknown
->(
+export const importDocumentContent = async <TFileLine = unknown, TContentLine = unknown>(
   document: IDocument,
   content: TFileLine[],
   formatter: (line: TFileLine) => TContentLine
@@ -497,9 +447,7 @@ export const deleteDocumentById = async (documentId: ObjectId) => {
   await getDbCollection("documents").deleteOne({ _id: document._id });
 };
 
-export const handleDocumentFileContent = async ({
-  document_id,
-}: Record<"document_id", ObjectId>) => {
+export const handleDocumentFileContent = async ({ document_id }: Record<"document_id", ObjectId>) => {
   const document = await findDocument({
     _id: document_id,
   });

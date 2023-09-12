@@ -1,9 +1,5 @@
 // @ts-nocheck
-import {
-  IconButton,
-  Input as ChackraInput,
-  InputProps,
-} from "@chakra-ui/react";
+import { IconButton, Input as ChackraInput, InputProps } from "@chakra-ui/react";
 import fr from "date-fns/locale/fr";
 import range from "lodash.range";
 import { DateTime } from "luxon";
@@ -38,8 +34,7 @@ const DateInputIn = (props) => {
   const { onChange, value, locked } = props;
   const dateValue = useMemo(() => {
     if (!value) return "";
-    if (typeof value === "number")
-      return DateTime.fromMillis(value).setLocale("fr-FR").toJSDate();
+    if (typeof value === "number") return DateTime.fromMillis(value).setLocale("fr-FR").toJSDate();
     return DateTime.fromISO(value).setLocale("fr-FR").toJSDate();
   }, [value]);
 
@@ -68,10 +63,7 @@ const DateInputIn = (props) => {
     prevMonthButtonDisabled,
     nextMonthButtonDisabled,
   }) => {
-    const yearValue =
-      date.getFullYear() >= 1930 && date.getFullYear() <= 2035
-        ? date.getFullYear()
-        : 2022;
+    const yearValue = date.getFullYear() >= 1930 && date.getFullYear() <= 2035 ? date.getFullYear() : 2022;
     return (
       <div
         style={{
@@ -90,10 +82,7 @@ const DateInputIn = (props) => {
           mt={-2}
           aria-label={""}
         />
-        <select
-          value={yearValue}
-          onChange={({ target: { value } }) => changeYear(value)}
-        >
+        <select value={yearValue} onChange={({ target: { value } }) => changeYear(value)}>
           {years.map((option) => (
             <option key={option} value={option}>
               {option}
@@ -103,9 +92,7 @@ const DateInputIn = (props) => {
 
         <select
           value={months[date.getMonth()]}
-          onChange={({ target: { value } }) =>
-            changeMonth(months.indexOf(value))
-          }
+          onChange={({ target: { value } }) => changeMonth(months.indexOf(value))}
         >
           {months.map((option) => (
             <option key={option} value={option}>
@@ -137,9 +124,7 @@ const DateInputIn = (props) => {
       closeOnScroll={true}
       renderCustomHeader={CustomHeader}
       customInput={<CustomDateInput {...props} value={value} />}
-      onChange={(date) =>
-        onChange(DateTime.fromJSDate(date).setLocale("fr-FR").toUTC().toISO())
-      }
+      onChange={(date) => onChange(DateTime.fromJSDate(date).setLocale("fr-FR").toUTC().toISO())}
       fixedHeight
     />
   );
@@ -152,57 +137,55 @@ const MInput = IMaskMixin(({ inputRef, ...props }) => {
 });
 
 // eslint-disable-next-line react/display-name
-const CustomDateInput = forwardRef(
-  ({ value, onChange, onFocus, locked, onClick, ...props }, ref) => {
-    const actions = !locked
-      ? { onClick: onClick, onFocus: onFocus }
-      : {
-          onKeyDown: (e) => {
-            e.preventDefault();
-          },
-        };
+const CustomDateInput = forwardRef(({ value, onChange, onFocus, locked, onClick, ...props }, ref) => {
+  const actions = !locked
+    ? { onClick: onClick, onFocus: onFocus }
+    : {
+        onKeyDown: (e) => {
+          e.preventDefault();
+        },
+      };
 
-    return (
-      <MInput
-        {...props}
-        isDisabled={locked}
-        mask="d/m/Y"
-        unmask={true}
-        lazy={false}
-        placeholderChar="_"
-        autofix={true}
-        blocks={{
-          d: {
-            mask: IMask.MaskedRange,
-            placeholderChar: "j",
-            from: 1,
-            to: 31,
-            maxLength: 2,
-          },
-          m: {
-            mask: IMask.MaskedRange,
-            placeholderChar: "m",
-            from: 1,
-            to: 12,
-            maxLength: 2,
-          },
-          Y: {
-            mask: IMask.MaskedRange,
-            placeholderChar: "a",
-            from: 1900,
-            to: 4000,
-            maxLength: 4,
-          },
-        }}
-        onAccept={(val) => {
-          if (val.length === 8 || !val) {
-            onChange({ persist: () => {}, target: { value: val } });
-          }
-        }}
-        ref={ref}
-        value={value}
-        {...actions}
-      />
-    );
-  }
-);
+  return (
+    <MInput
+      {...props}
+      isDisabled={locked}
+      mask="d/m/Y"
+      unmask={true}
+      lazy={false}
+      placeholderChar="_"
+      autofix={true}
+      blocks={{
+        d: {
+          mask: IMask.MaskedRange,
+          placeholderChar: "j",
+          from: 1,
+          to: 31,
+          maxLength: 2,
+        },
+        m: {
+          mask: IMask.MaskedRange,
+          placeholderChar: "m",
+          from: 1,
+          to: 12,
+          maxLength: 2,
+        },
+        Y: {
+          mask: IMask.MaskedRange,
+          placeholderChar: "a",
+          from: 1900,
+          to: 4000,
+          maxLength: 4,
+        },
+      }}
+      onAccept={(val) => {
+        if (val.length === 8 || !val) {
+          onChange({ persist: () => {}, target: { value: val } });
+        }
+      }}
+      ref={ref}
+      value={value}
+      {...actions}
+    />
+  );
+});

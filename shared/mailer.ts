@@ -13,10 +13,7 @@ export type TemplatePayloads = {
 };
 export type TemplateName = keyof TemplatePayloads;
 
-type TemplateSubjectFunc<
-  T extends TemplateName,
-  Payload = TemplatePayloads[T]
-> = (payload: Payload) => string;
+type TemplateSubjectFunc<T extends TemplateName, Payload = TemplatePayloads[T]> = (payload: Payload) => string;
 
 export type TemplateTitleFuncs = {
   [types in TemplateName]: TemplateSubjectFunc<types>;

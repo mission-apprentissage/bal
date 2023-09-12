@@ -7,10 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 import { LockFill } from "../../theme/icons/LockFill";
 import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
 
-const tabs = [
-  { ...PAGES.usageApiValidation(), secure: true },
-  PAGES.usageApiHealthcheck(),
-];
+const tabs = [{ ...PAGES.usageApiValidation(), secure: true }, PAGES.usageApiHealthcheck()];
 
 const UsageLayout: FC<PropsWithChildren> = ({ children }) => {
   const { user } = useAuth();
@@ -39,9 +36,7 @@ const UsageLayout: FC<PropsWithChildren> = ({ children }) => {
             <Tab key={tab.path}>
               {tab.title}
               {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {(tab as any).secure && (
-                <LockFill color={"grey.625"} boxSize="4" ml={2} mb="0.250em" />
-              )}
+              {(tab as any).secure && <LockFill color={"grey.625"} boxSize="4" ml={2} mb="0.250em" />}
             </Tab>
           ))}
         </TabList>

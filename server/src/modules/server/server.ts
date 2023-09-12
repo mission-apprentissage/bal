@@ -38,11 +38,7 @@ import { documentsRoutes } from "./documents.routes";
 import { emailsRoutes } from "./emails.routes";
 import { mailingListRoutes } from "./mailingList.routes";
 import { userRoutes } from "./user.routes";
-import {
-  authValidateJWT,
-  authValidateSession,
-  authWebHookKey,
-} from "./utils/auth.strategies";
+import { authValidateJWT, authValidateSession, authWebHookKey } from "./utils/auth.strategies";
 import { organisationRoutes } from "./v1/organisation.routes";
 
 declare module "fastify" {
@@ -126,58 +122,47 @@ export function build(opts: FastifyServerOptions = {}): Server {
       : {}),
   });
 
-  app.setErrorHandler<
-    FastifyError | Boom<unknown> | Error | ZodError,
-    { Reply: IResError }
-  >((error, _request, reply) => {
-    logger.error(error);
+  app.setErrorHandler<FastifyError | Boom<unknown> | Error | ZodError, { Reply: IResError }>(
+    (error, _request, reply) => {
+      logger.error(error);
 
-    let statusCode = (error as FastifyError).statusCode ?? 500;
-    let message =
-      config.env === "local" ? error.message : "Internal Server Error";
-    let name = error.name;
+      let statusCode = (error as FastifyError).statusCode ?? 500;
+      let message = config.env === "local" ? error.message : "Internal Server Error";
+      let name = error.name;
 
-    if (error.name === "ResponseValidationError") {
-      name = "Response Validation failed";
-      statusCode = 500;
-      if (config.env === "local") {
-        message = getZodMessageError(
-          (error as ResponseValidationError).details as ZodError,
-          "response"
-        );
+      if (error.name === "ResponseValidationError") {
+        name = "Response Validation failed";
+        statusCode = 500;
+        if (config.env === "local") {
+          message = getZodMessageError((error as ResponseValidationError).details as ZodError, "response");
+        }
       }
-    }
-    if (error instanceof ZodError) {
-      name = "Validation failed";
-      message = getZodMessageError(
-        error,
-        (error as unknown as FastifyError).validationContext ?? ""
-      );
-    }
+      if (error instanceof ZodError) {
+        name = "Validation failed";
+        message = getZodMessageError(error, (error as unknown as FastifyError).validationContext ?? "");
+      }
 
-    if (isBoom(error)) {
-      statusCode = error.output.statusCode;
+      if (isBoom(error)) {
+        statusCode = error.output.statusCode;
+
+        return reply.status(statusCode).send({
+          message: statusCode >= 500 && config.env !== "local" ? "Internal Server Error" : message,
+          statusCode,
+          name,
+        });
+      }
+
+      if (statusCode >= 500) {
+        captureException(error);
+      }
 
       return reply.status(statusCode).send({
-        message:
-          statusCode >= 500 && config.env !== "local"
-            ? "Internal Server Error"
-            : message,
+        message,
         statusCode,
         name,
       });
     }
-
-    if (statusCode >= 500) {
-      captureException(error);
-    }
-
-    return reply.status(statusCode).send({
-      message,
-      statusCode,
-      name,
-    });
-  });
+  );
 
   app.register(
     async (instance: Server) => {

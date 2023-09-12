@@ -3,10 +3,7 @@ import { setupCache } from "axios-cache-interceptor";
 import http from "http";
 import https from "https";
 
-const getApiClient = (
-  options: AxiosRequestConfig,
-  { cache }: { cache: boolean } = { cache: true }
-) => {
+const getApiClient = (options: AxiosRequestConfig, { cache }: { cache: boolean } = { cache: true }) => {
   const axiosInstance = axios.create({
     timeout: 5000,
     httpAgent: new http.Agent({ keepAlive: true }),

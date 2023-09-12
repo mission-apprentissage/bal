@@ -33,10 +33,7 @@ export const extensions = {
     ),
   iso8601Date: () =>
     z.preprocess(
-      (v: unknown) =>
-        typeof v === "string" && v.match(/^([0-9]{4})-([0-9]{2})-([0-9]{2})/)
-          ? new Date(v.trim())
-          : v,
+      (v: unknown) => (typeof v === "string" && v.match(/^([0-9]{4})-([0-9]{2})-([0-9]{2})/) ? new Date(v.trim()) : v),
       z.date({
         invalid_type_error: "Date invalide",
         required_error: "Champ obligatoire",
@@ -44,15 +41,11 @@ export const extensions = {
     ),
   iso8601Datetime: () =>
     z.preprocess(
-      (v: unknown) =>
-        typeof v === "string" && v.match(/^([0-9]{4})-([0-9]{2})-([0-9]{2})/)
-          ? new Date(v.trim())
-          : v,
+      (v: unknown) => (typeof v === "string" && v.match(/^([0-9]{4})-([0-9]{2})-([0-9]{2})/) ? new Date(v.trim()) : v),
       z.date({
         invalid_type_error: "Date invalide",
         required_error: "Champ obligatoire",
       })
     ),
-  codeCommuneInsee: () =>
-    z.string().regex(/^([0-9]{2}|2A|2B)[0-9]{3}$/, "Format invalide"),
+  codeCommuneInsee: () => z.string().regex(/^([0-9]{2}|2A|2B)[0-9]{3}$/, "Format invalide"),
 };

@@ -38,23 +38,11 @@ const LoggedIn: FC<Props> = ({ user }) => {
   return (
     <Box>
       <Menu placement="bottom">
-        <MenuButton
-          as={Button}
-          variant="pill"
-          px={0}
-          flexGrow={1}
-          data-id="menu:user"
-        >
+        <MenuButton as={Button} variant="pill" px={0} flexGrow={1} data-id="menu:user">
           <Flex maxWidth="226px">
             <UserFill mt="0.3rem" boxSize={4} />
             <Box display={["none", "block"]} ml={2}>
-              <Text
-                color="blue_france.main"
-                textStyle="sm"
-                textOverflow="ellipsis"
-                maxWidth="200px"
-                overflow="hidden"
-              >
+              <Text color="blue_france.main" textStyle="sm" textOverflow="ellipsis" maxWidth="200px" overflow="hidden">
                 {user.email}
               </Text>
             </Box>

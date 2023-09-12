@@ -4,14 +4,17 @@ set -euo pipefail
 
 echo "Push les images docker de BAL sur le registry github (https://ghcr.io/mission-apprentissage/)"
 
-readonly VERSION=$(${ROOT_DIR}/.bin/scripts/get-version.sh)
+readonly VERSION=$("${ROOT_DIR}/.bin/scripts/get-version.sh")
 
 get_channel() {
   local version="$1"
   channel=$(echo "$version" | cut -d '-' -f 2)
 
-  if [ -z "$channel" ]; then
+  if [ "$channel" == "$version" ]; then
     channel="latest"
+    echo $channel
+  else
+    channel=$(echo $channel | cut -d '.' -f 1 )
   fi
 
   echo $channel

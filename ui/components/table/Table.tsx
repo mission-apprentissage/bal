@@ -129,12 +129,7 @@ const Table = <TData extends object>({
       <Box as="table" flex={1} fontSize="delta" w="100%" {...props}>
         <Box as="thead">
           {table.getHeaderGroups().map((headerGroup, key) => (
-            <Box
-              as="tr"
-              key={key}
-              borderBottom="3px solid"
-              borderColor="blue_france.main"
-            >
+            <Box as="tr" key={key} borderBottom="3px solid" borderColor="blue_france.main">
               {headerGroup.headers.map((header) => {
                 return (
                   <Box
@@ -156,16 +151,11 @@ const Table = <TData extends object>({
                     {header.isPlaceholder ? null : (
                       <div
                         {...{
-                          className: header.column.getCanSort()
-                            ? "cursor-pointer select-none"
-                            : "",
+                          className: header.column.getCanSort() ? "cursor-pointer select-none" : "",
                           onClick: header.column.getToggleSortingHandler(),
                         }}
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        {flexRender(header.column.columnDef.header, header.getContext())}
                         {{
                           asc: " 🔼",
                           desc: " 🔽",
@@ -193,10 +183,7 @@ const Table = <TData extends object>({
                   {row.getVisibleCells().map((cell) => {
                     return (
                       <Box as="td" key={cell.id} overflow="hidden">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </Box>
                     );
                   })}
@@ -219,24 +206,12 @@ const Table = <TData extends object>({
           <Divider my={2} />
           <HStack spacing={3} justifyContent="space-between">
             <HStack spacing={3}>
-              <Button
-                variant="unstyled"
-                onClick={() => table.setPageIndex(0)}
-                isDisabled={!table.getCanPreviousPage()}
-              >
+              <Button variant="unstyled" onClick={() => table.setPageIndex(0)} isDisabled={!table.getCanPreviousPage()}>
                 <Box className="ri-skip-back-fill" mt="0.250rem !important" />
               </Button>
-              <Button
-                variant="unstyled"
-                onClick={() => table.previousPage()}
-                isDisabled={!table.getCanPreviousPage()}
-              >
+              <Button variant="unstyled" onClick={() => table.previousPage()} isDisabled={!table.getCanPreviousPage()}>
                 <HStack>
-                  <Box
-                    as="i"
-                    className="ri-arrow-left-s-line"
-                    mt="0.250rem !important"
-                  />
+                  <Box as="i" className="ri-arrow-left-s-line" mt="0.250rem !important" />
                   <Text>Page précédente </Text>
                 </HStack>
               </Button>
@@ -253,18 +228,10 @@ const Table = <TData extends object>({
                 </Button>
               </Box>
 
-              <Button
-                variant="unstyled"
-                onClick={() => table.nextPage()}
-                isDisabled={!table.getCanNextPage()}
-              >
+              <Button variant="unstyled" onClick={() => table.nextPage()} isDisabled={!table.getCanNextPage()}>
                 <HStack>
                   <Text>Page suivante </Text>
-                  <Box
-                    as="i"
-                    className="ri-arrow-right-s-line"
-                    mt="0.250rem !important"
-                  />
+                  <Box as="i" className="ri-arrow-right-s-line" mt="0.250rem !important" />
                 </HStack>
               </Button>
               <Button
@@ -272,10 +239,7 @@ const Table = <TData extends object>({
                 onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                 isDisabled={!table.getCanNextPage()}
               >
-                <Box
-                  className="ri-skip-forward-fill"
-                  mt="0.250rem !important"
-                />
+                <Box className="ri-skip-forward-fill" mt="0.250rem !important" />
               </Button>
             </HStack>
 

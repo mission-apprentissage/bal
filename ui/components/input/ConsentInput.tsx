@@ -1,9 +1,4 @@
-import {
-  Checkbox,
-  CheckboxProps,
-  Text,
-  UseCheckboxProps,
-} from "@chakra-ui/react";
+import { Checkbox, CheckboxProps, Text, UseCheckboxProps } from "@chakra-ui/react";
 import React, { FC } from "react";
 
 import { Check } from "../../theme/icons/Check";

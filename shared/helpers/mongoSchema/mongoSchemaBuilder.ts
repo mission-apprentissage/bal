@@ -1,9 +1,4 @@
-import {
-  JSONSchema7,
-  JSONSchema7Definition,
-  JSONSchema7Type,
-  JSONSchema7TypeName,
-} from "json-schema";
+import { JSONSchema7, JSONSchema7Definition, JSONSchema7Type, JSONSchema7TypeName } from "json-schema";
 import { ZodType } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
@@ -70,9 +65,7 @@ export interface MongoSchema {
   uniqueItems?: boolean;
 }
 
-function convertJSONSchema7Definition(
-  input: JSONSchema7Definition
-): MongoSchema | boolean {
+function convertJSONSchema7Definition(input: JSONSchema7Definition): MongoSchema | boolean {
   if (typeof input === "boolean") {
     return input;
   }
@@ -80,9 +73,7 @@ function convertJSONSchema7Definition(
   return jsonSchemaToMongoSchema(input);
 }
 
-function convertJSONSchema7DefinitionNoBoolean(
-  input: JSONSchema7Definition
-): MongoSchema {
+function convertJSONSchema7DefinitionNoBoolean(input: JSONSchema7Definition): MongoSchema {
   if (typeof input === "boolean") {
     throw new Error("Boolean not supported");
   }
@@ -116,9 +107,7 @@ export const jsonSchemaToMongoSchema = (schema: JSONSchema7): MongoSchema => {
   const result: MongoSchema = {};
 
   if (schema.additionalItems != null) {
-    result.additionalItems = convertJSONSchema7Definition(
-      schema.additionalItems
-    );
+    result.additionalItems = convertJSONSchema7Definition(schema.additionalItems);
   }
 
   if (schema.additionalProperties != null) {
@@ -127,9 +116,7 @@ export const jsonSchemaToMongoSchema = (schema: JSONSchema7): MongoSchema => {
     } else if (Object.keys(schema.additionalProperties).length === 0) {
       result.additionalProperties = true;
     } else {
-      result.additionalProperties = convertJSONSchema7Definition(
-        schema.additionalProperties
-      );
+      result.additionalProperties = convertJSONSchema7Definition(schema.additionalProperties);
     }
   }
 
@@ -144,9 +131,7 @@ export const jsonSchemaToMongoSchema = (schema: JSONSchema7): MongoSchema => {
   if (schema.dependencies) {
     result.dependencies = Object.entries(schema.dependencies).reduce(
       (acc: NonNullable<MongoSchema["dependencies"]>, [k, v]) => {
-        acc[k] = Array.isArray(v)
-          ? v
-          : convertJSONSchema7DefinitionNoBoolean(v);
+        acc[k] = Array.isArray(v) ? v : convertJSONSchema7DefinitionNoBoolean(v);
         return acc;
       },
       {}
@@ -177,10 +162,8 @@ export const jsonSchemaToMongoSchema = (schema: JSONSchema7): MongoSchema => {
   if (schema.minLength != null) result.minLength = schema.minLength;
   if (schema.minProperties != null) result.minProperties = schema.minProperties;
   if (schema.multipleOf != null) result.multipleOf = schema.multipleOf;
-  if (schema.not != null)
-    result.not = convertJSONSchema7DefinitionNoBoolean(schema.not);
-  if (schema.oneOf != null)
-    result.oneOf = schema.oneOf.map(convertJSONSchema7DefinitionNoBoolean);
+  if (schema.not != null) result.not = convertJSONSchema7DefinitionNoBoolean(schema.not);
+  if (schema.oneOf != null) result.oneOf = schema.oneOf.map(convertJSONSchema7DefinitionNoBoolean);
   if (schema.pattern != null) result.pattern = schema.pattern;
   if (schema.patternProperties != null) {
     result.patternProperties = Object.entries(schema.patternProperties).reduce(

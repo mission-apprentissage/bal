@@ -51,10 +51,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             size: 100,
             header: () => "Date de génération",
             cell: ({ row }) => {
-              return (
-                row.original.created_at &&
-                formatDate(row.original.created_at, "dd/MM/yyyy à HH:mm")
-              );
+              return row.original.created_at && formatDate(row.original.created_at, "dd/MM/yyyy à HH:mm");
             },
           },
 
@@ -110,10 +107,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
           isLoading: isDeleting,
         }}
       >
-        <Text>
-          Vous allez supprimer la liste de diffusion. Cette action est
-          irréversible.
-        </Text>
+        <Text>Vous allez supprimer la liste de diffusion. Cette action est irréversible.</Text>
       </Dialog>
     </Box>
   );

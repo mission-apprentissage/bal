@@ -6,15 +6,16 @@
     /* Projects */
     "incremental": true,
     /* Language and Environment */
-    "target": "ES2021",
-    "lib": ["ESNext"],
+    "target": "ES2022",
+    "lib": ["ES2023"],
     /* Modules */
     "module": "ESNext", // TODO: maybe nodenext ?
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"],
-      "@tests/*": ["./tests/*"]
+      "@tests/*": ["./tests/*"],
+      "shared": ["../shared"]
     },
     "resolveJsonModule": true,
     "typeRoots": ["./types", "./node_modules/@types/"],

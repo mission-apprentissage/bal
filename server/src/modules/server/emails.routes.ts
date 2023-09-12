@@ -14,10 +14,7 @@ import {
 import { Server } from "./server";
 
 export const emailsRoutes = ({ server }: { server: Server }) => {
-  async function checkEmailToken<T extends FastifyRequest>(
-    request: T,
-    reply: FastifyReply
-  ) {
+  async function checkEmailToken<T extends FastifyRequest>(request: T, reply: FastifyReply) {
     const { token } = request.params as z.infer<typeof zEmailParams>;
     if (!(await checkIfEmailExists(token))) {
       return reply.status(404).send("Non trouvé");
@@ -53,12 +50,7 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
       return response
         .header("Content-Type", "image/gif")
         .status(200)
-        .send(
-          Buffer.from(
-            "R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==",
-            "base64"
-          )
-        );
+        .send(Buffer.from("R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==", "base64"));
     }
   );
 

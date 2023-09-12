@@ -26,8 +26,7 @@ import Breadcrumb, { PAGES } from "../../../components/breadcrumb/Breadcrumb";
 import useToaster from "../../../components/hooks/useToaster";
 import { Dropzone } from "./components/Dropzone";
 
-interface FormValues
-  extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
+interface FormValues extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
   file: File;
   has_new_type_document: boolean;
   new_type_document: string;
@@ -38,9 +37,7 @@ const AdminImportPage = () => {
   const { toastSuccess, toastError } = useToaster();
   const router = useRouter();
 
-  const { data: types = [] } = useQuery<
-    IResponse<IGetRoutes["/admin/documents/types"]>
-  >({
+  const { data: types = [] } = useQuery<IResponse<IGetRoutes["/admin/documents/types"]>>({
     queryKey: ["documentTypes"],
     queryFn: async () => apiGet("/admin/documents/types", {}),
   });
@@ -68,9 +65,7 @@ const AdminImportPage = () => {
 
       await apiPost("/admin/upload", {
         querystring: {
-          type_document: has_new_type_document
-            ? new_type_document
-            : type_document,
+          type_document: has_new_type_document ? new_type_document : type_document,
         },
         body: formData,
       });
@@ -88,25 +83,14 @@ const AdminImportPage = () => {
 
   return (
     <>
-      <Breadcrumb
-        pages={[PAGES.homepage(), PAGES.adminFichier(), PAGES.adminImport()]}
-      />
-      <Flex
-        flexDirection="column"
-        p={12}
-        w={{ base: "100%", md: "65%" }}
-        h="100%"
-      >
+      <Breadcrumb pages={[PAGES.homepage(), PAGES.adminFichier(), PAGES.adminImport()]} />
+      <Flex flexDirection="column" p={12} w={{ base: "100%", md: "65%" }} h="100%">
         <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
           Importer un fichier
         </Heading>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box>
-            <FormControl
-              isInvalid={!!errors.type_document}
-              mb={5}
-              isDisabled={hasNewTypeDocument || isSubmitting}
-            >
+            <FormControl isInvalid={!!errors.type_document} mb={5} isDisabled={hasNewTypeDocument || isSubmitting}>
               <FormLabel>Type de document</FormLabel>
               <Select
                 isInvalid={!!errors.type_document}
@@ -115,13 +99,10 @@ const AdminImportPage = () => {
                   required: !hasNewTypeDocument,
                 })}
               >
-                {types?.map((type) => (
-                  <option key={type}>{type}</option>
-                ))}
+                {types?.map((type) => <option key={type}>{type}</option>)}
               </Select>
               <FormErrorMessage>
-                Obligatoire: Vous devez choisir le type de fichier que vous
-                souhaitez importer
+                Obligatoire: Vous devez choisir le type de fichier que vous souhaitez importer
               </FormErrorMessage>
             </FormControl>
             <FormControl mb={5} isDisabled={isSubmitting}>
@@ -131,35 +112,23 @@ const AdminImportPage = () => {
             </FormControl>
 
             {hasNewTypeDocument && (
-              <FormControl
-                isInvalid={!!errors.new_type_document}
-                mb={5}
-                isDisabled={isSubmitting}
-              >
+              <FormControl isInvalid={!!errors.new_type_document} mb={5} isDisabled={isSubmitting}>
                 <FormLabel>Nom de votre type de document</FormLabel>
                 <Input
                   placeholder="Source de données"
                   {...register("new_type_document", {
-                    required:
-                      "Obligatoire: Veuillez saisir le nom de votre type de document",
+                    required: "Obligatoire: Veuillez saisir le nom de votre type de document",
                   })}
                 />
-                <FormErrorMessage>
-                  {errors.new_type_document?.message}
-                </FormErrorMessage>
+                <FormErrorMessage>{errors.new_type_document?.message}</FormErrorMessage>
               </FormControl>
             )}
 
-            <FormControl
-              isInvalid={!!errors.file}
-              mb={5}
-              isDisabled={isSubmitting}
-            >
+            <FormControl isInvalid={!!errors.file} mb={5} isDisabled={isSubmitting}>
               <FormLabel>Fichier</FormLabel>
               <Input
                 {...register("file", {
-                  required:
-                    "Obligatoire: Vous devez ajouter un fichier à importer",
+                  required: "Obligatoire: Vous devez ajouter un fichier à importer",
                 })}
                 hidden
               />
@@ -173,8 +142,7 @@ const AdminImportPage = () => {
                     console.log("rejected");
                   },
                   accept: {
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                      [".xlsx"],
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
                     "application/vnd.ms-excel": [".xls", ".csv"],
                     "text/csv": [".csv"],
                   },
@@ -186,12 +154,7 @@ const AdminImportPage = () => {
             </FormControl>
           </Box>
           <HStack spacing="4w" mt={8}>
-            <Button
-              variant="primary"
-              type="submit"
-              isLoading={isSubmitting}
-              loadingText="En cours d'import"
-            >
+            <Button variant="primary" type="submit" isLoading={isSubmitting} loadingText="En cours d'import">
               Importer le fichier
             </Button>
           </HStack>

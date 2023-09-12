@@ -47,39 +47,32 @@ async function authenticate(uri: string) {
 
   // @ts-ignore
   const [, protocol, user, password, tenantId, authUrl] = uri.match(regExp);
-  const response = await axios.post<unknown, AxiosResponse<IAuthResponse>>(
-    `${protocol}${authUrl}`,
-    {
-      auth: {
-        identity: {
-          tenantId,
-          methods: ["password"],
-          password: {
-            user: {
-              name: user,
-              password: password,
-              domain: {
-                name: "Default",
-              },
+  const response = await axios.post<unknown, AxiosResponse<IAuthResponse>>(`${protocol}${authUrl}`, {
+    auth: {
+      identity: {
+        tenantId,
+        methods: ["password"],
+        password: {
+          user: {
+            name: user,
+            password: password,
+            domain: {
+              name: "Default",
             },
           },
         },
       },
-    }
-  );
+    },
+  });
 
   const token = response.headers["x-subject-token"];
-  const catalog = response.data.token.catalog.find(
-    (c) => c.type === "object-store"
-  );
+  const catalog = response.data.token.catalog.find((c) => c.type === "object-store");
 
   if (!catalog) {
     throw new Error("No object-store catalog found");
   }
 
-  const endpoint = catalog.endpoints.find(
-    (endpoint) => endpoint.region === "GRA"
-  );
+  const endpoint = catalog.endpoints.find((endpoint) => endpoint.region === "GRA");
 
   if (!endpoint) {
     throw new Error("No GRA endpoint found");
@@ -120,10 +113,7 @@ export const uploadToStorage = async (path: string, options: Options = {}) => {
   });
 };
 
-export const deleteFromStorage = async (
-  path: string,
-  options: Options = {}
-) => {
+export const deleteFromStorage = async (path: string, options: Options = {}) => {
   const { url, token } = await requestObjectAccess(path, options);
   return createRequestStream(url, {
     method: "DELETE",

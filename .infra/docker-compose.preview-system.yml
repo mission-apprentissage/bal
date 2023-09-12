@@ -54,8 +54,7 @@ services:
     volumes:
       - /opt/app/data/mongodb/db:/data/db
     healthcheck:
-      test:
-        ["CMD", "mongosh", "--eval", '''db.runCommand("ping").ok''', "--quiet"]
+      test: ["CMD", "mongosh", "--eval", '''db.runCommand("ping").ok''', "--quiet"]
       interval: 10s
       timeout: 5s
       retries: 12
@@ -92,14 +91,14 @@ services:
       - /opt/app/configs/mailpit/auth:/auth
     environment:
       - MP_DATA_FILE=/data/mailpit.db
-      - MP_UI_AUTH_FILE=/auth
+      - MP_UI_AUTH_FILE=/auth/auth
       - VIRTUAL_HOST=smtp.{{dns_name}}
       - VIRTUAL_PATH=/
       - VIRTUAL_PORT=8025
       - LETSENCRYPT_HOST=smtp.{{dns_name}}
       - LETSENCRYPT_EMAIL=misson.apprentissage.devops@gmail.com
 
-   nodeexporter:
+  nodeexporter:
     <<: *default
     image: prom/node-exporter:v1.5.0
     hostname: "{{host_name}}"

@@ -57,18 +57,14 @@ export const validation = async ({
 };
 
 interface ICreateOrganisation extends Omit<IOrganisation, "_id"> {}
-export const createOrganisation = async (
-  data: ICreateOrganisation
-): Promise<IOrganisation> => {
+export const createOrganisation = async (data: ICreateOrganisation): Promise<IOrganisation> => {
   const now = new Date();
   const organisation = {
     ...data,
     updated_at: now,
     created_at: now,
   };
-  const { insertedId: organisationId } = await getDbCollection(
-    "organisations"
-  ).insertOne({
+  const { insertedId: organisationId } = await getDbCollection("organisations").insertOne({
     ...data,
     updated_at: now,
     created_at: now,
@@ -81,20 +77,13 @@ export const createOrganisation = async (
 };
 
 export const findOrganisations = async (filter: Filter<IOrganisation> = {}) => {
-  const organisations = await getDbCollection("organisations")
-    .find(filter)
-    .toArray();
+  const organisations = await getDbCollection("organisations").find(filter).toArray();
 
   return organisations;
 };
 
-export const findOrganisation = async (
-  filter: Filter<IOrganisation>,
-  options?: FindOptions
-) => {
-  const organisation = await getDbCollection(
-    "organisations"
-  ).findOne<IOrganisation>(filter, options);
+export const findOrganisation = async (filter: Filter<IOrganisation>, options?: FindOptions) => {
+  const organisation = await getDbCollection("organisations").findOne<IOrganisation>(filter, options);
 
   return organisation;
 };
@@ -123,21 +112,16 @@ export const findOrCreateOrganisation = async (
   return organisation;
 };
 
-export const findOrganisationBySiret = async (
-  siret: string,
-  options?: FindOptions
-) => {
-  const organisation = await getDbCollection(
-    "organisations"
-  ).findOne<IOrganisation>({ "etablissements.siret": siret }, options);
+export const findOrganisationBySiret = async (siret: string, options?: FindOptions) => {
+  const organisation = await getDbCollection("organisations").findOne<IOrganisation>(
+    { "etablissements.siret": siret },
+    options
+  );
 
   return organisation;
 };
 
-export const updateOrganisation = async (
-  organisation: IOrganisation,
-  data: Partial<IOrganisation>
-) => {
+export const updateOrganisation = async (organisation: IOrganisation, data: Partial<IOrganisation>) => {
   if (Object.keys(data).length === 0) {
     return organisation;
   }

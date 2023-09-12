@@ -1,9 +1,6 @@
 import { IDocumentContentJson } from "shared/models/documentContent.model";
 
-export const getDataFromSample = (
-  sample: IDocumentContentJson[],
-  key: string
-) => {
+export const getDataFromSample = (sample: IDocumentContentJson[], key: string) => {
   const data = sample
     // @ts-ignore
     .map((row) => row?.content?.[key] ?? "")

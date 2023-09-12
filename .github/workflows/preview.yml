@@ -3,9 +3,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review, closed]
 
-concurrency:
-  group: ${{ github.workflow }}
-
 jobs:
   tests:
     if: github.event.pull_request.state == 'open'
@@ -15,11 +12,14 @@ jobs:
 
   deploy:
     if: github.event.pull_request.draft == false
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     name: Deploy Preview ${{ github.event.pull_request.number }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -42,7 +42,7 @@ jobs:
         run: .bin/mna-bal deploy preview "${{ github.event.pull_request.number }}"
         env:
           ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
-          ANSIBLE_REMOTE_USER: ${{ secrets.DEPLOY_USERNAME }}
+          ANSIBLE_REMOTE_USER: deploy
           ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
 
       - name: Preview Summary
@@ -53,7 +53,7 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            # :rocket: Prévisualisation
-            ## https://${{ github.event.pull_request.number }}.bal-preview.apprentissage.beta.gouv.fr/
+            ### :rocket: Prévisualisation
+            https://${{ github.event.pull_request.number }}.bal-preview.apprentissage.beta.gouv.fr/
           comment_tag: execution
           mode: recreate

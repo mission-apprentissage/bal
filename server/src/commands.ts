@@ -6,10 +6,7 @@ import logger from "@/common/logger";
 import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
 import { server } from "@/modules/server/server";
 
-import {
-  closeSentry,
-  initSentryProcessor,
-} from "./common/services/sentry/sentry";
+import { closeSentry, initSentryProcessor } from "./common/services/sentry/sentry";
 import config from "./config";
 import { addJob, processor } from "./modules/jobs/jobs_actions";
 

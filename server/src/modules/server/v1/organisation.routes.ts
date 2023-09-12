@@ -13,9 +13,7 @@ export const organisationRoutes = ({ server }: { server: Server }) => {
       preHandler: [
         server.auth([
           async function (request, ...arg) {
-            if (
-              request.headers.referer === `${config.publicUrl}/usage/validation`
-            ) {
+            if (request.headers.referer === `${config.publicUrl}/usage/validation`) {
               return this.validateSession(request, ...arg);
             }
             return this.validateJWT(request, ...arg);

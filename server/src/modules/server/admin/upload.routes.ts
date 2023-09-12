@@ -20,19 +20,14 @@ import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 const validateFile = (file: MultipartFile) => {
   if (
-    file.mimetype !==
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
+    file.mimetype !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
     file.mimetype !== "application/vnd.ms-excel" &&
     file.mimetype !== "text/csv"
   ) {
     return false;
   }
 
-  if (
-    !file.filename.endsWith(".xlsx") &&
-    !file.filename.endsWith(".xls") &&
-    !file.filename.endsWith(".csv")
-  ) {
+  if (!file.filename.endsWith(".xlsx") && !file.filename.endsWith(".xls") && !file.filename.endsWith(".csv")) {
     return false;
   }
 
