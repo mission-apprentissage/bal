@@ -75,7 +75,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: docker.json.bal.{{env_type}}.ui
+        tag: docker.txt.bal.{{env_type}}.ui
         fluentd-async: "true"
 
   metabase:
