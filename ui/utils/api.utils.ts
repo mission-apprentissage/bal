@@ -243,7 +243,7 @@ export async function apiGet<P extends keyof IRoutes["get"], S extends IRoutes["
 
 export async function apiDelete<
   P extends keyof IRoutes["delete"],
-  S extends IRoutes["delete"][P] = IRoutes["delete"][P]
+  S extends IRoutes["delete"][P] = IRoutes["delete"][P],
 >(path: P, options: IRequest<S>): Promise<IResponse<S>> {
   // TODO: Use a better cast
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

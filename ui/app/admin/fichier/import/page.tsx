@@ -99,9 +99,7 @@ const AdminImportPage = () => {
                   required: !hasNewTypeDocument,
                 })}
               >
-                {types?.map((type) => (
-                  <option key={type}>{type}</option>
-                ))}
+                {types?.map((type) => <option key={type}>{type}</option>)}
               </Select>
               <FormErrorMessage>
                 Obligatoire: Vous devez choisir le type de fichier que vous souhaitez importer

@@ -27,7 +27,7 @@ export type deserialize = [
       format: "ObjectId";
     };
     output: ObjectId;
-  }
+  },
 ];
 
 export const zRoutes = {

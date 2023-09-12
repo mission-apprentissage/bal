@@ -36,9 +36,7 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
             cell: ({ email_domains }) => {
               return (
                 <UnorderedList>
-                  {email_domains?.map((domain: string) => (
-                    <ListItem key={domain}>{domain}</ListItem>
-                  ))}
+                  {email_domains?.map((domain: string) => <ListItem key={domain}>{domain}</ListItem>)}
                 </UnorderedList>
               );
             },
