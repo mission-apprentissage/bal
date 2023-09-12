@@ -14,11 +14,12 @@
     "prebuild": "only-include-used-icons"
   },
   "dependencies": {
-    "@codegouvfr/react-dsfr": "^0.75.4",
+    "@codegouvfr/react-dsfr": "^0.75.7",
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.8",
+    "@mui/x-data-grid": "^6.13.0",
     "@sentry/nextjs": "^7.64.0",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-table": "^8.9.3",

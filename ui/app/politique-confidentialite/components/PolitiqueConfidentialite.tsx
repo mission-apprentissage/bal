@@ -1,9 +1,9 @@
 import { getLink } from "@codegouvfr/react-dsfr/link";
 import Summary from "@codegouvfr/react-dsfr/Summary";
+import Table from "@codegouvfr/react-dsfr/Table";
 import { Grid, Typography } from "@mui/material";
 import React from "react";
 
-import Table from "../../../components/table/Table";
 import Section from "../../components/section/Section";
 
 const CONTACT_ADDRESS = "tableau-de-bord@apprentissage.beta.gouv.fr";
@@ -237,32 +237,16 @@ const PolitiqueDeConfidentialite = () => {
           <Typography>Sous-traitants</Typography>
           <Table
             data={[
-              {
-                partenaire: "OVH SAS",
-                paysDestinataire: "France",
-                traitementRealise: "Hébergement",
-                garanties: "https://www.ovhcloud.com/fr/personal-data-protection",
-              },
+              [
+                "OVH SAS",
+                "France",
+                "Hébergement",
+                <Link href="https://www.ovhcloud.com/fr/personal-data-protection" key="ovh">
+                  https://www.ovhcloud.com/fr/personal-data-protection
+                </Link>,
+              ],
             ]}
-            columns={{
-              partenaire: {
-                id: "partenaire",
-                header: () => "Partenaire",
-              },
-              paysDestinataire: {
-                id: "paysDestinataire",
-                header: () => "Pays destinataire",
-              },
-              traitementRealise: {
-                id: "traitementRealise",
-                header: () => "Traitement réalisé",
-              },
-              garanties: {
-                id: "garanties",
-                header: () => "Garanties",
-                cell: ({ row }) => <Link href={row.original.garanties}>{row.original.garanties}</Link>,
-              },
-            }}
+            headers={["Partenaire", "Pays destinataire", "Traitement réalisé", "Garanties"]}
           />
 
           <Typography variant="h3" gutterBottom>

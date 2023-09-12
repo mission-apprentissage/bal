@@ -1,6 +1,5 @@
 import { fr } from "@codegouvfr/react-dsfr";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { Download } from "@codegouvfr/react-dsfr/Download";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { FC, useState } from "react";
 import { IMailingListJson } from "shared/models/mailingList.model";
@@ -39,69 +38,67 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
   return (
     <>
       <Table
-        fixed
-        data={mailingLists || []}
-        columns={{
-          source: {
-            id: "source",
-            size: 100,
-            header: () => "Source",
+        rows={mailingLists || []}
+        columns={[
+          {
+            field: "source",
+            headerName: "Source",
+            flex: 1,
           },
-          campaign_name: {
-            id: "campaign_name",
-            size: 100,
-            header: () => "Nom de la campagne",
+          {
+            field: "campaign_name",
+            headerName: "Nom de la campagne",
+            flex: 1,
           },
-          date: {
-            id: "date",
-            size: 100,
-            header: () => "Date de génération",
-            cell: ({ row }) => {
-              return row.original.created_at && formatDate(row.original.created_at, "dd/MM/yyyy à HH:mm");
+          {
+            field: "created_at",
+            headerName: "Date de génération",
+            width: 200,
+            valueFormatter: ({ value }) => {
+              return value && formatDate(value, "dd/MM/yyyy à HH:mm");
             },
           },
-
-          actions: {
-            id: "actions",
-            size: 25,
-            header: () => "Actions",
-            cell: ({ row }) => {
-              if (row.original.status !== "done") return null;
-
-              return (
-                <>
-                  <Download
-                    details=""
-                    label="Télécharger"
-                    linkProps={{
-                      href: generateUrl(`/mailing-lists/:id/download`, {
-                        params: {
-                          id: row.original._id,
-                        },
-                      }),
-                    }}
-                    style={{ display: "inline-block", margin: 0, padding: 0 }}
-                  />
-
-                  <Button
-                    iconId="ri-delete-bin-line"
-                    onClick={() => {
-                      setToDelete(row.original._id);
-                      modal.open();
-                    }}
-                    priority="tertiary no outline"
-                    title="Supprimer"
-                    style={{
-                      color:
-                        fr.colors.decisions.text.actionHigh.redMarianne.default,
-                    }}
-                  />
-                </>
-              );
+          {
+            field: "actions",
+            type: "actions",
+            headerName: "Actions",
+            width: 100,
+            getActions: ({ row }) => {
+              return [
+                <Button
+                  key="download"
+                  iconId="fr-icon-download-line"
+                  linkProps={{
+                    href: generateUrl(`/mailing-lists/:id/download`, {
+                      params: {
+                        id: row._id,
+                      },
+                    }),
+                    target: undefined,
+                    rel: undefined,
+                  }}
+                  priority="tertiary no outline"
+                  title="Label buttons"
+                />,
+                <Button
+                  key="delete"
+                  iconId="ri-delete-bin-line"
+                  onClick={() => {
+                    setToDelete(row._id);
+                    modal.open();
+                  }}
+                  priority="tertiary no outline"
+                  title="Supprimer"
+                  style={{
+                    color: fr.colors.decisions.text.actionHigh.redMarianne.default,
+                  }}
+                />,
+              ];
             },
           },
-        }}
+        ]}
       />
+
       <modal.Component
         title="Supprimer la liste de diffusion"
         buttons={[

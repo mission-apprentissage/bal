@@ -57,96 +57,98 @@ const AdminImportPage = () => {
         </Button>
       </Box>
 
-      <Box my={4}>
-        <Table
-          data={documentLists || []}
-          columns={{
-            type_document: {
-              id: "type_document",
-              size: 120,
-              header: () => "Type de fichier",
+      <Table
+        rows={documentLists || []}
+        columns={[
+          {
+            field: "type_document",
+            headerName: "Type de fichier",
+            flex: 1,
+          },
+          {
+            field: "nom_fichier",
+            headerName: "Nom du fichier",
+            flex: 1,
+          },
+          {
+            field: "taille_fichier",
+            headerName: "Taille du fichier",
+            minWidth: 150,
+            valueFormatter: ({ value }) => {
+              return formatBytes(value);
             },
-            nom_fichier: {
-              id: "nom_fichier",
-              size: 100,
-              header: () => "Nom du fichier",
+          },
+          {
+            field: "lines_count",
+            headerName: "Nombre de lignes",
+            minWidth: 150,
+          },
+          {
+            field: "created_at",
+            headerName: "Date d'import",
+            minWidth: 150,
+            valueFormatter: ({ value }) => {
+              return value && formatDate(value, "dd/MM/yyyy à HH:mm");
             },
-            taille_fichier: {
-              id: "taille_fichier",
-              size: 80,
-              header: () => "Taille du fichier",
-              cell: ({ row }) => formatBytes(row.original.taille_fichier),
+          },
+          {
+            field: "import_progress",
+            headerName: "Statut",
+            valueFormatter: ({ value }) => {
+              if (value === 100) return "Terminé";
+              return `En cours d'importation ${value?.toPrecision(2)}%`;
             },
-            lines_count: {
-              id: "lines_count",
-              size: 80,
-              header: () => "Nombre de lignes",
+          },
+          {
+            field: "actions",
+            type: "actions",
+            headerName: "Actions",
+            getActions: ({ row }) => {
+              if (
+                row.import_progress !== 100 &&
+                row.import_progress !== 0 // TODO This is a quick cleaning method but if delete and job running nned to send a kill sig to job
+              )
+                return [];
+
+              return [
+                <Button
+                  key="delete"
+                  iconId="ri-delete-bin-line"
+                  onClick={() => {
+                    setToDelete(row._id.toString());
+                    modal.open();
+                  }}
+                  priority="tertiary no outline"
+                  title="Supprimer"
+                  style={{
+                    color: fr.colors.decisions.text.actionHigh.redMarianne.default,
+                  }}
+                />,
+              ];
             },
-            created_at: {
-              id: "created_at",
-              size: 70,
-              header: () => "Date d'import",
-              cell: ({ row }) => {
-                return row.original.created_at && formatDate(row.original.created_at, "dd/MM/yyyy à HH:mm");
-              },
+          },
+        ]}
+      />
+
+      <modal.Component
+        title="Supprimer le document"
+        buttons={[
+          {
+            children: "Conserver le document",
+            disabled: isDeleting,
+          },
+          {
+            iconId: "ri-delete-bin-line",
+            onClick: () => {
+              onDeleteDocument();
             },
-            status: {
-              id: "import_progress",
-              size: 100,
-              header: () => "Statut",
-              cell: ({ row }) => {
-                if (row.original.import_progress === 100) return "Terminé";
-                return `En cours d'importation ${row.original.import_progress?.toPrecision(2)}%`;
-              },
-            },
-            actions: {
-              id: "actions",
-              size: 25,
-              header: () => "Actions",
-              cell: ({ row }) => {
-                if (
-                  row.original.import_progress !== 100 &&
-                  row.original.import_progress !== 0 // TODO This is a quick cleaning method but if delete and job running nned to send a kill sig to job
-                )
-                  return null;
-                return (
-                  <Button
-                    iconId="ri-delete-bin-line"
-                    onClick={() => {
-                      setToDelete(row.original._id.toString());
-                      modal.open();
-                    }}
-                    priority="tertiary no outline"
-                    title="Supprimer"
-                    style={{
-                      color: fr.colors.decisions.text.actionHigh.redMarianne.default,
-                    }}
-                  />
-                );
-              },
-            },
-          }}
-        />
-        <modal.Component
-          title="Supprimer le document"
-          buttons={[
-            {
-              children: "Conserver le document",
-              disabled: isDeleting,
-            },
-            {
-              iconId: "ri-delete-bin-line",
-              onClick: () => {
-                onDeleteDocument();
-              },
-              children: "Supprimer le document",
-              disabled: isDeleting,
-            },
-          ]}
-        >
-          Vous allez supprimer le document. Cette action est irréversible.
-        </modal.Component>
-      </Box>
+            children: "Supprimer le document",
+            disabled: isDeleting,
+          },
+        ]}
+      >
+        Vous allez supprimer le document. Cette action est irréversible.
+      </modal.Component>
     </>
   );
 };

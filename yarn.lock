@@ -74,7 +74,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.22.10, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:^7.22.10, @babel/runtime@npm:^7.22.15, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.22.15
   resolution: "@babel/runtime@npm:7.22.15"
   dependencies:
@@ -101,15 +101,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codegouvfr/react-dsfr@npm:^0.75.4":
-  version: 0.75.4
-  resolution: "@codegouvfr/react-dsfr@npm:0.75.4"
+"@codegouvfr/react-dsfr@npm:^0.75.7":
+  version: 0.75.7
+  resolution: "@codegouvfr/react-dsfr@npm:0.75.7"
   dependencies:
     tsafe: ^1.6.3
   bin:
     copy-dsfr-to-public: bin/copy-dsfr-to-public.js
     only-include-used-icons: bin/only-include-used-icons.js
-  checksum: 70874aa70d5a535667425e01abfa90d5fdeb1df7ccca2b26b8e27ed951d69b80da44c67f5b3b139953c33d0c79e4a7902f8b875070169411bd31584faa828685
+  checksum: 97ca64e8ac3fa9dc3eb0ef384283a8c48ad7687fb0a558f74f989119a6b667808cbad42e567fc5036b219a39600436e4ddf8318f1ff522c5f14af5b66c406f5b
   languageName: node
   linkType: hard
 
@@ -1437,7 +1437,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.14.8":
+"@mui/utils@npm:^5.14.7, @mui/utils@npm:^5.14.8":
   version: 5.14.8
   resolution: "@mui/utils@npm:5.14.8"
   dependencies:
@@ -1449,6 +1449,24 @@ __metadata:
   peerDependencies:
     react: ^17.0.0 || ^18.0.0
   checksum: 2fb29c9d7908a47276b4f4a31a7e76d5a7d437afe95d2c0d6cd9c07f04beea89857f763c4f5c546fe243539d9986181815bfded42e516077122ed373d11a7ebf
+  languageName: node
+  linkType: hard
+
+"@mui/x-data-grid@npm:^6.13.0":
+  version: 6.13.0
+  resolution: "@mui/x-data-grid@npm:6.13.0"
+  dependencies:
+    "@babel/runtime": ^7.22.15
+    "@mui/utils": ^5.14.7
+    clsx: ^2.0.0
+    prop-types: ^15.8.1
+    reselect: ^4.1.8
+  peerDependencies:
+    "@mui/material": ^5.4.1
+    "@mui/system": ^5.4.1
+    react: ^17.0.0 || ^18.0.0
+    react-dom: ^17.0.0 || ^18.0.0
+  checksum: 756d1b6bdccff60e209b4970ed3e74825377dba91764abfc7aa5084c33abaa37b4874c05bbfdafe13f3f191a4194723b0bbfb9b02f00cf677ecd8ca782af57f0
   languageName: node
   linkType: hard
 
@@ -13812,6 +13830,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"reselect@npm:^4.1.8":
+  version: 4.1.8
+  resolution: "reselect@npm:4.1.8"
+  checksum: a4ac87cedab198769a29be92bc221c32da76cfdad6911eda67b4d3e7136dca86208c3b210e31632eae31ebd2cded18596f0dd230d3ccc9e978df22f233b5583e
+  languageName: node
+  linkType: hard
+
 "resize-observer-polyfill@npm:^1.5.1":
   version: 1.5.1
   resolution: "resize-observer-polyfill@npm:1.5.1"
@@ -15894,11 +15919,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ui@workspace:ui"
   dependencies:
-    "@codegouvfr/react-dsfr": ^0.75.4
+    "@codegouvfr/react-dsfr": ^0.75.7
     "@emotion/react": ^11.11.1
     "@emotion/server": ^11.11.0
     "@emotion/styled": ^11.11.0
     "@mui/material": ^5.14.8
+    "@mui/x-data-grid": ^6.13.0
     "@sentry/nextjs": ^7.64.0
     "@tanstack/react-query": ^4.32.6
     "@tanstack/react-table": ^8.9.3

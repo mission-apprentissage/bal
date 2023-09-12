@@ -49,31 +49,32 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
       </Typography>
 
       <Table
-        data={organisation.etablissements ?? []}
-        columns={{
-          nom: {
-            id: "nom",
-            size: 100,
-            header: () => "Nom",
+        rows={organisation.etablissements ?? []}
+        getRowId={(row) => row.siret as string}
+        columns={[
+          {
+            field: "nom",
+            headerName: "Nom",
+            flex: 1,
           },
-          siret: {
-            id: "siret",
-            size: 100,
-            header: () => "Siret",
+          {
+            field: "siret",
+            headerName: "Siret",
+            minWidth: 200,
           },
-          is_hq: {
-            id: "is_hq",
-            size: 100,
-            header: () => "Siège social",
-            cell: ({ getValue }) => (getValue() ? "Oui" : "Non"),
+          {
+            field: "is_hq",
+            headerName: "Siège social",
+            minWidth: 100,
+            valueFormatter: ({ value }) => (value ? "Oui" : "Non"),
           },
-          is_close: {
-            id: "is_close",
-            size: 100,
-            header: () => "Fermé",
-            cell: ({ getValue }) => (getValue() ? "Oui" : "Non"),
+          {
+            field: "is_close",
+            headerName: "Fermé",
+            minWidth: 100,
+            valueFormatter: ({ value }) => (value ? "Oui" : "Non"),
           },
-        }}
+        ]}
       />
     </>
   );

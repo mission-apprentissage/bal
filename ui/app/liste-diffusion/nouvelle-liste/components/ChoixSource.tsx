@@ -2,8 +2,8 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { Box, Typography } from "@mui/material";
+import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
-import { CellContext, ColumnDefTemplate } from "@tanstack/react-table";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
@@ -69,22 +69,15 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
     onSuccess({ ...data, sample, columns });
   };
 
-  const tableColumns: Record<
-    string,
-    {
-      id: string;
-      header?: () => React.ReactNode;
-      cell?: ColumnDefTemplate<CellContext<IDocumentContentJson, unknown>>;
-      size?: number;
-    }
-  > = {};
+  const tableColumns: GridColDef[] = [];
 
   for (const column of columns) {
-    tableColumns[column] = {
-      id: column,
-      // @ts-ignore
-      cell: ({ row }) => row.original?.content?.[column],
-    };
+    tableColumns.push({
+      field: column,
+      headerName: column,
+      valueGetter: ({ row }) => row.content?.[column],
+      minWidth: 200,
+    });
   }
 
   return (
@@ -129,7 +122,9 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
         {watchSource && !isFetching && (
           <Box my={2}>
             {sample.length > 0 ? (
-              <Table noScroll={false} data={sample} columns={tableColumns} />
+              <>
+                <Table rows={sample} columns={tableColumns} />
+              </>
             ) : (
               <Typography>Cette source ne comporte aucune donnée</Typography>
             )}

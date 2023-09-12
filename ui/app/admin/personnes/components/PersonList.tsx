@@ -39,34 +39,32 @@ const PersonList = () => {
       <SearchBar onButtonClick={onSearch} defaultValue={searchValue} />
 
       <Table
-        fixed
-        data={persons || []}
-        columns={{
-          name: {
-            id: "name",
-            size: 100,
-            header: () => "Nom complet",
-            cell: ({ row }) => {
-              const { nom, prenom, _id } = row.original;
+        rows={persons || []}
+        columns={[
+          {
+            field: "name",
+            headerName: "Nom complet",
+            flex: 1,
+            valueGetter: ({ row }) => {
+              const { nom, prenom, _id } = row;
               return nom || prenom ? `${nom ?? ""} ${prenom ?? ""}` : _id;
             },
           },
-          email: {
-            id: "email",
-            size: 100,
-            header: () => "Email",
+          {
+            field: "email",
+            headerName: "Email",
+            flex: 1,
           },
-          civility: {
-            id: "civility",
-            size: 100,
-            header: () => "Civilité",
+          {
+            field: "civility",
+            headerName: "Civilité",
+            minWidth: 50,
           },
-          organisation_id: {
-            id: "organisation_id",
-            size: 100,
-            header: () => "Organisation",
-            cell: ({ row }) => {
-              const { organisation } = row.original;
+          {
+            field: "organisation_id",
+            headerName: "Organisation",
+            flex: 1,
+            valueFormatter: ({ value: organisation }) => {
               if (!organisation) return null;
               return (
                 <Link href={PAGES.adminViewOrganisation(organisation._id as unknown as string).path}>
@@ -75,30 +73,30 @@ const PersonList = () => {
               );
             },
           },
-          source: {
-            id: "sources",
-            size: 100,
-            header: () => "Sources",
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            cell: ({ row }) => (row.original._meta as any)?.sources?.join(", ") ?? "",
+          {
+            field: "sources",
+            headerName: "Sources",
+            valueGetter: ({ row }) => {
+              return (row._meta as any)?.sources?.join(", ") ?? "";
+            },
           },
-          actions: {
-            id: "actions",
-            size: 25,
-            header: () => "",
-            cell: ({ row }) => (
+          {
+            field: "actions",
+            type: "actions",
+            headerName: "Actions",
+            getActions: ({ row: { _id } }) => [
               <Button
+                key="view"
                 iconId="fr-icon-arrow-right-line"
                 linkProps={{
-                  href: PAGES.adminViewPerson(row.original._id).path,
+                  href: PAGES.adminViewPerson(_id).path,
                 }}
                 priority="tertiary no outline"
                 title="Voir la personne"
-              />
-            ),
+              />,
+            ],
           },
-        }}
-        searchValue={searchValue}
+        ]}
       />
     </>
   );

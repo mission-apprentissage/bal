@@ -38,37 +38,38 @@ const OrganisationList = () => {
       <SearchBar onButtonClick={onSearch} defaultValue={searchValue} />
 
       <Table
-        fixed
-        data={organisations || []}
-        columns={{
-          nom: {
-            id: "nom",
-            size: 100,
-            header: () => "Nom",
+        rows={organisations || []}
+        columns={[
+          {
+            field: "nom",
+            headerName: "Nom",
+            flex: 1,
           },
-          email_domains: {
-            id: "email_domains",
-            size: 100,
-            header: () => "Domaines",
-            cell: ({ row }) => row.original.email_domains?.join(", ") ?? "",
+          {
+            field: "email_domains",
+            headerName: "Domaines",
+            flex: 1,
+            valueFormatter: ({ value }) => value?.join(", "),
           },
-          actions: {
-            id: "actions",
-            size: 25,
-            header: () => "",
-            cell: ({ row }) => (
-              <Button
-                iconId="fr-icon-arrow-right-line"
-                linkProps={{
-                  href: PAGES.adminViewOrganisation(row.original._id).path,
-                }}
-                priority="tertiary no outline"
-                title="Voir l'organisation"
-              />
-            ),
+          {
+            field: "actions",
+            type: "actions",
+            headerName: "Actions",
+            getActions: ({ row: { _id } }) => {
+              return [
+                <Button
+                  key="view"
+                  iconId="fr-icon-arrow-right-line"
+                  linkProps={{
+                    href: PAGES.adminViewOrganisation(_id).path,
+                  }}
+                  priority="tertiary no outline"
+                  title="Voir l'organisation"
+                />,
+              ];
+            },
           },
-        }}
-        searchValue={searchValue}
+        ]}
       />
     </>
   );
