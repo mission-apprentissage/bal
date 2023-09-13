@@ -82,8 +82,7 @@ const PersonList = () => {
             size: 100,
             header: () => "Sources",
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            cell: ({ row }) =>
-              (row.original._meta as any)?.sources?.join(", ") ?? "",
+            cell: ({ row }) => (row.original._meta as any)?.sources?.join(", ") ?? "",
           },
           actions: {
             id: "actions",

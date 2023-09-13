@@ -31,9 +31,7 @@ export interface IOcapiatParsedContentLine {
   "Email du contact"?: string;
 }
 
-export const parseOcapiatContentLine = (
-  line: IOcapiatParsedContentLine
-): IOcapiatParsedContentLine | undefined => {
+export const parseOcapiatContentLine = (line: IOcapiatParsedContentLine): IOcapiatParsedContentLine | undefined => {
   // remove attributes where value is "-" considered empty
   const content = Object.entries(line).reduce<IOcapiatParsedContentLine>(
     (acc, [key, value]) => ({
@@ -46,9 +44,7 @@ export const parseOcapiatContentLine = (
   return content;
 };
 
-export const importOcapiatContent = async (
-  content: IOcapiatParsedContentLine
-) => {
+export const importOcapiatContent = async (content: IOcapiatParsedContentLine) => {
   const siret = content?.Siret ?? "";
   const siren = getSirenFromSiret(siret);
   const email = content?.["Email du contact"];

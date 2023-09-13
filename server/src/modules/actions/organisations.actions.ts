@@ -145,12 +145,7 @@ interface IUpdateOrganisationData {
   source: string;
 }
 
-export const updateOrganisationData = async ({
-  siren,
-  sirets,
-  email_domains,
-  source,
-}: IUpdateOrganisationData) => {
+export const updateOrganisationData = async ({ siren, sirets, email_domains, source }: IUpdateOrganisationData) => {
   const organisation = await findOrCreateOrganisation(
     { siren },
     {
@@ -170,9 +165,7 @@ export const updateOrganisationData = async ({
   };
 
   for (const siret of sirets) {
-    const etablissement = updateOrganisationData.etablissements?.find(
-      (e) => e.siret === siret
-    );
+    const etablissement = updateOrganisationData.etablissements?.find((e) => e.siret === siret);
 
     if (!etablissement) {
       updateOrganisationData.etablissements?.push({ siret });
@@ -180,9 +173,7 @@ export const updateOrganisationData = async ({
   }
 
   const newDomains = email_domains.filter(
-    (domain) =>
-      !organisation.email_domains?.includes(domain) &&
-      companyEmailValidator.isCompanyDomain(domain)
+    (domain) => !organisation.email_domains?.includes(domain) && companyEmailValidator.isCompanyDomain(domain)
   );
 
   if (newDomains.length) {

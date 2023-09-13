@@ -73,9 +73,7 @@ const AdminImportPage = () => {
 
       await apiPost("/admin/upload", {
         querystring: {
-          type_document: has_new_type_document
-            ? new_type_document
-            : type_document,
+          type_document: has_new_type_document ? new_type_document : type_document,
           ...(should_import_content && { import_content: "true" }),
         },
         body: formData,
@@ -135,9 +133,7 @@ const AdminImportPage = () => {
               </FormControl>
             )}
             <FormControl mb={5} isDisabled={isSubmitting}>
-              <Checkbox {...register("should_import_content")}>
-                Importer le contenu
-              </Checkbox>
+              <Checkbox {...register("should_import_content")}>Importer le contenu</Checkbox>
             </FormControl>
 
             <FormControl isInvalid={!!errors.file} mb={5} isDisabled={isSubmitting}>

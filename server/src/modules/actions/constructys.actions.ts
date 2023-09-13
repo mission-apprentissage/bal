@@ -15,18 +15,14 @@ export interface IConstructysParsedContentLine {
   emails: string[];
 }
 
-export const parseConstructysContentLine = (
-  line: ContentLine
-): IConstructysParsedContentLine | undefined => {
+export const parseConstructysContentLine = (line: ContentLine): IConstructysParsedContentLine | undefined => {
   if (!line.Mails) return;
   if (!SIRET_REGEX.test(line.Siret)) return;
 
   const { Siret: siret } = line;
 
   // split emails and remove non valid emails
-  let emails = line.Mails.split(",").filter((e) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)
-  );
+  let emails = line.Mails.split(",").filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
   // remove duplicates
   emails = [...new Set(emails)];
 
@@ -35,9 +31,7 @@ export const parseConstructysContentLine = (
   return { siret, emails };
 };
 
-export const importConstructysContent = async (
-  content: IConstructysParsedContentLine
-) => {
+export const importConstructysContent = async (content: IConstructysParsedContentLine) => {
   const { siret, emails } = content;
   const uniqueEmails = [...new Set(emails)];
   const siren = getSirenFromSiret(siret);

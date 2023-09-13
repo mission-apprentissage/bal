@@ -5,10 +5,7 @@ import { SIRET_REGEX } from "shared/constants/regex";
 import { getSirenFromSiret } from "shared/helpers/common";
 
 import { getDbCollection } from "../../common/utils/mongodbUtils";
-import {
-  findOrganisation,
-  updateOrganisationData,
-} from "./organisations.actions";
+import { findOrganisation, updateOrganisationData } from "./organisations.actions";
 import { findPerson } from "./persons.actions";
 
 interface ContentLine {
