@@ -14,7 +14,10 @@ export const up = async (db: Db, _client: MongoClient) => {
       {
         $unset: "_meta.source",
       },
-    ]
+    ],
+    {
+      bypassDocumentValidation: true,
+    }
   );
 
   await db.collection("persons").updateMany(
@@ -30,7 +33,10 @@ export const up = async (db: Db, _client: MongoClient) => {
       {
         $unset: "_meta.source",
       },
-    ]
+    ],
+    {
+      bypassDocumentValidation: true,
+    }
   );
 };
 
@@ -48,7 +54,10 @@ export const down = async (db: Db, _client: MongoClient) => {
       {
         $unset: "_meta.sources",
       },
-    ]
+    ],
+    {
+      bypassDocumentValidation: true,
+    }
   );
 
   db.collection("persons").updateMany(
@@ -64,6 +73,9 @@ export const down = async (db: Db, _client: MongoClient) => {
       {
         $unset: "_meta.sources",
       },
-    ]
+    ],
+    {
+      bypassDocumentValidation: true,
+    }
   );
 };
