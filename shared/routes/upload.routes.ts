@@ -21,6 +21,7 @@ export const zUploadRoutes = {
       querystring: z
         .object({
           type_document: z.string(),
+          import_content: z.string().optional(),
         })
         .strict(),
       body: z.unknown(),

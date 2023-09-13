@@ -1,4 +1,5 @@
 import { internal } from "@hapi/boom";
+import companyEmailValidator from "company-email-validator";
 import { Filter, FindOptions } from "mongodb";
 import { IPostRoutes, IResponse } from "shared";
 import { getSirenFromSiret } from "shared/helpers/common";
@@ -135,4 +136,52 @@ export const updateOrganisation = async (organisation: IOrganisation, data: Part
     },
     { returnDocument: "after" }
   );
+};
+
+interface IUpdateOrganisationData {
+  siren: string;
+  sirets: string[];
+  email_domains: string[];
+  source: string;
+}
+
+export const updateOrganisationData = async ({ siren, sirets, email_domains, source }: IUpdateOrganisationData) => {
+  const organisation = await findOrCreateOrganisation(
+    { siren },
+    {
+      siren,
+      etablissements: sirets.map((siret) => ({ siret })),
+      email_domains: email_domains,
+    }
+  );
+
+  const sources = organisation._meta?.sources ?? [];
+  const newSources = [...new Set([...sources, source])];
+
+  const updateOrganisationData: Partial<IOrganisation> = {
+    etablissements: organisation.etablissements ?? [],
+    email_domains: organisation.email_domains ?? [],
+    _meta: { sources: newSources },
+  };
+
+  for (const siret of sirets) {
+    const etablissement = updateOrganisationData.etablissements?.find((e) => e.siret === siret);
+
+    if (!etablissement) {
+      updateOrganisationData.etablissements?.push({ siret });
+    }
+  }
+
+  const newDomains = email_domains.filter(
+    (domain) => !organisation.email_domains?.includes(domain) && companyEmailValidator.isCompanyDomain(domain)
+  );
+
+  if (newDomains.length) {
+    updateOrganisationData.email_domains = organisation.email_domains ?? [];
+    updateOrganisationData.email_domains?.push(...newDomains);
+  }
+
+  await updateOrganisation(organisation, updateOrganisationData);
+
+  return findOrganisation({ _id: organisation._id });
 };

@@ -32,7 +32,7 @@ export const ZPerson = z
     sirets: z.array(z.string()).optional().describe("Liste de sirets recensé (sécurisation qualité de la donnée)"),
     _meta: z
       .object({
-        source: z.string().optional(),
+        sources: z.array(z.string()).optional(),
       })
       .describe("Métadonnées")
       .nonstrict()

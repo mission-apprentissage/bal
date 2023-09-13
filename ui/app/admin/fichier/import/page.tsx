@@ -28,6 +28,7 @@ import { Dropzone } from "./components/Dropzone";
 
 interface FormValues extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
   file: File;
+  should_import_content: boolean;
   has_new_type_document: boolean;
   new_type_document: string;
 }
@@ -48,7 +49,13 @@ const AdminImportPage = () => {
     formState: { errors },
     setValue,
     watch,
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    defaultValues: {
+      type_document: "",
+      should_import_content: true,
+      has_new_type_document: false,
+    },
+  });
 
   const hasNewTypeDocument = watch("has_new_type_document");
 
@@ -57,6 +64,7 @@ const AdminImportPage = () => {
     type_document,
     has_new_type_document,
     new_type_document,
+    should_import_content,
   }) => {
     setIsSubmitting(true);
     try {
@@ -66,6 +74,7 @@ const AdminImportPage = () => {
       await apiPost("/admin/upload", {
         querystring: {
           type_document: has_new_type_document ? new_type_document : type_document,
+          ...(should_import_content && { import_content: "true" }),
         },
         body: formData,
       });
@@ -123,6 +132,9 @@ const AdminImportPage = () => {
                 <FormErrorMessage>{errors.new_type_document?.message}</FormErrorMessage>
               </FormControl>
             )}
+            <FormControl mb={5} isDisabled={isSubmitting}>
+              <Checkbox {...register("should_import_content")}>Importer le contenu</Checkbox>
+            </FormControl>
 
             <FormControl isInvalid={!!errors.file} mb={5} isDisabled={isSubmitting}>
               <FormLabel>Fichier</FormLabel>
