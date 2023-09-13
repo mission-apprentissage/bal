@@ -56,6 +56,7 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
 
   return {
     ...user,
+    person,
     _id: userId,
   };
 };
