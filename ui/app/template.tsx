@@ -10,7 +10,7 @@ import { FC, useRef } from "react";
 import { publicConfig } from "../config.public";
 import { queryClient } from "../utils/query.utils";
 import Footer from "./components/Footer";
-import { Header } from "./components/Header";
+import { Header } from "./components/header/Header";
 
 interface Props {
   children: React.ReactNode;

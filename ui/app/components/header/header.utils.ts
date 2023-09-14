@@ -1,22 +1,14 @@
-import { Header as DSFRHeader, HeaderProps } from "@codegouvfr/react-dsfr/Header";
 import { MainNavigationProps } from "@codegouvfr/react-dsfr/MainNavigation";
-import { usePathname, useRouter } from "next/navigation";
+import { IUserPublic } from "shared/models/user.model";
 
-import { useAuth } from "../../context/AuthContext";
-import { apiGet } from "../../utils/api.utils";
-import { PAGES } from "./breadcrumb/Breadcrumb";
+import { PAGES } from "../breadcrumb/Breadcrumb";
 
-export const Header = () => {
-  const { user, setUser } = useAuth();
-  const { push } = useRouter();
-  const pathname = usePathname();
+interface GetNavigationItemsProps {
+  user?: IUserPublic;
+  pathname: string;
+}
 
-  const handleLogout = async () => {
-    await apiGet("/auth/logout", {});
-    setUser();
-    push(PAGES.homepage().path);
-  };
-
+export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps): MainNavigationProps.Item[] => {
   let navigation: MainNavigationProps.Item[] = [
     {
       isActive: pathname === PAGES.homepage().path,
@@ -38,12 +30,14 @@ export const Header = () => {
             linkProps: {
               href: PAGES.usageApiValidation().path,
             },
+            isActive: pathname === PAGES.usageApiValidation().path,
             text: PAGES.usageApiValidation().title,
           },
           {
             linkProps: {
               href: PAGES.usageApiHealthcheck().path,
             },
+            isActive: pathname === PAGES.usageApiHealthcheck().path,
             text: PAGES.usageApiHealthcheck().title,
           },
         ],
@@ -72,24 +66,28 @@ export const Header = () => {
         menuLinks: [
           {
             text: PAGES.adminUsers().title,
+            isActive: pathname === PAGES.adminUsers().path,
             linkProps: {
               href: PAGES.adminUsers().path,
             },
           },
           {
             text: PAGES.adminPersons().title,
+            isActive: pathname === PAGES.adminPersons().path,
             linkProps: {
               href: PAGES.adminPersons().path,
             },
           },
           {
             text: PAGES.adminOrganisations().title,
+            isActive: pathname === PAGES.adminOrganisations().path,
             linkProps: {
               href: PAGES.adminOrganisations().path,
             },
           },
           {
             text: PAGES.adminFichier().title,
+            isActive: pathname === PAGES.adminFichier().path,
             linkProps: {
               href: PAGES.adminFichier().path,
             },
@@ -99,49 +97,12 @@ export const Header = () => {
     ];
   }
 
-  const loggedOut: HeaderProps.QuickAccessItem[] = [
-    {
-      iconId: "fr-icon-lock-line",
-      linkProps: {
-        href: PAGES.connexion().path,
-      },
-      text: "Se connecter",
-    },
-  ];
+  return navigation.map((item) => {
+    const { menuLinks } = item;
 
-  const loggedIn: HeaderProps.QuickAccessItem[] = [
-    {
-      linkProps: {
-        href: PAGES.compteProfil().path,
-      },
-      iconId: "fr-icon-account-line",
-      text: "Mon compte",
-    },
-    {
-      buttonProps: {
-        onClick: handleLogout,
-      },
-      text: "Se deconnecter",
-      iconId: "fr-icon-logout-box-r-line",
-    },
-  ];
+    const menuLinkWithActive = menuLinks?.map((link) => ({ ...link, isActive: link.linkProps.href === pathname }));
+    const isActive = pathname === item.linkProps?.href || menuLinkWithActive?.some((link) => link.isActive);
 
-  return (
-    <DSFRHeader
-      brandTop={
-        <>
-          République
-          <br />
-          Française
-        </>
-      }
-      homeLinkProps={{
-        href: "/",
-        title: "Accueil - BAL",
-      }}
-      quickAccessItems={user ? loggedIn : loggedOut}
-      serviceTitle="BAL"
-      navigation={navigation}
-    />
-  );
+    return { ...item, isActive, menuLinks };
+  }) as MainNavigationProps.Item[];
 };
