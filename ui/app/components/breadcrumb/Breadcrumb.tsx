@@ -96,7 +96,7 @@ export const PAGES = {
   }),
 };
 
-interface Page {
+export interface Page {
   title: string;
   path: string;
 }

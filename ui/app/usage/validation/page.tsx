@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { IBody, IPostRoutes, IResponse } from "shared";
 
 import { apiPost } from "../../../utils/api.utils";
-import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import ViewData from "../components/ViewData";
 
 type Route = IPostRoutes["/v1/organisation/validation"];
@@ -44,11 +43,6 @@ const UsageVerificationPage = () => {
 
   return (
     <>
-      <Breadcrumb pages={[PAGES.usageApi(), PAGES.usageApiValidation()]} />
-
-      <Typography variant="h2" gutterBottom>
-        Tester l'API
-      </Typography>
       <Typography variant="h4" gutterBottom>
         POST api/v1/organisation/validation
       </Typography>

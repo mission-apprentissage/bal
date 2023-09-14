@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { IGetRoutes, IResponse } from "shared";
 
 import { apiGet } from "../../../utils/api.utils";
-import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import ViewData from "../components/ViewData";
 
 const UsageHealthcheckPage = () => {
@@ -18,10 +17,6 @@ const UsageHealthcheckPage = () => {
 
   return (
     <>
-      <Breadcrumb pages={[PAGES.usageApi(), PAGES.usageApiHealthcheck()]} />
-      <Typography variant="h2" gutterBottom>
-        Tester l'API
-      </Typography>
       <Typography variant="h4" gutterBottom>
         POST api/healthcheck
       </Typography>
