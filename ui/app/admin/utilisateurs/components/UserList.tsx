@@ -1,12 +1,11 @@
-import { Text } from "@chakra-ui/react";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IUserWithPersonPublic } from "shared/models/user.model";
 
-import FormSearch from "../../../../components/formSearch/FormSearch";
+import SearchBar from "../../../../components/SearchBar";
 import Table from "../../../../components/table/Table";
-import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";
 import { apiGet } from "../../../../utils/api.utils";
 import { formatDate } from "../../../../utils/date.utils";
 import { formatUrlWithNewParams, getSearchParamsForQuery } from "../../../../utils/query.utils";
@@ -42,57 +41,57 @@ const UserList = () => {
 
   return (
     <>
-      <FormSearch onSearch={onSearch} defaultValue={searchValue} />
+      <SearchBar onButtonClick={onSearch} defaultValue={searchParams.get("q") ?? ""} />
+
       <Table
-        mt={4}
-        searchValue={searchValue}
-        data={users || []}
-        columns={{
-          email: {
-            id: "email",
-            header: () => "Email",
-            cell: ({ row }) => row.original.email,
+        rows={users || []}
+        columns={[
+          {
+            field: "email",
+            headerName: "Email",
+            flex: 1,
           },
-          person: {
-            id: "person",
-            header: () => "Personne",
-            cell: ({ row }) => {
-              const { person } = row.original;
+          {
+            field: "person",
+            headerName: "Personne",
+            flex: 1,
+            renderCell: ({ value: person }) => {
               if (!person) return null;
 
-              return (
-                <Text as={Link} href={`/admin/personnes/${person._id}`} flexGrow={1}>
-                  <Text isTruncated maxWidth={400}>
-                    {getPersonDisplayName(person)}
-                  </Text>
-                </Text>
-              );
+              return <Link href={PAGES.adminViewPerson(person._id).path}>{getPersonDisplayName(person)}</Link>;
             },
           },
-          is_admin: {
-            id: "is_admin",
-            header: () => "Administrateur",
-            cell: ({ row }) => (row.original.is_admin ? "Oui" : "Non"),
+          {
+            field: "is_admin",
+            headerName: "Administrateur",
+            valueGetter: ({ value }) => (value ? "Oui" : "Non"),
+            minWidth: 150,
           },
-          api_key_used_at: {
-            id: "api_key_used_at",
-            header: () => "Dernière utilisation API",
-            cell: ({ row }) => {
-              const date = row.original.api_key_used_at;
-              return date ? formatDate(date as unknown as string, "PPP à p") : "Jamais";
+          {
+            field: "api_key_used_at",
+            headerName: "Dernière utilisation API",
+            valueGetter: ({ value }) => {
+              return value ? formatDate(value as unknown as string, "PPP à p") : "Jamais";
             },
+            minWidth: 180,
           },
-          actions: {
-            size: 25,
-            id: "actions",
-            header: () => "",
-            cell: ({ row }) => (
-              <Link href={`/admin/utilisateurs/${row.original._id}`}>
-                <ArrowRightLine w="1w" />
-              </Link>
-            ),
+          {
+            field: "actions",
+            type: "actions",
+            headerName: "Actions",
+            getActions: ({ row: { _id } }) => [
+              <Button
+                key="view"
+                iconId="fr-icon-arrow-right-line"
+                linkProps={{
+                  href: PAGES.adminUserView(_id).path,
+                }}
+                priority="tertiary no outline"
+                title="Voir l'utilisateur"
+              />,
+            ],
           },
-        }}
+        ]}
       />
     </>
   );

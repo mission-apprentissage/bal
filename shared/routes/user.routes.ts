@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { zObjectId } from "../models/common";
 import { ZPerson } from "../models/person.model";
-import { ZUser, ZUserPublic } from "../models/user.model";
+import { ZUser, ZUserPublic, zUserWithPersonPublic } from "../models/user.model";
 import { ZReqParamsSearchPagination } from "./common.routes";
 
 const zUserWithPerson = ZUserPublic.extend({
@@ -28,7 +28,7 @@ export const zUserAdminRoutes = {
         organisation_id: z.string(),
       }),
       response: {
-        "2xx": ZUserPublic,
+        "2xx": zUserWithPersonPublic,
       },
     },
   },

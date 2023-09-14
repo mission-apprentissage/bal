@@ -1,40 +1,29 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-  HStack,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Text,
-} from "@chakra-ui/react";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import { PasswordInput } from "@codegouvfr/react-dsfr/blocks/PasswordInput";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { Box } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 import { IStatus } from "shared/routes/auth.routes";
 
-import Link from "../../../components/link/Link";
 import { useAuth } from "../../../context/AuthContext";
-import { AlertRounded } from "../../../theme/icons/AlertRounded";
-import { ShowPassword } from "../../../theme/icons/ShowPassword";
 import { apiPost } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
-import { NavLink } from "../../components/NavLink";
+import FormContainer from "../components/FormContainer";
 
 type Route = IPostRoutes["/auth/login"];
 
 const ConnexionPage = () => {
   const { push } = useRouter();
-  const [status, setStatus] = useState<IStatus>();
-  const [showPassword, setShowPassword] = useState(false);
   const { user, setUser } = useAuth();
+  const [status, setStatus] = useState<IStatus>();
+
   const {
     register,
     handleSubmit,
@@ -45,7 +34,13 @@ const ConnexionPage = () => {
     try {
       setUser(await apiPost("/auth/login", { body: data }));
     } catch (error) {
-      setStatus({ error: true, message: "Impossible de se connecter." });
+      const errorMessage = (error as Record<string, string>)?.message;
+
+      setStatus({
+        error: true,
+        message: errorMessage ?? "Impossible de se connecter.",
+      });
+
       console.error(error);
     }
   };
@@ -56,61 +51,55 @@ const ConnexionPage = () => {
 
   return (
     <>
-      <Breadcrumb pages={[PAGES.homepage(), PAGES.connexion()]} />
-      <Flex
-        flexDirection="column"
-        p={12}
-        w={{ base: "100%", md: "50%" }}
-        h="100%"
-        border="1px solid"
-        borderColor="blue_france.light"
-      >
-        <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
+      <Breadcrumb pages={[PAGES.connexion()]} />
+      <FormContainer>
+        <Typography variant="h2" gutterBottom>
           Connectez-vous
-        </Heading>
+        </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box>
-            <FormControl isInvalid={!!errors.email} mb={5}>
-              <FormLabel>Email (votre identifiant)</FormLabel>
-              <Input placeholder="prenom.nom@courriel.fr" {...register("email", { required: "Email obligatoire" })} />
-              <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-            </FormControl>
-
-            <FormControl isInvalid={!!errors.password} mb={5}>
-              <FormLabel>Mot de passe</FormLabel>
-              <InputGroup size="md">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="************************"
-                  {...register("password", {
-                    required: "Mot de passe obligatoire",
-                  })}
-                />
-                <InputRightElement width="2.5rem">
-                  <ShowPassword boxSize={5} onClick={() => setShowPassword((current) => !current)} cursor="pointer" />
-                </InputRightElement>
-              </InputGroup>
-
-              <FormErrorMessage>
-                <>{errors.password?.message}</>
-              </FormErrorMessage>
-            </FormControl>
-            {status?.error && (
-              <Text color="error_main" mt={8}>
-                <AlertRounded mb="0.5" /> {status?.message}
-              </Text>
-            )}
-          </Box>
-          <HStack spacing="4w" mt={8}>
-            <Button variant="primary" type="submit">
-              Connexion
-            </Button>
-            <Link href="/auth/mot-de-passe-oublie" as={NavLink} color="grey.425">
+          <Input
+            label="Email (votre identifiant)"
+            state={errors.email ? "error" : "default"}
+            stateRelatedMessage={errors.email?.message}
+            nativeInputProps={{
+              placeholder: "prenom.nom@courriel.fr",
+              ...register("email", { required: "Email obligatoire" }),
+            }}
+          />
+          <PasswordInput
+            label="Mot de passe"
+            messagesHint="Mot de passe incorrect"
+            messages={
+              errors.password?.message
+                ? [
+                    {
+                      message: errors.password?.message,
+                      severity: "error",
+                    },
+                  ]
+                : []
+            }
+            nativeInputProps={{
+              placeholder: "****************",
+              ...register("password", {
+                required: "Mot de passe obligatoire",
+              }),
+            }}
+          />
+          {status?.message && <Alert description={status.message} severity="error" small />}
+          <Box mt={2}>
+            <Button type="submit">Connexion</Button>
+            <Button
+              linkProps={{
+                href: PAGES.motDePasseOublie().path,
+              }}
+              priority="tertiary no outline"
+            >
               Mot de passe oublié
-            </Link>
-          </HStack>
+            </Button>
+          </Box>
         </form>
-      </Flex>
+      </FormContainer>
     </>
   );
 };

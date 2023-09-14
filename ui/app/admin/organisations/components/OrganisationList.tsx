@@ -1,11 +1,10 @@
+import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IOrganisationJson } from "shared/models/organisation.model";
 
-import FormSearch from "../../../../components/formSearch/FormSearch";
+import SearchBar from "../../../../components/SearchBar";
 import Table from "../../../../components/table/Table";
-import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";
 import { apiGet } from "../../../../utils/api.utils";
 import { formatUrlWithNewParams, getSearchParamsForQuery } from "../../../../utils/query.utils";
 import { PAGES } from "../../../components/breadcrumb/Breadcrumb";
@@ -36,34 +35,41 @@ const OrganisationList = () => {
 
   return (
     <>
-      <FormSearch onSearch={onSearch} defaultValue={searchValue} />
+      <SearchBar onButtonClick={onSearch} defaultValue={searchValue} />
+
       <Table
-        mt={4}
-        data={organisations || []}
-        columns={{
-          nom: {
-            id: "nom",
-            size: 100,
-            header: () => "Nom",
+        rows={organisations || []}
+        columns={[
+          {
+            field: "nom",
+            headerName: "Nom",
+            flex: 1,
           },
-          email_domains: {
-            id: "email_domains",
-            size: 100,
-            header: () => "Domaines",
-            cell: ({ row }) => row.original.email_domains?.join(", ") ?? "",
+          {
+            field: "email_domains",
+            headerName: "Domaines",
+            flex: 1,
+            valueFormatter: ({ value }) => value?.join(", "),
           },
-          actions: {
-            id: "actions",
-            size: 25,
-            header: () => "",
-            cell: ({ row }) => (
-              <Link href={`/admin/organisations/${row.original._id}`}>
-                <ArrowRightLine w="1w" />
-              </Link>
-            ),
+          {
+            field: "actions",
+            type: "actions",
+            headerName: "Actions",
+            getActions: ({ row: { _id } }) => {
+              return [
+                <Button
+                  key="view"
+                  iconId="fr-icon-arrow-right-line"
+                  linkProps={{
+                    href: PAGES.adminViewOrganisation(_id).path,
+                  }}
+                  priority="tertiary no outline"
+                  title="Voir l'organisation"
+                />,
+              ];
+            },
           },
-        }}
-        searchValue={searchValue}
+        ]}
       />
     </>
   );

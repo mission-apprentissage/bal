@@ -1,8 +1,5 @@
-import { Breadcrumb as ChakraBreadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
-import NavLink from "next/link";
+import { Breadcrumb as DSFRBreadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
 import React, { FC } from "react";
-
-import ArrowDropRightLine from "../../../theme/icons/ArrowDropRightLine";
 
 export const PAGES = {
   homepage: () => ({
@@ -31,11 +28,11 @@ export const PAGES = {
   }),
   connexion: () => ({
     title: "Se connecter",
-    path: "/connexion",
+    path: "/auth/connexion",
   }),
   motDePasseOublie: () => ({
     title: "Mot de passe oublié",
-    path: "/mot-de-passe-oublie",
+    path: "/auth/mot-de-passe-oublie",
   }),
   modifierMotDePasse: () => ({
     title: "Modifier mon mot de passe",
@@ -46,7 +43,7 @@ export const PAGES = {
     path: "/compte/profil",
   }),
   adminFichier: () => ({
-    title: "Fichier source",
+    title: "Gestion des fichiers",
     path: "/admin/fichier",
   }),
   adminImport: () => ({
@@ -54,15 +51,15 @@ export const PAGES = {
     path: "/admin/fichier/import",
   }),
   adminUsers: () => ({
-    title: "Utilisateurs",
+    title: "Gestion des utilisateurs",
     path: "/admin/utilisateurs",
   }),
   adminUserView: (id: string) => ({
     title: "Fiche utilisateur",
-    path: `/admin/utilisateur/${id}`,
+    path: `/admin/utilisateurs/${id}`,
   }),
   adminPersons: () => ({
-    title: "Personnes",
+    title: "Gestion des personnes",
     path: "/admin/personnes",
   }),
   adminViewPerson: (id: string) => ({
@@ -70,7 +67,7 @@ export const PAGES = {
     path: `/admin/personnes/${id}`,
   }),
   adminOrganisations: () => ({
-    title: "Organisations",
+    title: "Gestion des organisations",
     path: "/admin/organisations",
   }),
   adminViewOrganisation: (id: string) => ({
@@ -99,9 +96,9 @@ export const PAGES = {
   }),
 };
 
-interface Page {
+export interface Page {
   title: string;
-  path?: string;
+  path: string;
 }
 
 interface Props {
@@ -109,43 +106,21 @@ interface Props {
 }
 
 const Breadcrumb: FC<Props> = ({ pages }) => {
+  const currentPage = pages.pop();
+
   return (
-    <ChakraBreadcrumb
-      separator={<ArrowDropRightLine color="grey.425" boxSize={3} mb={1} />}
-      textStyle="xs"
-      color={"grey.50"}
-      mb={4}
-    >
-      {pages?.map((page, index) => {
-        if (index === pages.length - 1 || !page.path) {
-          return (
-            <BreadcrumbItem key={page.title} isCurrentPage>
-              <BreadcrumbLink textDecoration="none" _hover={{ textDecoration: "none" }} cursor="default">
-                {page.title}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          );
-        } else {
-          return (
-            <BreadcrumbItem key={page.title}>
-              <BreadcrumbLink
-                as={NavLink}
-                href={page.path}
-                color={"grey.425"}
-                textDecoration="underline"
-                _focus={{
-                  boxShadow: "0 0 0 3px #2A7FFE",
-                  outlineColor: "#2A7FFE",
-                }}
-                _focusVisible={{ outlineColor: "#2A7FFE" }}
-              >
-                {page.title}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          );
-        }
-      })}
-    </ChakraBreadcrumb>
+    <DSFRBreadcrumb
+      currentPageLabel={currentPage?.title}
+      homeLinkProps={{
+        href: PAGES.homepage().path,
+      }}
+      segments={pages.map((page) => ({
+        label: page.title,
+        linkProps: {
+          href: page.path,
+        },
+      }))}
+    />
   );
 };
 

@@ -1,13 +1,10 @@
-import { Grid } from "@chakra-ui/react";
+import { fr } from "@codegouvfr/react-dsfr";
+import { Grid, GridProps } from "@mui/material";
 import { FC, PropsWithChildren } from "react";
 
-interface Props {
-  nbColumns?: number;
-}
-
-const MailingListSectionRow: FC<PropsWithChildren<Props>> = ({ children, nbColumns = 3 }) => {
+const MailingListSectionRow: FC<PropsWithChildren<GridProps>> = ({ children, ...props }) => {
   return (
-    <Grid templateColumns={`repeat(${nbColumns}, 1fr)`} gap={6} mb={4} bg="white" p={4}>
+    <Grid container spacing={2} mb={2} p={2} bgcolor={fr.colors.decisions.background.alt.blueFrance.default} {...props}>
       {children}
     </Grid>
   );

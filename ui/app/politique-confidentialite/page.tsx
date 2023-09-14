@@ -1,5 +1,3 @@
-"use client";
-
 import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
 import PolitiqueConfidentialite from "./components/PolitiqueConfidentialite";
 

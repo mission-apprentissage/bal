@@ -1,7 +1,7 @@
-import { Box, Flex, Heading, HStack, Link, Text } from "@chakra-ui/react";
+import { Summary } from "@codegouvfr/react-dsfr/Summary";
+import { Grid, Typography } from "@mui/material";
 
 import Section from "../../components/section/Section";
-import Summary from "../../components/summary/Summary";
 
 const anchors = {
   EditeurDuSite: "editeur-du-site",
@@ -13,93 +13,76 @@ const anchors = {
 
 const summaryData = [
   {
-    anchorTitle: "1",
     anchorName: "Éditeur du site",
-    anchorLink: "editeur-du-site",
+    anchorLink: anchors.EditeurDuSite,
   },
   {
-    anchorTitle: "2",
     anchorName: "Directeur de la publication",
-    anchorLink: "directeur-de-la-publication",
+    anchorLink: anchors.DirecteurDeLaPublication,
   },
   {
-    anchorTitle: "3",
     anchorName: "Hébergement du site",
-    anchorLink: "hebergement-du-site",
+    anchorLink: anchors.HebergementDuSite,
   },
   {
-    anchorTitle: "4",
     anchorName: "Accessibilité",
-    anchorLink: "accessibilite",
+    anchorLink: anchors.Accessibilite,
   },
   {
-    anchorTitle: "5",
     anchorName: "Signaler un dysfonctionnement",
-    anchorLink: "signaler-un-dyfonctionnement",
+    anchorLink: anchors.SignalerUnDyfonctionnement,
   },
 ];
 
 const MentionsLegales = () => {
   return (
-    <HStack
-      mt="4w"
-      spacing={["0", "0", "0", "6w"]}
-      flexDirection={["column", "column", "column", "row"]}
-      alignItems={["normal", "normal", "normal", "center"]}
-    >
-      <Summary>
-        <Flex flexDirection="column" fontSize="zeta">
-          {summaryData.map((item) => (
-            <Link
-              key={item.anchorName}
-              padding="1w"
-              href={`#${item.anchorLink}`}
-              _hover={{ textDecoration: "none", bg: "grey.950" }}
-            >
-              <Text>
-                <Text as="span" fontWeight="700">
-                  {item.anchorTitle}.
-                </Text>{" "}
-                {item.anchorName}
-              </Text>
-            </Link>
-          ))}
-        </Flex>
-      </Summary>
-      <Box>
-        <Section pt={0}>
-          <Heading textStyle="h2" color="grey.50" mt={5}>
-            Mentions légales
-          </Heading>
-          <Text>Mentions légales du site « BAL »</Text>
-        </Section>
-        <Section mt={4} id={anchors.EditeurDuSite}>
-          <Heading as={"h3"} textStyle="h6" mb={2}>
+    <Grid container spacing={2}>
+      <Grid item xs={12} lg={3}>
+        <Summary
+          links={summaryData.map((item) => ({
+            linkProps: {
+              href: `#${item.anchorLink}`,
+            },
+            text: item.anchorName,
+          }))}
+        />
+      </Grid>
+      <Grid item xs={12} lg={9}>
+        <Typography variant="h2" gutterBottom>
+          Mentions légales
+        </Typography>
+
+        <Typography>Mentions légales du site « BAL »</Typography>
+
+        <Section id={anchors.EditeurDuSite}>
+          <Typography variant="h3" gutterBottom>
             Éditeur du site
-          </Heading>
-          <Text>
+          </Typography>
+          <Typography>
             Ce site est édité par la Délégation Générale à l’Emploi et à la Formation Professionnelle (DGEFP) et la
             Mission interministérielle de l’apprentissage.
             <br />
             <br />
             10-18 place des 5 Martyrs du Lycée Buffon
             <br /> 75015 Paris
-          </Text>
+          </Typography>
         </Section>
-        <Section mt={4} id={anchors.DirecteurDeLaPublication}>
-          <Heading as={"h3"} textStyle="h6" mb={2}>
+
+        <Section id={anchors.DirecteurDeLaPublication}>
+          <Typography variant="h3" gutterBottom>
             Directeur de la publication
-          </Heading>
-          <Text>
+          </Typography>
+          <Typography gutterBottom>
             Le Directeur de la publication est Monsieur Bruno Lucas, Délégué général à l’Emploi et à la Formation
             Professionnelle.
-          </Text>
+          </Typography>
         </Section>
-        <Section mt={4} id={anchors.HebergementDuSite}>
-          <Heading as={"h3"} textStyle="h6" mb={2}>
+
+        <Section id={anchors.HebergementDuSite}>
+          <Typography variant="h3" gutterBottom>
             Hébergement du site
-          </Heading>
-          <Text>
+          </Typography>
+          <Typography>
             L’hébergement est assuré par OVH SAS, situé à l’adresse suivante :
             <br />
             2 rue Kellermann
@@ -117,31 +100,33 @@ const MentionsLegales = () => {
             20 avenue de Ségur
             <br />
             75007 Paris
-          </Text>
+          </Typography>
         </Section>
-        <Section mt={4} id={anchors.Accessibilite}>
-          <Heading as={"h3"} textStyle="h6" mb={2}>
+
+        <Section id={anchors.Accessibilite}>
+          <Typography variant="h3" gutterBottom id={anchors.Accessibilite}>
             Accessibilité
-          </Heading>
-          <Text>
+          </Typography>
+          <Typography>
             La conformité aux normes d’accessibilité numérique est un objectif ultérieur mais nous tâchons de rendre ce
             site accessible à toutes et à tous.
-          </Text>
+          </Typography>
         </Section>
-        <Section mt={4} id={anchors.SignalerUnDyfonctionnement}>
-          <Heading as={"h3"} textStyle="h6" mb={2}>
+
+        <Section id={anchors.SignalerUnDyfonctionnement}>
+          <Typography variant="h3" gutterBottom>
             Signaler un dysfonctionnement
-          </Heading>
-          <Text>
+          </Typography>
+          <Typography>
             Si vous rencontrez un défaut d’accessibilité vous empêchant d’accéder à un contenu ou une fonctionnalité du
             site, merci de nous en faire part.
             <br />
             Si vous n’obtenez pas de réponse rapide de notre part, vous êtes en droit de faire parvenir vos doléances ou
             une demande de saisine au Défenseur des droits.
-          </Text>
+          </Typography>
         </Section>
-      </Box>
-    </HStack>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -1,18 +1,16 @@
 "use client";
 
-import { CacheProvider } from "@chakra-ui/next-js";
-import { Box, ChakraProvider } from "@chakra-ui/react";
+import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
+import { Box, Container } from "@mui/material";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
 import { FC, useRef } from "react";
 
 import { publicConfig } from "../config.public";
-import { theme } from "../theme/theme";
 import { queryClient } from "../utils/query.utils";
 import Footer from "./components/Footer";
-import { Header } from "./components/Header";
-import Section from "./components/section/Section";
+import { Header } from "./components/header/Header";
 
 interface Props {
   children: React.ReactNode;
@@ -25,15 +23,13 @@ const RootTemplate: FC<Props> = ({ children }) => {
   return (
     <PlausibleProvider trackLocalhost={false} enabled={tracking.current} domain={publicConfig.host}>
       <QueryClientProvider client={queryClient}>
-        <CacheProvider>
-          <ChakraProvider theme={theme}>
-            <Header />
-            <Box minH={"40vh"}>
-              <Section my={8}>{children}</Section>
-            </Box>
-            <Footer />
-          </ChakraProvider>
-        </CacheProvider>
+        <MuiDsfrThemeProvider>
+          <Header />
+          <Container maxWidth="xl">
+            <Box minHeight="60vh">{children}</Box>
+          </Container>
+          <Footer />
+        </MuiDsfrThemeProvider>
       </QueryClientProvider>
     </PlausibleProvider>
   );

@@ -125,17 +125,15 @@ fileignoreconfig:
 - filename: ui/Dockerfile.preview
   checksum: 03cd37123382c0779373482a2e362c991164ba294fff77a2989cc7d2ca2816cc
 - filename: ui/app/auth/connexion/page.tsx
-  checksum: 82b92aab62afde9952eef3052f76aaacf1b14aa94e9b2057d8ab4688c7b7240d
+  checksum: a2131c94803d35f354c09e40c5bff4eb33763290e1cab8569ed57c3d2d07d7e7
 - filename: ui/app/auth/modifier-mot-de-passe/page.tsx
   checksum: f6e44cbee7ba781129c86e1d21755fb3817c696b2be1c8b40a6e081fa6178c64
 - filename: ui/app/auth/mot-de-passe-oublie/page.tsx
-  checksum: 7aa0490dfb40b32ff93421bd55c7c69d02c372a65d9200e43224aaaaaa170646
+  checksum: 795d2c6beef95a07d0ca787276f8398c4c44c79844f3f4c28e918e67df0b6d75
 - filename: ui/app/cgu/components/Cgu.tsx
   checksum: 06b32f3875b997d0c5199f60b89a31c6392eb0f081cf2801404fb75a11884dac
 - filename: ui/app/components/Footer.tsx
-  checksum: 0467f77da9e5e2ac6086cef53ee620def51fc539c1b3efb240e29b8bb62998f2
-- filename: ui/app/components/FooterLogo.tsx
-  checksum: 0c7cf76e0a78293e20ab70bdefa060de3fb45edb6e14b40c45fc8b80250e9d53
+  checksum: 8c4c956726034bc225a0a3b5b1f2738cf771ad4028a4c0134fd3f76486811fb6
 - filename: ui/app/components/breadcrumb/Breadcrumb.tsx
   checksum: c8a647325f6337637ed5a66346ed20905bc27388c4aa2b6509c798ccc15ecc49
 - filename: ui/app/page.tsx
@@ -143,9 +141,7 @@ fileignoreconfig:
 - filename: ui/app/politique-confidentialite/components/PolitiqueConfidentialite.tsx
   checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
 - filename: ui/app/usage/validation/page.tsx
-  checksum: 25ddd9d8e46cec2447d74b2363a75ac775ed3982466ad21ed21d7feda1683fba
-- filename: ui/app/usage/verification/page.tsx
-  checksum: 3bcde7fc38236a4b6bf921ffc94ed471344054036b9b9e8d8ffd32283608544d
+  checksum: 2123980fbc1470fc2791b08e838ad20207483a7770301014c3e44ac80f660c09
 scopeconfig:
 - scope: node
 custom_patterns:

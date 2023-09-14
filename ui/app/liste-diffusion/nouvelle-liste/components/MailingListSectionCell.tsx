@@ -1,11 +1,11 @@
-import { GridItem, GridItemProps } from "@chakra-ui/react";
+import { Grid, GridProps } from "@mui/material";
 import { FC, PropsWithChildren } from "react";
 
-const MailingListSectionCell: FC<PropsWithChildren<GridItemProps>> = ({ children, ...props }) => {
+const MailingListSectionCell: FC<PropsWithChildren<GridProps>> = ({ children, ...props }) => {
   return (
-    <GridItem w="100%" display="flex" alignItems="center" {...props}>
+    <Grid item xs={4} display="flex" alignItems="center" {...props}>
       {children}
-    </GridItem>
+    </Grid>
   );
 };
 

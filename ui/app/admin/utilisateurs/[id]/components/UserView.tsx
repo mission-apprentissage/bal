@@ -1,7 +1,5 @@
-"use client";
-
-import { Heading, Text } from "@chakra-ui/react";
-import Link from "next/link";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { Typography } from "@mui/material";
 import { FC } from "react";
 import { IUserWithPersonPublic } from "shared/models/user.model";
 
@@ -17,10 +15,10 @@ interface Props {
 const UserView: FC<Props> = ({ user }) => {
   return (
     <>
-      <Breadcrumb pages={[PAGES.homepage(), PAGES.adminUsers(), PAGES.adminUserView(user._id)]} />
-      <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
+      <Breadcrumb pages={[PAGES.adminUsers(), PAGES.adminUserView(user._id)]} />
+      <Typography variant="h2" gutterBottom>
         Fiche utilisateur
-      </Heading>
+      </Typography>
 
       <InfoDetails
         data={user}
@@ -37,9 +35,16 @@ const UserView: FC<Props> = ({ user }) => {
               if (!person) return null;
 
               return (
-                <Text as={Link} href={PAGES.adminViewPerson(person._id).path}>
+                <Button
+                  iconId="fr-icon-arrow-right-line"
+                  iconPosition="right"
+                  linkProps={{
+                    href: PAGES.adminViewPerson(person._id).path,
+                  }}
+                  priority="tertiary no outline"
+                >
                   {getPersonDisplayName(person)}
-                </Text>
+                </Button>
               );
             },
           },

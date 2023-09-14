@@ -1,5 +1,7 @@
 "use client";
-import { Accordion, Heading } from "@chakra-ui/react";
+import { fr } from "@codegouvfr/react-dsfr";
+import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
+import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IBody, IPostRoutes } from "shared";
@@ -9,7 +11,6 @@ import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import ChoixColonnesIdentifiant from "./components/ChoixColonnesIdentifiant";
 import ChoixColonnesSortie from "./components/ChoixColonnesSortie";
 import ChoixSource, { IChoseSourceForm } from "./components/ChoixSource";
-import CreateMailingListSection from "./components/CreateMailingListSection";
 
 const NouvelleListePage = () => {
   const [step, setStep] = useState<number>(0);
@@ -45,26 +46,29 @@ const NouvelleListePage = () => {
 
   return (
     <>
-      <Breadcrumb pages={[PAGES.homepage(), PAGES.listeDiffusion(), PAGES.nouvelleListe()]} />
-
-      <Heading as="h2" fontSize="2xl" mt={8} mb={4}>
+      <Breadcrumb pages={[PAGES.listeDiffusion(), PAGES.nouvelleListe()]} />
+      <Typography variant="h2" gutterBottom>
         Créer nouvelle liste
-      </Heading>
+      </Typography>
 
-      <Accordion index={step}>
-        <CreateMailingListSection title="Choix de la source">
+      <Box className={fr.cx("fr-accordions-group")} my={4}>
+        <Accordion label="Choix de la source" expanded={step === 0} onExpandedChange={() => {}}>
           <ChoixSource onSuccess={handleSourceSelection} />
-        </CreateMailingListSection>
-        <CreateMailingListSection title="Champs d'identification et de contact">
+        </Accordion>
+        <Accordion expanded={step === 1} onExpandedChange={() => {}} label="Champs d'identification et de contact">
           <ChoixColonnesIdentifiant
             columns={columns}
             onSuccess={handleIdentifierColumnsSelection}
             onCancel={() => setStep(0)}
             sample={sample}
           />
-        </CreateMailingListSection>
-        <CreateMailingListSection title="Champs à afficher dans le fichier de sortie">
-          {campaignName && source && !!columns.length && identifierColumns && email && (
+        </Accordion>
+        <Accordion
+          expanded={step === 2}
+          onExpandedChange={() => {}}
+          label="Champs à afficher dans le fichier de sortie"
+        >
+          {campaignName && source && !!columns.length && identifierColumns && email ? (
             <ChoixColonnesSortie
               sample={sample}
               columns={columns}
@@ -76,9 +80,11 @@ const NouvelleListePage = () => {
               secondaryEmail={secondaryEmail}
               onCancel={() => setStep(1)}
             />
+          ) : (
+            <></>
           )}
-        </CreateMailingListSection>
-      </Accordion>
+        </Accordion>
+      </Box>
     </>
   );
 };

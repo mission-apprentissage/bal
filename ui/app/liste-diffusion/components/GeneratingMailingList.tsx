@@ -1,4 +1,5 @@
-import { Box, Center, Heading, Text } from "@chakra-ui/react";
+import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
+import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { FC } from "react";
@@ -35,24 +36,23 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
   const progression = Math.ceil(progress?.processed ?? 0);
 
   return (
-    <Box textAlign="center" pt="4" pb="6">
-      <Center>
-        <Image
-          src="/images/televersement.svg"
-          alt="Liste de diffusion en cours de génération"
-          width={200}
-          height={90}
-        />
-      </Center>
-      <Heading as="h3" fontSize="3xl" mb="2">
-        Génération en cours...
-      </Heading>
-      <Text mb="2">Veuillez patienter pendant la génération de votre liste de diffusion</Text>
-      <Text mb="2">
-        Cette opération peut durer jusqu’à 2 heures selon la taille du fichier, vous pouvez quitter cette page et
-        revenir plus tard.
-      </Text>
-      <Text mb="2">Progression : {progression} %</Text>
+    <Box textAlign="center" my={4}>
+      <CallOut title="Génération en cours...">
+        <Box display="flex" justifyContent="center" m={2}>
+          <Image
+            src="/images/televersement.svg"
+            alt="Liste de diffusion en cours de génération"
+            width={200}
+            height={90}
+          />
+        </Box>
+        <Typography mb="2">Veuillez patienter pendant la génération de votre liste de diffusion.</Typography>
+        <Typography mb="2">
+          Cette opération peut durer jusqu’à 2 heures selon la taille du fichier, vous pouvez quitter cette page et
+          revenir plus tard.
+        </Typography>
+        <Typography mb="2">Progression : {progression} %</Typography>
+      </CallOut>
     </Box>
   );
 };

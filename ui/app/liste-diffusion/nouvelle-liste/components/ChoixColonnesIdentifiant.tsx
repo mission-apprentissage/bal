@@ -1,21 +1,12 @@
-import { DeleteIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  FormControl,
-  FormErrorMessage,
-  HStack,
-  IconButton,
-  Select,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react";
+import { fr } from "@codegouvfr/react-dsfr";
+import Button from "@codegouvfr/react-dsfr/Button";
+import Select from "@codegouvfr/react-dsfr/Select";
+import { Box, Tooltip, Typography } from "@mui/material";
 import { FC } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
 
-import { TooltipIcon } from "../../../../theme/icons/Tooltip";
 import { getDataFromSample } from "../mailingLists.utils";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
@@ -43,7 +34,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
     control,
     watch,
   } = useForm<IIdentifierColumnForm>({
-    defaultValues: { identifier_columns: [] },
+    defaultValues: { identifier_columns: [], email: "", secondary_email: "" },
   });
   const { fields, append, remove } = useFieldArray({
     control,
@@ -61,10 +52,10 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
 
   return (
     <Box>
-      <Text mb={4}>
+      <Typography mb={4}>
         Les champs obligatoires serviront comme identifiants uniques. Les champs de courriel facultatifs correspondent
         aux courriels supplémentaires à qui la campagne sera envoyée.
-      </Text>
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <MailingListSectionRow>
           <MailingListSectionCell>Informations demandées</MailingListSectionCell>
@@ -74,57 +65,59 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
 
         <MailingListSectionRow>
           <MailingListSectionCell>
-            Email<Text color="red">*</Text>
+            Email
+            <Typography color={fr.colors.decisions.text.label.redMarianne.default} component="span">
+              *
+            </Typography>
           </MailingListSectionCell>
           <MailingListSectionCell>
-            <FormControl isInvalid={!!errors.email} isDisabled={isSubmitting}>
-              <Select
-                isInvalid={!!errors.email}
-                placeholder="Choisir l'email"
-                {...register("email", {
+            <Select
+              label=""
+              state={errors.email ? "error" : "default"}
+              stateRelatedMessage={errors.email?.message}
+              nativeSelectProps={{
+                ...register("email", {
                   required: "Obligatoire",
                   validate: (value) => {
                     return value && columns.includes(value);
                   },
-                })}
-              >
-                {columns.map((column) => (
-                  <option key={column}>{column}</option>
-                ))}
-              </Select>
-              <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-            </FormControl>
+                }),
+              }}
+            >
+              <option value="" disabled hidden>
+                Choisir la colonne email
+              </option>
+              {columns.map((column) => (
+                <option key={column}>{column}</option>
+              ))}
+            </Select>
           </MailingListSectionCell>
           <MailingListSectionCell>{watchEmail && getDataFromSample(sample, watchEmail)}</MailingListSectionCell>
           <MailingListSectionCell>ou</MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
           <MailingListSectionCell>
-            Email secondaire{" "}
-            <Tooltip
-              label="L'email secondaire est facultatif. Une adresse email secondaire différente dupliquera la ligne dans le fichier de sortie."
-              fontSize="md"
-            >
-              <span>
-                <TooltipIcon ml={2} />
-              </span>
+            Email secondaire
+            <Tooltip title="L'email secondaire est facultatif. Une adresse email secondaire différente dupliquera la ligne dans le fichier de sortie.">
+              <Box component="i" ml={1} className="ri-information-line" />
             </Tooltip>
           </MailingListSectionCell>
           <MailingListSectionCell>
-            <FormControl isInvalid={!!errors.secondary_email} isDisabled={isSubmitting}>
-              <Select
-                isInvalid={!!errors.secondary_email}
-                placeholder="Choisir l'email secondaire"
-                {...register("secondary_email")}
-              >
-                {columns.map((column) => (
-                  <option key={column} disabled={watchEmail === column}>
-                    {column}
-                  </option>
-                ))}
-              </Select>
-              <FormErrorMessage>{errors.secondary_email?.message}</FormErrorMessage>
-            </FormControl>
+            <Select
+              label=""
+              state={errors.secondary_email ? "error" : "default"}
+              stateRelatedMessage={errors.secondary_email?.message}
+              nativeSelectProps={{ ...register("secondary_email") }}
+            >
+              <option value="" disabled hidden>
+                Choisir la colonne email secondaire
+              </option>
+              {columns.map((column) => (
+                <option key={column} disabled={watchEmail === column}>
+                  {column}
+                </option>
+              ))}
+            </Select>
           </MailingListSectionCell>
           <MailingListSectionCell>
             {watchSecondaryEmail && getDataFromSample(sample, watchSecondaryEmail)}
@@ -135,59 +128,66 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
           <MailingListSectionRow key={field.id}>
             <MailingListSectionCell />
             <MailingListSectionCell>
-              <FormControl isInvalid={!!errors.identifier_columns?.[index]} isDisabled={isSubmitting}>
-                <Select
-                  isInvalid={!!errors.identifier_columns?.[index]}
-                  placeholder="Colonne"
-                  {...register(`identifier_columns.${index}.name`, {
+              <Select
+                label=""
+                state={errors.identifier_columns?.[index]?.message ? "error" : "default"}
+                stateRelatedMessage={errors.identifier_columns?.[index]?.message}
+                nativeSelectProps={{
+                  ...register(`identifier_columns.${index}.name`, {
                     required: "Obligatoire",
                     validate: (value) => {
                       return value && columns.includes(value);
                     },
-                  })}
-                >
-                  {columns.map((column) => (
-                    <option
-                      key={column}
-                      disabled={[
-                        watchEmail,
-                        watchSecondaryEmail,
-                        ...watchIdentifierColumns.map((ic) => ic.name),
-                      ].includes(column)}
-                    >
-                      {column}
-                    </option>
-                  ))}
-                </Select>
-                <FormErrorMessage>{errors.identifier_columns?.[index]?.name?.message}</FormErrorMessage>
-              </FormControl>
+                  }),
+                }}
+              >
+                <option value="" disabled hidden>
+                  Colonne
+                </option>
+                {columns.map((column) => (
+                  <option
+                    key={column}
+                    disabled={[
+                      watchEmail,
+                      watchSecondaryEmail,
+                      ...watchIdentifierColumns.map((ic) => ic.name),
+                    ].includes(column)}
+                  >
+                    {column}
+                  </option>
+                ))}
+              </Select>
             </MailingListSectionCell>
             <MailingListSectionCell>
               {watchIdentifierColumns?.[index]?.name &&
                 getDataFromSample(sample, watchIdentifierColumns?.[index]?.name)}
 
-              <IconButton
-                marginLeft="auto"
-                aria-label="Supprimer"
-                onClick={() => remove(index)}
-                icon={<DeleteIcon />}
-              />
+              <Box ml="auto">
+                <Button
+                  iconId="ri-delete-bin-line"
+                  onClick={() => remove(index)}
+                  priority="tertiary no outline"
+                  title="Supprimer"
+                />
+              </Box>
             </MailingListSectionCell>
           </MailingListSectionRow>
         ))}
         <Box display="flex" justifyContent="center">
-          <Button variant="secondary" onClick={() => append({ name: "" })}>
+          <Button priority="secondary" onClick={() => append({ name: "" })}>
             + Ajouter un champ
           </Button>
         </Box>
-        <HStack spacing="4w" mt={8}>
-          <Button isLoading={isSubmitting} onClick={onCancel}>
-            Retour
-          </Button>
-          <Button variant="primary" type="submit" isLoading={isSubmitting}>
+        <Box>
+          <Box mx={2} display="inline-block">
+            <Button priority="tertiary" disabled={isSubmitting} onClick={onCancel}>
+              Retour
+            </Button>
+          </Box>
+          <Button type="submit" disabled={isSubmitting}>
             Confirmer
           </Button>
-        </HStack>
+        </Box>
       </form>
     </Box>
   );

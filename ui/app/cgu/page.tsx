@@ -6,7 +6,7 @@ import Cgu from "./components/Cgu";
 const CGUPage = () => {
   return (
     <>
-      <Breadcrumb pages={[PAGES.homepage(), PAGES.cgu()]} />
+      <Breadcrumb pages={[PAGES.cgu()]} />
       <Cgu />
     </>
   );

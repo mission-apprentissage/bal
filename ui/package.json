@@ -7,23 +7,25 @@
     "npm": "please-use-yarn"
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build --no-lint",
-    "typecheck": "tsc --noEmit"
+    "dev": "yarn predev && next dev",
+    "build": "yarn prebuild && next build --no-lint",
+    "typecheck": "tsc --noEmit",
+    "predev": "only-include-used-icons",
+    "prebuild": "only-include-used-icons"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.1.0",
-    "@chakra-ui/next-js": "^2.1.5",
-    "@chakra-ui/react": "^2.8.0",
+    "@codegouvfr/react-dsfr": "^0.75.7",
     "@emotion/react": "^11.11.1",
+    "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.8",
+    "@mui/x-data-grid": "^6.13.0",
     "@sentry/nextjs": "^7.64.0",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-table": "^8.9.3",
     "@types/node": "18.11.18",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
-    "chakra-ui-markdown-renderer": "^4.1.0",
     "client-only": "^0.0.1",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.16.0",
@@ -46,11 +48,11 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "@chakra-ui/theme": "^3.2.0",
     "@types/lodash.range": "3.2.7",
     "@types/react-datepicker": "^4.15.0",
     "luxon": "^3.4.0",
     "notion-types": "^6.16.0",
+    "sass": "^1.66.1",
     "type-fest": "^4.2.0"
   }
 }

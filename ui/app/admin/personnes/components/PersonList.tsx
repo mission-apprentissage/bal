@@ -1,12 +1,11 @@
-import { Text } from "@chakra-ui/react";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PersonWithOrganisationJson } from "shared/models/person.model";
 
-import FormSearch from "../../../../components/formSearch/FormSearch";
+import SearchBar from "../../../../components/SearchBar";
 import Table from "../../../../components/table/Table";
-import { ArrowRightLine } from "../../../../theme/icons/ArrowRightLine";
 import { apiGet } from "../../../../utils/api.utils";
 import { formatUrlWithNewParams, getSearchParamsForQuery } from "../../../../utils/query.utils";
 import { PAGES } from "../../../components/breadcrumb/Breadcrumb";
@@ -37,65 +36,67 @@ const PersonList = () => {
 
   return (
     <>
-      <FormSearch onSearch={onSearch} defaultValue={searchValue} />
+      <SearchBar onButtonClick={onSearch} defaultValue={searchValue} />
+
       <Table
-        mt={4}
-        data={persons || []}
-        columns={{
-          name: {
-            id: "name",
-            size: 100,
-            header: () => "Nom complet",
-            cell: ({ row }) => {
-              const { nom, prenom, _id } = row.original;
+        rows={persons || []}
+        columns={[
+          {
+            field: "name",
+            headerName: "Nom complet",
+            flex: 1,
+            valueGetter: ({ row }) => {
+              const { nom, prenom, _id } = row;
               return nom || prenom ? `${nom ?? ""} ${prenom ?? ""}` : _id;
             },
           },
-          email: {
-            id: "email",
-            size: 100,
-            header: () => "Email",
+          {
+            field: "email",
+            headerName: "Email",
+            flex: 1,
           },
-          civility: {
-            id: "civility",
-            size: 100,
-            header: () => "Civilité",
+          {
+            field: "civility",
+            headerName: "Civilité",
+            minWidth: 50,
           },
-          organisation_id: {
-            id: "organisation_id",
-            size: 100,
-            header: () => "Organisation",
-            cell: ({ row }) => {
-              const { organisation } = row.original;
-
-              return organisation ? (
-                <Text as={Link} href={PAGES.adminViewOrganisation(organisation._id as unknown as string).path}>
+          {
+            field: "organisation_id",
+            headerName: "Organisation",
+            flex: 1,
+            valueFormatter: ({ value: organisation }) => {
+              if (!organisation) return null;
+              return (
+                <Link href={PAGES.adminViewOrganisation(organisation._id as unknown as string).path}>
                   {organisation.nom}
-                </Text>
-              ) : (
-                ""
+                </Link>
               );
             },
           },
-          source: {
-            id: "sources",
-            size: 100,
-            header: () => "Sources",
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            cell: ({ row }) => (row.original._meta as any)?.sources?.join(", ") ?? "",
+          {
+            field: "sources",
+            headerName: "Sources",
+            valueGetter: ({ row }) => {
+              return (row._meta as any)?.sources?.join(", ") ?? "";
+            },
           },
-          actions: {
-            id: "actions",
-            size: 25,
-            header: () => "",
-            cell: ({ row }) => (
-              <Link href={`/admin/personnes/${row.original._id}`}>
-                <ArrowRightLine w="1w" />
-              </Link>
-            ),
+          {
+            field: "actions",
+            type: "actions",
+            headerName: "Actions",
+            getActions: ({ row: { _id } }) => [
+              <Button
+                key="view"
+                iconId="fr-icon-arrow-right-line"
+                linkProps={{
+                  href: PAGES.adminViewPerson(_id).path,
+                }}
+                priority="tertiary no outline"
+                title="Voir la personne"
+              />,
+            ],
           },
-        }}
-        searchValue={searchValue}
+        ]}
       />
     </>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading, ListItem, UnorderedList } from "@chakra-ui/react";
+import { Typography } from "@mui/material";
 import { FC } from "react";
 import { IOrganisationJson } from "shared/models/organisation.model";
 
@@ -15,12 +15,10 @@ interface Props {
 const OrganisationView: FC<Props> = ({ organisation }) => {
   return (
     <>
-      <Breadcrumb
-        pages={[PAGES.homepage(), PAGES.adminOrganisations(), PAGES.adminViewOrganisation(organisation._id)]}
-      />
-      <Heading as="h2" fontSize="2xl" mb={[3, 6]}>
+      <Breadcrumb pages={[PAGES.adminOrganisations(), PAGES.adminViewOrganisation(organisation._id)]} />
+      <Typography variant="h2" gutterBottom>
         Fiche organisation
-      </Heading>
+      </Typography>
 
       <InfoDetails
         data={organisation}
@@ -34,47 +32,43 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
           email_domains: {
             header: () => "Domaines",
             cell: ({ email_domains }) => {
-              return (
-                <UnorderedList>
-                  {email_domains?.map((domain: string) => <ListItem key={domain}>{domain}</ListItem>)}
-                </UnorderedList>
-              );
+              return <ul>{email_domains?.map((domain: string) => <li key={domain}>{domain}</li>)}</ul>;
             },
           },
         }}
       />
 
-      <Heading as="h3" fontSize="xl" mb={[3, 6]}>
+      <Typography variant="h3" gutterBottom>
         Établissements
-      </Heading>
+      </Typography>
 
       <Table
-        mt={4}
-        data={organisation.etablissements ?? []}
-        columns={{
-          nom: {
-            id: "nom",
-            size: 100,
-            header: () => "Nom",
+        rows={organisation.etablissements ?? []}
+        getRowId={(row) => row.siret as string}
+        columns={[
+          {
+            field: "nom",
+            headerName: "Nom",
+            flex: 1,
           },
-          siret: {
-            id: "siret",
-            size: 100,
-            header: () => "Siret",
+          {
+            field: "siret",
+            headerName: "Siret",
+            minWidth: 200,
           },
-          is_hq: {
-            id: "is_hq",
-            size: 100,
-            header: () => "Siège social",
-            cell: ({ getValue }) => (getValue() ? "Oui" : "Non"),
+          {
+            field: "is_hq",
+            headerName: "Siège social",
+            minWidth: 100,
+            valueFormatter: ({ value }) => (value ? "Oui" : "Non"),
           },
-          is_close: {
-            id: "is_close",
-            size: 100,
-            header: () => "Fermé",
-            cell: ({ getValue }) => (getValue() ? "Oui" : "Non"),
+          {
+            field: "is_close",
+            headerName: "Fermé",
+            minWidth: 100,
+            valueFormatter: ({ value }) => (value ? "Oui" : "Non"),
           },
-        }}
+        ]}
       />
     </>
   );

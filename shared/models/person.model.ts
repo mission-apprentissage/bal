@@ -24,7 +24,7 @@ const indexes: IModelDescriptor["indexes"] = [
 export const ZPerson = z
   .object({
     _id: zObjectId,
-    email: z.string().email().describe("Email de la personne"),
+    email: z.string().describe("Email de la personne"),
     civility: z.enum(["Madame", "Monsieur"]).optional().describe("civilité"),
     nom: z.string().optional().describe("Le nom de la personne"),
     prenom: z.string().optional().describe("Le prénom de la personne"),
