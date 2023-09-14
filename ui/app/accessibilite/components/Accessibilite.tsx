@@ -14,9 +14,8 @@ const Accessibilite = () => {
       </Typography>
       <Section>
         <Typography>
-          L&apos;initiative internationale pour l&apos;accessibilité du Web (Web
-          Accessiblility Initiative) définit l&apos;accessibilité du Web comme
-          suit :<br />
+          L&apos;initiative internationale pour l&apos;accessibilité du Web (Web Accessiblility Initiative) définit
+          l&apos;accessibilité du Web comme suit :<br />
           <br />
           L&apos;accessibilité du Web signifie que les personnes en situation de handicap peuvent utiliser le Web. Plus
           précisément, qu&apos;elles peuvent percevoir, comprendre, naviguer et interagir avec le Web, et qu&apos;elles
@@ -39,13 +38,7 @@ const Accessibilite = () => {
           <br />
           Le site Catalogue de l&apos;offre de formation en apprentissage est en cours d&apos;optimisation afin de le
           rendre conforme au{" "}
-          <Link
-            href={
-              "https://www.numerique.gouv.fr/publications/rgaa-accessibilite"
-            }
-          >
-            RGAA v3{" "}
-          </Link>
+          <Link href={"https://www.numerique.gouv.fr/publications/rgaa-accessibilite"}>RGAA v3 </Link>
           .
           <br />
           La déclaration de conformité sera publiée ultérieurement.
@@ -56,29 +49,22 @@ const Accessibilite = () => {
           Nos engagements
         </Typography>
         <Typography>
-          Audit de mise en conformité (en cours) pour nous aider à détecter les
-          potentiels oublis d&apos;accessibilité.
+          Audit de mise en conformité (en cours) pour nous aider à détecter les potentiels oublis d&apos;accessibilité.
           <br />
           Déclaration d&apos;accessibilité (en cours) pour expliquer en toute transparence notre démarche.
           <br />
           Mise à jour de cette page pour vous tenir informés de notre progression.
           <br />
-          Nos équipes ont ainsi travaillé sur les contrastes de couleur, la
-          présentation et la structure de l&apos;information ou la clarté des
-          formulaires.
+          Nos équipes ont ainsi travaillé sur les contrastes de couleur, la présentation et la structure de
+          l&apos;information ou la clarté des formulaires.
           <br />
           Des améliorations vont être apportées régulièrement.
         </Typography>
       </Section>
       <Section>
         <Typography>
-          Pour en savoir plus sur la politique d&apos;accessibilité numérique de
-          l&apos;État :{" "}
-          <Link
-            href={
-              "https://www.numerique.gouv.fr/publications/rgaa-accessibilite/"
-            }
-          >
+          Pour en savoir plus sur la politique d&apos;accessibilité numérique de l&apos;État :{" "}
+          <Link href={"https://www.numerique.gouv.fr/publications/rgaa-accessibilite/"}>
             https://www.numerique.gouv.fr/publications/rgaa-accessibilite/{" "}
           </Link>
         </Typography>
@@ -88,19 +74,15 @@ const Accessibilite = () => {
           Voie de recours
         </Typography>
         <Typography>
-          Cette procédure est à utiliser dans le cas suivant : vous avez signalé
-          au responsable du site internet un défaut d&apos;accessibilité qui
-          vous empêche d&apos;accéder à un contenu ou à un des services du
-          portail et vous n&apos;avez pas obtenu de réponse satisfaisante.
+          Cette procédure est à utiliser dans le cas suivant : vous avez signalé au responsable du site internet un
+          défaut d&apos;accessibilité qui vous empêche d&apos;accéder à un contenu ou à un des services du portail et
+          vous n&apos;avez pas obtenu de réponse satisfaisante.
           <br />
           <br />
           Vous pouvez :
           <ul>
             <li>
-              Écrire un message au{" "}
-              <Link href={"https://formulaire.defenseurdesdroits.fr/"}>
-                Défenseur des droits{" "}
-              </Link>
+              Écrire un message au <Link href={"https://formulaire.defenseurdesdroits.fr/"}>Défenseur des droits </Link>
             </li>
             <li>
               Contacter le délégué du{" "}
@@ -109,8 +91,7 @@ const Accessibilite = () => {
               </Link>
             </li>
             <li>
-              Envoyer un courrier par la poste (gratuit, ne pas mettre de
-              timbre) :<br />
+              Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) :<br />
               Défenseur des droits
               <br />
               Libre réponse 71120 75342 Paris CEDEX 07

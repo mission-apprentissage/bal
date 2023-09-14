@@ -65,8 +65,7 @@ const ProfilPage = () => {
       {apiKey && (
         <>
           <Typography gutterBottom>
-            Ce jeton n'est visible qu'une fois, il est recommandé de le stocker
-            dans un endroit sécurisé.
+            Ce jeton n'est visible qu'une fois, il est recommandé de le stocker dans un endroit sécurisé.
           </Typography>
           <Box my={2}>
             <Button onClick={handleClick}>Copier</Button>
@@ -98,23 +97,16 @@ const ProfilPage = () => {
           },
         ]}
       >
-        Êtes-vous sûr de vouloir générer un nouveau jeton API ? Le jeton
-        existant ne sera plus utilisable.
+        Êtes-vous sûr de vouloir générer un nouveau jeton API ? Le jeton existant ne sera plus utilisable.
       </modal.Component>
 
       {!apiKey && (
         <Box my={2}>
-          <Button onClick={() => modal.open()}>
-            Générer un nouveau jeton API
-          </Button>
+          <Button onClick={() => modal.open()}>Générer un nouveau jeton API</Button>
         </Box>
       )}
 
-      <Toast
-        severity={toast?.severity}
-        message={toast?.message}
-        onClose={close}
-      />
+      <Toast severity={toast?.severity} message={toast?.message} onClose={close} />
     </>
   );
 };

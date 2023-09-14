@@ -14,11 +14,7 @@ const ViewData: FC<Props> = ({ data, title }) => {
       <Typography variant="h6" gutterBottom>
         {title}
       </Typography>
-      <Box
-        mt={2}
-        p={2}
-        bgcolor={fr.colors.decisions.background.default.grey.active}
-      >
+      <Box mt={2} p={2} bgcolor={fr.colors.decisions.background.default.grey.active}>
         <pre>{JSON.stringify(data, null, "\t")}</pre>
       </Box>
     </Box>

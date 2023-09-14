@@ -52,18 +52,10 @@ const NouvelleListePage = () => {
       </Typography>
 
       <Box className={fr.cx("fr-accordions-group")} my={4}>
-        <Accordion
-          label="Choix de la source"
-          expanded={step === 0}
-          onExpandedChange={() => {}}
-        >
+        <Accordion label="Choix de la source" expanded={step === 0} onExpandedChange={() => {}}>
           <ChoixSource onSuccess={handleSourceSelection} />
         </Accordion>
-        <Accordion
-          expanded={step === 1}
-          onExpandedChange={() => {}}
-          label="Champs d'identification et de contact"
-        >
+        <Accordion expanded={step === 1} onExpandedChange={() => {}} label="Champs d'identification et de contact">
           <ChoixColonnesIdentifiant
             columns={columns}
             onSuccess={handleIdentifierColumnsSelection}
@@ -76,11 +68,7 @@ const NouvelleListePage = () => {
           onExpandedChange={() => {}}
           label="Champs à afficher dans le fichier de sortie"
         >
-          {campaignName &&
-          source &&
-          !!columns.length &&
-          identifierColumns &&
-          email ? (
+          {campaignName && source && !!columns.length && identifierColumns && email ? (
             <ChoixColonnesSortie
               sample={sample}
               columns={columns}

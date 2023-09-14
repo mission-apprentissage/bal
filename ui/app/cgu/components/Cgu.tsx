@@ -30,8 +30,7 @@ const summaryData = [
     anchorLink: "definition",
   },
   {
-    anchorName:
-      "Article 4 - Fonctionnalités liées aux comptes des utilisateurs",
+    anchorName: "Article 4 - Fonctionnalités liées aux comptes des utilisateurs",
     anchorLink: "fonctionnalite-liees-aux-comptes-des-utilisateurs",
   },
   {
@@ -83,13 +82,10 @@ const Cgu: FC<Props> = ({ onLoad }) => {
         <Typography variant="h2" gutterBottom>
           CONDITIONS GÉNÉRALES D&apos;UTILISATION
         </Typography>
+        <Typography>Dernière mise à jour le : 3 novembre 2022 - {cguVersion} </Typography>
         <Typography>
-          Dernière mise à jour le : 3 novembre 2022 - {cguVersion}{" "}
-        </Typography>
-        <Typography>
-          Les présentes conditions générales d’utilisation (dites « CGU »)
-          définissent les conditions d’accès et d’utilisation des Services par
-          l’Utilisateur.
+          Les présentes conditions générales d’utilisation (dites « CGU ») définissent les conditions d’accès et
+          d’utilisation des Services par l’Utilisateur.
         </Typography>
 
         <Section id={anchors.ChampApplication}>
@@ -97,9 +93,8 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             Article 1 – Champ d’application
           </Typography>
           <Typography>
-            Le tableau de bord est d’accès libre et gratuit à tout Utilisateur.
-            La simple visite du tableau de bord suppose l’acceptation par tout
-            Utilisateur des présentes conditions générales d’utilisation.
+            Le tableau de bord est d’accès libre et gratuit à tout Utilisateur. La simple visite du tableau de bord
+            suppose l’acceptation par tout Utilisateur des présentes conditions générales d’utilisation.
           </Typography>
         </Section>
         <Section id={anchors.Objet}>
@@ -107,9 +102,8 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             Article 2 – Objet
           </Typography>
           <Typography>
-            Le tableau de bord a pour objectif de mettre à disposition des
-            différents acteurs les données clés de l’apprentissage en temps
-            réel.
+            Le tableau de bord a pour objectif de mettre à disposition des différents acteurs les données clés de
+            l’apprentissage en temps réel.
           </Typography>
         </Section>
         <Section id={anchors.Definition}>
@@ -117,8 +111,7 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             Article 3 – Définitions
           </Typography>
           <Typography>
-            Les termes ci-dessous définis ont entre les parties la signification
-            suivante :
+            Les termes ci-dessous définis ont entre les parties la signification suivante :
             <br />
             <br />
             <strong>« Utilisateur »</strong> : toute personne ayant accès aux services du tableau de bord
@@ -144,8 +137,7 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             Article 4 – Fonctionnalités liées aux comptes des utilisateurs
           </Typography>
           <Typography>
-            L&apos;accès à certaines données du tableau de bord est restreint à
-            une inscription à un compte :
+            L&apos;accès à certaines données du tableau de bord est restreint à une inscription à un compte :
             <Link href="https://cfas.apprentissage.beta.gouv.fr/login">
               https://cfas.apprentissage.beta.gouv.fr/login
             </Link>
@@ -173,9 +165,8 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             majuscules, minuscules, chiffres, et caractères spéciaux.
             <br />
             <br />
-            En cas d&apos;oubli de son mot de passe ou de compromission,
-            l’utilisateur utilise la fonctionnalité « oubli de mot de passe » et
-            suit les instructions fournies par le tableau de bord.
+            En cas d&apos;oubli de son mot de passe ou de compromission, l’utilisateur utilise la fonctionnalité « oubli
+            de mot de passe » et suit les instructions fournies par le tableau de bord.
           </Typography>
         </Section>
         <Section id={anchors.PresentationDesServices}>
@@ -213,9 +204,8 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             d&apos;accessibilité. Cette liste n&apos;est pas limitative.
             <br />
             <br />
-            Dans ce cas, la Mission interministérielle de l’apprentissage peut
-            indiquer une date de réouverture du compte ou d&apos;accessibilité à
-            un ou plusieurs services.
+            Dans ce cas, la Mission interministérielle de l’apprentissage peut indiquer une date de réouverture du
+            compte ou d&apos;accessibilité à un ou plusieurs services.
           </Typography>
         </Section>
         <Section id={anchors.Securite}>
@@ -223,11 +213,9 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             Article 6 - Sécurité
           </Typography>
           <Typography>
-            Le tableau de bord comporte un accès sécurisé qui permet de
-            consulter certaines données. Tout accès frauduleux est interdit et
-            sanctionné pénalement. Il en est de même pour toute entrave ou
-            altération du fonctionnement de ce système, ou en cas
-            d&apos;introduction, de suppression ou de modification des données
+            Le tableau de bord comporte un accès sécurisé qui permet de consulter certaines données. Tout accès
+            frauduleux est interdit et sanctionné pénalement. Il en est de même pour toute entrave ou altération du
+            fonctionnement de ce système, ou en cas d&apos;introduction, de suppression ou de modification des données
             qui y sont contenues.
             <br />
             <br />
@@ -235,9 +223,8 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             à ne pas introduire de virus ou toute autre technologie nuisible au tableau de bord.
             <br />
             <br />
-            La Mission interministérielle de l’apprentissage fait ses meilleurs
-            efforts, conformément aux règles de l&apos;art, pour sécuriser le
-            service eu égard à la complexité de l&apos;internet.
+            La Mission interministérielle de l’apprentissage fait ses meilleurs efforts, conformément aux règles de
+            l&apos;art, pour sécuriser le service eu égard à la complexité de l&apos;internet.
           </Typography>
         </Section>
         <Section id={anchors.Hyperliens}>
@@ -245,10 +232,8 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             Article 7 – Hyperliens
           </Typography>
           <Typography>
-            La Mission interministérielle de l’apprentissage se réserve la
-            possibilité de mettre en place des hyperliens sur le tableau de bord
-            donnant accès à des pages internet autres que celles de son
-            interface.
+            La Mission interministérielle de l’apprentissage se réserve la possibilité de mettre en place des hyperliens
+            sur le tableau de bord donnant accès à des pages internet autres que celles de son interface.
             <br />
             <br />
             Les utilisateurs sont formellement informés que les sites auxquels ils peuvent accéder par
@@ -261,10 +246,9 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             ressources présentes sur le réseau.
             <br />
             <br />
-            La Mission interministérielle de l’apprentissage décline toute
-            responsabilité quant au contenu des informations fournies sur ces
-            ressources présentes sur le réseau au titre de l&apos;activation des
-            liens hypertextes.
+            La Mission interministérielle de l’apprentissage décline toute responsabilité quant au contenu des
+            informations fournies sur ces ressources présentes sur le réseau au titre de l&apos;activation des liens
+            hypertextes.
           </Typography>
         </Section>
         <Section id={anchors.Responsabilites}>
@@ -272,14 +256,11 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             Article 8 – Responsabilités
           </Typography>
           <Typography variant="h4" gutterBottom>
-            8.1. Limites de la responsabilité de la Mission interministérielle
-            de l’apprentissage
+            8.1. Limites de la responsabilité de la Mission interministérielle de l’apprentissage
           </Typography>
           <Typography>
-            La Mission interministérielle de l’apprentissage ne saurait être
-            tenue pour responsable des conséquences provoquées par le caractère
-            erroné ou frauduleux des informations fournies par
-            l&apos;utilisateur.
+            La Mission interministérielle de l’apprentissage ne saurait être tenue pour responsable des conséquences
+            provoquées par le caractère erroné ou frauduleux des informations fournies par l&apos;utilisateur.
             <br />
             <br />
             L&apos;utilisateur reste en toute circonstance responsable de l&apos;utilisation qu&apos;il fait des
@@ -373,10 +354,9 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             tableau de bord.
             <br />
             <br />
-            Toute tentative d&apos;accès non autorisé aux services, à
-            d&apos;autres comptes, aux systèmes informatiques ou à d&apos;autres
-            réseaux connectés ou à l&apos;un des services via le piratage ou
-            toute autre méthode est interdite.
+            Toute tentative d&apos;accès non autorisé aux services, à d&apos;autres comptes, aux systèmes informatiques
+            ou à d&apos;autres réseaux connectés ou à l&apos;un des services via le piratage ou toute autre méthode est
+            interdite.
           </Typography>
         </Section>
         <Section id={anchors.MiseAjourDesConditionsUtilisation}>
@@ -384,10 +364,9 @@ const Cgu: FC<Props> = ({ onLoad }) => {
             Article 9 – Mise à jour des conditions d’utilisation
           </Typography>
           <Typography>
-            Les termes des CGU doivent être acceptés au moment de la connexion.
-            Toute modification des CGU réalisée en fonction des modifications
-            apportées au site, de l’évolution de la législation ou pour tout
-            autre motif jugé nécessaire, nécessite votre consentement.
+            Les termes des CGU doivent être acceptés au moment de la connexion. Toute modification des CGU réalisée en
+            fonction des modifications apportées au site, de l’évolution de la législation ou pour tout autre motif jugé
+            nécessaire, nécessite votre consentement.
           </Typography>
         </Section>
       </Grid>

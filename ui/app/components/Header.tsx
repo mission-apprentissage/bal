@@ -1,7 +1,4 @@
-import {
-  Header as DSFRHeader,
-  HeaderProps,
-} from "@codegouvfr/react-dsfr/Header";
+import { Header as DSFRHeader, HeaderProps } from "@codegouvfr/react-dsfr/Header";
 import { MainNavigationProps } from "@codegouvfr/react-dsfr/MainNavigation";
 import { useRouter } from "next/navigation";
 

@@ -29,14 +29,10 @@ export default async function NotFoundPage() {
             Page non trouvée
           </Typography>
 
-          <Typography>
-            La page que vous recherchez n’existe pas ou a été déplacée
-          </Typography>
+          <Typography>La page que vous recherchez n’existe pas ou a été déplacée</Typography>
 
           <Box mt={2}>
-            <Link href={PAGES.homepage().path}>
-              Retourner à la page d'accueil
-            </Link>
+            <Link href={PAGES.homepage().path}>Retourner à la page d'accueil</Link>
           </Box>
         </Box>
       </Box>

@@ -86,9 +86,7 @@ const ConnexionPage = () => {
               }),
             }}
           />
-          {status?.message && (
-            <Alert description={status.message} severity="error" small />
-          )}
+          {status?.message && <Alert description={status.message} severity="error" small />}
           <Box mt={2}>
             <Button type="submit">Connexion</Button>
             <Button

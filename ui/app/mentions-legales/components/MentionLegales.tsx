@@ -59,9 +59,8 @@ const MentionsLegales = () => {
             Éditeur du site
           </Typography>
           <Typography>
-            Ce site est édité par la Délégation Générale à l’Emploi et à la
-            Formation Professionnelle (DGEFP) et la Mission interministérielle
-            de l’apprentissage.
+            Ce site est édité par la Délégation Générale à l’Emploi et à la Formation Professionnelle (DGEFP) et la
+            Mission interministérielle de l’apprentissage.
             <br />
             <br />
             10-18 place des 5 Martyrs du Lycée Buffon
@@ -74,8 +73,8 @@ const MentionsLegales = () => {
             Directeur de la publication
           </Typography>
           <Typography gutterBottom>
-            Le Directeur de la publication est Monsieur Bruno Lucas, Délégué
-            général à l’Emploi et à la Formation Professionnelle.
+            Le Directeur de la publication est Monsieur Bruno Lucas, Délégué général à l’Emploi et à la Formation
+            Professionnelle.
           </Typography>
         </Section>
 
@@ -109,9 +108,8 @@ const MentionsLegales = () => {
             Accessibilité
           </Typography>
           <Typography>
-            La conformité aux normes d’accessibilité numérique est un objectif
-            ultérieur mais nous tâchons de rendre ce site accessible à toutes et
-            à tous.
+            La conformité aux normes d’accessibilité numérique est un objectif ultérieur mais nous tâchons de rendre ce
+            site accessible à toutes et à tous.
           </Typography>
         </Section>
 
@@ -120,13 +118,11 @@ const MentionsLegales = () => {
             Signaler un dysfonctionnement
           </Typography>
           <Typography>
-            Si vous rencontrez un défaut d’accessibilité vous empêchant
-            d’accéder à un contenu ou une fonctionnalité du site, merci de nous
-            en faire part.
+            Si vous rencontrez un défaut d’accessibilité vous empêchant d’accéder à un contenu ou une fonctionnalité du
+            site, merci de nous en faire part.
             <br />
-            Si vous n’obtenez pas de réponse rapide de notre part, vous êtes en
-            droit de faire parvenir vos doléances ou une demande de saisine au
-            Défenseur des droits.
+            Si vous n’obtenez pas de réponse rapide de notre part, vous êtes en droit de faire parvenir vos doléances ou
+            une demande de saisine au Défenseur des droits.
           </Typography>
         </Section>
       </Grid>

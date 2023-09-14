@@ -60,9 +60,7 @@ export const zUserWithPersonPublic = ZUserPublic.extend({
 });
 export type IUserWithPersonPublic = Jsonify<z.output<typeof zUserWithPersonPublic>>;
 
-export function toPublicUser(
-  user: IUserWithPerson
-): z.output<typeof zUserWithPersonPublic> {
+export function toPublicUser(user: IUserWithPerson): z.output<typeof zUserWithPersonPublic> {
   return {
     _id: user._id,
     email: user.email,

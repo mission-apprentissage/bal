@@ -115,16 +115,12 @@ const ModifierMotDePassePage = () => {
               ...register("password_confirmation", {
                 required: "Confirmation de mot de passe obligatoire",
                 validate: {
-                  match: (value) =>
-                    value === password ||
-                    "Les mots de passe ne correspondent pas.",
+                  match: (value) => value === password || "Les mots de passe ne correspondent pas.",
                 },
               }),
             }}
           />
-          {status?.message && (
-            <Alert description={status.message} severity="error" small />
-          )}
+          {status?.message && <Alert description={status.message} severity="error" small />}
           <Box mt={2}>
             <Button type="submit">Modifier mon mot de passe</Button>
           </Box>

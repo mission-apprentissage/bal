@@ -67,13 +67,9 @@ const MotDePasseOubliePage = () => {
             }}
           />
 
-          {status?.message && (
-            <Alert description={status.message} severity="error" small />
-          )}
+          {status?.message && <Alert description={status.message} severity="error" small />}
           <Box mt={2}>
-            <Button type="submit">
-              Recevoir un courriel de ré-initialisation
-            </Button>
+            <Button type="submit">Recevoir un courriel de ré-initialisation</Button>
             <Button
               linkProps={{
                 href: PAGES.connexion().path,

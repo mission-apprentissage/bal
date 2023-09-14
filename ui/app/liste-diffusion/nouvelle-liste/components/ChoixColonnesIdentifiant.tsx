@@ -53,9 +53,8 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
   return (
     <Box>
       <Typography mb={4}>
-        Les champs obligatoires serviront comme identifiants uniques. Les champs
-        de courriel facultatifs correspondent aux courriels supplémentaires à
-        qui la campagne sera envoyée.
+        Les champs obligatoires serviront comme identifiants uniques. Les champs de courriel facultatifs correspondent
+        aux courriels supplémentaires à qui la campagne sera envoyée.
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <MailingListSectionRow>
@@ -67,10 +66,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
         <MailingListSectionRow>
           <MailingListSectionCell>
             Email
-            <Typography
-              color={fr.colors.decisions.text.label.redMarianne.default}
-              component="span"
-            >
+            <Typography color={fr.colors.decisions.text.label.redMarianne.default} component="span">
               *
             </Typography>
           </MailingListSectionCell>
@@ -134,14 +130,8 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
             <MailingListSectionCell>
               <Select
                 label=""
-                state={
-                  errors.identifier_columns?.[index]?.message
-                    ? "error"
-                    : "default"
-                }
-                stateRelatedMessage={
-                  errors.identifier_columns?.[index]?.message
-                }
+                state={errors.identifier_columns?.[index]?.message ? "error" : "default"}
+                stateRelatedMessage={errors.identifier_columns?.[index]?.message}
                 nativeSelectProps={{
                   ...register(`identifier_columns.${index}.name`, {
                     required: "Obligatoire",
@@ -190,11 +180,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
         </Box>
         <Box>
           <Box mx={2} display="inline-block">
-            <Button
-              priority="tertiary"
-              disabled={isSubmitting}
-              onClick={onCancel}
-            >
+            <Button priority="tertiary" disabled={isSubmitting} onClick={onCancel}>
               Retour
             </Button>
           </Box>

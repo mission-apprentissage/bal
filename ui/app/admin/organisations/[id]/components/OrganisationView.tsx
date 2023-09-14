@@ -32,13 +32,7 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
           email_domains: {
             header: () => "Domaines",
             cell: ({ email_domains }) => {
-              return (
-                <ul>
-                  {email_domains?.map((domain: string) => (
-                    <li key={domain}>{domain}</li>
-                  ))}
-                </ul>
-              );
+              return <ul>{email_domains?.map((domain: string) => <li key={domain}>{domain}</li>)}</ul>;
             },
           },
         }}

@@ -94,10 +94,7 @@ const ChoixColonnesSortie: FC<Props> = ({
 
   useEffect(() => {
     if (webhookLbaColumnIndex !== -1) {
-      setValue(
-        `output_columns.${webhookLbaColumnIndex}.output`,
-        "lien_lba, lien_prdv"
-      );
+      setValue(`output_columns.${webhookLbaColumnIndex}.output`, "lien_lba, lien_prdv");
       setValue(`output_columns.${webhookLbaColumnIndex}.grouped`, true);
     }
   }, [webhookLbaColumnIndex]);
@@ -105,39 +102,24 @@ const ChoixColonnesSortie: FC<Props> = ({
   return (
     <Box>
       <Typography mb={4}>
-        Sélectionnez le ou les champs du fichier d’entrée que vous voulez
-        retrouver dans votre fichier de sortie. (Exemple : libellé établissement
-        et libellé formation).
+        Sélectionnez le ou les champs du fichier d’entrée que vous voulez retrouver dans votre fichier de sortie.
+        (Exemple : libellé établissement et libellé formation).
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <MailingListSectionRow>
           <MailingListSectionCell xs={3}>Nom de sortie</MailingListSectionCell>
-          <MailingListSectionCell xs={3}>
-            En-têtes des colonnes (fichier source)
-          </MailingListSectionCell>
+          <MailingListSectionCell xs={3}>En-têtes des colonnes (fichier source)</MailingListSectionCell>
           <MailingListSectionCell xs={3}>Ne pas écraser</MailingListSectionCell>
-          <MailingListSectionCell xs={3}>
-            3 premières lignes de données
-          </MailingListSectionCell>
+          <MailingListSectionCell xs={3}>3 premières lignes de données</MailingListSectionCell>
         </MailingListSectionRow>
         {fields.map((field, index) => (
           <MailingListSectionRow key={field.id}>
             <MailingListSectionCell xs={3}>
               <Input
                 label=""
-                state={
-                  errors.output_columns?.[index]?.output?.message
-                    ? "error"
-                    : "default"
-                }
-                stateRelatedMessage={
-                  errors.output_columns?.[index]?.output?.message
-                }
-                disabled={
-                  index === 0 ||
-                  outputColumns[index].column === WEBHOOK_LBA ||
-                  isSubmitting
-                }
+                state={errors.output_columns?.[index]?.output?.message ? "error" : "default"}
+                stateRelatedMessage={errors.output_columns?.[index]?.output?.message}
+                disabled={index === 0 || outputColumns[index].column === WEBHOOK_LBA || isSubmitting}
                 nativeInputProps={{
                   placeholder: "Nom de sortie",
                   ...register(`output_columns.${index}.output`, {
@@ -150,14 +132,8 @@ const ChoixColonnesSortie: FC<Props> = ({
               <Select
                 label=""
                 disabled={index === 0 || isSubmitting}
-                state={
-                  errors.output_columns?.[index]?.column?.message
-                    ? "error"
-                    : "default"
-                }
-                stateRelatedMessage={
-                  errors.output_columns?.[index]?.column?.message
-                }
+                state={errors.output_columns?.[index]?.column?.message ? "error" : "default"}
+                stateRelatedMessage={errors.output_columns?.[index]?.column?.message}
                 nativeSelectProps={{
                   ...register(`output_columns.${index}.column`, {
                     required: "Obligatoire",
@@ -171,24 +147,13 @@ const ChoixColonnesSortie: FC<Props> = ({
                   Colonne
                 </option>
                 <optgroup label="BAL">
-                  <option
-                    value={WEBHOOK_LBA}
-                    disabled={
-                      !!outputColumns.find((c) => c.column === WEBHOOK_LBA)
-                    }
-                  >
+                  <option value={WEBHOOK_LBA} disabled={!!outputColumns.find((c) => c.column === WEBHOOK_LBA)}>
                     {WEBHOOK_LBA}
                   </option>
                 </optgroup>
                 <optgroup label={source}>
                   {columns.map((column) => (
-                    <option
-                      key={column}
-                      disabled={
-                        !!outputColumns.find((c) => c.column === column)
-                      }
-                      value={column}
-                    >
+                    <option key={column} disabled={!!outputColumns.find((c) => c.column === column)} value={column}>
                       {column}
                       {index === 0 && secondaryEmail && `, ${secondaryEmail}`}
                     </option>
@@ -204,18 +169,12 @@ const ChoixColonnesSortie: FC<Props> = ({
                     {...register(`output_columns.${index}.grouped` as const)}
                     toggleSwitchProps={{
                       showCheckedHint: false,
-                      disabled:
-                        outputColumns[index].column === WEBHOOK_LBA ||
-                        isSubmitting,
+                      disabled: outputColumns[index].column === WEBHOOK_LBA || isSubmitting,
                       label: (
                         <Typography whiteSpace="nowrap">
                           Ne pas écraser
                           <Tooltip title="Ajoutera des colonnes prefixées par _ pour chacun des champs du groupe NE_PAS_ECRASER">
-                            <Box
-                              component="i"
-                              ml={1}
-                              className="ri-information-line"
-                            />
+                            <Box component="i" ml={1} className="ri-information-line" />
                           </Tooltip>
                         </Typography>
                       ),
@@ -226,8 +185,7 @@ const ChoixColonnesSortie: FC<Props> = ({
               )}
             </MailingListSectionCell>
             <MailingListSectionCell xs={3}>
-              {outputColumns[index].column &&
-                getDataFromSample(sample, outputColumns[index].column)}
+              {outputColumns[index].column && getDataFromSample(sample, outputColumns[index].column)}
               {index !== 0 && (
                 <Box ml="auto">
                   <Button
@@ -243,21 +201,14 @@ const ChoixColonnesSortie: FC<Props> = ({
         ))}
 
         <Box display="flex" justifyContent="center">
-          <Button
-            priority="secondary"
-            onClick={() => append({ output: "", column: "", grouped: false })}
-          >
+          <Button priority="secondary" onClick={() => append({ output: "", column: "", grouped: false })}>
             + Ajouter un champ
           </Button>
         </Box>
 
         <Box>
           <Box mx={2} display="inline-block">
-            <Button
-              priority="tertiary"
-              disabled={isSubmitting}
-              onClick={onCancel}
-            >
+            <Button priority="tertiary" disabled={isSubmitting} onClick={onCancel}>
               Retour
             </Button>
           </Box>

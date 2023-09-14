@@ -16,8 +16,7 @@ import Toast, { useToast } from "../../../../components/toast/Toast";
 import { apiGet, apiPost } from "../../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../../components/breadcrumb/Breadcrumb";
 
-interface FormValues
-  extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
+interface FormValues extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
   file: FileList;
   should_import_content: boolean;
   has_new_type_document: boolean;
@@ -116,9 +115,7 @@ const AdminImportPage = () => {
             <option value="" disabled hidden>
               Choisir un type de document
             </option>
-            {types?.map((type) => (
-              <option key={type}>{type}</option>
-            ))}
+            {types?.map((type) => <option key={type}>{type}</option>)}
           </Select>
 
           <ToggleSwitchInput
@@ -166,14 +163,10 @@ const AdminImportPage = () => {
               accept:
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.xlsx,application/vnd.ms-excel,.xls,.csv, text/csv",
               ...register("file", {
-                required:
-                  "Obligatoire: Vous devez ajouter un fichier à importer",
+                required: "Obligatoire: Vous devez ajouter un fichier à importer",
                 validate: {
                   notEmpty: (value) => {
-                    return (
-                      (value && value.length > 0) ||
-                      "Obligatoire: Vous devez ajouter un fichier à importer"
-                    );
+                    return (value && value.length > 0) || "Obligatoire: Vous devez ajouter un fichier à importer";
                   },
                 },
               }),

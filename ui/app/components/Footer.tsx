@@ -1,7 +1,4 @@
-import {
-  Footer as DSFRFooter,
-  FooterBottomItem,
-} from "@codegouvfr/react-dsfr/Footer";
+import { Footer as DSFRFooter, FooterBottomItem } from "@codegouvfr/react-dsfr/Footer";
 import Link from "next/link";
 // import { usePlausible } from "next-plausible";
 import React from "react";
@@ -20,8 +17,7 @@ const Footer = () => {
           <Link href="https://beta.gouv.fr/startups/?incubateur=mission-apprentissage">
             Mission interministérielle pour l'apprentissage
           </Link>{" "}
-          développe plusieurs services destinés à faciliter les entrées en
-          apprentissage.
+          développe plusieurs services destinés à faciliter les entrées en apprentissage.
         </span>
       }
       operatorLogo={{

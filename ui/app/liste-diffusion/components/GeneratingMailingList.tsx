@@ -46,12 +46,10 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
             height={90}
           />
         </Box>
+        <Typography mb="2">Veuillez patienter pendant la génération de votre liste de diffusion.</Typography>
         <Typography mb="2">
-          Veuillez patienter pendant la génération de votre liste de diffusion.
-        </Typography>
-        <Typography mb="2">
-          Cette opération peut durer jusqu’à 2 heures selon la taille du
-          fichier, vous pouvez quitter cette page et revenir plus tard.
+          Cette opération peut durer jusqu’à 2 heures selon la taille du fichier, vous pouvez quitter cette page et
+          revenir plus tard.
         </Typography>
         <Typography mb="2">Progression : {progression} %</Typography>
       </CallOut>

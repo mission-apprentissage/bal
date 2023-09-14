@@ -13,12 +13,7 @@ interface Props {
 const PersonView: FC<Props> = ({ person }) => {
   return (
     <>
-      <Breadcrumb
-        pages={[
-          PAGES.adminPersons(),
-          PAGES.adminViewPerson(person._id as unknown as string),
-        ]}
-      />
+      <Breadcrumb pages={[PAGES.adminPersons(), PAGES.adminViewPerson(person._id as unknown as string)]} />
       <Typography variant="h2" gutterBottom>
         Fiche personne
       </Typography>
@@ -50,9 +45,7 @@ const PersonView: FC<Props> = ({ person }) => {
                   iconId="fr-icon-arrow-right-line"
                   iconPosition="right"
                   linkProps={{
-                    href: PAGES.adminViewOrganisation(
-                      organisation._id as unknown as string
-                    ).path,
+                    href: PAGES.adminViewOrganisation(organisation._id as unknown as string).path,
                   }}
                   priority="tertiary no outline"
                 >
