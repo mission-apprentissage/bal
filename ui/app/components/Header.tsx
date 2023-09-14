@@ -1,6 +1,6 @@
 import { Header as DSFRHeader, HeaderProps } from "@codegouvfr/react-dsfr/Header";
 import { MainNavigationProps } from "@codegouvfr/react-dsfr/MainNavigation";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { useAuth } from "../../context/AuthContext";
 import { apiGet } from "../../utils/api.utils";
@@ -9,19 +9,20 @@ import { PAGES } from "./breadcrumb/Breadcrumb";
 export const Header = () => {
   const { user, setUser } = useAuth();
   const { push } = useRouter();
+  const pathname = usePathname();
 
   const handleLogout = async () => {
     await apiGet("/auth/logout", {});
     setUser();
-    push("/");
+    push(PAGES.homepage().path);
   };
 
   let navigation: MainNavigationProps.Item[] = [
     {
-      isActive: true,
+      isActive: pathname === PAGES.homepage().path,
       text: "Accueil",
       linkProps: {
-        href: "/",
+        href: PAGES.homepage().path,
       },
     },
   ];
@@ -31,6 +32,7 @@ export const Header = () => {
       ...navigation,
       {
         text: "API",
+        isActive: [PAGES.usageApiValidation().path, PAGES.usageApiHealthcheck().path].includes(pathname),
         menuLinks: [
           {
             linkProps: {
@@ -48,6 +50,7 @@ export const Header = () => {
       },
       {
         text: PAGES.listeDiffusion().title,
+        isActive: pathname === PAGES.listeDiffusion().path,
         linkProps: {
           href: PAGES.listeDiffusion().path,
         },
@@ -60,6 +63,12 @@ export const Header = () => {
       ...navigation,
       {
         text: "Administration",
+        isActive: [
+          PAGES.adminUsers().path,
+          PAGES.adminPersons().path,
+          PAGES.adminOrganisations().path,
+          PAGES.adminFichier().path,
+        ].includes(pathname),
         menuLinks: [
           {
             text: PAGES.adminUsers().title,
@@ -92,7 +101,7 @@ export const Header = () => {
 
   const loggedOut: HeaderProps.QuickAccessItem[] = [
     {
-      iconId: "ri-account-box-line",
+      iconId: "fr-icon-lock-line",
       linkProps: {
         href: PAGES.connexion().path,
       },
@@ -105,7 +114,7 @@ export const Header = () => {
       linkProps: {
         href: PAGES.compteProfil().path,
       },
-      iconId: "ri-account-box-line",
+      iconId: "fr-icon-account-line",
       text: "Mon compte",
     },
     {
@@ -113,7 +122,7 @@ export const Header = () => {
         onClick: handleLogout,
       },
       text: "Se deconnecter",
-      iconId: "ri-logout-box-line",
+      iconId: "fr-icon-logout-box-r-line",
     },
   ];
 
