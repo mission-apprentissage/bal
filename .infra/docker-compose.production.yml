@@ -11,7 +11,9 @@ x-deploy-default: &deploy-default
   rollback_config:
     parallelism: 0
   restart_policy:
-    window: 5s
+    window: 360s
+    # Max 24hours
+    max_attempts: 240
 
 x-default: &default
   networks:
@@ -75,7 +77,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: docker.json.bal.{{env_type}}.ui
+        tag: docker.txt.bal.{{env_type}}.ui
         fluentd-async: "true"
 
   metabase:
