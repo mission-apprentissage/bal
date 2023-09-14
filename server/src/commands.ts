@@ -8,12 +8,22 @@ import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
 import { server } from "@/modules/server/server";
 
 import { closeSentry, initSentryProcessor } from "./common/services/sentry/sentry";
+import { sleep } from "./common/utils/asyncUtils";
 import config from "./config";
 import { addJob, processor } from "./modules/jobs/jobs_actions";
 
 program
   .configureHelp({
     sortSubcommands: true,
+  })
+  .hook("preAction", (_, actionCommand) => {
+    const command = actionCommand.name();
+    // on définit le module du logger en global pour distinguer les logs des jobs
+    if (command !== "start") {
+      logger.fields.module = `cli:${command}`;
+      // Pas besoin d'init Sentry dans le cas du server car il est start automatiquement
+      initSentryProcessor();
+    }
   })
   .hook("postAction", async () => {
     await closeMongodbConnection();
@@ -22,18 +32,14 @@ program
 
 async function startProcessor(signal: AbortSignal) {
   logger.info(`Process jobs queue - start`);
-  await addJob(
-    {
-      name: "crons:init",
-      sync: true,
-    },
-    { runningLogs: true }
-  );
+  await addJob({
+    name: "crons:init",
+    queued: true,
+  });
 
   await processor(signal);
   logger.info(`Processor shut down`);
 }
-
 function createProcessExitSignal() {
   const abortController = new AbortController();
 
@@ -44,6 +50,7 @@ function createProcessExitSignal() {
         if (shutdownInProgress) {
           const message = `Server shut down (FORCED) (signal=${signal})`;
           logger.warn(message);
+          // eslint-disable-next-line no-process-exit
           process.exit(1);
         }
 
@@ -112,10 +119,36 @@ program
   .command("processor")
   .description("Run job processor")
   .action(async () => {
-    initSentryProcessor();
     const signal = createProcessExitSignal();
+    if (config.disable_processors) {
+      // The processor will exit, and be restarted by docker every day
+      await sleep(24 * 3_600_000, signal);
+      return;
+    }
+
     await startProcessor(signal);
   });
+
+function createJobAction(name: string) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return async (options: any) => {
+    try {
+      const { queued = false, ...payload } = options;
+      const exitCode = await addJob({
+        name,
+        queued,
+        payload,
+      });
+
+      if (exitCode) {
+        program.error("Command failed", { exitCode });
+      }
+    } catch (err) {
+      logger.error(err);
+      program.error("Command failed", { exitCode: 2 });
+    }
+  };
+}
 
 program
   .command("users:create")
@@ -125,168 +158,64 @@ program
   .requiredOption("-oId, --organisationId <string>", "Organisation Id")
   .option("-a, --admin", "administrateur")
   .option("-s, --sync", "Run job synchronously")
-  .action(async ({ email, password, organisationId, admin = false, sync }) => {
-    const exitCode = await addJob({
-      name: "users:create",
-      payload: {
-        email,
-        password,
-        is_admin: admin,
-        organisation_id: organisationId,
-      },
-      sync,
-    });
-
-    if (exitCode) {
-      program.error("Command failed", { exitCode });
-    }
-  });
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("users:create"));
 
 program
   .command("seed")
   .description("Seed database")
-  .action(async () => {
-    const exitCode = await addJob(
-      {
-        name: "seed",
-        sync: true,
-      },
-      { runningLogs: true }
-    );
-
-    if (exitCode) {
-      program.error("Command failed", { exitCode });
-    }
-  });
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("seed"));
 
 program
   .command("clear")
   .description("Clear database")
-  .option("-s, --sync", "Run job synchronously")
-  .action(async ({ sync }) => {
-    const exitCode = await addJob(
-      {
-        name: "clear",
-        sync,
-      },
-      { runningLogs: true }
-    );
-
-    if (exitCode) {
-      program.error("Command failed", { exitCode });
-    }
-  });
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("clear"));
 
 program
   .command("db:validate")
   .description("Validate Documents")
-  .option("-s, --sync", "Run job synchronously")
-  .action(async ({ sync }) => {
-    const exitCode = await addJob(
-      {
-        name: "db:validate",
-        sync,
-      },
-      { runningLogs: true }
-    );
-
-    if (exitCode) {
-      program.error("Command failed", { exitCode });
-    }
-  });
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("db:validate"));
 
 program
   .command("migrations:up")
   .description("Run migrations up")
-  .action(async () => {
-    const exitCode = await addJob(
-      {
-        name: "migrations:up",
-        sync: true,
-      },
-      { runningLogs: true }
-    );
-    if (exitCode) {
-      program.error("Command failed", { exitCode });
-    }
-  });
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("migrations:up"));
 
 program
   .command("migrations:status")
   .description("Check migrations status")
-  .action(async () => {
-    const exitCode = await addJob(
-      {
-        name: "migrations:status",
-        sync: true,
-      },
-      { runningLogs: false }
-    );
-    if (exitCode) {
-      program.error("Command failed", { exitCode });
-    }
-  });
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("migrations:status"));
 
 program
   .command("migrations:create")
   .description("Run migrations create")
   .requiredOption("-d, --description <string>", "description")
-  .action(async ({ description }) => {
-    const exitCode = await addJob({
-      name: "migrations:create",
-      payload: { description },
-      sync: true,
-    });
-    if (exitCode) {
-      program.error("Command failed", { exitCode });
-    }
-  });
+  .action(createJobAction("migrations:create"));
 
 program
   .command("indexes:recreate")
   .description("Drop and recreate indexes")
   .option("-d, --drop", "Drop indexes before recreating them")
-  .option("-s, --sync", "Run job synchronously")
-  .action(async ({ drop, sync }) => {
-    const exitCode = await addJob({
-      name: "indexes:recreate",
-      payload: { drop },
-      sync,
-    });
-    if (exitCode) {
-      program.error("Command failed", { exitCode });
-    }
-  });
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("indexes:recreate"));
 
 program
   .command("import:document")
   .description("Import document content")
-  .requiredOption("-dId, --documentId <string>", "Document Id")
-  .option("-s, --sync", "Run job synchronously")
-  .action(async ({ documentId, sync }) => {
-    const exitCode = await addJob({
-      name: "import:document",
-      payload: { document_id: new ObjectId(documentId) },
-      sync,
-    });
-    if (exitCode) {
-      program.error("Command failed", { exitCode });
-    }
-  });
+  .requiredOption("-dId, --documentId <string>", "Document Id", (documentId) => new ObjectId(documentId))
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("import:document"));
 
 program
   .command("documents:save-columns")
   .description("Gets columns from documents and save them in database")
-  .option("-s, --sync", "Run job synchronously")
-  .action(async ({ sync }) => {
-    const exitCode = await addJob({
-      name: "documents:save-columns",
-      sync,
-    });
-    if (exitCode) {
-      program.error("Command failed", { exitCode });
-    }
-  });
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("documents:save-columns"));
 
 program.hook("preAction", (_, actionCommand) => {
   const command = actionCommand.name();

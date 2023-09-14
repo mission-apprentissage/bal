@@ -44,6 +44,7 @@ export const createMailingList = async (data: Omit<IMailingList, "_id" | "status
     payload: {
       mailing_list_id: mailingListId.toString(),
     },
+    queued: true,
   });
 };
 

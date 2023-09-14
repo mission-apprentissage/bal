@@ -38,76 +38,60 @@ export const CRONS: Record<string, CronDef> = {
       return stderr ? 1 : 0;
     },
   },
-  // "Run every 2 minutes dummy": {
-  //   name: "Run every 2 minutes dummy",
-  //   cron_string: "*/2 * * * *",
-  //   handler: async () => {
-  //     logger.info(`Dummy 2 minutes`);
-  //     return 0;
-  //   },
-  // },
 };
 
-export async function runJob(
-  job: IJob,
-  options: { runningLogs: boolean } = {
-    runningLogs: true,
-  }
-): Promise<number> {
-  return executeJob(
-    job,
-    async () => {
-      if (job.type === "cron_task") {
-        return CRONS[job.name].handler();
+export async function runJob(job: IJob): Promise<number> {
+  return executeJob(job, async () => {
+    if (job.type === "cron_task") {
+      return CRONS[job.name].handler();
+    }
+    switch (job.name) {
+      case "seed":
+        return seed();
+      case "clear":
+        return clear();
+      case "users:create":
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return createUser(job.payload as any);
+      case "indexes:recreate":
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return recreateIndexes(job.payload as any);
+      case "db:validate":
+        return validateModels();
+      case "migrations:up": {
+        await upMigration();
+        // Validate all documents after the migration
+        await addJob({ name: "db:validate", queued: true });
+        return;
       }
-      switch (job.name) {
-        case "seed":
-          return seed();
-        case "clear":
-          return clear();
-        case "users:create":
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return createUser(job.payload as any);
-        case "indexes:recreate":
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return recreateIndexes(job.payload as any);
-        case "db:validate":
-          return validateModels();
-        case "migrations:up": {
-          await upMigration();
-          // Validate all documents after the migration
-          await addJob({ name: "db:validate" });
-          return;
-        }
-        case "migrations:status": {
-          const pendingMigrations = await statusMigration();
-          console.log(`migrations-status=${pendingMigrations === 0 ? "synced" : "pending"}`);
-          return;
-        }
-        case "migrations:create":
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return createMigration(job.payload as any);
-        case "crons:init": {
-          await cronsInit();
-          return;
-        }
-        case "crons:scheduler":
-          return cronsScheduler();
+      case "migrations:status": {
+        const pendingMigrations = await statusMigration();
+        console.log(`migrations-status=${pendingMigrations === 0 ? "synced" : "pending"}`);
+        return;
+      }
+      case "migrations:create":
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return createMigration(job.payload as any);
+      case "crons:init": {
+        await cronsInit();
+        return;
+      }
+      case "crons:scheduler":
+        return cronsScheduler();
 
-        // BELOW SPECIFIC TO PRODUCT
-        case "import:document":
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return handleDocumentFileContent(job.payload as any);
-        case "documents:save-columns":
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return saveDocumentsColumns();
-        case "generate:mailing-list":
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return processMailingList(job.payload as any);
-        default:
-          return Promise.resolve();
+      // BELOW SPECIFIC TO PRODUCT
+      case "import:document":
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return handleDocumentFileContent(job.payload as any);
+      case "documents:save-columns":
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return saveDocumentsColumns();
+      case "generate:mailing-list":
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return processMailingList(job.payload as any);
+      default: {
+        logger.warn(`Job not found ${job.name}`);
       }
-    },
-    options
-  );
+    }
+  });
 }
