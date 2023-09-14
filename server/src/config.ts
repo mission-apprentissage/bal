@@ -93,6 +93,7 @@ const config = {
     testAdminName: env.get("MNA_BAL_TEST_ADMIN_NAME").default("").asString(),
     testAdminPwd: env.get("MNA_BAL_TEST_ADMIN_PWD").default("").asString(),
   },
+  disable_processors: env.get("MNA_BAL_DISABLE_PROCESSORS").default("false").asBool(),
 };
 
 export default config;

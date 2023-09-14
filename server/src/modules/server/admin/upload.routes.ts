@@ -88,6 +88,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
             payload: {
               document_id: document._id,
             },
+            queued: true,
           });
         }
 

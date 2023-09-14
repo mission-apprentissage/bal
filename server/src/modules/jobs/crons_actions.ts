@@ -35,7 +35,7 @@ export async function cronsInit() {
     });
   }
 
-  await addJob({ name: "crons:scheduler" });
+  await addJob({ name: "crons:scheduler", queued: true });
 }
 
 export async function cronsScheduler(): Promise<void> {
