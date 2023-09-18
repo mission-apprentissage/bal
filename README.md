@@ -298,4 +298,3 @@ yarn test --update
 - [Debugging](./docs/developpement/debug.md)
 - [Infrastructure](./docs/infrastructure.md)
 - [Sécurité](./docs/securite.md)
-
