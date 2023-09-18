@@ -87,12 +87,6 @@ const config = {
     encryptionKey: env.get("MNA_BAL_OVH_STORAGE_ENCRYPTION_KEY").required().asString(),
     uri: env.get("MNA_BAL_OVH_STORAGE_URI").required().asString(),
   },
-  tests: {
-    testUserName: env.get("MNA_BAL_TEST_USER_NAME").default("").asString(),
-    testUserPwd: env.get("MNA_BAL_TEST_USER_PWD").default("").asString(),
-    testAdminName: env.get("MNA_BAL_TEST_ADMIN_NAME").default("").asString(),
-    testAdminPwd: env.get("MNA_BAL_TEST_ADMIN_PWD").default("").asString(),
-  },
   disable_processors: env.get("MNA_BAL_DISABLE_PROCESSORS").default("false").asBool(),
 };
 

@@ -14,6 +14,8 @@ _mna-bal_completion() {
    "preview\:cleanup:'Remove preview from close pull-requests'"
    "vault\:edit:'Edit vault file'"
    "vault\:password:'Get vault password'"
+   "seed\:update:'Update seed using a database'"
+   "seed\:apply:'Apply seed to a database'"
   )
 
   # Set completion behavior based on the current word

@@ -32,10 +32,12 @@ program
 
 async function startProcessor(signal: AbortSignal) {
   logger.info(`Process jobs queue - start`);
-  await addJob({
-    name: "crons:init",
-    queued: true,
-  });
+  if (config.env !== "local") {
+    await addJob({
+      name: "crons:init",
+      queued: true,
+    });
+  }
 
   await processor(signal);
   logger.info(`Processor shut down`);
@@ -157,21 +159,8 @@ program
   .requiredOption("-p, --password <string>", "Mot de passe de l'utilisateur")
   .requiredOption("-oId, --organisationId <string>", "Organisation Id")
   .option("-a, --admin", "administrateur")
-  .option("-s, --sync", "Run job synchronously")
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("users:create"));
-
-program
-  .command("seed")
-  .description("Seed database")
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("seed"));
-
-program
-  .command("clear")
-  .description("Clear database")
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("clear"));
 
 program
   .command("db:validate")
