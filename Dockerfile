@@ -69,7 +69,7 @@ ENV NEXT_PUBLIC_VERSION=$PUBLIC_VERSION
 ARG PUBLIC_ENV
 ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
 
-RUN --mount=type=cache,target=/app/ui/.next/cache yarn --cwd ui build
+RUN yarn --cwd ui build
 
 # Production image, copy all the files and run next
 FROM node:20-alpine AS ui
