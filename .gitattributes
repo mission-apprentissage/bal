@@ -77,3 +77,4 @@
 *.otf       binary
 *.woff      binary
 *.woff2     binary
+.infra/files/configs/mongodb/seed.gpg filter=lfs diff=lfs merge=lfs -text
