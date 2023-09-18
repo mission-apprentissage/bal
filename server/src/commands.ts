@@ -159,7 +159,6 @@ program
   .requiredOption("-p, --password <string>", "Mot de passe de l'utilisateur")
   .requiredOption("-oId, --organisationId <string>", "Organisation Id")
   .option("-a, --admin", "administrateur")
-  .option("-s, --sync", "Run job synchronously")
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("users:create"));
 

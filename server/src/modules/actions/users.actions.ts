@@ -11,7 +11,7 @@ import { createPerson } from "./persons.actions";
 type ICreateUser = {
   email: string;
   password: string;
-  organisation_id: string;
+  organisationId: string;
   is_admin?: boolean;
 };
 
@@ -33,10 +33,10 @@ const DEFAULT_UNWIND = {
   preserveNullAndEmptyArrays: true,
 };
 
-export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
+export const createUser = async ({ organisationId, ...data }: ICreateUser) => {
   const person = await createPerson({
     email: data.email,
-    organisations: [organisation_id],
+    organisations: [organisationId],
     _meta: { source: "bal" },
   });
 
