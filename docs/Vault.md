@@ -61,5 +61,5 @@ git config --local diff.diff-vault.cachetextconv "false"
 Ensuite lors du merge, vous serez invité à entrer votre passphrase (3 fois) pour décrypter les fichiers (distant, local et resultat). Il sera également affiché un le `git diff` dans le stdout.
 
 ```bash
-git merge master
+git merge main
 ```

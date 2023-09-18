@@ -39,8 +39,8 @@ dans ce fichier en renseignant les informations suivantes :
 [<nom de l'environnement>]
 <IP>
 [<nom de l'environnement>:vars]
-dns_name=tdb-<nom de l'environnement>.apprentissage.beta.gouv.fr
-host_name=tdb-<nom de l'environnement>
+dns_name=bal-<nom de l'environnement>.apprentissage.beta.gouv.fr
+host_name=bal-<nom de l'environnement>
 env_type=recette
 ```
 
@@ -55,7 +55,7 @@ Vous pouvez maintenant poursuivre avec le [Deploiement de l'application](#deploi
 
 ### Release Application
 
-La création de release dépend de l'etat local de votre environnement, il est recommandé d'utiliser les releases créés automatiquement pour tout commit sur `master` via la Github Action `Release version`.
+La création de release dépend de l'etat local de votre environnement, il est recommandé d'utiliser les releases créés automatiquement pour tout commit sur `main` via la Github Action `Release version`.
 
 Si vous souhaitez effectuer une release manuelle veuillez vous référé à la section suivante.
 
