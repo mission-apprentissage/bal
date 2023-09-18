@@ -18,8 +18,6 @@ import { cronsInit, cronsScheduler } from "./crons_actions";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
 import { addJob, executeJob } from "./jobs_actions";
-import { clear } from "./seed/clear";
-import { seed } from "./seed/seed";
 
 interface CronDef {
   name: string;
@@ -46,10 +44,6 @@ export async function runJob(job: IJob): Promise<number> {
       return CRONS[job.name].handler();
     }
     switch (job.name) {
-      case "seed":
-        return seed();
-      case "clear":
-        return clear();
       case "users:create":
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return createUser(job.payload as any);

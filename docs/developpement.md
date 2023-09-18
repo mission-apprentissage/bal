@@ -115,7 +115,7 @@ De manière général, il est recommandé d'utiliser une session interactive.
 Vous pouvez utiliser la cli du server, dans la session interactive `docker compose run --rm -it server sh`:
 
 - `yarn cli --help`: List l'ensemble des commandes disponibles
-- `yarn cli seed`: Seed de la database
+- `yarn seed`: Seed de la database
 - `yarn cli migrations:status`: Vérification du status des migrations
 - `yarn cli migrations:up`: Execution des migrations
 - `yarn cli migrations:create`: Creation d'une nouvelle migration

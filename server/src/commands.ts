@@ -162,18 +162,6 @@ program
   .action(createJobAction("users:create"));
 
 program
-  .command("seed")
-  .description("Seed database")
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("seed"));
-
-program
-  .command("clear")
-  .description("Clear database")
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("clear"));
-
-program
   .command("db:validate")
   .description("Validate Documents")
   .option("-q, --queued", "Run job asynchronously", false)
