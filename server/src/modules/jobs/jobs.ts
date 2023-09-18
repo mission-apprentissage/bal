@@ -49,7 +49,6 @@ export async function runJob(job: IJob): Promise<number> {
         const { organisationId, ...rest } = job.payload as any;
         return createUser({ organisation_id: organisationId, ...rest });
       }
-      case "indexes:create":
       case "indexes:recreate":
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return recreateIndexes(job.payload as any);
