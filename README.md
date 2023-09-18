@@ -6,11 +6,21 @@
     - [Pré-requis](#pré-requis)
     - [Clé GPG](#clé-gpg)
   - [Développement](#développement)
-    - [Installation des dépendances](#installation-des-dépendances)
-    - [Developpement CLI mna-bal](#developpement-cli-mna-bal)
+    - [Gettting started](#gettting-started)
+    - [Détails des commandes globales](#détails-des-commandes-globales)
+      - [Installation .env](#installation-env)
+      - [Lancement de la stack compléte](#lancement-de-la-stack-compléte)
+      - [CLI mna-bal](#cli-mna-bal)
+      - [Lancement de l'application](#lancement-de-lapplication)
+      - [Gestion des services docker](#gestion-des-services-docker)
+      - [Hydratation du projet en local](#hydratation-du-projet-en-local)
+      - [Deploiement depuis l'environnement local](#deploiement-depuis-lenvironnement-local)
+      - [Gestion des migrations](#gestion-des-migrations)
+      - [Talisman](#talisman)
+      - [Vault](#vault)
+      - [Linter](#linter)
+      - [Release depuis l'environnement local](#release-depuis-lenvironnement-local)
     - [Variables d'environnement local](#variables-denvironnement-local)
-    - [Lancement de l'application](#lancement-de-lapplication)
-    - [Hydratation du projet en local](#hydratation-du-projet-en-local)
     - [Exécution des tests](#exécution-des-tests)
       - [Snapshots](#snapshots)
   - [Aller plus loin](#aller-plus-loin)
@@ -27,8 +37,19 @@ Avant d'installer le projet, assurez-vous d'avoir les éléments suivants :
 
 - Docker 23.03.0+
 - GPG
-- NodeJS 18+ (vous pouvez utiliser [n](https://github.com/tj/n#third-party-installers) pour l'installer)
-- Brew (jq)
+- NodeJS 20+ (vous pouvez utiliser [n](https://github.com/tj/n#third-party-installers) pour l'installer)
+
+- brew install yq https://github.com/mikefarah/yq
+- brew install git-lfs https://git-lfs.com/
+- brew install 1password-cli https://developer.1password.com/docs/cli/get-started/
+- Ansible 2.7+: `brew install ansible`
+- sshpass
+  ```bash
+  brew tap esolitos/ipa
+  brew install esolitos/ipa/sshpass
+  ```
+- pwgen: `brew install pwgen`
+- bash 5+: `brew install bash`
 
 ### Clé GPG
 
@@ -72,11 +93,14 @@ Voici les étapes pour créer votre clé GPG :
 **Une fois autorisé, vous aurez accès aux fichiers suivants :**
 
 - `.infra/vault/.vault-password.gpg`
-- `.infra/vault/habilitations.yml`
+
+6. Installer 1password cli et connecter votre compte
+
+- brew install 1password-cli https://developer.1password.com/docs/cli/get-started/
 
 ## Développement
 
-### Installation des dépendances
+### Gettting started
 
 Avant de lancer l'application, assurez-vous d'installer toutes les dépendances nécessaires en exécutant la commande suivante :
 
@@ -89,35 +113,157 @@ Cette commande mettra à jour les dépendances du projet.
 
 Le script vous demandera plusieurs fois la phrase secrète de votre clé GPG pour décrypter les variables d'environnement du vault.
 
-### Developpement CLI mna-bal
+```bash
+yarn dev
+yarn seed
+```
 
-Les principales opérations sont regroupée dans un CLI `.bin/mna-bal`, il est possible de liste l'ensemble des commandes disponible via `.bin/mna-bal help`.
+Vous pouvez maintenant accéder à l'application via l'URL [http://localhost:3000](http://localhost:3000)
 
-Il est également possible d'installer globallement l'exécutable via la commande `.bin/mna-bal bin:setup` upuis `compinit -C` ne fois installé il est possible d'utiliser la CLI via `mna-bal help` directement (n'oubliez pas d'ouvrir une nouvelle session de votre terminal).
+Vous pouvez maintenant accéder à l'API via l'URL [http://localhost:5001](http://localhost:5001)
 
-### Variables d'environnement local
+Vous pouvez maintenant accéder au SMTP via l'URL [http://localhost:8025](http://localhost:8025)
 
-Les variables d'environnement local du server sont stocké dans le vault (peut contenir des secrets). Si vous souhaitez overwwrite certaines variables ou changer le port de l'api par exemple, il est possible de créer un fichier `server/.env.local` et `ui/.env.local`
+### Détails des commandes globales
 
-### Lancement de l'application
+Les principales opérations sont regroupées dans le `package.json`.
+
+#### Installation .env
+
+```bash
+  yarn setup
+```
+
+installation ou mise à jour de vos fichiers d'environnement de développement depuis le vault.yml (`server/.env` et `ui/.env`)
+
+#### Lancement de la stack compléte
 
 Pour démarrer l'application en mode local, exécutez la commande suivante :
 
 ```bash
-yarn dev
+  yarn dev
 ```
+
+Lance la stack local de développement (server, ui, services)
 
 Cette commande démarre les containers définis dans le fichier `docker-compose.yml`.
 
-Une fois l'application démarrée, vous pourrez y accéder via l'URL [http://localhost](http://localhost)
-
-### Hydratation du projet en local
-
-Pour créer des jeux de test facilement il suffit de lancer les commandes suivante :
+#### CLI mna-bal
 
 ```bash
-yarn seed
+  yarn cli <command>
 ```
+
+commande pour lancer les commandes du cli mna-bal
+
+#### Lancement de l'application
+
+```bash
+  yarn server:dev
+```
+
+Lance le server en dev indépendamment de la stack
+
+```bash
+  yarn ui:dev
+```
+
+Lance l'ui en dev indépendamment de la stack
+
+#### Gestion des services docker
+
+Lance les services docker en local
+
+```bash
+  yarn services:start
+```
+
+---
+
+Stopper les services docker en local
+
+```bash
+  yarn services:stop
+```
+
+---
+
+Supprimer les services docker en local
+
+```bash
+  yarn services:clean
+```
+
+#### Hydratation du projet en local
+
+```bash
+  yarn seed <OPTIONAL:DB_URL>
+```
+
+Pour créer des jeux de test facilement il suffit de lancer les commandes suivante.
+Applique la base de données seed sur la base de données cible (par défaut la base de données locale)
+
+---
+
+Mise à jour de la base de données seed depuis votre local
+
+```bash
+  yarn seed:update
+```
+
+#### Deploiement depuis l'environnement local
+
+Deploie l'application sur l'environnement cible
+
+```bash
+  yarn deploy <environnement> <OPTIONAL:--user USERNAME>
+```
+
+> TODO: Optional only if 1password is configured
+
+#### Gestion des migrations
+
+Cli pour créer une migration
+
+```bash
+  yarn migration:create -d <name>
+```
+
+#### Talisman
+
+Ajouter une exception à talisman
+
+```bash
+  yarn talisman:add-exception
+```
+
+#### Vault
+
+Édition du vault ansible
+
+```bash
+  yarn vault:edit
+```
+
+#### Linter
+
+Lint global du projet
+
+```bash
+  yarn lint
+```
+
+#### Release depuis l'environnement local
+
+Création d'une release
+
+```bash
+  yarn release:interactive
+```
+
+### Variables d'environnement local
+
+Les variables d'environnement local du server sont stocké dans le vault (peut contenir des secrets). Si vous souhaitez overwwrite certaines variables ou changer le port de l'api par exemple, il est possible de créer un fichier `server/.env.local` et `ui/.env.local`
 
 ### Exécution des tests
 
@@ -145,6 +291,11 @@ yarn test --update
 
 ## Aller plus loin
 
-- [Développement](./docs/developping.md)
-- [Infrastructure](./docs/developping.md)
+- [Datasouces](./docs/DATASOURCES.md)
+- [Vault](./docs/Vault.md)
+- [Déploiement](./docs/deploy.md)
+- [Développement](./docs/developpement/developpement.md)
+- [Debugging](./docs/developpement/debug.md)
+- [Infrastructure](./docs/infrastructure.md)
 - [Sécurité](./docs/securite.md)
+
