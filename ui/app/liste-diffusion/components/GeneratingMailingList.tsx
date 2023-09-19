@@ -14,11 +14,11 @@ interface Props {
 }
 
 const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
-  const [done, setDone] = useState(false);
-  const [error, setError] = useState(false);
+  const [allowRefetch, setAllowRefetch] = useState(true);
 
   const { data: progress } = useQuery({
     queryKey: ["generatingMailingListProgress"],
+    enabled: allowRefetch,
     queryFn: async () => {
       if (!mailingList) {
         return null;
@@ -28,22 +28,23 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
         params: { id: mailingList._id },
       });
 
+      if (["finished", "blocked", "errored"].includes(data.status)) {
+        setAllowRefetch(false);
+      }
+
       if (data.status === "finished") {
         onDone();
-        setDone(true);
-      } else if (data.status === "errored") {
-        setError(true);
       }
 
       return data;
     },
-    refetchInterval: error || done ? false : 1000,
+    refetchInterval: 1000,
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const progression = Math.ceil(progress?.processed ?? 0);
 
-  if (done) {
+  if (progress?.status === "finished") {
     return (
       <Box my={2}>
         <Alert
@@ -55,7 +56,7 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
     );
   }
 
-  if (error) {
+  if (progress?.status === "errored") {
     return (
       <Box my={2}>
         <Alert
@@ -67,7 +68,7 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
     );
   }
 
-  if (!mailingList) {
+  if (!mailingList || !progress) {
     return null;
   }
 

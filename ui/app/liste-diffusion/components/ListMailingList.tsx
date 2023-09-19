@@ -51,6 +51,20 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             flex: 1,
           },
           {
+            field: "status",
+            headerName: "Statut",
+            width: 200,
+            valueFormatter: ({ value }) => {
+              return (
+                {
+                  processing: "En cours de génération",
+                  done: "Terminé",
+                  error: "Erreur",
+                }[value as string] ?? ""
+              );
+            },
+          },
+          {
             field: "created_at",
             headerName: "Date de génération",
             width: 200,
@@ -64,38 +78,47 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             headerName: "Actions",
             width: 100,
             getActions: ({ row }) => {
-              if (row.status === "processing") return [];
+              const actions = [];
 
-              return [
-                <Button
-                  key="download"
-                  iconId="fr-icon-download-line"
-                  linkProps={{
-                    href: generateUrl(`/mailing-lists/:id/download`, {
-                      params: {
-                        id: row._id,
-                      },
-                    }),
-                    target: undefined,
-                    rel: undefined,
-                  }}
-                  priority="tertiary no outline"
-                  title="Label buttons"
-                />,
-                <Button
-                  key="delete"
-                  iconId="ri-delete-bin-line"
-                  onClick={() => {
-                    setToDelete(row._id);
-                    modal.open();
-                  }}
-                  priority="tertiary no outline"
-                  title="Supprimer"
-                  style={{
-                    color: fr.colors.decisions.text.actionHigh.redMarianne.default,
-                  }}
-                />,
-              ];
+              if (row.status === "done") {
+                actions.push(
+                  <Button
+                    key="download"
+                    iconId="fr-icon-download-line"
+                    linkProps={{
+                      href: generateUrl(`/mailing-lists/:id/download`, {
+                        params: {
+                          id: row._id,
+                        },
+                      }),
+                      target: undefined,
+                      rel: undefined,
+                    }}
+                    priority="tertiary no outline"
+                    title="Label buttons"
+                  />
+                );
+              }
+
+              if (row.status !== "processing") {
+                actions.push(
+                  <Button
+                    key="delete"
+                    iconId="ri-delete-bin-line"
+                    onClick={() => {
+                      setToDelete(row._id);
+                      modal.open();
+                    }}
+                    priority="tertiary no outline"
+                    title="Supprimer"
+                    style={{
+                      color: fr.colors.decisions.text.actionHigh.redMarianne.default,
+                    }}
+                  />
+                );
+              }
+
+              return actions;
             },
           },
         ]}
