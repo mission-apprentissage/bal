@@ -3,11 +3,14 @@ import { fr } from "@codegouvfr/react-dsfr";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Box, Typography } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { IBody, IPostRoutes } from "shared";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
+import { IMailingListJson } from "shared/models/mailingList.model";
 
+import { apiGet } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import ChoixColonnesIdentifiant from "./components/ChoixColonnesIdentifiant";
 import ChoixColonnesSortie from "./components/ChoixColonnesSortie";
@@ -41,6 +44,25 @@ const NouvelleListePage = () => {
   const [email, setEmail] = useState<string>();
   const [secondaryEmail, setSecondaryEmail] = useState<string | undefined>();
   const { push } = useRouter();
+  const params = useSearchParams();
+
+  const { data: mailingList } = useQuery<IMailingListJson>({
+    queryKey: ["mailingLists"],
+    queryFn: async () => {
+      const data = await apiGet("/mailing-lists/:id", {
+        params: {
+          id: params.get("mailing_list_id") || "",
+        },
+      });
+
+      setSource(data.source);
+      setCampaignName(data.campaign_name);
+      setColumns(data.identifier_columns);
+
+      return data;
+    },
+    enabled: !!params.get("mailing_list_id"),
+  });
 
   const goToStep = (stepName: keyof typeof STEPS) => {
     // set step
@@ -86,7 +108,7 @@ const NouvelleListePage = () => {
           expanded={step === STEPS.CHOIX_SOURCE.number}
           onExpandedChange={() => {}}
         >
-          <ChoixSource onSuccess={handleSourceSelection} />
+          <ChoixSource mailingList={mailingList} onSuccess={handleSourceSelection} />
         </Accordion>
         <Accordion
           id={STEPS.CHOIX_IDENTIFIANT.id}
@@ -95,6 +117,7 @@ const NouvelleListePage = () => {
           label={STEPS.CHOIX_IDENTIFIANT.label}
         >
           <ChoixColonnesIdentifiant
+            mailingList={mailingList}
             columns={columns}
             onSuccess={handleIdentifierColumnsSelection}
             onCancel={() => goToStep("CHOIX_SOURCE")}
@@ -109,6 +132,7 @@ const NouvelleListePage = () => {
         >
           {campaignName && source && !!columns.length && identifierColumns && email ? (
             <ChoixColonnesSortie
+              mailingList={mailingList}
               sample={sample}
               columns={columns}
               source={source}

@@ -7,6 +7,7 @@ import { IMailingListJson } from "shared/models/mailingList.model";
 import Table from "../../../components/table/Table";
 import { apiDelete, generateUrl } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
+import { PAGES } from "../../components/breadcrumb/Breadcrumb";
 
 interface Props {
   mailingLists?: IMailingListJson[];
@@ -76,7 +77,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             field: "actions",
             type: "actions",
             headerName: "Actions",
-            width: 100,
+            width: 150,
             getActions: ({ row }) => {
               const actions = [];
 
@@ -102,6 +103,17 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
 
               if (row.status !== "processing") {
                 actions.push(
+                  <Button
+                    key="duplicate"
+                    iconId="ri-file-copy-line"
+                    linkProps={{
+                      href: `${PAGES.nouvelleListe().path}?mailing_list_id=${row._id}`,
+                      target: undefined,
+                      rel: undefined,
+                    }}
+                    priority="tertiary no outline"
+                    title="Label buttons"
+                  />,
                   <Button
                     key="delete"
                     iconId="ri-delete-bin-line"

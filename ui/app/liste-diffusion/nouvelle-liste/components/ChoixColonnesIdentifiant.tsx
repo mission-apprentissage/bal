@@ -3,10 +3,11 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { Box, Tooltip, Typography } from "@mui/material";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
+import { IMailingListJson } from "shared/models/mailingList.model";
 
 import { getFormattedSample } from "../mailingLists.utils";
 import EmailSample from "./EmailSample";
@@ -20,6 +21,7 @@ interface Props {
   columns: string[];
   sample: IDocumentContentJson[];
   onCancel: () => void;
+  mailingList?: IMailingListJson;
 }
 
 interface IIdentifierColumnForm {
@@ -28,20 +30,31 @@ interface IIdentifierColumnForm {
   identifier_columns: { name: string }[];
 }
 
-const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sample }) => {
+const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sample, mailingList }) => {
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
     register,
     control,
     watch,
+    setValue,
   } = useForm<IIdentifierColumnForm>({
     defaultValues: { identifier_columns: [], email: "", secondary_email: "" },
   });
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "identifier_columns",
   });
+
+  useEffect(() => {
+    if (mailingList) {
+      setValue("email", mailingList.email);
+      setValue("secondary_email", mailingList.secondary_email ?? "");
+      const identifierColumns = mailingList?.identifier_columns?.map((ic) => ({ name: ic }));
+      setValue("identifier_columns", identifierColumns);
+    }
+  }, [mailingList, columns]);
 
   const watchEmail = watch("email");
   const watchSecondaryEmail = watch("secondary_email");

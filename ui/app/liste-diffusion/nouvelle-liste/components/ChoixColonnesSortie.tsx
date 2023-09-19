@@ -6,6 +6,7 @@ import { FC } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
+import { IMailingListJson } from "shared/models/mailingList.model";
 
 import ToggleSwitchInput from "../../../../components/form/ToggleSwitchInput";
 import { apiPost } from "../../../../utils/api.utils";
@@ -26,6 +27,7 @@ interface Props {
   email: string;
   secondaryEmail?: string;
   sample: IDocumentContentJson[];
+  mailingList?: IMailingListJson;
 }
 
 type FormValues = IBody<IPostRoutes["/mailing-list"]>;
@@ -40,11 +42,21 @@ const ChoixColonnesSortie: FC<Props> = ({
   email,
   secondaryEmail,
   sample,
+  mailingList,
 }) => {
   const outputColumnDefaultValues = [{ output: "email", column: email, grouped: true }];
 
   for (const identifierColumn of identifierColumns) {
     outputColumnDefaultValues.push({ output: identifierColumn, column: identifierColumn, grouped: true });
+  }
+
+  if (mailingList) {
+    const outputColumns = mailingList?.output_columns
+      //filter already selected columns
+      .filter((c) => !outputColumnDefaultValues.find((oc) => oc.column === c.column))
+      .map((c) => ({ ...c, grouped: !c.grouped }));
+
+    outputColumnDefaultValues.push(...outputColumns);
   }
 
   outputColumnDefaultValues.push({ output: "", column: "", grouped: false });
