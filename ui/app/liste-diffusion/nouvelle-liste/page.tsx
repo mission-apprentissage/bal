@@ -47,7 +47,7 @@ const NouvelleListePage = () => {
   const params = useSearchParams();
 
   const { data: mailingList } = useQuery<IMailingListJson>({
-    queryKey: ["mailingLists"],
+    queryKey: ["mailingList"],
     queryFn: async () => {
       const data = await apiGet("/mailing-lists/:id", {
         params: {
