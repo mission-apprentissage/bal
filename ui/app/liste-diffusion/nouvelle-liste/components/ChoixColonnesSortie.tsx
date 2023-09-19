@@ -107,7 +107,7 @@ const ChoixColonnesSortie: FC<Props> = ({
         <MailingListSectionRow>
           <MailingListSectionCell xs={3}>Nom de sortie</MailingListSectionCell>
           <MailingListSectionCell xs={3}>En-têtes des colonnes (fichier source)</MailingListSectionCell>
-          <MailingListSectionCell xs={3}>Ne pas écraser</MailingListSectionCell>
+          <MailingListSectionCell xs={3}>Fusionner les valeurs</MailingListSectionCell>
           <MailingListSectionCell xs={3}>3 premières lignes de données</MailingListSectionCell>
         </MailingListSectionRow>
         {fields.map((field, index) => {
