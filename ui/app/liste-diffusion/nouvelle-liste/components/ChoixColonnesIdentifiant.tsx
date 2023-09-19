@@ -193,7 +193,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
         </Box>
         <Box>
           <Box mx={2} display="inline-block">
-            <Button priority="tertiary" disabled={isSubmitting} onClick={onCancel}>
+            <Button type="button" priority="tertiary" disabled={isSubmitting} onClick={onCancel}>
               Retour
             </Button>
           </Box>

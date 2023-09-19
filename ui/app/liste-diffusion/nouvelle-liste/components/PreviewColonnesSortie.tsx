@@ -15,7 +15,8 @@ const PreviewColonnesSortie: FC<Props> = ({ columns }) => {
 
   columns.reduce(
     (acc, column) => {
-      if (column.grouped) {
+      if (!column.output || column.output === "") return acc;
+      if (!column.grouped) {
         if (column.column === "WEBHOOK_LBA") {
           acc.groupedColumns.push("lien_lba");
           acc.groupedColumns.push("lien_prdv");
