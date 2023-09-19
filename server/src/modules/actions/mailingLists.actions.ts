@@ -72,6 +72,16 @@ interface IPayload {
   mailing_list_id: string;
 }
 
+export const handleMailingListJob = async (payload: IPayload) => {
+  try {
+    return processMailingList(payload);
+  } catch (error) {
+    logger.error(error);
+    await updateMailingList({ _id: new ObjectId(payload.mailing_list_id) }, { status: MAILING_LIST_STATUS.ERROR });
+    throw error;
+  }
+};
+
 export const processMailingList = async (payload: IPayload) => {
   const mailingList = await findMailingList({
     _id: new ObjectId(payload.mailing_list_id),
@@ -196,7 +206,13 @@ const mergeLbaData = async (documentContents: IDocumentContent[]) => {
     rncp: (content.content?.rncp as string) ?? "", // pas présent dans le fichier
   }));
 
-  const trainingLinks = (await getTrainingLinks(payload)) as TrainingLink[];
+  let trainingLinks: TrainingLink[] = [];
+
+  try {
+    trainingLinks = await getTrainingLinks(payload);
+  } catch (error) {
+    logger.error(error);
+  }
 
   return documentContents.map((dc) => {
     const trainingLink = trainingLinks.find((tl) => tl.id === dc._id.toString());
@@ -264,16 +280,6 @@ const getOutputColumnsWithLba = (mailingList: IMailingList) => {
     // LBA columns
     { column: "lien_lba", output: "lien_lba", grouped: true },
     { column: "lien_prdv", output: "lien_prdv", grouped: true },
-    {
-      column: "libelle_etab_accueil",
-      output: "libelle_etab_accueil",
-      grouped: true,
-    },
-    {
-      column: "libelle_formation",
-      output: "libelle_formation",
-      grouped: true,
-    },
     // remove WEBHOOK_LBA column
   ].filter((c) => c.column !== MAILING_LIST_WEBHOOK_LBA);
 };
