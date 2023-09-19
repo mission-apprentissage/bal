@@ -5,7 +5,7 @@ import { stringify } from "csv-stringify";
 import { Filter, FindCursor, FindOptions, ObjectId, Sort } from "mongodb";
 import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
-import { IMailingList, MAILING_LIST_STATUS } from "shared/models/mailingList.model";
+import { IMailingList, MAILING_LIST_MAX_ITERATION, MAILING_LIST_STATUS } from "shared/models/mailingList.model";
 
 import logger from "@/common/logger";
 import * as crypto from "@/common/utils/cryptoUtils";
@@ -334,7 +334,7 @@ export const createMailingListFile = async (mailingList: IMailingList, document:
           flat[key] = line?.[key] ?? line.wishes[0]?.[key] ?? "";
         }
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < MAILING_LIST_MAX_ITERATION; i++) {
           for (const key of keys) {
             flat[`${key}_${i + 1}`] = line.wishes[i]?.[key] ?? "";
           }

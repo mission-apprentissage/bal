@@ -9,9 +9,10 @@ import { IDocumentContentJson } from "shared/models/documentContent.model";
 
 import ToggleSwitchInput from "../../../../components/form/ToggleSwitchInput";
 import { apiPost } from "../../../../utils/api.utils";
-import { getDataFromSample } from "../mailingLists.utils";
+import { getFormattedSample } from "../mailingLists.utils";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
+import PreviewColonnesSortie from "./PreviewColonnesSortie";
 
 const WEBHOOK_LBA = "WEBHOOK_LBA";
 
@@ -77,6 +78,7 @@ const ChoixColonnesSortie: FC<Props> = ({
       ],
     },
   });
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "output_columns",
@@ -185,7 +187,7 @@ const ChoixColonnesSortie: FC<Props> = ({
               )}
             </MailingListSectionCell>
             <MailingListSectionCell xs={3}>
-              {outputColumns[index].column && getDataFromSample(sample, outputColumns[index].column)}
+              {outputColumns[index].column && getFormattedSample(sample, outputColumns[index].column)}
               {index !== 0 && (
                 <Box ml="auto">
                   <Button
@@ -205,6 +207,8 @@ const ChoixColonnesSortie: FC<Props> = ({
             + Ajouter un champ
           </Button>
         </Box>
+
+        <PreviewColonnesSortie columns={outputColumns} />
 
         <Box>
           <Box mx={2} display="inline-block">

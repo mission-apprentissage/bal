@@ -193,7 +193,9 @@ export const getDocumentColumns = async (type: string): Promise<string[]> => {
 };
 
 export const getDocumentSample = async (type: string): Promise<IDocumentContent[]> => {
-  return await getDbCollection("documentContents").find({ type_document: type }).limit(10).toArray();
+  return await getDbCollection("documentContents")
+    .aggregate<IDocumentContent>([{ $match: { type_document: type } }, { $sample: { size: 10 } }])
+    .toArray();
 };
 
 interface ICreateEmptyDocumentOptions {

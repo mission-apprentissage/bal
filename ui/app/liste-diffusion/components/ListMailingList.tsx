@@ -64,6 +64,8 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             headerName: "Actions",
             width: 100,
             getActions: ({ row }) => {
+              if (row.status === "processing") return [];
+
               return [
                 <Button
                   key="download"

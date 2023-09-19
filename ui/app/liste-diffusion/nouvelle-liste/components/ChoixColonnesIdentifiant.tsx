@@ -1,4 +1,5 @@
 import { fr } from "@codegouvfr/react-dsfr";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { Box, Tooltip, Typography } from "@mui/material";
@@ -7,7 +8,8 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
 
-import { getDataFromSample } from "../mailingLists.utils";
+import { getFormattedSample } from "../mailingLists.utils";
+import EmailSample from "./EmailSample";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
 
@@ -52,6 +54,15 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
 
   return (
     <Box>
+      {columns.length === 0 && (
+        <Box my={2}>
+          <Alert
+            description="Il est nécessaire de sélectionner une source à l'étape 1 pour continuer."
+            severity="info"
+            title="Selectionner une source"
+          />
+        </Box>
+      )}
       <Typography mb={4}>
         Les champs obligatoires serviront comme identifiants uniques. Les champs de courriel facultatifs correspondent
         aux courriels supplémentaires à qui la campagne sera envoyée.
@@ -92,7 +103,9 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
               ))}
             </Select>
           </MailingListSectionCell>
-          <MailingListSectionCell>{watchEmail && getDataFromSample(sample, watchEmail)}</MailingListSectionCell>
+          <MailingListSectionCell>
+            {watchEmail && <EmailSample sample={sample} emailKey={watchEmail} />}
+          </MailingListSectionCell>
           <MailingListSectionCell>ou</MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
@@ -120,7 +133,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
             </Select>
           </MailingListSectionCell>
           <MailingListSectionCell>
-            {watchSecondaryEmail && getDataFromSample(sample, watchSecondaryEmail)}
+            {watchSecondaryEmail && <EmailSample sample={sample} emailKey={watchSecondaryEmail} />}
           </MailingListSectionCell>
         </MailingListSectionRow>
 
@@ -160,7 +173,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
             </MailingListSectionCell>
             <MailingListSectionCell>
               {watchIdentifierColumns?.[index]?.name &&
-                getDataFromSample(sample, watchIdentifierColumns?.[index]?.name)}
+                getFormattedSample(sample, watchIdentifierColumns?.[index]?.name)}
 
               <Box ml="auto">
                 <Button

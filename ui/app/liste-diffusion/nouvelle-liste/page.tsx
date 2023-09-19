@@ -1,6 +1,7 @@
 "use client";
 import { fr } from "@codegouvfr/react-dsfr";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -48,14 +49,14 @@ const NouvelleListePage = () => {
     <>
       <Breadcrumb pages={[PAGES.listeDiffusion(), PAGES.nouvelleListe()]} />
       <Typography variant="h2" gutterBottom>
-        Créer nouvelle liste
+        {PAGES.nouvelleListe().title}
       </Typography>
 
       <Box className={fr.cx("fr-accordions-group")} my={4}>
-        <Accordion label="Choix de la source" expanded={step === 0} onExpandedChange={() => {}}>
+        <Accordion label="1. Choix de la source" expanded={step === 0} onExpandedChange={() => {}}>
           <ChoixSource onSuccess={handleSourceSelection} />
         </Accordion>
-        <Accordion expanded={step === 1} onExpandedChange={() => {}} label="Champs d'identification et de contact">
+        <Accordion expanded={step === 1} onExpandedChange={() => {}} label="2. Champs d'identification et de contact">
           <ChoixColonnesIdentifiant
             columns={columns}
             onSuccess={handleIdentifierColumnsSelection}
@@ -66,7 +67,7 @@ const NouvelleListePage = () => {
         <Accordion
           expanded={step === 2}
           onExpandedChange={() => {}}
-          label="Champs à afficher dans le fichier de sortie"
+          label="3. Champs à afficher dans le fichier de sortie"
         >
           {campaignName && source && !!columns.length && identifierColumns && email ? (
             <ChoixColonnesSortie
@@ -81,7 +82,13 @@ const NouvelleListePage = () => {
               onCancel={() => setStep(1)}
             />
           ) : (
-            <></>
+            <Box my={2}>
+              <Alert
+                title="Compléter les étapes précédentes"
+                description="Il est nécessaire de compléter les étapes précédentes pour continuer."
+                severity="info"
+              />
+            </Box>
           )}
         </Accordion>
       </Box>

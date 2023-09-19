@@ -10,6 +10,8 @@ export enum MAILING_LIST_STATUS {
   ERROR = "error",
 }
 
+export const MAILING_LIST_MAX_ITERATION = 10;
+
 const collectionName = "mailingLists" as const;
 
 const indexes: IModelDescriptor["indexes"] = [

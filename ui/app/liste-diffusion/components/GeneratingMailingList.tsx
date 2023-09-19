@@ -1,30 +1,38 @@
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { IJobJson } from "shared/models/job.model";
 import { IMailingListJson } from "shared/models/mailingList.model";
 
 import { apiGet } from "../../../utils/api.utils";
 
 interface Props {
-  mailingList: IMailingListJson;
+  mailingList?: IMailingListJson;
   onDone: () => void;
 }
 
 const doneStatuses: IJobJson["status"][] = ["finished", "errored", "blocked"];
 
 const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
+  const [done, setDone] = useState(false);
+
   const { data: progress } = useQuery({
     queryKey: ["generatingMailingListProgress"],
     queryFn: async () => {
+      if (!mailingList) {
+        return null;
+      }
+
       const data = await apiGet("/mailing-lists/:id/progress", {
         params: { id: mailingList._id },
       });
 
       if (doneStatuses.includes(data.status)) {
         onDone();
+        setDone(true);
       }
 
       return data;
@@ -34,6 +42,22 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const progression = Math.ceil(progress?.processed ?? 0);
+
+  if (done) {
+    return (
+      <Box my={2}>
+        <Alert
+          title="Votre liste de diffusion est prête !"
+          description="Retrouvez votre liste de diffusion en première ligne de votre tableau."
+          severity="success"
+        />
+      </Box>
+    );
+  }
+
+  if (!mailingList) {
+    return null;
+  }
 
   return (
     <Box textAlign="center" my={4}>
