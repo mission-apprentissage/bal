@@ -3,8 +3,10 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { FC, useState } from "react";
 import { IMailingListJson } from "shared/models/mailingList.model";
+import { IResErrorJson } from "shared/routes/common.routes";
 
 import Table from "../../../components/table/Table";
+import Toast, { useToast } from "../../../components/toast/Toast";
 import { apiDelete, generateUrl } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 import { PAGES } from "../../components/breadcrumb/Breadcrumb";
@@ -22,6 +24,7 @@ const modal = createModal({
 const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
   const [toDelete, setToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { toast, setToast, handleClose } = useToast();
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -29,6 +32,15 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
       if (!toDelete) throw new Error("Nothing to delete");
       await apiDelete(`/mailing-list/:id`, { params: { id: toDelete } });
       onDelete?.();
+    } catch (error) {
+      console.error(error);
+      const serverError = error as IResErrorJson;
+      setToast({
+        severity: "error",
+        message: `Une erreur est survenue lors de la suppression de la liste de diffusion${
+          serverError?.message ? ` : ${serverError.message}` : ""
+        }`,
+      });
     } finally {
       setToDelete(null);
       setIsDeleting(false);
@@ -145,16 +157,16 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
           },
           {
             iconId: "ri-delete-bin-line",
-            onClick: () => {
-              handleDelete();
-            },
+            onClick: handleDelete,
             children: "Supprimer le fichier",
             disabled: isDeleting,
+            doClosesModal: false,
           },
         ]}
       >
         Vous allez supprimer la liste de diffusion. Cette action est irréversible.
       </modal.Component>
+      <Toast severity={toast?.severity} message={toast?.message} handleClose={handleClose} />
     </>
   );
 };

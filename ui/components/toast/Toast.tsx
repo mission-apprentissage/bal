@@ -4,6 +4,7 @@ import { FC, useState } from "react";
 interface Props extends SnackbarProps {
   severity?: AlertProps["severity"];
   message?: string;
+  handleClose?: (event?: React.SyntheticEvent | Event, reason?: string) => void;
 }
 
 interface UseToast {
@@ -14,21 +15,21 @@ interface UseToast {
 export const useToast = () => {
   const [toast, setToast] = useState<UseToast | undefined>();
 
-  const close = () => setToast(undefined);
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
-  return { toast, setToast, close };
+    setToast(undefined);
+  };
+
+  return { toast, setToast, handleClose };
 };
 
-const Toast: FC<Props> = ({ severity, message, onClose, ...rest }) => {
+const Toast: FC<Props> = ({ severity, message, handleClose, ...rest }) => {
   return (
-    <Snackbar open={!!message} autoHideDuration={4000} {...rest}>
-      <Alert
-        severity={severity}
-        sx={{ width: "100%" }}
-        onClose={(e) => {
-          onClose?.(e, "clickaway");
-        }}
-      >
+    <Snackbar open={!!message} autoHideDuration={4000} onClose={handleClose} {...rest}>
+      <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
         {message}
       </Alert>
     </Snackbar>

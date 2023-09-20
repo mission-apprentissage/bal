@@ -135,9 +135,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
               stateRelatedMessage={errors.secondary_email?.message}
               nativeSelectProps={{ ...register("secondary_email") }}
             >
-              <option value="" disabled hidden>
-                Choisir la colonne email secondaire
-              </option>
+              <option value="">Choisir la colonne email secondaire</option>
               {columns.map((column) => (
                 <option key={column} disabled={watchEmail === column}>
                   {column}

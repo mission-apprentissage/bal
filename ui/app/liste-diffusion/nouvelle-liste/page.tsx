@@ -94,6 +94,14 @@ const NouvelleListePage = () => {
     push(PAGES.listeDiffusion().path);
   };
 
+  const handleExpandChange = (expanded: boolean, stepName: keyof typeof STEPS) => {
+    if (expanded) {
+      goToStep(stepName);
+    } else {
+      setStep(0);
+    }
+  };
+
   return (
     <>
       <Breadcrumb pages={[PAGES.listeDiffusion(), PAGES.nouvelleListe()]} />
@@ -106,28 +114,30 @@ const NouvelleListePage = () => {
           id={STEPS.CHOIX_SOURCE.id}
           label={STEPS.CHOIX_SOURCE.label}
           expanded={step === STEPS.CHOIX_SOURCE.number}
-          onExpandedChange={() => {}}
+          onExpandedChange={(expanded) => handleExpandChange(expanded, "CHOIX_SOURCE")}
         >
           <ChoixSource mailingList={mailingList} onSuccess={handleSourceSelection} />
         </Accordion>
         <Accordion
           id={STEPS.CHOIX_IDENTIFIANT.id}
           expanded={step === STEPS.CHOIX_IDENTIFIANT.number}
-          onExpandedChange={() => {}}
+          onExpandedChange={(expanded) => handleExpandChange(expanded, "CHOIX_IDENTIFIANT")}
           label={STEPS.CHOIX_IDENTIFIANT.label}
         >
           <ChoixColonnesIdentifiant
             mailingList={mailingList}
             columns={columns}
             onSuccess={handleIdentifierColumnsSelection}
-            onCancel={() => goToStep("CHOIX_SOURCE")}
+            onCancel={() => {
+              goToStep("CHOIX_SOURCE");
+            }}
             sample={sample}
           />
         </Accordion>
         <Accordion
           id={STEPS.CHOIX_SORTIE.id}
           expanded={step === STEPS.CHOIX_SORTIE.number}
-          onExpandedChange={() => {}}
+          onExpandedChange={(expanded) => handleExpandChange(expanded, "CHOIX_SORTIE")}
           label={STEPS.CHOIX_SORTIE.label}
         >
           {campaignName && source && !!columns.length && identifierColumns && email ? (

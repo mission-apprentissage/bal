@@ -20,7 +20,7 @@ const modal = createModal({
 const ProfilPage = () => {
   const { user } = useAuth();
   const [apiKey, setApiKey] = useState<string | undefined>();
-  const { toast, setToast, close } = useToast();
+  const { toast, setToast, handleClose } = useToast();
 
   const handleClick = () => {
     if (apiKey) {
@@ -106,7 +106,7 @@ const ProfilPage = () => {
         </Box>
       )}
 
-      <Toast severity={toast?.severity} message={toast?.message} onClose={close} />
+      <Toast severity={toast?.severity} message={toast?.message} onClose={handleClose} />
     </>
   );
 };
