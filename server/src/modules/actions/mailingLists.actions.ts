@@ -17,6 +17,7 @@ import {
   TrainingLink,
   TrainingLinkData,
 } from "../../common/apis/lba";
+import { sleep } from "../../common/utils/asyncUtils";
 import { uploadToStorage } from "../../common/utils/ovhUtils";
 import { addJob } from "../jobs/jobs_actions";
 import { noop } from "../server/utils/upload.utils";
@@ -145,6 +146,8 @@ export const processMailingList = async (payload: IPayload) => {
       skip += batchSize;
     } else {
       hasMore = false;
+      // wait 5 seconds to make sure ovh has time to process the file before download
+      await sleep(5000);
       await updateMailingList({ _id: mailingList._id }, { status: MAILING_LIST_STATUS.DONE });
 
       logger.info("All documents retrieved");
