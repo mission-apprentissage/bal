@@ -106,7 +106,10 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     async (_request, response) => {
       const documents = await findDocuments(
         { import_progress: { $exists: true } },
-        { projection: { hash_secret: 0, hash_fichier: 0 }, sort: { created_at: -1 } }
+        {
+          projection: { hash_secret: 0, hash_fichier: 0 },
+          sort: { created_at: -1 },
+        }
       );
 
       return response.status(200).send(documents);

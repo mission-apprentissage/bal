@@ -1,7 +1,10 @@
+import Boom from "@hapi/boom";
 import { captureException } from "@sentry/node";
+import chardet from "chardet";
 import { Options } from "csv-parse";
+import iconv from "iconv-lite";
 import { Filter, FindOneAndUpdateOptions, FindOptions, ObjectId, UpdateFilter } from "mongodb";
-import { oleoduc, writeData } from "oleoduc";
+import { oleoduc, transformData, writeData } from "oleoduc";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
@@ -98,6 +101,28 @@ export const readDocumentContent = async (
     crypto.isCipherAvailable() ? crypto.decipher(document.hash_secret) : noop(),
     parseCsv(options),
     writeData(callback)
+  );
+};
+
+export const checkCsvFile = async (document: IDocument) => {
+  await readDocumentContent(
+    document,
+    {
+      // get only 1 record to get the columns
+      to: 1,
+      on_record: (record: unknown) => record,
+    },
+    async (json: JsonObject) => {
+      const columns = Object.keys(json);
+
+      if (!columns.includes("")) {
+        return true;
+      }
+
+      await deleteDocumentById(document._id);
+
+      throw Boom.unauthorized("Le fichier contient des noms de colonne vides");
+    }
   );
 };
 
@@ -267,8 +292,24 @@ export const uploadFile = async (
     throw new Error("Missing mimetype");
   }
 
+  let encoding: string | null = null;
+  const isCsv = options.mimetype === "text/csv";
+
   await oleoduc(
     stream,
+    isCsv
+      ? // encode utf8
+        transformData((chunk: Buffer) => {
+          if (!encoding) {
+            encoding = chardet.detect(chunk);
+          }
+
+          if (!encoding || encoding === "utf8" || !iconv.encodingExists(encoding)) return chunk;
+
+          const utf8Chunk = iconv.decode(chunk, encoding);
+          return iconv.encode(utf8Chunk, "utf8");
+        })
+      : noop(),
     scanStream,
     hashStream,
     crypto.isCipherAvailable() ? crypto.cipher(documentHash) : noop(), // ISSUE
@@ -290,6 +331,10 @@ export const uploadFile = async (
       await deleteFromStorage(path);
     }
     throw new Error("Le contenu du fichier est invalide");
+  }
+
+  if (isCsv) {
+    await checkCsvFile(doc);
   }
 
   if (options.createDocumentDb) {
