@@ -111,7 +111,7 @@ const ChoixSource: FC<Props> = ({ mailingList, onSuccess }) => {
               stateRelatedMessage={errors.source?.message}
               nativeSelectProps={{
                 ...register("source", {
-                  required: "Veuillez selectionner la source",
+                  required: "Veuillez sélectionner la source",
                   validate: (value) => {
                     return value && types.includes(value);
                   },
@@ -119,7 +119,7 @@ const ChoixSource: FC<Props> = ({ mailingList, onSuccess }) => {
               }}
             >
               <option value="" disabled hidden>
-                Selectionner la source
+                Sélectionner la source
               </option>
               {types.map((type) => (
                 <option key={type}>{type}</option>

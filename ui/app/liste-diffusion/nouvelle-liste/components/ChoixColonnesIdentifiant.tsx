@@ -72,7 +72,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
           <Alert
             description="Il est nécessaire de sélectionner une source à l'étape 1 pour continuer."
             severity="info"
-            title="Selectionner une source"
+            title="Sélectionner une source"
           />
         </Box>
       )}

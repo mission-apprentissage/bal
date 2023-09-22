@@ -1,4 +1,5 @@
 import { IDocumentContentJson } from "shared/models/documentContent.model";
+export const WEBHOOK_LBA = "WEBHOOK_LBA";
 
 export const getDataFromSample = (sample: IDocumentContentJson[], key: string) => {
   return (
@@ -10,6 +11,9 @@ export const getDataFromSample = (sample: IDocumentContentJson[], key: string) =
 };
 
 export const getFormattedSample = (sample: IDocumentContentJson[], key: string, size = 3) => {
+  if (key === WEBHOOK_LBA) {
+    return "Données récupérées depuis LBA";
+  }
   const data = getDataFromSample(sample, key);
 
   if (data.length === 0) {

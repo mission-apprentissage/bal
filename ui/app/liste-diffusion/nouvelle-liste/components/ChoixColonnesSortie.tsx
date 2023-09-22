@@ -10,12 +10,10 @@ import { IMailingListJson } from "shared/models/mailingList.model";
 
 import ToggleSwitchInput from "../../../../components/form/ToggleSwitchInput";
 import { apiPost } from "../../../../utils/api.utils";
-import { getFormattedSample } from "../mailingLists.utils";
+import { getFormattedSample, WEBHOOK_LBA } from "../mailingLists.utils";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
 import PreviewColonnesSortie from "./PreviewColonnesSortie";
-
-const WEBHOOK_LBA = "WEBHOOK_LBA";
 
 interface Props {
   onSuccess: (data: IBody<IPostRoutes["/mailing-list"]>) => void;
@@ -30,7 +28,8 @@ interface Props {
   mailingList?: IMailingListJson;
 }
 
-type FormValues = IBody<IPostRoutes["/mailing-list"]>;
+type Route = IBody<IPostRoutes["/mailing-list"]>;
+type FormValues = Route;
 
 const ChoixColonnesSortie: FC<Props> = ({
   onSuccess,
@@ -47,7 +46,11 @@ const ChoixColonnesSortie: FC<Props> = ({
   const outputColumnDefaultValues = [{ output: "email", column: email, grouped: true }];
 
   for (const identifierColumn of identifierColumns) {
-    outputColumnDefaultValues.push({ output: identifierColumn, column: identifierColumn, grouped: true });
+    outputColumnDefaultValues.push({
+      output: identifierColumn,
+      column: identifierColumn,
+      grouped: true,
+    });
   }
 
   if (mailingList) {
@@ -129,26 +132,20 @@ const ChoixColonnesSortie: FC<Props> = ({
               return value && [...columns, WEBHOOK_LBA].includes(value);
             },
           });
+          const selectColumnDisabled = index === 0 || isSubmitting;
+          const outputDisabled = index === 0 || outputColumns[index].column === WEBHOOK_LBA || isSubmitting;
+
+          const groupedDisabled =
+            outputColumns[index].column === WEBHOOK_LBA ||
+            identifierColumns.includes(outputColumns[index].column) ||
+            isSubmitting;
+
           return (
             <MailingListSectionRow key={field.id}>
               <MailingListSectionCell xs={3}>
-                <Input
-                  label=""
-                  state={errors.output_columns?.[index]?.output?.message ? "error" : "default"}
-                  stateRelatedMessage={errors.output_columns?.[index]?.output?.message}
-                  disabled={index === 0 || outputColumns[index].column === WEBHOOK_LBA || isSubmitting}
-                  nativeInputProps={{
-                    placeholder: "Nom de sortie",
-                    ...register(`output_columns.${index}.output`, {
-                      required: "Obligatoire",
-                    }),
-                  }}
-                />
-              </MailingListSectionCell>
-              <MailingListSectionCell xs={3}>
                 <Select
                   label=""
-                  disabled={index === 0 || isSubmitting}
+                  disabled={selectColumnDisabled}
                   state={errors.output_columns?.[index]?.column?.message ? "error" : "default"}
                   stateRelatedMessage={errors.output_columns?.[index]?.column?.message}
                   nativeSelectProps={{
@@ -186,6 +183,20 @@ const ChoixColonnesSortie: FC<Props> = ({
                 </Select>
               </MailingListSectionCell>
               <MailingListSectionCell xs={3}>
+                <Input
+                  label=""
+                  state={errors.output_columns?.[index]?.output?.message ? "error" : "default"}
+                  stateRelatedMessage={errors.output_columns?.[index]?.output?.message}
+                  disabled={outputDisabled}
+                  nativeInputProps={{
+                    placeholder: "Nom de sortie",
+                    ...register(`output_columns.${index}.output`, {
+                      required: "Obligatoire",
+                    }),
+                  }}
+                />
+              </MailingListSectionCell>
+              <MailingListSectionCell xs={3}>
                 {index !== 0 && (
                   <>
                     <ToggleSwitchInput
@@ -193,7 +204,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                       {...register(`output_columns.${index}.grouped` as const)}
                       toggleSwitchProps={{
                         showCheckedHint: false,
-                        disabled: outputColumns[index].column === WEBHOOK_LBA || isSubmitting,
+                        disabled: groupedDisabled,
                         label: (
                           <Typography whiteSpace="nowrap">
                             Fusionner les valeurs

@@ -108,7 +108,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
                       rel: undefined,
                     }}
                     priority="tertiary no outline"
-                    title="Label buttons"
+                    title="Télécharger"
                   />
                 );
               }
@@ -124,7 +124,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
                       rel: undefined,
                     }}
                     priority="tertiary no outline"
-                    title="Label buttons"
+                    title="Dupliquer"
                   />,
                   <Button
                     key="delete"
