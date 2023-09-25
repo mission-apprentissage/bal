@@ -239,7 +239,7 @@ const ChoixColonnesSortie: FC<Props> = ({
         })}
 
         <Box display="flex" justifyContent="center">
-          <Button priority="secondary" onClick={() => append({ output: "", column: "", grouped: false })}>
+          <Button priority="secondary" type="button" onClick={() => append({ output: "", column: "", grouped: false })}>
             + Ajouter un champ
           </Button>
         </Box>

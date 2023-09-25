@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import { captureException } from "@sentry/node";
 import chardet from "chardet";
 import { Options } from "csv-parse";
@@ -16,6 +17,7 @@ import { getDbCollection } from "@/common/utils/mongodbUtils";
 import config from "@/config";
 import { clamav } from "@/services";
 
+import { sleep } from "../../common/utils/asyncUtils";
 import { deleteFromStorage, getFromStorage, uploadToStorage } from "../../common/utils/ovhUtils";
 import { parseCsv } from "../../common/utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
@@ -317,9 +319,43 @@ export const uploadFile = async (
     });
   }
 
-  await saveDocumentColumns(doc);
+  if (isCsv) {
+    await checkCsvFile(doc);
+  }
 
   return documentId;
+};
+
+export const checkCsvFile = async (document: IDocument) => {
+  await sleep(3000);
+  await readDocumentContent(
+    document,
+    {
+      // get only 1 record to get the columns
+      to: 1,
+      on_record: (record: unknown) => record,
+    },
+    async (json: JsonObject) => {
+      const columns = Object.keys(json);
+      const emptyColumnIndex = columns.findIndex((column) => column === "");
+      if (emptyColumnIndex === -1) {
+        // save columns
+        await updateDocument(
+          { _id: document._id },
+          {
+            $set: {
+              columns: columns.sort(),
+            },
+          }
+        );
+        return true;
+      }
+
+      await deleteDocumentById(document._id);
+
+      throw Boom.unauthorized(`Le fichier contient un nom de colonne vide à la position ${emptyColumnIndex + 1}`);
+    }
+  );
 };
 
 /**

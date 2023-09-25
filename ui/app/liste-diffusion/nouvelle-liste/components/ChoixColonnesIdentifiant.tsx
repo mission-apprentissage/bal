@@ -154,8 +154,8 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
             <MailingListSectionCell>
               <Select
                 label=""
-                state={errors.identifier_columns?.[index]?.message ? "error" : "default"}
-                stateRelatedMessage={errors.identifier_columns?.[index]?.message}
+                state={errors.identifier_columns?.[index]?.name?.message ? "error" : "default"}
+                stateRelatedMessage={errors.identifier_columns?.[index]?.name?.message}
                 nativeSelectProps={{
                   ...register(`identifier_columns.${index}.name`, {
                     required: "Obligatoire",
@@ -198,7 +198,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
           </MailingListSectionRow>
         ))}
         <Box display="flex" justifyContent="center">
-          <Button priority="secondary" onClick={() => append({ name: "" })}>
+          <Button priority="secondary" type="button" onClick={() => append({ name: "" })}>
             + Ajouter un champ
           </Button>
         </Box>
