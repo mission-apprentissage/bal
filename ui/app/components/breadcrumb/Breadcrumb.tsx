@@ -87,11 +87,11 @@ export const PAGES = {
     path: "/usage/healthcheck",
   }),
   listeDiffusion: () => ({
-    title: "Liste de diffusion",
+    title: "Listes de diffusion",
     path: "/liste-diffusion",
   }),
   nouvelleListe: () => ({
-    title: "Créer une nouvelle liste",
+    title: "Créer une liste de diffusion",
     path: "/liste-diffusion/nouvelle-liste",
   }),
 };

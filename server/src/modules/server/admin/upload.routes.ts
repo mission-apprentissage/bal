@@ -19,15 +19,11 @@ import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 const validateFile = (file: MultipartFile) => {
-  if (
-    file.mimetype !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
-    file.mimetype !== "application/vnd.ms-excel" &&
-    file.mimetype !== "text/csv"
-  ) {
+  if (file.mimetype !== "text/csv") {
     return false;
   }
 
-  if (!file.filename.endsWith(".xlsx") && !file.filename.endsWith(".xls") && !file.filename.endsWith(".csv")) {
+  if (!file.filename.endsWith(".csv")) {
     return false;
   }
 
@@ -110,7 +106,10 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     async (_request, response) => {
       const documents = await findDocuments(
         { import_progress: { $exists: true } },
-        { projection: { hash_secret: 0, hash_fichier: 0 } }
+        {
+          projection: { hash_secret: 0, hash_fichier: 0 },
+          sort: { created_at: -1 },
+        }
       );
 
       return response.status(200).send(documents);

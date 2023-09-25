@@ -34,7 +34,7 @@ const FormContainer = styled("div")(({ theme }) => ({
 
 const AdminImportPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast, setToast } = useToast();
+  const { toast, setToast, handleClose } = useToast();
 
   const router = useRouter();
 
@@ -160,13 +160,15 @@ const AdminImportPage = () => {
             state={errors.file ? "error" : "default"}
             stateRelatedMessage={errors.file?.message}
             nativeInputProps={{
-              accept:
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.xlsx,application/vnd.ms-excel,.xls,.csv, text/csv",
+              accept: ".csv, text/csv",
               ...register("file", {
                 required: "Obligatoire: Vous devez ajouter un fichier à importer",
                 validate: {
                   notEmpty: (value) => {
                     return (value && value.length > 0) || "Obligatoire: Vous devez ajouter un fichier à importer";
+                  },
+                  extension: (value) => {
+                    return value[0]?.name?.endsWith(".csv") || "Le fichier doit être au format .csv";
                   },
                 },
               }),
@@ -179,7 +181,7 @@ const AdminImportPage = () => {
             </Button>
           </Box>
         </form>
-        <Toast severity={toast?.severity} message={toast?.message} />
+        <Toast severity={toast?.severity} message={toast?.message} handleClose={handleClose} />
       </FormContainer>
     </>
   );

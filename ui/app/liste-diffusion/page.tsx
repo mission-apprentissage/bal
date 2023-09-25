@@ -34,7 +34,7 @@ const ListeDiffusionPage = () => {
         </Button>
       </Box>
 
-      {!!generatingMailingList && <GeneratingMailingList mailingList={generatingMailingList} onDone={refetch} />}
+      <GeneratingMailingList mailingList={generatingMailingList} onDone={refetch} />
 
       <ListMailingList mailingLists={mailingLists} onDelete={refetch} />
     </>

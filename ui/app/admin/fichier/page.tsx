@@ -23,7 +23,7 @@ const AdminImportPage = () => {
   const [toDelete, setToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { data: documentLists } = useQuery<IDocumentJson[]>({
+  const { data: documentLists, refetch } = useQuery<IDocumentJson[]>({
     queryKey: ["documentLists"],
     queryFn: async () => apiGet("/admin/documents", {}),
     refetchInterval: 1000,
@@ -35,8 +35,9 @@ const AdminImportPage = () => {
       if (!toDelete) throw new Error("Nothing to delete");
       await apiDelete(`/admin/document/:id`, { params: { id: toDelete } });
     } finally {
-      setToDelete(null);
+      await refetch();
       setIsDeleting(false);
+      setToDelete(null);
       modal.close();
     }
   };
@@ -94,9 +95,17 @@ const AdminImportPage = () => {
           {
             field: "import_progress",
             headerName: "Statut",
-            valueFormatter: ({ value }) => {
+            minWidth: 170,
+            renderCell: ({ value, row }) => {
               if (value === 100) return "Terminé";
-              return `En cours d'importation ${value?.toPrecision(2)}%`;
+              if (row.nom_fichier.includes("mailing-list")) return "Terminé";
+              return (
+                <>
+                  En cours d'importation
+                  <br />
+                  {` ${Math.ceil(value ?? 0)}%`}
+                </>
+              );
             },
           },
           {
@@ -139,10 +148,9 @@ const AdminImportPage = () => {
           },
           {
             iconId: "ri-delete-bin-line",
-            onClick: () => {
-              onDeleteDocument();
-            },
+            onClick: onDeleteDocument,
             children: "Supprimer le document",
+            doClosesModal: false,
             disabled: isDeleting,
           },
         ]}

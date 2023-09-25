@@ -4,9 +4,10 @@ import Select from "@codegouvfr/react-dsfr/Select";
 import { Box, Typography } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
+import { IMailingListJson } from "shared/models/mailingList.model";
 
 import Table from "../../../../components/table/Table";
 import { apiGet } from "../../../../utils/api.utils";
@@ -20,15 +21,23 @@ export interface IChoseSourceForm {
 
 interface Props {
   onSuccess: (data: IChoseSourceForm) => void;
+  mailingList?: IMailingListJson;
 }
 
-const ChoixSource: FC<Props> = ({ onSuccess }) => {
+const ChoixSource: FC<Props> = ({ mailingList, onSuccess }) => {
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
     register,
     watch,
-  } = useForm<IChoseSourceForm>({ defaultValues: { source: "" } });
+    setValue,
+  } = useForm<IChoseSourceForm>();
+
+  useEffect(() => {
+    setValue("campaign_name", mailingList?.campaign_name ?? "");
+    setValue("source", mailingList?.source ?? "");
+  }, [mailingList]);
+
   const watchSource = watch("source");
 
   const { data: types = [] } = useQuery<string[]>({
@@ -102,7 +111,7 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
               stateRelatedMessage={errors.source?.message}
               nativeSelectProps={{
                 ...register("source", {
-                  required: "Veuillez selectionner la source",
+                  required: "Veuillez sélectionner la source",
                   validate: (value) => {
                     return value && types.includes(value);
                   },
@@ -110,7 +119,7 @@ const ChoixSource: FC<Props> = ({ onSuccess }) => {
               }}
             >
               <option value="" disabled hidden>
-                Selectionner la source
+                Sélectionner la source
               </option>
               {types.map((type) => (
                 <option key={type}>{type}</option>

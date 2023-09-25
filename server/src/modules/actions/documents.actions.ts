@@ -1,7 +1,10 @@
+import Boom from "@hapi/boom";
 import { captureException } from "@sentry/node";
+import chardet from "chardet";
 import { Options } from "csv-parse";
+import iconv from "iconv-lite";
 import { Filter, FindOneAndUpdateOptions, FindOptions, ObjectId, UpdateFilter } from "mongodb";
-import { oleoduc, writeData } from "oleoduc";
+import { oleoduc, transformData, writeData } from "oleoduc";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
@@ -14,6 +17,7 @@ import { getDbCollection } from "@/common/utils/mongodbUtils";
 import config from "@/config";
 import { clamav } from "@/services";
 
+import { sleep } from "../../common/utils/asyncUtils";
 import { deleteFromStorage, getFromStorage, uploadToStorage } from "../../common/utils/ovhUtils";
 import { parseCsv } from "../../common/utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
@@ -193,7 +197,9 @@ export const getDocumentColumns = async (type: string): Promise<string[]> => {
 };
 
 export const getDocumentSample = async (type: string): Promise<IDocumentContent[]> => {
-  return await getDbCollection("documentContents").find({ type_document: type }).limit(10).toArray();
+  return await getDbCollection("documentContents")
+    .aggregate<IDocumentContent>([{ $match: { type_document: type } }, { $sample: { size: 10 } }])
+    .toArray();
 };
 
 interface ICreateEmptyDocumentOptions {
@@ -265,8 +271,11 @@ export const uploadFile = async (
     throw new Error("Missing mimetype");
   }
 
+  const isCsv = options.mimetype === "text/csv";
+
   await oleoduc(
     stream,
+    isCsv ? transformData(processCsvFile) : noop(),
     scanStream,
     hashStream,
     crypto.isCipherAvailable() ? crypto.cipher(documentHash) : noop(), // ISSUE
@@ -310,9 +319,55 @@ export const uploadFile = async (
     });
   }
 
-  await saveDocumentColumns(doc);
+  if (isCsv) {
+    await checkCsvFile(doc);
+  }
 
   return documentId;
+};
+
+export const checkCsvFile = async (document: IDocument) => {
+  await sleep(3000);
+  await readDocumentContent(
+    document,
+    {
+      // get only 1 record to get the columns
+      to: 1,
+      on_record: (record: unknown) => record,
+    },
+    async (json: JsonObject) => {
+      const columns = Object.keys(json);
+      const emptyColumnIndex = columns.findIndex((column) => column === "");
+      if (emptyColumnIndex === -1) {
+        // save columns
+        await updateDocument(
+          { _id: document._id },
+          {
+            $set: {
+              columns: columns.sort(),
+            },
+          }
+        );
+        return true;
+      }
+
+      await deleteDocumentById(document._id);
+
+      throw Boom.unauthorized(`Le fichier contient un nom de colonne vide à la position ${emptyColumnIndex + 1}`);
+    }
+  );
+};
+
+/**
+ * Convert a buffer to utf8 if needed and check if file does not contain empty column names
+ */
+export const processCsvFile = async (chunk: Buffer) => {
+  const encoding = chardet.detect(chunk);
+
+  if (!encoding || encoding === "utf8" || !iconv.encodingExists(encoding)) return chunk;
+
+  const toEncodeChunk = iconv.decode(chunk, encoding);
+  return iconv.encode(toEncodeChunk, "utf8");
 };
 
 export const extractDocumentContent = async ({

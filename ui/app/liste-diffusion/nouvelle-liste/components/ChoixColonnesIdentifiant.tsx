@@ -1,13 +1,16 @@
 import { fr } from "@codegouvfr/react-dsfr";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { Box, Tooltip, Typography } from "@mui/material";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
+import { IMailingListJson } from "shared/models/mailingList.model";
 
-import { getDataFromSample } from "../mailingLists.utils";
+import { getFormattedSample } from "../mailingLists.utils";
+import EmailSample from "./EmailSample";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
 
@@ -18,6 +21,7 @@ interface Props {
   columns: string[];
   sample: IDocumentContentJson[];
   onCancel: () => void;
+  mailingList?: IMailingListJson;
 }
 
 interface IIdentifierColumnForm {
@@ -26,20 +30,31 @@ interface IIdentifierColumnForm {
   identifier_columns: { name: string }[];
 }
 
-const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sample }) => {
+const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sample, mailingList }) => {
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
     register,
     control,
     watch,
+    setValue,
   } = useForm<IIdentifierColumnForm>({
     defaultValues: { identifier_columns: [], email: "", secondary_email: "" },
   });
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "identifier_columns",
   });
+
+  useEffect(() => {
+    if (mailingList) {
+      setValue("email", mailingList.email);
+      setValue("secondary_email", mailingList.secondary_email ?? "");
+      const identifierColumns = mailingList?.identifier_columns?.map((ic) => ({ name: ic }));
+      setValue("identifier_columns", identifierColumns);
+    }
+  }, [mailingList, columns]);
 
   const watchEmail = watch("email");
   const watchSecondaryEmail = watch("secondary_email");
@@ -52,6 +67,15 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
 
   return (
     <Box>
+      {columns.length === 0 && (
+        <Box my={2}>
+          <Alert
+            description="Il est nécessaire de sélectionner une source à l'étape 1 pour continuer."
+            severity="info"
+            title="Sélectionner une source"
+          />
+        </Box>
+      )}
       <Typography mb={4}>
         Les champs obligatoires serviront comme identifiants uniques. Les champs de courriel facultatifs correspondent
         aux courriels supplémentaires à qui la campagne sera envoyée.
@@ -92,7 +116,9 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
               ))}
             </Select>
           </MailingListSectionCell>
-          <MailingListSectionCell>{watchEmail && getDataFromSample(sample, watchEmail)}</MailingListSectionCell>
+          <MailingListSectionCell>
+            {watchEmail && <EmailSample sample={sample} emailKey={watchEmail} />}
+          </MailingListSectionCell>
           <MailingListSectionCell>ou</MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
@@ -109,9 +135,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
               stateRelatedMessage={errors.secondary_email?.message}
               nativeSelectProps={{ ...register("secondary_email") }}
             >
-              <option value="" disabled hidden>
-                Choisir la colonne email secondaire
-              </option>
+              <option value="">Choisir la colonne email secondaire</option>
               {columns.map((column) => (
                 <option key={column} disabled={watchEmail === column}>
                   {column}
@@ -120,7 +144,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
             </Select>
           </MailingListSectionCell>
           <MailingListSectionCell>
-            {watchSecondaryEmail && getDataFromSample(sample, watchSecondaryEmail)}
+            {watchSecondaryEmail && <EmailSample sample={sample} emailKey={watchSecondaryEmail} />}
           </MailingListSectionCell>
         </MailingListSectionRow>
 
@@ -130,8 +154,8 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
             <MailingListSectionCell>
               <Select
                 label=""
-                state={errors.identifier_columns?.[index]?.message ? "error" : "default"}
-                stateRelatedMessage={errors.identifier_columns?.[index]?.message}
+                state={errors.identifier_columns?.[index]?.name?.message ? "error" : "default"}
+                stateRelatedMessage={errors.identifier_columns?.[index]?.name?.message}
                 nativeSelectProps={{
                   ...register(`identifier_columns.${index}.name`, {
                     required: "Obligatoire",
@@ -160,7 +184,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
             </MailingListSectionCell>
             <MailingListSectionCell>
               {watchIdentifierColumns?.[index]?.name &&
-                getDataFromSample(sample, watchIdentifierColumns?.[index]?.name)}
+                getFormattedSample(sample, watchIdentifierColumns?.[index]?.name)}
 
               <Box ml="auto">
                 <Button
@@ -174,13 +198,13 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
           </MailingListSectionRow>
         ))}
         <Box display="flex" justifyContent="center">
-          <Button priority="secondary" onClick={() => append({ name: "" })}>
+          <Button priority="secondary" type="button" onClick={() => append({ name: "" })}>
             + Ajouter un champ
           </Button>
         </Box>
         <Box>
           <Box mx={2} display="inline-block">
-            <Button priority="tertiary" disabled={isSubmitting} onClick={onCancel}>
+            <Button type="button" priority="tertiary" disabled={isSubmitting} onClick={onCancel}>
               Retour
             </Button>
           </Box>

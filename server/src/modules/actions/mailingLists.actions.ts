@@ -5,7 +5,7 @@ import { stringify } from "csv-stringify";
 import { Filter, FindCursor, FindOptions, ObjectId, Sort } from "mongodb";
 import { IDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
-import { IMailingList, MAILING_LIST_STATUS } from "shared/models/mailingList.model";
+import { IMailingList, MAILING_LIST_MAX_ITERATION, MAILING_LIST_STATUS } from "shared/models/mailingList.model";
 
 import logger from "@/common/logger";
 import * as crypto from "@/common/utils/cryptoUtils";
@@ -17,6 +17,7 @@ import {
   TrainingLink,
   TrainingLinkData,
 } from "../../common/apis/lba";
+import { sleep } from "../../common/utils/asyncUtils";
 import { uploadToStorage } from "../../common/utils/ovhUtils";
 import { addJob } from "../jobs/jobs_actions";
 import { noop } from "../server/utils/upload.utils";
@@ -71,6 +72,16 @@ const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 interface IPayload {
   mailing_list_id: string;
 }
+
+export const handleMailingListJob = async (payload: IPayload) => {
+  try {
+    return processMailingList(payload);
+  } catch (error) {
+    logger.error(error);
+    await updateMailingList({ _id: new ObjectId(payload.mailing_list_id) }, { status: MAILING_LIST_STATUS.ERROR });
+    throw error;
+  }
+};
 
 export const processMailingList = async (payload: IPayload) => {
   const mailingList = await findMailingList({
@@ -135,6 +146,8 @@ export const processMailingList = async (payload: IPayload) => {
       skip += batchSize;
     } else {
       hasMore = false;
+      // wait 5 seconds to make sure ovh has time to process the file before download
+      await sleep(5000);
       await updateMailingList({ _id: mailingList._id }, { status: MAILING_LIST_STATUS.DONE });
 
       logger.info("All documents retrieved");
@@ -196,7 +209,13 @@ const mergeLbaData = async (documentContents: IDocumentContent[]) => {
     rncp: (content.content?.rncp as string) ?? "", // pas présent dans le fichier
   }));
 
-  const trainingLinks = (await getTrainingLinks(payload)) as TrainingLink[];
+  let trainingLinks: TrainingLink[] = [];
+
+  try {
+    trainingLinks = await getTrainingLinks(payload);
+  } catch (error) {
+    logger.error(error);
+  }
 
   return documentContents.map((dc) => {
     const trainingLink = trainingLinks.find((tl) => tl.id === dc._id.toString());
@@ -264,16 +283,6 @@ const getOutputColumnsWithLba = (mailingList: IMailingList) => {
     // LBA columns
     { column: "lien_lba", output: "lien_lba", grouped: true },
     { column: "lien_prdv", output: "lien_prdv", grouped: true },
-    {
-      column: "libelle_etab_accueil",
-      output: "libelle_etab_accueil",
-      grouped: true,
-    },
-    {
-      column: "libelle_formation",
-      output: "libelle_formation",
-      grouped: true,
-    },
     // remove WEBHOOK_LBA column
   ].filter((c) => c.column !== MAILING_LIST_WEBHOOK_LBA);
 };
@@ -334,7 +343,7 @@ export const createMailingListFile = async (mailingList: IMailingList, document:
           flat[key] = line?.[key] ?? line.wishes[0]?.[key] ?? "";
         }
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < MAILING_LIST_MAX_ITERATION; i++) {
           for (const key of keys) {
             flat[`${key}_${i + 1}`] = line.wishes[i]?.[key] ?? "";
           }
