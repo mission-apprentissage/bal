@@ -1,6 +1,6 @@
 import Boom, { forbidden } from "@hapi/boom";
 import { zRoutes } from "shared";
-import { IUserWithPerson, toPublicUser } from "shared/models/user.model";
+import { IUser, toPublicUser } from "shared/models/user.model";
 
 import config from "@/config";
 
@@ -38,7 +38,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const { email, password } = request.body;
 
-      const user: IUserWithPerson | undefined = await verifyEmailPassword(email, password);
+      const user: IUser | undefined = await verifyEmailPassword(email, password);
 
       if (!user || !user._id) {
         throw Boom.forbidden("Identifiants incorrects");

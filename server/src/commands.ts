@@ -1,7 +1,6 @@
 import { captureException } from "@sentry/node";
 import { program } from "commander";
 import HttpTerminator from "lil-http-terminator";
-import { ObjectId } from "mongodb";
 
 import logger from "@/common/logger";
 import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
@@ -192,19 +191,6 @@ program
   .option("-d, --drop", "Drop indexes before recreating them")
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("indexes:recreate"));
-
-program
-  .command("import:document")
-  .description("Import document content")
-  .requiredOption("-dId, --documentId <string>", "Document Id", (documentId) => new ObjectId(documentId))
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("import:document"));
-
-program
-  .command("documents:save-columns")
-  .description("Gets columns from documents and save them in database")
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("documents:save-columns"));
 
 program.hook("preAction", (_, actionCommand) => {
   const command = actionCommand.name();

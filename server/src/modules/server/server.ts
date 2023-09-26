@@ -28,18 +28,13 @@ import { ZodError } from "zod";
 import logger from "../../common/logger";
 import { initSentryFastify } from "../../common/services/sentry/sentry";
 import config from "../../config";
-import { organisationAdminRoutes } from "./admin/organisation.routes";
-import { personAdminRoutes } from "./admin/person.routes";
 import { uploadAdminRoutes } from "./admin/upload.routes";
 import { userAdminRoutes } from "./admin/user.routes";
 import { authRoutes } from "./auth.routes";
 import { coreRoutes } from "./core.routes";
 import { documentsRoutes } from "./documents.routes";
-import { emailsRoutes } from "./emails.routes";
-import { mailingListRoutes } from "./mailingList.routes";
 import { userRoutes } from "./user.routes";
 import { authValidateJWT, authValidateSession, authWebHookKey } from "./utils/auth.strategies";
-import { organisationRoutes } from "./v1/organisation.routes";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -171,13 +166,6 @@ export function build(opts: FastifyServerOptions = {}): Server {
     { prefix: "/api" }
   );
 
-  app.register(
-    async (instance: Server) => {
-      registerV1Routes({ server: instance });
-    },
-    { prefix: "/api/v1" }
-  );
-
   return app.withTypeProvider<ZodTypeProvider>();
 }
 
@@ -198,15 +186,7 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
   coreRoutes({ server });
   authRoutes({ server });
   userRoutes({ server });
-  emailsRoutes({ server });
   userAdminRoutes({ server });
-  personAdminRoutes({ server });
-  organisationAdminRoutes({ server });
   uploadAdminRoutes({ server });
-  mailingListRoutes({ server });
   documentsRoutes({ server });
-};
-
-export const registerV1Routes: RegisterRoutes = ({ server }) => {
-  organisationRoutes({ server });
 };

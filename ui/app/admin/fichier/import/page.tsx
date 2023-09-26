@@ -18,7 +18,6 @@ import Breadcrumb, { PAGES } from "../../../components/breadcrumb/Breadcrumb";
 
 interface FormValues extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
   file: FileList;
-  should_import_content: boolean;
   has_new_type_document: boolean;
   new_type_document: string;
 }
@@ -47,13 +46,11 @@ const AdminImportPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-
     watch,
     control,
   } = useForm<FormValues>({
     defaultValues: {
       type_document: "",
-      should_import_content: true,
       has_new_type_document: false,
     },
   });
@@ -65,7 +62,6 @@ const AdminImportPage = () => {
     type_document,
     has_new_type_document,
     new_type_document,
-    should_import_content,
   }) => {
     setIsSubmitting(true);
     try {
@@ -75,7 +71,6 @@ const AdminImportPage = () => {
       await apiPost("/admin/upload", {
         querystring: {
           type_document: has_new_type_document ? new_type_document : type_document,
-          ...(should_import_content && { import_content: "true" }),
         },
         body: formData,
       });
@@ -143,16 +138,6 @@ const AdminImportPage = () => {
               }}
             />
           )}
-          <ToggleSwitchInput
-            control={control}
-            {...register("should_import_content")}
-            toggleSwitchProps={{
-              showCheckedHint: false,
-              disabled: isSubmitting,
-              label: "Importer le contenu",
-              inputTitle: "Importer le contenu",
-            }}
-          />
 
           <DSFRUpload
             hint="(.csv, maximum 100mb)"
@@ -160,15 +145,11 @@ const AdminImportPage = () => {
             state={errors.file ? "error" : "default"}
             stateRelatedMessage={errors.file?.message}
             nativeInputProps={{
-              accept: ".csv, text/csv",
               ...register("file", {
                 required: "Obligatoire: Vous devez ajouter un fichier à importer",
                 validate: {
                   notEmpty: (value) => {
                     return (value && value.length > 0) || "Obligatoire: Vous devez ajouter un fichier à importer";
-                  },
-                  extension: (value) => {
-                    return value[0]?.name?.endsWith(".csv") || "Le fichier doit être au format .csv";
                   },
                 },
               }),

@@ -58,42 +58,6 @@ export const PAGES = {
     title: "Fiche utilisateur",
     path: `/admin/utilisateurs/${id}`,
   }),
-  adminPersons: () => ({
-    title: "Gestion des personnes",
-    path: "/admin/personnes",
-  }),
-  adminViewPerson: (id: string) => ({
-    title: "Fiche personne",
-    path: `/admin/personnes/${id}`,
-  }),
-  adminOrganisations: () => ({
-    title: "Gestion des organisations",
-    path: "/admin/organisations",
-  }),
-  adminViewOrganisation: (id: string) => ({
-    title: "Fiche organisation",
-    path: `/admin/organisations/${id}`,
-  }),
-  usageApi: () => ({
-    title: "API",
-    path: "/usage",
-  }),
-  usageApiValidation: () => ({
-    title: "Vérification appartenance",
-    path: "/usage/validation",
-  }),
-  usageApiHealthcheck: () => ({
-    title: "Healthcheck",
-    path: "/usage/healthcheck",
-  }),
-  listeDiffusion: () => ({
-    title: "Listes de diffusion",
-    path: "/liste-diffusion",
-  }),
-  nouvelleListe: () => ({
-    title: "Créer une liste de diffusion",
-    path: "/liste-diffusion/nouvelle-liste",
-  }),
 };
 
 export interface Page {

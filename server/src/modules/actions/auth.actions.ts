@@ -6,7 +6,6 @@ import { createResetPasswordToken } from "@/common/utils/jwtUtils";
 import config from "@/config";
 
 import { hashPassword, verifyPassword } from "../server/utils/password.utils";
-import { findPerson } from "./persons.actions";
 import { findUser, updateUser } from "./users.actions";
 
 export const verifyEmailPassword = async (email: string, password: string) => {
@@ -33,20 +32,10 @@ export const sendResetPasswordEmail = async (email: string) => {
     return;
   }
 
-  const person = await findPerson({ email });
-
-  if (!person) {
-    logger.warn({ email }, "forgot-password: missing Person");
-    return;
-  }
-
   const token = createResetPasswordToken(user.email);
 
-  await sendEmail(person._id.toString(), "reset_password", {
+  await sendEmail("reset_password", {
     recipient: {
-      civility: person.civility,
-      prenom: person.prenom,
-      nom: person.nom,
       email: user.email,
     },
     resetPasswordToken: token,

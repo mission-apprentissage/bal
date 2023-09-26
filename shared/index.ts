@@ -5,13 +5,8 @@ import z, { ZodType } from "zod";
 import { zAuthRoutes } from "./routes/auth.routes";
 import { zCoreRoutes } from "./routes/core.routes";
 import { zDocumentRoutes } from "./routes/document.routes";
-import { zEmailRoutes } from "./routes/emails.routes";
-import { zMailingListRoutes } from "./routes/mailingList.routes";
-import { zAdminOrganisationRoutes } from "./routes/organisation.routes";
-import { zPersonRoutes } from "./routes/person.routes";
 import { zUploadRoutes } from "./routes/upload.routes";
 import { zUserAdminRoutes, zUserRoutes } from "./routes/user.routes";
-import { zOrganisationV1Routes } from "./routes/v1/organisation.routes";
 
 export type deserialize = [
   {
@@ -36,49 +31,29 @@ export const zRoutes = {
     ...zUserRoutes.get,
     ...zAuthRoutes.get,
     ...zCoreRoutes.get,
-    ...zEmailRoutes.get,
-    ...zPersonRoutes.get,
     ...zUploadRoutes.get,
     ...zDocumentRoutes.get,
-    ...zAdminOrganisationRoutes.get,
-    ...zOrganisationV1Routes.get,
-    ...zMailingListRoutes.get,
   },
   post: {
     ...zUserAdminRoutes.post,
     ...zUserRoutes.post,
     ...zAuthRoutes.post,
     ...zCoreRoutes.post,
-    ...zEmailRoutes.post,
-    ...zPersonRoutes.post,
     ...zUploadRoutes.post,
-    ...zAdminOrganisationRoutes.post,
-    ...zOrganisationV1Routes.post,
-    ...zMailingListRoutes.post,
   },
   put: {
     ...zUserAdminRoutes.put,
     ...zUserRoutes.put,
     ...zAuthRoutes.put,
     ...zCoreRoutes.put,
-    ...zEmailRoutes.put,
-    ...zPersonRoutes.put,
     ...zUploadRoutes.put,
-    ...zAdminOrganisationRoutes.put,
-    ...zOrganisationV1Routes.put,
-    ...zMailingListRoutes.put,
   },
   delete: {
     ...zUserAdminRoutes.delete,
     ...zUserRoutes.delete,
     ...zAuthRoutes.delete,
     ...zCoreRoutes.delete,
-    ...zEmailRoutes.delete,
-    ...zPersonRoutes.delete,
     ...zUploadRoutes.delete,
-    ...zAdminOrganisationRoutes.delete,
-    ...zOrganisationV1Routes.delete,
-    ...zMailingListRoutes.delete,
   },
 } as const;
 

@@ -11,15 +11,12 @@ export const ZDocument = z
   .object({
     _id: zObjectId,
     type_document: z.string().describe("Le type de document (exemple: DECA, etc..)"),
-    ext_fichier: z.enum(["xlsx", "xls", "csv"]).describe("Le type de fichier extension"),
+    ext_fichier: z.string().describe("Le type de fichier extension"),
     nom_fichier: z.string().describe("Le nom de fichier"),
     chemin_fichier: z.string().describe("Chemin du fichier binaire"),
     taille_fichier: z.number().int().finite().describe("Taille du fichier en bytes"),
     hash_secret: z.string().describe("Hash fichier"),
     hash_fichier: z.string().describe("Checksum fichier"),
-    columns: z.array(z.string()).optional().describe("Liste des colonnes"),
-    import_progress: z.number().finite().optional().describe("Progress percentage (-1 not started)"),
-    lines_count: z.number().int().finite().optional().describe("Number of lines"),
     added_by: z.string().describe("Qui a ajouté le fichier"),
     updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
     created_at: z.date().describe("Date d'ajout en base de données"),
@@ -34,9 +31,11 @@ export const zDocumentPublic = ZDocument.omit({
 export type IDocument = z.output<typeof ZDocument>;
 export type IDocumentJson = Jsonify<z.input<typeof zDocumentPublic>>;
 
-export interface IDocumentWithContent<TContent> extends IDocument {
-  content: TContent;
-}
+export const toPublicDocument = (document: z.infer<typeof ZDocument>) => {
+  const { hash_fichier: _hash_fichier, hash_secret: _hash_secret, ...publicDocument } = document;
+
+  return zDocumentPublic.parse(publicDocument);
+};
 
 export default {
   zod: ZDocument,

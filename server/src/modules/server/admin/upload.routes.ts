@@ -2,7 +2,7 @@ import { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
 import { ObjectId } from "mongodb";
 import { zRoutes } from "shared";
-import { IDocument } from "shared/models/document.model";
+import { IDocument, toPublicDocument } from "shared/models/document.model";
 
 import logger from "@/common/logger";
 
@@ -14,21 +14,8 @@ import {
   getDocumentTypes,
   uploadFile,
 } from "../../actions/documents.actions";
-import { addJob } from "../../jobs/jobs_actions";
 import { Server } from "../server";
 import { ensureUserIsAdmin } from "../utils/middleware.utils";
-
-const validateFile = (file: MultipartFile) => {
-  if (file.mimetype !== "text/csv") {
-    return false;
-  }
-
-  if (!file.filename.endsWith(".csv")) {
-    return false;
-  }
-
-  return true;
-};
 
 export const uploadAdminRoutes = ({ server }: { server: Server }) => {
   /**
@@ -57,7 +44,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         throw Boom.badImplementation(error as Error);
       }
 
-      if (!request.user || !data || !validateFile(data)) {
+      if (!request.user || !data) {
         throw Boom.unauthorized("Le fichier n'est pas au bon format");
       }
 
@@ -78,17 +65,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           mimetype: data.mimetype,
         });
 
-        if (request.query?.import_content === "true") {
-          await addJob({
-            name: "import:document",
-            payload: {
-              document_id: document._id,
-            },
-            queued: true,
-          });
-        }
-
-        return response.status(200).send(document);
+        return response.status(200).send(toPublicDocument(document));
       } catch (error) {
         const err = server.multipartErrors;
         logger.debug(err);
@@ -105,14 +82,13 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     },
     async (_request, response) => {
       const documents = await findDocuments(
-        { import_progress: { $exists: true } },
+        {},
         {
-          projection: { hash_secret: 0, hash_fichier: 0 },
           sort: { created_at: -1 },
         }
       );
 
-      return response.status(200).send(documents);
+      return response.status(200).send(documents.map(toPublicDocument));
     }
   );
 

@@ -11,8 +11,6 @@ import {
 } from "@/modules/jobs/migrations/migrations";
 
 import logger from "../../common/logger";
-import { handleDocumentFileContent, saveDocumentsColumns } from "../actions/documents.actions";
-import { handleMailingListJob } from "../actions/mailingLists.actions";
 import { createUser } from "../actions/users.actions";
 import { cronsInit, cronsScheduler } from "./crons_actions";
 import { recreateIndexes } from "./db/recreateIndexes";
@@ -75,16 +73,6 @@ export async function runJob(job: IJob): Promise<number> {
       case "crons:scheduler":
         return cronsScheduler();
 
-      // BELOW SPECIFIC TO PRODUCT
-      case "import:document":
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return handleDocumentFileContent(job.payload as any);
-      case "documents:save-columns":
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return saveDocumentsColumns();
-      case "generate:mailing-list":
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return handleMailingListJob(job.payload as any);
       default: {
         logger.warn(`Job not found ${job.name}`);
       }

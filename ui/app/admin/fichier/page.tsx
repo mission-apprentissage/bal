@@ -26,7 +26,6 @@ const AdminImportPage = () => {
   const { data: documentLists, refetch } = useQuery<IDocumentJson[]>({
     queryKey: ["documentLists"],
     queryFn: async () => apiGet("/admin/documents", {}),
-    refetchInterval: 1000,
   });
 
   const onDeleteDocument = async () => {
@@ -47,7 +46,7 @@ const AdminImportPage = () => {
       <Breadcrumb pages={[PAGES.adminFichier()]} />
       <Box display="flex" flexDirection="row">
         <Typography flexGrow={1} variant="h2">
-          Gestion fichiers sources
+          {PAGES.adminFichier().title}
         </Typography>
         <Button
           linkProps={{
@@ -80,11 +79,6 @@ const AdminImportPage = () => {
             },
           },
           {
-            field: "lines_count",
-            headerName: "Nombre de lignes",
-            minWidth: 150,
-          },
-          {
             field: "created_at",
             headerName: "Date d'import",
             minWidth: 150,
@@ -93,32 +87,10 @@ const AdminImportPage = () => {
             },
           },
           {
-            field: "import_progress",
-            headerName: "Statut",
-            minWidth: 170,
-            renderCell: ({ value, row }) => {
-              if (value === 100) return "Terminé";
-              if (row.nom_fichier.includes("mailing-list")) return "Terminé";
-              return (
-                <>
-                  En cours d'importation
-                  <br />
-                  {` ${Math.ceil(value ?? 0)}%`}
-                </>
-              );
-            },
-          },
-          {
             field: "actions",
             type: "actions",
             headerName: "Actions",
             getActions: ({ row }) => {
-              if (
-                row.import_progress !== 100 &&
-                row.import_progress !== 0 // TODO This is a quick cleaning method but if delete and job running nned to send a kill sig to job
-              )
-                return [];
-
               return [
                 <Button
                   key="delete"

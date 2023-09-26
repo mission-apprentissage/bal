@@ -29,7 +29,6 @@ describe("Users routes", () => {
     const user = await createUser({
       email: "connected@exemple.fr",
       password: "my-password",
-      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const token = createUserTokenSimple({ payload: { email: user.email } });
@@ -61,7 +60,6 @@ describe("Users routes", () => {
     const admin = await createUser({
       email: "admin@exemple.fr",
       password: "my-password",
-      organisation_id: "64520f65d7726475fd54b3b7",
       is_admin: true,
     });
 
@@ -77,7 +75,6 @@ describe("Users routes", () => {
       payload: {
         email: "email@exemple.fr",
         password: "my-password",
-        organisation_id: "64520f65d7726475fd54b3b7",
       },
       headers: {
         ["Cookie"]: `bal_session=${token}`,
@@ -98,7 +95,6 @@ describe("Users routes", () => {
     const user = await createUser({
       email: "user@exemple.fr",
       password: "my-password",
-      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const token = createUserTokenSimple({ payload: { email: user.email } });
@@ -113,13 +109,13 @@ describe("Users routes", () => {
       payload: {
         email: "email@exemple.fr",
         password: "my-password",
-        organisation_id: "64520f65d7726475fd54b3b7",
       },
       headers: {
         ["Cookie"]: `bal_session=${token}`,
       },
     });
 
+    console.log({ response });
     assert.equal(response.statusCode, 403);
   });
 });

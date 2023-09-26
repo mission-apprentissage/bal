@@ -1,23 +1,18 @@
 import { z } from "zod";
 
 import { zObjectId } from "../models/common";
-import { ZPerson } from "../models/person.model";
-import { ZUser, ZUserPublic, zUserWithPersonPublic } from "../models/user.model";
+import { ZUser, ZUserPublic } from "../models/user.model";
 import { ZReqParamsSearchPagination } from "./common.routes";
-
-const zUserWithPerson = ZUserPublic.extend({
-  person: ZPerson.nullish(),
-});
 
 export const zUserAdminRoutes = {
   get: {
     "/admin/users": {
       querystring: ZReqParamsSearchPagination,
-      response: { "2xx": z.array(zUserWithPerson) },
+      response: { "2xx": z.array(ZUserPublic) },
     },
     "/admin/users/:id": {
       params: z.object({ id: zObjectId }).strict(),
-      response: { "2xx": zUserWithPerson },
+      response: { "2xx": ZUserPublic },
     },
   },
   post: {
@@ -25,10 +20,9 @@ export const zUserAdminRoutes = {
       body: z.object({
         email: ZUser.shape.email,
         password: ZUser.shape.password,
-        organisation_id: z.string(),
       }),
       response: {
-        "2xx": zUserWithPersonPublic,
+        "2xx": ZUserPublic,
       },
     },
   },

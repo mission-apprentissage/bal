@@ -5,9 +5,9 @@ import { htmlToText } from "nodemailer-html-to-text";
 import { TemplateName, TemplatePayloads, TemplateTitleFuncs } from "shared/mailer";
 
 import config from "@/config";
+import { mailer } from "@/services";
 
-import { sendStoredEmail } from "../../../modules/actions/emails.actions";
-import { generateHtml, getPublicUrl } from "../../utils/emailsUtils";
+import { generateHtml } from "../../utils/emailsUtils";
 import { getStaticFilePath } from "../../utils/getStaticFilePath";
 
 function createTransporter(smtp: SMTPTransport) {
@@ -21,11 +21,8 @@ export function createMailerService(
   // @ts-ignore
   transporter = createTransporter({ ...config.smtp, secure: false })
 ) {
-  async function sendEmailMessage(
-    to: string,
-    template: { subject: string; templateFile: string; data: { token: string } }
-  ) {
-    const { subject, data } = template;
+  async function sendEmailMessage(to: string, template: { subject: string; templateFile: string; data: unknown }) {
+    const { subject } = template;
 
     const { messageId } = await transporter.sendMail({
       from: `${config.email_from} <${config.email}>`,
@@ -34,7 +31,6 @@ export function createMailerService(
       html: await generateHtml(to, template),
       list: {
         help: "https://mission-apprentissage.gitbook.io/general/les-services-en-devenir/accompagner-les-futurs-apprentis", // TODO [metier/tech]
-        unsubscribe: getPublicUrl(`/api/emails/${data.token}/unsubscribe`),
       },
     });
 
@@ -46,13 +42,8 @@ export function createMailerService(
   };
 }
 
-export async function sendEmail<T extends TemplateName>(
-  person_id: string,
-  template: T,
-  payload: TemplatePayloads[T]
-): Promise<void> {
-  // identifiant email car stocké en BDD et possibilité de le consulter via navigateur
-  await sendStoredEmail(person_id, template, payload, {
+export async function sendEmail<T extends TemplateName>(template: T, payload: TemplatePayloads[T]): Promise<void> {
+  await mailer.sendEmailMessage(payload.recipient.email, {
     subject: templatesTitleFuncs[template](payload),
     templateFile: getStaticFilePath(`./emails/${template}.mjml.ejs`),
     data: payload,

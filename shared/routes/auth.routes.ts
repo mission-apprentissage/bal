@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ZUser, zUserWithPersonPublic } from "../models/user.model";
+import { ZUser, ZUserPublic } from "../models/user.model";
 import { ZReqHeadersAuthorization, ZResOk } from "./common.routes";
 
 export const zAuthRoutes = {
@@ -18,7 +18,7 @@ export const zAuthRoutes = {
     },
     "/auth/session": {
       response: {
-        "2xx": zUserWithPersonPublic,
+        "2xx": ZUserPublic,
       },
       headers: ZReqHeadersAuthorization,
     },
@@ -43,7 +43,7 @@ export const zAuthRoutes = {
         })
         .strict(),
       response: {
-        "2xx": zUserWithPersonPublic,
+        "2xx": ZUserPublic,
       },
     },
   },

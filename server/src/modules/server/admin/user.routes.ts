@@ -60,10 +60,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       }
 
       // Fixme: maybe we return too much data!!
-      return response.status(200).send({
-        ...toPublicUser(user),
-        person: user.person,
-      });
+      return response.status(200).send(toPublicUser(user));
     }
   );
 };

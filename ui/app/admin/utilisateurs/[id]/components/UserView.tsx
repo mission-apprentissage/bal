@@ -1,15 +1,13 @@
-import Button from "@codegouvfr/react-dsfr/Button";
 import { Typography } from "@mui/material";
 import { FC } from "react";
-import { IUserWithPersonPublic } from "shared/models/user.model";
+import { IUserPublic } from "shared/models/user.model";
 
 import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
 import { formatDate } from "../../../../../utils/date.utils";
 import Breadcrumb, { PAGES } from "../../../../components/breadcrumb/Breadcrumb";
-import { getPersonDisplayName } from "../../../personnes/persons.format";
 
 interface Props {
-  user: IUserWithPersonPublic;
+  user: IUserPublic;
 }
 
 const UserView: FC<Props> = ({ user }) => {
@@ -28,25 +26,6 @@ const UserView: FC<Props> = ({ user }) => {
           },
           email: {
             header: () => "Email",
-          },
-          person: {
-            header: () => "Personne",
-            cell: ({ person }) => {
-              if (!person) return null;
-
-              return (
-                <Button
-                  iconId="fr-icon-arrow-right-line"
-                  iconPosition="right"
-                  linkProps={{
-                    href: PAGES.adminViewPerson(person._id).path,
-                  }}
-                  priority="tertiary no outline"
-                >
-                  {getPersonDisplayName(person)}
-                </Button>
-              );
-            },
           },
           is_admin: {
             header: () => "Administrateur",

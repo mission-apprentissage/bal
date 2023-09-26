@@ -1,8 +1,7 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { IUserWithPersonPublic } from "shared/models/user.model";
+import { IUserPublic } from "shared/models/user.model";
 
 import SearchBar from "../../../../components/SearchBar";
 import Table from "../../../../components/table/Table";
@@ -10,7 +9,6 @@ import { apiGet } from "../../../../utils/api.utils";
 import { formatDate } from "../../../../utils/date.utils";
 import { formatUrlWithNewParams, getSearchParamsForQuery } from "../../../../utils/query.utils";
 import { PAGES } from "../../../components/breadcrumb/Breadcrumb";
-import { getPersonDisplayName } from "../../personnes/persons.format";
 
 const UserList = () => {
   const searchParams = useSearchParams();
@@ -18,7 +16,7 @@ const UserList = () => {
 
   const { page: page, limit: limit, q: searchValue } = getSearchParamsForQuery(searchParams);
 
-  const { data: users } = useQuery<IUserWithPersonPublic[]>({
+  const { data: users } = useQuery<IUserPublic[]>({
     queryKey: ["users", { searchValue, page, limit }],
     queryFn: async () => {
       const data = await apiGet("/admin/users", {
@@ -51,16 +49,7 @@ const UserList = () => {
             headerName: "Email",
             flex: 1,
           },
-          {
-            field: "person",
-            headerName: "Personne",
-            flex: 1,
-            renderCell: ({ value: person }) => {
-              if (!person) return null;
 
-              return <Link href={PAGES.adminViewPerson(person._id).path}>{getPersonDisplayName(person)}</Link>;
-            },
-          },
           {
             field: "is_admin",
             headerName: "Administrateur",

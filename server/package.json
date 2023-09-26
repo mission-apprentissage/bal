@@ -21,7 +21,6 @@
     "@fastify/multipart": "^7.7.3",
     "@fastify/swagger": "^8.9.0",
     "@fastify/swagger-ui": "^1.9.3",
-    "@fastify/type-provider-json-schema-to-ts": "^2.2.2",
     "@hapi/boom": "^10.0.1",
     "@immobiliarelabs/fastify-sentry": "^6.0.10",
     "@sentry/integrations": "^7.64.0",
@@ -35,11 +34,7 @@
     "checksum-stream": "^1.0.3",
     "clamscan": "^2.1.2",
     "commander": "^10.0.1",
-    "company-email-validator": "^1.1.0",
-    "convert-csv-to-json": "^2.0.0",
     "cron-parser": "^4.9.0",
-    "csv-parse": "^5.4.0",
-    "csv-stringify": "^6.4.0",
     "date-fns": "^2.30.0",
     "ejs": "^3.1.9",
     "env-var": "^7.3.1",
@@ -59,8 +54,7 @@
     "rate-limiter-flexible": "^2.4.2",
     "shared": "workspace:*",
     "tcp-port-used": "^1.0.2",
-    "uuid": "^9.0.0",
-    "xlsx": "^0.18.5"
+    "uuid": "^9.0.0"
   },
   "engines": {
     "node": ">=20",

@@ -1,17 +1,15 @@
 import { Filter, ObjectId, UpdateFilter } from "mongodb";
-import { IUser, IUserWithPerson } from "shared/models/user.model";
+import { IUser } from "shared/models/user.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 import { generateKey, generateSecretHash } from "../../common/utils/cryptoUtils";
 import { createUserTokenSimple } from "../../common/utils/jwtUtils";
 import { hashPassword } from "../server/utils/password.utils";
-import { createPerson } from "./persons.actions";
 
 type ICreateUser = {
   email: string;
   password: string;
-  organisation_id: string;
   is_admin?: boolean;
 };
 
@@ -33,20 +31,13 @@ const DEFAULT_UNWIND = {
   preserveNullAndEmptyArrays: true,
 };
 
-export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
-  const person = await createPerson({
-    email: data.email,
-    organisations: [organisation_id],
-    _meta: { source: "bal" },
-  });
-
+export const createUser = async ({ ...data }: ICreateUser) => {
   const _id = new ObjectId();
 
   const password = hashPassword(data.password);
   const now = new Date();
   const user = {
     ...data,
-    person_id: person._id.toString(),
     _id,
     password,
     updated_at: now,
@@ -56,14 +47,13 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
 
   return {
     ...user,
-    person,
     _id: userId,
   };
 };
 
-export const findUsers = async (filter: Filter<IUser>): Promise<IUserWithPerson[]> => {
+export const findUsers = async (filter: Filter<IUser>): Promise<IUser[]> => {
   const users = await getDbCollection("users")
-    .aggregate<IUserWithPerson>([
+    .aggregate<IUser>([
       {
         $match: filter,
       },
@@ -79,9 +69,9 @@ export const findUsers = async (filter: Filter<IUser>): Promise<IUserWithPerson[
   return users;
 };
 
-export const findUser = async (filter: Filter<IUser>): Promise<IUserWithPerson | null> => {
+export const findUser = async (filter: Filter<IUser>): Promise<IUser | null> => {
   const user = await getDbCollection("users")
-    .aggregate<IUserWithPerson>([
+    .aggregate<IUser>([
       {
         $match: filter,
       },

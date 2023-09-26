@@ -1,43 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`zodToMongoSchema > should convert documentContents schema 1`] = `
-{
-  "additionalProperties": false,
-  "bsonType": "object",
-  "properties": {
-    "_id": {
-      "bsonType": "objectId",
-      "description": "Identifiant unique",
-    },
-    "content": {
-      "additionalProperties": true,
-      "bsonType": "object",
-      "description": "Contenu du document",
-    },
-    "created_at": {
-      "bsonType": "date",
-      "description": "Date d'ajout en base de données",
-    },
-    "document_id": {
-      "bsonType": "string",
-      "description": "Identifiant du document",
-    },
-    "type_document": {
-      "bsonType": "string",
-      "description": "Le type de document (exemple: DECA, etc..)",
-    },
-    "updated_at": {
-      "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
-    },
-  },
-  "required": [
-    "_id",
-    "document_id",
-  ],
-}
-`;
-
 exports[`zodToMongoSchema > should convert documents schema 1`] = `
 {
   "additionalProperties": false,
@@ -55,13 +17,6 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
       "bsonType": "string",
       "description": "Chemin du fichier binaire",
     },
-    "columns": {
-      "bsonType": "array",
-      "description": "Liste des colonnes",
-      "items": {
-        "bsonType": "string",
-      },
-    },
     "created_at": {
       "bsonType": "date",
       "description": "Date d'ajout en base de données",
@@ -69,11 +24,6 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
     "ext_fichier": {
       "bsonType": "string",
       "description": "Le type de fichier extension",
-      "enum": [
-        "xlsx",
-        "xls",
-        "csv",
-      ],
     },
     "hash_fichier": {
       "bsonType": "string",
@@ -82,14 +32,6 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
     "hash_secret": {
       "bsonType": "string",
       "description": "Hash fichier",
-    },
-    "import_progress": {
-      "bsonType": "number",
-      "description": "Progress percentage (-1 not started)",
-    },
-    "lines_count": {
-      "bsonType": "int",
-      "description": "Number of lines",
     },
     "nom_fichier": {
       "bsonType": "string",
@@ -119,131 +61,6 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
     "hash_fichier",
     "added_by",
     "created_at",
-  ],
-}
-`;
-
-exports[`zodToMongoSchema > should convert events schema 1`] = `
-{
-  "additionalProperties": true,
-  "bsonType": "object",
-  "properties": {
-    "_id": {
-      "bsonType": "objectId",
-      "description": "Identifiant unique",
-    },
-    "name": {
-      "bsonType": "string",
-      "description": "Nom de l'évènement",
-      "enum": [
-        "bal_emails",
-      ],
-    },
-    "payload": {
-      "additionalProperties": true,
-      "bsonType": "object",
-      "description": "Payload de l'évènement",
-      "properties": {
-        "emails": {
-          "bsonType": "array",
-          "items": {
-            "additionalProperties": true,
-            "bsonType": "object",
-            "properties": {
-              "error": {
-                "bsonType": "array",
-                "items": {
-                  "additionalProperties": true,
-                  "bsonType": "object",
-                  "properties": {
-                    "err_type": {
-                      "bsonType": "string",
-                      "enum": [
-                        "fatal",
-                        "soft_bounce",
-                        "hard_bounce",
-                        "complaint",
-                        "invalid_email",
-                        "blocked",
-                        "error",
-                      ],
-                    },
-                    "message": {
-                      "bsonType": "string",
-                    },
-                  },
-                },
-              },
-              "messageIds": {
-                "bsonType": "array",
-                "items": {
-                  "bsonType": "string",
-                },
-              },
-              "openDate": {
-                "bsonType": "date",
-              },
-              "payload": {
-                "additionalProperties": true,
-                "bsonType": "object",
-                "properties": {
-                  "recipient": {
-                    "additionalProperties": true,
-                    "bsonType": "object",
-                    "properties": {
-                      "email": {
-                        "bsonType": "string",
-                      },
-                    },
-                    "required": [
-                      "email",
-                    ],
-                  },
-                },
-                "required": [
-                  "recipient",
-                ],
-              },
-              "sendDates": {
-                "bsonType": "array",
-                "items": {
-                  "bsonType": "date",
-                },
-              },
-              "templateName": {
-                "bsonType": "string",
-              },
-              "token": {
-                "bsonType": "string",
-              },
-            },
-            "required": [
-              "token",
-              "templateName",
-              "payload",
-              "sendDates",
-            ],
-          },
-        },
-        "unsubscribe": {
-          "bsonType": "bool",
-          "description": "unsubscribe email",
-        },
-      },
-      "required": [
-        "emails",
-      ],
-    },
-    "person_id": {
-      "bsonType": "string",
-      "description": "Identifiant de la personne",
-    },
-  },
-  "required": [
-    "_id",
-    "person_id",
-    "name",
-    "payload",
   ],
 }
 `;
@@ -331,158 +148,6 @@ exports[`zodToMongoSchema > should convert jobs schema 1`] = `
 }
 `;
 
-exports[`zodToMongoSchema > should convert organisations schema 1`] = `
-{
-  "additionalProperties": false,
-  "bsonType": "object",
-  "properties": {
-    "_id": {
-      "bsonType": "objectId",
-      "description": "Identifiant unique",
-    },
-    "_meta": {
-      "additionalProperties": true,
-      "bsonType": "object",
-      "description": "Métadonnées",
-      "properties": {
-        "sources": {
-          "bsonType": "array",
-          "items": {
-            "bsonType": "string",
-          },
-        },
-      },
-    },
-    "created_at": {
-      "bsonType": "date",
-      "description": "Date d'ajout en base de données",
-    },
-    "email_domains": {
-      "bsonType": "array",
-      "description": "Liste des domaines email",
-      "items": {
-        "bsonType": "string",
-      },
-    },
-    "etablissements": {
-      "bsonType": "array",
-      "description": "Liste des établissements",
-      "items": {
-        "additionalProperties": false,
-        "bsonType": "object",
-        "properties": {
-          "is_close": {
-            "bsonType": "bool",
-            "description": "Est fermé",
-          },
-          "is_hq": {
-            "bsonType": "bool",
-            "description": "Siège social",
-          },
-          "nom": {
-            "bsonType": "string",
-            "description": "Nom de l'établissement",
-          },
-          "siret": {
-            "bsonType": "string",
-            "description": "Siret actif de l'établissement",
-          },
-        },
-      },
-    },
-    "nom": {
-      "bsonType": "string",
-      "description": "Nom de l'organisation",
-    },
-    "siren": {
-      "bsonType": "string",
-      "description": "Siren de l'organisation",
-    },
-    "updated_at": {
-      "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
-    },
-  },
-  "required": [
-    "_id",
-  ],
-}
-`;
-
-exports[`zodToMongoSchema > should convert persons schema 1`] = `
-{
-  "additionalProperties": false,
-  "bsonType": "object",
-  "properties": {
-    "_id": {
-      "bsonType": "objectId",
-      "description": "Identifiant unique",
-    },
-    "_meta": {
-      "additionalProperties": true,
-      "bsonType": "object",
-      "description": "Métadonnées",
-      "properties": {
-        "sources": {
-          "bsonType": "array",
-          "items": {
-            "bsonType": "string",
-          },
-        },
-      },
-    },
-    "civility": {
-      "bsonType": "string",
-      "description": "civilité",
-      "enum": [
-        "Madame",
-        "Monsieur",
-      ],
-    },
-    "created_at": {
-      "bsonType": "date",
-      "description": "Date d'ajout en base de données",
-    },
-    "email": {
-      "bsonType": "string",
-      "description": "Email de la personne",
-    },
-    "nom": {
-      "bsonType": "string",
-      "description": "Le nom de la personne",
-    },
-    "organisations": {
-      "bsonType": "array",
-      "description": "Liste des organisations",
-      "items": {
-        "bsonType": "string",
-        "description": "Identifiant de l'organisation",
-      },
-    },
-    "prenom": {
-      "bsonType": "string",
-      "description": "Le prénom de la personne",
-    },
-    "sirets": {
-      "bsonType": "array",
-      "description": "Liste de sirets recensé (sécurisation qualité de la donnée)",
-      "items": {
-        "bsonType": "string",
-      },
-    },
-    "updated_at": {
-      "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
-    },
-  },
-  "required": [
-    "_id",
-    "email",
-    "organisations",
-  ],
-}
-`;
-
 exports[`zodToMongoSchema > should convert sessions schema 1`] = `
 {
   "additionalProperties": false,
@@ -552,10 +217,6 @@ exports[`zodToMongoSchema > should convert users schema 1`] = `
       "bsonType": "string",
       "description": "Mot de passe de l'utilisateur",
     },
-    "person_id": {
-      "bsonType": "string",
-      "description": "Identifiant de la personne",
-    },
     "updated_at": {
       "bsonType": "date",
       "description": "Date de mise à jour en base de données",
@@ -565,7 +226,6 @@ exports[`zodToMongoSchema > should convert users schema 1`] = `
     "_id",
     "email",
     "password",
-    "person_id",
   ],
 }
 `;
