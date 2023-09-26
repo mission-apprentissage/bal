@@ -75,7 +75,7 @@ const config = {
     scope: env.get("MNA_BAL_OPCO_EP_SCOPE").default("").asString(),
   },
   clamav: {
-    uri: env.get("MNA_BAL_CLAMAV_URI").default("clamav:3310").asString(),
+    uri: env.get("MNA_BAL_CLAMAV_URI").default("localhost:3310").asString(),
   },
   ovhStorage: {
     username: env.get("MNA_BAL_OVH_STORAGE_USERNAME").required().asString(),

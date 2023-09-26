@@ -61,7 +61,7 @@ export const zUserWithPersonPublic = ZUserPublic.extend({
 export type IUserWithPersonPublic = Jsonify<z.output<typeof zUserWithPersonPublic>>;
 
 export function toPublicUser(user: IUserWithPerson): z.output<typeof zUserWithPersonPublic> {
-  return {
+  return zUserWithPersonPublic.parse({
     _id: user._id,
     email: user.email,
     person: user.person,
@@ -70,7 +70,7 @@ export function toPublicUser(user: IUserWithPerson): z.output<typeof zUserWithPe
     api_key_used_at: user.api_key_used_at,
     updated_at: user.updated_at,
     created_at: user.created_at,
-  };
+  });
 }
 
 export default {

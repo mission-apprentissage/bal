@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import React from "react";
+import React, { Fragment } from "react";
 
 interface Props<TData> {
   title?: string;
@@ -29,7 +29,7 @@ const InfoDetails = <TData,>({ title, rows, data }: Props<TData>) => {
           const value = data[dataKey];
 
           return (
-            <>
+            <Fragment key={key}>
               <Grid item xs={6} md={3} display="flex" alignItems="center">
                 {header?.() ?? key}
               </Grid>
@@ -37,7 +37,7 @@ const InfoDetails = <TData,>({ title, rows, data }: Props<TData>) => {
                 {/* @ts-ignore */}
                 {cell?.(data) ?? value}
               </Grid>
-            </>
+            </Fragment>
           );
         })}
       </Grid>

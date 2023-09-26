@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { zObjectId } from "../models/common";
-import { ZDocument, zDocumentPublic } from "../models/document.model";
+import { zDocumentPublic } from "../models/document.model";
 
 export const zUploadRoutes = {
   get: {
@@ -26,7 +26,7 @@ export const zUploadRoutes = {
         .strict(),
       body: z.unknown(),
       response: {
-        "2xx": ZDocument,
+        "2xx": zDocumentPublic,
       },
     },
   },
