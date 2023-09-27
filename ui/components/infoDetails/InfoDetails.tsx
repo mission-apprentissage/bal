@@ -19,7 +19,7 @@ const InfoDetails = <TData,>({ title, rows, data }: Props<TData>) => {
   return (
     <Box my={4}>
       {title && (
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h4" gutterBottom>
           {title}
         </Typography>
       )}
