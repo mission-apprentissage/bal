@@ -1276,6 +1276,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mongodb-js/saslprep@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@mongodb-js/saslprep@npm:1.1.0"
+  dependencies:
+    sparse-bitfield: ^3.0.3
+  checksum: 1479a43e216734672f8eb1a2a55165b6896841bd00fb5bd645390a24374ef6c29f0f6d19a43618a19b8f1912fcbd2b2cc2210a62361103d1f28dce6852cf31d4
+  languageName: node
+  linkType: hard
+
 "@mui/base@npm:5.0.0-beta.14":
   version: 5.0.0-beta.14
   resolution: "@mui/base@npm:5.0.0-beta.14"
@@ -3822,6 +3831,13 @@ __metadata:
   version: 5.4.0
   resolution: "bson@npm:5.4.0"
   checksum: 1c07e3d09f139d414bd226bf7f4e9aaa7a726e0c9718c55b53bb23ffa2805cac8b66e4fa46b424c73a35c6e292ed5f7432df5c76ea5d08052642b2ac9e0399e3
+  languageName: node
+  linkType: hard
+
+"bson@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "bson@npm:5.5.0"
+  checksum: 61afd240dfcaaa07346c3278d42586606b4c09bd8dcf865f6d79e26ee9cf3d6b140b8347257c598f65340e26ba640f96f6a3b9b6ff2baef963a1d321fc4c281e
   languageName: node
   linkType: hard
 
@@ -10802,7 +10818,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:^5.3.0, mongodb@npm:^5.7.0":
+"mongodb@npm:^5.3.0":
   version: 5.7.0
   resolution: "mongodb@npm:5.7.0"
   dependencies:
@@ -10831,6 +10847,38 @@ __metadata:
     snappy:
       optional: true
   checksum: 16357b6229abac165aecea15a6efa873ec8662a00411ecb9e49853f05a590be31aab63d404486125778eedaafe76d70e84eea682fa89b138decc247f4870d2ec
+  languageName: node
+  linkType: hard
+
+"mongodb@npm:^5.8.0":
+  version: 5.9.0
+  resolution: "mongodb@npm:5.9.0"
+  dependencies:
+    "@mongodb-js/saslprep": ^1.1.0
+    bson: ^5.5.0
+    mongodb-connection-string-url: ^2.6.0
+    socks: ^2.7.1
+  peerDependencies:
+    "@aws-sdk/credential-providers": ^3.188.0
+    "@mongodb-js/zstd": ^1.0.0
+    kerberos: ^1.0.0 || ^2.0.0
+    mongodb-client-encryption: ">=2.3.0 <3"
+    snappy: ^7.2.2
+  dependenciesMeta:
+    "@mongodb-js/saslprep":
+      optional: true
+  peerDependenciesMeta:
+    "@aws-sdk/credential-providers":
+      optional: true
+    "@mongodb-js/zstd":
+      optional: true
+    kerberos:
+      optional: true
+    mongodb-client-encryption:
+      optional: true
+    snappy:
+      optional: true
+  checksum: 5fb828d6503b7291c0bcc984ed35bdd0e2f166cd9d637a5ff9e8c2e497ef6260eea5a3f700f2850200cd8108057c858f96e37394ed2953aff3b85fe760bbd777
   languageName: node
   linkType: hard
 
@@ -13696,7 +13744,7 @@ __metadata:
     lodash-es: ^4.17.21
     migrate-mongo: ^10.0.0
     mjml: ^4.14.1
-    mongodb: ^5.7.0
+    mongodb: ^5.8.0
     nock: ^13.3.3
     nodemailer: ^6.9.4
     nodemailer-html-to-text: ^3.2.0
@@ -13748,7 +13796,7 @@ __metadata:
     json-schema-to-ts: ^2.9.2
     lodash-es: ^4.17.21
     luhn: ^2.4.1
-    mongodb: ^5.7.0
+    mongodb: ^5.8.0
     react: 18.2.0
     type-fest: ^4.2.0
     typescript: ^5.1.6

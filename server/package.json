@@ -50,7 +50,7 @@
     "lodash-es": "^4.17.21",
     "migrate-mongo": "^10.0.0",
     "mjml": "^4.14.1",
-    "mongodb": "^5.7.0",
+    "mongodb": "^5.8.0",
     "nodemailer": "^6.9.4",
     "nodemailer-html-to-text": "^3.2.0",
     "oleoduc": "^0.8.0",
