@@ -21,7 +21,6 @@
     "@fastify/multipart": "^7.7.3",
     "@fastify/swagger": "^8.9.0",
     "@fastify/swagger-ui": "^1.9.3",
-    "@fastify/type-provider-json-schema-to-ts": "^2.2.2",
     "@hapi/boom": "^10.0.1",
     "@immobiliarelabs/fastify-sentry": "^6.0.10",
     "@sentry/integrations": "^7.64.0",

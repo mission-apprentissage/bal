@@ -2,7 +2,7 @@ import { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
 import { ObjectId } from "mongodb";
 import { zRoutes } from "shared";
-import { IDocument } from "shared/models/document.model";
+import { IDocument, toPublicDocument } from "shared/models/document.model";
 
 import logger from "@/common/logger";
 
@@ -88,7 +88,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           });
         }
 
-        return response.status(200).send(document);
+        return response.status(200).send(toPublicDocument(document));
       } catch (error) {
         const err = server.multipartErrors;
         logger.debug(err);
@@ -112,7 +112,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         }
       );
 
-      return response.status(200).send(documents);
+      return response.status(200).send(documents.map(toPublicDocument));
     }
   );
 
