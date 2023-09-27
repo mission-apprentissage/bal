@@ -6,6 +6,7 @@ import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 
+import InfoDetails from "../../../components/infoDetails/InfoDetails";
 import Toast, { useToast } from "../../../components/toast/Toast";
 import { useAuth } from "../../../context/AuthContext";
 import { apiGet } from "../../../utils/api.utils";
@@ -54,6 +55,22 @@ const ProfilPage = () => {
     <>
       <Breadcrumb pages={[PAGES.compteProfil()]} />
       <Typography variant="h2" gutterBottom>
+        Mon compte
+      </Typography>
+      <InfoDetails
+        title="Mes informations"
+        data={user}
+        rows={{
+          email: {
+            header: () => "Adresse email",
+          },
+          is_admin: {
+            header: () => "Accès",
+            cell: (data) => (data.is_admin ? "Administrateur" : "Utilisateur"),
+          },
+        }}
+      />
+      <Typography variant="h4" gutterBottom>
         Jeton API
       </Typography>
       <Input
