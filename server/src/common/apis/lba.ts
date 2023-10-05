@@ -45,7 +45,7 @@ export const getTrainingLinks = async (data: TrainingLinkData[]) => {
   return executeWithRateLimiting(async (client: AxiosInstance) => {
     console.log(`Request fired with ${data.length} items`);
     try {
-      const { data: links } = await client.post<TrainingLink[]>(`/api/trainingLinks`, data);
+      const { data: links } = await client.post<TrainingLink[]>(`/api/traininglinks`, data);
       console.log(`Request success with ${links.length} items`);
 
       return links;
