@@ -7,6 +7,10 @@ import { zCoreRoutes } from "./routes/core.routes";
 import { zDocumentRoutes } from "./routes/document.routes";
 import { zUploadRoutes } from "./routes/upload.routes";
 import { zUserAdminRoutes, zUserRoutes } from "./routes/user.routes";
+import { zGeoRoutes } from "./routes/v1/geo.route";
+import { zNafRoutes } from "./routes/v1/naf.route";
+import { zSiretRoutes } from "./routes/v1/siret.route";
+import { zTcoRoutes } from "./routes/v1/tco.route";
 
 export type deserialize = [
   {
@@ -33,6 +37,10 @@ export const zRoutes = {
     ...zCoreRoutes.get,
     ...zUploadRoutes.get,
     ...zDocumentRoutes.get,
+    ...zSiretRoutes.get,
+    ...zGeoRoutes.get,
+    ...zTcoRoutes.get,
+    ...zNafRoutes.get,
   },
   post: {
     ...zUserAdminRoutes.post,
@@ -40,6 +48,10 @@ export const zRoutes = {
     ...zAuthRoutes.post,
     ...zCoreRoutes.post,
     ...zUploadRoutes.post,
+    ...zSiretRoutes.post,
+    ...zGeoRoutes.post,
+    ...zTcoRoutes.post,
+    ...zNafRoutes.post,
   },
   put: {
     ...zUserAdminRoutes.put,
@@ -47,6 +59,10 @@ export const zRoutes = {
     ...zAuthRoutes.put,
     ...zCoreRoutes.put,
     ...zUploadRoutes.put,
+    ...zSiretRoutes.put,
+    ...zGeoRoutes.put,
+    ...zTcoRoutes.put,
+    ...zNafRoutes.put,
   },
   delete: {
     ...zUserAdminRoutes.delete,
@@ -54,6 +70,10 @@ export const zRoutes = {
     ...zAuthRoutes.delete,
     ...zCoreRoutes.delete,
     ...zUploadRoutes.delete,
+    ...zSiretRoutes.delete,
+    ...zGeoRoutes.delete,
+    ...zTcoRoutes.delete,
+    ...zNafRoutes.delete,
   },
 } as const;
 

@@ -35,6 +35,8 @@ import { coreRoutes } from "./core.routes";
 import { documentsRoutes } from "./documents.routes";
 import { userRoutes } from "./user.routes";
 import { authValidateJWT, authValidateSession, authWebHookKey } from "./utils/auth.strategies";
+import { geoRoutes } from "./v1/geo.routes";
+import { siretRoutes } from "./v1/siret.routes";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -165,6 +167,12 @@ export function build(opts: FastifyServerOptions = {}): Server {
     },
     { prefix: "/api" }
   );
+  app.register(
+    async (instance: Server) => {
+      registerV1Routes({ server: instance });
+    },
+    { prefix: "/v1" }
+  );
 
   return app.withTypeProvider<ZodTypeProvider>();
 }
@@ -189,4 +197,9 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
   userAdminRoutes({ server });
   uploadAdminRoutes({ server });
   documentsRoutes({ server });
+};
+
+export const registerV1Routes: RegisterRoutes = ({ server }) => {
+  siretRoutes({ server });
+  geoRoutes({ server });
 };

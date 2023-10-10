@@ -42,6 +42,10 @@ export const PAGES = {
     title: "Mon profil",
     path: "/compte/profil",
   }),
+  nouveauDossier: () => ({
+    title: "Nouveau dossier",
+    path: "/dossiers/nouveau",
+  }),
   adminFichier: () => ({
     title: "Gestion des fichiers",
     path: "/admin/fichier",

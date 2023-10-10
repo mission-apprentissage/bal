@@ -51,6 +51,7 @@
     "nodemailer-html-to-text": "^3.2.0",
     "oleoduc": "^0.8.0",
     "omit-deep": "^0.3.0",
+    "query-string": "^8.1.0",
     "rate-limiter-flexible": "^2.4.2",
     "shared": "workspace:*",
     "tcp-port-used": "^1.0.2",
