@@ -19,7 +19,7 @@ export const createSession = async (data: TCreateSession) => {
 };
 
 export const getSession = async (filter: Filter<ISession>, options?: FindOptions): Promise<ISession | null> => {
-  return await getDbCollection("sessions").findOne(filter, options);
+  return getDbCollection("sessions").findOne(filter, options);
 };
 
 export const deleteSession = async (token: string) => {
