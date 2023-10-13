@@ -23,12 +23,16 @@ const executeWithRateLimiting = apiRateLimiter("mailingList", {
 
 export interface TrainingLinkData {
   id: string;
+  cle_ministere_educatif?: string;
   mef?: string;
   cfd?: string;
+  rncp?: string;
   code_postal?: string;
   uai?: string;
-  rncp?: string;
-  cle_ministere_educatif?: string;
+  uai_lieu_formation?: string;
+  uai_formateur?: string;
+  uai_formateur_responsable?: string;
+  code_insee?: string;
 }
 
 export interface TrainingLink {
@@ -41,7 +45,7 @@ export const getTrainingLinks = async (data: TrainingLinkData[]) => {
   return executeWithRateLimiting(async (client: AxiosInstance) => {
     console.log(`Request fired with ${data.length} items`);
     try {
-      const { data: links } = await client.post<TrainingLink[]>(`/api/trainingLinks`, data);
+      const { data: links } = await client.post<TrainingLink[]>(`/api/traininglinks`, data);
       console.log(`Request success with ${links.length} items`);
 
       return links;
