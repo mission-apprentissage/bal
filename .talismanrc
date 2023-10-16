@@ -39,8 +39,6 @@ fileignoreconfig:
   checksum: aa93a5ec0e3365d21334481c5f816d3f42775ab08512cf7276b66b28f8df8f86
 - filename: .infra/ansible/roles/setup/tasks/install-app.yml
   checksum: 2c7d8cdb7af638f1f5588ac9969128dddccc0a0650a5b70af5be7711d8dfbbe7
-- filename: .infra/ansible/roles/setup/vars/main/vault.yml
-  checksum: e40d1cfbe320ad9152ae23f552f16a1cf01451725292112f539285fa455f78fd
 - filename: .infra/docker-compose.preview-33.yml
   checksum: d4a2b70da835529d9f90d5a563fecfc3f3ad7782d4d442b049028ed570dc11c2
 - filename: .infra/docker-compose.preview-app.yml
@@ -70,7 +68,7 @@ fileignoreconfig:
 - filename: .infra/vault/setup-local-env.sh
   checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: 49bc99d1b39949898edce8625665c7056aa9cefcb432db80b81697b431b36271
+  checksum: 3608bfabab27222796416187ec3d91a29ee4c0920bc57284874c51bd122b2be7
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:
