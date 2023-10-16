@@ -199,21 +199,21 @@ const formatOutput = async (mailingList: IMailingList, documentContents: IDocume
 };
 
 const mergeLbaData = async (documentContents: IDocumentContent[]) => {
-  const payload: TrainingLinkData[] = documentContents.map((content) => {
-    const mef = (content.content?.code_mef as string)?.substring(0, 10) ?? "";
+  const payload: TrainingLinkData[] = documentContents.map((documentContent) => {
+    const content = documentContent.content as Record<string, string>;
 
     return {
-      id: content._id.toString(),
-      cle_ministere_educatif: (content.content?.cle_ministere_educatif as string) ?? "",
-      mef,
-      cfd: (content.content?.cfd as string) ?? "", // pas présent dans le fichier
-      rncp: (content.content?.rncp as string) ?? "", // pas présent dans le fichier
-      code_postal: (content.content?.code_postal as string) ?? "",
-      uai: (content.content?.code_uai_etab_accueil as string) ?? "",
-      uai_lieu_formation: (content?.content?.organisme_uai as string) ?? "",
-      uai_formateur: (content?.content?.organisme_uai as string) ?? "",
-      uai_formateur_responsable: (content?.content?.organisme_uai as string) ?? "",
-      code_insee: (content?.content?.code_insee as string) ?? "",
+      id: documentContent._id.toString(),
+      cle_ministere_educatif: content?.cle_ministere_educatif ?? "",
+      mef: content?.code_mef?.substring(0, 10) ?? "",
+      cfd: content?.cfd ?? "", // pas présent dans le fichier
+      rncp: content?.rncp ?? "", // pas présent dans le fichier
+      code_postal: content?.code_postal ?? "",
+      uai: content?.code_uai_etab_accueil ?? "",
+      uai_lieu_formation: content?.uai_lieu_formation ?? content?.organisme_uai ?? "",
+      uai_formateur: content?.uai_formateur ?? content?.organisme_uai ?? "",
+      uai_formateur_responsable: content?.uai_formateur_responsable ?? content?.organisme_uai ?? "",
+      code_insee: content?.code_insee ?? "",
     };
   });
 
