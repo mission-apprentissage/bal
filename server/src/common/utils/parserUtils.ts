@@ -46,7 +46,7 @@ export const getJsonFromXlsxData = (
 export function parseCsv(options: Options = {}) {
   return parse({
     trim: true,
-    delimiter: ";",
+    delimiter: [";", ","],
     columns: true,
     bom: true,
     relax_column_count: true,

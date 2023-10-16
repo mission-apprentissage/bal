@@ -372,11 +372,11 @@ export const processCsvFile = async (chunk: Buffer) => {
 
 export const extractDocumentContent = async ({
   document,
-  delimiter = ";",
+  delimiter = [";", ","],
   formatter = (line) => line,
 }: {
   document: IDocument;
-  delimiter?: string;
+  delimiter?: string | string[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formatter?: (line: any) => any;
 }) => {
