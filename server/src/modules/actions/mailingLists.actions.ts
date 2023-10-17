@@ -126,11 +126,6 @@ export const processMailingList = async (payload: IPayload) => {
       .skip(skip)
       .toArray();
 
-    if (!wishes.length) {
-      hasMore = false;
-      continue;
-    }
-
     const output = await formatOutput(mailingList, wishes);
 
     await importDocumentContent(outputDocument, output, (line) => line);
