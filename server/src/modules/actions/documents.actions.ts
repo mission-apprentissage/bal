@@ -372,7 +372,7 @@ export const processCsvFile = async (chunk: Buffer) => {
 
 export const extractDocumentContent = async ({
   document,
-  delimiter = [";", ","],
+  delimiter = ";",
   formatter = (line) => line,
 }: {
   document: IDocument;
