@@ -204,7 +204,6 @@ const mergeLbaData = async (documentContents: IDocumentContent[]) => {
       cfd: content?.cfd ?? "", // pas présent dans le fichier
       rncp: content?.rncp ?? "", // pas présent dans le fichier
       code_postal: content?.code_postal ?? "",
-      uai: content?.code_uai_etab_accueil ?? "",
       uai_lieu_formation: content?.uai_lieu_formation ?? content?.organisme_uai ?? "",
       uai_formateur: content?.uai_formateur ?? content?.organisme_uai ?? "",
       uai_formateur_responsable: content?.uai_formateur_responsable ?? content?.organisme_uai ?? "",
