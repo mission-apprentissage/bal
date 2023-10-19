@@ -268,7 +268,7 @@ export const uploadFile = async (
   const { hashStream, getHash } = crypto.checksum();
 
   if (!options.mimetype) {
-    throw new Error("Missing mimetype");
+    throw Boom.badRequest("Missing mimetype");
   }
 
   const isCsv = options.mimetype === "text/csv";
@@ -296,12 +296,12 @@ export const uploadFile = async (
 
       await deleteFromStorage(path);
     }
-    throw new Error("Le contenu du fichier est invalide");
+    throw Boom.badRequest("Le contenu du fichier est invalide");
   }
 
   if (options.createDocumentDb) {
     if (!options.filename) {
-      throw new Error("Missing filename");
+      throw Boom.badRequest("Missing filename");
     }
     await createDocument({
       _id: documentId,
@@ -353,7 +353,7 @@ export const checkCsvFile = async (document: IDocument) => {
 
       await deleteDocumentById(document._id);
 
-      throw Boom.unauthorized(`Le fichier contient un nom de colonne vide à la position ${emptyColumnIndex + 1}`);
+      throw Boom.badRequest(`Le fichier contient un nom de colonne vide à la position ${emptyColumnIndex + 1}`);
     }
   );
 };
@@ -499,7 +499,7 @@ export const importDocumentContent = async <TFileLine = unknown, TContentLine = 
 export const deleteDocumentById = async (documentId: ObjectId) => {
   const document = await findDocument({ _id: documentId });
   if (!document) {
-    throw new Error("Impossible de trouver le document");
+    throw Boom.forbidden("Impossible de trouver le document");
   }
   try {
     await deleteFromStorage(document.chemin_fichier);
