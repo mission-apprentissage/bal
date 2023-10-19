@@ -90,6 +90,10 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
 
         return response.status(200).send(toPublicDocument(document));
       } catch (error) {
+        if (error.isBoom) {
+          throw error;
+        }
+
         const err = server.multipartErrors;
         logger.debug(err);
         throw Boom.badImplementation(error as Error);
