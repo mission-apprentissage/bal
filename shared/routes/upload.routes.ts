@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 import { zObjectId } from "../models/common";
-import { zDocumentPublic } from "../models/document.model";
+import { zDocumentPublic, zDocumentPublicWithJobs } from "../models/document.model";
 
 export const zUploadRoutes = {
   get: {
     "/admin/documents": {
       response: {
-        "2xx": z.array(zDocumentPublic),
+        "2xx": z.array(zDocumentPublicWithJobs),
       },
     },
     "/admin/documents/types": {

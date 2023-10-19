@@ -3,10 +3,10 @@
 import { fr } from "@codegouvfr/react-dsfr";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { Box, Typography } from "@mui/material";
+import { Box, Tooltip, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { IDocumentJson } from "shared/models/document.model";
+import { IDocumentPublicWithJobsJson } from "shared/models/document.model";
 
 import Table from "../../../components/table/Table";
 import { apiDelete, apiGet } from "../../../utils/api.utils";
@@ -23,7 +23,7 @@ const AdminImportPage = () => {
   const [toDelete, setToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { data: documentLists, refetch } = useQuery<IDocumentJson[]>({
+  const { data: documentLists, refetch } = useQuery<IDocumentPublicWithJobsJson[]>({
     queryKey: ["documentLists"],
     queryFn: async () => apiGet("/admin/documents", {}),
     refetchInterval: 1000,
@@ -97,7 +97,21 @@ const AdminImportPage = () => {
             headerName: "Statut",
             minWidth: 170,
             renderCell: ({ value, row }) => {
-              if (value === 100) return "Terminé";
+              const job = row.jobs?.[0];
+              const output = job?.output as Record<string, string>;
+
+              if (!job) return "Terminé";
+
+              if (job.status === "finished") return "Terminé";
+              if (job.status === "errored")
+                return (
+                  <Box color={fr.colors.decisions.text.actionHigh.redMarianne.default}>
+                    Erreur
+                    <Tooltip title={output.error} arrow>
+                      <Box component="i" ml={1} className="ri-information-line" />
+                    </Tooltip>
+                  </Box>
+                );
               if (row.nom_fichier.includes("mailing-list")) return "Terminé";
               return (
                 <>

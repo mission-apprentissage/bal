@@ -2,6 +2,7 @@ import { Jsonify } from "type-fest";
 import { z } from "zod";
 
 import { IModelDescriptor, zObjectId } from "./common";
+import { ZJob } from "./job.model";
 
 const collectionName = "documents" as const;
 
@@ -31,12 +32,26 @@ export const zDocumentPublic = ZDocument.omit({
   hash_secret: true,
 });
 
+export const zDocumentWithJobs = ZDocument.extend({
+  jobs: z.array(ZJob).nullish(),
+});
+
+export const zDocumentPublicWithJobs = zDocumentPublic.extend({
+  jobs: z.array(ZJob).nullish(),
+});
+
 export type IDocument = z.output<typeof ZDocument>;
 export type IDocumentJson = Jsonify<z.input<typeof zDocumentPublic>>;
 
-export const toPublicDocument = (document: IDocument): z.output<typeof zDocumentPublic> => {
+export type IDocumentWithJobs = z.output<typeof zDocumentWithJobs>;
+export type IDocumentWithJobsJson = Jsonify<z.input<typeof zDocumentWithJobs>>;
+
+export type IDocumentPublicWithJobs = z.output<typeof zDocumentPublicWithJobs>;
+export type IDocumentPublicWithJobsJson = Jsonify<z.input<typeof zDocumentPublicWithJobs>>;
+
+export const toPublicDocument = (document: IDocumentWithJobs): z.output<typeof zDocumentPublicWithJobs> => {
   const { hash_fichier: _hash_fichier, hash_secret: _hash_secret, ...publicDocument } = document;
-  return zDocumentPublic.parse(publicDocument);
+  return zDocumentPublicWithJobs.parse(publicDocument);
 };
 
 export interface IDocumentWithContent<TContent> extends IDocument {
