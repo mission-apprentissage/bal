@@ -44,8 +44,8 @@ export async function runJob(job: IJob): Promise<number> {
     switch (job.name) {
       case "users:create": {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { organisationId, ...rest } = job.payload as any;
-        return createUser({ organisation_id: organisationId, ...rest });
+        const { payload } = job as any;
+        return createUser(payload);
       }
       case "indexes:recreate":
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

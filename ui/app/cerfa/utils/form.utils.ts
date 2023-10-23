@@ -1,4 +1,9 @@
+import { InputProps } from "@codegouvfr/react-dsfr/Input";
 import { differenceInYears, parseISO } from "date-fns";
+import { get, setWith } from "lodash";
+import { FormState } from "react-hook-form";
+
+import { CerfaForm } from "../components/CerfaForm";
 
 // luxon
 // export const caclAgeAtDate = (dateNaissanceString: string, dateString: string) => {
@@ -26,3 +31,26 @@ export const caclAgeAtDate = (dateNaissanceString: string, dateString: string) =
     exactAge: age, // since differenceInYears already returns a whole number
   };
 };
+
+interface FieldState {
+  state: InputProps["state"];
+  stateRelatedMessage: string | undefined;
+}
+
+export const getFieldStateFromFormState = (formState: FormState<CerfaForm>, name: string): FieldState => {
+  const state = get(formState.errors, name) ? "error" : "default";
+  const stateRelatedMessage = get(formState.errors, name)?.message?.toString();
+
+  return { state, stateRelatedMessage };
+};
+
+export const getValues = (fields: any) => {
+  if (!fields) return undefined;
+  const values = {};
+  Object.entries(fields).forEach(([key, field]) => {
+    setWith(values, key, field.value);
+  });
+  return values;
+};
+
+export const isEmptyValue = (value: any) => value === "" || value === undefined || value === null;

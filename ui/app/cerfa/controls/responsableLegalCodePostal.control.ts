@@ -1,11 +1,11 @@
-import { apiService } from "../../services/api.service";
 import { CerfaControl } from ".";
+import { fetchCodePostal } from "./utils/api.utils";
 
 export const responsableLegalCodePostalControl: CerfaControl = {
   deps: ["apprenti.responsableLegal.adresse.codePostal"],
   process: async ({ values, dossier, signal }) => {
     const codePostal = values.apprenti.responsableLegal.adresse.codePostal;
-    const { messages, result } = await apiService.fetchCodePostal({
+    const { messages, result } = await fetchCodePostal({
       codePostal,
       dossierId: dossier._id,
       signal,

@@ -3,6 +3,8 @@ import { FC } from "react";
 
 import CheckEmptyFields from "../CheckEmptyFields";
 import InputController from "../inputs/InputController";
+import { AvantagesNatures } from "./AvantagesNatures";
+import { Remunerations } from "./Remunerations";
 
 const CerfaContrat: FC = () => {
   return (
@@ -29,8 +31,8 @@ const CerfaContrat: FC = () => {
           </Box>
         </Box>
         <InputController name="contrat.travailRisque" />
-        {/* <Remunerations />
-        <AvantagesNatures /> */}
+        <Remunerations />
+        <AvantagesNatures />
       </Box>
       <CheckEmptyFields schema={{}} blockName="contrat" />
     </Box>

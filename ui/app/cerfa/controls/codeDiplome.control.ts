@@ -1,14 +1,13 @@
-import { apiService } from "../../services/api.service";
 import { CerfaControl } from ".";
+import { fetchCfdrncp } from "./utils/api.utils";
 
 export const codeDiplomeControl: CerfaControl[] = [
   {
     deps: ["formation.codeDiplome"],
-    process: async ({ values, dossier, signal }) => {
+    process: async ({ values, signal }) => {
       const cfd = values.formation.codeDiplome;
-      const { messages, result, error } = await apiService.fetchCfdrncp({
+      const { messages, result, error } = await fetchCfdrncp({
         cfd,
-        dossierId: dossier._id,
         signal,
       });
 

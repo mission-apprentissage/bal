@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { FC } from "react";
-import { FieldValues, UseFormReturn } from "react-hook-form";
+import { FieldValues, UseFormRegisterReturn, UseFormReturn } from "react-hook-form";
 
 import { CerfaField } from "../../../utils/cerfaSchema";
 import ConsentInput from "./ConsentInput";
@@ -27,6 +27,7 @@ interface Props {
   fieldType: FieldType;
   fieldMethods: UseFormReturn<FieldValues, any, undefined>;
   fieldSchema: CerfaField;
+  inputProps?: UseFormRegisterReturn;
 }
 
 export type InputFieldProps = Omit<Props, "fieldType">;
@@ -54,7 +55,12 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
     );
   }
 
-  return <Component {...fieldProps} />;
+  const { name, fieldMethods, fieldSchema } = fieldProps;
+  const inputProps = fieldMethods.register(name, {
+    required: fieldSchema.required && fieldSchema.requiredMessage,
+  });
+
+  return <Component {...fieldProps} inputProps={inputProps} />;
 };
 
 export default InputField;

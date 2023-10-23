@@ -156,7 +156,6 @@ program
   .description("Créer un utilisateur")
   .requiredOption("-e, --email <string>", "Email de l'utilisateur")
   .requiredOption("-p, --password <string>", "Mot de passe de l'utilisateur")
-  .requiredOption("-oId, --organisationId <string>", "Organisation Id")
   .option("-a, --admin", "administrateur")
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("users:create"));

@@ -7,7 +7,7 @@ interface Props {
 }
 
 const CheckEmptyFields: FC<Props> = () => {
-  return <Button>Est-ce que tous mes champs sont remplis ?</Button>;
+  return <Button type="submit">Est-ce que tous mes champs sont remplis ?</Button>;
 };
 
 export default CheckEmptyFields;

@@ -1,4 +1,4 @@
-import departements from "static/departements.json";
+import departements from "@/common/static/departements.json";
 
 import {
   Adresse,

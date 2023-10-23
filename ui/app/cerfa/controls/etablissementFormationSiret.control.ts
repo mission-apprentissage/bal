@@ -1,5 +1,5 @@
-import { apiService } from "../../services/api.service";
 import { CerfaControl } from ".";
+import { fetchSiret } from "./utils/api.utils";
 
 const unlockAllCascade = {
   "etablissementFormation.denomination": { locked: false, reset: true },
@@ -17,7 +17,7 @@ export const etablissementFormationSiretControl: CerfaControl[] = [
     deps: ["etablissementFormation.siret"],
     process: async ({ values, signal, dossier }) => {
       const siret = values.etablissementFormation.siret;
-      const { messages, result } = await apiService.fetchSiret({
+      const { messages, result } = await fetchSiret({
         siret,
         dossierId: dossier._id,
         organismeFormation: true,

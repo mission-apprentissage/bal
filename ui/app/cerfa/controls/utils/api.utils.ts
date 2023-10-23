@@ -5,7 +5,7 @@ type ErrorReturn = {
 };
 
 interface APIServiceCommonParams {
-  dossierId: string;
+  dossierId?: string;
   signal: AbortSignal;
 }
 
@@ -74,8 +74,8 @@ export const fetchNaf: APIServiceAction<FetchNafParams> = async ({ naf, dossierI
 };
 
 interface FetchCfdrncpParams {
-  rncp: string;
-  cfd: string;
+  rncp?: string;
+  cfd?: string;
 }
 
 export const fetchCfdrncp: APIServiceAction<FetchCfdrncpParams> = async ({
@@ -87,8 +87,8 @@ export const fetchCfdrncp: APIServiceAction<FetchCfdrncpParams> = async ({
   try {
     return apiPost("/v1/cfdrncp", {
       body: {
-        rncp,
-        cfd,
+        rncp: rncp ?? "",
+        cfd: cfd ?? "",
       },
     });
   } catch (e) {

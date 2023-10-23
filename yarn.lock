@@ -65,6 +65,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime-corejs3@npm:^7.22.6":
+  version: 7.23.1
+  resolution: "@babel/runtime-corejs3@npm:7.23.1"
+  dependencies:
+    core-js-pure: ^3.30.2
+    regenerator-runtime: ^0.14.0
+  checksum: 5d52b0cc8b5d243e67cf29c584d15acdc0c89b64de4a3fe1cb8a83b84b64a5621802e36931f93ca696cb637884abd11c8514615d890a4edf057ec4464f73915d
+  languageName: node
+  linkType: hard
+
 "@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.14.6, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.2.0, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.22.10, @babel/runtime@npm:^7.22.15, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.22.15
   resolution: "@babel/runtime@npm:7.22.15"
@@ -4733,6 +4743,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"core-js-pure@npm:^3.30.2":
+  version: 3.33.0
+  resolution: "core-js-pure@npm:3.33.0"
+  checksum: d47084a4de9a0cef9779eccd3ac9f435cf9fd7aa71794150cd4c6b305036bcc392d94766d4a7b6456bdd08faba7752d55c2ec40185bda161c3563081c9fa1e17
+  languageName: node
+  linkType: hard
+
 "core-util-is@npm:1.0.2":
   version: 1.0.2
   resolution: "core-util-is@npm:1.0.2"
@@ -7825,6 +7842,15 @@ __metadata:
   version: 5.2.4
   resolution: "ignore@npm:5.2.4"
   checksum: 3d4c309c6006e2621659311783eaea7ebcd41fe4ca1d78c91c473157ad6666a57a2df790fe0d07a12300d9aac2888204d7be8d59f9aaf665b1c7fcdb432517ef
+  languageName: node
+  linkType: hard
+
+"imask@npm:^7.1.3":
+  version: 7.1.3
+  resolution: "imask@npm:7.1.3"
+  dependencies:
+    "@babel/runtime-corejs3": ^7.22.6
+  checksum: f6dda9ec5f6bab89bbd0fca88f9cd9bd4df522764ce37f9813feec00ff18041097dccad06fe0e74c6d59b84e2fe330755064df1dc421539d3eef51f107b3cafe
   languageName: node
   linkType: hard
 
@@ -12652,6 +12678,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-imask@npm:^7.1.3":
+  version: 7.1.3
+  resolution: "react-imask@npm:7.1.3"
+  dependencies:
+    imask: ^7.1.3
+    prop-types: ^15.8.1
+  peerDependencies:
+    react: ">=0.14.0"
+  checksum: b275f62e830408b4f21be0ade9b66862bb9bd56fa0dfbfc6da6df3e6db19d5b488840de835665441e2558431e71305e815dcd139ad62955a0fdda75b8aea9828
+  languageName: node
+  linkType: hard
+
 "react-intersection-observer@npm:^6.1.0":
   version: 6.4.2
   resolution: "react-intersection-observer@npm:6.4.2"
@@ -15230,6 +15268,7 @@ __metadata:
     client-only: ^0.0.1
     date-fns: ^2.30.0
     framer-motion: ^10.16.0
+    lodash: ^4.17.21
     luxon: ^3.4.0
     next: ^13.4.17
     next-plausible: ^3.10.2
@@ -15238,6 +15277,7 @@ __metadata:
     react: ^18.2.0
     react-dom: ^18.2.0
     react-hook-form: ^7.45.4
+    react-imask: ^7.1.3
     react-notion-x: ^6.16.0
     react-phone-input-2: ^2.15.1
     sass: ^1.66.1

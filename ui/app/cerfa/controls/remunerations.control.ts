@@ -1,4 +1,4 @@
-import { buildRemuneration } from "../../cerfaForm/domain/buildRemuneration";
+import { buildRemuneration } from "../components/blocks/domain/buildRemuneration";
 import { CerfaControl } from ".";
 
 interface RemunerationAnnuelle {

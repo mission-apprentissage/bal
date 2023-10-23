@@ -12,7 +12,13 @@ const SelectInput: FC<InputFieldProps> = (props) => {
   const flatOptions = !groupedOptions ? (options as SelectOption[]) : undefined;
 
   return (
-    <Select label={fieldSchema.label} nativeSelectProps={{ ...fieldMethods.register(name) }}>
+    <Select
+      label={fieldSchema.label}
+      nativeSelectProps={{ ...fieldMethods.register(name) }}
+      style={{
+        marginBottom: "1.5rem",
+      }}
+    >
       {groupedOptions
         ? groupedOptions?.map((group) => (
             <optgroup key={group.name} label={group.name}>

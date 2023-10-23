@@ -1,15 +1,14 @@
-import { apiService } from "../../services/api.service";
 import { CerfaControl } from ".";
+import { fetchCfdrncp } from "./utils/api.utils";
 
 export const rncpControl: CerfaControl[] = [
   {
     deps: ["formation.rncp"],
-    process: async ({ values, dossier, signal }) => {
+    process: async ({ values, signal }) => {
       const rncp = values.formation.rncp;
 
-      const { messages, result, error } = await apiService.fetchCfdrncp({
+      const { messages, result, error } = await fetchCfdrncp({
         rncp,
-        dossierId: dossier._id,
         signal,
       });
 
