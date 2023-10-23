@@ -146,7 +146,7 @@ export function build(opts: FastifyServerOptions = {}): Server {
         statusCode = error.output.statusCode;
 
         return reply.status(statusCode).send({
-          message: statusCode >= 500 && config.env !== "local" ? "Internal Server Error" : message,
+          message: statusCode >= 500 && config.env !== "local" ? "Internal Server Error" : error.message,
           statusCode,
           name,
         });
