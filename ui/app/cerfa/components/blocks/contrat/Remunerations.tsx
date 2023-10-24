@@ -1,11 +1,15 @@
+import { fr } from "@codegouvfr/react-dsfr";
 import Alert from "@codegouvfr/react-dsfr/Alert";
+import { getLink } from "@codegouvfr/react-dsfr/link";
 import { Box, Collapse, Typography } from "@mui/material";
-import Link from "next/link";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
 import InputController from "../inputs/InputController";
+import ConditionItem from "./ConditionItem";
 import { shouldShowRemunerationsAnnuelles } from "./domain/shouldShowRemunerationsAnnuelles";
+
+const { Link } = getLink();
 
 const getAnneeLabel = (ordre: 1.1 | 2.1 | 3.1 | 4.1) => {
   return {
@@ -28,40 +32,49 @@ export const Remunerations = () => {
   const remunerationsAnnuelles = values.contrat.remunerationsAnnuelles;
 
   return (
-    <Box padding={4}>
-      <Typography>Rémunération</Typography>
-      <Alert
-        severity="info"
-        small
-        description={
-          <>
-            Le calcul de la rémunération est généré automatiquement à partir des informations <br />
-            que vous avez remplies. <br />
-            <strong>
-              Le calcul indique la rémunération minimale légale, l&apos;employeur pouvant décider d&apos;attribuer
-              <br /> une rémunération plus avantageuse.
-            </strong>
-          </>
-        }
-      />
-      <Alert
-        severity="info"
-        small
-        description={
-          <>
-            <Typography>
-              <strong>Attention : Ne tient pas encore compte de situations spécifiques</strong>
-              <br />
-              Exemples : rémunération du contrat d&apos;apprentissage préparant à une licence professionnelle,
-              majorations <br />
-              En savoir plus sur les situations spécifiques sur le{" "}
-              <Link href="https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/contrat-apprentissage#salaire">
-                site du Ministère du Travail, de l&apos;Emploi et de l&apos;Insertion
-              </Link>
-            </Typography>
-          </>
-        }
-      />
+    <Box
+      padding={4}
+      border="1px dashed black"
+      borderRadius="8px"
+      borderColor={fr.colors.decisions.border.plain.grey.default}
+    >
+      <Typography variant="h4" gutterBottom>
+        Rémunération
+      </Typography>
+      <Box mb={2}>
+        <Alert
+          severity="info"
+          small
+          description={
+            <>
+              Le calcul de la rémunération est généré automatiquement à partir des informations <br />
+              que vous avez remplies. <br />
+              <strong>
+                Le calcul indique la rémunération minimale légale, l&apos;employeur pouvant décider d&apos;attribuer
+                <br /> une rémunération plus avantageuse.
+              </strong>
+            </>
+          }
+        />
+        <Alert
+          severity="warning"
+          small
+          description={
+            <>
+              <Typography>
+                <strong>Attention : Ne tient pas encore compte de situations spécifiques</strong>
+                <br />
+                Exemples : rémunération du contrat d&apos;apprentissage préparant à une licence professionnelle,
+                majorations <br />
+                En savoir plus sur les situations spécifiques sur le{" "}
+                <Link href="https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/contrat-apprentissage#salaire">
+                  site du Ministère du Travail, de l&apos;Emploi et de l&apos;Insertion
+                </Link>
+              </Typography>
+            </>
+          }
+        />
+      </Box>
 
       {(dateDebutContrat === "" ||
         dateFinContrat === "" ||
@@ -72,18 +85,18 @@ export const Remunerations = () => {
             L&apos;outil détermine les périodes de rémunération et s&apos;assure du respect du minimum légale pour
             chacune des périodes, à partir des éléments renseignés.
           </Typography>
-          <ul>
-            <li color={apprentiDateNaissance === "" ? "error" : "green.500"}>
+          <Box component="ul" padding={0} sx={{ listStyle: "none" }}>
+            <ConditionItem state={apprentiDateNaissance === "" ? "error" : "success"}>
               La date de naissance de l&apos;apprenti
-            </li>
-            <li color={dateDebutContrat === "" ? "error" : "green.500"}>
+            </ConditionItem>
+            <ConditionItem state={dateDebutContrat === "" ? "error" : "success"}>
               La date de début d&apos;exécution du contrat
-            </li>
-            <li color={dateFinContrat === "" ? "error" : "green.500"}>La date de fin du contrat</li>
-            <li color={employeurAdresseDepartement === "" ? "error" : "green.500"}>
+            </ConditionItem>
+            <ConditionItem state={dateFinContrat === "" ? "error" : "success"}>La date de fin du contrat</ConditionItem>
+            <ConditionItem state={employeurAdresseDepartement === "" ? "error" : "success"}>
               Le département de l&apos;employeur
-            </li>
-          </ul>
+            </ConditionItem>
+          </Box>
         </Box>
       )}
       <Collapse in={shouldShowRemunerationsAnnuelles({ values })}>

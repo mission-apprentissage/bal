@@ -23,16 +23,9 @@ export const AvantagesNatures = () => {
           </Typography>
         )}
         <Box>
-          <Box flex="1">
-            <InputController name="contrat.avantageNourriture" type="number" />
-          </Box>
-          <Box ml={5}>
-            <InputController name="contrat.avantageLogement" type="number" />
-          </Box>
-
-          <Box>
-            <InputController name="contrat.autreAvantageEnNature" type="consent" />
-          </Box>
+          <InputController name="contrat.avantageNourriture" type="number" />
+          <InputController name="contrat.avantageLogement" type="number" />
+          <InputController name="contrat.autreAvantageEnNature" type="consent" />
         </Box>
       </Collapse>
     </Box>

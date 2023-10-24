@@ -12,7 +12,7 @@ const CerfaFormation: FC = () => {
         <InputController name="organismeFormation.siret" />
 
         <Box>
-          <Box>
+          <Box mb={1}>
             <InputController name="organismeFormation.denomination" />
             <InputController name="organismeFormation.uaiCfa" />
             <Typography>Adresse du CFA responsable : </Typography>

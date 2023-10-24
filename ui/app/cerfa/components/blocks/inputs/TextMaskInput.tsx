@@ -3,13 +3,18 @@ import { IMask } from "react-imask";
 
 import MaskInput from "@/components/form/input/MaskInput";
 
-import { getFieldStateFromFormState } from "../../../utils/form.utils";
 import { InputFieldProps } from "./InputField";
 
-const TextMaskInput: FC<InputFieldProps> = ({ name, fieldMethods, fieldSchema, inputProps }) => {
-  const { formState, setValue } = fieldMethods;
+const TextMaskInput: FC<InputFieldProps> = ({
+  name,
+  fieldMethods,
+  fieldSchema,
+  inputProps,
+  state,
+  stateRelatedMessage,
+}) => {
+  const { setValue } = fieldMethods;
   const { mask, maskBlocks, precision, min, unmask, minLength, maxLength } = fieldSchema;
-  const { state, stateRelatedMessage } = getFieldStateFromFormState(formState, name);
 
   const blocks = useMemo(() => {
     return maskBlocks?.reduce(

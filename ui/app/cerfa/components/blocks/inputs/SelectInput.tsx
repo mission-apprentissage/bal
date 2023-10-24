@@ -4,9 +4,7 @@ import { FC } from "react";
 import { SelectNestedOption, SelectOption } from "../../../utils/cerfaSchema";
 import { InputFieldProps } from "./InputField";
 
-const SelectInput: FC<InputFieldProps> = (props) => {
-  const { name, fieldMethods, fieldSchema } = props;
-
+const SelectInput: FC<InputFieldProps> = ({ fieldSchema, inputProps, state, stateRelatedMessage }) => {
   const { options } = fieldSchema;
   const groupedOptions = options && "name" in options[0] ? (options as SelectNestedOption[]) : undefined;
   const flatOptions = !groupedOptions ? (options as SelectOption[]) : undefined;
@@ -14,11 +12,14 @@ const SelectInput: FC<InputFieldProps> = (props) => {
   return (
     <Select
       label={fieldSchema.label}
-      nativeSelectProps={{ ...fieldMethods.register(name) }}
+      nativeSelectProps={{ ...inputProps }}
       style={{
         marginBottom: "1.5rem",
       }}
+      state={state}
+      stateRelatedMessage={stateRelatedMessage}
     >
+      <option value="">Sélectionnez une option</option>
       {groupedOptions
         ? groupedOptions?.map((group) => (
             <optgroup key={group.name} label={group.name}>

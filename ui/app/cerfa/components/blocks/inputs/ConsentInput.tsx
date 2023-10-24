@@ -3,12 +3,9 @@ import { FC } from "react";
 
 import { InputFieldProps } from "./InputField";
 
-const ConsentInput: FC<InputFieldProps> = (props) => {
-  const { name, fieldMethods, fieldSchema } = props;
-
+const ConsentInput: FC<InputFieldProps> = ({ name, fieldMethods, fieldSchema, state, stateRelatedMessage }) => {
   return (
     <Checkbox
-      // legend=
       options={[
         {
           label: fieldSchema?.label ?? "",
@@ -20,8 +17,8 @@ const ConsentInput: FC<InputFieldProps> = (props) => {
           },
         },
       ]}
-      // state="default"
-      // stateRelatedMessage="State description"
+      state={state}
+      stateRelatedMessage={stateRelatedMessage}
     />
   );
 };

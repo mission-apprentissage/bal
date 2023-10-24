@@ -1,36 +1,37 @@
 import { fr } from "@codegouvfr/react-dsfr/fr";
 import { InputProps } from "@codegouvfr/react-dsfr/Input";
 import { cx } from "@codegouvfr/react-dsfr/tools/cx";
+import { Box } from "@mui/material";
 import React, { forwardRef, memo, useId } from "react";
-import { symToStr } from "tsafe/symToStr";
+import PInput, { PhoneInputProps } from "react-phone-input-2";
 
 import InputGroup from "./InputGroup";
+
+interface Props extends InputProps.RegularInput {
+  phoneInputProps: PhoneInputProps;
+}
 
 /**
  * @see <https://components.react-dsfr.codegouv.studio/?path=/docs/components-input>
  * This is a more composable version to make custom components
  * */
-export const Input = memo(
-  forwardRef<HTMLDivElement, InputProps>((props, ref) => {
+export const PhoneInput = memo(
+  forwardRef<HTMLDivElement, Props>((props, ref) => {
     const {
       disabled = false,
       iconId,
       classes = {},
       state = "default",
-      textArea = false,
-      nativeTextAreaProps,
+      textArea: _textArea,
+      nativeTextAreaProps: _nativeTextAreaProps,
       nativeInputProps,
       ...rest
     } = props;
 
-    const nativeInputOrTextAreaProps = (textArea ? nativeTextAreaProps : nativeInputProps) ?? {};
-
-    const NativeInputOrTextArea = textArea ? "textarea" : "input";
-
     const inputId = (function useClosure() {
       const id = useId();
 
-      return nativeInputOrTextAreaProps.id ?? `input-${id}`;
+      return nativeInputProps?.id ?? `input-${id}`;
     })();
 
     const messageId = `${inputId}-desc-error`;
@@ -47,10 +48,12 @@ export const Input = memo(
         {...rest}
       >
         {(() => {
-          const nativeInputOrTextArea = (
-            <NativeInputOrTextArea
-              {...(nativeInputOrTextAreaProps as object)}
-              className={cx(
+          const phoneInput = (
+            <PInput
+              specialLabel=""
+              disabled={disabled}
+              aria-describedby={messageId}
+              inputClass={cx(
                 fr.cx(
                   "fr-input",
                   (() => {
@@ -66,17 +69,14 @@ export const Input = memo(
                 ),
                 classes.nativeInputOrTextArea
               )}
-              disabled={disabled || undefined}
-              aria-describedby={messageId}
-              type={textArea ? undefined : nativeInputProps?.type ?? "text"}
-              id={inputId}
+              {...props.phoneInputProps}
             />
           );
 
-          return iconId === undefined ? (
-            nativeInputOrTextArea
-          ) : (
-            <div className={fr.cx("fr-input-wrap", iconId)}>{nativeInputOrTextArea}</div>
+          return (
+            <Box mt={1}>
+              {iconId === undefined ? phoneInput : <div className={fr.cx("fr-input-wrap", iconId)}>{phoneInput}</div>}
+            </Box>
           );
         })()}
       </InputGroup>
@@ -84,6 +84,4 @@ export const Input = memo(
   })
 );
 
-Input.displayName = symToStr({ Input });
-
-export default Input;
+export default PhoneInput;

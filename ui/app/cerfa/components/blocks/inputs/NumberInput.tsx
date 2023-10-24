@@ -4,17 +4,19 @@ import { FC } from "react";
 import { InputFieldProps } from "./InputField";
 
 const NumberInput: FC<InputFieldProps> = (props) => {
-  const { name, fieldMethods, fieldSchema } = props;
+  const { fieldSchema, inputProps, state, stateRelatedMessage } = props;
 
   return (
     <Input
       label={fieldSchema.label}
       nativeInputProps={{
-        ...fieldMethods.register(name),
+        ...inputProps,
         inputMode: "numeric",
         pattern: "[0-9]*",
         type: "number",
       }}
+      state={state}
+      stateRelatedMessage={stateRelatedMessage}
     />
   );
 };

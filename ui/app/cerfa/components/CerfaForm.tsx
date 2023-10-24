@@ -58,7 +58,7 @@ const CerfaForm: FC = () => {
                   key={key}
                   id={cerfaStep.id}
                   label={cerfaStep.label}
-                  completion={0}
+                  completion={0} // TODO : compute completion
                   expanded={cerfaStep.order === step}
                   onExpandedChange={() => handleExpandChange(cerfaStep.order)}
                 >

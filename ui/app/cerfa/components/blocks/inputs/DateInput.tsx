@@ -3,10 +3,15 @@ import { FC } from "react";
 
 import { InputFieldProps } from "./InputField";
 
-const DateInput: FC<InputFieldProps> = (props) => {
-  const { name, fieldMethods, fieldSchema } = props;
-
-  return <Input label={fieldSchema.label} nativeInputProps={{ ...fieldMethods.register(name), type: "date" }} />;
+const DateInput: FC<InputFieldProps> = ({ fieldSchema, state, stateRelatedMessage, inputProps }) => {
+  return (
+    <Input
+      label={fieldSchema.label}
+      nativeInputProps={{ ...inputProps, type: "date" }}
+      state={state}
+      stateRelatedMessage={stateRelatedMessage}
+    />
+  );
 };
 
 export default DateInput;

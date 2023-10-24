@@ -4,9 +4,7 @@ import { FC } from "react";
 import { RadioOption } from "../../../utils/cerfaSchema";
 import { InputFieldProps } from "./InputField";
 
-const RadioInput: FC<InputFieldProps> = (props) => {
-  const { name, fieldMethods, fieldSchema } = props;
-
+const RadioInput: FC<InputFieldProps> = ({ name, fieldMethods, fieldSchema, state, stateRelatedMessage }) => {
   const options = fieldSchema?.options as RadioOption[] | undefined;
 
   const radioOptions: RadioButtonsProps["options"] =
@@ -25,8 +23,8 @@ const RadioInput: FC<InputFieldProps> = (props) => {
       legend={fieldSchema.label}
       name={name}
       options={radioOptions}
-      // state="default"
-      // stateRelatedMessage="State description"
+      state={state}
+      stateRelatedMessage={stateRelatedMessage}
     />
   );
 };

@@ -1,8 +1,10 @@
+import { InputProps } from "@codegouvfr/react-dsfr/Input";
 import { Typography } from "@mui/material";
 import { FC } from "react";
 import { FieldValues, UseFormRegisterReturn, UseFormReturn } from "react-hook-form";
 
 import { CerfaField } from "../../../utils/cerfaSchema";
+import { getFieldStateFromFormState } from "../../../utils/form.utils";
 import ConsentInput from "./ConsentInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
@@ -30,7 +32,7 @@ interface Props {
   inputProps?: UseFormRegisterReturn;
 }
 
-export type InputFieldProps = Omit<Props, "fieldType">;
+export type InputFieldProps = Omit<Props, "fieldType"> & Pick<InputProps, "state" | "stateRelatedMessage">;
 
 const TypesMapping: Record<FieldType, FC<InputFieldProps>> = {
   text: TextInput,
@@ -59,8 +61,9 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
   const inputProps = fieldMethods.register(name, {
     required: fieldSchema.required && fieldSchema.requiredMessage,
   });
+  const { state, stateRelatedMessage } = getFieldStateFromFormState(fieldMethods.formState, name);
 
-  return <Component {...fieldProps} inputProps={inputProps} />;
+  return <Component {...fieldProps} inputProps={inputProps} state={state} stateRelatedMessage={stateRelatedMessage} />;
 };
 
 export default InputField;
