@@ -62,6 +62,10 @@ export const PAGES = {
     title: "Fiche utilisateur",
     path: `/admin/utilisateurs/${id}`,
   }),
+  cerfa: () => ({
+    title: "Cerfa",
+    path: "/cerfa",
+  }),
 };
 
 export interface Page {

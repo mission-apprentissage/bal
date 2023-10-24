@@ -17,6 +17,13 @@ export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps):
         href: PAGES.homepage().path,
       },
     },
+    {
+      isActive: pathname === PAGES.cerfa().path,
+      text: PAGES.cerfa().title,
+      linkProps: {
+        href: PAGES.cerfa().path,
+      },
+    },
   ];
 
   if (user?.is_admin) {
