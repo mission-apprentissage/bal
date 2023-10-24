@@ -253,6 +253,7 @@ export const employeurSchema = {
     },
   },
   "employeur.typeEmployeur": {
+    fieldType: "select",
     required: true,
     label: "Type d'employeur :",
     requiredMessage: "Le type d'employeur est obligatoire",
@@ -304,6 +305,7 @@ export const employeurSchema = {
     ],
   },
   "employeur.employeurSpecifique": {
+    fieldType: "select",
     required: true,
     completion: false,
     label: "Est un employeur spécifique :",
@@ -367,6 +369,7 @@ export const employeurSchema = {
     requiredMessage: "Le libellé de la convention collective est obligatoire",
   },
   "employeur.regimeSpecifique": {
+    fieldType: "radio",
     required: true,
     label: "Adhésion de l'apprenti au régime spécifique d'assurance chômage : ",
     requiredMessage: "Cette déclaration est obligatoire",

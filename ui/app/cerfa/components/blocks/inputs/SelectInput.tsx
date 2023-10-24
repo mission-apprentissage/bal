@@ -13,9 +13,6 @@ const SelectInput: FC<InputFieldProps> = ({ fieldSchema, inputProps, state, stat
     <Select
       label={fieldSchema.label}
       nativeSelectProps={{ ...inputProps }}
-      style={{
-        marginBottom: "1.5rem",
-      }}
       state={state}
       stateRelatedMessage={stateRelatedMessage}
     >
