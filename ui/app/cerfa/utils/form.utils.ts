@@ -48,6 +48,7 @@ export const getValues = (fields: any) => {
   if (!fields) return undefined;
   const values = {};
   Object.entries(fields).forEach(([key, field]) => {
+    // @ts-expect-error: todo
     setWith(values, key, field.value);
   });
   return values;

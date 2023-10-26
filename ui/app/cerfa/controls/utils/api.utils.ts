@@ -29,7 +29,7 @@ export const fetchSiret: APIServiceAction<FetchSiretParams> = async ({
         organismeFormation,
       },
     });
-  } catch (e) {
+  } catch (e: any) {
     if (e.name === "AbortError") throw e;
     return { error: e.prettyMessage ?? "Une erreur technique est survenue" };
   }
@@ -50,7 +50,7 @@ export const fetchCodePostal: APIServiceAction<FetchCodePostalParams> = async ({
         codePostal,
       },
     });
-  } catch (e) {
+  } catch (e: any) {
     if (e.name === "AbortError") throw e;
     return { error: e.prettyMessage ?? "Une erreur technique est survenue" };
   }
@@ -67,7 +67,7 @@ export const fetchNaf: APIServiceAction<FetchNafParams> = async ({ naf, dossierI
         naf,
       },
     });
-  } catch (e) {
+  } catch (e: any) {
     if (e.name === "AbortError") throw e;
     return { error: e.prettyMessage ?? "Une erreur technique est survenue" };
   }
@@ -91,7 +91,7 @@ export const fetchCfdrncp: APIServiceAction<FetchCfdrncpParams> = async ({
         cfd: cfd ?? "",
       },
     });
-  } catch (e) {
+  } catch (e: any) {
     if (e.name === "AbortError") throw e;
     return { error: e.prettyMessage ?? "Une erreur technique est survenue" };
   }

@@ -956,7 +956,7 @@ export const apprentiSchema = {
   },
   "apprenti.responsableLegal.nom": {
     // required: true,
-    _init: ({ values }) => ({ required: shouldAskRepresentantLegal({ values }) }),
+    _init: ({ values }: any) => ({ required: shouldAskRepresentantLegal({ values }) }),
     showInfo: true,
     label: "Nom du représentant légal:",
     requiredMessage: "le nom du représentant légal est obligatoire",
@@ -970,7 +970,7 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.responsableLegal.prenom": {
-    _init: ({ values }) => ({ required: shouldAskRepresentantLegal({ values }) }),
+    _init: ({ values }: any) => ({ required: shouldAskRepresentantLegal({ values }) }),
     showInfo: true,
     label: "Prénom du représentant légal:",
     requiredMessage: "le prénom du représentant légal est obligatoire",
@@ -984,7 +984,7 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.responsableLegal.memeAdresse": {
-    _init: ({ values }) => ({ required: shouldAskRepresentantLegal({ values }) }),
+    _init: ({ values }: any) => ({ required: shouldAskRepresentantLegal({ values }) }),
     showInfo: true,
     label: "l'apprenti(e) vit à la même adresse que son responsable légal",
     requiredMessage: "L'adresse du représentant légal est obligatoire",
@@ -1020,7 +1020,7 @@ export const apprentiSchema = {
     options: INDICE_DE_REPETITION_OPTIONS,
   },
   "apprenti.responsableLegal.adresse.voie": {
-    _init: ({ values }) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
+    _init: ({ values }: any) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
     label: "Voie :",
     requiredMessage: "le nom de voie est obligatoire",
     mask: "C",
@@ -1038,7 +1038,7 @@ export const apprentiSchema = {
     requiredMessage: "le complement d'adress est obligatoire",
   },
   "apprenti.responsableLegal.adresse.codePostal": {
-    _init: ({ values }) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
+    _init: ({ values }: any) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
@@ -1052,7 +1052,7 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.responsableLegal.adresse.commune": {
-    _init: ({ values }) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
+    _init: ({ values }: any) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
     path: "apprenti.responsableLegal.adresse.commune",
     maxLength: 80,
     label: "Commune: ",
@@ -1067,7 +1067,7 @@ export const apprentiSchema = {
     ],
   },
   "apprenti.responsableLegal.adresse.pays": {
-    _init: ({ values }) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
+    _init: ({ values }: any) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
     fieldType: "select",
     label: "Pays :",
     requiredMessage: "le pays est obligatoire",

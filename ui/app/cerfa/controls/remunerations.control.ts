@@ -64,7 +64,7 @@ export const RemunerationsControl: CerfaControl[] = [
       );
 
       const newRemus = Object.fromEntries(
-        remunerationsAnnuelles?.flatMap((remu, i) => {
+        remunerationsAnnuelles?.flatMap((remu: any, i) => {
           return [
             [`contrat.remunerationsAnnuelles[${i}].dateDebut`, { value: remu.dateDebut }],
             [`contrat.remunerationsAnnuelles[${i}].dateFin`, { value: remu.dateFin }],
@@ -103,15 +103,23 @@ export const RemunerationsControl: CerfaControl[] = [
 
         return {
           cascade: {
+            // @ts-expect-error: todo
             [`${remuAnneePath}.dateDebut`]: { value: remunerationsAnnuelles[i].dateDebut },
+            // @ts-expect-error: todo
             [`${remuAnneePath}.dateFin`]: { value: remunerationsAnnuelles[i].dateFin },
             [`${remuAnneePath}.taux`]: {
+              // @ts-expect-error: todo
               value: remunerationsAnnuelles[i].taux,
+              // @ts-expect-error: todo
               min: remunerationsAnnuelles[i].tauxMinimal,
             },
+            // @ts-expect-error: todo
             [`${remuAnneePath}.tauxMinimal`]: { value: remunerationsAnnuelles[i].tauxMinimal },
+            // @ts-expect-error: todo
             [`${remuAnneePath}.typeSalaire`]: { value: remunerationsAnnuelles[i].typeSalaire },
+            // @ts-expect-error: todo
             [`${remuAnneePath}.salaireBrut`]: { value: remunerationsAnnuelles[i].salaireBrut },
+            // @ts-expect-error: todo
             [`${remuAnneePath}.ordre`]: { value: remunerationsAnnuelles[i].ordre },
           },
         };

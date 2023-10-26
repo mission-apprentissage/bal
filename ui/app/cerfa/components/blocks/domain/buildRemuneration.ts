@@ -262,6 +262,7 @@ export const buildRemuneration = (data) => {
   };
 
   const isChangingTaux = (currentAge, nextAge) => {
+    // @ts-expect-error: todo
     return getSeuils(nextAge) > getSeuils(currentAge);
   };
 
@@ -281,14 +282,18 @@ export const buildRemuneration = (data) => {
     11: emptyLineObj,
     12: emptyLineObj,
   };
+  // @ts-expect-error: todo
   const taux11 = taux.a1[getSeuils(ageA1)];
+  // @ts-expect-error: todo
   const taux12 = taux.a1[getSeuils(ageA2)];
   const selectedTaux11 = getTaux(1.1, taux11);
   const selectedTaux12 = getTaux(1.2, taux12);
   if (
     isChangingTaux(ageA1, ageA2) &&
+    // @ts-expect-error: todo
     !(isAnniversaireInLastMonth && dateFinContrat.get("year") === dateFinA1.get("year"))
   ) {
+    // @ts-expect-error: todo
     const dateDebut12 = anniversaireA1.set({ day: 1, month: anniversaireA1.get("month") + 1 });
     const dateFin11 = dateDebut12.minus({ days: 1 });
 
@@ -296,7 +301,9 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result1 = {
         11: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutContrat.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinContrat.toISO(),
           taux: selectedTaux11,
           tauxMinimal: taux11,
@@ -309,6 +316,7 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result1 = {
         11: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutContrat.toISO(),
           dateFin: dateFin11.toISO(),
           taux: selectedTaux11,
@@ -318,6 +326,7 @@ export const buildRemuneration = (data) => {
         },
         12: {
           dateDebut: dateDebut12.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinContrat.toISO(),
           taux: selectedTaux12,
           tauxMinimal: taux12,
@@ -328,6 +337,7 @@ export const buildRemuneration = (data) => {
     } else {
       result1 = {
         11: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutContrat.toISO(),
           dateFin: dateFin11.toISO(),
           taux: selectedTaux11,
@@ -337,6 +347,7 @@ export const buildRemuneration = (data) => {
         },
         12: {
           dateDebut: dateDebut12.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinA1.toISO(),
           taux: selectedTaux12,
           tauxMinimal: taux12,
@@ -350,7 +361,9 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result1 = {
         11: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutContrat.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinContrat.toISO(),
           taux: selectedTaux11,
           tauxMinimal: taux11,
@@ -362,7 +375,9 @@ export const buildRemuneration = (data) => {
     } else {
       result1 = {
         11: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
+          // @ts-expect-error: todo
           dateFin: dateFinA1.toFormat("yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
@@ -379,15 +394,19 @@ export const buildRemuneration = (data) => {
     22: emptyLineObj,
   };
 
+  // @ts-expect-error: todo
   const taux21 = taux.a2[getSeuils(ageA2)];
+  // @ts-expect-error: todo
   const taux22 = taux.a2[getSeuils(ageA3)];
   const selectedTaux21 = getTaux(2.1, taux21);
   const selectedTaux22 = getTaux(2.2, taux22);
   if (
     isChangingTaux(ageA2, ageA3) &&
     !finRemuneration &&
+    // @ts-expect-error: todo
     !(isAnniversaireInLastMonth && dateFinContrat.get("year") === dateFinA2.get("year"))
   ) {
+    // @ts-expect-error: todo
     const dateDebut22 = anniversaireA2.set({ day: 1, month: anniversaireA2.get("month") + 1 });
     const dateFin21 = dateDebut22.minus({ days: 1 });
 
@@ -395,7 +414,9 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result2 = {
         21: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutA2.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinContrat.toISO(),
           taux: selectedTaux21,
           tauxMinimal: taux21,
@@ -408,6 +429,7 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result2 = {
         21: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutA2.toISO(),
           dateFin: dateFin21.toISO(),
           taux: selectedTaux21,
@@ -417,6 +439,7 @@ export const buildRemuneration = (data) => {
         },
         22: {
           dateDebut: dateDebut22.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinContrat.toISO(),
           taux: selectedTaux22,
           tauxMinimal: taux22,
@@ -427,6 +450,7 @@ export const buildRemuneration = (data) => {
     } else {
       result2 = {
         21: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutA2.toISO(),
           dateFin: dateFin21.toISO(),
           taux: selectedTaux21,
@@ -436,6 +460,7 @@ export const buildRemuneration = (data) => {
         },
         22: {
           dateDebut: dateDebut22.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinA2.toISO(),
           taux: selectedTaux22,
           tauxMinimal: taux22,
@@ -449,7 +474,9 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result2 = {
         21: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutA2.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinContrat.toISO(),
           taux: selectedTaux21,
           tauxMinimal: taux21,
@@ -461,7 +488,9 @@ export const buildRemuneration = (data) => {
     } else {
       result2 = {
         21: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutA2.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinA2.toISO(),
           taux: selectedTaux21,
           tauxMinimal: taux21,
@@ -477,15 +506,19 @@ export const buildRemuneration = (data) => {
     31: emptyLineObj,
     32: emptyLineObj,
   };
+  // @ts-expect-error: todo
   const taux31 = taux.a3[getSeuils(ageA3)];
+  // @ts-expect-error: todo
   const taux32 = taux.a3[getSeuils(ageA4)];
   const selectedTaux31 = getTaux(3.1, taux31);
   const selectedTaux32 = getTaux(3.2, taux32);
   if (
     isChangingTaux(ageA3, ageA4) &&
     !finRemuneration &&
+    // @ts-expect-error: todo
     !(isAnniversaireInLastMonth && dateFinContrat.get("year") === dateFinA3.get("year"))
   ) {
+    // @ts-expect-error: todo
     const dateDebut32 = anniversaireA3.set({ day: 1, month: anniversaireA3.get("month") + 1 });
     const dateFin31 = dateDebut32.minus({ days: 1 });
 
@@ -493,7 +526,9 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result3 = {
         31: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutA3.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinContrat.toISO(),
           taux: selectedTaux31,
           tauxMinimal: taux31,
@@ -506,6 +541,7 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result3 = {
         31: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutA3.toISO(),
           dateFin: dateFin31.toISO(),
           taux: selectedTaux31,
@@ -515,6 +551,7 @@ export const buildRemuneration = (data) => {
         },
         32: {
           dateDebut: dateDebut32.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinContrat.toISO(),
           taux: selectedTaux32,
           tauxMinimal: taux32,
@@ -525,6 +562,7 @@ export const buildRemuneration = (data) => {
     } else {
       result3 = {
         31: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutA3.toISO(),
           dateFin: dateFin31.toISO(),
           taux: selectedTaux31,
@@ -534,6 +572,7 @@ export const buildRemuneration = (data) => {
         },
         32: {
           dateDebut: dateDebut32.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinA3.toISO(),
           taux: selectedTaux32,
           tauxMinimal: taux32,
@@ -547,7 +586,9 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result3 = {
         31: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutA3.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinContrat.toISO(),
           taux: selectedTaux31,
           tauxMinimal: taux31,
@@ -559,7 +600,9 @@ export const buildRemuneration = (data) => {
     } else {
       result3 = {
         31: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutA3.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinA3.toISO(),
           taux: selectedTaux31,
           tauxMinimal: taux31,
@@ -575,12 +618,15 @@ export const buildRemuneration = (data) => {
     41: emptyLineObj,
     42: emptyLineObj,
   };
+  // @ts-expect-error: todo
   const taux41 = taux.a4[getSeuils(ageA4)];
+  // @ts-expect-error: todo
   const taux42 = taux.a4[getSeuils(ageA5)];
   const selectedTaux41 = getTaux(4.1, taux41);
   const selectedTaux42 = getTaux(4.2, taux42);
 
   if (isChangingTaux(ageA4, ageA5) && !finRemuneration && !isAnniversaireInLastMonth) {
+    // @ts-expect-error: todo
     const dateDebut42 = anniversaireA4.set({ day: 1, month: anniversaireA4.get("month") + 1 });
     const dateFin41 = dateDebut42.minus({ days: 1 });
 
@@ -588,7 +634,9 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result4 = {
         41: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutA4.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinContrat.toISO(),
           taux: selectedTaux41,
           tauxMinimal: taux41,
@@ -600,6 +648,7 @@ export const buildRemuneration = (data) => {
     } else {
       result4 = {
         41: {
+          // @ts-expect-error: todo
           dateDebut: dateDebutA4.toISO(),
           dateFin: dateFin41.toISO(),
           taux: selectedTaux41,
@@ -609,6 +658,7 @@ export const buildRemuneration = (data) => {
         },
         42: {
           dateDebut: dateDebut42.toISO(),
+          // @ts-expect-error: todo
           dateFin: dateFinContrat.toISO(),
           taux: selectedTaux42,
           tauxMinimal: taux42,
@@ -620,7 +670,9 @@ export const buildRemuneration = (data) => {
   } else if (!finRemuneration) {
     result4 = {
       41: {
+        // @ts-expect-error: todo
         dateDebut: dateDebutA4.toISO(),
+        // @ts-expect-error: todo
         dateFin: dateFinContrat.toISO(),
         taux: selectedTaux41,
         tauxMinimal: taux41,
@@ -657,6 +709,7 @@ export const buildRemuneration = (data) => {
 
   return {
     remunerationsAnnuelles,
+    // @ts-expect-error: todo
     salaireEmbauche: remunerationsAnnuelles[0].salaireBrut,
     smicObj: {
       ...smicObj,

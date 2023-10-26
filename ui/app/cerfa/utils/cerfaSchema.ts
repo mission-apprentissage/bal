@@ -62,6 +62,7 @@ interface CerfaSchema {
 }
 
 const cerfaSchema: CerfaSchema = {
+  // @ts-expect-error: todo
   fields: {
     ...employeurSchema,
     ...maitreApprentissageSchema,

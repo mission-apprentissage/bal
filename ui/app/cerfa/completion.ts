@@ -90,6 +90,7 @@ const getBlocErrors = ({ fields, values }: any) => {
   const blockErrors: any[] = [];
   cerfaSchema.logics.forEach((logic) => {
     if (!logic.target) return;
+    // @ts-expect-error: todo
     const { error } = logic.process({ values, fields }) ?? {};
     if (error) {
       blockErrors.push({
