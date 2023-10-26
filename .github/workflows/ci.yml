@@ -6,9 +6,9 @@ on:
       CODECOV_TOKEN:
         description: Code coverrage token
         required: true
-
 jobs:
   tests:
+    timeout-minutes: 10
     name: "Tests"
     runs-on: ubuntu-latest
     services:
