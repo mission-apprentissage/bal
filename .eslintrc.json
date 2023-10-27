@@ -36,7 +36,7 @@
       }
     ],
     "import/no-useless-path-segments": ["error"],
-    "import/no-duplicates": ["error", { "considerQueryString": true }],
+    "no-duplicate-imports": ["error"],
     "import/no-unassigned-import": ["off"]
   },
   "settings": {

@@ -39,6 +39,12 @@ const nextConfig = {
     // typedRoutes: true,
   },
   output: "standalone",
+  sentry: {
+    disableServerWebpackPlugin: true,
+    disableClientWebpackPlugin: true,
+    hideSourceMaps: false,
+    widenClientFileUpload: true,
+  },
   async headers() {
     return [
       {
@@ -58,10 +64,6 @@ const nextConfig = {
       type: "asset/resource",
     });
     return config;
-  },
-  sentry: {
-    hideSourceMaps: false,
-    widenClientFileUpload: true,
   },
 };
 

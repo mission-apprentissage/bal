@@ -77,7 +77,8 @@ const PersonList = () => {
             field: "sources",
             headerName: "Sources",
             valueGetter: ({ row }) => {
-              return (row._meta as any)?.sources?.join(", ") ?? "";
+              // @ts-expect-error
+              return row._meta?.sources?.join(", ") ?? "";
             },
           },
           {

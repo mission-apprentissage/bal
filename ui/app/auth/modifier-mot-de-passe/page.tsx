@@ -26,10 +26,6 @@ const ModifierMotDePassePage = () => {
 
   const token = searchParams?.get("passwordToken") ?? "";
 
-  if (!token) {
-    return push(PAGES.homepage().path);
-  }
-
   const {
     register,
     handleSubmit,
@@ -37,6 +33,10 @@ const ModifierMotDePassePage = () => {
     reset,
     watch,
   } = useForm<IFormValues>();
+
+  if (!token) {
+    return push(PAGES.homepage().path);
+  }
 
   const password = watch("password");
 

@@ -10,7 +10,8 @@ export const zCoreRoutes = {
             version: z.string(),
             env: z.enum(["local", "recette", "production", "preview", "test"]),
           })
-          .describe("API Health"),
+          .describe("API Health")
+          .strict(),
       },
     },
     "/healthcheck/sentry": {

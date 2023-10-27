@@ -3,15 +3,18 @@
   "version": "0.0.0",
   "description": "[MNA] bal server",
   "repository": "https://github.com/mission-apprentissage/bal.git",
-  "author": "MNA",
+  "author": "Mission apprentissage",
   "license": "MIT",
-  "main": "src/index.ts",
   "type": "module",
+  "engines": {
+    "node": ">=20",
+    "npm": "please-use-yarn"
+  },
   "scripts": {
     "cli": "node dist/index.js",
-    "dev": "tsup-node --watch",
-    "build": "tsup-node --env.NODE_ENV production",
     "build:dev": "tsup-node",
+    "dev": "tsup-node --env.TSUP_WATCH true",
+    "build": "tsup-node --env.NODE_ENV production",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -59,11 +62,8 @@
     "shared": "workspace:*",
     "tcp-port-used": "^1.0.2",
     "uuid": "^9.0.0",
-    "xlsx": "^0.18.5"
-  },
-  "engines": {
-    "node": ">=20",
-    "npm": "please-use-yarn"
+    "xlsx": "^0.18.5",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/bunyan": "^1.8.8",
@@ -83,6 +83,11 @@
     "json-schema": "^0.4.0",
     "nock": "^13.3.3",
     "tsup": "^7.2.0",
-    "typescript": "^5.1.6"
-  }
+    "typescript": "^5.1.6",
+    "vitest": "^0.34.6"
+  },
+  "files": [
+    "src/**/*",
+    "!src/dev.ts"
+  ]
 }

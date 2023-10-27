@@ -30,11 +30,13 @@ export const ZMailingList = z
     identifier_columns: z.array(z.string()).describe("Liste des colonnes d'identifiants"),
     output_columns: z
       .array(
-        z.object({
-          column: z.string(),
-          output: z.string(),
-          grouped: z.boolean(),
-        })
+        z
+          .object({
+            column: z.string(),
+            output: z.string(),
+            grouped: z.boolean(),
+          })
+          .strict()
       )
       .describe("Liste des colonnes de sortie"),
     document_id: z.string().optional().describe("Identifiant du document généré"),

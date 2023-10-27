@@ -1,10 +1,18 @@
 fileignoreconfig:
 - filename: '*.mjml.ejs'
   checksum: 9e0290e41389acecddebce27c63d2af3687ece2b8ea5ce61ab33617c74728536
+- filename: .bin/scripts/deploy-log-decrypt.sh
+  checksum: b9c969e31cc620084c9a3d97637d509a821c542dba236f96dc799beff4b66648
+- filename: .bin/scripts/deploy-log-encrypt.sh
+  checksum: 8ebe245e2a3719defc295d0de3d02c42e2cb82cb2ecc9507ce0dd4273a428e5e
 - filename: .bin/scripts/setup-local-env.sh
-  checksum: 4bb90296fab07d4c645e2dae35f0e397e073764e944865a55e6339aec0a707f3
+  checksum: 89a7bbcd48dc130506fb4af4bd697c3e44542561cc52bea6ae47a134e42f06f5
 - filename: .github/workflows/_deploy.yml
-  checksum: f5e875545f9aaf94e535fb41dcf56b94c6c47be46a97e5bdfb39a36c2c42f7aa
+  checksum: bfbfdbf9032949561988a0961dce57f2e786716de5fa5b7e937d5d3a6e5a7aad
+- filename: .github/workflows/deploy_preview.yml
+  checksum: f96d49d99fb2a424924f6eb865a75be1cf6cf62a20db64255e8222ecdc39e836
+- filename: .github/workflows/gitguardian.yml
+  checksum: 6570536d75569b3826026d9126cff26fc4de473afbab8adbfc9fab833362fb79
 - filename: .github/workflows/preview.yml
   checksum: f6f0ddbd4c2498156e171b972840d4ff318681c6ef1920c0b8adc3f3e129e912
 - filename: .github/workflows/preview_cleanup.yml
@@ -81,7 +89,7 @@ fileignoreconfig:
 - filename: server/.env.local.example
   checksum: b760092fca0bbc8ba8c1d1d162b0461b992de867cbfde3dc4556226a1129e484
 - filename: server/.env.test
-  checksum: 7df7b9cccc051413dceaed2d59f4a1c7b9bee3e387ea568134f68972431878c3
+  checksum: 313ec8e940c752f33c8b3e904450ffce235ad05c99b255817b044f431ad9b106
 - filename: server/config/config.ts
   checksum: dee90e5b9ea1162aaffc204bd46a7801f8abba89fddd3f7077990321299ff3bf
 - filename: server/dev/load-env.mjs
@@ -118,6 +126,8 @@ fileignoreconfig:
   checksum: 36cfa5591cf1dcf75cc7fb3be6980cc26a393786f0afffdcca92573c448b3148
 - filename: ui/.env.local.example
   checksum: bc2c4b87084d70a679bb31f86a3981b9db3b95fe118cf3bdfc130a36cfddf607
+- filename: ui/.env.test
+  checksum: 185bfafce79a9f548bc9c6e7f98b75d9a028c3452a8bc431ce8f957c9cfe515e
 - filename: ui/Dockerfile
   checksum: 2eb89b135a7f55f39ba6781b377b5e58948e8e1686be9a22257b10b8245c42f0
 - filename: ui/Dockerfile.preview

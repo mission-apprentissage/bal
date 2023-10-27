@@ -6,10 +6,16 @@
   "author": "MNA",
   "license": "MIT",
   "private": true,
+  "packageManager": "yarn@3.6.1",
   "engines": {
     "node": ">=20",
     "npm": "please-use-yarn"
   },
+  "workspaces": [
+    "ui",
+    "server",
+    "shared"
+  ],
   "dependencies": {
     "dotenv": "^16.0.3",
     "eslint-plugin-react": "^7.32.2",
@@ -20,7 +26,6 @@
     "dev": "yarn services:start; yarn foreach:parallel run dev",
     "cli": "yarn workspace server cli",
     "seed": "./.bin/mna-bal seed:apply",
-    "seed:update": "./.bin/mna-bal seed:update",
     "deploy": "./.bin/mna-bal deploy",
     "build": "yarn foreach:seq run build",
     "migrations:status": "yarn cli migrations:status",
@@ -31,12 +36,14 @@
     "services:start": "docker compose up --remove-orphans -d",
     "services:stop": "docker compose down",
     "services:clean": "yarn services:stop; docker system prune --volumes",
-    "lint": "eslint --ignore-path .gitignore --cache .",
+    "seed:update": "./.bin/mna-bal seed:update",
+    "lint": "eslint --ignore-path .gitignore --cache --ext .js,.jsx,.ts,.tsx .",
+    "lint:fix": "yarn lint --fix",
     "prettier:fix": "prettier --write -u .",
     "prettier:check": "prettier --check -u .",
     "release": "semantic-release",
     "release:interactive": "./.bin/mna-bal release:interactive",
-    "prepare": "husky install",
+    "postinstall": "husky install",
     "talisman:add-exception": "yarn node-talisman --githook pre-commit -i",
     "e2e": "cypress open",
     "e2e:headless": "cypress run",
@@ -52,11 +59,6 @@
     "foreach:parallel": "yarn foreach:seq -pi",
     "foreach:ci": "yarn foreach:seq -p"
   },
-  "workspaces": [
-    "ui",
-    "server",
-    "shared"
-  ],
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
@@ -75,9 +77,11 @@
     "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-mocha": "^10.1.0",
+    "eslint-plugin-n": "^16.2.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "eslint-plugin-zod": "^1.4.0",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "node-talisman": "^1.29.10",
@@ -102,6 +106,5 @@
     "*": [
       "prettier --write -u"
     ]
-  },
-  "packageManager": "yarn@3.6.1"
+  }
 }

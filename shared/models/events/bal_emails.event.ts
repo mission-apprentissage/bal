@@ -10,9 +10,9 @@ export const ZBalEmail = z
           .object({
             email: z.string(),
           })
-          .nonstrict(),
+          .passthrough(),
       })
-      .nonstrict(),
+      .passthrough(),
     sendDates: z.array(z.date()),
     openDate: z.date().optional(),
     messageIds: z.array(z.string()).optional(),
@@ -25,11 +25,11 @@ export const ZBalEmail = z
               .optional(),
             message: z.string().optional(),
           })
-          .nonstrict()
+          .passthrough()
       )
       .optional(),
   })
-  .nonstrict();
+  .passthrough();
 
 export const ZBalEmails = z.array(ZBalEmail);
 
@@ -38,7 +38,7 @@ export const ZBalEmailsPayload = z
     emails: ZBalEmails,
     unsubscribe: z.boolean().optional().describe("unsubscribe email"),
   })
-  .nonstrict();
+  .passthrough();
 
 export type IBalEmail = z.output<typeof ZBalEmail>;
 export type IBalEmails = z.output<typeof ZBalEmails>;

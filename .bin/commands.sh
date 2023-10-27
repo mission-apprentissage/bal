@@ -16,6 +16,8 @@ function Help() {
    echo "  vault:password                                                                Show vault password"
    echo "  seed:update                                Update seed using a database"
    echo "  seed:apply                                 Apply seed to a database"
+   echo "  deploy:log:encrypt                         Encrypt Github ansible logs"
+   echo "  deploy:log:dencrypt                        Decrypt Github ansible logs"
    echo 
    echo
 }
@@ -68,3 +70,12 @@ function seed:update() {
 function seed:apply() {
   "${SCRIPT_DIR}/seed-apply.sh" "$@"
 }
+
+function deploy:log:encrypt() {
+  "${SCRIPT_DIR}/deploy-log-encrypt.sh" "$@"
+}
+
+function deploy:log:decrypt() {
+  "${SCRIPT_DIR}/deploy-log-decrypt.sh" "$@"
+}
+

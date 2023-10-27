@@ -5,9 +5,11 @@ import { ZDocumentContent } from "../models/documentContent.model";
 export const zDocumentRoutes = {
   get: {
     "/documents/columns": {
-      querystring: z.object({
-        type: z.string(),
-      }),
+      querystring: z
+        .object({
+          type: z.string(),
+        })
+        .strict(),
       response: {
         "2xx": z.array(z.string()),
       },
@@ -18,9 +20,11 @@ export const zDocumentRoutes = {
       },
     },
     "/documents/sample": {
-      querystring: z.object({
-        type: z.string(),
-      }),
+      querystring: z
+        .object({
+          type: z.string(),
+        })
+        .strict(),
       response: {
         "2xx": z.array(ZDocumentContent),
       },

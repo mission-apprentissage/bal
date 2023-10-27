@@ -1,14 +1,14 @@
 import { IncomingMessage } from "node:http";
 
 import https from "https";
-import { parse as parseUrl } from "url";
+import { urlToHttpOptions } from "url";
 
 import logger from "@/common/logger";
 
 export async function createRequestStream(url: string, httpOptions: https.RequestOptions = {}) {
   return new Promise<IncomingMessage>((resolve, reject) => {
     const options = {
-      ...parseUrl(url),
+      ...urlToHttpOptions(new URL(url)),
       method: "GET",
       ...httpOptions,
     };
@@ -27,7 +27,7 @@ export async function createRequestStream(url: string, httpOptions: https.Reques
 
 export function createUploadStream(url: string, httpOptions = {}) {
   const options = {
-    ...parseUrl(url),
+    ...urlToHttpOptions(new URL(url)),
     method: "PUT",
     ...httpOptions,
   };

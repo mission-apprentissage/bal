@@ -32,7 +32,9 @@ RUN --mount=type=cache,target=/app/.yarn/cache yarn workspaces focus --all --pro
 # Production image, copy all the files and run next
 FROM node:20-alpine AS server
 WORKDIR /app
-RUN --mount=type=cache,target=/var/cache/apk apk add --update curl
+RUN --mount=type=cache,target=/var/cache/apk apk add --update \
+  curl \
+  && rm -rf /var/cache/apk/*
 
 ENV NODE_ENV production
 ARG PUBLIC_VERSION
@@ -49,7 +51,7 @@ CMD ["node", "dist/index.js", "start"]
 
 
 ##############################################################
-######################    UI    ##########################
+######################      UI      ##########################
 ##############################################################
 
 # Rebuild the source code only when needed
@@ -70,6 +72,7 @@ ARG PUBLIC_ENV
 ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
 
 RUN yarn --cwd ui build
+# RUN --mount=type=cache,target=/app/ui/.next/cache yarn --cwd ui build
 
 # Production image, copy all the files and run next
 FROM node:20-alpine AS ui

@@ -2,11 +2,11 @@ import { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
 import { ObjectId } from "mongodb";
 import { zRoutes } from "shared";
+import { FILE_SIZE_LIMIT } from "shared/constants/index";
 import { IDocument, toPublicDocument } from "shared/models/document.model";
 
 import logger from "@/common/logger";
 
-import { FILE_SIZE_LIMIT } from "../../../../../shared/constants/index";
 import {
   createEmptyDocument,
   deleteDocumentById,
