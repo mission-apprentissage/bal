@@ -3,6 +3,7 @@ export interface PublicConfig {
     dsn: string;
   };
   host: string;
+  baseUrl: string;
   apiEndpoint: string;
   env: "local" | "preview" | "recette" | "production";
   version: string;
@@ -16,6 +17,7 @@ function getProductionPublicConfig(): PublicConfig {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
     host,
+    baseUrl: `https://${host}`,
     env: "production",
     apiEndpoint: `https://${host}/api`,
     version: getVersion(),
@@ -30,6 +32,7 @@ function getRecettePublicConfig(): PublicConfig {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
     host,
+    baseUrl: `https://${host}`,
     env: "recette",
     apiEndpoint: `https://${host}/api`,
     version: getVersion(),
@@ -51,6 +54,7 @@ function getPreviewPublicConfig(): PublicConfig {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
     host,
+    baseUrl: `https://${host}`,
     env: "preview",
     apiEndpoint: `https://${host}/api`,
     version: getVersion(),
@@ -64,6 +68,7 @@ function getLocalPublicConfig(): PublicConfig {
       dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
     },
     host,
+    baseUrl: `http://${host}:3000`,
     env: "local",
     apiEndpoint: `http://${host}:${process.env.NEXT_PUBLIC_API_PORT ?? 5000}/api`,
     version: getVersion(),

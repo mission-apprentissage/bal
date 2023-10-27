@@ -127,7 +127,7 @@ fileignoreconfig:
 - filename: ui/.env.local.example
   checksum: bc2c4b87084d70a679bb31f86a3981b9db3b95fe118cf3bdfc130a36cfddf607
 - filename: ui/.env.test
-  checksum: 15bd4e7d9fe9daaad1a60f60a70de60ed1d7223235a127e22d0335f18f33ded4
+  checksum: 185bfafce79a9f548bc9c6e7f98b75d9a028c3452a8bc431ce8f957c9cfe515e
 - filename: ui/Dockerfile
   checksum: 2eb89b135a7f55f39ba6781b377b5e58948e8e1686be9a22257b10b8245c42f0
 - filename: ui/Dockerfile.preview

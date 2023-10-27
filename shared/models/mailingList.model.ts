@@ -36,7 +36,7 @@ export const ZMailingList = z
             output: z.string(),
             grouped: z.boolean(),
           })
-          .passthrough()
+          .strict()
       )
       .describe("Liste des colonnes de sortie"),
     document_id: z.string().optional().describe("Identifiant du document généré"),

@@ -1,6 +1,6 @@
 import { ObjectId } from "bson";
 import { Jsonify } from "type-fest";
-import z, { ZodType } from "zod";
+import z, { AnyZodObject, ZodType } from "zod";
 
 import { zAuthRoutes } from "./routes/auth.routes";
 import { zCoreRoutes } from "./routes/core.routes";
@@ -30,69 +30,89 @@ export type deserialize = [
   },
 ];
 
-export const zRoutes = {
-  get: {
-    ...zUserAdminRoutes.get,
-    ...zUserRoutes.get,
-    ...zAuthRoutes.get,
-    ...zCoreRoutes.get,
-    ...zEmailRoutes.get,
-    ...zPersonRoutes.get,
-    ...zUploadRoutes.get,
-    ...zDocumentRoutes.get,
-    ...zAdminOrganisationRoutes.get,
-    ...zOrganisationV1Routes.get,
-    ...zMailingListRoutes.get,
-  },
-  post: {
-    ...zUserAdminRoutes.post,
-    ...zUserRoutes.post,
-    ...zAuthRoutes.post,
-    ...zCoreRoutes.post,
-    ...zEmailRoutes.post,
-    ...zPersonRoutes.post,
-    ...zUploadRoutes.post,
-    ...zAdminOrganisationRoutes.post,
-    ...zOrganisationV1Routes.post,
-    ...zMailingListRoutes.post,
-  },
-  put: {
-    ...zUserAdminRoutes.put,
-    ...zUserRoutes.put,
-    ...zAuthRoutes.put,
-    ...zCoreRoutes.put,
-    ...zEmailRoutes.put,
-    ...zPersonRoutes.put,
-    ...zUploadRoutes.put,
-    ...zAdminOrganisationRoutes.put,
-    ...zOrganisationV1Routes.put,
-    ...zMailingListRoutes.put,
-  },
-  delete: {
-    ...zUserAdminRoutes.delete,
-    ...zUserRoutes.delete,
-    ...zAuthRoutes.delete,
-    ...zCoreRoutes.delete,
-    ...zEmailRoutes.delete,
-    ...zPersonRoutes.delete,
-    ...zUploadRoutes.delete,
-    ...zAdminOrganisationRoutes.delete,
-    ...zOrganisationV1Routes.delete,
-    ...zMailingListRoutes.delete,
-  },
+const zRoutesGet = {
+  ...zUserAdminRoutes.get,
+  ...zUserRoutes.get,
+  ...zAuthRoutes.get,
+  ...zCoreRoutes.get,
+  ...zEmailRoutes.get,
+  ...zPersonRoutes.get,
+  ...zUploadRoutes.get,
+  ...zDocumentRoutes.get,
+  ...zAdminOrganisationRoutes.get,
+  ...zOrganisationV1Routes.get,
+  ...zMailingListRoutes.get,
 } as const;
 
-export type IRoutes = typeof zRoutes;
+const zRoutesPost = {
+  ...zUserAdminRoutes.post,
+  ...zUserRoutes.post,
+  ...zAuthRoutes.post,
+  ...zCoreRoutes.post,
+  ...zEmailRoutes.post,
+  ...zPersonRoutes.post,
+  ...zUploadRoutes.post,
+  ...zAdminOrganisationRoutes.post,
+  ...zOrganisationV1Routes.post,
+  ...zMailingListRoutes.post,
+} as const;
 
-export type IGetRoutes = IRoutes["get"];
-export type IPostRoutes = IRoutes["post"];
-export type IPutRoutes = IRoutes["put"];
-export type IDeleteRoutes = IRoutes["delete"];
+const zRoutesPut = {
+  ...zUserAdminRoutes.put,
+  ...zUserRoutes.put,
+  ...zAuthRoutes.put,
+  ...zCoreRoutes.put,
+  ...zEmailRoutes.put,
+  ...zPersonRoutes.put,
+  ...zUploadRoutes.put,
+  ...zAdminOrganisationRoutes.put,
+  ...zOrganisationV1Routes.put,
+  ...zMailingListRoutes.put,
+} as const;
+
+const zRoutesDelete = {
+  ...zUserAdminRoutes.delete,
+  ...zUserRoutes.delete,
+  ...zAuthRoutes.delete,
+  ...zCoreRoutes.delete,
+  ...zEmailRoutes.delete,
+  ...zPersonRoutes.delete,
+  ...zUploadRoutes.delete,
+  ...zAdminOrganisationRoutes.delete,
+  ...zOrganisationV1Routes.delete,
+  ...zMailingListRoutes.delete,
+} as const;
+
+export type IGetRoutes = typeof zRoutesGet;
+export type IPostRoutes = typeof zRoutesPost;
+export type IPutRoutes = typeof zRoutesPut;
+export type IDeleteRoutes = typeof zRoutesDelete;
+
+export type IRoutes = {
+  get: IGetRoutes;
+  post: IPostRoutes;
+  put: IPutRoutes;
+  delete: IDeleteRoutes;
+};
+
+export type IRoutesPath = {
+  get: keyof IRoutes["get"];
+  post: keyof IRoutes["post"];
+  put: keyof IRoutes["put"];
+  delete: keyof IRoutes["delete"];
+};
+
+export const zRoutes: IRoutes = {
+  get: zRoutesGet,
+  post: zRoutesPost,
+  put: zRoutesPut,
+  delete: zRoutesDelete,
+} as const;
 
 export interface IRouteSchema {
   body?: ZodType;
   querystring?: ZodType;
-  headers?: ZodType<Record<string, string | undefined> | undefined>;
+  headers?: AnyZodObject;
   params?: ZodType;
   response: { "2xx": ZodType };
 }

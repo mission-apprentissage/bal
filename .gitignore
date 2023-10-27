@@ -163,3 +163,4 @@ ui/next-env.d.ts
 SEED_PASSPHRASE.txt
 seed.gz
 
+tsconfig.tsbuildinfo

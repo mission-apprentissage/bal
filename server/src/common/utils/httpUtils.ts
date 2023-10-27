@@ -27,7 +27,7 @@ export async function createRequestStream(url: string, httpOptions: https.Reques
 
 export function createUploadStream(url: string, httpOptions = {}) {
   const options = {
-    ...parseUrl(url),
+    ...urlToHttpOptions(new URL(url)),
     method: "PUT",
     ...httpOptions,
   };
