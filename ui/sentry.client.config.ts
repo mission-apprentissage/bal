@@ -10,10 +10,15 @@ import { publicConfig } from "./config.public";
 Sentry.init({
   dsn: publicConfig.sentry.dsn,
   tracesSampleRate: publicConfig.env === "production" ? 0.1 : 1.0,
-  tracePropagationTargets: [/\.apprentissage\.beta\.gouv\.fr$/],
+  tracePropagationTargets: [
+    /^https:\/\/[^/]*\.apprentissage\.beta\.gouv\.fr/,
+    publicConfig.baseUrl,
+    publicConfig.apiEndpoint,
+    /^\//,
+  ],
   environment: publicConfig.env,
   enabled: publicConfig.env !== "local",
-  // debug: true,
+  release: publicConfig.version,
   normalizeDepth: 8,
   // replaysOnErrorSampleRate: 1.0,
   // replaysSessionSampleRate: 0.1,
@@ -22,6 +27,7 @@ Sentry.init({
     //   maskAllText: true,
     //   blockAllMedia: true,
     // }),
+    // new Sentry.BrowserTracing(),
     // @ts-ignore
     new ExtraErrorData({ depth: 8 }),
     // @ts-ignore

@@ -5,6 +5,7 @@ export interface PublicConfig {
   host: string;
   apiEndpoint: string;
   env: "local" | "preview" | "recette" | "production";
+  version: string;
 }
 
 function getProductionPublicConfig(): PublicConfig {
@@ -17,6 +18,7 @@ function getProductionPublicConfig(): PublicConfig {
     host,
     env: "production",
     apiEndpoint: `https://${host}/api`,
+    version: getVersion(),
   };
 }
 
@@ -30,6 +32,7 @@ function getRecettePublicConfig(): PublicConfig {
     host,
     env: "recette",
     apiEndpoint: `https://${host}/api`,
+    version: getVersion(),
   };
 }
 
@@ -50,6 +53,7 @@ function getPreviewPublicConfig(): PublicConfig {
     host,
     env: "preview",
     apiEndpoint: `https://${host}/api`,
+    version: getVersion(),
   };
 }
 
@@ -62,6 +66,7 @@ function getLocalPublicConfig(): PublicConfig {
     host,
     env: "local",
     apiEndpoint: `http://${host}:${process.env.NEXT_PUBLIC_API_PORT ?? 5000}/api`,
+    version: getVersion(),
   };
 }
 
