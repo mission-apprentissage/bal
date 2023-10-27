@@ -21,3 +21,6 @@ echo "NEXT_PUBLIC_ENV=local" >> "${ROOT_DIR}/ui/.env"
 echo "NEXT_PUBLIC_VERSION=0.0.0-local" >> "${ROOT_DIR}/ui/.env"
 echo "NEXT_PUBLIC_API_PORT=5001" >> "${ROOT_DIR}/ui/.env"
 
+yarn build:dev
+yarn cli migrations:up
+yarn cli indexes:recreate

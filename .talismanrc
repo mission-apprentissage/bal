@@ -6,7 +6,7 @@ fileignoreconfig:
 - filename: .bin/scripts/deploy-log-encrypt.sh
   checksum: 8ebe245e2a3719defc295d0de3d02c42e2cb82cb2ecc9507ce0dd4273a428e5e
 - filename: .bin/scripts/setup-local-env.sh
-  checksum: 8d849d877c11bc3e20ed7f767e569e9bcb50e0028d868c70044ac4ecb7ae2aaf
+  checksum: 89a7bbcd48dc130506fb4af4bd697c3e44542561cc52bea6ae47a134e42f06f5
 - filename: .github/workflows/_deploy.yml
   checksum: bfbfdbf9032949561988a0961dce57f2e786716de5fa5b7e937d5d3a6e5a7aad
 - filename: .github/workflows/deploy_preview.yml
@@ -126,6 +126,8 @@ fileignoreconfig:
   checksum: 36cfa5591cf1dcf75cc7fb3be6980cc26a393786f0afffdcca92573c448b3148
 - filename: ui/.env.local.example
   checksum: bc2c4b87084d70a679bb31f86a3981b9db3b95fe118cf3bdfc130a36cfddf607
+- filename: ui/.env.test
+  checksum: 15bd4e7d9fe9daaad1a60f60a70de60ed1d7223235a127e22d0335f18f33ded4
 - filename: ui/Dockerfile
   checksum: 2eb89b135a7f55f39ba6781b377b5e58948e8e1686be9a22257b10b8245c42f0
 - filename: ui/Dockerfile.preview
