@@ -24,6 +24,8 @@ export const ZReqParamsSearchPagination = z
   .strict();
 export type IReqParamsSearchPagination = z.input<typeof ZReqParamsSearchPagination>;
 
-export const ZReqHeadersAuthorization = z.object({
-  Authorization: z.string().describe("Bearer token").optional(),
-});
+export const ZReqHeadersAuthorization = z
+  .object({
+    Authorization: z.string().describe("Bearer token").optional(),
+  })
+  .passthrough();

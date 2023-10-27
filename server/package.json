@@ -62,7 +62,8 @@
     "shared": "workspace:*",
     "tcp-port-used": "^1.0.2",
     "uuid": "^9.0.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/bunyan": "^1.8.8",
@@ -82,9 +83,11 @@
     "json-schema": "^0.4.0",
     "nock": "^13.3.3",
     "tsup": "^7.2.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vitest": "^0.34.6"
   },
   "files": [
-    "src/**/*"
+    "src/**/*",
+    "!src/dev.ts"
   ]
 }

@@ -19,7 +19,7 @@ export const ZEvent = z
     name: z.enum(["bal_emails"]).describe("Nom de l'évènement"),
     payload: ZBalEmailsPayload.describe("Payload de l'évènement"),
   })
-  .nonstrict();
+  .passthrough();
 
 export type IEvent = z.output<typeof ZEvent>;
 export type IEventJson = Jsonify<z.output<typeof ZEvent>>;

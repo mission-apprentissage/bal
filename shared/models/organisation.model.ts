@@ -50,7 +50,7 @@ export const ZOrganisation = z
       .object({
         sources: z.array(z.string()).optional(),
       })
-      .nonstrict()
+      .passthrough()
       .optional()
       .describe("Métadonnées"),
     updated_at: z.date().optional().describe("Date de mise à jour en base de données"),

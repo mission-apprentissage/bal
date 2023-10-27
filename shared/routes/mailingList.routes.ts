@@ -11,25 +11,27 @@ export const zMailingListRoutes = {
       },
     },
     "/mailing-lists/:id": {
-      params: z.object({ id: zObjectId }),
+      params: z.object({ id: zObjectId }).strict(),
       response: {
         "2xx": ZMailingList,
       },
     },
     "/mailing-lists/:id/download": {
-      params: z.object({ id: zObjectId }),
+      params: z.object({ id: zObjectId }).strict(),
       response: {
         "2xx": z.unknown(),
       },
     },
     "/mailing-lists/:id/progress": {
-      params: z.object({ id: zObjectId }),
+      params: z.object({ id: zObjectId }).strict(),
       response: {
-        "2xx": z.object({
-          status: z.enum(["pending", "will_start", "running", "finished", "blocked", "errored"]),
-          processed: z.number(),
-          processed_count: z.number(),
-        }),
+        "2xx": z
+          .object({
+            status: z.enum(["pending", "will_start", "running", "finished", "blocked", "errored"]),
+            processed: z.number(),
+            processed_count: z.number(),
+          })
+          .strict(),
       },
     },
   },
@@ -43,16 +45,18 @@ export const zMailingListRoutes = {
           secondary_email: z.string().optional(),
           identifier_columns: z.array(z.string()),
           output_columns: z.array(
-            z.object({
-              column: z.string(),
-              output: z.string(),
-              grouped: z.boolean(),
-            })
+            z
+              .object({
+                column: z.string(),
+                output: z.string(),
+                grouped: z.boolean(),
+              })
+              .strict()
           ),
         })
         .strict(),
       response: {
-        "2xx": z.object({ success: z.literal(true) }),
+        "2xx": z.object({ success: z.literal(true) }).strict(),
       },
     },
   },
@@ -61,7 +65,7 @@ export const zMailingListRoutes = {
     "/mailing-list/:id": {
       params: z.object({ id: zObjectId }).strict(),
       response: {
-        "2xx": z.object({ success: z.literal(true) }),
+        "2xx": z.object({ success: z.literal(true) }).strict(),
       },
     },
   },

@@ -8,11 +8,11 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   },
 }));
 
-export const Table = <R extends GridValidRowModel = any>(props: DataGridProps<R>) => {
+export const Table = <R extends GridValidRowModel>(props: DataGridProps<R>) => {
   return (
     <Box my={2}>
       <StyledDataGrid
-        // @ts-ignore
+        // @ts-expect-error
         getRowId={(row) => row?._id ?? row.id}
         rowHeight={60}
         localeText={frFR.components.MuiDataGrid.defaultProps.localeText}

@@ -12,7 +12,8 @@ export const zOrganisationV1Routes = {
           email: z.string().trim().email("Email non valide"),
           siret: extensions.siret(),
         })
-        .describe("Organisation validation Request body"),
+        .describe("Organisation validation Request body")
+        .strict(),
       headers: ZReqHeadersAuthorization,
       response: {
         "2xx": z

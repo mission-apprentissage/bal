@@ -22,11 +22,13 @@ export const zUserAdminRoutes = {
   },
   post: {
     "/admin/user": {
-      body: z.object({
-        email: ZUser.shape.email,
-        password: ZUser.shape.password,
-        organisation_id: z.string(),
-      }),
+      body: z
+        .object({
+          email: ZUser.shape.email,
+          password: ZUser.shape.password,
+          organisation_id: z.string(),
+        })
+        .strict(),
       response: {
         "2xx": zUserWithPersonPublic,
       },

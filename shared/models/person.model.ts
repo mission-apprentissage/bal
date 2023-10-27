@@ -34,8 +34,8 @@ export const ZPerson = z
       .object({
         sources: z.array(z.string()).optional(),
       })
+      .passthrough()
       .describe("Métadonnées")
-      .nonstrict()
       .optional(),
     updated_at: z.date().describe("Date de mise à jour en base de données").optional(),
     created_at: z.date().describe("Date d'ajout en base de données").optional(),

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "404",
 };
 
-export default async function NotFoundPage() {
+export default function NotFoundPage() {
   return (
     <Box>
       <Box

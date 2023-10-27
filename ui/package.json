@@ -1,7 +1,9 @@
 {
   "name": "ui",
   "version": "0.0.0",
-  "private": true,
+  "license": "MIT",
+  "author": "Mission apprentissage",
+  "repository": "https://github.com/mission-apprentissage/bal.git",
   "engines": {
     "node": ">=20",
     "npm": "please-use-yarn"
