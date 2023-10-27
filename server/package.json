@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "description": "[MNA] bal server",
   "repository": "https://github.com/mission-apprentissage/bal.git",
-  "author": "MNA",
+  "author": "Mission apprentissage",
   "license": "MIT",
-  "main": "src/index.ts",
   "type": "module",
+  "engines": {
+    "node": ">=20",
+    "npm": "please-use-yarn"
+  },
   "scripts": {
     "cli": "node dist/index.js",
     "dev": "tsup-node --watch",
@@ -61,10 +64,6 @@
     "uuid": "^9.0.0",
     "xlsx": "^0.18.5"
   },
-  "engines": {
-    "node": ">=20",
-    "npm": "please-use-yarn"
-  },
   "devDependencies": {
     "@types/bunyan": "^1.8.8",
     "@types/bunyan-prettystream": "^0.1.32",
@@ -84,5 +83,8 @@
     "nock": "^13.3.3",
     "tsup": "^7.2.0",
     "typescript": "^5.1.6"
-  }
+  },
+  "files": [
+    "src/**/*"
+  ]
 }
