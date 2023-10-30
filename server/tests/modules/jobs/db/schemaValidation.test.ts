@@ -4,35 +4,36 @@ import { getDatabase } from "../../../../src/common/utils/mongodbUtils";
 import { countInvalidDocuments, validateDocuments } from "../../../../src/modules/jobs/db/schemaValidation";
 import { useMongo } from "../../../utils/mongo.utils";
 
-describe("countInvalidDocuments", () => {
-  const mongo = useMongo();
+const mongo = useMongo();
 
-  beforeAll(async () => {
-    await mongo.beforeAll();
-    await getDatabase().createCollection("shipping", {
-      validator: {
-        $jsonSchema: {
-          bsonType: "object",
-          title: "Shipping Country Validation",
-          properties: {
-            country: {
-              enum: ["France", "United Kingdom", "United States"],
-              description: "Must be either France, United Kingdom, or United States",
-            },
+beforeAll(async () => {
+  await mongo.beforeAll();
+  await getDatabase().createCollection("shipping", {
+    validator: {
+      $jsonSchema: {
+        bsonType: "object",
+        title: "Shipping Country Validation",
+        properties: {
+          country: {
+            enum: ["France", "United Kingdom", "United States"],
+            description: "Must be either France, United Kingdom, or United States",
           },
         },
       },
-    });
+    },
   });
+});
 
-  beforeEach(async () => {
-    await mongo.beforeEach();
-  });
+beforeEach(async () => {
+  await mongo.beforeEach();
+});
 
-  afterAll(async () => {
-    await mongo.afterAll();
-  });
+afterAll(async () => {
+  await getDatabase().dropCollection("shipping");
+  await mongo.afterAll();
+});
 
+describe("countInvalidDocuments", () => {
   it("should return invalid documents count", async () => {
     await getDatabase()
       .collection("shipping")
@@ -93,34 +94,6 @@ describe("countInvalidDocuments", () => {
 });
 
 describe("validateDocuments", () => {
-  const mongo = useMongo();
-
-  beforeAll(async () => {
-    await mongo.beforeAll();
-    await getDatabase().createCollection("shipping", {
-      validator: {
-        $jsonSchema: {
-          bsonType: "object",
-          title: "Shipping Country Validation",
-          properties: {
-            country: {
-              enum: ["France", "United Kingdom", "United States"],
-              description: "Must be either France, United Kingdom, or United States",
-            },
-          },
-        },
-      },
-    });
-  });
-
-  beforeEach(async () => {
-    await mongo.beforeEach();
-  });
-
-  afterAll(async () => {
-    await mongo.afterAll();
-  });
-
   it("should reject when at least one document is invalid", async () => {
     await getDatabase()
       .collection("shipping")
