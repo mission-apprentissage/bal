@@ -2,14 +2,6 @@ import { config } from "dotenv";
 import { MongoClient } from "mongodb";
 
 export default async () => {
-  config({ path: "./server/.env.test" });
-
-  const { createIndexesAndSchema, startAndConnectMongodb, stopMongodb } = await import("./utils/mongo.utils");
-
-  await startAndConnectMongodb();
-  await createIndexesAndSchema();
-  await stopMongodb();
-
   return async () => {
     config({ path: "./server/.env.test" });
 

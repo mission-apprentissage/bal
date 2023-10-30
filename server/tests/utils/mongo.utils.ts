@@ -13,10 +13,7 @@ export const startAndConnectMongodb = async () => {
   const workerId = `${process.env.VITEST_POOL_ID}-${process.env.VITEST_WORKER_ID}`;
 
   await connectToMongodb(config.mongodb.uri.replace("VITEST_POOL_ID", workerId));
-};
-
-export const createIndexesAndSchema = async () => {
-  return await Promise.all([createIndexes(), configureDbSchemaValidation(modelDescriptors)]);
+  await Promise.all([createIndexes(), configureDbSchemaValidation(modelDescriptors)]);
 };
 
 export const stopMongodb = async () => {
