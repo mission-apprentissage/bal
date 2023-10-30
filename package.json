@@ -19,7 +19,8 @@
   "dependencies": {
     "dotenv": "^16.0.3",
     "eslint-plugin-react": "^7.32.2",
-    "global": "4.4.0"
+    "global": "4.4.0",
+    "husky": "^8.0.3"
   },
   "scripts": {
     "setup": ".bin/mna-bal init:env",
@@ -82,7 +83,6 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "eslint-plugin-zod": "^1.4.0",
-    "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "node-talisman": "^1.29.10",
     "prettier": "^3.0.3",
