@@ -37,24 +37,15 @@ export const zMailingListRoutes = {
   },
   post: {
     "/mailing-list": {
-      body: z
-        .object({
-          source: z.string(),
-          campaign_name: z.string(),
-          email: z.string(),
-          secondary_email: z.string().optional(),
-          identifier_columns: z.array(z.string()),
-          output_columns: z.array(
-            z
-              .object({
-                column: z.string(),
-                output: z.string(),
-                grouped: z.boolean(),
-              })
-              .strict()
-          ),
-        })
-        .strict(),
+      body: ZMailingList.pick({
+        source: true,
+        campaign_name: true,
+        email: true,
+        secondary_email: true,
+        identifier_columns: true,
+        output_columns: true,
+        training_columns: true,
+      }).strict(),
       response: {
         "2xx": z.object({ success: z.literal(true) }).strict(),
       },

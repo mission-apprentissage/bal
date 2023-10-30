@@ -10,10 +10,11 @@ import { IMailingListJson } from "shared/models/mailingList.model";
 
 import ToggleSwitchInput from "../../../../components/form/ToggleSwitchInput";
 import { apiPost } from "../../../../utils/api.utils";
-import { getFormattedSample, WEBHOOK_LBA } from "../mailingLists.utils";
+import { WEBHOOK_LBA } from "../mailingLists.utils";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
 import PreviewColonnesSortie from "./PreviewColonnesSortie";
+import Sample from "./Sample";
 
 interface Props {
   onSuccess: (data: IBody<IPostRoutes["/mailing-list"]>) => void;
@@ -26,6 +27,7 @@ interface Props {
   secondaryEmail?: string;
   sample: IDocumentContentJson[];
   mailingList?: IMailingListJson;
+  trainingColumns: IMailingListJson["training_columns"];
 }
 
 type Route = IBody<IPostRoutes["/mailing-list"]>;
@@ -36,6 +38,7 @@ const ChoixColonnesSortie: FC<Props> = ({
   onCancel,
   columns,
   identifierColumns,
+  trainingColumns,
   campaignName,
   source,
   email,
@@ -77,6 +80,7 @@ const ChoixColonnesSortie: FC<Props> = ({
       campaign_name: campaignName,
       identifier_columns: identifierColumns,
       output_columns: outputColumnDefaultValues,
+      training_columns: trainingColumns,
     },
     values: {
       email,
@@ -85,6 +89,7 @@ const ChoixColonnesSortie: FC<Props> = ({
       campaign_name: campaignName,
       identifier_columns: identifierColumns,
       output_columns: outputColumnDefaultValues,
+      training_columns: trainingColumns,
     },
   });
 
@@ -222,7 +227,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                 )}
               </MailingListSectionCell>
               <MailingListSectionCell xs={3}>
-                {outputColumns[index].column && getFormattedSample(sample, outputColumns[index].column)}
+                <Sample sample={sample} column={outputColumns[index].column} />
                 {index !== 0 && (
                   <Box ml="auto">
                     <Button
