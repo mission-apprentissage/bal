@@ -78,7 +78,7 @@ jobs:
           ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
 
       - name: Encrypt Error log on failure
-        run: .bin/mna-lba deploy:log:encrypt
+        run: .bin/mna-bal deploy:log:encrypt
         if: failure()
         env:
           ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
