@@ -9,9 +9,8 @@ export default defineWorkspace([
       root: "./server",
       include: ["./tests/**/*.test.ts"],
       setupFiles: ["./tests/setup.ts"],
-      // We cannot use threads for testing databases.
-      // We need to use child_process to isolate mongodb.
-      threads: false,
+      globalSetup: ["./server/tests/globalSetup.ts"],
+      threads: true,
     },
   },
   {
