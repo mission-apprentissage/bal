@@ -47,7 +47,7 @@ const AdminImportPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-
+    setError,
     watch,
     control,
   } = useForm<FormValues>({
@@ -87,7 +87,10 @@ const AdminImportPage = () => {
       router.push(PAGES.adminFichier().path);
     } catch (error) {
       if (error instanceof Error) {
-        setToast({ severity: "error", message: error.message });
+        const { message } = error;
+        setError("file", { message });
+      } else {
+        setToast({ severity: "error", message: "Une erreur s'est produite pendant le téléversement du fichier." });
       }
       console.error(error);
     } finally {

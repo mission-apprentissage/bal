@@ -3,10 +3,10 @@ import { captureException } from "@sentry/node";
 import chardet from "chardet";
 import { Options } from "csv-parse";
 import iconv from "iconv-lite";
-import { Filter, FindOneAndUpdateOptions, FindOptions, ObjectId, UpdateFilter } from "mongodb";
+import { Document, Filter, FindOneAndUpdateOptions, FindOptions, ObjectId, UpdateFilter } from "mongodb";
 import { oleoduc, transformData, writeData } from "oleoduc";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
-import { IDocument } from "shared/models/document.model";
+import { IDocument, IDocumentWithJobs } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
 import { Readable } from "stream";
 import { JsonObject } from "type-fest";
@@ -63,6 +63,30 @@ export const findDocuments = async (filter: Filter<IDocument>, options?: FindOpt
   const documents = await getDbCollection("documents").find<IDocument>(filter, options).toArray();
 
   return documents;
+};
+
+export const findDocumentsWithImportJob = async (filter: Filter<IDocument>, pipeline: Document[] = []) => {
+  const documents = await getDbCollection("documents")
+    .aggregate([
+      {
+        $lookup: {
+          from: "jobs",
+          localField: "_id",
+          foreignField: "payload.document_id",
+          as: "jobs",
+        },
+      },
+      {
+        $match: {
+          "jobs.name": "import:document",
+          ...filter,
+        },
+      },
+      ...pipeline,
+    ])
+    .toArray();
+
+  return documents as IDocumentWithJobs[];
 };
 
 export const updateDocument = async (

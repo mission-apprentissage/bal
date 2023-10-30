@@ -10,7 +10,7 @@ import logger from "@/common/logger";
 import {
   createEmptyDocument,
   deleteDocumentById,
-  findDocuments,
+  findDocumentsWithImportJob,
   getDocumentTypes,
   uploadFile,
 } from "../../actions/documents.actions";
@@ -108,13 +108,13 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (_request, response) => {
-      const documents = await findDocuments(
-        { import_progress: { $exists: true } },
+      const documents = await findDocumentsWithImportJob({}, [
         {
-          projection: { hash_secret: 0, hash_fichier: 0 },
-          sort: { created_at: -1 },
-        }
-      );
+          $sort: {
+            created_at: -1,
+          },
+        },
+      ]);
 
       return response.status(200).send(documents.map(toPublicDocument));
     }
