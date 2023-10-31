@@ -8,7 +8,7 @@
     - Une fois la PR validée, merger avec "Squash and merge" ou "Rebase and merge" si cela a du sens.
 -->
 
-fix #...
+fix: #...
 
 <!-- Une description  -->
 <!-- Si changements visuels, merci d'ajouter des screenshots ou videos -->
