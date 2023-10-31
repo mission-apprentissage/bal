@@ -22,7 +22,7 @@ import { uploadToStorage } from "../../common/utils/ovhUtils";
 import { DEFAULT_DELIMITER } from "../../common/utils/parserUtils";
 import { addJob } from "../jobs/jobs_actions";
 import { noop } from "../server/utils/upload.utils";
-import { createEmptyDocument, deleteDocumentById, findDocument, importDocumentContent } from "./documents.actions";
+import { createEmptyDocument, deleteDocumentById, importDocumentContent } from "./documents.actions";
 import { findJob, updateJob } from "./job.actions";
 
 /**
@@ -97,12 +97,6 @@ export const processMailingList = async (payload: IPayload) => {
 
   if (!job) throw new Error("Job not found");
 
-  const document = await findDocument({
-    type_document: mailingList.source,
-  });
-
-  if (!document) throw new Error("Document not found");
-
   // create output document
   const outputDocument = await createEmptyDocument({
     type_document: `${MAILING_LIST_DOCUMENT_PREFIX}-${mailingList.source}`,
@@ -118,10 +112,14 @@ export const processMailingList = async (payload: IPayload) => {
   let hasMore = true;
   let processed = 0;
 
+  const lines_count = await getDbCollection("documentContents").countDocuments({
+    type_document: mailingList.source,
+  });
+
   while (hasMore) {
     const wishes = await getDbCollection("documentContents")
       .find({
-        document_id: document._id.toString(),
+        type_document: mailingList.source,
       })
       .limit(batchSize)
       .skip(skip)
@@ -134,7 +132,7 @@ export const processMailingList = async (payload: IPayload) => {
     processed += wishes.length;
 
     await updateJob(job._id, {
-      "payload.processed": document.lines_count ? (processed / document.lines_count) * 100 : 0,
+      "payload.processed": lines_count ? (processed / lines_count) * 100 : 0,
       "payload.processed_count": processed,
     });
     // Check if there are more documents to retrieve
