@@ -1,4 +1,4 @@
-name: Deploy Preview
+name: Deploy a Preview
 on:
   issue_comment:
     types: [created]
