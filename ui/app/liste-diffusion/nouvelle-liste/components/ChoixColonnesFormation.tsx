@@ -1,7 +1,7 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Box, Typography } from "@mui/material";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
 import { IMailingListJson } from "shared/models/mailingList.model";
@@ -111,7 +111,7 @@ const fields: ITrainingField[] = [
   },
 ];
 
-const ChoixColonnesFormation: FC<Props> = ({ onSuccess, columns, onCancel, sample }) => {
+const ChoixColonnesFormation: FC<Props> = ({ mailingList, onSuccess, columns, onCancel, sample }) => {
   const form = useForm<ITrainingColumnForm>({
     defaultValues: {},
   });
@@ -119,7 +119,16 @@ const ChoixColonnesFormation: FC<Props> = ({ onSuccess, columns, onCancel, sampl
   const {
     handleSubmit,
     formState: { isSubmitting },
+    setValue,
   } = form;
+
+  useEffect(() => {
+    if (mailingList) {
+      Object.entries(mailingList.training_columns ?? {}).forEach(([key, value]) => {
+        setValue(key as keyof ITrainingColumnForm, value);
+      });
+    }
+  }, [mailingList, columns]);
 
   const onSubmit = async (data: ITrainingColumnForm) => {
     onSuccess({ training_columns: data });
