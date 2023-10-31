@@ -157,7 +157,7 @@ const formatOutput = async (mailingList: IMailingList, documentContents: IDocume
   const needsLbaData = outputColumns.map((c) => c.column).includes(MAILING_LIST_WEBHOOK_LBA);
 
   if (needsLbaData) {
-    data = await mergeLbaData(data);
+    data = await mergeLbaData(mailingList, data);
   }
 
   outputColumns = getOutputColumnsWithLba(mailingList);
@@ -193,21 +193,34 @@ const formatOutput = async (mailingList: IMailingList, documentContents: IDocume
   return [...rows, ...toDuplicate];
 };
 
-const mergeLbaData = async (documentContents: IDocumentContent[]) => {
+const mergeLbaData = async (mailingList: IMailingList, documentContents: IDocumentContent[]) => {
+  const {
+    training_columns: {
+      cle_ministere_educatif,
+      cfd,
+      rncp,
+      mef,
+      uai_lieu_formation,
+      uai_formateur,
+      uai_formateur_responsable,
+      code_postal,
+      code_insee,
+    },
+  } = mailingList;
   const payload: TrainingLinkData[] = documentContents.map((documentContent) => {
     const content = documentContent.content as Record<string, string>;
 
     return {
       id: documentContent._id.toString(),
-      cle_ministere_educatif: content?.cle_ministere_educatif ?? "",
-      mef: content?.code_mef?.substring(0, 10) ?? "",
-      cfd: content?.cfd ?? "", // pas présent dans le fichier
-      rncp: content?.rncp ?? "", // pas présent dans le fichier
-      code_postal: content?.code_postal ?? "",
-      uai_lieu_formation: content?.uai_lieu_formation ?? content?.organisme_uai ?? "",
-      uai_formateur: content?.uai_formateur ?? content?.organisme_uai ?? "",
-      uai_formateur_responsable: content?.uai_formateur_responsable ?? content?.organisme_uai ?? "",
-      code_insee: content?.code_insee ?? "",
+      cle_ministere_educatif: cle_ministere_educatif ? content?.[cle_ministere_educatif] : "",
+      cfd: cfd ? content?.[cfd] : "",
+      rncp: rncp ? content?.[rncp] : "",
+      mef: mef ? content?.[mef]?.substring(0, 10) : "",
+      uai_lieu_formation: uai_lieu_formation ? content?.[uai_lieu_formation] : "",
+      uai_formateur: uai_formateur ? content?.[uai_formateur] : "",
+      uai_formateur_responsable: uai_formateur_responsable ? content?.[uai_formateur_responsable] : "",
+      code_postal: code_postal ? content?.[code_postal] : "",
+      code_insee: code_insee ? content?.[code_insee] : "",
     };
   });
 

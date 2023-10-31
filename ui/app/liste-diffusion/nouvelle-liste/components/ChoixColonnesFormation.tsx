@@ -22,13 +22,13 @@ type ITrainingColumnForm = IMailingListJson["training_columns"];
 export interface ITrainingField {
   name:
     | "cle_ministere_educatif"
-    | "mef"
     | "cfd"
     | "rncp"
-    | "code_postal"
+    | "mef"
     | "uai_lieu_formation"
     | "uai_formateur"
     | "uai_formateur_responsable"
+    | "code_postal"
     | "code_insee";
   label: string;
   tooltip?: {
