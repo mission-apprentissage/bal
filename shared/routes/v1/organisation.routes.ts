@@ -1,22 +1,23 @@
 import { z } from "zod";
 
 import { extensions } from "../../helpers/zodHelpers/zodPrimitives";
-import { ZReqHeadersAuthorization } from "../common.routes";
+import { IRoutesDef, ZReqHeadersAuthorization } from "../common.routes";
 
 export const zOrganisationV1Routes = {
-  get: {},
   post: {
     "/v1/organisation/validation": {
+      method: "post",
+      path: "/v1/organisation/validation",
       body: z
         .object({
           email: z.string().trim().email("Email non valide"),
-          siret: extensions.siret(),
+          siret: extensions.siret,
         })
         .describe("Organisation validation Request body")
         .strict(),
       headers: ZReqHeadersAuthorization,
       response: {
-        "2xx": z
+        "200": z
           .object({
             is_valid: z.boolean(),
             on: z.enum(["email", "domain"]).optional(),
@@ -24,8 +25,11 @@ export const zOrganisationV1Routes = {
           .strict()
           .describe("Organisation validation Response body"),
       },
+      securityScheme: {
+        auth: "api-key",
+        ressources: {},
+        access: null,
+      },
     },
   },
-  put: {},
-  delete: {},
-};
+} as const satisfies IRoutesDef;

@@ -1,7 +1,6 @@
 import Boom from "@hapi/boom";
 import { zRoutes } from "shared";
 
-import config from "../../../config";
 import { validation } from "../../actions/organisations.actions";
 import { Server } from "../server";
 
@@ -10,16 +9,7 @@ export const organisationRoutes = ({ server }: { server: Server }) => {
     "/organisation/validation",
     {
       schema: zRoutes.post["/v1/organisation/validation"],
-      preHandler: [
-        server.auth([
-          async function (request, ...arg) {
-            if (request.headers.referer === `${config.publicUrl}/usage/validation`) {
-              return this.validateSession(request, ...arg);
-            }
-            return this.validateJWT(request, ...arg);
-          },
-        ]),
-      ],
+      onRequest: [server.auth(zRoutes.post["/v1/organisation/validation"])],
     },
     async (request, response) => {
       const { email, siret } = request.body;

@@ -22,6 +22,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@asteasolutions/zod-to-openapi@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "@asteasolutions/zod-to-openapi@npm:6.2.0"
+  dependencies:
+    openapi3-ts: ^4.1.2
+  peerDependencies:
+    zod: ^3.20.2
+  checksum: 27106e47676fe87c8acf29ba8a9a61270d4a26ecd386c3fbe5f65b1517af9a2948544338a0e82de3091c112316ebc3c75adc1e7cf88a0e626b8680c21b8f5f17
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.21.4":
   version: 7.22.5
   resolution: "@babel/code-frame@npm:7.22.5"
@@ -11836,6 +11847,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"openapi3-ts@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "openapi3-ts@npm:4.1.2"
+  dependencies:
+    yaml: ^2.2.2
+  checksum: 019a66f4195966bf58ee29f913b91e39975616458fdb40a15507a3b3e338eacfc882def0dda1a5001edf962e382ed6f46c8a0d40684adcccb868960267df30d9
+  languageName: node
+  linkType: hard
+
 "optionator@npm:^0.9.3":
   version: 0.9.3
   resolution: "optionator@npm:0.9.3"
@@ -13924,11 +13944,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "shared@workspace:shared"
   dependencies:
+    "@asteasolutions/zod-to-openapi": ^6.2.0
     bson: ^5.4.0
     json-schema-to-ts: ^2.9.2
     lodash-es: ^4.17.21
     luhn: ^2.4.1
     mongodb: ^5.7.0
+    openapi3-ts: ^4.1.2
     react: 18.2.0
     type-fest: ^4.2.0
     typescript: ^5.1.6

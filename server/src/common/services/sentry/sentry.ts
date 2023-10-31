@@ -9,8 +9,9 @@ import config from "../../../config";
 function getOptions() {
   return {
     tracesSampleRate: config.env === "production" ? 0.1 : 1.0,
-    tracePropagationTargets: [/\.apprentissage\.beta\.gouv\.fr$/],
+    tracePropagationTargets: [/^https:\/\/[^/]*\.apprentissage\.beta\.gouv\.fr/],
     environment: config.env,
+    release: config.version,
     enabled: config.env !== "local",
     integrations: [
       new Sentry.Integrations.Http({ tracing: true }),
@@ -66,4 +67,27 @@ export function initSentryFastify<T extends FastifyInstance>(app: T) {
   };
 
   app.register(fastifySentryPlugin, options);
+}
+
+function getTransation() {
+  return Sentry.getCurrentHub()?.getScope()?.getSpan();
+}
+
+export function startSentryPerfRecording(
+  category: string,
+  operation: string,
+  data?: {
+    [key: string]: any;
+  }
+): () => void {
+  const childTransaction =
+    getTransation()?.startChild({
+      op: category,
+      description: operation,
+      data,
+    }) ?? null;
+
+  return () => {
+    childTransaction?.finish();
+  };
 }

@@ -97,10 +97,14 @@ export const findUser = async (filter: Filter<IUser>): Promise<IUserWithPerson |
   return user;
 };
 
-export const updateUser = async (user: IUser, data: Partial<IUser>, updateFilter: UpdateFilter<IUser> = {}) => {
-  return await getDbCollection("users").findOneAndUpdate(
+export const updateUser = async (
+  email: IUser["email"],
+  data: Partial<IUser>,
+  updateFilter: UpdateFilter<IUser> = {}
+): Promise<void> => {
+  await getDbCollection("users").findOneAndUpdate(
     {
-      _id: user._id,
+      email,
     },
     {
       $set: { ...data, updated_at: new Date() },
@@ -113,7 +117,7 @@ export const generateApiKey = async (user: IUser) => {
   const generatedKey = generateKey();
   const secretHash = generateSecretHash(generatedKey);
 
-  await updateUser(user, { api_key: secretHash }, { $unset: { api_key_used_at: true } });
+  await updateUser(user.email, { api_key: secretHash }, { $unset: { api_key_used_at: true } });
 
   const token = createUserTokenSimple({
     payload: { _id: user._id, api_key: generatedKey },

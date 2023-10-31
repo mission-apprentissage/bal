@@ -43,9 +43,11 @@ const ModifierMotDePassePage = () => {
   const onSubmit: SubmitHandler<IFormValues> = async ({ password }) => {
     try {
       await apiPost("/auth/reset-password", {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
         body: {
           password,
-          token,
         },
       });
 

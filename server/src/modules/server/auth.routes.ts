@@ -1,12 +1,10 @@
-import Boom, { forbidden } from "@hapi/boom";
+import Boom from "@hapi/boom";
 import { zRoutes } from "shared";
 import { IUserWithPerson, toPublicUser } from "shared/models/user.model";
 
-import config from "@/config";
-
-import { createUserTokenSimple } from "../../common/utils/jwtUtils";
+import { getUserFromRequest } from "../../security/authenticationService";
 import { resetPassword, sendResetPasswordEmail, verifyEmailPassword } from "../actions/auth.actions";
-import { createSession, deleteSession } from "../actions/sessions.actions";
+import { startSession, stopSession } from "../actions/sessions.actions";
 import { Server } from "./server";
 
 export const authRoutes = ({ server }: { server: Server }) => {
@@ -17,13 +15,11 @@ export const authRoutes = ({ server }: { server: Server }) => {
     "/auth/session",
     {
       schema: zRoutes.get["/auth/session"],
-      preHandler: server.auth([server.validateSession]),
+      onRequest: [server.auth(zRoutes.get["/auth/session"])],
     },
     async (request, response) => {
-      if (!request.user) {
-        throw forbidden();
-      }
-      return response.status(200).send(toPublicUser(request.user));
+      const user = getUserFromRequest(request, zRoutes.get["/auth/session"]);
+      return response.status(200).send(toPublicUser(user));
     }
   );
 
@@ -44,13 +40,9 @@ export const authRoutes = ({ server }: { server: Server }) => {
         throw Boom.forbidden("Identifiants incorrects");
       }
 
-      const token = createUserTokenSimple({ payload: { email: user.email } });
-      await createSession({ token });
+      await startSession(user.email, response);
 
-      return response
-        .setCookie(config.session.cookieName, token, config.session.cookie)
-        .status(200)
-        .send(toPublicUser(user));
+      return response.status(200).send(toPublicUser(user));
     }
   );
 
@@ -60,13 +52,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
       schema: zRoutes.get["/auth/logout"],
     },
     async (request, response) => {
-      const token = request.cookies[config.session.cookieName];
-
-      if (token) {
-        await deleteSession(token);
-
-        return response.clearCookie(config.session.cookieName, config.session.cookie).status(200).send({});
-      }
+      await stopSession(request, response);
 
       return response.status(200).send({});
     }
@@ -87,12 +73,14 @@ export const authRoutes = ({ server }: { server: Server }) => {
     "/auth/reset-password",
     {
       schema: zRoutes.post["/auth/reset-password"],
+      onRequest: [server.auth(zRoutes.post["/auth/reset-password"])],
     },
     async (request, response) => {
-      const { password, token } = request.body;
+      const { password } = request.body;
+      const user = getUserFromRequest(request, zRoutes.post["/auth/reset-password"]);
 
       try {
-        await resetPassword(password, token);
+        await resetPassword(user, password);
 
         return response.status(200).send({});
       } catch (error) {

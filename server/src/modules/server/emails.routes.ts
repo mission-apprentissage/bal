@@ -1,35 +1,23 @@
-import { FastifyReply, FastifyRequest } from "fastify";
+import Boom from "@hapi/boom";
 import { zRoutes } from "shared";
-import { zEmailParams } from "shared/routes/emails.routes";
-import z from "zod";
+import { IEmailError } from "shared/models/events/bal_emails.event";
 
-import {
-  checkIfEmailExists,
-  markEmailAsDelivered,
-  markEmailAsFailed,
-  markEmailAsOpened,
-  renderEmail,
-  unsubscribeUser,
-} from "../actions/emails.actions";
+import { renderEmail } from "../../common/services/mailer/mailer";
+import { deserializeEmailTemplate } from "../../common/utils/jwtUtils";
+import config from "../../config";
+import { markEmailAsDelivered, markEmailAsFailed, markEmailAsOpened, unsubscribe } from "../actions/emails.actions";
 import { Server } from "./server";
 
 export const emailsRoutes = ({ server }: { server: Server }) => {
-  async function checkEmailToken<T extends FastifyRequest>(request: T, reply: FastifyReply) {
-    const { token } = request.params as z.infer<typeof zEmailParams>;
-    if (!(await checkIfEmailExists(token))) {
-      return reply.status(404).send("Non trouvé");
-    }
-    return;
-  }
-
   server.get(
-    "/emails/:token/preview",
+    "/emails/preview",
     {
-      schema: zRoutes.get["/emails/:token/preview"],
-      preHandler: [checkEmailToken],
+      schema: zRoutes.get["/emails/preview"],
     },
     async (request, response) => {
-      const html = await renderEmail(request.params.token);
+      const template = deserializeEmailTemplate(request.query.data);
+      // No need to set markAsOpenedActionLink as the email as already be openned
+      const html = await renderEmail(template, null);
       return response
         .header("Content-Type", "text/html")
         .status(200)
@@ -38,14 +26,13 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
   );
 
   server.get(
-    "/emails/:token/markAsOpened",
+    "/emails/:id/markAsOpened",
     {
-      schema: zRoutes.get["/emails/:token/markAsOpened"],
+      schema: zRoutes.get["/emails/:id/markAsOpened"],
+      onRequest: [server.auth(zRoutes.get["/emails/:id/markAsOpened"])],
     },
     async (request, response) => {
-      const { token } = request.params;
-
-      markEmailAsOpened(token);
+      await markEmailAsOpened(request.params.id);
 
       return response
         .header("Content-Type", "image/gif")
@@ -55,15 +42,14 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
   );
 
   server.get(
-    "/emails/:token/unsubscribe",
+    "/emails/unsubscribe",
     {
-      schema: zRoutes.get["/emails/:token/unsubscribe"],
-      preHandler: [checkEmailToken],
+      schema: zRoutes.get["/emails/unsubscribe"],
     },
     async (request, response) => {
-      const { token } = request.params;
+      const template = deserializeEmailTemplate(request.query.data);
 
-      await unsubscribeUser(token);
+      await unsubscribe(template.to);
 
       return response
         .header("Content-Type", "text/html")
@@ -98,15 +84,20 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
     "/emails/webhook",
     {
       schema: zRoutes.post["/emails/webhook"],
-      preHandler: [server.auth([server.validateWebHookKey])],
     },
     async (request, response) => {
+      const { webhookKey } = request.query;
+
+      if (config.smtp.webhookKey !== webhookKey) {
+        throw Boom.forbidden("Non autorisé");
+      }
+
       const { event, "message-id": messageId } = request.body;
 
       if (event === "delivered") {
         markEmailAsDelivered(messageId);
       } else {
-        markEmailAsFailed(messageId, event);
+        markEmailAsFailed(messageId, event as IEmailError["type"]);
       }
 
       return response.status(200).send();

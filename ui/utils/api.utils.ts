@@ -1,26 +1,62 @@
-import { IRequest, IResponse, IRoutes, IRouteSchema } from "shared";
-import { IResErrorJson } from "shared/routes/common.routes";
+import { IDeleteRoutes, IGetRoutes, IPostRoutes, IPutRoutes, IRequest, IResponse } from "shared";
+import { IResErrorJson, IRouteSchema, IRouteSchemaWrite } from "shared/routes/common.routes";
+import { EmptyObject } from "type-fest";
 import z, { ZodType } from "zod";
 
 import { publicConfig } from "../config.public";
 
 type PathParam = Record<string, string>;
 type QueryString = Record<string, string | string[]>;
-interface WithQueryStringAndPathParam {
-  params?: PathParam;
-  querystring?: QueryString;
-}
+type WithQueryStringAndPathParam =
+  | {
+      params?: PathParam;
+      querystring?: QueryString;
+    }
+  | EmptyObject;
 
-type Options = {
-  [Prop in keyof Omit<IRouteSchema, "response">]: IRouteSchema[Prop] extends ZodType
+type OptionsGet = {
+  [Prop in keyof Pick<IRouteSchema, "params" | "querystring" | "headers">]: IRouteSchema[Prop] extends ZodType
     ? z.input<IRouteSchema[Prop]>
-    : undefined;
+    : never;
 };
 
-async function getHeaders(options: Options) {
+type OptionsWrite = {
+  [Prop in keyof Pick<
+    IRouteSchemaWrite,
+    "params" | "querystring" | "headers" | "body"
+  >]: IRouteSchemaWrite[Prop] extends ZodType ? z.input<IRouteSchemaWrite[Prop]> : never;
+};
+
+type IRequestOptions = OptionsGet | OptionsWrite | EmptyObject;
+
+async function optionsToFetchParams(method: RequestInit["method"], options: IRequestOptions) {
+  const headers = await getHeaders(options);
+
+  let body: BodyInit | undefined = undefined;
+  if ("body" in options && method !== "GET") {
+    // @ts-expect-error
+    if (options.body instanceof FormData) {
+      body = options.body;
+    } else {
+      body = JSON.stringify(options.body);
+      headers.append("Content-Type", "application/json");
+    }
+  }
+
+  const requestInit: RequestInit = {
+    mode: publicConfig.env === "local" ? "cors" : "same-origin",
+    credentials: publicConfig.env === "local" ? "include" : "same-origin",
+    body,
+    method,
+    headers,
+  };
+  return { requestInit, headers };
+}
+
+async function getHeaders(options: IRequestOptions) {
   const headers = new Headers();
 
-  if (options.headers) {
+  if ("headers" in options && options.headers) {
     const h = options.headers;
     Object.keys(h).forEach((name) => {
       headers.append(name, h[name]);
@@ -113,22 +149,18 @@ export function generateQueryString(query: QueryString = {}): string {
   return `?${searchParams.toString()}`;
 }
 
+const removeAtEnd = (url: string, removed: string): string =>
+  url.endsWith(removed) ? url.slice(0, -removed.length) : url;
+
 export function generateUrl(path: string, options: WithQueryStringAndPathParam = {}): string {
-  const normalisedEndpoint = publicConfig.apiEndpoint.endsWith("/")
-    ? publicConfig.apiEndpoint.slice(0, -1)
-    : publicConfig.apiEndpoint;
-
-  const url = normalisedEndpoint + generatePath(path, options.params) + generateQueryString(options.querystring);
-
-  return url;
-}
-
-function getBody(headers: Headers, body?: BodyInit): BodyInit | null {
-  if (!body) {
-    return null;
+  let normalisedEndpoint = removeAtEnd(publicConfig.apiEndpoint, "/");
+  if ("params" in options) {
+    normalisedEndpoint += generatePath(path, options.params);
   }
-
-  return headers.get("Content-Type") === "application/json" ? JSON.stringify(body) : body;
+  if ("querystring" in options) {
+    normalisedEndpoint += generateQueryString(options.querystring);
+  }
+  return normalisedEndpoint;
 }
 
 export interface ApiErrorContext {
@@ -140,6 +172,7 @@ export interface ApiErrorContext {
   message: string;
   name: string;
   responseHeaders: Record<string, string | string[]>;
+  errorData: unknown;
 }
 
 export class ApiError extends Error {
@@ -164,6 +197,7 @@ export class ApiError extends Error {
   ): Promise<ApiError> {
     let message = res.status === 0 ? "Network Error" : res.statusText;
     let name = "Api Error";
+    let errorData: IResErrorJson["data"] | null = null;
 
     if (res.status > 0) {
       try {
@@ -171,6 +205,7 @@ export class ApiError extends Error {
           const data: IResErrorJson = await res.json();
           name = data.name;
           message = data.message;
+          errorData = data.data;
         }
       } catch (error) {
         // ignore
@@ -179,86 +214,73 @@ export class ApiError extends Error {
 
     return new ApiError({
       path,
-      params: options.params ?? {},
-      querystring: options.querystring ?? {},
+      params: "params" in options && options.params ? options.params : {},
+      querystring: "querystring" in options && options.querystring ? options.querystring : {},
       requestHeaders: Object.fromEntries(requestHeaders.entries()),
       statusCode: res.status,
       message,
       name,
       responseHeaders: Object.fromEntries(res.headers.entries()),
+      errorData,
     });
   }
 }
 
-export async function apiPost<P extends keyof IRoutes["post"], S extends IRoutes["post"][P] = IRoutes["post"][P]>(
+export async function apiPost<P extends keyof IPostRoutes, S extends IPostRoutes[P] = IPostRoutes[P]>(
   path: P,
   options: IRequest<S>
 ): Promise<IResponse<S>> {
-  // TODO: Use a better cast
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const o: any = options;
-  const headers = await getHeaders(options);
+  const { requestInit, headers } = await optionsToFetchParams("POST", options);
 
-  if (!(o.body instanceof FormData)) {
-    headers.append("Content-Type", "application/json");
-  }
-
-  const res = await fetch(generateUrl(path, o), {
-    method: "POST",
-    mode: publicConfig.env === "local" ? "cors" : "same-origin",
-    credentials: publicConfig.env === "local" ? "include" : "same-origin",
-    body: getBody(headers, o?.body),
-    headers,
-  });
+  const res = await fetch(generateUrl(path, options), requestInit);
 
   if (!res.ok) {
-    throw await ApiError.build(path, headers, o, res);
+    throw await ApiError.build(path, headers, options, res);
   }
 
   return res.json();
 }
 
-export async function apiGet<P extends keyof IRoutes["get"], S extends IRoutes["get"][P] = IRoutes["get"][P]>(
+export async function apiGet<P extends keyof IGetRoutes, S extends IGetRoutes[P] = IGetRoutes[P]>(
   path: P,
   options: IRequest<S>
 ): Promise<IResponse<S>> {
-  // TODO: Use a better cast
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const o: Record<string, any> = options;
-  const headers = await getHeaders(options);
+  const { requestInit, headers } = await optionsToFetchParams("GET", options);
 
-  const res = await fetch(generateUrl(path, options), {
-    method: "GET",
-    mode: publicConfig.env === "local" ? "cors" : "same-origin",
-    credentials: publicConfig.env === "local" ? "include" : "same-origin",
-    headers,
-  });
+  const res = await fetch(generateUrl(path, options), requestInit);
 
   if (!res.ok) {
-    throw await ApiError.build(path, headers, o, res);
+    throw await ApiError.build(path, headers, options, res);
   }
 
   return res.json();
 }
 
-export async function apiDelete<
-  P extends keyof IRoutes["delete"],
-  S extends IRoutes["delete"][P] = IRoutes["delete"][P],
->(path: P, options: IRequest<S>): Promise<IResponse<S>> {
-  // TODO: Use a better cast
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const o: Record<string, any> = options;
-  const headers = await getHeaders(options);
+export async function apiPut<P extends keyof IPutRoutes, S extends IPutRoutes[P] = IPutRoutes[P]>(
+  path: P,
+  options: IRequest<S>
+): Promise<IResponse<S>> {
+  const { requestInit, headers } = await optionsToFetchParams("PUT", options);
 
-  const res = await fetch(generateUrl(path, options), {
-    method: "DELETE",
-    mode: publicConfig.env === "local" ? "cors" : "same-origin",
-    credentials: publicConfig.env === "local" ? "include" : "same-origin",
-    headers,
-  });
+  const res = await fetch(generateUrl(path, options), requestInit);
 
   if (!res.ok) {
-    throw await ApiError.build(path, headers, o, res);
+    throw await ApiError.build(path, headers, options, res);
+  }
+
+  return res.json();
+}
+
+export async function apiDelete<P extends keyof IDeleteRoutes, S extends IDeleteRoutes[P] = IDeleteRoutes[P]>(
+  path: P,
+  options: IRequest<S>
+): Promise<IResponse<S>> {
+  const { requestInit, headers } = await optionsToFetchParams("DELETE", options);
+
+  const res = await fetch(generateUrl(path, options), requestInit);
+
+  if (!res.ok) {
+    throw await ApiError.build(path, headers, options, res);
   }
 
   return res.json();

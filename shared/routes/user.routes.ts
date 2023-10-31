@@ -3,7 +3,7 @@ import { z } from "zod";
 import { zObjectId } from "../models/common";
 import { ZPerson } from "../models/person.model";
 import { ZUser, ZUserPublic, zUserWithPersonPublic } from "../models/user.model";
-import { ZReqParamsSearchPagination } from "./common.routes";
+import { IRoutesDef, ZReqParamsSearchPagination } from "./common.routes";
 
 const zUserWithPerson = ZUserPublic.extend({
   person: ZPerson.nullish(),
@@ -12,16 +12,32 @@ const zUserWithPerson = ZUserPublic.extend({
 export const zUserAdminRoutes = {
   get: {
     "/admin/users": {
+      method: "get",
+      path: "/admin/users",
       querystring: ZReqParamsSearchPagination,
-      response: { "2xx": z.array(zUserWithPerson) },
+      response: { "200": z.array(zUserWithPerson) },
+      securityScheme: {
+        auth: "cookie-session",
+        access: "admin",
+        ressources: {},
+      },
     },
     "/admin/users/:id": {
+      method: "get",
+      path: "/admin/users/:id",
       params: z.object({ id: zObjectId }).strict(),
-      response: { "2xx": zUserWithPerson },
+      response: { "200": zUserWithPerson },
+      securityScheme: {
+        auth: "cookie-session",
+        access: "admin",
+        ressources: {},
+      },
     },
   },
   post: {
     "/admin/user": {
+      method: "post",
+      path: "/admin/user",
       body: z
         .object({
           email: ZUser.shape.email,
@@ -30,23 +46,30 @@ export const zUserAdminRoutes = {
         })
         .strict(),
       response: {
-        "2xx": zUserWithPersonPublic,
+        "200": zUserWithPersonPublic,
+      },
+      securityScheme: {
+        auth: "cookie-session",
+        access: "admin",
+        ressources: {},
       },
     },
   },
-  put: {},
-  delete: {},
-} as const;
+} as const satisfies IRoutesDef;
 
 export const zUserRoutes = {
   get: {
     "/user/generate-api-key": {
+      method: "get",
+      path: "/user/generate-api-key",
       response: {
-        "2xx": z.object({ api_key: z.string() }).strict(),
+        "200": z.object({ api_key: z.string() }).strict(),
+      },
+      securityScheme: {
+        auth: "cookie-session",
+        access: "admin",
+        ressources: {},
       },
     },
   },
-  post: {},
-  put: {},
-  delete: {},
-};
+} as const satisfies IRoutesDef;
