@@ -19,7 +19,7 @@ import { clamav } from "@/services";
 
 import { sleep } from "../../common/utils/asyncUtils";
 import { deleteFromStorage, getFromStorage, uploadToStorage } from "../../common/utils/ovhUtils";
-import { parseCsv } from "../../common/utils/parserUtils";
+import { DEFAULT_DELIMITER, parseCsv } from "../../common/utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
 import {
   IConstructysParsedContentLine,
@@ -144,6 +144,7 @@ export const saveDocumentColumns = async (document: IDocument) => {
         // get only 1 record to get the columns
         to: 1,
         on_record: (record: unknown) => record,
+        delimiter: document.delimiter ?? DEFAULT_DELIMITER,
       },
       async (json: JsonObject) => {
         columns = Object.keys(json)
@@ -232,6 +233,7 @@ interface ICreateEmptyDocumentOptions {
   filename: `${string}.${IDocument["ext_fichier"]}`;
   mimetype?: string;
   createDocumentDb?: boolean;
+  delimiter?: string;
 }
 
 export const createEmptyDocument = async (options: ICreateEmptyDocumentOptions) => {
@@ -253,6 +255,7 @@ export const createEmptyDocument = async (options: ICreateEmptyDocumentOptions) 
     chemin_fichier: path,
     taille_fichier: options.fileSize || 0,
     import_progress: 0,
+    delimiter: options.delimiter,
     hash_secret: documentHash,
     hash_fichier: "",
     added_by: new ObjectId().toString(),
@@ -396,7 +399,7 @@ export const processCsvFile = async (chunk: Buffer) => {
 
 export const extractDocumentContent = async ({
   document,
-  delimiter = ";",
+  delimiter = DEFAULT_DELIMITER,
   formatter = (line) => line,
 }: {
   document: IDocument;
@@ -571,7 +574,7 @@ export const handleDocumentFileContent = async ({ document_id }: Record<"documen
       break;
 
     default:
-      await extractDocumentContent({ document });
+      await extractDocumentContent({ document, delimiter: document.delimiter ?? DEFAULT_DELIMITER });
       break;
   }
 };

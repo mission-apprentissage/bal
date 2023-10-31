@@ -19,6 +19,7 @@ export const ZDocument = z
     hash_secret: z.string().describe("Hash fichier"),
     hash_fichier: z.string().describe("Checksum fichier"),
     columns: z.array(z.string()).optional().describe("Liste des colonnes"),
+    delimiter: z.string().optional().describe("Délimiteur"),
     import_progress: z.number().finite().optional().describe("Progress percentage (-1 not started)"),
     lines_count: z.number().int().finite().optional().describe("Number of lines"),
     added_by: z.string().describe("Qui a ajouté le fichier"),

@@ -21,6 +21,7 @@ interface FormValues extends Zod.input<IPostRoutes["/admin/upload"]["querystring
   should_import_content: boolean;
   has_new_type_document: boolean;
   new_type_document: string;
+  delimiter_other: string;
 }
 
 const FormContainer = styled("div")(({ theme }) => ({
@@ -59,6 +60,8 @@ const AdminImportPage = () => {
   });
 
   const hasNewTypeDocument = watch("has_new_type_document");
+  const delimiter = watch("delimiter");
+  const askDelimiterOther = delimiter === "other";
 
   const onSubmit: SubmitHandler<FormValues> = async ({
     file,
@@ -66,6 +69,8 @@ const AdminImportPage = () => {
     has_new_type_document,
     new_type_document,
     should_import_content,
+    delimiter,
+    delimiter_other,
   }) => {
     setIsSubmitting(true);
     try {
@@ -75,6 +80,7 @@ const AdminImportPage = () => {
       await apiPost("/admin/upload", {
         querystring: {
           type_document: has_new_type_document ? new_type_document : type_document,
+          delimiter: askDelimiterOther ? delimiter_other : delimiter,
           ...(should_import_content && { import_content: "true" }),
         },
         body: formData,
@@ -157,26 +163,60 @@ const AdminImportPage = () => {
             }}
           />
 
-          <DSFRUpload
-            hint="(.csv, maximum 100mb)"
+          <Box mb={2}>
+            <DSFRUpload
+              hint="(.csv, maximum 100mb)"
+              disabled={isSubmitting}
+              state={errors.file ? "error" : "default"}
+              stateRelatedMessage={errors.file?.message}
+              nativeInputProps={{
+                accept: ".csv, text/csv",
+                ...register("file", {
+                  required: "Obligatoire: Vous devez ajouter un fichier à importer",
+                  validate: {
+                    notEmpty: (value) => {
+                      return (value && value.length > 0) || "Obligatoire: Vous devez ajouter un fichier à importer";
+                    },
+                    extension: (value) => {
+                      return value[0]?.name?.endsWith(".csv") || "Le fichier doit être au format .csv";
+                    },
+                  },
+                }),
+              }}
+            />
+          </Box>
+
+          <Select
+            label="Séparateur"
             disabled={isSubmitting}
-            state={errors.file ? "error" : "default"}
-            stateRelatedMessage={errors.file?.message}
-            nativeInputProps={{
-              accept: ".csv, text/csv",
-              ...register("file", {
-                required: "Obligatoire: Vous devez ajouter un fichier à importer",
-                validate: {
-                  notEmpty: (value) => {
-                    return (value && value.length > 0) || "Obligatoire: Vous devez ajouter un fichier à importer";
-                  },
-                  extension: (value) => {
-                    return value[0]?.name?.endsWith(".csv") || "Le fichier doit être au format .csv";
-                  },
-                },
+            state={errors.delimiter ? "error" : "default"}
+            stateRelatedMessage={errors.delimiter?.message}
+            nativeSelectProps={{
+              ...register("delimiter", {
+                required: "Obligatoire",
               }),
             }}
-          />
+          >
+            <option value=";">point-virgule ( ; )</option>
+            <option value=",">virgule ( , )</option>
+            <option value="|">barre verticale ( | )</option>
+            <option value="other">autre</option>
+          </Select>
+
+          {askDelimiterOther && (
+            <Input
+              label="Séparateur personnalisé"
+              disabled={isSubmitting}
+              state={errors.delimiter_other ? "error" : "default"}
+              stateRelatedMessage={errors.delimiter_other?.message}
+              nativeInputProps={{
+                placeholder: "Séparateur personnalisé",
+                ...register("delimiter_other", {
+                  required: askDelimiterOther && "Obligatoire",
+                }),
+              }}
+            />
+          )}
 
           <Box my={4}>
             <Button type="submit" disabled={isSubmitting}>

@@ -4,6 +4,8 @@ import { Options, parse } from "csv-parse";
 import { isEmpty, pickBy } from "lodash-es";
 import XLSX, { WorkSheet } from "xlsx";
 
+export const DEFAULT_DELIMITER = ";";
+
 const readXLSXData = (
   data: unknown,
   readOpt: XLSX.ParsingOptions = {
@@ -46,7 +48,7 @@ export const getJsonFromXlsxData = (
 export function parseCsv(options: Options = {}) {
   return parse({
     trim: true,
-    delimiter: ";",
+    delimiter: DEFAULT_DELIMITER,
     columns: true,
     bom: true,
     relax_column_count: true,

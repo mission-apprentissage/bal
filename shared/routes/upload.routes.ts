@@ -22,6 +22,7 @@ export const zUploadRoutes = {
         .object({
           type_document: z.string(),
           import_content: z.string().optional(),
+          delimiter: z.string(),
         })
         .strict(),
       body: z.unknown(),
