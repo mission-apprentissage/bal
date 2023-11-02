@@ -57,7 +57,7 @@ const config = {
   lba: {
     baseURL: env
       .get("MNA_BAL_LBA_BASE_URL")
-      .default("https://labonnealternance-develop.apprentissage.beta.gouv.fr")
+      .default("https://labonnealternance-recette.apprentissage.beta.gouv.fr")
       .asString(),
   },
   akto: {
