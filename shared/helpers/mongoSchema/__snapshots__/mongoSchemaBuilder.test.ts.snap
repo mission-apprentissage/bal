@@ -66,6 +66,10 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
       "bsonType": "date",
       "description": "Date d'ajout en base de données",
     },
+    "delimiter": {
+      "bsonType": "string",
+      "description": "Délimiteur",
+    },
     "ext_fichier": {
       "bsonType": "string",
       "description": "Le type de fichier extension",

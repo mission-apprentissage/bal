@@ -41,7 +41,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
-      const { type_document } = request.query;
+      const { type_document, delimiter } = request.query;
       const fileSize = parseInt(request.headers["content-length"] ?? "0");
 
       let data: MultipartFile | null | undefined = null;
@@ -65,6 +65,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         type_document,
         fileSize,
         filename: data.filename as `${string}.${IDocument["ext_fichier"]}`,
+        delimiter,
       });
 
       if (!document) {

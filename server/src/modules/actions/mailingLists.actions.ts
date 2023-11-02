@@ -19,6 +19,7 @@ import {
 } from "../../common/apis/lba";
 import { sleep } from "../../common/utils/asyncUtils";
 import { uploadToStorage } from "../../common/utils/ovhUtils";
+import { DEFAULT_DELIMITER } from "../../common/utils/parserUtils";
 import { addJob } from "../jobs/jobs_actions";
 import { noop } from "../server/utils/upload.utils";
 import { createEmptyDocument, deleteDocumentById, findDocument, importDocumentContent } from "./documents.actions";
@@ -331,7 +332,7 @@ export const createMailingListFile = async (mailingList: IMailingList, document:
 
   const parser = stringify({
     header: true,
-    delimiter: ";",
+    delimiter: DEFAULT_DELIMITER,
     bom: true,
   });
 
