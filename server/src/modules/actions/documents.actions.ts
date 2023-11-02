@@ -361,6 +361,7 @@ export const checkCsvFile = async (document: IDocument) => {
       // get only 1 record to get the columns
       to: 1,
       on_record: (record: unknown) => record,
+      delimiter: document.delimiter ?? DEFAULT_DELIMITER,
     },
     async (json: JsonObject) => {
       const columns = Object.keys(json);
