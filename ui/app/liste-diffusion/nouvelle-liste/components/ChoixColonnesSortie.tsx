@@ -15,6 +15,7 @@ import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
 import PreviewColonnesSortie from "./PreviewColonnesSortie";
 import Sample from "./Sample";
+import WarningEmail from "./WarningEmail";
 
 interface Props {
   onSuccess: (data: IBody<IPostRoutes["/mailing-list"]>) => void;
@@ -250,6 +251,8 @@ const ChoixColonnesSortie: FC<Props> = ({
         </Box>
 
         <PreviewColonnesSortie columns={outputColumns} />
+
+        <WarningEmail email={email} sample={sample} />
 
         <Box>
           <Box mx={2} display="inline-block">

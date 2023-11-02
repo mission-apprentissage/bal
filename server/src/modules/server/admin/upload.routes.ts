@@ -109,13 +109,19 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (_request, response) => {
-      const documents = await findDocumentsWithImportJob({}, [
+      const documents = await findDocumentsWithImportJob(
         {
-          $sort: {
-            created_at: -1,
-          },
+          // exclude mailing lists files from the list
+          type_document: { $nin: [/mailing-list/] },
         },
-      ]);
+        [
+          {
+            $sort: {
+              created_at: -1,
+            },
+          },
+        ]
+      );
 
       return response.status(200).send(documents.map(toPublicDocument));
     }
