@@ -8,7 +8,7 @@ export const documentsRoutes = ({ server }: { server: Server }) => {
     "/documents/types",
     {
       schema: zRoutes.get["/documents/types"],
-      preHandler: [server.auth([server.validateSession])],
+      onRequest: [server.auth(zRoutes.get["/documents/types"])],
     },
     async (_request, response) => {
       const types = await getDocumentTypes();
@@ -21,7 +21,7 @@ export const documentsRoutes = ({ server }: { server: Server }) => {
     "/documents/columns",
     {
       schema: zRoutes.get["/documents/columns"],
-      preHandler: [server.auth([server.validateSession])],
+      onRequest: [server.auth(zRoutes.get["/documents/columns"])],
     },
     async (request, response) => {
       const types = await getDocumentColumns(request.query.type);
@@ -34,7 +34,7 @@ export const documentsRoutes = ({ server }: { server: Server }) => {
     "/documents/sample",
     {
       schema: zRoutes.get["/documents/sample"],
-      preHandler: [server.auth([server.validateSession])],
+      onRequest: [server.auth(zRoutes.get["/documents/sample"])],
     },
     async (request, response) => {
       const sample = await getDocumentSample(request.query.type);

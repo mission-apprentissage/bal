@@ -28,7 +28,6 @@ const UsageVerificationPage = () => {
       setRequestData(body);
       const data = await apiPost("/v1/organisation/validation", {
         body,
-        headers: { Authorization: "" },
       });
 
       setResponseData(data);

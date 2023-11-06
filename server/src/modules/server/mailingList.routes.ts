@@ -9,6 +9,7 @@ import { Readable } from "stream";
 import logger from "../../common/logger";
 import * as crypto from "../../common/utils/cryptoUtils";
 import { getFromStorage } from "../../common/utils/ovhUtils";
+import { getUserFromRequest } from "../../security/authenticationService";
 import { findDocument } from "../actions/documents.actions";
 import { findJob } from "../actions/job.actions";
 import {
@@ -19,7 +20,6 @@ import {
   findMailingLists,
 } from "../actions/mailingLists.actions";
 import { Server } from "./server";
-import { getUserFromRequest } from "./utils/auth.strategies";
 import { noop } from "./utils/upload.utils";
 
 export const mailingListRoutes = ({ server }: { server: Server }) => {
@@ -27,10 +27,10 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     "/mailing-list",
     {
       schema: zRoutes.post["/mailing-list"],
-      preHandler: server.auth([server.validateSession]),
+      onRequest: [server.auth(zRoutes.post["/mailing-list"])],
     },
     async (request, response) => {
-      const user = getUserFromRequest(request);
+      const user = getUserFromRequest(request, zRoutes.post["/mailing-list"]);
 
       try {
         await createMailingList({
@@ -49,10 +49,10 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     "/mailing-lists",
     {
       schema: zRoutes.get["/mailing-lists"],
-      preHandler: server.auth([server.validateSession]),
+      onRequest: [server.auth(zRoutes.get["/mailing-lists"])],
     },
     async (request, response) => {
-      const user = getUserFromRequest(request);
+      const user = getUserFromRequest(request, zRoutes.get["/mailing-lists"]);
 
       const mailingLists = await findMailingLists(
         {
@@ -71,10 +71,10 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     "/mailing-lists/:id",
     {
       schema: zRoutes.get["/mailing-lists/:id"],
-      preHandler: server.auth([server.validateSession]),
+      onRequest: [server.auth(zRoutes.get["/mailing-lists/:id"])],
     },
     async (request, response) => {
-      const { user } = request;
+      const user = getUserFromRequest(request, zRoutes.get["/mailing-lists/:id"]);
       const { id } = request.params;
 
       const mailingList = await findMailingList({
@@ -97,10 +97,10 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     "/mailing-lists/:id/progress",
     {
       schema: zRoutes.get["/mailing-lists/:id/progress"],
-      preHandler: server.auth([server.validateSession]),
+      onRequest: [server.auth(zRoutes.get["/mailing-lists/:id/progress"])],
     },
     async (request, response) => {
-      const user = getUserFromRequest(request);
+      const user = getUserFromRequest(request, zRoutes.get["/mailing-lists/:id/progress"]);
       const { id } = request.params;
 
       const mailingList = await findMailingList({
@@ -134,10 +134,10 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     "/mailing-lists/:id/download",
     {
       schema: zRoutes.get["/mailing-lists/:id/download"],
-      preHandler: server.auth([server.validateSession]),
+      onRequest: [server.auth(zRoutes.get["/mailing-lists/:id/download"])],
     },
     async (request, response) => {
-      const user = getUserFromRequest(request);
+      const user = getUserFromRequest(request, zRoutes.get["/mailing-lists/:id/download"]);
       const { id } = request.params;
 
       const mailingList = await findMailingList({
@@ -201,10 +201,10 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     "/mailing-list/:id",
     {
       schema: zRoutes.delete["/mailing-list/:id"],
-      preHandler: server.auth([server.validateSession]),
+      onRequest: [server.auth(zRoutes.delete["/mailing-list/:id"])],
     },
     async (request, response) => {
-      const user = getUserFromRequest(request);
+      const user = getUserFromRequest(request, zRoutes.delete["/mailing-list/:id"]);
       const { id } = request.params;
 
       const mailingList = await findMailingList({

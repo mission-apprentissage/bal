@@ -2,24 +2,35 @@ import { z } from "zod";
 
 import { zObjectId } from "../models/common";
 import { ZOrganisation } from "../models/organisation.model";
-import { ZReqParamsSearchPagination } from "./common.routes";
+import { IRoutesDef, ZReqParamsSearchPagination } from "./common.routes";
 
 export const zAdminOrganisationRoutes = {
   get: {
     "/admin/organisations": {
+      method: "get",
+      path: "/admin/organisations",
       querystring: ZReqParamsSearchPagination,
       response: {
-        "2xx": z.array(ZOrganisation),
+        "200": z.array(ZOrganisation),
+      },
+      securityScheme: {
+        auth: "cookie-session",
+        access: "admin",
+        ressources: {},
       },
     },
     "/admin/organisations/:id": {
+      method: "get",
+      path: "/admin/organisations/:id",
       params: z.object({ id: zObjectId }).strict(),
       response: {
-        "2xx": ZOrganisation,
+        "200": ZOrganisation,
+      },
+      securityScheme: {
+        auth: "cookie-session",
+        access: "admin",
+        ressources: {},
       },
     },
   },
-  post: {},
-  put: {},
-  delete: {},
-};
+} as const satisfies IRoutesDef;

@@ -1,8 +1,10 @@
+import Boom from "@hapi/boom";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { zRoutes } from "shared";
 import { zEmailParams } from "shared/routes/emails.routes";
 import z from "zod";
 
+import config from "../../config";
 import {
   checkIfEmailExists,
   markEmailAsDelivered,
@@ -98,9 +100,14 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
     "/emails/webhook",
     {
       schema: zRoutes.post["/emails/webhook"],
-      preHandler: [server.auth([server.validateWebHookKey])],
     },
     async (request, response) => {
+      const { webhookKey } = request.query;
+
+      if (config.smtp.webhookKey !== webhookKey) {
+        throw Boom.forbidden("Non autorisé");
+      }
+
       const { event, "message-id": messageId } = request.body;
 
       if (event === "delivered") {

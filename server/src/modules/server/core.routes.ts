@@ -7,7 +7,7 @@ import { Server } from "./server";
 
 export const coreRoutes = ({ server }: { server: Server }) => {
   server.get("/healthcheck", { schema: zRoutes.get["/healthcheck"] }, async (request, response) => {
-    await ensureInitialization();
+    ensureInitialization();
     response.status(200).send({
       name: "[BAL] Apprentissage API",
       version: config.version,

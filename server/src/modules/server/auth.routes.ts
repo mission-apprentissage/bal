@@ -1,10 +1,11 @@
-import Boom, { forbidden } from "@hapi/boom";
+import Boom from "@hapi/boom";
 import { zRoutes } from "shared";
 import { IUserWithPerson, toPublicUser } from "shared/models/user.model";
 
 import config from "@/config";
 
 import { createUserTokenSimple } from "../../common/utils/jwtUtils";
+import { getUserFromRequest } from "../../security/authenticationService";
 import { resetPassword, sendResetPasswordEmail, verifyEmailPassword } from "../actions/auth.actions";
 import { createSession, deleteSession } from "../actions/sessions.actions";
 import { Server } from "./server";
@@ -17,13 +18,11 @@ export const authRoutes = ({ server }: { server: Server }) => {
     "/auth/session",
     {
       schema: zRoutes.get["/auth/session"],
-      preHandler: server.auth([server.validateSession]),
+      onRequest: [server.auth(zRoutes.get["/auth/session"])],
     },
     async (request, response) => {
-      if (!request.user) {
-        throw forbidden();
-      }
-      return response.status(200).send(toPublicUser(request.user));
+      const user = getUserFromRequest(request, zRoutes.get["/auth/session"]);
+      return response.status(200).send(toPublicUser(user));
     }
   );
 
