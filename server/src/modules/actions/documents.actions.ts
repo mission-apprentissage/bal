@@ -3,10 +3,10 @@ import { captureException } from "@sentry/node";
 import chardet from "chardet";
 import { Options } from "csv-parse";
 import iconv from "iconv-lite";
-import { Filter, FindOneAndUpdateOptions, FindOptions, ObjectId, UpdateFilter } from "mongodb";
+import { Document, Filter, FindOneAndUpdateOptions, FindOptions, ObjectId, UpdateFilter } from "mongodb";
 import { oleoduc, transformData, writeData } from "oleoduc";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
-import { IDocument } from "shared/models/document.model";
+import { IDocument, IDocumentWithJobs } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
 import { Readable } from "stream";
 import { JsonObject } from "type-fest";
@@ -19,7 +19,7 @@ import { clamav } from "@/services";
 
 import { sleep } from "../../common/utils/asyncUtils";
 import { deleteFromStorage, getFromStorage, uploadToStorage } from "../../common/utils/ovhUtils";
-import { parseCsv } from "../../common/utils/parserUtils";
+import { DEFAULT_DELIMITER, parseCsv } from "../../common/utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
 import {
   IConstructysParsedContentLine,
@@ -63,6 +63,30 @@ export const findDocuments = async (filter: Filter<IDocument>, options?: FindOpt
   const documents = await getDbCollection("documents").find<IDocument>(filter, options).toArray();
 
   return documents;
+};
+
+export const findDocumentsWithImportJob = async (filter: Filter<IDocument>, pipeline: Document[] = []) => {
+  const documents = await getDbCollection("documents")
+    .aggregate([
+      {
+        $lookup: {
+          from: "jobs",
+          localField: "_id",
+          foreignField: "payload.document_id",
+          as: "jobs",
+        },
+      },
+      {
+        $match: {
+          "jobs.name": "import:document",
+          ...filter,
+        },
+      },
+      ...pipeline,
+    ])
+    .toArray();
+
+  return documents as IDocumentWithJobs[];
 };
 
 export const updateDocument = async (
@@ -120,6 +144,7 @@ export const saveDocumentColumns = async (document: IDocument) => {
         // get only 1 record to get the columns
         to: 1,
         on_record: (record: unknown) => record,
+        delimiter: document.delimiter ?? DEFAULT_DELIMITER,
       },
       async (json: JsonObject) => {
         columns = Object.keys(json)
@@ -208,6 +233,7 @@ interface ICreateEmptyDocumentOptions {
   filename: `${string}.${IDocument["ext_fichier"]}`;
   mimetype?: string;
   createDocumentDb?: boolean;
+  delimiter?: string;
 }
 
 export const createEmptyDocument = async (options: ICreateEmptyDocumentOptions) => {
@@ -229,6 +255,7 @@ export const createEmptyDocument = async (options: ICreateEmptyDocumentOptions) 
     chemin_fichier: path,
     taille_fichier: options.fileSize || 0,
     import_progress: 0,
+    delimiter: options.delimiter,
     hash_secret: documentHash,
     hash_fichier: "",
     added_by: new ObjectId().toString(),
@@ -334,6 +361,7 @@ export const checkCsvFile = async (document: IDocument) => {
       // get only 1 record to get the columns
       to: 1,
       on_record: (record: unknown) => record,
+      delimiter: document.delimiter ?? DEFAULT_DELIMITER,
     },
     async (json: JsonObject) => {
       const columns = Object.keys(json);
@@ -372,7 +400,7 @@ export const processCsvFile = async (chunk: Buffer) => {
 
 export const extractDocumentContent = async ({
   document,
-  delimiter = ";",
+  delimiter = DEFAULT_DELIMITER,
   formatter = (line) => line,
 }: {
   document: IDocument;
@@ -547,7 +575,7 @@ export const handleDocumentFileContent = async ({ document_id }: Record<"documen
       break;
 
     default:
-      await extractDocumentContent({ document });
+      await extractDocumentContent({ document, delimiter: document.delimiter ?? DEFAULT_DELIMITER });
       break;
   }
 };

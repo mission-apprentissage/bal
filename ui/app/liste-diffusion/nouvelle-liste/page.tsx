@@ -12,9 +12,12 @@ import { IMailingListJson } from "shared/models/mailingList.model";
 
 import { apiGet } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
+import ChoixColonnesFormation from "./components/ChoixColonnesFormation";
 import ChoixColonnesIdentifiant from "./components/ChoixColonnesIdentifiant";
 import ChoixColonnesSortie from "./components/ChoixColonnesSortie";
 import ChoixSource, { IChoseSourceForm } from "./components/ChoixSource";
+
+export type IPostMailingListRoute = IBody<IPostRoutes["/mailing-list"]>;
 
 const STEPS = {
   CHOIX_SOURCE: {
@@ -27,9 +30,14 @@ const STEPS = {
     label: "2. Champs d'identification et de contact",
     id: "choix-identifiant",
   },
-  CHOIX_SORTIE: {
+  CHOIX_FORMATION: {
     number: 3,
-    label: "3. Champs à afficher dans le fichier de sortie",
+    label: "3. Champs liés à la formation",
+    id: "choix-formation",
+  },
+  CHOIX_SORTIE: {
+    number: 4,
+    label: "4. Champs à afficher dans le fichier de sortie",
     id: "choix-sortie",
   },
 } as const;
@@ -41,6 +49,7 @@ const NouvelleListePage = () => {
   const [columns, setColumns] = useState<string[]>([]);
   const [sample, setSample] = useState<IDocumentContentJson[]>([]);
   const [identifierColumns, setIdentifierColumns] = useState<string[]>();
+  const [trainingColumns, setTrainingColumns] = useState<IMailingListJson["training_columns"]>({});
   const [email, setEmail] = useState<string>();
   const [secondaryEmail, setSecondaryEmail] = useState<string | undefined>();
   const { push } = useRouter();
@@ -82,12 +91,17 @@ const NouvelleListePage = () => {
   };
 
   const handleIdentifierColumnsSelection = (
-    data: Pick<IBody<IPostRoutes["/mailing-list"]>, "email" | "secondary_email" | "identifier_columns">
+    data: Pick<IPostMailingListRoute, "email" | "secondary_email" | "identifier_columns">
   ) => {
-    goToStep("CHOIX_SORTIE");
+    goToStep("CHOIX_FORMATION");
     setIdentifierColumns(data.identifier_columns);
     setEmail(data.email);
     setSecondaryEmail(data.secondary_email);
+  };
+
+  const handleTrainingColumnsSelection = (data: Pick<IPostMailingListRoute, "training_columns">) => {
+    goToStep("CHOIX_SORTIE");
+    setTrainingColumns(data.training_columns);
   };
 
   const handleOutputColumnsSelection = () => {
@@ -135,6 +149,22 @@ const NouvelleListePage = () => {
           />
         </Accordion>
         <Accordion
+          id={STEPS.CHOIX_FORMATION.id}
+          expanded={step === STEPS.CHOIX_FORMATION.number}
+          onExpandedChange={(expanded) => handleExpandChange(expanded, "CHOIX_FORMATION")}
+          label={STEPS.CHOIX_FORMATION.label}
+        >
+          <ChoixColonnesFormation
+            mailingList={mailingList}
+            columns={columns}
+            onSuccess={handleTrainingColumnsSelection}
+            onCancel={() => {
+              goToStep("CHOIX_IDENTIFIANT");
+            }}
+            sample={sample}
+          />
+        </Accordion>
+        <Accordion
           id={STEPS.CHOIX_SORTIE.id}
           expanded={step === STEPS.CHOIX_SORTIE.number}
           onExpandedChange={(expanded) => handleExpandChange(expanded, "CHOIX_SORTIE")}
@@ -148,6 +178,7 @@ const NouvelleListePage = () => {
               source={source}
               campaignName={campaignName}
               identifierColumns={identifierColumns}
+              trainingColumns={trainingColumns}
               onSuccess={handleOutputColumnsSelection}
               email={email}
               secondaryEmail={secondaryEmail}

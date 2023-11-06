@@ -9,10 +9,10 @@ import { IBody, IPostRoutes } from "shared";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
 import { IMailingListJson } from "shared/models/mailingList.model";
 
-import { getFormattedSample } from "../mailingLists.utils";
 import EmailSample from "./EmailSample";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
+import Sample from "./Sample";
 
 interface Props {
   onSuccess: (
@@ -117,7 +117,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
             </Select>
           </MailingListSectionCell>
           <MailingListSectionCell>
-            {watchEmail && <EmailSample sample={sample} emailKey={watchEmail} />}
+            <EmailSample sample={sample} emailKey={watchEmail} />
           </MailingListSectionCell>
           <MailingListSectionCell>ou</MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
@@ -144,7 +144,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
             </Select>
           </MailingListSectionCell>
           <MailingListSectionCell>
-            {watchSecondaryEmail && <EmailSample sample={sample} emailKey={watchSecondaryEmail} />}
+            <EmailSample sample={sample} emailKey={watchSecondaryEmail} />
           </MailingListSectionCell>
         </MailingListSectionRow>
 
@@ -183,8 +183,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
               </Select>
             </MailingListSectionCell>
             <MailingListSectionCell>
-              {watchIdentifierColumns?.[index]?.name &&
-                getFormattedSample(sample, watchIdentifierColumns?.[index]?.name)}
+              <Sample sample={sample} column={watchIdentifierColumns?.[index]?.name} />
 
               <Box ml="auto">
                 <Button

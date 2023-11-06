@@ -11,7 +11,7 @@ import { getUserFromRequest } from "../../../security/authenticationService";
 import {
   createEmptyDocument,
   deleteDocumentById,
-  findDocuments,
+  findDocumentsWithImportJob,
   getDocumentTypes,
   uploadFile,
 } from "../../actions/documents.actions";
@@ -41,7 +41,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.post["/admin/upload"])],
     },
     async (request, response) => {
-      const { type_document } = request.query;
+      const { type_document, delimiter } = request.query;
       const fileSize = parseInt(request.headers["content-length"] ?? "0");
 
       let data: MultipartFile | null | undefined = null;
@@ -65,6 +65,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         type_document,
         fileSize,
         filename: data.filename as `${string}.${IDocument["ext_fichier"]}`,
+        delimiter,
       });
 
       if (!document) {
@@ -108,12 +109,18 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/admin/documents"])],
     },
     async (_request, response) => {
-      const documents = await findDocuments(
-        { import_progress: { $exists: true } },
+      const documents = await findDocumentsWithImportJob(
         {
-          projection: { hash_secret: 0, hash_fichier: 0 },
-          sort: { created_at: -1 },
-        }
+          // exclude mailing lists files from the list
+          type_document: { $nin: [/mailing-list/] },
+        },
+        [
+          {
+            $sort: {
+              created_at: -1,
+            },
+          },
+        ]
       );
 
       return response.status(200).send(documents.map(toPublicDocument));

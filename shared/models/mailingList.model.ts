@@ -39,6 +39,20 @@ export const ZMailingList = z
           .strict()
       )
       .describe("Liste des colonnes de sortie"),
+    training_columns: z
+      .object({
+        cle_ministere_educatif: z.string().optional(),
+        mef: z.string().optional(),
+        cfd: z.string().optional(),
+        rncp: z.string().optional(),
+        code_postal: z.string().optional(),
+        uai_lieu_formation: z.string().optional(),
+        uai_formateur: z.string().optional(),
+        uai_formateur_responsable: z.string().optional(),
+        code_insee: z.string().optional(),
+      })
+      .strict()
+      .describe("Liste des colonnes lié à la formation"),
     document_id: z.string().optional().describe("Identifiant du document généré"),
     added_by: z.string().describe("L'utilisateur ayant crée la liste"),
     updated_at: z.date().describe("Date de mise à jour en base de données").optional(),
