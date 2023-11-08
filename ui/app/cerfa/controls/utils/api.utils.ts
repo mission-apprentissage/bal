@@ -5,7 +5,6 @@ type ErrorReturn = {
 };
 
 interface APIServiceCommonParams {
-  dossierId?: string;
   signal: AbortSignal;
 }
 
@@ -19,7 +18,6 @@ interface FetchSiretParams {
 export const fetchSiret: APIServiceAction<FetchSiretParams> = async ({
   siret,
   organismeFormation = false,
-  dossierId: _dossierId,
   signal: _signal,
 }) => {
   try {
@@ -39,11 +37,7 @@ interface FetchCodePostalParams {
   codePostal: string;
 }
 
-export const fetchCodePostal: APIServiceAction<FetchCodePostalParams> = async ({
-  codePostal,
-  dossierId: _dossierId,
-  signal: _signal,
-}) => {
+export const fetchCodePostal: APIServiceAction<FetchCodePostalParams> = async ({ codePostal, signal: _signal }) => {
   try {
     return apiPost("/v1/geo/cp", {
       body: {
@@ -60,7 +54,7 @@ interface FetchNafParams {
   naf: string;
 }
 
-export const fetchNaf: APIServiceAction<FetchNafParams> = async ({ naf, dossierId: _dossierId, signal: _signal }) => {
+export const fetchNaf: APIServiceAction<FetchNafParams> = async ({ naf, signal: _signal }) => {
   try {
     return apiPost("/v1/naf", {
       body: {
@@ -78,12 +72,7 @@ interface FetchCfdrncpParams {
   cfd?: string;
 }
 
-export const fetchCfdrncp: APIServiceAction<FetchCfdrncpParams> = async ({
-  rncp,
-  cfd,
-  dossierId: _dossierId,
-  signal: _signal,
-}) => {
+export const fetchCfdrncp: APIServiceAction<FetchCfdrncpParams> = async ({ rncp, cfd, signal: _signal }) => {
   try {
     return apiPost("/v1/cfdrncp", {
       body: {

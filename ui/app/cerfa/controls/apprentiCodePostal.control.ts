@@ -5,11 +5,10 @@ import { apiService } from "./utils/api.utils";
 export const apprentiCodePostalControl: CerfaControl[] = [
   {
     deps: ["apprenti.adresse.codePostal"],
-    process: async ({ values, dossier, signal }: CerfaForm) => {
+    process: async ({ values, signal }: CerfaForm) => {
       const codePostal = values.apprenti.adresse.codePostal;
       const { messages, result } = await apiService.fetchCodePostal({
         codePostal,
-        dossierId: dossier._id,
         signal,
       });
 
