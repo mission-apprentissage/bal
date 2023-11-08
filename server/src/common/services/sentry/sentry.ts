@@ -1,4 +1,4 @@
-import fastifySentryPlugin, { SentryPluginOptions, UserData } from "@immobiliarelabs/fastify-sentry";
+import fastifySentryPlugin, { FastifySentryOptions } from "@immobiliarelabs/fastify-sentry";
 import { CaptureConsole, ExtraErrorData } from "@sentry/integrations";
 import * as Sentry from "@sentry/node";
 import { FastifyRequest } from "fastify";
@@ -6,7 +6,7 @@ import { FastifyRequest } from "fastify";
 import config from "../../../config";
 import { Server } from "../../../modules/server/server";
 
-function getOptions() {
+function getOptions(): Sentry.NodeOptions {
   return {
     tracesSampleRate: config.env === "production" ? 0.1 : 1.0,
     tracePropagationTargets: [/^https:\/\/[^/]*\.apprentissage\.beta\.gouv\.fr/],
@@ -30,7 +30,11 @@ export async function closeSentry(): Promise<void> {
   await Sentry.close(2_000);
 }
 
-function extractUserData(request: FastifyRequest): UserData {
+function extractUserData(request: FastifyRequest): {
+  id?: string | number;
+  username: string;
+  email?: string;
+} & Record<string, unknown> {
   const user = request.user;
 
   if (!user) {
@@ -60,7 +64,7 @@ function extractUserData(request: FastifyRequest): UserData {
 }
 
 export function initSentryFastify(app: Server) {
-  const options: SentryPluginOptions = {
+  const options: FastifySentryOptions = {
     setErrorHandler: false,
     extractUserData: extractUserData,
     extractRequestData: (request: FastifyRequest) => {
@@ -71,10 +75,10 @@ export function initSentryFastify(app: Server) {
         query_string: request.query,
       };
     },
-    ...getOptions(),
   };
 
-  app.register(fastifySentryPlugin, options);
+  // @ts-expect-error
+  app.register(fastifySentryPlugin, { options, ...getOptions() });
 }
 
 function getTransation() {

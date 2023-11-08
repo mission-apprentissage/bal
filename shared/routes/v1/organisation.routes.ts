@@ -1,6 +1,5 @@
-import { z } from "zod";
-
 import { extensions } from "../../helpers/zodHelpers/zodPrimitives";
+import { z } from "../../helpers/zodWithOpenApi";
 import { IRoutesDef, ZReqHeadersAuthorization } from "../common.routes";
 
 export const zOrganisationV1Routes = {
@@ -11,7 +10,7 @@ export const zOrganisationV1Routes = {
       body: z
         .object({
           email: z.string().trim().email("Email non valide"),
-          siret: extensions.siret(),
+          siret: extensions.siret,
         })
         .describe("Organisation validation Request body")
         .strict(),
@@ -29,6 +28,9 @@ export const zOrganisationV1Routes = {
         auth: "api-key",
         ressources: {},
         access: null,
+      },
+      openapi: {
+        tags: ["v1"] as string[],
       },
     },
   },

@@ -1,8 +1,8 @@
 import fastifyCookie from "@fastify/cookie";
 import fastifyCors from "@fastify/cors";
 import fastifyMultipart from "@fastify/multipart";
-import fastifySwagger from "@fastify/swagger";
-import fastifySwaggerUi from "@fastify/swagger-ui";
+import fastifySwagger, { FastifyStaticSwaggerOptions, StaticDocumentSpec } from "@fastify/swagger";
+import fastifySwaggerUi, { FastifySwaggerUiOptions } from "@fastify/swagger-ui";
 import Boom from "@hapi/boom";
 import fastify, {
   FastifyBaseLogger,
@@ -11,12 +11,8 @@ import fastify, {
   RawRequestDefaultExpression,
   RawServerDefault,
 } from "fastify";
-import {
-  createJsonSchemaTransform,
-  serializerCompiler,
-  validatorCompiler,
-  ZodTypeProvider,
-} from "fastify-type-provider-zod";
+import { serializerCompiler, validatorCompiler, ZodTypeProvider } from "fastify-type-provider-zod";
+import { generateOpenApiSchema } from "shared/helpers/openapi/generateOpenapi";
 import { IRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
 
 import { initSentryFastify } from "../../common/services/sentry/sentry";
@@ -51,34 +47,29 @@ export async function bind(app: Server) {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
-  app.register(fastifySwagger, {
-    swagger: {
-      info: {
-        title: "API documentation BAL",
-        version: config.version,
-      },
-      consumes: ["application/json"],
-      produces: ["application/json"],
-      securityDefinitions: {
-        apiKey: {
-          type: "apiKey",
-          name: "Authorization",
-          in: "header",
-        },
-      },
+  const swaggerOpts: FastifyStaticSwaggerOptions = {
+    mode: "static",
+    specification: {
+      document: generateOpenApiSchema(
+        config.version,
+        config.env,
+        config.env === "local" ? "http://localhost:5001/api" : `${config.publicUrl}/api`
+      ) as StaticDocumentSpec["document"],
     },
-    transform: createJsonSchemaTransform({
-      skipList: ["/api/healthcheck", "/api/documentation"],
-    }),
-  });
+  };
+  await app.register(fastifySwagger, swaggerOpts);
 
-  app.register(fastifySwaggerUi, {
+  const swaggerUiOptions: FastifySwaggerUiOptions = {
     routePrefix: "/api/documentation",
     uiConfig: {
+      displayOperationId: true,
+      operationsSorter: "method",
+      tagsSorter: "alpha",
       docExpansion: "list",
       deepLinking: false,
     },
-  });
+  };
+  await app.register(fastifySwaggerUi, swaggerUiOptions);
 
   app.register(fastifyCookie);
   app.decorate("auth", <S extends IRouteSchema & WithSecurityScheme>(scheme: S) => auth(scheme));
