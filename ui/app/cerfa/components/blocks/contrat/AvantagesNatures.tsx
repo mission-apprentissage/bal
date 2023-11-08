@@ -1,33 +1,29 @@
-import { Box, Collapse, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
-import { useFormContext } from "react-hook-form";
 
+import CollapseController from "../../CollapseController";
 import InputController from "../inputs/InputController";
+import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
+import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
 import { shouldAskAvantageNature } from "./domain/shouldAskAvantageNature";
 
 export const AvantagesNatures = () => {
-  const { getValues } = useFormContext();
-  const values = getValues();
-  //   const missingFieldAvantages = cerfaStatus.global.errors.avantageNature?.touched;
-  const missingFieldAvantages = true;
   return (
     <Box mt={6}>
-      <InputController name="contrat.avantageNature" type="radio" />
+      <InputController name="contrat.avantageNature" />
 
-      <Collapse in={shouldAskAvantageNature({ values })}>
-        <Typography>Avantages en nature, le cas échéant :</Typography>
-        {missingFieldAvantages && (
-          <Typography>
-            Si l&apos;apprenti(e) bénéficie d&apos;avantages en nature, veuillez saisir au moins un des champs
-            ci-dessous.
-          </Typography>
-        )}
-        <Box>
-          <InputController name="contrat.avantageNourriture" type="number" />
-          <InputController name="contrat.avantageLogement" type="number" />
-          <InputController name="contrat.autreAvantageEnNature" type="consent" />
-        </Box>
-      </Collapse>
+      <CollapseController show={shouldAskAvantageNature}>
+        <InputGroupContainer>
+          <InputGroupItem size={3}>
+            <InputController name="contrat.avantageNourriture" />
+          </InputGroupItem>
+          <InputGroupItem size={3}>
+            <InputController name="contrat.avantageLogement" />
+          </InputGroupItem>
+        </InputGroupContainer>
+
+        <InputController name="contrat.autreAvantageEnNature" />
+      </CollapseController>
     </Box>
   );
 };

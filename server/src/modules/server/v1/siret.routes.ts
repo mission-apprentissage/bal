@@ -2,7 +2,6 @@ import { zSiretRoutes } from "shared/routes/v1/siret.route";
 
 import { getOrganisme } from "../../../common/apis/referentiel";
 import { Server } from "../server";
-import { ensureUserIsAdmin } from "../utils/middleware.utils";
 import { getDataFromSiret } from "../utils/siret.utils";
 
 interface Uai {
@@ -19,7 +18,6 @@ export const siretRoutes = ({ server }: { server: Server }) => {
     "/siret",
     {
       schema: zSiretRoutes.post["/v1/siret"],
-      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
     },
     async (request, response) => {
       const { siret, organismeFormation } = request.body;
@@ -59,7 +57,7 @@ export const siretRoutes = ({ server }: { server: Server }) => {
         dataResult = { ...data.result, ...referentielData };
       }
 
-      return response.send({ ...data, result: dataResult });
+      return response.status(200).send({ ...data, result: dataResult });
     }
   );
 };

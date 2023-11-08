@@ -7,7 +7,7 @@ interface Props extends GridProps {
 
 const InputGroupItem: FC<PropsWithChildren<Props>> = ({ children, size, ...rest }) => {
   return (
-    <Grid item sm={size} mb={3} {...rest}>
+    <Grid item sm={size} {...rest}>
       {children}
     </Grid>
   );

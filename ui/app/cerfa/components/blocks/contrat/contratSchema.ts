@@ -69,6 +69,10 @@ export const contratSchema = {
             label: "37 Modification du lieu d'exécution du contrat",
             value: 37,
           },
+          {
+            label: "38 Modification du lieu principal de réalisation de la formation théorique",
+            value: 38,
+          },
         ],
       },
     ],
@@ -242,19 +246,12 @@ export const contratSchema = {
     ],
     validateMessage: "n'est pas un numéro valide",
   },
-  "contrat.dateDebutContrat": {
+  "contrat.dateSignature": {
     required: true,
     fieldType: "date",
     showInfo: true,
-    label: "Date de début d'exécution du contrat :",
-    requiredMessage: "la date de début d'exécution de contrat est obligatoire",
-  },
-  "contrat.dateEffetAvenant": {
-    fieldType: "date",
-    _init: ({ values }) => ({ required: shouldAskDateEffetAvenant({ values }) }),
-    showInfo: true,
-    label: "Date d'effet d'avenant :",
-    requiredMessage: "S'agissant d'un avenant sa date d'effet est obligatoire ",
+    label: "Date de signature du présent contrat :",
+    requiredMessage: "la date de signature du contrat est obligatoire",
   },
   "contrat.dateFinContrat": {
     required: true,
@@ -262,6 +259,27 @@ export const contratSchema = {
     showInfo: true,
     label: "Date de fin du contrat ou de la période d'apprentissage :",
     requiredMessage: "la date de fin de contrat est obligatoire",
+  },
+  "contrat.dateDebutContrat": {
+    required: true,
+    fieldType: "date",
+    showInfo: true,
+    label: "Date de début d'exécution du contrat :",
+    requiredMessage: "la date de début d'exécution de contrat est obligatoire",
+  },
+  "contrat.dateDebutFormationPratique": {
+    required: true,
+    fieldType: "date",
+    showInfo: true,
+    label: "Date de début de formation pratique chez l’employeur :",
+    requiredMessage: "la date de début de la formation pratique est obligatoire",
+  },
+  "contrat.dateEffetAvenant": {
+    fieldType: "date",
+    _init: ({ values }) => ({ required: shouldAskDateEffetAvenant({ values }) }),
+    showInfo: true,
+    label: "Date d'effet d'avenant :",
+    requiredMessage: "S'agissant d'un avenant sa date d'effet est obligatoire ",
   },
   "contrat.dureeTravailHebdoHeures": {
     required: true,

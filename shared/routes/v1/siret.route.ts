@@ -9,7 +9,7 @@ export const zSiretRoutes = {
         organismeFormation: z.boolean(),
       }),
       response: {
-        "2xx": z.object({}),
+        "2xx": z.any(),
       },
     },
   },

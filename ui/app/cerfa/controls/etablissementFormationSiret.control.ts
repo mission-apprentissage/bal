@@ -15,11 +15,10 @@ const unlockAllCascade = {
 export const etablissementFormationSiretControl: CerfaControl[] = [
   {
     deps: ["etablissementFormation.siret"],
-    process: async ({ values, signal, dossier }) => {
+    process: async ({ values, signal }) => {
       const siret = values.etablissementFormation.siret;
       const { messages, result } = await fetchSiret({
         siret,
-        dossierId: dossier._id,
         organismeFormation: true,
         signal,
       });

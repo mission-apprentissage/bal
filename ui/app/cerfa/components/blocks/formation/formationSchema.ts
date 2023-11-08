@@ -2,8 +2,40 @@ import { INDICE_DE_REPETITION_OPTIONS } from "../domain/indiceRepetitionOptions"
 import { shouldAskEtablissementFormation } from "./domain/shouldAskEtablissementFormation";
 
 export const formationSchema = {
-  "etablissementFormation.memeResponsable": {
+  "organismeFormation.formationInterne": {
+    required: true,
     fieldType: "radio",
+    completion: false,
+    label: "Le centre de formation est-il un CFA d'entreprise ?",
+    requiredMessage: "Merci de préciser s'il sagit d'un CFA d'entreprise",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
+  },
+  "organismeFormation.siret": {
+    fieldType: "text",
+    required: true,
+    label: "N° SIRET du CFA responsable :",
+    requiredMessage: "Le siret est obligatoire",
+    validateMessage: "n'est pas un siret valide",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
+  },
+  "etablissementFormation.memeResponsable": {
+    fieldType: "consent",
     required: true,
     label: "Le lieu de formation est le même que l'organisme responsable",
     options: [
@@ -335,38 +367,6 @@ export const formationSchema = {
         name: "C",
         mask: "Pattern",
         pattern: "^.*$",
-      },
-    ],
-  },
-  "organismeFormation.formationInterne": {
-    required: true,
-    fieldType: "radio",
-    completion: false,
-    label: "Le centre de formation est-il un CFA d'entreprise ?",
-    requiredMessage: "Merci de préciser s'il sagit d'un CFA d'entreprise",
-    options: [
-      {
-        label: "Oui",
-        value: true,
-      },
-      {
-        label: "Non",
-        value: false,
-      },
-    ],
-  },
-  "organismeFormation.siret": {
-    fieldType: "text",
-    required: true,
-    label: "N° SIRET du CFA responsable :",
-    requiredMessage: "Le siret est obligatoire",
-    validateMessage: "n'est pas un siret valide",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d*$",
       },
     ],
   },

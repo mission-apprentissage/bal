@@ -1,10 +1,11 @@
 import { fr } from "@codegouvfr/react-dsfr";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { getLink } from "@codegouvfr/react-dsfr/link";
-import { Box, Collapse, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
+import CollapseController from "../../CollapseController";
 import InputController from "../inputs/InputController";
 import ConditionItem from "./ConditionItem";
 import { shouldShowRemunerationsAnnuelles } from "./domain/shouldShowRemunerationsAnnuelles";
@@ -99,7 +100,7 @@ export const Remunerations = () => {
           </Box>
         </Box>
       )}
-      <Collapse in={shouldShowRemunerationsAnnuelles({ values })}>
+      <CollapseController show={shouldShowRemunerationsAnnuelles}>
         <Box>
           {remunerationsAnnuelles?.map((annee, i) => {
             const anneeLabel = getAnneeLabel(annee.ordre);
@@ -142,7 +143,7 @@ export const Remunerations = () => {
             </Typography>
           )}
         </Box>
-      </Collapse>
+      </CollapseController>
     </Box>
   );
 };

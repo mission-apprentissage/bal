@@ -5,7 +5,7 @@ import { Server } from "../server";
 
 export const geoRoutes = ({ server }: { server: Server }) => {
   server.post(
-    "/cp",
+    "/geo/cp",
     {
       schema: zGeoRoutes.post["/v1/geo/cp"],
     },

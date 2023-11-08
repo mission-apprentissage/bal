@@ -3,11 +3,10 @@ import { fetchCodePostal } from "./utils/api.utils";
 
 export const responsableLegalCodePostalControl: CerfaControl = {
   deps: ["apprenti.responsableLegal.adresse.codePostal"],
-  process: async ({ values, dossier, signal }) => {
+  process: async ({ values, signal }) => {
     const codePostal = values.apprenti.responsableLegal.adresse.codePostal;
     const { messages, result } = await fetchCodePostal({
       codePostal,
-      dossierId: dossier._id,
       signal,
     });
 

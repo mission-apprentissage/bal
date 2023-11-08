@@ -10,6 +10,7 @@ import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
 const CerfaEmployeur: FC = () => {
   return (
     <Box>
+      <InputController name="employeur.privePublic" />
       <InputController name="employeur.siret" />
       <InputController name="employeur.denomination" />
 
@@ -35,15 +36,6 @@ const CerfaEmployeur: FC = () => {
         </InputGroupItem>
         <InputGroupItem size={10}>
           <InputController name="employeur.adresse.commune" />
-        </InputGroupItem>
-      </InputGroupContainer>
-
-      <InputGroupContainer>
-        <InputGroupItem size={6}>
-          <InputController name="employeur.adresse.departement" />
-        </InputGroupItem>
-        <InputGroupItem size={6}>
-          <InputController name="employeur.adresse.region" />
         </InputGroupItem>
       </InputGroupContainer>
 
@@ -75,10 +67,15 @@ const CerfaEmployeur: FC = () => {
         </InputGroupItem>
       </InputGroupContainer>
 
-      <InputController name="employeur.codeIdcc" />
       <InputController name="employeur.codeIdcc_special" />
-      <InputController name="employeur.libelleIdcc" />
-      <InputController name="employeur.regimeSpecifique" />
+      <InputGroupContainer>
+        <InputGroupItem size={6}>
+          <InputController name="employeur.codeIdcc" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="employeur.libelleIdcc" />
+        </InputGroupItem>
+      </InputGroupContainer>
 
       <CheckEmptyFields schema={{}} blockName="employeur" />
     </Box>

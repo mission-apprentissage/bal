@@ -18,6 +18,18 @@ export const apprentiSchema = {
       },
     ],
   },
+  "apprenti.nomUsage": {
+    showInfo: true,
+    label: "Nom d'usage de l'apprenti(e) :",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: nomPattern,
+      },
+    ],
+  },
   "apprenti.prenom": {
     required: true,
     showInfo: true,
@@ -29,6 +41,102 @@ export const apprentiSchema = {
         name: "C",
         mask: "Pattern",
         pattern: nomPattern,
+      },
+    ],
+  },
+  "apprenti.dateNaissance": {
+    fieldType: "date",
+    required: true,
+    label: "Date de naissance :",
+    requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
+    showInfo: true,
+  },
+  "apprenti.sexe": {
+    required: true,
+    fieldType: "radio",
+    label: "Sexe :",
+    requiredMessage: "le sexe de l'apprenti(e) est obligatoire",
+    options: [
+      {
+        label: "Féminin",
+        value: "F",
+      },
+      {
+        label: "Masculin",
+        value: "M",
+      },
+    ],
+  },
+  "apprenti.lieuNaissanceFrance": {
+    required: true,
+    fieldType: "radio",
+    label: "L’apprenti(e) est né(e) en France (Metropolitaine, DOM-TOM...) :",
+    requiredMessage: "le lieu de naissance de l'apprenti(e) est obligatoire",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
+  },
+  "apprenti.nationalite": {
+    required: true,
+    fieldType: "select",
+    label: "Nationalité :",
+    requiredMessage: "la nationalité de l'apprenti(e) est obligatoire",
+    showInfo: true,
+    options: [
+      {
+        label: "1: Française",
+        value: 1,
+      },
+      {
+        label: "2: Union Européenne",
+        value: 2,
+      },
+      {
+        label: "3: Etranger hors Union Européenne",
+        value: 3,
+      },
+    ],
+  },
+  "apprenti.communeNaissance": {
+    required: true,
+    label: "Commune de naissance :",
+    requiredMessage: "la commune de naissance est obligatoire",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
+  },
+  "apprenti.departementNaissance": {
+    required: true,
+    label: "Département de naissance :",
+    requiredMessage: "le département de naissance est obligatoire",
+    validateMessage: " n'est pas un département valide",
+    showInfo: true,
+  },
+  "apprenti.regimeSocial": {
+    fieldType: "select",
+    required: true,
+    label: "Régime social :",
+    requiredMessage: "le régime social de l'apprenti(e) est obligatoire",
+    options: [
+      {
+        label: "1 MSA",
+        value: 1,
+      },
+      {
+        label: "2 URSSAF",
+        value: 2,
       },
     ],
   },
@@ -921,6 +1029,54 @@ export const apprentiSchema = {
       },
     ],
   },
+  "apprenti.projetCreationRepriseEntreprise": {
+    required: true,
+    fieldType: "radio",
+    label: "Déclare avoir un projet de création ou de reprise d’entreprise :",
+    requiredMessage: "Cette déclaration est obligatoire",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
+  },
+  "apprenti.inscriptionSportifDeHautNiveau": {
+    fieldType: "radio",
+    required: true,
+    label: "Déclare être inscrit sur la liste des sportifs de haut niveau :",
+    requiredMessage: "Cette déclaration est obligatoire",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
+  },
+  "apprenti.handicap": {
+    fieldType: "radio",
+    required: true,
+    label: "Déclare bénéficier de la reconnaissance travailleur handicapé :",
+    requiredMessage: "La déclaration de reconnaissance travailleur handicapé est obligatoire",
+    options: [
+      {
+        label: "Oui",
+        value: true,
+      },
+      {
+        label: "Non",
+        value: false,
+      },
+    ],
+  },
   "apprenti.apprentiMineur": {
     required: true,
     fieldType: "radio",
@@ -985,6 +1141,7 @@ export const apprentiSchema = {
   },
   "apprenti.responsableLegal.memeAdresse": {
     _init: ({ values }: any) => ({ required: shouldAskRepresentantLegal({ values }) }),
+    fieldType: "radio",
     showInfo: true,
     label: "l'apprenti(e) vit à la même adresse que son responsable légal",
     requiredMessage: "L'adresse du représentant légal est obligatoire",
@@ -1870,118 +2027,7 @@ export const apprentiSchema = {
       },
     ],
   },
-  "apprenti.dateNaissance": {
-    fieldType: "date",
-    required: true,
-    label: "Date de naissance :",
-    requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
-    showInfo: true,
-  },
-  "apprenti.sexe": {
-    required: true,
-    fieldType: "radio",
-    label: "Sexe :",
-    requiredMessage: "le sexe de l'apprenti(e) est obligatoire",
-    options: [
-      {
-        label: "M : Homme",
-        value: "M",
-      },
-      {
-        label: "F : Femme",
-        value: "F",
-      },
-    ],
-  },
-  "apprenti.departementNaissance": {
-    required: true,
-    label: "Département de naissance :",
-    requiredMessage: "le département de naissance est obligatoire",
-    validateMessage: " n'est pas un département valide",
-    showInfo: true,
-  },
-  "apprenti.communeNaissance": {
-    required: true,
-    label: "Commune de naissance :",
-    requiredMessage: "la commune de naissance est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
-  },
-  "apprenti.nationalite": {
-    required: true,
-    fieldType: "select",
-    label: "Nationalité :",
-    requiredMessage: "la nationalité de l'apprenti(e) est obligatoire",
-    showInfo: true,
-    options: [
-      {
-        label: "1: Française",
-        value: 1,
-      },
-      {
-        label: "2: Union Européenne",
-        value: 2,
-      },
-      {
-        label: "3: Etranger hors Union Européenne",
-        value: 3,
-      },
-    ],
-  },
-  "apprenti.regimeSocial": {
-    fieldType: "select",
-    required: true,
-    label: "Régime social :",
-    requiredMessage: "le régime social de l'apprenti(e) est obligatoire",
-    options: [
-      {
-        label: "1 MSA",
-        value: 1,
-      },
-      {
-        label: "2 URSSAF",
-        value: 2,
-      },
-    ],
-  },
-  "apprenti.inscriptionSportifDeHautNiveau": {
-    fieldType: "radio",
-    required: true,
-    label: "Déclare être inscrit sur la liste des sportifs, entraîneurs, arbitres et juges sportifs de haut niveau :",
-    requiredMessage: "Cette déclaration est obligatoire",
-    options: [
-      {
-        label: "Oui",
-        value: true,
-      },
-      {
-        label: "Non",
-        value: false,
-      },
-    ],
-  },
-  "apprenti.handicap": {
-    fieldType: "radio",
-    required: true,
-    label: "Déclare bénéficier de la reconnaissance travailleur handicapé :",
-    requiredMessage: "La déclaration de reconnaissance travailleur handicapé est obligatoire",
-    options: [
-      {
-        label: "Oui",
-        value: true,
-      },
-      {
-        label: "Non",
-        value: false,
-      },
-    ],
-  },
+
   "apprenti.situationAvantContrat": {
     fieldType: "select",
     required: true,

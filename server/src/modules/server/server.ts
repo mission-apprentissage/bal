@@ -171,7 +171,7 @@ export function build(opts: FastifyServerOptions = {}): Server {
     async (instance: Server) => {
       registerV1Routes({ server: instance });
     },
-    { prefix: "/v1" }
+    { prefix: "/api/v1" }
   );
 
   return app.withTypeProvider<ZodTypeProvider>();

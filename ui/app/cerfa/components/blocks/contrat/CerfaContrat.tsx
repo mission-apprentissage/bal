@@ -1,40 +1,59 @@
-import { Box, Collapse, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { FC } from "react";
-import { useFormContext } from "react-hook-form";
 
+import CollapseController from "../../CollapseController";
 import CheckEmptyFields from "../CheckEmptyFields";
 import InputController from "../inputs/InputController";
+import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
+import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
+import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
 import { AvantagesNatures } from "./AvantagesNatures";
 import { shouldAskDateEffetAvenant } from "./domain/shouldAskDateEffetAvenant";
+import NumeroContratPrecedentField from "./NumeroContratPrecedentField";
 import { Remunerations } from "./Remunerations";
 import TypeDerogationField from "./TypeDerogationField";
 
 const CerfaContrat: FC = () => {
-  const values = useFormContext().getValues();
   return (
     <Box>
-      <Box>
-        <InputController name="contrat.typeContratApp" />
-        <TypeDerogationField />
-        {/* <TypeDerogationField />
-        <NumeroContratPrecedentField /> */}
-      </Box>
-      <Box>
-        <InputController name="contrat.dateDebutContrat" />
-        <Collapse in={shouldAskDateEffetAvenant({ values })}>
-          <InputController name="contrat.dateEffetAvenant" />
-        </Collapse>
-        <InputController name="contrat.dateFinContrat" />
-      </Box>
+      <InputController name="contrat.typeContratApp" />
+      <TypeDerogationField />
+      <NumeroContratPrecedentField />
 
-      <Box pt={4}>
-        <Typography fontWeight={700}>Durée hebdomadaire du travail :</Typography>
-        <InputController name="contrat.dureeTravailHebdoHeures" type="number" />
-        <InputController name="contrat.dureeTravailHebdoMinutes" type="number" />
-        <InputController name="contrat.travailRisque" />
-        <Remunerations />
-        <AvantagesNatures />
-      </Box>
+      <InputGroupContainer>
+        <InputGroupItem size={6}>
+          <InputController name="contrat.dateSignature" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="contrat.dateFinContrat" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="contrat.dateDebutContrat" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="contrat.dateDebutFormationPratique" />
+        </InputGroupItem>
+      </InputGroupContainer>
+
+      <CollapseController show={shouldAskDateEffetAvenant}>
+        <InputController name="contrat.dateEffetAvenant" />
+      </CollapseController>
+
+      <InputGroupTitle fontWeight={700}>Durée hebdomadaire du travail</InputGroupTitle>
+
+      <InputGroupContainer>
+        <InputGroupItem size={3}>
+          <InputController name="contrat.dureeTravailHebdoHeures" />
+        </InputGroupItem>
+        <InputGroupItem size={3}>
+          <InputController name="contrat.dureeTravailHebdoMinutes" />
+        </InputGroupItem>
+      </InputGroupContainer>
+
+      <InputController name="contrat.travailRisque" />
+      <Remunerations />
+      <AvantagesNatures />
+
       <CheckEmptyFields schema={{}} blockName="contrat" />
     </Box>
   );

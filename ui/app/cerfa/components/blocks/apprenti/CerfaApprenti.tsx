@@ -1,65 +1,148 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { FC } from "react";
 
+import CollapseController from "../../CollapseController";
 import CheckEmptyFields from "../CheckEmptyFields";
+import { shouldAskRepresentantLegal } from "../domain/shouldAskRepresentantLegal";
+import { shouldAskResponsableLegalAdresse } from "../domain/shouldAskResponsableLegalAdresse";
 import InputController from "../inputs/InputController";
+import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
+import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
+import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
 
 const CerfaApprenti: FC = () => {
   return (
     <Box>
-      <Box>
-        <InputController name="apprenti.nom" />
-        <InputController name="apprenti.prenom" />
+      <InputGroupContainer>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.nom" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.nomUsage" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.prenom" />
+        </InputGroupItem>
+        <InputGroupItem size={6} />
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.dateNaissance" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.sexe" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.lieuNaissanceFrance" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.nationalite" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.communeNaissance" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.departementNaissance" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.regimeSocial" />
+        </InputGroupItem>
+      </InputGroupContainer>
 
-        <Box>
+      <InputGroupTitle>Adresse et contact de l’apprenti(e)</InputGroupTitle>
+      <InputGroupContainer>
+        <InputGroupItem size={2}>
           <InputController name="apprenti.adresse.numero" />
+        </InputGroupItem>
+        <InputGroupItem size={3}>
           <InputController name="apprenti.adresse.repetitionVoie" />
-        </Box>
-        <InputController name="apprenti.adresse.voie" />
-        <InputController name="apprenti.adresse.complement" />
-        <InputController name="apprenti.adresse.codePostal" />
-        <InputController name="apprenti.adresse.commune" />
-        <InputController name="apprenti.adresse.pays" />
-        <InputController name="apprenti.telephone" />
-        <InputController name="apprenti.courriel" />
-        <Box mt={5}>
-          <InputController name="apprenti.apprentiMineur" />
-          <InputController name="apprenti.apprentiMineurNonEmancipe" fieldType="radio" />
-        </Box>
-        <Box mt={5}>
-          <Typography>Représentant légal</Typography>
-          <InputController name="apprenti.responsableLegal.nom" />
-          <InputController name="apprenti.responsableLegal.prenom" />
-          <Typography>Adresse du représentant légal :</Typography>
-          <InputController name="apprenti.responsableLegal.memeAdresse" fieldType="radio" />
+        </InputGroupItem>
+        <InputGroupItem size={7}>
+          <InputController name="apprenti.adresse.voie" />
+        </InputGroupItem>
+        <InputGroupItem size={12}>
+          <InputController name="apprenti.adresse.complement" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.adresse.codePostal" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.adresse.commune" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.adresse.pays" />
+        </InputGroupItem>
+        <InputGroupItem size={6} />
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.telephone" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.courriel" />
+        </InputGroupItem>
+      </InputGroupContainer>
 
-          <InputController name="apprenti.responsableLegal.adresse.numero" />
-          <Box>
-            <InputController name="apprenti.responsableLegal.adresse.numero" />
-            <InputController name="apprenti.responsableLegal.adresse.repetitionVoie" />
-          </Box>
-          <InputController name="apprenti.responsableLegal.adresse.voie" />
-          <InputController name="apprenti.responsableLegal.adresse.complement" />
-          <InputController name="apprenti.responsableLegal.adresse.codePostal" />
-          <InputController name="apprenti.responsableLegal.adresse.commune" />
-          <InputController name="apprenti.responsableLegal.adresse.pays" />
-        </Box>
-      </Box>
-      <Box>
-        <InputController name="apprenti.dateNaissance" />
-        <InputController name="apprenti.sexe" />
-        <InputController name="apprenti.departementNaissance" />
-        <InputController name="apprenti.communeNaissance" />
-        <InputController name="apprenti.nationalite" />
-        <InputController name="apprenti.regimeSocial" />
-        <InputController name="apprenti.inscriptionSportifDeHautNiveau" />
-        <InputController name="apprenti.handicap" />
-        <InputController name="apprenti.situationAvantContrat" />
-        <InputController name="apprenti.diplomePrepare" />
-        <InputController name="apprenti.derniereClasse" />
-        <InputController name="apprenti.intituleDiplomePrepare" />
-        <InputController name="apprenti.diplome" />
-      </Box>
+      <InputGroupTitle>Informations supplémentaires sur l’apprenti(e)</InputGroupTitle>
+
+      <InputController name="apprenti.projetCreationRepriseEntreprise" />
+      <InputController name="apprenti.inscriptionSportifDeHautNiveau" />
+      <InputController name="apprenti.handicap" />
+      <InputController name="apprenti.situationAvantContrat" />
+      <InputGroupContainer>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.diplomePrepare" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.derniereClasse" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.intituleDiplomePrepare" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.diplome" />
+        </InputGroupItem>
+      </InputGroupContainer>
+
+      <InputController name="apprenti.apprentiMineur" />
+      <InputController name="apprenti.apprentiMineurNonEmancipe" />
+
+      <CollapseController show={shouldAskRepresentantLegal}>
+        <InputGroupTitle>Représentant légal</InputGroupTitle>
+        <InputGroupContainer>
+          <InputGroupItem size={6}>
+            <InputController name="apprenti.responsableLegal.nom" />
+          </InputGroupItem>
+          <InputGroupItem size={6}>
+            <InputController name="apprenti.responsableLegal.prenom" />
+          </InputGroupItem>
+        </InputGroupContainer>
+
+        <InputGroupTitle>Adresse du représentant légal :</InputGroupTitle>
+        <InputController name="apprenti.responsableLegal.memeAdresse" />
+
+        <CollapseController show={shouldAskResponsableLegalAdresse}>
+          <InputGroupContainer>
+            <InputGroupItem size={2}>
+              <InputController name="apprenti.responsableLegal.adresse.numero" />
+            </InputGroupItem>
+            <InputGroupItem size={3}>
+              <InputController name="apprenti.responsableLegal.adresse.repetitionVoie" />
+            </InputGroupItem>
+            <InputGroupItem size={7}>
+              <InputController name="apprenti.responsableLegal.adresse.voie" />
+            </InputGroupItem>
+            <InputGroupItem size={12}>
+              <InputController name="apprenti.responsableLegal.adresse.complement" />
+            </InputGroupItem>
+            <InputGroupItem size={6}>
+              <InputController name="apprenti.responsableLegal.adresse.codePostal" />
+            </InputGroupItem>
+            <InputGroupItem size={6}>
+              <InputController name="apprenti.responsableLegal.adresse.commune" />
+            </InputGroupItem>
+            <InputGroupItem size={6}>
+              <InputController name="apprenti.responsableLegal.adresse.pays" />
+            </InputGroupItem>
+          </InputGroupContainer>
+        </CollapseController>
+      </CollapseController>
 
       <CheckEmptyFields schema={{}} blockName="apprenti" />
     </Box>

@@ -74,7 +74,7 @@ const config = {
     clientSecret: env.get("MNA_BAL_OPCO_EP_CLIENT_SECRET").default("").asString(),
     scope: env.get("MNA_BAL_OPCO_EP_SCOPE").default("").asString(),
   },
-  apiEntreprise: env.get("MBA_BAL_API_ENTREPRISE_SECRET").asString(),
+  apiEntreprise: env.get("MNA_BAL_API_ENTREPRISE_SECRET").asString(),
   clamav: {
     uri: env.get("MNA_BAL_CLAMAV_URI").default("localhost:3310").asString(),
   },

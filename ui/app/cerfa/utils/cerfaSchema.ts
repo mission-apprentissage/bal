@@ -73,4 +73,22 @@ const cerfaSchema: CerfaSchema = {
   logics: controls,
 };
 
+export const indexedDependencies = (() => {
+  const names = {};
+  controls.forEach((rule) => {
+    rule.deps.forEach((dep) => {
+      rule.deps.forEach((depI) => {
+        names[dep] = names[dep] ?? {};
+        names[dep][depI] = true;
+      });
+      delete names[dep][dep];
+    });
+  });
+  return Object.fromEntries(Object.keys(names).reduce((acc, name) => [...acc, [name, Object.keys(names[name])]], []));
+})();
+
+export const indexedRules = Object.fromEntries(
+  Object.keys(indexedDependencies).map((name) => [name, controls.filter((logic) => logic.deps.includes(name))])
+);
+
 export default cerfaSchema;

@@ -3,7 +3,8 @@ import { Typography } from "@mui/material";
 import { FC } from "react";
 import { FieldValues, UseFormRegisterReturn, UseFormReturn } from "react-hook-form";
 
-import { CerfaField } from "../../../utils/cerfaSchema";
+import { CerfaControl } from "../../../controls";
+import cerfaSchema, { CerfaField } from "../../../utils/cerfaSchema";
 import { getFieldStateFromFormState } from "../../../utils/form.utils";
 import ConsentInput from "./ConsentInput";
 import DateInput from "./DateInput";
@@ -30,9 +31,10 @@ interface Props {
   fieldMethods: UseFormReturn<FieldValues, any, undefined>;
   fieldSchema: CerfaField;
   inputProps?: UseFormRegisterReturn;
+  controls: CerfaControl[];
 }
 
-export type InputFieldProps = Omit<Props, "fieldType"> & Pick<InputProps, "state" | "stateRelatedMessage">;
+export type InputFieldProps = Omit<Props, "fieldType" | "controls"> & Pick<InputProps, "state" | "stateRelatedMessage">;
 
 const TypesMapping: Record<FieldType, FC<InputFieldProps>> = {
   text: TextInput,
@@ -46,7 +48,7 @@ const TypesMapping: Record<FieldType, FC<InputFieldProps>> = {
   consent: ConsentInput,
 } as const;
 
-const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
+const InputField: FC<Props> = ({ fieldType, controls, ...fieldProps }) => {
   const Component = TypesMapping[fieldType];
 
   if (!Component) {
@@ -58,9 +60,24 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
   }
 
   const { name, fieldMethods, fieldSchema } = fieldProps;
+  const deps = controls?.map((control) => control.deps).flat() ?? [];
+
   const inputProps = fieldMethods.register(name, {
     required: fieldSchema.required && fieldSchema.requiredMessage,
+    deps: [...new Set(deps)],
+    validate: {
+      controls: async (value, formValues) => {
+        try {
+          const validation = await controls?.[0].process({ values: formValues, fields: cerfaSchema.fields });
+
+          return validation?.error;
+        } catch (error) {
+          return "Une erreur est survenue";
+        }
+      },
+    },
   });
+
   const { state, stateRelatedMessage } = getFieldStateFromFormState(fieldMethods.formState, name);
 
   return <Component {...fieldProps} inputProps={inputProps} state={state} stateRelatedMessage={stateRelatedMessage} />;

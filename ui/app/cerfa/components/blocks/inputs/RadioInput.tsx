@@ -25,6 +25,7 @@ const RadioInput: FC<InputFieldProps> = ({ name, fieldMethods, fieldSchema, stat
       options={radioOptions}
       state={state}
       stateRelatedMessage={stateRelatedMessage}
+      orientation="horizontal"
     />
   );
 };

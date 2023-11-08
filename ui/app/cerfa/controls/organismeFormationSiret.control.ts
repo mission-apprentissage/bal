@@ -14,11 +14,10 @@ const unlockAllCascade = {
 
 export const siretOrganismeFormationLogic: CerfaControl = {
   deps: ["organismeFormation.siret"],
-  process: async ({ values, signal, dossier }) => {
+  process: async ({ values, signal }) => {
     const siret = values.organismeFormation.siret;
     const { messages, result } = await fetchSiret({
       siret,
-      dossierId: dossier._id,
       organismeFormation: true,
       signal,
     });

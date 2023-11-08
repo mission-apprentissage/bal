@@ -8,7 +8,7 @@ export const zGeoRoutes = {
         codePostal: z.string().regex(new RegExp("^[0-9]{5}$")),
       }),
       response: {
-        "2xx": z.object({}),
+        "2xx": z.any(),
       },
     },
   },

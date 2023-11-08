@@ -21,12 +21,11 @@ const unlockAllCascade = {
 
 export const employerSiretLogic: CerfaControl = {
   deps: ["employeur.siret"],
-  process: async ({ values, signal, dossier }) => {
+  process: async ({ values, signal }) => {
     const siret = values.employeur.siret;
 
     const { messages, result } = await fetchSiret({
       siret,
-      dossierId: dossier._id,
       signal,
     });
 

@@ -1,25 +1,25 @@
 import { FC } from "react";
 import { useFormContext } from "react-hook-form";
 
-import cerfaSchema from "../../../utils/cerfaSchema";
-import InputField, { FieldType } from "./InputField";
+import cerfaSchema, { indexedRules } from "../../../utils/cerfaSchema";
+import InputField from "./InputField";
 
 interface Props {
   name: string;
-  fieldType?: FieldType;
-  type?: string;
 }
 
-const InputController: FC<Props> = ({ name, fieldType }) => {
+const InputController: FC<Props> = ({ name }) => {
   const fieldMethods = useFormContext();
   const fieldSchema = cerfaSchema.fields[name];
+  const controls = indexedRules[name];
 
   return (
     <InputField
       name={name}
+      fieldType={fieldSchema?.fieldType ?? "text"}
       fieldSchema={fieldSchema}
-      fieldType={fieldType ?? fieldSchema?.fieldType ?? "text"}
       fieldMethods={fieldMethods}
+      controls={controls}
     />
   );
 };
