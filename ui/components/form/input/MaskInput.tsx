@@ -37,7 +37,7 @@ export const MaskInput = memo(
 
     const messageId = `${inputId}-desc-error`;
 
-    const { onChange: _, ...nativeInputPropsRest } = nativeInputProps ?? {};
+    const { onChange: _, ref: inputRef, ...nativeInputPropsRest } = nativeInputProps ?? {};
 
     return (
       <InputGroup
@@ -54,10 +54,11 @@ export const MaskInput = memo(
           const maskInput = (
             <IMaskInput
               {...(nativeInputPropsRest as object)}
+              /* @ts-ignore */
+              inputRef={inputRef}
               id={inputId}
               disabled={disabled || undefined}
               aria-describedby={messageId}
-              ref={ref}
               className={cx(
                 fr.cx(
                   "fr-input",

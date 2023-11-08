@@ -8,7 +8,7 @@ export const zNafRoutes = {
         naf: z.string().regex(new RegExp("^.{1,6}$")),
       }),
       response: {
-        "2xx": z.object({}),
+        "2xx": z.any(),
       },
     },
   },

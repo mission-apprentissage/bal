@@ -16,7 +16,7 @@ export const nafRoutes = ({ server }: { server: Server }) => {
         response.send({ error: "Ce code naf n'existe pas" });
       }
       const { noteLiteral: _, ...result } = nafResponse;
-      return response.send(result);
+      return response.status(200).send(result);
     }
   );
 };

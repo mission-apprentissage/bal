@@ -36,6 +36,7 @@ import { documentsRoutes } from "./documents.routes";
 import { userRoutes } from "./user.routes";
 import { authValidateJWT, authValidateSession, authWebHookKey } from "./utils/auth.strategies";
 import { geoRoutes } from "./v1/geo.routes";
+import { nafRoutes } from "./v1/naf.routes";
 import { siretRoutes } from "./v1/siret.routes";
 
 declare module "fastify" {
@@ -202,4 +203,5 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
 export const registerV1Routes: RegisterRoutes = ({ server }) => {
   siretRoutes({ server });
   geoRoutes({ server });
+  nafRoutes({ server });
 };

@@ -64,15 +64,32 @@ const InputField: FC<Props> = ({ fieldType, controls, ...fieldProps }) => {
 
   const inputProps = fieldMethods.register(name, {
     required: fieldSchema.required && fieldSchema.requiredMessage,
+    // @ts-ignore
     deps: [...new Set(deps)],
     validate: {
       controls: async (value, formValues) => {
         try {
-          const validation = await controls?.[0].process({ values: formValues, fields: cerfaSchema.fields });
+          let error: string | undefined = undefined;
 
-          return validation?.error;
-        } catch (error) {
-          return "Une erreur est survenue";
+          for (const control of controls ?? []) {
+            const validation = await control.process({ values: formValues, fields: cerfaSchema.fields });
+
+            if (validation?.error) {
+              error = validation.error;
+            }
+
+            if (validation?.cascade) {
+              Object.entries(validation.cascade).forEach(([fieldName, cascade]) => {
+                if (cascade?.value) {
+                  fieldMethods.setValue(fieldName, cascade.value);
+                }
+              });
+            }
+          }
+
+          return error;
+        } catch (e) {
+          return "Une erreur technique est survenue";
         }
       },
     },
