@@ -6,7 +6,7 @@ import mjml from "mjml";
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
-import { TemplateName, TemplatePayloads, TemplateTitleFuncs } from "shared/mailer";
+import { TemplateName, TemplatePayloads } from "shared/mailer";
 import { IEvent } from "shared/models/events/event.model";
 import { v4 as uuidv4 } from "uuid";
 
@@ -62,11 +62,7 @@ export async function sendEmail<T extends TemplateName>(
   payload: TemplatePayloads[T]
 ): Promise<void> {
   // identifiant email car stocké en BDD et possibilité de le consulter via navigateur
-  await sendStoredEmail(person_id, template, payload, {
-    subject: templatesTitleFuncs[template](payload),
-    templateFile: getStaticFilePath(`./emails/${template}.mjml.ejs`),
-    data: payload,
-  });
+  await sendStoredEmail(person_id, template, payload, getEmailInfos(template, payload));
 }
 
 // version intermédiaire qui prend le template en paramètre (constuit et vérifié au préalable avec TS)
@@ -92,15 +88,25 @@ export async function sendStoredEmail<T extends TemplateName>(
 
 export function getEmailInfos<T extends TemplateName>(template: T, payload: TemplatePayloads[T]) {
   return {
-    subject: templatesTitleFuncs[template](payload),
+    subject: getEmailSubject(template),
     templateFile: getStaticFilePath(`./emails/${template}.mjml.ejs`),
     data: payload,
   };
 }
 
-const templatesTitleFuncs: TemplateTitleFuncs = {
-  reset_password: () => "Réinitialisation du mot de passe",
-};
+function assertUnreachable(_x: never): never {
+  throw internal("Didn't expect to get here");
+}
+
+export function getEmailSubject<T extends TemplateName>(name: T): string {
+  switch (name) {
+    case "reset_password":
+      return "Réinitialisation du mot de passe";
+    default:
+      // @ts-expect-error
+      assertUnreachable(name);
+  }
+}
 
 export function getPublicUrl(path: string) {
   return `${config.publicUrl}${path}`;
