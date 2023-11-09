@@ -7,12 +7,15 @@ import { configureDbSchemaValidation, connectToMongodb } from "@/common/utils/mo
 import config from "@/config";
 import createGlobalServices from "@/services";
 
+import { initMailer } from "./common/services/mailer/mailer";
+
 (async function () {
   try {
     await connectToMongodb(config.mongodb.uri);
     await configureDbSchemaValidation(modelDescriptors);
 
     await createGlobalServices();
+    await initMailer();
 
     startCLI();
   } catch (err) {

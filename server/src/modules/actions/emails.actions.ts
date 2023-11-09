@@ -4,10 +4,9 @@ import { IEvent } from "shared/models/events/event.model";
 import { v4 as uuidv4 } from "uuid";
 
 import logger from "@/common/logger";
-import { getEmailInfos } from "@/common/services/mailer/mailer";
+import { getEmailInfos, sendEmailMessage } from "@/common/services/mailer/mailer";
 import { generateHtml } from "@/common/utils/emailsUtils";
 import { getDbCollection } from "@/common/utils/mongodbUtils";
-import { mailer } from "@/services";
 
 function addEmail(
   person_id: string,
@@ -174,7 +173,7 @@ export async function sendStoredEmail<T extends TemplateName>(
   try {
     template.data.token = emailToken;
     await addEmail(person_id, emailToken, templateName, payload);
-    const messageId = await mailer.sendEmailMessage(payload.recipient.email, template);
+    const messageId = await sendEmailMessage(payload.recipient.email, template);
     await addEmailMessageId(emailToken, messageId);
   } catch (err) {
     captureException(err);
