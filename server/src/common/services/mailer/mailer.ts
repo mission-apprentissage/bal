@@ -58,25 +58,16 @@ async function sendEmailMessage(
 
 export async function sendEmail<T extends TemplateName>(
   person_id: string,
-  template: T,
+  templateName: T,
   payload: TemplatePayloads[T]
 ): Promise<void> {
-  // identifiant email car stocké en BDD et possibilité de le consulter via navigateur
-  await sendStoredEmail(person_id, template, payload, getEmailInfos(template, payload));
-}
-
-// version intermédiaire qui prend le template en paramètre (constuit et vérifié au préalable avec TS)
-export async function sendStoredEmail<T extends TemplateName>(
-  person_id: string,
-  templateName: T,
-  payload: TemplatePayloads[T],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  template: any
-): Promise<void> {
+  const template = getEmailInfos(templateName, payload);
   const emailToken = uuidv4();
   try {
+    // @ts-expect-error
     template.data.token = emailToken;
     await addEmail(person_id, emailToken, templateName, payload);
+    // @ts-expect-error
     const messageId = await sendEmailMessage(payload.recipient.email, template);
     await addEmailMessageId(emailToken, messageId);
   } catch (err) {
