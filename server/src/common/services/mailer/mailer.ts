@@ -5,6 +5,7 @@ import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
 import { TemplateName, TemplatePayloads, TemplateTitleFuncs } from "shared/mailer";
+import { IEvent } from "shared/models/events/event.model";
 import { v4 as uuidv4 } from "uuid";
 
 import config from "@/config";
@@ -13,6 +14,7 @@ import { addEmail, addEmailError, addEmailMessageId } from "../../../modules/act
 import logger from "../../logger";
 import { generateHtml, getPublicUrl } from "../../utils/emailsUtils";
 import { getStaticFilePath } from "../../utils/getStaticFilePath";
+import { getDbCollection } from "../../utils/mongodbUtils";
 
 let transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo> | null = null;
 
@@ -98,3 +100,23 @@ export function getEmailInfos<T extends TemplateName>(template: T, payload: Temp
 const templatesTitleFuncs: TemplateTitleFuncs = {
   reset_password: () => "Réinitialisation du mot de passe",
 };
+
+export async function renderEmail(token: string) {
+  const event = await getDbCollection("events").findOne<IEvent>({
+    "payload.emails.token": token,
+    name: "bal_emails",
+  });
+  if (!event) {
+    return;
+  }
+  const email = event.payload.emails.find((e) => e.token === token);
+  if (!email) {
+    return;
+  }
+  const { templateName, payload } = email;
+  return generateHtml(
+    payload.recipient.email,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getEmailInfos(templateName as TemplateName, payload as any)
+  );
+}
