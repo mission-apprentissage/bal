@@ -34,11 +34,10 @@ export function initMailer() {
 
 async function sendEmailMessage<T extends TemplateName>(
   to: string,
-  template: { subject: string; templateFile: string; data: TemplatePayloads[T] },
+  templateName: T,
+  data: TemplatePayloads[T],
   emailToken: string
 ) {
-  const { subject, templateFile, data } = template;
-
   if (!transporter) {
     throw internal("mailer is not initialised");
   }
@@ -46,8 +45,8 @@ async function sendEmailMessage<T extends TemplateName>(
   const { messageId } = await transporter.sendMail({
     from: `${config.email_from} <${config.email}>`,
     to,
-    subject,
-    html: await generateHtml(to, { subject, templateFile, data: { ...data, token: emailToken } }),
+    subject: getEmailSubject(templateName),
+    html: await generateHtml(to, templateName, { ...data, token: emailToken }),
     list: {
       help: "https://mission-apprentissage.gitbook.io/general/les-services-en-devenir/accompagner-les-futurs-apprentis", // TODO [metier/tech]
       unsubscribe: getPublicUrl(`/api/emails/${emailToken}/unsubscribe`),
@@ -62,25 +61,16 @@ export async function sendEmail<T extends TemplateName>(
   templateName: T,
   payload: TemplatePayloads[T]
 ): Promise<void> {
-  const template = getEmailInfos(templateName, payload);
   const emailToken = uuidv4();
   try {
     await addEmail(person_id, emailToken, templateName, payload);
-    const messageId = await sendEmailMessage(payload.recipient.email, template, emailToken);
+    const messageId = await sendEmailMessage(payload.recipient.email, templateName, payload, emailToken);
     await addEmailMessageId(emailToken, messageId);
   } catch (err) {
     captureException(err);
     logger.error({ err, template: templateName }, "error sending email");
     await addEmailError(emailToken, err);
   }
-}
-
-export function getEmailInfos<T extends TemplateName>(template: T, payload: TemplatePayloads[T]) {
-  return {
-    subject: getEmailSubject(template),
-    templateFile: getStaticFilePath(`./emails/${template}.mjml.ejs`),
-    data: payload,
-  };
 }
 
 function assertUnreachable(_x: never): never {
@@ -114,17 +104,12 @@ export async function renderEmail(token: string) {
     return;
   }
   const { templateName, payload } = email;
-  return generateHtml(
-    payload.recipient.email,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getEmailInfos(templateName as TemplateName, payload as any)
-  );
+  return generateHtml(payload.recipient.email, templateName as TemplateName, payload);
 }
 
-export async function generateHtml(
-  to: string,
-  { subject, templateFile, data }: { subject: string; templateFile: string; data: unknown }
-) {
+export async function generateHtml<T extends TemplateName>(to: string, templateName: T, data: unknown) {
+  const subject = getEmailSubject(templateName);
+  const templateFile = getStaticFilePath(`./emails/${templateName}.mjml.ejs`);
   const buffer = await ejs.renderFile(templateFile, {
     to,
     subject,
