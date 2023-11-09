@@ -1,13 +1,16 @@
 import { internal } from "@hapi/boom";
+import { captureException } from "@sentry/node";
 import { omit } from "lodash-es";
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
 import { TemplateName, TemplatePayloads, TemplateTitleFuncs } from "shared/mailer";
+import { v4 as uuidv4 } from "uuid";
 
 import config from "@/config";
 
-import { sendStoredEmail } from "../../../modules/actions/emails.actions";
+import { addEmail, addEmailError, addEmailMessageId } from "../../../modules/actions/emails.actions";
+import logger from "../../logger";
 import { generateHtml, getPublicUrl } from "../../utils/emailsUtils";
 import { getStaticFilePath } from "../../utils/getStaticFilePath";
 
@@ -26,14 +29,14 @@ export function initMailer() {
   transporter.use("compile", htmlToText());
 }
 
-export async function sendEmailMessage(
+async function sendEmailMessage(
   to: string,
   template: { subject: string; templateFile: string; data: { token: string } }
 ) {
   const { subject, data } = template;
 
   if (!transporter) {
-    throw internal("mailer not initialized");
+    throw internal("mailer is not initialised");
   }
 
   const { messageId } = await transporter.sendMail({
@@ -61,6 +64,27 @@ export async function sendEmail<T extends TemplateName>(
     templateFile: getStaticFilePath(`./emails/${template}.mjml.ejs`),
     data: payload,
   });
+}
+
+// version intermédiaire qui prend le template en paramètre (constuit et vérifié au préalable avec TS)
+export async function sendStoredEmail<T extends TemplateName>(
+  person_id: string,
+  templateName: T,
+  payload: TemplatePayloads[T],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  template: any
+): Promise<void> {
+  const emailToken = uuidv4();
+  try {
+    template.data.token = emailToken;
+    await addEmail(person_id, emailToken, templateName, payload);
+    const messageId = await sendEmailMessage(payload.recipient.email, template);
+    await addEmailMessageId(emailToken, messageId);
+  } catch (err) {
+    captureException(err);
+    logger.error({ err, template: templateName }, "error sending email");
+    await addEmailError(emailToken, err);
+  }
 }
 
 export function getEmailInfos<T extends TemplateName>(template: T, payload: TemplatePayloads[T]) {

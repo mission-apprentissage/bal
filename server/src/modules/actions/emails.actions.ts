@@ -1,14 +1,11 @@
-import { captureException } from "@sentry/node";
-import { TemplateName, TemplatePayloads } from "shared/mailer";
+import { TemplateName } from "shared/mailer";
 import { IEvent } from "shared/models/events/event.model";
-import { v4 as uuidv4 } from "uuid";
 
-import logger from "@/common/logger";
-import { getEmailInfos, sendEmailMessage } from "@/common/services/mailer/mailer";
+import { getEmailInfos } from "@/common/services/mailer/mailer";
 import { generateHtml } from "@/common/utils/emailsUtils";
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-function addEmail(
+export function addEmail(
   person_id: string,
   token: string,
   templateName: string,
@@ -38,7 +35,7 @@ function addEmail(
   );
 }
 
-function addEmailMessageId(token: string, messageId: string) {
+export function addEmailMessageId(token: string, messageId: string) {
   return getDbCollection("events").findOneAndUpdate(
     { "payload.emails.token": token, name: "bal_emails" },
     {
@@ -57,7 +54,7 @@ function addEmailMessageId(token: string, messageId: string) {
   );
 }
 
-function addEmailError(token: string, e: Error) {
+export function addEmailError(token: string, e: Error) {
   return getDbCollection("events").findOneAndUpdate(
     { "payload.emails.token": token, name: "bal_emails" },
     {
@@ -159,25 +156,4 @@ export async function checkIfEmailExists(token: string) {
     name: "bal_emails",
   });
   return count > 0;
-}
-
-// version intermédiaire qui prend le template en paramètre (constuit et vérifié au préalable avec TS)
-export async function sendStoredEmail<T extends TemplateName>(
-  person_id: string,
-  templateName: T,
-  payload: TemplatePayloads[T],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  template: any
-): Promise<void> {
-  const emailToken = uuidv4();
-  try {
-    template.data.token = emailToken;
-    await addEmail(person_id, emailToken, templateName, payload);
-    const messageId = await sendEmailMessage(payload.recipient.email, template);
-    await addEmailMessageId(emailToken, messageId);
-  } catch (err) {
-    captureException(err);
-    logger.error({ err, template: templateName }, "error sending email");
-    await addEmailError(emailToken, err);
-  }
 }
