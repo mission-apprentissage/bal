@@ -29,7 +29,7 @@ export const zEmailRoutes = {
         auth: "access-token",
         access: null,
         ressources: {
-          events: [{ _id: { type: "query", key: "id" } }],
+          events: [{ _id: { type: "params", key: "id" } }],
         },
       },
     },
