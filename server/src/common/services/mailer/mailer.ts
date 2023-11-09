@@ -32,11 +32,12 @@ export function initMailer() {
   transporter.use("compile", htmlToText());
 }
 
-async function sendEmailMessage(
+async function sendEmailMessage<T extends TemplateName>(
   to: string,
-  template: { subject: string; templateFile: string; data: { token: string } }
+  template: { subject: string; templateFile: string; data: TemplatePayloads[T] },
+  emailToken: string
 ) {
-  const { subject, data } = template;
+  const { subject, templateFile, data } = template;
 
   if (!transporter) {
     throw internal("mailer is not initialised");
@@ -46,10 +47,10 @@ async function sendEmailMessage(
     from: `${config.email_from} <${config.email}>`,
     to,
     subject,
-    html: await generateHtml(to, template),
+    html: await generateHtml(to, { subject, templateFile, data: { ...data, token: emailToken } }),
     list: {
       help: "https://mission-apprentissage.gitbook.io/general/les-services-en-devenir/accompagner-les-futurs-apprentis", // TODO [metier/tech]
-      unsubscribe: getPublicUrl(`/api/emails/${data.token}/unsubscribe`),
+      unsubscribe: getPublicUrl(`/api/emails/${emailToken}/unsubscribe`),
     },
   });
 
@@ -64,11 +65,8 @@ export async function sendEmail<T extends TemplateName>(
   const template = getEmailInfos(templateName, payload);
   const emailToken = uuidv4();
   try {
-    // @ts-expect-error
-    template.data.token = emailToken;
     await addEmail(person_id, emailToken, templateName, payload);
-    // @ts-expect-error
-    const messageId = await sendEmailMessage(payload.recipient.email, template);
+    const messageId = await sendEmailMessage(payload.recipient.email, template, emailToken);
     await addEmailMessageId(emailToken, messageId);
   } catch (err) {
     captureException(err);
