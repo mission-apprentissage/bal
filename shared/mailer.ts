@@ -6,14 +6,10 @@ import { z } from "zod";
 const zTemplateResetPassword = z
   .object({
     name: z.literal("reset_password"),
-    recipient: z
-      .object({
-        civility: z.enum(["Madame", "Monsieur"]).optional(),
-        prenom: z.string().optional(),
-        nom: z.string().optional(),
-        email: z.string().email(),
-      })
-      .strict(),
+    to: z.string().email(),
+    civility: z.enum(["Madame", "Monsieur"]).optional(),
+    nom: z.string().optional(),
+    prenom: z.string().optional(),
     resetPasswordToken: z.string(),
   })
   .strict();

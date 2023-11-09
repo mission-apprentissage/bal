@@ -44,12 +44,10 @@ export const sendResetPasswordEmail = async (email: string) => {
 
   await sendEmail(person._id.toString(), {
     name: "reset_password",
-    recipient: {
-      civility: person.civility,
-      prenom: person.prenom,
-      nom: person.nom,
-      email: user.email,
-    },
+    to: email,
+    civility: person.civility,
+    prenom: person.prenom,
+    nom: person.nom,
     resetPasswordToken: token,
   });
 };

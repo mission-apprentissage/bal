@@ -39,7 +39,7 @@ async function sendEmailMessage(template: ITemplate, emailToken: string) {
 
   const { messageId } = await transporter.sendMail({
     from: `${config.email_from} <${config.email}>`,
-    to: template.recipient.email,
+    to: template.to,
     subject: getEmailSubject(template),
     html: await generateHtml(template, emailToken),
     list: {
@@ -93,23 +93,20 @@ export async function renderEmail(token: string) {
   if (!email) {
     return;
   }
-  const { payload } = email;
-  return generateHtml(payload as ITemplate, token);
+  return generateHtml(email.template, token);
 }
 
 export async function generateHtml(template: ITemplate, emailToken: string) {
   const subject = getEmailSubject(template);
   const templateFile = getStaticFilePath(`./emails/${template.name}.mjml.ejs`);
   const buffer = await ejs.renderFile(templateFile, {
-    to: template.recipient.email,
+    to: template.to,
     subject,
-    data: {
-      template,
-      actions: {
-        unsubscribe: getPublicUrl(`/api/emails/${emailToken}/unsubscribe`),
-        preview: getPublicUrl(`/api/emails/${emailToken}/preview`),
-        markAsOpened: getPublicUrl(`/api/emails/${emailToken}/markAsOpened`),
-      },
+    template,
+    actions: {
+      unsubscribe: getPublicUrl(`/api/emails/${emailToken}/unsubscribe`),
+      preview: getPublicUrl(`/api/emails/${emailToken}/preview`),
+      markAsOpened: getPublicUrl(`/api/emails/${emailToken}/markAsOpened`),
     },
     utils: { getPublicUrl },
   });
