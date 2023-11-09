@@ -1,33 +1,46 @@
 import { z } from "zod";
 
+import { zObjectId } from "../models/common";
 import { IRoutesDef } from "./common.routes";
-
-export const zEmailParams = z.object({ token: z.string() }).strict();
 
 export const zEmailRoutes = {
   get: {
-    "/emails/:token/preview": {
+    "/emails/preview": {
       method: "get",
-      path: "/emails/:token/preview",
-      params: zEmailParams,
+      path: "/emails/preview",
+      querystring: z
+        .object({
+          data: z.string(),
+        })
+        .strict(),
       response: {
         "200": z.unknown(),
       },
       securityScheme: null,
     },
-    "/emails/:token/markAsOpened": {
+    "/emails/:id/markAsOpened": {
       method: "get",
-      path: "/emails/:token/markAsOpened",
-      params: zEmailParams,
+      path: "/emails/:id/markAsOpened",
+      params: z.object({ id: zObjectId }).strict(),
       response: {
         "200": z.unknown(),
       },
-      securityScheme: null,
+      securityScheme: {
+        auth: "access-token",
+        access: null,
+        ressources: {
+          events: [{ _id: { type: "query", key: "id" } }],
+        },
+      },
     },
-    "/emails/:token/unsubscribe": {
+    "/emails/unsubscribe": {
       method: "get",
-      path: "/emails/:token/unsubscribe",
-      params: zEmailParams,
+      path: "/emails/unsubscribe",
+      querystring: z
+        .object({
+          data: z.string(),
+        })
+        .strict(),
       response: {
         "200": z.unknown(),
       },

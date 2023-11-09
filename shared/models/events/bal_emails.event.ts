@@ -1,38 +1,30 @@
 import { z } from "zod";
 
 import { zTemplate } from "../../mailer";
+import { zObjectId } from "../common";
 
-export const ZBalEmail = z
+const zEmailError = z
   .object({
-    token: z.string(),
+    type: z.enum(["fatal", "soft_bounce", "hard_bounce", "complaint", "invalid_email", "blocked", "error"]).optional(),
+    message: z.string().optional(),
+  })
+  .strict();
+
+export type IEmailError = z.output<typeof zEmailError>;
+
+export const ZEventBalEmail = z
+  .object({
+    _id: zObjectId,
+    type: z.literal("email.bal").describe("Type de l'évènement"),
+    person_id: z.string().describe("Identifiant de la personne"),
     template: zTemplate,
-    sendDates: z.array(z.date()),
-    openDate: z.date().optional(),
-    messageIds: z.array(z.string()).optional(),
-    error: z
-      .array(
-        z
-          .object({
-            err_type: z
-              .enum(["fatal", "soft_bounce", "hard_bounce", "complaint", "invalid_email", "blocked", "error"])
-              .optional(),
-            message: z.string().optional(),
-          })
-          .passthrough()
-      )
-      .optional(),
+    created_at: z.date(),
+    updated_at: z.date(),
+    opened_at: z.date().nullable(),
+    delivered_at: z.date().nullable(),
+    messageId: z.string().nullable(),
+    errors: z.array(zEmailError),
   })
-  .passthrough();
+  .strict();
 
-export const ZBalEmails = z.array(ZBalEmail);
-
-export const ZBalEmailsPayload = z
-  .object({
-    emails: ZBalEmails,
-    unsubscribe: z.boolean().optional().describe("unsubscribe email"),
-  })
-  .passthrough();
-
-export type IBalEmail = z.output<typeof ZBalEmail>;
-export type IBalEmails = z.output<typeof ZBalEmails>;
-export type IBalEmailsPayload = z.output<typeof ZBalEmailsPayload>;
+export type IEventBalEmail = z.output<typeof ZEventBalEmail>;

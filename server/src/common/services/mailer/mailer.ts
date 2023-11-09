@@ -6,16 +6,22 @@ import mjml from "mjml";
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
+import { zRoutes } from "shared";
 import { ITemplate } from "shared/mailer";
-import { IEvent } from "shared/models/events/event.model";
-import { v4 as uuidv4 } from "uuid";
+import { IEventBalEmail } from "shared/models/events/bal_emails.event";
 
 import config from "@/config";
 
-import { addEmail, addEmailError, addEmailMessageId } from "../../../modules/actions/emails.actions";
+import {
+  addEmailError,
+  createBalEmailEvent,
+  isUnsubscribed,
+  setEmailMessageId,
+} from "../../../modules/actions/emails.actions";
+import { generateAccessToken } from "../../../security/accessTokenService";
 import logger from "../../logger";
 import { getStaticFilePath } from "../../utils/getStaticFilePath";
-import { getDbCollection } from "../../utils/mongodbUtils";
+import { serializeEmailTemplate } from "../../utils/jwtUtils";
 
 let transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo> | null = null;
 
@@ -32,7 +38,10 @@ export function initMailer() {
   transporter.use("compile", htmlToText());
 }
 
-async function sendEmailMessage(template: ITemplate, emailToken: string) {
+async function sendEmailMessage(template: ITemplate, emailEvent: IEventBalEmail | null): Promise<string | null> {
+  if (await isUnsubscribed(template.to)) {
+    return null;
+  }
   if (!transporter) {
     throw internal("mailer is not initialised");
   }
@@ -41,34 +50,39 @@ async function sendEmailMessage(template: ITemplate, emailToken: string) {
     from: `${config.email_from} <${config.email}>`,
     to: template.to,
     subject: getEmailSubject(template),
-    html: await generateHtml(template, emailToken),
+    html: await renderEmail(template, emailEvent),
     list: {
       help: "https://mission-apprentissage.gitbook.io/general/les-services-en-devenir/accompagner-les-futurs-apprentis", // TODO [metier/tech]
-      unsubscribe: getPublicUrl(`/api/emails/${emailToken}/unsubscribe`),
+      unsubscribe: getUnsubscribeActionLink(template),
     },
   });
 
   return messageId;
 }
 
-export async function sendEmail(person_id: string, template: ITemplate): Promise<void> {
-  const emailToken = uuidv4();
-  try {
-    await addEmail(person_id, emailToken, template);
-    const messageId = await sendEmailMessage(template, emailToken);
-    await addEmailMessageId(emailToken, messageId);
-  } catch (err) {
-    captureException(err);
-    logger.error({ err, template: template.name }, "error sending email");
-    await addEmailError(emailToken, err);
-  }
-}
-
 function assertUnreachable(_x: never): never {
   throw internal("Didn't expect to get here");
 }
 
-export function getEmailSubject(template: ITemplate): string {
+export async function sendEmail<T extends ITemplate>(person_id: string, template: T): Promise<void> {
+  const emailEvent = await createBalEmailEvent(person_id, template);
+
+  try {
+    const messageId = await sendEmailMessage(template, emailEvent);
+    if (messageId) {
+      await setEmailMessageId(emailEvent, messageId);
+    }
+  } catch (err) {
+    captureException(err);
+    logger.error({ err, template: template.name }, "error sending email");
+    await addEmailError(emailEvent, {
+      type: "fatal",
+      message: err.message,
+    });
+  }
+}
+
+export function getEmailSubject<T extends ITemplate>(template: T): string {
   switch (template.name) {
     case "reset_password":
       return "Réinitialisation du mot de passe";
@@ -81,32 +95,40 @@ export function getPublicUrl(path: string) {
   return `${config.publicUrl}${path}`;
 }
 
-export async function renderEmail(token: string) {
-  const event = await getDbCollection("events").findOne<IEvent>({
-    "payload.emails.token": token,
-    name: "bal_emails",
-  });
-  if (!event) {
-    return;
-  }
-  const email = event.payload.emails.find((e) => e.token === token);
-  if (!email) {
-    return;
-  }
-  return generateHtml(email.template, token);
+function getPreviewActionLink(template: ITemplate) {
+  return getPublicUrl(`/api/emails/preview?data=${serializeEmailTemplate(template)}`);
 }
 
-export async function generateHtml(template: ITemplate, emailToken: string) {
-  const subject = getEmailSubject(template);
+function getUnsubscribeActionLink(template: ITemplate) {
+  return getPublicUrl(`/api/emails/unsubscribe?data=${serializeEmailTemplate(template)}`);
+}
+
+function getMarkAsOpenedActionLink(emailEvent: IEventBalEmail | null) {
+  if (!emailEvent) {
+    return null;
+  }
+
+  const token = generateAccessToken({ person_id: emailEvent.person_id, email: emailEvent.template.to }, [
+    {
+      route: zRoutes.get["/emails/:id/markAsOpened"],
+      resources: {
+        events: [emailEvent._id.toString()],
+      },
+    },
+  ]);
+
+  return getPublicUrl(`/api/emails/${emailEvent._id.toString()}/markAsOpened?token=${token}`);
+}
+
+export async function renderEmail(template: ITemplate, emailEvent: IEventBalEmail | null) {
   const templateFile = getStaticFilePath(`./emails/${template.name}.mjml.ejs`);
+
   const buffer = await ejs.renderFile(templateFile, {
-    to: template.to,
-    subject,
     template,
     actions: {
-      unsubscribe: getPublicUrl(`/api/emails/${emailToken}/unsubscribe`),
-      preview: getPublicUrl(`/api/emails/${emailToken}/preview`),
-      markAsOpened: getPublicUrl(`/api/emails/${emailToken}/markAsOpened`),
+      unsubscribe: getUnsubscribeActionLink(template),
+      preview: getPreviewActionLink(template),
+      markAsOpened: getMarkAsOpenedActionLink(emailEvent),
     },
     utils: { getPublicUrl },
   });
