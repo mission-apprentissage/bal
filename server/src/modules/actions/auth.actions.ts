@@ -42,7 +42,8 @@ export const sendResetPasswordEmail = async (email: string) => {
 
   const token = createResetPasswordToken(user.email);
 
-  await sendEmail(person._id.toString(), "reset_password", {
+  await sendEmail(person._id.toString(), {
+    name: "reset_password",
     recipient: {
       civility: person.civility,
       prenom: person.prenom,

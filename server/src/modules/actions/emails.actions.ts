@@ -1,23 +1,17 @@
-import { IEvent } from "shared/models/events/event.model";
+import { ITemplate } from "shared/mailer";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-export function addEmail(
-  person_id: string,
-  token: string,
-  templateName: string,
-  payload: IEvent["payload"]["emails"][number]["payload"]
-) {
+export function addEmail(person_id: string, token: string, template: ITemplate) {
   const now = new Date();
   return getDbCollection("events").findOneAndUpdate(
     { person_id, name: "bal_emails" },
     {
-      // @ts-ignore
+      // @ts-expect-error
       $push: {
         "payload.emails": {
           token,
-          templateName,
-          payload,
+          template,
           sendDates: [now],
         },
       },

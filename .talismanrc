@@ -114,6 +114,8 @@ fileignoreconfig:
   checksum: e3e123d712465ed963965b5fa36f8d7a15364bbc7107d9d15bef2cc670483d42
 - filename: server/src/utils/jwtUtils.ts
   checksum: 071d8aa92d917d9224e77393463a2af00a65d381637b08140d52d11571dab51c
+- filename: server/static/emails/reset_password.mjml.ejs
+  checksum: 2c2cef4645b11161f129f50c022a1607520c1744b8a1bfe2916ac4e81614c8db
 - filename: server/tests/data/DECA_Extraction MIA-Fake.csv
   checksum: 1c636fe39fedecc8e6bf1b08fe4db680f30c0b5d0cbebc4d8f8a7cc9c2e886ca
 - filename: server/tests/data/akto.ts

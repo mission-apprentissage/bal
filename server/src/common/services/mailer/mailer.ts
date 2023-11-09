@@ -6,7 +6,7 @@ import mjml from "mjml";
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
-import { TemplateName, TemplatePayloads } from "shared/mailer";
+import { ITemplate } from "shared/mailer";
 import { IEvent } from "shared/models/events/event.model";
 import { v4 as uuidv4 } from "uuid";
 
@@ -32,21 +32,16 @@ export function initMailer() {
   transporter.use("compile", htmlToText());
 }
 
-async function sendEmailMessage<T extends TemplateName>(
-  to: string,
-  templateName: T,
-  data: TemplatePayloads[T],
-  emailToken: string
-) {
+async function sendEmailMessage(template: ITemplate, emailToken: string) {
   if (!transporter) {
     throw internal("mailer is not initialised");
   }
 
   const { messageId } = await transporter.sendMail({
     from: `${config.email_from} <${config.email}>`,
-    to,
-    subject: getEmailSubject(templateName),
-    html: await generateHtml(to, templateName, { ...data, token: emailToken }),
+    to: template.recipient.email,
+    subject: getEmailSubject(template),
+    html: await generateHtml(template, emailToken),
     list: {
       help: "https://mission-apprentissage.gitbook.io/general/les-services-en-devenir/accompagner-les-futurs-apprentis", // TODO [metier/tech]
       unsubscribe: getPublicUrl(`/api/emails/${emailToken}/unsubscribe`),
@@ -56,19 +51,15 @@ async function sendEmailMessage<T extends TemplateName>(
   return messageId;
 }
 
-export async function sendEmail<T extends TemplateName>(
-  person_id: string,
-  templateName: T,
-  payload: TemplatePayloads[T]
-): Promise<void> {
+export async function sendEmail(person_id: string, template: ITemplate): Promise<void> {
   const emailToken = uuidv4();
   try {
-    await addEmail(person_id, emailToken, templateName, payload);
-    const messageId = await sendEmailMessage(payload.recipient.email, templateName, payload, emailToken);
+    await addEmail(person_id, emailToken, template);
+    const messageId = await sendEmailMessage(template, emailToken);
     await addEmailMessageId(emailToken, messageId);
   } catch (err) {
     captureException(err);
-    logger.error({ err, template: templateName }, "error sending email");
+    logger.error({ err, template: template.name }, "error sending email");
     await addEmailError(emailToken, err);
   }
 }
@@ -77,13 +68,12 @@ function assertUnreachable(_x: never): never {
   throw internal("Didn't expect to get here");
 }
 
-export function getEmailSubject<T extends TemplateName>(name: T): string {
-  switch (name) {
+export function getEmailSubject(template: ITemplate): string {
+  switch (template.name) {
     case "reset_password":
       return "Réinitialisation du mot de passe";
     default:
-      // @ts-expect-error
-      assertUnreachable(name);
+      assertUnreachable(template.name);
   }
 }
 
@@ -103,17 +93,24 @@ export async function renderEmail(token: string) {
   if (!email) {
     return;
   }
-  const { templateName, payload } = email;
-  return generateHtml(payload.recipient.email, templateName as TemplateName, payload);
+  const { payload } = email;
+  return generateHtml(payload as ITemplate, token);
 }
 
-export async function generateHtml<T extends TemplateName>(to: string, templateName: T, data: unknown) {
-  const subject = getEmailSubject(templateName);
-  const templateFile = getStaticFilePath(`./emails/${templateName}.mjml.ejs`);
+export async function generateHtml(template: ITemplate, emailToken: string) {
+  const subject = getEmailSubject(template);
+  const templateFile = getStaticFilePath(`./emails/${template.name}.mjml.ejs`);
   const buffer = await ejs.renderFile(templateFile, {
-    to,
+    to: template.recipient.email,
     subject,
-    data,
+    data: {
+      template,
+      actions: {
+        unsubscribe: getPublicUrl(`/api/emails/${emailToken}/unsubscribe`),
+        preview: getPublicUrl(`/api/emails/${emailToken}/preview`),
+        markAsOpened: getPublicUrl(`/api/emails/${emailToken}/markAsOpened`),
+      },
+    },
     utils: { getPublicUrl },
   });
 

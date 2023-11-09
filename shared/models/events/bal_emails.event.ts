@@ -1,18 +1,11 @@
 import { z } from "zod";
 
+import { zTemplate } from "../../mailer";
+
 export const ZBalEmail = z
   .object({
     token: z.string(),
-    templateName: z.string(),
-    payload: z
-      .object({
-        recipient: z
-          .object({
-            email: z.string(),
-          })
-          .passthrough(),
-      })
-      .passthrough(),
+    template: zTemplate,
     sendDates: z.array(z.date()),
     openDate: z.date().optional(),
     messageIds: z.array(z.string()).optional(),
