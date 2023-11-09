@@ -1,6 +1,8 @@
 import { internal } from "@hapi/boom";
 import { captureException } from "@sentry/node";
+import ejs from "ejs";
 import { omit } from "lodash-es";
+import mjml from "mjml";
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
@@ -12,7 +14,6 @@ import config from "@/config";
 
 import { addEmail, addEmailError, addEmailMessageId } from "../../../modules/actions/emails.actions";
 import logger from "../../logger";
-import { generateHtml, getPublicUrl } from "../../utils/emailsUtils";
 import { getStaticFilePath } from "../../utils/getStaticFilePath";
 import { getDbCollection } from "../../utils/mongodbUtils";
 
@@ -101,6 +102,10 @@ const templatesTitleFuncs: TemplateTitleFuncs = {
   reset_password: () => "Réinitialisation du mot de passe",
 };
 
+export function getPublicUrl(path: string) {
+  return `${config.publicUrl}${path}`;
+}
+
 export async function renderEmail(token: string) {
   const event = await getDbCollection("events").findOne<IEvent>({
     "payload.emails.token": token,
@@ -119,4 +124,19 @@ export async function renderEmail(token: string) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getEmailInfos(templateName as TemplateName, payload as any)
   );
+}
+
+export async function generateHtml(
+  to: string,
+  { subject, templateFile, data }: { subject: string; templateFile: string; data: unknown }
+) {
+  const buffer = await ejs.renderFile(templateFile, {
+    to,
+    subject,
+    data,
+    utils: { getPublicUrl },
+  });
+
+  const { html } = mjml(buffer.toString(), { minify: true });
+  return html;
 }
