@@ -84,7 +84,7 @@ async function authApiKey(req: FastifyRequest): Promise<UserWithType<"user", IUs
 
     const api_key_used_at = new Date();
 
-    await updateUser(user, { api_key_used_at });
+    await updateUser(user.email, { api_key_used_at });
     return user ? { type: "user", value: { ...user, api_key_used_at } } : null;
   } catch (error) {
     throw Boom.forbidden("Jeton invalide");

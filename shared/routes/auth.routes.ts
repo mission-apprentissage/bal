@@ -43,13 +43,16 @@ export const zAuthRoutes = {
       body: z
         .object({
           password: ZUser.shape.password,
-          token: z.string(),
         })
         .strict(),
       response: {
         "200": ZResOk,
       },
-      securityScheme: null,
+      securityScheme: {
+        auth: "access-token",
+        access: null,
+        ressources: {},
+      },
     },
     "/auth/login": {
       method: "post",

@@ -127,6 +127,43 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
 }
 `;
 
+exports[`zodToMongoSchema > should convert emailDenied schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+      "description": "Identifiant unique",
+    },
+    "created_at": {
+      "bsonType": "date",
+      "description": "Date d'ajout en base de données",
+    },
+    "email": {
+      "bsonType": "string",
+      "description": "L'email rejetée",
+    },
+    "reason": {
+      "bsonType": "string",
+      "enum": [
+        "unsubscribe",
+      ],
+    },
+    "updated_at": {
+      "bsonType": "date",
+      "description": "Date de mise à jour en base de données",
+    },
+  },
+  "required": [
+    "_id",
+    "email",
+    "reason",
+    "created_at",
+  ],
+}
+`;
+
 exports[`zodToMongoSchema > should convert events schema 1`] = `
 {
   "additionalProperties": true,

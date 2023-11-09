@@ -1,13 +1,12 @@
 import jwt, { SignOptions } from "jsonwebtoken";
+import { zRoutes } from "shared";
 import { ITemplate, zTemplate } from "shared/mailer";
+import { IUserWithPerson } from "shared/models/user.model";
 
 import config from "@/config";
 
-interface ICreateUserToken {
-  _id: string;
-  email: string;
-  is_admin?: boolean;
-}
+import { generateAccessToken } from "../../security/accessTokenService";
+
 interface ICreateTokenOptions {
   secret?: string;
   expiresIn?: string;
@@ -32,16 +31,13 @@ const createToken = (type: TokenType, subject: string | null = null, options: IC
   return jwt.sign(payload, secret, opts);
 };
 
-export function createResetPasswordToken(username: string, options: ICreateTokenOptions = {}) {
-  return createToken("resetPasswordToken", username, options);
-}
-
-export function createActivationToken(subject: string, options: ICreateTokenOptions = {}) {
-  return createToken("activation", subject, options);
-}
-
-export function createUserTokenSimple(options = {}) {
-  return createToken("user", null, options);
+export function createResetPasswordToken(user: IUserWithPerson) {
+  return generateAccessToken(user, [
+    {
+      route: zRoutes.post["/auth/reset-password"],
+      resources: {},
+    },
+  ]);
 }
 
 export function serializeEmailTemplate(template: ITemplate): string {
@@ -55,13 +51,9 @@ export function deserializeEmailTemplate(data: string): ITemplate {
   return zTemplate.parse(jwt.verify(data, config.auth.user.jwtSecret));
 }
 
-export const createUserToken = (user: ICreateUserToken, options: ICreateTokenOptions = {}) => {
-  const payload = {
-    id: user._id,
-    is_admin: user.is_admin,
-  };
-  return createToken("user", user.email, { payload, ...options });
-};
+export function createUserTokenSimple(options = {}) {
+  return createToken("user", null, options);
+}
 
 export const decodeToken = (token: string, type: TokenType = "user") => {
   return jwt.verify(token, config.auth[type].jwtSecret);
