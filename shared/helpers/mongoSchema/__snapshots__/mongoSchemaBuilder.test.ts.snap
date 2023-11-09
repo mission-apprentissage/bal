@@ -127,127 +127,169 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
 }
 `;
 
-exports[`zodToMongoSchema > should convert events schema 1`] = `
+exports[`zodToMongoSchema > should convert emailDenied schema 1`] = `
 {
-  "additionalProperties": true,
+  "additionalProperties": false,
   "bsonType": "object",
   "properties": {
     "_id": {
       "bsonType": "objectId",
       "description": "Identifiant unique",
     },
-    "name": {
+    "created_at": {
+      "bsonType": "date",
+      "description": "Date d'ajout en base de données",
+    },
+    "email": {
       "bsonType": "string",
-      "description": "Nom de l'évènement",
+      "description": "L'email rejetée",
+    },
+    "reason": {
+      "bsonType": "string",
       "enum": [
-        "bal_emails",
+        "unsubscribe",
       ],
     },
-    "payload": {
-      "additionalProperties": true,
-      "bsonType": "object",
-      "description": "Payload de l'évènement",
-      "properties": {
-        "emails": {
-          "bsonType": "array",
-          "items": {
-            "additionalProperties": true,
-            "bsonType": "object",
-            "properties": {
-              "error": {
-                "bsonType": "array",
-                "items": {
-                  "additionalProperties": true,
-                  "bsonType": "object",
-                  "properties": {
-                    "err_type": {
-                      "bsonType": "string",
-                      "enum": [
-                        "fatal",
-                        "soft_bounce",
-                        "hard_bounce",
-                        "complaint",
-                        "invalid_email",
-                        "blocked",
-                        "error",
-                      ],
-                    },
-                    "message": {
-                      "bsonType": "string",
-                    },
-                  },
-                },
-              },
-              "messageIds": {
-                "bsonType": "array",
-                "items": {
-                  "bsonType": "string",
-                },
-              },
-              "openDate": {
-                "bsonType": "date",
-              },
-              "payload": {
-                "additionalProperties": true,
-                "bsonType": "object",
-                "properties": {
-                  "recipient": {
-                    "additionalProperties": true,
-                    "bsonType": "object",
-                    "properties": {
-                      "email": {
-                        "bsonType": "string",
-                      },
-                    },
-                    "required": [
-                      "email",
-                    ],
-                  },
-                },
-                "required": [
-                  "recipient",
-                ],
-              },
-              "sendDates": {
-                "bsonType": "array",
-                "items": {
-                  "bsonType": "date",
-                },
-              },
-              "templateName": {
-                "bsonType": "string",
-              },
-              "token": {
-                "bsonType": "string",
-              },
-            },
-            "required": [
-              "token",
-              "templateName",
-              "payload",
-              "sendDates",
-            ],
-          },
-        },
-        "unsubscribe": {
-          "bsonType": "bool",
-          "description": "unsubscribe email",
-        },
-      },
-      "required": [
-        "emails",
-      ],
-    },
-    "person_id": {
-      "bsonType": "string",
-      "description": "Identifiant de la personne",
+    "updated_at": {
+      "bsonType": "date",
+      "description": "Date de mise à jour en base de données",
     },
   },
   "required": [
     "_id",
-    "person_id",
-    "name",
-    "payload",
+    "email",
+    "reason",
+    "created_at",
+  ],
+}
+`;
+
+exports[`zodToMongoSchema > should convert events schema 1`] = `
+{
+  "anyOf": [
+    {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+          "description": "Identifiant unique",
+        },
+        "created_at": {
+          "bsonType": "date",
+        },
+        "delivered_at": {
+          "anyOf": [
+            {
+              "bsonType": "date",
+            },
+            {
+              "bsonType": "null",
+            },
+          ],
+        },
+        "errors": {
+          "bsonType": "array",
+          "items": {
+            "additionalProperties": false,
+            "bsonType": "object",
+            "properties": {
+              "message": {
+                "bsonType": "string",
+              },
+              "type": {
+                "bsonType": "string",
+                "enum": [
+                  "fatal",
+                  "soft_bounce",
+                  "hard_bounce",
+                  "complaint",
+                  "invalid_email",
+                  "blocked",
+                  "error",
+                ],
+              },
+            },
+          },
+        },
+        "messageId": {
+          "bsonType": [
+            "string",
+            "null",
+          ],
+        },
+        "opened_at": {
+          "anyOf": [
+            {
+              "bsonType": "date",
+            },
+            {
+              "bsonType": "null",
+            },
+          ],
+        },
+        "person_id": {
+          "bsonType": "string",
+          "description": "Identifiant de la personne",
+        },
+        "template": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "civility": {
+                  "bsonType": "string",
+                  "enum": [
+                    "Madame",
+                    "Monsieur",
+                  ],
+                },
+                "name": {
+                  "bsonType": "string",
+                },
+                "nom": {
+                  "bsonType": "string",
+                },
+                "prenom": {
+                  "bsonType": "string",
+                },
+                "resetPasswordToken": {
+                  "bsonType": "string",
+                },
+                "to": {
+                  "bsonType": "string",
+                },
+              },
+              "required": [
+                "name",
+                "to",
+                "resetPasswordToken",
+              ],
+            },
+          ],
+        },
+        "type": {
+          "bsonType": "string",
+          "description": "Type de l'évènement",
+        },
+        "updated_at": {
+          "bsonType": "date",
+        },
+      },
+      "required": [
+        "_id",
+        "type",
+        "person_id",
+        "template",
+        "created_at",
+        "updated_at",
+        "opened_at",
+        "delivered_at",
+        "messageId",
+        "errors",
+      ],
+    },
   ],
 }
 `;
