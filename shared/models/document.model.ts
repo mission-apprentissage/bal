@@ -2,7 +2,7 @@ import { Jsonify } from "type-fest";
 import { z } from "zod";
 
 import { IModelDescriptor, zObjectId } from "./common";
-import { ZJob } from "./job.model";
+import { ZJob, ZJobSimple } from "./job.model";
 
 const collectionName = "documents" as const;
 
@@ -38,7 +38,7 @@ export const zDocumentWithJobs = ZDocument.extend({
 });
 
 export const zDocumentPublicWithJobs = zDocumentPublic.extend({
-  jobs: z.array(ZJob).nullish(),
+  jobs: z.array(ZJobSimple).nullish(),
 });
 
 export type IDocument = z.output<typeof ZDocument>;

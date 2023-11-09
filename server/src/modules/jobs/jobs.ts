@@ -1,7 +1,7 @@
 import { exec as nodeexec } from "node:child_process";
 import util from "node:util";
 
-import { IJob } from "shared/models/job.model";
+import { CronName, IJobsCronTask, IJobsSimple } from "shared/models/job.model";
 const exec = util.promisify(nodeexec);
 
 import {
@@ -20,14 +20,13 @@ import { validateModels } from "./db/schemaValidation";
 import { addJob, executeJob } from "./jobs_actions";
 
 interface CronDef {
-  name: string;
+  name: CronName;
   cron_string: string;
   handler: () => Promise<number>;
 }
 
-export const CRONS: Record<string, CronDef> = {
+export const CronsMap = {
   "Run daily jobs each day at 02h30": {
-    name: "Run daily jobs each day at 02h30",
     cron_string: "30 2 * * *",
     handler: async () => {
       const { stdout, stderr } = await exec("/opt/app/scripts/run-dummy-outside-job.sh");
@@ -36,12 +35,17 @@ export const CRONS: Record<string, CronDef> = {
       return stderr ? 1 : 0;
     },
   },
-};
+} satisfies Record<CronName, Omit<CronDef, "name">>;
 
-export async function runJob(job: IJob): Promise<number> {
+export const CRONS: CronDef[] = Object.entries(CronsMap).map(([name, cronDef]) => ({
+  ...cronDef,
+  name: name as CronName,
+}));
+
+export async function runJob(job: IJobsCronTask | IJobsSimple): Promise<number> {
   return executeJob(job, async () => {
     if (job.type === "cron_task") {
-      return CRONS[job.name].handler();
+      return CronsMap[job.name].handler();
     }
     switch (job.name) {
       case "users:create": {

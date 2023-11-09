@@ -23,7 +23,7 @@ import { DEFAULT_DELIMITER } from "../../common/utils/parserUtils";
 import { addJob } from "../jobs/jobs_actions";
 import { noop } from "../server/utils/upload.utils";
 import { createEmptyDocument, deleteDocumentById, importDocumentContent } from "./documents.actions";
-import { findJob, updateJob } from "./job.actions";
+import { findSimpleJob, updateJob } from "./job.actions";
 
 /**
  * CRUD
@@ -91,7 +91,8 @@ export const processMailingList = async (payload: IPayload) => {
 
   if (!mailingList) throw new Error("Mailing list not found");
 
-  const job = await findJob({
+  const job = await findSimpleJob({
+    name: "generate:mailing-list",
     "payload.mailing_list_id": mailingList._id.toString(),
   });
 

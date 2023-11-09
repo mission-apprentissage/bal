@@ -1,42 +1,96 @@
-import { Filter, FindOptions, MatchKeysAndValues, ObjectId, WithoutId } from "mongodb";
-import { IJob } from "shared/models/job.model";
+import { Filter, FindOptions, MatchKeysAndValues, ObjectId } from "mongodb";
+import { IJob, IJobsCron, IJobsCronTask, IJobsSimple } from "shared/models/job.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-type CreateJobParam = Pick<IJob, "name" | "type" | "cron_string" | "payload" | "scheduled_for" | "sync">;
+type CreateJobSimpleParams = Pick<IJobsSimple, "name" | "payload" | "scheduled_for" | "sync">;
 
-/**
- * Création d'un job
- */
-export const createJob = async ({
+export const createJobSimple = async ({
   name,
-  type = "simple",
   payload,
   scheduled_for = new Date(),
   sync = false,
-  cron_string,
-}: CreateJobParam): Promise<IJob> => {
-  const job: WithoutId<IJob> = {
+}: CreateJobSimpleParams): Promise<IJobsSimple> => {
+  const job: IJobsSimple = {
+    _id: new ObjectId(),
     name,
-    type,
+    type: "simple",
     status: sync ? "will_start" : "pending",
-    ...(payload ? { payload } : {}),
-    ...(cron_string ? { cron_string } : {}),
+    payload,
     updated_at: new Date(),
     created_at: new Date(),
     scheduled_for,
     sync,
   };
-  const { insertedId: _id } = await getDbCollection("jobs").insertOne(job);
-  return { ...job, _id };
+  await getDbCollection("jobs").insertOne(job);
+  return job;
 };
 
-export const findJob = async (filter: Filter<IJob>, options?: FindOptions<IJob>): Promise<IJob | null> => {
-  return await getDbCollection("jobs").findOne(filter, options);
+type CreateJobCronParams = Pick<IJobsCron, "name" | "cron_string" | "scheduled_for">;
+
+export const createJobCron = async ({
+  name,
+  cron_string,
+  scheduled_for = new Date(),
+}: CreateJobCronParams): Promise<IJobsCron> => {
+  const job: IJobsCron = {
+    _id: new ObjectId(),
+    name,
+    type: "cron",
+    status: "active",
+    cron_string,
+    updated_at: new Date(),
+    created_at: new Date(),
+    scheduled_for,
+  };
+  await getDbCollection("jobs").insertOne(job);
+  return job;
 };
 
-export const findJobs = async (filter: Filter<IJob>, options?: FindOptions<IJob>): Promise<IJob[]> => {
-  return await getDbCollection("jobs").find<IJob>(filter, options).toArray();
+export const updateJobCron = async (id: ObjectId, cron_string: IJobsCron["cron_string"]): Promise<void> => {
+  const data = {
+    status: "pending",
+    cron_string,
+    updated_at: new Date(),
+  };
+
+  await getDbCollection("jobs").findOneAndUpdate(id, data);
+};
+
+type CreateJobCronTaskParams = Pick<IJobsCron, "name" | "scheduled_for">;
+
+export const createJobCronTask = async ({ name, scheduled_for }: CreateJobCronTaskParams): Promise<IJobsCronTask> => {
+  const job: IJobsCronTask = {
+    _id: new ObjectId(),
+    name,
+    type: "cron_task",
+    status: "pending",
+    updated_at: new Date(),
+    created_at: new Date(),
+    scheduled_for,
+  };
+  await getDbCollection("jobs").insertOne(job);
+  return job;
+};
+
+export const findJobCron = async (filter: Filter<IJobsCron>, options?: FindOptions): Promise<IJobsCron | null> => {
+  const f: Filter<IJobsCron> = { type: "cron", ...filter };
+  // @ts-expect-error
+  return await getDbCollection("jobs").findOne(f, options);
+};
+
+export const findSimpleJob = async (
+  filter: Filter<IJobsSimple>,
+  options?: FindOptions
+): Promise<IJobsSimple | null> => {
+  const f: Filter<IJobsSimple> = { type: "simple", ...filter };
+  // @ts-expect-error
+  return await getDbCollection("jobs").findOne<IJobsSimple>(f, options);
+};
+
+export const findJobs = async <T extends IJob>(filter: Filter<T>, options?: FindOptions): Promise<T[]> => {
+  // @ts-expect-error
+  return await getDbCollection("jobs").find(filter, options).toArray();
 };
 
 /**
