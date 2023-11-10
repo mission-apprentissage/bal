@@ -6,16 +6,22 @@ import mjml from "mjml";
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
-import { TemplateName, TemplatePayloads } from "shared/mailer";
-import { IEvent } from "shared/models/events/event.model";
-import { v4 as uuidv4 } from "uuid";
+import { zRoutes } from "shared";
+import { ITemplate } from "shared/mailer";
+import { IEventBalEmail } from "shared/models/events/bal_emails.event";
 
 import config from "@/config";
 
-import { addEmail, addEmailError, addEmailMessageId } from "../../../modules/actions/emails.actions";
+import {
+  addEmailError,
+  createBalEmailEvent,
+  isUnsubscribed,
+  setEmailMessageId,
+} from "../../../modules/actions/emails.actions";
+import { generateAccessToken } from "../../../security/accessTokenService";
 import logger from "../../logger";
 import { getStaticFilePath } from "../../utils/getStaticFilePath";
-import { getDbCollection } from "../../utils/mongodbUtils";
+import { serializeEmailTemplate } from "../../utils/jwtUtils";
 
 let transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo> | null = null;
 
@@ -32,58 +38,56 @@ export function initMailer() {
   transporter.use("compile", htmlToText());
 }
 
-async function sendEmailMessage<T extends TemplateName>(
-  to: string,
-  templateName: T,
-  data: TemplatePayloads[T],
-  emailToken: string
-) {
+async function sendEmailMessage(template: ITemplate, emailEvent: IEventBalEmail | null): Promise<string | null> {
+  if (await isUnsubscribed(template.to)) {
+    return null;
+  }
   if (!transporter) {
     throw internal("mailer is not initialised");
   }
 
   const { messageId } = await transporter.sendMail({
     from: `${config.email_from} <${config.email}>`,
-    to,
-    subject: getEmailSubject(templateName),
-    html: await generateHtml(to, templateName, { ...data, token: emailToken }),
+    to: template.to,
+    subject: getEmailSubject(template),
+    html: await renderEmail(template, emailEvent),
     list: {
       help: "https://mission-apprentissage.gitbook.io/general/les-services-en-devenir/accompagner-les-futurs-apprentis", // TODO [metier/tech]
-      unsubscribe: getPublicUrl(`/api/emails/${emailToken}/unsubscribe`),
+      unsubscribe: getUnsubscribeActionLink(template),
     },
   });
 
   return messageId;
 }
 
-export async function sendEmail<T extends TemplateName>(
-  person_id: string,
-  templateName: T,
-  payload: TemplatePayloads[T]
-): Promise<void> {
-  const emailToken = uuidv4();
-  try {
-    await addEmail(person_id, emailToken, templateName, payload);
-    const messageId = await sendEmailMessage(payload.recipient.email, templateName, payload, emailToken);
-    await addEmailMessageId(emailToken, messageId);
-  } catch (err) {
-    captureException(err);
-    logger.error({ err, template: templateName }, "error sending email");
-    await addEmailError(emailToken, err);
-  }
-}
-
 function assertUnreachable(_x: never): never {
   throw internal("Didn't expect to get here");
 }
 
-export function getEmailSubject<T extends TemplateName>(name: T): string {
-  switch (name) {
+export async function sendEmail<T extends ITemplate>(person_id: string, template: T): Promise<void> {
+  const emailEvent = await createBalEmailEvent(person_id, template);
+
+  try {
+    const messageId = await sendEmailMessage(template, emailEvent);
+    if (messageId) {
+      await setEmailMessageId(emailEvent, messageId);
+    }
+  } catch (err) {
+    captureException(err);
+    logger.error({ err, template: template.name }, "error sending email");
+    await addEmailError(emailEvent, {
+      type: "fatal",
+      message: err.message,
+    });
+  }
+}
+
+export function getEmailSubject<T extends ITemplate>(template: T): string {
+  switch (template.name) {
     case "reset_password":
       return "Réinitialisation du mot de passe";
     default:
-      // @ts-expect-error
-      assertUnreachable(name);
+      assertUnreachable(template.name);
   }
 }
 
@@ -91,29 +95,41 @@ export function getPublicUrl(path: string) {
   return `${config.publicUrl}${path}`;
 }
 
-export async function renderEmail(token: string) {
-  const event = await getDbCollection("events").findOne<IEvent>({
-    "payload.emails.token": token,
-    name: "bal_emails",
-  });
-  if (!event) {
-    return;
-  }
-  const email = event.payload.emails.find((e) => e.token === token);
-  if (!email) {
-    return;
-  }
-  const { templateName, payload } = email;
-  return generateHtml(payload.recipient.email, templateName as TemplateName, payload);
+function getPreviewActionLink(template: ITemplate) {
+  return getPublicUrl(`/api/emails/preview?data=${serializeEmailTemplate(template)}`);
 }
 
-export async function generateHtml<T extends TemplateName>(to: string, templateName: T, data: unknown) {
-  const subject = getEmailSubject(templateName);
-  const templateFile = getStaticFilePath(`./emails/${templateName}.mjml.ejs`);
+function getUnsubscribeActionLink(template: ITemplate) {
+  return getPublicUrl(`/api/emails/unsubscribe?data=${serializeEmailTemplate(template)}`);
+}
+
+function getMarkAsOpenedActionLink(emailEvent: IEventBalEmail | null) {
+  if (!emailEvent) {
+    return null;
+  }
+
+  const token = generateAccessToken({ person_id: emailEvent.person_id, email: emailEvent.template.to }, [
+    {
+      route: zRoutes.get["/emails/:id/markAsOpened"],
+      resources: {
+        events: [emailEvent._id.toString()],
+      },
+    },
+  ]);
+
+  return getPublicUrl(`/api/emails/${emailEvent._id.toString()}/markAsOpened?token=${token}`);
+}
+
+export async function renderEmail(template: ITemplate, emailEvent: IEventBalEmail | null) {
+  const templateFile = getStaticFilePath(`./emails/${template.name}.mjml.ejs`);
+
   const buffer = await ejs.renderFile(templateFile, {
-    to,
-    subject,
-    data,
+    template,
+    actions: {
+      unsubscribe: getUnsubscribeActionLink(template),
+      preview: getPreviewActionLink(template),
+      markAsOpened: getMarkAsOpenedActionLink(emailEvent),
+    },
     utils: { getPublicUrl },
   });
 

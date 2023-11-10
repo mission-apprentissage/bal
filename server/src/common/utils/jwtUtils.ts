@@ -1,4 +1,5 @@
 import jwt, { SignOptions } from "jsonwebtoken";
+import { ITemplate, zTemplate } from "shared/mailer";
 
 import config from "@/config";
 
@@ -41,6 +42,17 @@ export function createActivationToken(subject: string, options: ICreateTokenOpti
 
 export function createUserTokenSimple(options = {}) {
   return createToken("user", null, options);
+}
+
+export function serializeEmailTemplate(template: ITemplate): string {
+  // We do not set expiry as the result is not used as a token but as serialized data
+  return jwt.sign(template, config.auth.user.jwtSecret, {
+    issuer: config.appName,
+  });
+}
+
+export function deserializeEmailTemplate(data: string): ITemplate {
+  return zTemplate.parse(jwt.verify(data, config.auth.user.jwtSecret));
 }
 
 export const createUserToken = (user: ICreateUserToken, options: ICreateTokenOptions = {}) => {

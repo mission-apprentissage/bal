@@ -1,6 +1,7 @@
 import { IModelDescriptor } from "./common";
 import documentsModelDescriptor, { IDocument } from "./document.model";
 import documentContentsModelDescriptor, { IDocumentContent } from "./documentContent.model";
+import emailDeniedModelDescriptor, { IEmailDenied } from "./emailDenied.model";
 import eventsModelDescriptor, { IEvent } from "./events/event.model";
 import jobsModelDescriptor, { IJob } from "./job.model";
 import { IMailingList } from "./mailingList.model";
@@ -18,6 +19,7 @@ export const modelDescriptors: IModelDescriptor[] = [
   sessionsModelDescriptor,
   documentsModelDescriptor,
   documentContentsModelDescriptor,
+  emailDeniedModelDescriptor,
 ];
 
 export type IDocumentMap = {
@@ -30,4 +32,5 @@ export type IDocumentMap = {
   documents: IDocument;
   documentContents: IDocumentContent;
   mailingLists: IMailingList;
+  emailDenied: IEmailDenied;
 };

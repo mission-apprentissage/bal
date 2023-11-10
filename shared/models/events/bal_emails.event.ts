@@ -1,45 +1,30 @@
 import { z } from "zod";
 
-export const ZBalEmail = z
+import { zTemplate } from "../../mailer";
+import { zObjectId } from "../common";
+
+const zEmailError = z
   .object({
-    token: z.string(),
-    templateName: z.string(),
-    payload: z
-      .object({
-        recipient: z
-          .object({
-            email: z.string(),
-          })
-          .passthrough(),
-      })
-      .passthrough(),
-    sendDates: z.array(z.date()),
-    openDate: z.date().optional(),
-    messageIds: z.array(z.string()).optional(),
-    error: z
-      .array(
-        z
-          .object({
-            err_type: z
-              .enum(["fatal", "soft_bounce", "hard_bounce", "complaint", "invalid_email", "blocked", "error"])
-              .optional(),
-            message: z.string().optional(),
-          })
-          .passthrough()
-      )
-      .optional(),
+    type: z.enum(["fatal", "soft_bounce", "hard_bounce", "complaint", "invalid_email", "blocked", "error"]).optional(),
+    message: z.string().optional(),
   })
-  .passthrough();
+  .strict();
 
-export const ZBalEmails = z.array(ZBalEmail);
+export type IEmailError = z.output<typeof zEmailError>;
 
-export const ZBalEmailsPayload = z
+export const ZEventBalEmail = z
   .object({
-    emails: ZBalEmails,
-    unsubscribe: z.boolean().optional().describe("unsubscribe email"),
+    _id: zObjectId,
+    type: z.literal("email.bal").describe("Type de l'évènement"),
+    person_id: z.string().describe("Identifiant de la personne"),
+    template: zTemplate,
+    created_at: z.date(),
+    updated_at: z.date(),
+    opened_at: z.date().nullable(),
+    delivered_at: z.date().nullable(),
+    messageId: z.string().nullable(),
+    errors: z.array(zEmailError),
   })
-  .passthrough();
+  .strict();
 
-export type IBalEmail = z.output<typeof ZBalEmail>;
-export type IBalEmails = z.output<typeof ZBalEmails>;
-export type IBalEmailsPayload = z.output<typeof ZBalEmailsPayload>;
+export type IEventBalEmail = z.output<typeof ZEventBalEmail>;
