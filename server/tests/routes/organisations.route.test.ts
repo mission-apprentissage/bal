@@ -144,7 +144,7 @@ describe("Organisations", () => {
             issues: [
               {
                 code: "custom",
-                message: "Le siret ne respecte pas l'algorithme luhn",
+                message: "Le siret ne respecte pas l'algorithme luhn (https://fr.wikipedia.org/wiki/Formule_de_Luhn)",
                 path: ["siret"],
               },
             ],
@@ -153,7 +153,8 @@ describe("Organisations", () => {
             validationContext: "body",
           },
         },
-        message: "body.siret: Le siret ne respecte pas l'algorithme luhn",
+        message:
+          "body.siret: Le siret ne respecte pas l'algorithme luhn (https://fr.wikipedia.org/wiki/Formule_de_Luhn)",
         name: "Bad Request",
         statusCode: 400,
       });

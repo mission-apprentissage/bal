@@ -1,0 +1,439 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generateOpenApiSchema > should generate proper schema 1`] = `
+{
+  "components": {
+    "parameters": {},
+    "responses": {
+      "BadRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+            },
+          },
+        },
+        "description": "La requete ne respecte pas les reglès de validations.",
+      },
+      "Forbidden": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+            },
+          },
+        },
+        "description": "L'utilisateur n'a pas les droits d'effectuer l'opération demandée",
+      },
+      "InternalServerError": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+            },
+          },
+        },
+        "description": "Le serveur a rencontré une situation qu'il ne sait pas traiter.",
+      },
+      "NotFound": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+            },
+          },
+        },
+        "description": "Le serveur n'a pas trouvé la ressource demandée.",
+      },
+      "ServiceUnavailable": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+            },
+          },
+        },
+        "description": "Le serveur n'est pas prêt pour traiter la requête",
+      },
+      "TooManyRequests": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+            },
+          },
+        },
+        "description": "L'utilisateur a émis trop de requêtes dans un laps de temps donné.",
+      },
+      "Unauthorized": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error",
+            },
+          },
+        },
+        "description": "L'authentification est requise.",
+      },
+    },
+    "schemas": {
+      "Error": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": [
+              "string",
+              "null",
+            ],
+          },
+          "data": {
+            "description": "Données contextuelles liées à l'erreur",
+            "example": {
+              "validationError": {
+                "code": "FST_ERR_VALIDATION",
+                "issues": [
+                  {
+                    "code": "invalid_type",
+                    "expected": "number",
+                    "message": "Number attendu",
+                    "path": [
+                      "longitude",
+                    ],
+                    "received": "nan",
+                  },
+                ],
+                "name": "ZodError",
+                "statusCode": 400,
+                "validationContext": "querystring",
+              },
+            },
+          },
+          "message": {
+            "description": "Un message explicatif de l'erreur",
+            "example": "querystring.longitude: Number attendu",
+            "type": "string",
+          },
+          "name": {
+            "description": "Le type générique de l'erreur",
+            "example": "Bad Request",
+            "type": "string",
+          },
+          "statusCode": {
+            "description": "Le status code retourné",
+            "example": 400,
+            "type": "number",
+          },
+        },
+        "required": [
+          "message",
+          "name",
+          "statusCode",
+        ],
+        "type": "object",
+      },
+    },
+    "securitySchemes": {
+      "api-key": {
+        "in": "header",
+        "name": "authorization",
+        "type": "apiKey",
+      },
+    },
+  },
+  "info": {
+    "license": {
+      "name": "MIT",
+    },
+    "title": "API documentation BAL",
+    "version": "V1.0",
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/healthcheck": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "description": "Organisation validation Response body",
+                      "properties": {
+                        "is_valid": {
+                          "type": "boolean",
+                        },
+                        "on": {
+                          "enum": [
+                            "email",
+                            "domain",
+                          ],
+                          "type": "string",
+                        },
+                      },
+                      "required": [
+                        "is_valid",
+                      ],
+                      "type": "object",
+                    },
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": [
+                            "string",
+                            "null",
+                          ],
+                        },
+                        "data": {
+                          "description": "Données contextuelles liées à l'erreur",
+                          "example": {
+                            "validationError": {
+                              "code": "FST_ERR_VALIDATION",
+                              "issues": [
+                                {
+                                  "code": "invalid_type",
+                                  "expected": "number",
+                                  "message": "Number attendu",
+                                  "path": [
+                                    "longitude",
+                                  ],
+                                  "received": "nan",
+                                },
+                              ],
+                              "name": "ZodError",
+                              "statusCode": 400,
+                              "validationContext": "querystring",
+                            },
+                          },
+                        },
+                        "message": {
+                          "description": "Un message explicatif de l'erreur",
+                          "example": "querystring.longitude: Number attendu",
+                          "type": "string",
+                        },
+                        "name": {
+                          "description": "Le type générique de l'erreur",
+                          "example": "Bad Request",
+                          "type": "string",
+                        },
+                        "statusCode": {
+                          "description": "Le status code retourné",
+                          "example": 400,
+                          "type": "number",
+                        },
+                      },
+                      "required": [
+                        "message",
+                        "name",
+                        "statusCode",
+                      ],
+                      "type": "object",
+                    },
+                  ],
+                  "description": "Organisation validation Response body",
+                },
+              },
+            },
+            "description": "Organisation validation Response body",
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest",
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized",
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden",
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound",
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests",
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError",
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable",
+          },
+        },
+        "security": [],
+        "tags": [
+          "système",
+        ],
+      },
+    },
+    "/v1/organisation/validation": {
+      "post": {
+        "parameters": [
+          {
+            "description": "Bearer token",
+            "in": "header",
+            "name": "Authorization",
+            "required": false,
+            "schema": {
+              "description": "Bearer token",
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "description": "Organisation validation Request body",
+                "properties": {
+                  "email": {
+                    "format": "email",
+                    "type": "string",
+                  },
+                  "siret": {
+                    "description": "Le numéro de SIRET de l'établissement",
+                    "example": "78424186100011",
+                    "pattern": "^[0-9]{14}$",
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "email",
+                  "siret",
+                ],
+                "type": "object",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "description": "Organisation validation Response body",
+                      "properties": {
+                        "is_valid": {
+                          "type": "boolean",
+                        },
+                        "on": {
+                          "enum": [
+                            "email",
+                            "domain",
+                          ],
+                          "type": "string",
+                        },
+                      },
+                      "required": [
+                        "is_valid",
+                      ],
+                      "type": "object",
+                    },
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": [
+                            "string",
+                            "null",
+                          ],
+                        },
+                        "data": {
+                          "description": "Données contextuelles liées à l'erreur",
+                          "example": {
+                            "validationError": {
+                              "code": "FST_ERR_VALIDATION",
+                              "issues": [
+                                {
+                                  "code": "invalid_type",
+                                  "expected": "number",
+                                  "message": "Number attendu",
+                                  "path": [
+                                    "longitude",
+                                  ],
+                                  "received": "nan",
+                                },
+                              ],
+                              "name": "ZodError",
+                              "statusCode": 400,
+                              "validationContext": "querystring",
+                            },
+                          },
+                        },
+                        "message": {
+                          "description": "Un message explicatif de l'erreur",
+                          "example": "querystring.longitude: Number attendu",
+                          "type": "string",
+                        },
+                        "name": {
+                          "description": "Le type générique de l'erreur",
+                          "example": "Bad Request",
+                          "type": "string",
+                        },
+                        "statusCode": {
+                          "description": "Le status code retourné",
+                          "example": 400,
+                          "type": "number",
+                        },
+                      },
+                      "required": [
+                        "message",
+                        "name",
+                        "statusCode",
+                      ],
+                      "type": "object",
+                    },
+                  ],
+                  "description": "Organisation validation Response body",
+                },
+              },
+            },
+            "description": "Organisation validation Response body",
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest",
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized",
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden",
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound",
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests",
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError",
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable",
+          },
+        },
+        "security": [
+          {
+            "api-key": [],
+          },
+        ],
+        "tags": [
+          "v1",
+        ],
+      },
+    },
+  },
+  "servers": [
+    {
+      "description": "Production",
+      "url": "https://bal.apprentissage.beta.gouv.fr",
+    },
+  ],
+  "webhooks": {},
+}
+`;

@@ -1,5 +1,4 @@
-import { z } from "zod";
-
+import { z } from "../helpers/zodWithOpenApi";
 import { IRoutesDef } from "./common.routes";
 
 export const zCoreRoutes = {
@@ -10,14 +9,21 @@ export const zCoreRoutes = {
       response: {
         "200": z
           .object({
-            name: z.string(),
-            version: z.string(),
+            name: z.string().openapi({
+              example: "bal",
+            }),
+            version: z.string().openapi({
+              example: "1.0.0",
+            }),
             env: z.enum(["local", "recette", "production", "preview", "test"]),
           })
           .describe("API Health")
           .strict(),
       },
       securityScheme: null,
+      openapi: {
+        tags: ["système"] as string[],
+      },
     },
     "/healthcheck/sentry": {
       method: "get",
