@@ -48,8 +48,8 @@ export const createJobCron = async ({
 };
 
 export const updateJobCron = async (id: ObjectId, cron_string: IJobsCron["cron_string"]): Promise<void> => {
-  const data = {
-    status: "pending",
+  const data: Partial<IJobsCron> = {
+    status: "active",
     cron_string,
     updated_at: new Date(),
   };
