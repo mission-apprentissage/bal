@@ -1,10 +1,14 @@
 import { z } from "zod";
 
+import { IRoutesDef } from "./common.routes";
+
 export const zCoreRoutes = {
   get: {
     "/healthcheck": {
+      method: "get",
+      path: "/healthcheck",
       response: {
-        "2xx": z
+        "200": z
           .object({
             name: z.string(),
             version: z.string(),
@@ -13,14 +17,15 @@ export const zCoreRoutes = {
           .describe("API Health")
           .strict(),
       },
+      securityScheme: null,
     },
     "/healthcheck/sentry": {
+      method: "get",
+      path: "/healthcheck/sentry",
       response: {
-        "2xx": z.never(),
+        "200": z.never(),
       },
+      securityScheme: null,
     },
   },
-  post: {},
-  put: {},
-  delete: {},
-};
+} as const satisfies IRoutesDef;

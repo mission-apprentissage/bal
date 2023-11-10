@@ -1,31 +1,24 @@
-import fastifyAuth, { FastifyAuthFunction } from "@fastify/auth";
 import fastifyCookie from "@fastify/cookie";
 import fastifyCors from "@fastify/cors";
 import fastifyMultipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
-import { Boom, isBoom } from "@hapi/boom";
-import { captureException } from "@sentry/node";
+import Boom from "@hapi/boom";
 import fastify, {
   FastifyBaseLogger,
-  FastifyError,
   FastifyInstance,
-  FastifyServerOptions,
   RawReplyDefaultExpression,
   RawRequestDefaultExpression,
   RawServerDefault,
 } from "fastify";
 import {
   createJsonSchemaTransform,
-  ResponseValidationError,
   serializerCompiler,
   validatorCompiler,
   ZodTypeProvider,
 } from "fastify-type-provider-zod";
-import { IResError } from "shared/routes/common.routes";
-import { ZodError } from "zod";
+import { IRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
 
-import logger from "../../common/logger";
 import { initSentryFastify } from "../../common/services/sentry/sentry";
 import config from "../../config";
 import { organisationAdminRoutes } from "./admin/organisation.routes";
@@ -37,17 +30,11 @@ import { coreRoutes } from "./core.routes";
 import { documentsRoutes } from "./documents.routes";
 import { emailsRoutes } from "./emails.routes";
 import { mailingListRoutes } from "./mailingList.routes";
+import { auth } from "./middlewares/authMiddleware";
+import { errorMiddleware } from "./middlewares/errorMiddleware";
+import { logMiddleware } from "./middlewares/logMiddleware";
 import { userRoutes } from "./user.routes";
-import { authValidateJWT, authValidateSession, authWebHookKey } from "./utils/auth.strategies";
 import { organisationRoutes } from "./v1/organisation.routes";
-
-declare module "fastify" {
-  interface FastifyInstance {
-    validateJWT: FastifyAuthFunction;
-    validateSession: FastifyAuthFunction;
-    validateWebHookKey: FastifyAuthFunction;
-  }
-}
 
 export interface Server
   extends FastifyInstance<
@@ -58,17 +45,7 @@ export interface Server
     ZodTypeProvider
   > {}
 
-function getZodMessageError(error: ZodError, context: string): string {
-  const normalizedContext = context ? `${context}.` : "";
-  return error.issues.reduce((acc, issue, i) => {
-    const path = issue.path.length === 0 ? "" : issue.path.join(".");
-    const delimiter = i === 0 ? "" : ", ";
-    return acc + `${delimiter}${normalizedContext}${path}: ${issue.message}`;
-  }, "");
-}
-
-export function build(opts: FastifyServerOptions = {}): Server {
-  const app = fastify(opts);
+export async function bind(app: Server) {
   initSentryFastify(app);
 
   app.setValidatorCompiler(validatorCompiler);
@@ -104,15 +81,9 @@ export function build(opts: FastifyServerOptions = {}): Server {
   });
 
   app.register(fastifyCookie);
-
-  // stratégies d'authentification
-  app
-    .decorate("validateJWT", authValidateJWT)
-    .decorate("validateSession", authValidateSession)
-    .decorate("validateWebHookKey", authWebHookKey);
+  app.decorate("auth", <S extends IRouteSchema & WithSecurityScheme>(scheme: S) => auth(scheme));
 
   app.register(fastifyMultipart);
-  app.register(fastifyAuth);
   app.register(fastifyCors, {
     ...(config.env === "local"
       ? {
@@ -121,48 +92,6 @@ export function build(opts: FastifyServerOptions = {}): Server {
         }
       : {}),
   });
-
-  app.setErrorHandler<FastifyError | Boom<unknown> | Error | ZodError, { Reply: IResError }>(
-    (error, _request, reply) => {
-      logger.error(error);
-
-      let statusCode = (error as FastifyError).statusCode ?? 500;
-      let message = config.env === "local" ? error.message : "Internal Server Error";
-      let name = error.name;
-
-      if (error.name === "ResponseValidationError") {
-        name = "Response Validation failed";
-        statusCode = 500;
-        if (config.env === "local") {
-          message = getZodMessageError((error as ResponseValidationError).details as ZodError, "response");
-        }
-      }
-      if (error instanceof ZodError) {
-        name = "Validation failed";
-        message = getZodMessageError(error, (error as unknown as FastifyError).validationContext ?? "");
-      }
-
-      if (isBoom(error)) {
-        statusCode = error.output.statusCode;
-
-        return reply.status(statusCode).send({
-          message: statusCode >= 500 && config.env !== "local" ? "Internal Server Error" : error.message,
-          statusCode,
-          name,
-        });
-      }
-
-      if (statusCode >= 500) {
-        captureException(error);
-      }
-
-      return reply.status(statusCode).send({
-        message,
-        statusCode,
-        name,
-      });
-    }
-  );
 
   app.register(
     async (instance: Server) => {
@@ -178,19 +107,24 @@ export function build(opts: FastifyServerOptions = {}): Server {
     { prefix: "/api/v1" }
   );
 
-  return app.withTypeProvider<ZodTypeProvider>();
+  app.setNotFoundHandler((req, res) => {
+    res.status(404).send(Boom.notFound().output);
+  });
+
+  errorMiddleware(app);
+
+  return app;
 }
 
-export const server = build({
-  logger: true,
-  ajv: {
-    customOptions: {
-      strict: "log",
-      keywords: ["kind", "modifier"],
-    },
-  },
-  trustProxy: 1,
-});
+export default async (): Promise<Server> => {
+  const app: Server = fastify({
+    logger: logMiddleware(),
+    trustProxy: 1,
+    caseSensitive: false,
+  }).withTypeProvider<ZodTypeProvider>();
+
+  return bind(app);
+};
 
 type RegisterRoutes = (opts: { server: Server }) => void;
 

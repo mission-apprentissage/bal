@@ -4,21 +4,21 @@ import nock from "nock";
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 import { createUser, generateApiKey } from "../../src/modules/actions/users.actions";
-import { build } from "../../src/modules/server/server";
+import createServer, { Server } from "../../src/modules/server/server";
 import { aktoValid } from "../data/akto";
 import { opcoEpInvalid, opcoEpValidDomain, opcoEpValidEmail } from "../data/opcoEp";
 import { aktoTokenMock, aktoVerificationMock } from "../utils/mocks/akto.mock";
 import { opcoEpTokenMock, opcoEpVerificationMock } from "../utils/mocks/opcoEp.mock";
 import { useMongo } from "../utils/mongo.utils";
 
-const app = build();
-
 let userToken: string;
 
 describe("Organisations", () => {
   const mongo = useMongo();
+  let app: Server;
 
   beforeAll(async () => {
+    app = await createServer();
     await Promise.all([app.ready(), mongo.beforeAll()]);
   }, 15_000);
 
@@ -138,8 +138,23 @@ describe("Organisations", () => {
 
       assert.equal(response.statusCode, 400);
       assert.deepEqual(response.json(), {
+        data: {
+          validationError: {
+            code: "FST_ERR_VALIDATION",
+            issues: [
+              {
+                code: "custom",
+                message: "Le siret ne respecte pas l'algorithme luhn",
+                path: ["siret"],
+              },
+            ],
+            name: "ZodError",
+            statusCode: 400,
+            validationContext: "body",
+          },
+        },
         message: "body.siret: Le siret ne respecte pas l'algorithme luhn",
-        name: "Validation failed",
+        name: "Bad Request",
         statusCode: 400,
       });
 

@@ -1,30 +1,45 @@
 import { z } from "zod";
 
 import { ZUser, zUserWithPersonPublic } from "../models/user.model";
-import { ZReqHeadersAuthorization, ZResOk } from "./common.routes";
+import { IRoutesDef, ZReqHeadersAuthorization, ZResOk } from "./common.routes";
 
 export const zAuthRoutes = {
   get: {
     "/auth/reset-password": {
+      method: "get",
+      path: "/auth/reset-password",
       querystring: z.object({ email: z.string().email() }).strict(),
       response: {
-        "2xx": ZResOk,
+        "200": ZResOk,
       },
+      securityScheme: null,
     },
     "/auth/logout": {
+      method: "get",
+      path: "/auth/logout",
       response: {
-        "2xx": ZResOk,
+        "200": ZResOk,
       },
+      securityScheme: null,
     },
     "/auth/session": {
+      method: "get",
+      path: "/auth/session",
       response: {
-        "2xx": zUserWithPersonPublic,
+        "200": zUserWithPersonPublic,
       },
       headers: ZReqHeadersAuthorization,
+      securityScheme: {
+        auth: "cookie-session",
+        access: null,
+        ressources: {},
+      },
     },
   },
   post: {
     "/auth/reset-password": {
+      method: "post",
+      path: "/auth/reset-password",
       body: z
         .object({
           password: ZUser.shape.password,
@@ -32,10 +47,13 @@ export const zAuthRoutes = {
         })
         .strict(),
       response: {
-        "2xx": ZResOk,
+        "200": ZResOk,
       },
+      securityScheme: null,
     },
     "/auth/login": {
+      method: "post",
+      path: "/auth/login",
       body: z
         .object({
           email: ZUser.shape.email,
@@ -43,13 +61,12 @@ export const zAuthRoutes = {
         })
         .strict(),
       response: {
-        "2xx": zUserWithPersonPublic,
+        "200": zUserWithPersonPublic,
       },
+      securityScheme: null,
     },
   },
-  put: {},
-  delete: {},
-};
+} as const satisfies IRoutesDef;
 
 export interface IStatus {
   error?: boolean;

@@ -5,14 +5,13 @@ import { zUserAdminRoutes } from "shared/routes/user.routes";
 
 import { createUser, findUser, findUsers } from "../../actions/users.actions";
 import { Server } from "../server";
-import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 export const userAdminRoutes = ({ server }: { server: Server }) => {
   server.post(
     "/admin/user",
     {
       schema: zUserAdminRoutes.post["/admin/user"],
-      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
+      onRequest: [server.auth(zUserAdminRoutes.post["/admin/user"])],
     },
     async (request, response) => {
       const user = await createUser(request.body);
@@ -29,7 +28,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
     "/admin/users",
     {
       schema: zUserAdminRoutes.get["/admin/users"],
-      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
+      onRequest: [server.auth(zUserAdminRoutes.get["/admin/users"])],
     },
     async (request, response) => {
       const filter: RootFilterOperators<IUser> = {};
@@ -50,7 +49,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
     "/admin/users/:id",
     {
       schema: zUserAdminRoutes.get["/admin/users/:id"],
-      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
+      onRequest: [server.auth(zUserAdminRoutes.get["/admin/users/:id"])],
     },
     async (request, response) => {
       const user = await findUser({ _id: request.params.id });

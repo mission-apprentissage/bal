@@ -5,14 +5,13 @@ import { IOrganisation } from "shared/models/organisation.model";
 
 import { findOrganisation, findOrganisations } from "../../actions/organisations.actions";
 import { Server } from "../server";
-import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 export const organisationAdminRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/admin/organisations",
     {
       schema: zRoutes.get["/admin/organisations"],
-      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
+      onRequest: [server.auth(zRoutes.get["/admin/organisations"])],
     },
     async (request, response) => {
       const filter: RootFilterOperators<IOrganisation> = {};
@@ -33,7 +32,7 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
     "/admin/organisations/:id",
     {
       schema: zRoutes.get["/admin/organisations/:id"],
-      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
+      onRequest: [server.auth(zRoutes.get["/admin/organisations/:id"])],
     },
     async (request, response) => {
       const organisation = await findOrganisation({

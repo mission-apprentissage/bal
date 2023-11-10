@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 
 import logger from "@/common/logger";
 import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
-import { server } from "@/modules/server/server";
+import createServer from "@/modules/server/server";
 
 import { closeSentry, initSentryProcessor } from "./common/services/sentry/sentry";
 import { sleep } from "./common/utils/asyncUtils";
@@ -77,6 +77,7 @@ program
     try {
       const signal = createProcessExitSignal();
 
+      const server = await createServer();
       await server.listen({ port: config.port, host: "0.0.0.0" });
       logger.info(`Server ready and listening on port ${config.port}`);
 

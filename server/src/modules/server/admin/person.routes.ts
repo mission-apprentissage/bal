@@ -5,14 +5,13 @@ import { IPerson } from "shared/models/person.model";
 
 import { findPerson, findPersons } from "../../actions/persons.actions";
 import { Server } from "../server";
-import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 export const personAdminRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/admin/persons",
     {
       schema: zRoutes.get["/admin/persons"],
-      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
+      onRequest: [server.auth(zRoutes.get["/admin/persons"])],
     },
     async (request, response) => {
       const filter: RootFilterOperators<IPerson> = {};
@@ -33,7 +32,7 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
     "/admin/persons/:id",
     {
       schema: zRoutes.get["/admin/persons/:id"],
-      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
+      onRequest: [server.auth(zRoutes.get["/admin/persons/:id"])],
     },
     async (request, response) => {
       const person = await findPerson({

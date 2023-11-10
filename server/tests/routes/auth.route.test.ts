@@ -5,10 +5,9 @@ import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 import config from "@/config";
 import { getSession } from "@/modules/actions/sessions.actions";
 import { createUser } from "@/modules/actions/users.actions";
-import { build } from "@/modules/server/server";
+import createServer, { Server } from "@/modules/server/server";
 
 import { useMongo } from "../utils/mongo.utils";
-const app = build();
 
 type Cookie = {
   name: string;
@@ -19,8 +18,10 @@ type Cookie = {
 
 describe("Authentication", () => {
   const mongo = useMongo();
+  let app: Server;
 
   beforeAll(async () => {
+    app = await createServer();
     await Promise.all([app.ready(), mongo.beforeAll()]);
   }, 15_000);
 

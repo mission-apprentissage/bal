@@ -16,9 +16,7 @@ import { StartDsfr } from "./StartDsfr";
 
 async function getSession(): Promise<IUserPublic | undefined> {
   try {
-    const session: IUserPublic = await apiGet(`/auth/session`, {
-      headers: {},
-    });
+    const session: IUserPublic = await apiGet(`/auth/session`, {});
     return session;
   } catch (error) {
     console.log(error);

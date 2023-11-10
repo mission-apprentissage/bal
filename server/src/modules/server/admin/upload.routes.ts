@@ -7,6 +7,7 @@ import { IDocument, toPublicDocument } from "shared/models/document.model";
 
 import logger from "@/common/logger";
 
+import { getUserFromRequest } from "../../../security/authenticationService";
 import {
   createEmptyDocument,
   deleteDocumentById,
@@ -16,7 +17,6 @@ import {
 } from "../../actions/documents.actions";
 import { addJob } from "../../jobs/jobs_actions";
 import { Server } from "../server";
-import { ensureUserIsAdmin } from "../utils/middleware.utils";
 
 const validateFile = (file: MultipartFile) => {
   if (file.mimetype !== "text/csv") {
@@ -38,7 +38,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     "/admin/upload",
     {
       schema: zRoutes.post["/admin/upload"],
-      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
+      onRequest: [server.auth(zRoutes.post["/admin/upload"])],
     },
     async (request, response) => {
       const { type_document, delimiter } = request.query;
@@ -57,7 +57,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         throw Boom.badImplementation(error as Error);
       }
 
-      if (!request.user || !data || !validateFile(data)) {
+      if (!data || !validateFile(data)) {
         throw Boom.unauthorized("Le fichier n'est pas au bon format");
       }
 
@@ -73,7 +73,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       }
 
       try {
-        const added_by = request.user._id.toString();
+        const added_by = getUserFromRequest(request, zRoutes.post["/admin/upload"])._id.toString();
 
         await uploadFile(added_by, data.file, document._id, {
           mimetype: data.mimetype,
@@ -106,7 +106,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     "/admin/documents",
     {
       schema: zRoutes.get["/admin/documents"],
-      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
+      onRequest: [server.auth(zRoutes.get["/admin/documents"])],
     },
     async (_request, response) => {
       const documents = await findDocumentsWithImportJob(
@@ -131,7 +131,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     "/admin/document/:id",
     {
       schema: zRoutes.delete["/admin/document/:id"],
-      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
+      onRequest: [server.auth(zRoutes.delete["/admin/document/:id"])],
     },
     async (request, response) => {
       await deleteDocumentById(new ObjectId(request.params.id));
@@ -144,7 +144,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
     "/admin/documents/types",
     {
       schema: zRoutes.get["/admin/documents/types"],
-      preHandler: [server.auth([server.validateSession]), ensureUserIsAdmin],
+      onRequest: [server.auth(zRoutes.get["/admin/documents/types"])],
     },
     async (_request, response) => {
       const types = await getDocumentTypes();
