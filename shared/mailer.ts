@@ -7,9 +7,9 @@ const zTemplateResetPassword = z
   .object({
     name: z.literal("reset_password"),
     to: z.string().email(),
-    civility: z.enum(["Madame", "Monsieur"]).optional(),
-    nom: z.string().optional(),
-    prenom: z.string().optional(),
+    civility: z.enum(["Madame", "Monsieur"]).nullish(),
+    nom: z.string().nullish(),
+    prenom: z.string().nullish(),
     resetPasswordToken: z.string(),
   })
   .strict();

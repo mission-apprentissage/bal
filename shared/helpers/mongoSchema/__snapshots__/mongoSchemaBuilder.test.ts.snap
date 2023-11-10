@@ -239,20 +239,33 @@ exports[`zodToMongoSchema > should convert events schema 1`] = `
               "bsonType": "object",
               "properties": {
                 "civility": {
-                  "bsonType": "string",
-                  "enum": [
-                    "Madame",
-                    "Monsieur",
+                  "anyOf": [
+                    {
+                      "bsonType": "string",
+                      "enum": [
+                        "Madame",
+                        "Monsieur",
+                      ],
+                    },
+                    {
+                      "bsonType": "null",
+                    },
                   ],
                 },
                 "name": {
                   "bsonType": "string",
                 },
                 "nom": {
-                  "bsonType": "string",
+                  "bsonType": [
+                    "string",
+                    "null",
+                  ],
                 },
                 "prenom": {
-                  "bsonType": "string",
+                  "bsonType": [
+                    "string",
+                    "null",
+                  ],
                 },
                 "resetPasswordToken": {
                   "bsonType": "string",
