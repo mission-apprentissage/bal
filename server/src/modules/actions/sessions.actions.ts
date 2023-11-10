@@ -1,31 +1,58 @@
-import { Filter, FindOptions, ObjectId } from "mongodb";
+import { FastifyReply, FastifyRequest } from "fastify";
+import jwt from "jsonwebtoken";
+import { Filter, FindOptions } from "mongodb";
 import { ISession } from "shared/models/session.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
+import config from "../../config";
+
 type TCreateSession = Pick<ISession, "token">;
 
-export const createSession = async (data: TCreateSession) => {
+async function createSession(data: TCreateSession) {
   const now = new Date();
   const { insertedId: _id } = await getDbCollection("sessions").insertOne({
     ...data,
     updated_at: now,
     created_at: now,
+    expires_at: new Date(now.getTime() + config.session.cookie.maxAge),
   });
 
   const session = await getSession({ _id });
 
   return session;
-};
+}
 
-export const getSession = async (filter: Filter<ISession>, options?: FindOptions): Promise<ISession | null> => {
+async function getSession(filter: Filter<ISession>, options?: FindOptions): Promise<ISession | null> {
   return getDbCollection("sessions").findOne(filter, options);
-};
+}
 
-export const deleteSession = async (token: string) => {
+async function deleteSession(token: string) {
   await getDbCollection("sessions").deleteMany({ token });
-};
+}
 
-export const updateSession = async (_id: ObjectId, data: Partial<ISession>) => {
-  return getDbCollection("sessions").updateOne({ _id }, { $set: { ...data, updated_at: new Date() } });
-};
+function createSessionToken(email: string) {
+  return jwt.sign({ email }, config.auth.user.jwtSecret, {
+    issuer: config.publicUrl,
+    expiresIn: config.auth.user.expiresIn,
+    subject: email,
+  });
+}
+
+async function startSession(email: string, res: FastifyReply) {
+  const token = createSessionToken(email);
+  await createSession({ token });
+  res.setCookie(config.session.cookieName, token, config.session.cookie);
+}
+
+async function stopSession(req: FastifyRequest, res: FastifyReply) {
+  const token = req.cookies[config.session.cookieName];
+
+  if (token) {
+    await deleteSession(token);
+  }
+
+  res.clearCookie(config.session.cookieName, config.session.cookie);
+}
+
+export { getSession, startSession, stopSession, createSessionToken, createSession };

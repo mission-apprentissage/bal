@@ -3,7 +3,7 @@ import assert from "node:assert";
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 import { createUserTokenSimple } from "../../src/common/utils/jwtUtils";
-import { createSession } from "../../src/modules/actions/sessions.actions";
+import { createSession, createSessionToken } from "../../src/modules/actions/sessions.actions";
 import { createUser, findUser } from "../../src/modules/actions/users.actions";
 import createServer, { Server } from "../../src/modules/server/server";
 import { useMongo } from "../utils/mongo.utils";
@@ -32,11 +32,8 @@ describe("Users routes", () => {
       organisation_id: "64520f65d7726475fd54b3b7",
     });
 
-    const token = createUserTokenSimple({ payload: { email: user.email } });
-
-    await createSession({
-      token,
-    });
+    const token = createSessionToken(user.email);
+    await createSession({ token });
 
     const userWithToken = await findUser({ _id: user._id });
 

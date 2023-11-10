@@ -1,10 +1,8 @@
-import jwt from "jsonwebtoken";
-
 import logger from "@/common/logger";
 import { sendEmail } from "@/common/services/mailer/mailer";
 import { createResetPasswordToken } from "@/common/utils/jwtUtils";
-import config from "@/config";
 
+import { IAccessToken } from "../../security/accessTokenService";
 import { hashPassword, verifyPassword } from "../server/utils/password.utils";
 import { findPerson } from "./persons.actions";
 import { findUser, updateUser } from "./users.actions";
@@ -40,7 +38,7 @@ export const sendResetPasswordEmail = async (email: string) => {
     return;
   }
 
-  const token = createResetPasswordToken(user.email);
+  const token = createResetPasswordToken(user);
 
   await sendEmail(person._id.toString(), {
     name: "reset_password",
@@ -52,20 +50,8 @@ export const sendResetPasswordEmail = async (email: string) => {
   });
 };
 
-export const resetPassword = async (password: string, token: string) => {
-  const decoded = jwt.verify(token, config.auth.resetPasswordToken.jwtSecret);
-
-  if (!decoded || !decoded.sub) {
-    throw new Error("Invalid token");
-  }
-
-  const user = await findUser({ email: decoded.sub });
-
-  if (!user) {
-    throw new Error("Invalid token");
-  }
-
+export const resetPassword = async (token: IAccessToken, password: string) => {
   const hashedPassword = hashPassword(password);
 
-  await updateUser(user, { password: hashedPassword });
+  await updateUser(token.identity.email, { password: hashedPassword });
 };

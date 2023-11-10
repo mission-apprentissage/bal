@@ -542,6 +542,10 @@ exports[`zodToMongoSchema > should convert sessions schema 1`] = `
       "bsonType": "date",
       "description": "Date d'ajout en base de données",
     },
+    "expires_at": {
+      "bsonType": "date",
+      "description": "Date d'ajout en base de données",
+    },
     "token": {
       "bsonType": "string",
       "description": "Token de la session",
@@ -554,6 +558,9 @@ exports[`zodToMongoSchema > should convert sessions schema 1`] = `
   "required": [
     "_id",
     "token",
+    "updated_at",
+    "created_at",
+    "expires_at",
   ],
 }
 `;
