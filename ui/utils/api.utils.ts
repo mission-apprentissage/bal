@@ -154,9 +154,7 @@ const removeAtEnd = (url: string, removed: string): string =>
 
 export function generateUrl(path: string, options: WithQueryStringAndPathParam = {}): string {
   let normalisedEndpoint = removeAtEnd(publicConfig.apiEndpoint, "/");
-  if ("params" in options) {
-    normalisedEndpoint += generatePath(path, options.params);
-  }
+  normalisedEndpoint += generatePath(path, "params" in options ? options.params : {});
   if ("querystring" in options) {
     normalisedEndpoint += generateQueryString(options.querystring);
   }
