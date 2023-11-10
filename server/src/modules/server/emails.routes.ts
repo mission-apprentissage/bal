@@ -4,13 +4,13 @@ import { zRoutes } from "shared";
 import { zEmailParams } from "shared/routes/emails.routes";
 import z from "zod";
 
+import { renderEmail } from "../../common/services/mailer/mailer";
 import config from "../../config";
 import {
   checkIfEmailExists,
   markEmailAsDelivered,
   markEmailAsFailed,
   markEmailAsOpened,
-  renderEmail,
   unsubscribeUser,
 } from "../actions/emails.actions";
 import { Server } from "./server";

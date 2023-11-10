@@ -45,7 +45,7 @@ const config = {
     hashRounds: env.get("MNA_BAL_AUTH_HASH_ROUNDS").default(1000).asIntPositive(),
   },
   smtp: {
-    host: env.get("MNA_BAL_SMTP_HOST").asString(),
+    host: env.get("MNA_BAL_SMTP_HOST").required().asString(),
     port: env.get("MNA_BAL_SMTP_PORT").asString(),
     secure: env.get("MNA_BAL_SMTP_SECURE").asBool(),
     webhookKey: env.get("MNA_BAL_SMTP_WEBHOOK_KEY").default("").asString(),

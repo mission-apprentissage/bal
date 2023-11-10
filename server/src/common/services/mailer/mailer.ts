@@ -1,72 +1,122 @@
+import { internal } from "@hapi/boom";
+import { captureException } from "@sentry/node";
+import ejs from "ejs";
 import { omit } from "lodash-es";
+import mjml from "mjml";
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
-import { TemplateName, TemplatePayloads, TemplateTitleFuncs } from "shared/mailer";
+import { TemplateName, TemplatePayloads } from "shared/mailer";
+import { IEvent } from "shared/models/events/event.model";
+import { v4 as uuidv4 } from "uuid";
 
 import config from "@/config";
 
-import { sendStoredEmail } from "../../../modules/actions/emails.actions";
-import { generateHtml, getPublicUrl } from "../../utils/emailsUtils";
+import { addEmail, addEmailError, addEmailMessageId } from "../../../modules/actions/emails.actions";
+import logger from "../../logger";
 import { getStaticFilePath } from "../../utils/getStaticFilePath";
+import { getDbCollection } from "../../utils/mongodbUtils";
 
-function createTransporter(smtp: SMTPTransport) {
-  const needsAuthentication = !!smtp.auth.user;
-  const transporter = nodemailer.createTransport(needsAuthentication ? smtp : omit(smtp, ["auth"]));
-  transporter.use("compile", htmlToText());
-  return transporter;
+let transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo> | null = null;
+
+export function closeMailer() {
+  transporter?.close?.();
+  transporter = null;
 }
 
-export function createMailerService(
-  // @ts-ignore
-  transporter = createTransporter({ ...config.smtp, secure: false })
+export function initMailer() {
+  const settings = { ...config.smtp, secure: false };
+  const needsAuthentication = !!settings.auth.user;
+  // @ts-expect-error
+  transporter = nodemailer.createTransport(needsAuthentication ? settings : omit(settings, ["auth"]));
+  transporter.use("compile", htmlToText());
+}
+
+async function sendEmailMessage<T extends TemplateName>(
+  to: string,
+  templateName: T,
+  data: TemplatePayloads[T],
+  emailToken: string
 ) {
-  async function sendEmailMessage(
-    to: string,
-    template: { subject: string; templateFile: string; data: { token: string } }
-  ) {
-    const { subject, data } = template;
-
-    const { messageId } = await transporter.sendMail({
-      from: `${config.email_from} <${config.email}>`,
-      to,
-      subject,
-      html: await generateHtml(to, template),
-      list: {
-        help: "https://mission-apprentissage.gitbook.io/general/les-services-en-devenir/accompagner-les-futurs-apprentis", // TODO [metier/tech]
-        unsubscribe: getPublicUrl(`/api/emails/${data.token}/unsubscribe`),
-      },
-    });
-
-    return messageId;
+  if (!transporter) {
+    throw internal("mailer is not initialised");
   }
 
-  return {
-    sendEmailMessage,
-  };
+  const { messageId } = await transporter.sendMail({
+    from: `${config.email_from} <${config.email}>`,
+    to,
+    subject: getEmailSubject(templateName),
+    html: await generateHtml(to, templateName, { ...data, token: emailToken }),
+    list: {
+      help: "https://mission-apprentissage.gitbook.io/general/les-services-en-devenir/accompagner-les-futurs-apprentis", // TODO [metier/tech]
+      unsubscribe: getPublicUrl(`/api/emails/${emailToken}/unsubscribe`),
+    },
+  });
+
+  return messageId;
 }
 
 export async function sendEmail<T extends TemplateName>(
   person_id: string,
-  template: T,
+  templateName: T,
   payload: TemplatePayloads[T]
 ): Promise<void> {
-  // identifiant email car stocké en BDD et possibilité de le consulter via navigateur
-  await sendStoredEmail(person_id, template, payload, {
-    subject: templatesTitleFuncs[template](payload),
-    templateFile: getStaticFilePath(`./emails/${template}.mjml.ejs`),
-    data: payload,
+  const emailToken = uuidv4();
+  try {
+    await addEmail(person_id, emailToken, templateName, payload);
+    const messageId = await sendEmailMessage(payload.recipient.email, templateName, payload, emailToken);
+    await addEmailMessageId(emailToken, messageId);
+  } catch (err) {
+    captureException(err);
+    logger.error({ err, template: templateName }, "error sending email");
+    await addEmailError(emailToken, err);
+  }
+}
+
+function assertUnreachable(_x: never): never {
+  throw internal("Didn't expect to get here");
+}
+
+export function getEmailSubject<T extends TemplateName>(name: T): string {
+  switch (name) {
+    case "reset_password":
+      return "Réinitialisation du mot de passe";
+    default:
+      // @ts-expect-error
+      assertUnreachable(name);
+  }
+}
+
+export function getPublicUrl(path: string) {
+  return `${config.publicUrl}${path}`;
+}
+
+export async function renderEmail(token: string) {
+  const event = await getDbCollection("events").findOne<IEvent>({
+    "payload.emails.token": token,
+    name: "bal_emails",
   });
+  if (!event) {
+    return;
+  }
+  const email = event.payload.emails.find((e) => e.token === token);
+  if (!email) {
+    return;
+  }
+  const { templateName, payload } = email;
+  return generateHtml(payload.recipient.email, templateName as TemplateName, payload);
 }
 
-export function getEmailInfos<T extends TemplateName>(template: T, payload: TemplatePayloads[T]) {
-  return {
-    subject: templatesTitleFuncs[template](payload),
-    templateFile: getStaticFilePath(`./emails/${template}.mjml.ejs`),
-    data: payload,
-  };
-}
+export async function generateHtml<T extends TemplateName>(to: string, templateName: T, data: unknown) {
+  const subject = getEmailSubject(templateName);
+  const templateFile = getStaticFilePath(`./emails/${templateName}.mjml.ejs`);
+  const buffer = await ejs.renderFile(templateFile, {
+    to,
+    subject,
+    data,
+    utils: { getPublicUrl },
+  });
 
-const templatesTitleFuncs: TemplateTitleFuncs = {
-  reset_password: () => "Réinitialisation du mot de passe",
-};
+  const { html } = mjml(buffer.toString(), { minify: true });
+  return html;
+}

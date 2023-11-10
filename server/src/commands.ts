@@ -7,6 +7,7 @@ import logger from "@/common/logger";
 import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
 import createServer from "@/modules/server/server";
 
+import { closeMailer } from "./common/services/mailer/mailer";
 import { closeSentry, initSentryProcessor } from "./common/services/sentry/sentry";
 import { sleep } from "./common/utils/asyncUtils";
 import config from "./config";
@@ -26,6 +27,7 @@ program
     }
   })
   .hook("postAction", async () => {
+    await closeMailer();
     await closeMongodbConnection();
     await closeSentry();
   });
