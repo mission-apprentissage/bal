@@ -60,7 +60,7 @@ export const ZJobCronTask = z
 export const ZJob = z.discriminatedUnion("type", [ZJobSimple, ZJobCron, ZJobCronTask]);
 
 export type IJob = z.output<typeof ZJob>;
-export type CronName = z.output<typeof zCronName>;
+export type CronName = z.output<ReturnType<typeof zCronName>>;
 
 export type IJobsSimple = z.output<typeof ZJobSimple>;
 export type IJobsCron = z.output<typeof ZJobCron>;
