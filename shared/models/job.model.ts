@@ -11,7 +11,7 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ ended_at: 1 }, { expireAfterSeconds: 3600 * 24 * 90 }], // 3 mois
 ];
 
-const zCronName = z.enum(["Run daily jobs each day at 02h30"]).describe("Le nom de la tâche");
+const zCronName = () => z.enum(["Run daily jobs each day at 02h30"]).describe("Le nom de la tâche");
 
 export const ZJobSimple = z
   .object({
@@ -33,7 +33,7 @@ export const ZJobSimple = z
 export const ZJobCron = z
   .object({
     _id: zObjectId,
-    name: zCronName,
+    name: zCronName(),
     type: z.literal("cron"),
     status: z.enum(["active"]).describe("Statut courant du cron"),
     cron_string: z.string().describe("standard cron string exemple: '*/2 * * * *'"),
@@ -46,7 +46,7 @@ export const ZJobCron = z
 export const ZJobCronTask = z
   .object({
     _id: zObjectId,
-    name: zCronName,
+    name: zCronName(),
     type: z.literal("cron_task"),
     status: z.enum(["pending", "will_start", "running", "finished", "errored"]).describe("Statut courant du job"),
     scheduled_for: z.date().describe("Date de lancement programmée"),
