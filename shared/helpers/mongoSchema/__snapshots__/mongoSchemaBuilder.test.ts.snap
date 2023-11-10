@@ -296,83 +296,220 @@ exports[`zodToMongoSchema > should convert events schema 1`] = `
 
 exports[`zodToMongoSchema > should convert jobs schema 1`] = `
 {
-  "additionalProperties": false,
-  "bsonType": "object",
-  "properties": {
-    "_id": {
-      "bsonType": "objectId",
-      "description": "Identifiant unique",
-    },
-    "created_at": {
-      "bsonType": "date",
-      "description": "Date d'ajout en base de données",
-    },
-    "cron_string": {
-      "bsonType": "string",
-      "description": "standard cron string exemple: '*/2 * * * *'",
-    },
-    "ended_at": {
-      "bsonType": "date",
-      "description": "Date de fin d'execution",
-    },
-    "name": {
-      "bsonType": "string",
-      "description": "Le nom de la tâche",
-    },
-    "output": {
-      "additionalProperties": true,
+  "anyOf": [
+    {
+      "additionalProperties": false,
       "bsonType": "object",
-      "description": "Les valeurs de retours du job",
-    },
-    "payload": {
-      "additionalProperties": true,
-      "bsonType": "object",
-      "description": "La donnée liéé à la tâche",
-    },
-    "scheduled_for": {
-      "bsonType": "date",
-      "description": "Date de lancement programmée",
-    },
-    "started_at": {
-      "bsonType": "date",
-      "description": "Date de lancement",
-    },
-    "status": {
-      "bsonType": "string",
-      "description": "Statut courant du job",
-      "enum": [
-        "pending",
-        "will_start",
-        "running",
-        "finished",
-        "blocked",
-        "errored",
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+          "description": "Identifiant unique",
+        },
+        "created_at": {
+          "bsonType": "date",
+          "description": "Date d'ajout en base de données",
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "bsonType": "date",
+            },
+            {
+              "bsonType": "null",
+            },
+          ],
+          "description": "Date de fin d'execution",
+        },
+        "name": {
+          "bsonType": "string",
+          "description": "Le nom de la tâche",
+        },
+        "output": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "bsonType": "object",
+            },
+            {
+              "bsonType": "null",
+            },
+          ],
+          "description": "Les valeurs de retours du job",
+        },
+        "payload": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "bsonType": "object",
+            },
+            {
+              "bsonType": "null",
+            },
+          ],
+          "description": "La donnée liéé à la tâche",
+        },
+        "scheduled_for": {
+          "bsonType": "date",
+          "description": "Date de lancement programmée",
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "bsonType": "date",
+            },
+            {
+              "bsonType": "null",
+            },
+          ],
+          "description": "Date de lancement",
+        },
+        "status": {
+          "bsonType": "string",
+          "description": "Statut courant du job",
+          "enum": [
+            "pending",
+            "will_start",
+            "running",
+            "finished",
+            "errored",
+          ],
+        },
+        "sync": {
+          "bsonType": "bool",
+          "description": "Si le job est synchrone",
+        },
+        "type": {
+          "bsonType": "string",
+        },
+        "updated_at": {
+          "bsonType": "date",
+          "description": "Date de mise à jour en base de données",
+        },
+      },
+      "required": [
+        "_id",
+        "name",
+        "type",
+        "status",
+        "sync",
+        "scheduled_for",
+        "updated_at",
+        "created_at",
       ],
     },
-    "sync": {
-      "bsonType": "bool",
-      "description": "Si le job est synchrone",
-    },
-    "type": {
-      "bsonType": "string",
-      "description": "Type du job simple ou cron",
-      "enum": [
-        "simple",
-        "cron",
-        "cron_task",
+    {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+          "description": "Identifiant unique",
+        },
+        "created_at": {
+          "bsonType": "date",
+          "description": "Date d'ajout en base de données",
+        },
+        "cron_string": {
+          "bsonType": "string",
+          "description": "standard cron string exemple: '*/2 * * * *'",
+        },
+        "name": {
+          "bsonType": "string",
+          "description": "Le nom de la tâche",
+          "enum": [
+            "Run daily jobs each day at 02h30",
+          ],
+        },
+        "scheduled_for": {
+          "bsonType": "date",
+          "description": "Date de lancement programmée",
+        },
+        "status": {
+          "bsonType": "string",
+          "description": "Statut courant du cron",
+          "enum": [
+            "active",
+          ],
+        },
+        "type": {
+          "bsonType": "string",
+        },
+        "updated_at": {
+          "bsonType": "date",
+          "description": "Date de mise à jour en base de données",
+        },
+      },
+      "required": [
+        "_id",
+        "name",
+        "type",
+        "status",
+        "cron_string",
+        "scheduled_for",
+        "updated_at",
+        "created_at",
       ],
     },
-    "updated_at": {
-      "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
+    {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+          "description": "Identifiant unique",
+        },
+        "created_at": {
+          "bsonType": "date",
+          "description": "Date d'ajout en base de données",
+        },
+        "ended_at": {
+          "bsonType": "date",
+          "description": "Date de fin d'execution",
+        },
+        "name": {
+          "bsonType": "string",
+          "description": "Le nom de la tâche",
+          "enum": [
+            "Run daily jobs each day at 02h30",
+          ],
+        },
+        "scheduled_for": {
+          "bsonType": "date",
+          "description": "Date de lancement programmée",
+        },
+        "started_at": {
+          "bsonType": "date",
+          "description": "Date de lancement",
+        },
+        "status": {
+          "bsonType": "string",
+          "description": "Statut courant du job",
+          "enum": [
+            "pending",
+            "will_start",
+            "running",
+            "finished",
+            "errored",
+          ],
+        },
+        "type": {
+          "bsonType": "string",
+        },
+        "updated_at": {
+          "bsonType": "date",
+          "description": "Date de mise à jour en base de données",
+        },
+      },
+      "required": [
+        "_id",
+        "name",
+        "type",
+        "status",
+        "scheduled_for",
+        "updated_at",
+        "created_at",
+      ],
     },
-  },
-  "required": [
-    "_id",
-    "name",
-    "type",
-    "status",
-    "scheduled_for",
   ],
 }
 `;

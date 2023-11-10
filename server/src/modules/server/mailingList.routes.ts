@@ -11,7 +11,7 @@ import * as crypto from "../../common/utils/cryptoUtils";
 import { getFromStorage } from "../../common/utils/ovhUtils";
 import { getUserFromRequest } from "../../security/authenticationService";
 import { findDocument } from "../actions/documents.actions";
-import { findJob } from "../actions/job.actions";
+import { findSimpleJob } from "../actions/job.actions";
 import {
   createMailingList,
   createMailingListFile,
@@ -112,7 +112,8 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         throw Boom.forbidden("Forbidden");
       }
 
-      const job = await findJob({
+      const job = await findSimpleJob({
+        name: "generate:mailing-list",
         "payload.mailing_list_id": mailingList._id.toString(),
       });
 
