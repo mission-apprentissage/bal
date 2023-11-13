@@ -1,8 +1,4 @@
-import { exec as nodeexec } from "node:child_process";
-import util from "node:util";
-
 import { CronName, IJobsCronTask, IJobsSimple } from "shared/models/job.model";
-const exec = util.promisify(nodeexec);
 
 import {
   create as createMigration,
@@ -27,14 +23,9 @@ interface CronDef {
 }
 
 export const CronsMap = {
-  "Run daily jobs each day at 02h30": {
-    cron_string: "30 2 * * *",
-    handler: async () => {
-      const { stdout, stderr } = await exec("/opt/app/scripts/run-dummy-outside-job.sh");
-      logger.info("stdout:", stdout);
-      logger.error("stderr:", stderr);
-      return stderr ? 1 : 0;
-    },
+  "Mise à jour des contrats deca": {
+    cron_string: "30 1 * * *",
+    handler: () => addJob({ name: "hydrate:deca", payload: {} }),
   },
 } satisfies Record<CronName, Omit<CronDef, "name">>;
 
