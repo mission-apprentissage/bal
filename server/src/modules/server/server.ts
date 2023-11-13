@@ -95,7 +95,7 @@ export async function bind(app: Server) {
     async (instance: Server) => {
       registerV1Routes({ server: instance });
     },
-    { prefix: "/api/v1" }
+    { prefix: "/api" }
   );
 
   app.setNotFoundHandler((req, res) => {

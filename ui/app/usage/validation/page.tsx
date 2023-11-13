@@ -26,7 +26,7 @@ const UsageVerificationPage = () => {
   const onSubmit = async (body: Req) => {
     try {
       setRequestData(body);
-      const data = await apiPost("/v1/organisation/validation", {
+      const data = await apiPost("/test/v1/organisation/validation", {
         body,
       });
 
@@ -43,7 +43,7 @@ const UsageVerificationPage = () => {
   return (
     <>
       <Typography variant="h4" gutterBottom>
-        POST api/v1/organisation/validation
+        POST /api/v1/organisation/validation
       </Typography>
 
       <form onSubmit={handleSubmit(onSubmit)}>

@@ -81,7 +81,7 @@ export type IQuery<S extends IRouteSchema> = S["querystring"] extends ZodType ? 
 export type IParam<S extends IRouteSchema> = S["params"] extends ZodType ? z.input<S["params"]> : never;
 
 type IHeadersAuth<S extends IRouteSchema> = S extends { securityScheme: { auth: infer A } }
-  ? A extends "access-token"
+  ? A extends "access-token" | "api-key"
     ? { authorization: `Bearer ${string}` }
     : object
   : object;

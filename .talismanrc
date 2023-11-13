@@ -59,6 +59,8 @@ fileignoreconfig:
   checksum: 1b26e5f3e3d4f30ddd5eb53bf09dffe27867beec422d64e4caad783acf31fbae
 - filename: .infra/env.ini
   checksum: 9c543f5fbadcb0467b6ba063b1eda18e46091102fa54331ba0fc34902932c605
+- filename: .infra/files/configs/mongodb/seed.gpg
+  checksum: df2838c8e4fdb523d03cc6895f3ff4a7150db0c2ba5b2b40c6aa381c16e6dcce
 - filename: .infra/scripts/deploy-app.sh
   checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
 - filename: .infra/scripts/ovh/create-backup-partition.sh

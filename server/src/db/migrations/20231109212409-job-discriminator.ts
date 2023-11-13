@@ -1,21 +1,29 @@
 import { Db, MongoClient } from "mongodb";
 
 export const up = async (db: Db, _client: MongoClient) => {
-  db.collection("jobs").updateMany(
+  await db.collection("jobs").updateMany(
+    {
+      type: "simple",
+    },
+    {
+      $unset: { cron_string: 1 },
+    }
+  );
+  await db.collection("jobs").updateMany(
     {
       type: "cron",
     },
     {
       $set: { status: "active" },
-      $unset: ["sync"],
+      $unset: { sync: 1 },
     }
   );
-  db.collection("jobs").updateMany(
+  await db.collection("jobs").updateMany(
     {
       type: "cron_task",
     },
     {
-      $unset: ["sync"],
+      $unset: { sync: 1, cron_string: 1 },
     }
   );
 };

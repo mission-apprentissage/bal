@@ -3,16 +3,16 @@
 
 import { z } from "zod";
 
-const zTemplateResetPassword = z
-  .object({
-    name: z.literal("reset_password"),
-    to: z.string().email(),
-    civility: z.enum(["Madame", "Monsieur"]).optional(),
-    nom: z.string().optional(),
-    prenom: z.string().optional(),
-    resetPasswordToken: z.string(),
-  })
-  .strict();
+// Ignore any extra props added by jwt parsing (iat, iss, ...)
+// eslint-disable-next-line zod/require-strict
+const zTemplateResetPassword = z.object({
+  name: z.literal("reset_password"),
+  to: z.string().email(),
+  civility: z.enum(["Madame", "Monsieur"]).nullish(),
+  nom: z.string().nullish(),
+  prenom: z.string().nullish(),
+  resetPasswordToken: z.string(),
+});
 
 type ITemplateResetPassword = z.output<typeof zTemplateResetPassword>;
 
