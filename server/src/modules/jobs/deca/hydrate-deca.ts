@@ -161,15 +161,25 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from: string; to: s
         return acc;
       }, [] as any[]);
 
-      console.log(decaContratsForPeriod);
+      await PromisePool.for(decaContratsForPeriod)
+        .handleError(async (err: any) => {
+          throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
+        })
+        .process(async (currentContrat: any) => {
+          await getDbCollection("deca").updateOne(
+            {
+              no_contrat: currentContrat.no_contrat,
+              "alternant.date_naissance": currentContrat.alternant.date_naissance,
+            },
+            {
+              ...currentContrat,
+              created_at: new Date(),
+              updated_at: new Date(),
+            },
+            { upsert: true }
+          );
+        });
 
-      // await PromisePool.for(decaContratsForPeriod)
-      //   .handleError(async (err: any) => {
-      //     throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
-      //   })
-      //   .process(async (currentContrat: any) => {
-      //     await getDbCollection("contratsDeca").insertOne({ ...currentContrat, created_at: new Date() });
-      //   });
       await createHistory();
     } catch (err: any) {
       throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
