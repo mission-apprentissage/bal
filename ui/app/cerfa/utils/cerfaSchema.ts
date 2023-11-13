@@ -84,6 +84,7 @@ export const indexedDependencies = (() => {
       delete names[dep][dep];
     });
   });
+  // @ts-expect-error
   return Object.fromEntries(Object.keys(names).reduce((acc, name) => [...acc, [name, Object.keys(names[name])]], []));
 })();
 

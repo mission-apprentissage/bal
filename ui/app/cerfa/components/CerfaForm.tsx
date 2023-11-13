@@ -22,6 +22,7 @@ const CerfaForm: FC = () => {
     setStep(step);
   };
   const methods = useForm({
+    mode: "all",
     defaultValues: {
       employeur: {
         adresse: {

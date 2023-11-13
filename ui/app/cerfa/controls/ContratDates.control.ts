@@ -66,7 +66,7 @@ export const ContratDatesControl: CerfaControl[] = [
       const dateDebutContrat = parseISO(values.contrat.dateDebutContrat);
       const dateFinContrat = parseISO(values.contrat.dateFinContrat);
 
-      const dureeContrat = differenceInMonths(dateDebutContrat, dateFinContrat);
+      const dureeContrat = differenceInMonths(dateFinContrat, dateDebutContrat);
       if (dureeContrat < 0) {
         return {
           error: "La date de début de contrat ne peut pas être après la date de fin de contrat",
@@ -81,7 +81,7 @@ export const ContratDatesControl: CerfaControl[] = [
       const dateDebutContrat = parseISO(values.contrat.dateDebutContrat);
       const dateFinContrat = parseISO(values.contrat.dateFinContrat);
 
-      const dureeContrat = differenceInMonths(dateDebutContrat, dateFinContrat);
+      const dureeContrat = differenceInMonths(dateFinContrat, dateDebutContrat);
       if (dureeContrat < 6) {
         return { error: "La durée du contrat ne peut pas être inférieure à 6 mois" };
       }
@@ -106,7 +106,7 @@ export const ContratDatesControl: CerfaControl[] = [
       const dateDebutContrat = parseISO(values.contrat.dateDebutContrat);
       const dateFinContrat = parseISO(values.contrat.dateFinContrat);
 
-      const dureeContrat = differenceInMonths(dateDebutContrat, dateFinContrat);
+      const dureeContrat = differenceInMonths(dateFinContrat, dateDebutContrat);
       if (dureeContrat > 54) {
         return {
           error: "La durée du contrat ne peut pas être supérieure à 4 ans et 6 mois",

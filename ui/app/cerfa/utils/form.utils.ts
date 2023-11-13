@@ -1,9 +1,10 @@
 import { InputProps } from "@codegouvfr/react-dsfr/Input";
 import { differenceInYears, parseISO } from "date-fns";
 import { get, setWith } from "lodash";
-import { FormState } from "react-hook-form";
+import { FieldValues, FormState, UseFormReturn } from "react-hook-form";
 
 import { CerfaForm } from "../components/CerfaForm";
+import cerfaSchema, { indexedRules } from "./cerfaSchema";
 
 // luxon
 // export const caclAgeAtDate = (dateNaissanceString: string, dateString: string) => {
@@ -42,6 +43,42 @@ export const getFieldStateFromFormState = (formState: FormState<CerfaForm>, name
   const stateRelatedMessage = get(formState.errors, name)?.message?.toString();
 
   return { state, stateRelatedMessage };
+};
+
+export const getFieldDeps = (name: string) => {
+  const deps = indexedRules[name]?.map((control) => control.deps) ?? [];
+  return [...new Set(deps.flat())];
+};
+
+export const validateField = async (
+  name: string,
+  formValues: FieldValues,
+  fieldMethods: UseFormReturn<FieldValues>
+) => {
+  const { setValue, resetField } = fieldMethods;
+  const controls = indexedRules[name];
+  let error: string | undefined = undefined;
+
+  for (const control of controls ?? []) {
+    const validation = await control.process({ values: formValues, fields: cerfaSchema.fields });
+
+    if (validation?.error) {
+      error = validation.error;
+    }
+
+    if (validation?.cascade) {
+      Object.entries(validation.cascade).forEach(([fieldName, cascade]) => {
+        if (cascade?.value) {
+          setValue(fieldName, cascade.value, { shouldValidate: true });
+        }
+        if (validation?.reset) {
+          resetField(fieldName);
+        }
+      });
+    }
+  }
+
+  return error;
 };
 
 export const getValues = (fields: any) => {

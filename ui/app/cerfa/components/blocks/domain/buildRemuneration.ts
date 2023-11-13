@@ -1,4 +1,4 @@
-import { addDays, getMonth, parse, parseISO, subDays } from "date-fns";
+import { addDays, format, getMonth, getYear, parse, parseISO, setDay, setMonth, subDays } from "date-fns";
 import addYears from "date-fns/addYears";
 import { fr } from "date-fns/locale";
 
@@ -288,23 +288,16 @@ export const buildRemuneration = (data) => {
   const taux12 = taux.a1[getSeuils(ageA2)];
   const selectedTaux11 = getTaux(1.1, taux11);
   const selectedTaux12 = getTaux(1.2, taux12);
-  if (
-    isChangingTaux(ageA1, ageA2) &&
-    // @ts-expect-error: todo
-    !(isAnniversaireInLastMonth && dateFinContrat.get("year") === dateFinA1.get("year"))
-  ) {
-    // @ts-expect-error: todo
-    const dateDebut12 = anniversaireA1.set({ day: 1, month: anniversaireA1.get("month") + 1 });
-    const dateFin11 = dateDebut12.minus({ days: 1 });
+  if (isChangingTaux(ageA1, ageA2) && !(isAnniversaireInLastMonth && getYear(dateFinContrat) === getYear(dateFinA1))) {
+    const dateDebut12 = setMonth(setDay(anniversaireA1, 1), getMonth(anniversaireA1) + 1);
+    const dateFin11 = subDays(dateDebut12, 1);
 
     if (dateFin11 >= dateFinContrat) {
       finRemuneration = true;
       result1 = {
         11: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutContrat.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinContrat.toISO(),
+          dateDebut: format(dateDebutContrat, "yyyy-MM-dd"),
+          dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
           typeSalaire: "SMIC",
@@ -316,18 +309,16 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result1 = {
         11: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutContrat.toISO(),
-          dateFin: dateFin11.toISO(),
+          dateDebut: format(dateDebutContrat, "yyyy-MM-dd"),
+          dateFin: format(dateFin11, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
           typeSalaire: "SMIC",
           salaireBrut: ceilUp((SMIC * selectedTaux11) / 100),
         },
         12: {
-          dateDebut: dateDebut12.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinContrat.toISO(),
+          dateDebut: format(dateDebut12, "yyyy-MM-dd"),
+          dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux12,
           tauxMinimal: taux12,
           typeSalaire: "SMIC",
@@ -337,18 +328,16 @@ export const buildRemuneration = (data) => {
     } else {
       result1 = {
         11: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutContrat.toISO(),
-          dateFin: dateFin11.toISO(),
+          dateDebut: format(dateDebutContrat, "yyyy-MM-dd"),
+          dateFin: format(dateFin11, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
           typeSalaire: "SMIC",
           salaireBrut: ceilUp((SMIC * selectedTaux11) / 100),
         },
         12: {
-          dateDebut: dateDebut12.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinA1.toISO(),
+          dateDebut: format(dateDebut12, "yyyy-MM-dd"),
+          dateFin: format(dateFinA1, "yyyy-MM-dd"),
           taux: selectedTaux12,
           tauxMinimal: taux12,
           typeSalaire: "SMIC",
@@ -361,10 +350,8 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result1 = {
         11: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutContrat.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinContrat.toISO(),
+          dateDebut: format(dateDebutContrat, "yyyy-MM-dd"),
+          dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
           typeSalaire: "SMIC",
@@ -375,10 +362,8 @@ export const buildRemuneration = (data) => {
     } else {
       result1 = {
         11: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutContrat.toFormat("yyyy-MM-dd"),
-          // @ts-expect-error: todo
-          dateFin: dateFinA1.toFormat("yyyy-MM-dd"),
+          dateDebut: format(dateDebutContrat, "yyyy-MM-dd"),
+          dateFin: format(dateFinA1, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
           typeSalaire: "SMIC",
@@ -403,21 +388,17 @@ export const buildRemuneration = (data) => {
   if (
     isChangingTaux(ageA2, ageA3) &&
     !finRemuneration &&
-    // @ts-expect-error: todo
-    !(isAnniversaireInLastMonth && dateFinContrat.get("year") === dateFinA2.get("year"))
+    !(isAnniversaireInLastMonth && getYear(dateFinContrat) === getYear(dateFinA2))
   ) {
-    // @ts-expect-error: todo
-    const dateDebut22 = anniversaireA2.set({ day: 1, month: anniversaireA2.get("month") + 1 });
-    const dateFin21 = dateDebut22.minus({ days: 1 });
+    const dateDebut22 = setMonth(setDay(anniversaireA2, 1), getMonth(anniversaireA2) + 1);
+    const dateFin21 = subDays(dateDebut22, 1);
 
     if (dateFin21 >= dateFinContrat) {
       finRemuneration = true;
       result2 = {
         21: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutA2.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinContrat.toISO(),
+          dateDebut: format(dateDebutA2, "yyyy-MM-dd"),
+          dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
           typeSalaire: "SMIC",
@@ -429,18 +410,16 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result2 = {
         21: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutA2.toISO(),
-          dateFin: dateFin21.toISO(),
+          dateDebut: format(dateDebutA2, "yyyy-MM-dd"),
+          dateFin: format(dateFin21, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
           typeSalaire: "SMIC",
           salaireBrut: ceilUp((SMIC * selectedTaux21) / 100),
         },
         22: {
-          dateDebut: dateDebut22.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinContrat.toISO(),
+          dateDebut: format(dateDebut22, "yyyy-MM-dd"),
+          dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux22,
           tauxMinimal: taux22,
           typeSalaire: "SMIC",
@@ -450,18 +429,16 @@ export const buildRemuneration = (data) => {
     } else {
       result2 = {
         21: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutA2.toISO(),
-          dateFin: dateFin21.toISO(),
+          dateDebut: format(dateDebutA2, "yyyy-MM-dd"),
+          dateFin: format(dateFin21, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
           typeSalaire: "SMIC",
           salaireBrut: ceilUp((SMIC * selectedTaux21) / 100),
         },
         22: {
-          dateDebut: dateDebut22.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinA2.toISO(),
+          dateDebut: format(dateDebut22, "yyyy-MM-dd"),
+          dateFin: format(dateFinA2, "yyyy-MM-dd"),
           taux: selectedTaux22,
           tauxMinimal: taux22,
           typeSalaire: "SMIC",
@@ -475,9 +452,9 @@ export const buildRemuneration = (data) => {
       result2 = {
         21: {
           // @ts-expect-error: todo
-          dateDebut: dateDebutA2.toISO(),
+          dateDebut: dateDebutA2,
           // @ts-expect-error: todo
-          dateFin: dateFinContrat.toISO(),
+          dateFin: dateFinContrat,
           taux: selectedTaux21,
           tauxMinimal: taux21,
           typeSalaire: "SMIC",
@@ -489,9 +466,9 @@ export const buildRemuneration = (data) => {
       result2 = {
         21: {
           // @ts-expect-error: todo
-          dateDebut: dateDebutA2.toISO(),
+          dateDebut: dateDebutA2,
           // @ts-expect-error: todo
-          dateFin: dateFinA2.toISO(),
+          dateFin: dateFinA2,
           taux: selectedTaux21,
           tauxMinimal: taux21,
           typeSalaire: "SMIC",
@@ -515,21 +492,17 @@ export const buildRemuneration = (data) => {
   if (
     isChangingTaux(ageA3, ageA4) &&
     !finRemuneration &&
-    // @ts-expect-error: todo
-    !(isAnniversaireInLastMonth && dateFinContrat.get("year") === dateFinA3.get("year"))
+    !(isAnniversaireInLastMonth && getYear(dateFinContrat) === getYear(dateFinA3))
   ) {
-    // @ts-expect-error: todo
-    const dateDebut32 = anniversaireA3.set({ day: 1, month: anniversaireA3.get("month") + 1 });
-    const dateFin31 = dateDebut32.minus({ days: 1 });
+    const dateDebut32 = setMonth(setDay(anniversaireA3, 1), getMonth(anniversaireA3) + 1);
+    const dateFin31 = subDays(dateDebut32, 1);
 
     if (dateFin31 >= dateFinContrat) {
       finRemuneration = true;
       result3 = {
         31: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutA3.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinContrat.toISO(),
+          dateDebut: format(dateDebutA3, "yyyy-MM-dd"),
+          dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
           typeSalaire: "SMIC",
@@ -541,18 +514,16 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result3 = {
         31: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutA3.toISO(),
-          dateFin: dateFin31.toISO(),
+          dateDebut: format(dateDebutA3, "yyyy-MM-dd"),
+          dateFin: format(dateFin31, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
           typeSalaire: "SMIC",
           salaireBrut: ceilUp((SMIC * selectedTaux31) / 100),
         },
         32: {
-          dateDebut: dateDebut32.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinContrat.toISO(),
+          dateDebut: format(dateDebut32, "yyyy-MM-dd"),
+          dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux32,
           tauxMinimal: taux32,
           typeSalaire: "SMIC",
@@ -562,18 +533,16 @@ export const buildRemuneration = (data) => {
     } else {
       result3 = {
         31: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutA3.toISO(),
-          dateFin: dateFin31.toISO(),
+          dateDebut: format(dateDebutA3, "yyyy-MM-dd"),
+          dateFin: format(dateFin31, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
           typeSalaire: "SMIC",
           salaireBrut: ceilUp((SMIC * selectedTaux31) / 100),
         },
         32: {
-          dateDebut: dateDebut32.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinA3.toISO(),
+          dateDebut: format(dateDebut32, "yyyy-MM-dd"),
+          dateFin: format(dateFinA3, "yyyy-MM-dd"),
           taux: selectedTaux32,
           tauxMinimal: taux32,
           typeSalaire: "SMIC",
@@ -586,10 +555,8 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result3 = {
         31: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutA3.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinContrat.toISO(),
+          dateDebut: format(dateDebutA3, "yyyy-MM-dd"),
+          dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
           typeSalaire: "SMIC",
@@ -600,10 +567,8 @@ export const buildRemuneration = (data) => {
     } else {
       result3 = {
         31: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutA3.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinA3.toISO(),
+          dateDebut: format(dateDebutA3, "yyyy-MM-dd"),
+          dateFin: format(dateFinA3, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
           typeSalaire: "SMIC",
@@ -626,18 +591,15 @@ export const buildRemuneration = (data) => {
   const selectedTaux42 = getTaux(4.2, taux42);
 
   if (isChangingTaux(ageA4, ageA5) && !finRemuneration && !isAnniversaireInLastMonth) {
-    // @ts-expect-error: todo
-    const dateDebut42 = anniversaireA4.set({ day: 1, month: anniversaireA4.get("month") + 1 });
-    const dateFin41 = dateDebut42.minus({ days: 1 });
+    const dateDebut42 = setMonth(setDay(anniversaireA4, 1), getMonth(anniversaireA4) + 1);
+    const dateFin41 = subDays(dateDebut42, 1);
 
     if (dateFin41 >= dateFinContrat) {
       finRemuneration = true;
       result4 = {
         41: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutA4.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinContrat.toISO(),
+          dateDebut: format(dateDebutA4, "yyyy-MM-dd"),
+          dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux41,
           tauxMinimal: taux41,
           typeSalaire: "SMIC",
@@ -648,18 +610,16 @@ export const buildRemuneration = (data) => {
     } else {
       result4 = {
         41: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutA4.toISO(),
-          dateFin: dateFin41.toISO(),
+          dateDebut: format(dateDebutA4, "yyyy-MM-dd"),
+          dateFin: format(dateFin41, "yyyy-MM-dd"),
           taux: selectedTaux41,
           tauxMinimal: taux41,
           typeSalaire: "SMIC",
           salaireBrut: ceilUp((SMIC * selectedTaux41) / 100),
         },
         42: {
-          dateDebut: dateDebut42.toISO(),
-          // @ts-expect-error: todo
-          dateFin: dateFinContrat.toISO(),
+          dateDebut: format(dateDebut42, "yyyy-MM-dd"),
+          dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux42,
           tauxMinimal: taux42,
           typeSalaire: "SMIC",
@@ -670,10 +630,8 @@ export const buildRemuneration = (data) => {
   } else if (!finRemuneration) {
     result4 = {
       41: {
-        // @ts-expect-error: todo
-        dateDebut: dateDebutA4.toISO(),
-        // @ts-expect-error: todo
-        dateFin: dateFinContrat.toISO(),
+        dateDebut: format(dateDebutA4, "yyyy-MM-dd"),
+        dateFin: format(dateFinContrat, "yyyy-MM-dd"),
         taux: selectedTaux41,
         tauxMinimal: taux41,
         typeSalaire: "SMIC",

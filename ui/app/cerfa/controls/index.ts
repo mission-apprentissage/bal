@@ -30,6 +30,7 @@ interface ControlResult {
   cache?: string;
   error?: string;
   warning?: string;
+  reset?: boolean;
 }
 
 export interface CerfaControl {

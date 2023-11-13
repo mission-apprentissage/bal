@@ -3,9 +3,8 @@ import { Typography } from "@mui/material";
 import { FC } from "react";
 import { FieldValues, UseFormRegisterReturn, UseFormReturn } from "react-hook-form";
 
-import { CerfaControl } from "../../../controls";
-import cerfaSchema, { CerfaField } from "../../../utils/cerfaSchema";
-import { getFieldStateFromFormState } from "../../../utils/form.utils";
+import { CerfaField } from "../../../utils/cerfaSchema";
+import { getFieldDeps, getFieldStateFromFormState, validateField } from "../../../utils/form.utils";
 import ConsentInput from "./ConsentInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
@@ -31,10 +30,9 @@ interface Props {
   fieldMethods: UseFormReturn<FieldValues, any, undefined>;
   fieldSchema: CerfaField;
   inputProps?: UseFormRegisterReturn;
-  controls: CerfaControl[];
 }
 
-export type InputFieldProps = Omit<Props, "fieldType" | "controls"> & Pick<InputProps, "state" | "stateRelatedMessage">;
+export type InputFieldProps = Omit<Props, "fieldType"> & Pick<InputProps, "state" | "stateRelatedMessage">;
 
 const TypesMapping: Record<FieldType, FC<InputFieldProps>> = {
   text: TextInput,
@@ -48,7 +46,7 @@ const TypesMapping: Record<FieldType, FC<InputFieldProps>> = {
   consent: ConsentInput,
 } as const;
 
-const InputField: FC<Props> = ({ fieldType, controls, ...fieldProps }) => {
+const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
   const Component = TypesMapping[fieldType];
 
   if (!Component) {
@@ -59,36 +57,21 @@ const InputField: FC<Props> = ({ fieldType, controls, ...fieldProps }) => {
     );
   }
 
-  const { name, fieldMethods, fieldSchema } = fieldProps;
-  const deps = controls?.map((control) => control.deps).flat() ?? [];
+  const { name, fieldMethods, fieldSchema: initialFieldSchema } = fieldProps;
+
+  const fieldSchema = initialFieldSchema ?? {
+    fieldType: "text",
+  };
 
   const inputProps = fieldMethods.register(name, {
     required: fieldSchema.required && fieldSchema.requiredMessage,
-    // @ts-ignore
-    deps: [...new Set(deps)],
+    deps: getFieldDeps(name),
     validate: {
-      controls: async (value, formValues) => {
+      controls: async (_, formValues) => {
         try {
-          let error: string | undefined = undefined;
-
-          for (const control of controls ?? []) {
-            const validation = await control.process({ values: formValues, fields: cerfaSchema.fields });
-
-            if (validation?.error) {
-              error = validation.error;
-            }
-
-            if (validation?.cascade) {
-              Object.entries(validation.cascade).forEach(([fieldName, cascade]) => {
-                if (cascade?.value) {
-                  fieldMethods.setValue(fieldName, cascade.value);
-                }
-              });
-            }
-          }
-
-          return error;
+          return validateField(name, formValues, fieldMethods);
         } catch (e) {
+          console.error(e);
           return "Une erreur technique est survenue";
         }
       },
@@ -97,7 +80,15 @@ const InputField: FC<Props> = ({ fieldType, controls, ...fieldProps }) => {
 
   const { state, stateRelatedMessage } = getFieldStateFromFormState(fieldMethods.formState, name);
 
-  return <Component {...fieldProps} inputProps={inputProps} state={state} stateRelatedMessage={stateRelatedMessage} />;
+  return (
+    <Component
+      {...fieldProps}
+      fieldSchema={fieldSchema}
+      inputProps={inputProps}
+      state={state}
+      stateRelatedMessage={stateRelatedMessage}
+    />
+  );
 };
 
 export default InputField;
