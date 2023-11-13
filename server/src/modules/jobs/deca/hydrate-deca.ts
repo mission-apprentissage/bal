@@ -139,7 +139,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from: string; to: s
               ...ifDefined("denomination", contrat.employeur.denomination), // LBA
             },
             no_contrat: contrat.detailsContrat.noContrat, // TDB, LBA
-            type_contrat: contrat.detailsContrat.typeContrat, // TDB, LBA
+            ...ifDefined("type_contrat", contrat.detailsContrat.typeContrat), // TDB, LBA
             ...ifDefined("date_effet_rupture", contrat.rupture?.dateEffetRupture), // TDB, LBA
             ...ifDefined("dispositif", contrat.detailsContrat.dispositif), // LBA
             ...ifDefined("date_debut_contrat", contrat.detailsContrat.dateDebutContrat), // TDB, LBA
