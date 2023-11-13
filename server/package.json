@@ -29,6 +29,7 @@
     "@sentry/integrations": "^7.77.0",
     "@sentry/node": "^7.77.0",
     "@sentry/tracing": "^7.77.0",
+    "@supercharge/promise-pool": "^3.1.0",
     "axios": "^0.24.0",
     "axios-cache-interceptor": "^1.2.0",
     "axios-retry": "^3.8.0",

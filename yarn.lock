@@ -2493,6 +2493,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@supercharge/promise-pool@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@supercharge/promise-pool@npm:3.1.0"
+  checksum: 15c391bb592f552eb9c7d36467539256a752206bd59834e86171a4c8356e077bc774e0583e14e03fd1613de66dbf623f00777ec674d95242ae7ad7f43d74268c
+  languageName: node
+  linkType: hard
+
 "@swc/helpers@npm:0.5.1":
   version: 0.5.1
   resolution: "@swc/helpers@npm:0.5.1"
@@ -14007,6 +14014,7 @@ __metadata:
     "@sentry/integrations": ^7.77.0
     "@sentry/node": ^7.77.0
     "@sentry/tracing": ^7.77.0
+    "@supercharge/promise-pool": ^3.1.0
     "@types/bunyan": ^1.8.8
     "@types/bunyan-prettystream": ^0.1.32
     "@types/clamscan": ^2.0.4
