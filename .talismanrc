@@ -24,7 +24,7 @@ fileignoreconfig:
 - filename: .github/workflows/remove-preview.yml
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/.env_server
-  checksum: 6af84bb7aa4a9867d0fb6a0f73cf6f0325483c440dc8dc018c08a6d34d9eb48c
+  checksum: 507f894e9c00ea68cc041757ef12add648fc90d0409f9a2eab5c651e3da357bf
   ignore_detectors:
   - filename
 - filename: .infra/.env_ui
@@ -78,7 +78,7 @@ fileignoreconfig:
 - filename: .infra/vault/setup-local-env.sh
   checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: 3608bfabab27222796416187ec3d91a29ee4c0920bc57284874c51bd122b2be7
+  checksum: d0e1f275ac266e36e524c0e51286f11ffbac118daaaeb3a8d72e872f30568b7d
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:
@@ -88,6 +88,8 @@ fileignoreconfig:
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
   checksum: 6b3f6df5ce466087bbef64dd4bdf04a064aa1d49c464d93af04627632ccbab4d
+- filename: keyfile
+  checksum: ac6ecdc6b5f6de1e7179e4a142dc3e225c2721fd6b59518fa8517b7a2853e24f
 - filename: server/.env.local.example
   checksum: b760092fca0bbc8ba8c1d1d162b0461b992de867cbfde3dc4556226a1129e484
 - filename: server/.env.test
@@ -106,6 +108,8 @@ fileignoreconfig:
   checksum: dec754c2aa978bc61d75d53a1d3f65c4ff49a9a0f37b6302532b1c343d9adb25
 - filename: server/src/modules/data/seed/seed-preview.ts
   checksum: c63289b52d6565490c1fd8176b68af4268602c9a0d5f31126647caf4ba354534
+- filename: server/src/modules/jobs/deca/watcher.ts
+  checksum: 2e242c6633ddbc53d748c49a49c60a204d85994abd6e4a95a11aaccea4c5ec4d
 - filename: server/src/modules/server/admin/upload.routes.ts
   checksum: 6181bbebf722c704b7c86a19a3ac46d56ab0dc98efe7b0eaba230989b5a6354f
 - filename: server/src/modules/server/index.ts

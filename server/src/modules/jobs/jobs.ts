@@ -17,6 +17,7 @@ import { createUser } from "../actions/users.actions";
 import { cronsInit, cronsScheduler } from "./crons_actions";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
+import { hydrateDeca } from "./deca/hydrate-deca";
 import { addJob, executeJob } from "./jobs_actions";
 
 interface CronDef {
@@ -89,6 +90,9 @@ export async function runJob(job: IJobsCronTask | IJobsSimple): Promise<number> 
       case "generate:mailing-list":
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return handleMailingListJob(job.payload as any);
+
+      case "hydrate:deca":
+        return hydrateDeca(job.payload as any);
       default: {
         logger.warn(`Job not found ${job.name}`);
       }

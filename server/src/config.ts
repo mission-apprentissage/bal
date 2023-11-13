@@ -74,6 +74,13 @@ const config = {
     clientSecret: env.get("MNA_BAL_OPCO_EP_CLIENT_SECRET").default("").asString(),
     scope: env.get("MNA_BAL_OPCO_EP_SCOPE").default("").asString(),
   },
+  decaApi: {
+    endpoint: env.get("MNA_BAL_API_DECA_URL").required().asString(),
+    loginLba: env.get("MNA_BAL_API_DECA_LOGIN_LBA").required().asString(),
+    passwordLba: env.get("MNA_BAL_API_DECA_PASSWORD_LBA").required().asString(),
+    loginTdb: env.get("MNA_BAL_API_DECA_LOGIN_TDB").required().asString(),
+    passwordTdb: env.get("MNA_BAL_API_DECA_PASSWORD_TDB").required().asString(),
+  },
   clamav: {
     uri: env.get("MNA_BAL_CLAMAV_URI").default("localhost:3310").asString(),
   },

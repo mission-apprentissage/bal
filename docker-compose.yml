@@ -6,8 +6,10 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:27017:27017"
+    command: ["--replSet", "replica", "--bind_ip_all", "--keyFile", "/tmp/keyfile"]
     volumes:
       - bal_mongodb_data:/data
+      - ./keyfile:/tmp/keyfile
     healthcheck:
       test: ["CMD", "mongosh", "--eval", '''db.runCommand("ping").ok''', "--quiet"]
       interval: 10s
