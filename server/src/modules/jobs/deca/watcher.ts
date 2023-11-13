@@ -3,7 +3,6 @@ import { get } from "lodash-es";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
 async function processChangeEvent(event: any): Promise<void> {
-  console.log(event.updateDescription.updatedFields);
   const keys = Object.keys(event.updateDescription.updatedFields);
   for (const key of keys) {
     const previousValue = get(event.fullDocumentBeforeChange, key);
@@ -18,21 +17,20 @@ async function processChangeEvent(event: any): Promise<void> {
       //   op: event.operationType,
       time: event.clusterTime,
     };
-    console.log(log);
-    await getDbCollection("deca_history").insertOne(log);
+    await getDbCollection("decaHistory").insertOne(log);
   }
 }
 
-function getNext(asyncIte) {
+function getNext(asyncIte: any) {
   let timeoutID: undefined | NodeJS.Timeout;
-  const timeout: Promise<never> = new Promise((resolve) => {
+  const timeout: Promise<any> = new Promise((resolve) => {
     timeoutID = setTimeout(() => resolve(null), 1500);
   });
   return Promise.race([asyncIte.next(), timeout]).finally(() => clearTimeout(timeoutID));
 }
 
-async function startWatcher() {
-  const lastHistory = await getDbCollection("deca_history").findOne({}, { sort: { $natural: -1 } });
+async function createHistory() {
+  const lastHistory = await getDbCollection("decaHistory").findOne({}, { sort: { $natural: -1 } });
 
   const collection = await getDbCollection("deca");
 
@@ -73,41 +71,27 @@ async function startWatcher() {
     //   if (error.name === "MongoError") {
     //   }
     // });
-    const asyncIte = changeStream[Symbol.asyncIterator]();
 
-    const processNext = async (asyncIte) => {
-      const next = await getNext(asyncIte);
-      if (!next) return null;
-      await processChangeEvent(next);
-      return processNext(asyncIte);
-    };
-    await processNext(asyncIte);
-
-    const hasNext = await changeStream.tryNext();
-    if (hasNext) {
-      await processChangeEvent(hasNext);
-
-      let tokenTimeout = setTimeout(async () => {
-        console.log("Timeout close");
-        await changeStream.close();
-      }, 2000);
-      for await (const event of changeStream) {
-        clearTimeout(tokenTimeout);
-        await processChangeEvent(event);
-        tokenTimeout = setTimeout(async () => {
-          console.log("Timeout close");
-          await changeStream.close();
-        }, 1500);
-      }
-    } else if (!lastHistory) {
+    if (!lastHistory) {
       for await (const event of changeStream) {
         await processChangeEvent(event);
       }
+    } else {
+      const asyncIte = changeStream[Symbol.asyncIterator]();
+
+      const processNext: any = async (asyncIte: any) => {
+        const next = await getNext(asyncIte);
+        if (!next) return null;
+        await processChangeEvent(next.value);
+        return processNext(asyncIte);
+      };
+      await processNext(asyncIte);
     }
+
     await changeStream.close();
   } catch (error) {
     console.log(error);
   }
 }
 
-export { startWatcher };
+export { createHistory };

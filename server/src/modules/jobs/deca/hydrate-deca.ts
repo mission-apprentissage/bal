@@ -6,7 +6,7 @@ import { getAllContrats } from "@/common/apis/deca";
 import parentLogger from "@/common/logger";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
-import { startWatcher } from "./watcher";
+import { createHistory } from "./watcher";
 
 const logger = parentLogger.child({ module: "job:hydrate:deca" });
 const DATE_DEBUT_CONTRATS_DISPONIBLES = new Date("2022-06-07T00:00:00.000Z"); // Date de début de disponibilité des données dans l'API Deca
@@ -14,11 +14,6 @@ const NB_JOURS_MAX_PERIODE_FETCH = 60;
 
 const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
   return value ? { [key]: transform(value) } : {};
-};
-
-// eslint-disable-next-line unused-imports/no-unused-vars
-export const hydrateDeca = async ({ from, to, chunk = 1 }: { from: string; to: string; chunk: number }) => {
-  await startWatcher();
 };
 
 /**
@@ -30,7 +25,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from: string; to: s
  *    - from : depuis yyyy-MM-dd
  *    - to : jusqu'a yyyy-MM-dd
  */
-export const hydrateDeca2 = async ({ from, to, chunk = 1 }: { from: string; to: string; chunk: number }) => {
+export const hydrateDeca = async ({ from, to, chunk = 1 }: { from: string; to: string; chunk: number }) => {
   // Récupération de la date début / fin
   const dateDebutToFetch: Date = from
     ? new Date(`${from}T00:00:00.000Z`)
@@ -92,7 +87,9 @@ export const hydrateDeca2 = async ({ from, to, chunk = 1 }: { from: string; to: 
         );
         if (tdbContrat) {
           contrat = deepmerge(item, tdbContrat);
-          // tdbMap.delete({ noContrat: item.detailsContrat.noContrat, dateNaissance: item.alternant.dateNaissance });
+          tdbMap.delete(
+            JSON.stringify({ noContrat: item.detailsContrat.noContrat, dateNaissance: item.alternant.dateNaissance })
+          );
         }
 
         try {
@@ -173,6 +170,7 @@ export const hydrateDeca2 = async ({ from, to, chunk = 1 }: { from: string; to: 
       //   .process(async (currentContrat: any) => {
       //     await getDbCollection("contratsDeca").insertOne({ ...currentContrat, created_at: new Date() });
       //   });
+      await createHistory();
     } catch (err: any) {
       throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
     }
