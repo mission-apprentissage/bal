@@ -119,7 +119,7 @@ export const configureDbSchemaValidation = async (modelDescriptors: IModelDescri
               ...convertedSchema,
             },
           },
-          changeStreamPreAndPostImages: { enabled: true },
+          ...(collectionName === "deca" ? { changeStreamPreAndPostImages: { enabled: true } } : {}),
         });
       } catch (error) {
         captureException(error);
