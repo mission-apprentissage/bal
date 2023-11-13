@@ -8993,17 +8993,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-schema-to-ts@npm:^2.9.2":
-  version: 2.9.2
-  resolution: "json-schema-to-ts@npm:2.9.2"
-  dependencies:
-    "@babel/runtime": ^7.18.3
-    "@types/json-schema": ^7.0.9
-    ts-algebra: ^1.2.0
-  checksum: 64bf7226511a3719075d28e715fbd203576088b6ebcf494d6c5ee2bcf5b24d6081fa0cfce22ce254ad8798b7044603db4e4d19779c6f5765285fb9ddaa0756ef
-  languageName: node
-  linkType: hard
-
 "json-schema-traverse@npm:^0.4.1":
   version: 0.4.1
   resolution: "json-schema-traverse@npm:0.4.1"
@@ -14036,6 +14025,7 @@ __metadata:
     vitest: ^0.34.6
     xlsx: ^0.18.5
     zod: ^3.22.4
+    zod-mongodb-schema: ^1.0.0-next.3
   languageName: unknown
   linkType: soft
 
@@ -14073,7 +14063,6 @@ __metadata:
   dependencies:
     "@asteasolutions/zod-to-openapi": ^6.2.0
     bson: ^5.4.0
-    json-schema-to-ts: ^2.9.2
     lodash-es: ^4.17.21
     luhn: ^2.4.1
     mongodb: ^5.7.0
@@ -15186,13 +15175,6 @@ __metadata:
   version: 1.0.5
   resolution: "trough@npm:1.0.5"
   checksum: d6c8564903ed00e5258bab92134b020724dbbe83148dc72e4bf6306c03ed8843efa1bcc773fa62410dd89161ecb067432dd5916501793508a9506cacbc408e25
-  languageName: node
-  linkType: hard
-
-"ts-algebra@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "ts-algebra@npm:1.2.0"
-  checksum: 471d3a049dbceadf2355f980e4d0a4cba413b50e66f0c8fb5eece876c238f7d2a270e1c85aa9ebd04349ae70335715f8e6d87338fd8cf755d12e285e884b3d91
   languageName: node
   linkType: hard
 
@@ -16471,7 +16453,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod-to-json-schema@npm:3.21.4, zod-to-json-schema@npm:^3.17.1":
+"zod-mongodb-schema@npm:^1.0.0-next.3":
+  version: 1.0.0-next.3
+  resolution: "zod-mongodb-schema@npm:1.0.0-next.3"
+  dependencies:
+    json-schema: ^0.4.0
+    zod-to-json-schema: ^3.21.4
+  peerDependencies:
+    mongodb: ^6.2.0
+    zod: ^3.22.4
+  checksum: f056e6a406d12059103a05a8dfee41a824f8c1b3b649a84c2a356210568926e98c9cbf7903f4d0446bf6d5a8146f859ed38f2c3e751ba2ef183a2b5feb5dedae
+  languageName: node
+  linkType: hard
+
+"zod-to-json-schema@npm:3.21.4, zod-to-json-schema@npm:^3.17.1, zod-to-json-schema@npm:^3.21.4":
   version: 3.21.4
   resolution: "zod-to-json-schema@npm:3.21.4"
   peerDependencies:

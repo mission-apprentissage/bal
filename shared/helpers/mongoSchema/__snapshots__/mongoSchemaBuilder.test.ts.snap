@@ -7,7 +7,6 @@ exports[`zodToMongoSchema > should convert documentContents schema 1`] = `
   "properties": {
     "_id": {
       "bsonType": "objectId",
-      "description": "Identifiant unique",
     },
     "content": {
       "additionalProperties": true,
@@ -45,7 +44,6 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
   "properties": {
     "_id": {
       "bsonType": "objectId",
-      "description": "Identifiant unique",
     },
     "added_by": {
       "bsonType": "string",
@@ -134,7 +132,6 @@ exports[`zodToMongoSchema > should convert emailDenied schema 1`] = `
   "properties": {
     "_id": {
       "bsonType": "objectId",
-      "description": "Identifiant unique",
     },
     "created_at": {
       "bsonType": "date",
@@ -173,7 +170,6 @@ exports[`zodToMongoSchema > should convert events schema 1`] = `
       "properties": {
         "_id": {
           "bsonType": "objectId",
-          "description": "Identifiant unique",
         },
         "created_at": {
           "bsonType": "date",
@@ -316,7 +312,6 @@ exports[`zodToMongoSchema > should convert jobs schema 1`] = `
       "properties": {
         "_id": {
           "bsonType": "objectId",
-          "description": "Identifiant unique",
         },
         "created_at": {
           "bsonType": "date",
@@ -416,7 +411,6 @@ exports[`zodToMongoSchema > should convert jobs schema 1`] = `
       "properties": {
         "_id": {
           "bsonType": "objectId",
-          "description": "Identifiant unique",
         },
         "created_at": {
           "bsonType": "date",
@@ -469,7 +463,6 @@ exports[`zodToMongoSchema > should convert jobs schema 1`] = `
       "properties": {
         "_id": {
           "bsonType": "objectId",
-          "description": "Identifiant unique",
         },
         "created_at": {
           "bsonType": "date",
@@ -534,7 +527,6 @@ exports[`zodToMongoSchema > should convert organisations schema 1`] = `
   "properties": {
     "_id": {
       "bsonType": "objectId",
-      "description": "Identifiant unique",
     },
     "_meta": {
       "additionalProperties": true,
@@ -612,7 +604,6 @@ exports[`zodToMongoSchema > should convert persons schema 1`] = `
   "properties": {
     "_id": {
       "bsonType": "objectId",
-      "description": "Identifiant unique",
     },
     "_meta": {
       "additionalProperties": true,
@@ -686,7 +677,6 @@ exports[`zodToMongoSchema > should convert sessions schema 1`] = `
   "properties": {
     "_id": {
       "bsonType": "objectId",
-      "description": "Identifiant unique",
     },
     "created_at": {
       "bsonType": "date",
@@ -722,7 +712,6 @@ exports[`zodToMongoSchema > should convert users schema 1`] = `
   "properties": {
     "_id": {
       "bsonType": "objectId",
-      "description": "Identifiant unique",
     },
     "api_key": {
       "bsonType": "string",
