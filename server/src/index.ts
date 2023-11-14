@@ -8,11 +8,15 @@ import config from "@/config";
 import createGlobalServices from "@/services";
 
 import { initMailer } from "./common/services/mailer/mailer";
+import { setupJobProcessor } from "./modules/jobs/jobs";
 
 (async function () {
   try {
     await connectToMongodb(config.mongodb.uri);
     await configureDbSchemaValidation(modelDescriptors);
+
+    // We need to setup even for server to be able to call addJob
+    await setupJobProcessor();
 
     await createGlobalServices();
     await initMailer();

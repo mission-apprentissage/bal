@@ -1,4 +1,4 @@
-import { Filter, UpdateFilter, WithoutId } from "mongodb";
+import { Filter, ObjectId, UpdateFilter } from "mongodb";
 import { IPerson, PersonWithOrganisation } from "shared/models/person.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
@@ -29,17 +29,16 @@ const DEFAULT_UNWIND = {
 
 export const createPerson = async (data: ICreatePerson) => {
   const now = new Date();
-  const person: WithoutId<IPerson> = {
+  const person: IPerson = {
+    _id: new ObjectId(),
     ...data,
     updated_at: now,
     created_at: now,
   };
-  const { insertedId: personId } = await getDbCollection("persons").insertOne(person);
 
-  return {
-    ...person,
-    _id: personId,
-  };
+  await getDbCollection("persons").insertOne(person);
+
+  return person;
 };
 
 export const findPerson = async (filter: Filter<IPerson>): Promise<PersonWithOrganisation | null> => {

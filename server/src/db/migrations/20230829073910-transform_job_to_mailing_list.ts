@@ -1,5 +1,4 @@
 import { Db, MongoClient } from "mongodb";
-import { MAILING_LIST_STATUS } from "shared/models/mailingList.model";
 
 export const up = async (db: Db, _client: MongoClient) => {
   const jobs = await db.collection("jobs").find({ name: "generate:mailing-list" }).toArray();
@@ -10,7 +9,7 @@ export const up = async (db: Db, _client: MongoClient) => {
         source: job.payload.source,
         document_id: job.payload.document_id,
         added_by: job.payload.user_id,
-        status: MAILING_LIST_STATUS.DONE,
+        status: "done",
         campaign_name: "Voeux affelnet",
         email: "mail_responsable_1",
         secondary_email: "mail_responsable_2",

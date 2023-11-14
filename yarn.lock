@@ -8949,9 +8949,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"job-processor@npm:^1.0.0-next.5":
-  version: 1.0.0-next.5
-  resolution: "job-processor@npm:1.0.0-next.5"
+"job-processor@npm:^1.0.0-next.12":
+  version: 1.0.0-next.12
+  resolution: "job-processor@npm:1.0.0-next.12"
   dependencies:
     "@sentry/node": ^7.80.0
     cron-parser: ^4.9.0
@@ -8960,7 +8960,7 @@ __metadata:
     mongodb: "*"
     zod: ^3.0.0
     zod-mongodb-schema: ^1.0.0-next.3
-  checksum: 5d3cddf0078a53748588dcbb92a77ea870844eb3b26a9639de6f87e099209a7658e88e0ffeaf831a812dd84e2016f8eab87b4cfa8529e4ba0e804fbb8c2176b6
+  checksum: b58455461952f7dfc66f0b5af2f6242b033e5a7d88e9c3b42cf3bb6f12a084fd792f99d9577b6cdbbc0e46bbff4f5349151f7528f8f982857cd0343c7683f6f2
   languageName: node
   linkType: hard
 
@@ -11047,7 +11047,7 @@ __metadata:
     node-talisman: ^1.29.10
     prettier: ^3.0.3
     semantic-release: ^21.0.7
-    semantic-release-slack-bot: ^3.5.3
+    semantic-release-slack-bot: ^4.0.0
     typescript: ^5.1.6
     vite-tsconfig-paths: ^4.2.0
     vitest: ^0.34.2
@@ -13916,17 +13916,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semantic-release-slack-bot@npm:^3.5.3":
-  version: 3.5.3
-  resolution: "semantic-release-slack-bot@npm:3.5.3"
+"semantic-release-slack-bot@npm:^4.0.0":
+  version: 4.0.2
+  resolution: "semantic-release-slack-bot@npm:4.0.2"
   dependencies:
     "@semantic-release/error": ^2.2.0
     micromatch: 4.0.2
     node-fetch: ^2.3.0
     slackify-markdown: ^4.3.0
   peerDependencies:
-    semantic-release: ">=11.0.0 <20.0.0"
-  checksum: 8bc40d1d28555082a82623cb6b623833456483fd92e7cb9f83379a9d45ccad07131d55431b242e503df9fcc5b08cd4aa12e6e8482f51352f06df5dfa65ad6c67
+    semantic-release: ">=11.0.0"
+  checksum: 9af9e2c47920358069d8cdb06f2881b434326a850cc0751bdad1fabfabee23a7462bc858e8fe95dd940f4fd6e8324bda52ccaf57d4bc4141ee8de6e515fe90d4
   languageName: node
   linkType: hard
 
@@ -14068,7 +14068,7 @@ __metadata:
     fastify: ^4.21.0
     fastify-type-provider-zod: ^1.1.9
     iconv-lite: ^0.6.3
-    job-processor: ^1.0.0-next.5
+    job-processor: ^1.0.0-next.12
     json-schema: ^0.4.0
     jsonwebtoken: ^9.0.1
     lil-http-terminator: ^1.2.3

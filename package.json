@@ -87,7 +87,7 @@
     "node-talisman": "^1.29.10",
     "prettier": "^3.0.3",
     "semantic-release": "^21.0.7",
-    "semantic-release-slack-bot": "^3.5.3",
+    "semantic-release-slack-bot": "^4.0.0",
     "typescript": "^5.1.6",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^0.34.2"

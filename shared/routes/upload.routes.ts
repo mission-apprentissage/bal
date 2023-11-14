@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { zObjectId } from "../models/common";
-import { zDocumentPublic, zDocumentPublicWithJobs } from "../models/document.model";
+import { ZUploadDocumentPublic } from "../models/document.model";
 import { IRoutesDef } from "./common.routes";
 
 export const zUploadRoutes = {
@@ -10,7 +10,7 @@ export const zUploadRoutes = {
       method: "get",
       path: "/admin/documents",
       response: {
-        "200": z.array(zDocumentPublicWithJobs),
+        "200": z.array(ZUploadDocumentPublic),
       },
       securityScheme: {
         auth: "cookie-session",
@@ -44,7 +44,7 @@ export const zUploadRoutes = {
         .strict(),
       body: z.unknown(),
       response: {
-        "200": zDocumentPublic,
+        "200": ZUploadDocumentPublic,
       },
       securityScheme: {
         auth: "cookie-session",

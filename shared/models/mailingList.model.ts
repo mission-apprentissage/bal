@@ -4,12 +4,6 @@ import { z } from "zod";
 import { IModelDescriptor, zObjectId } from "./common";
 import { ZDocument } from "./document.model";
 
-export enum MAILING_LIST_STATUS {
-  PROCESSING = "processing",
-  DONE = "done",
-  ERROR = "error",
-}
-
 export const MAILING_LIST_MAX_ITERATION = 10;
 
 const collectionName = "mailingLists" as const;
@@ -22,7 +16,6 @@ const indexes: IModelDescriptor["indexes"] = [
 export const ZMailingList = z
   .object({
     _id: zObjectId,
-    status: z.enum([MAILING_LIST_STATUS.PROCESSING, MAILING_LIST_STATUS.DONE, MAILING_LIST_STATUS.ERROR]).optional(),
     campaign_name: z.string().describe("Nom de la campagne"),
     source: z.string().describe("Source de la campagne"),
     email: z.string().describe("Nom de la colonne email"),
@@ -67,8 +60,8 @@ export const ZMailingListWithDocument = ZMailingList.extend({
 export type IMailingList = z.output<typeof ZMailingList>;
 export type IMailingListJson = Jsonify<z.input<typeof ZMailingList>>;
 
-export type MailingListWithDocument = z.output<typeof ZMailingListWithDocument>;
-export type MailingListWithDocumentJson = Jsonify<z.input<typeof ZMailingListWithDocument>>;
+export type IMailingListWithDocument = z.output<typeof ZMailingListWithDocument>;
+export type IMailingListWithDocumentJson = Jsonify<z.input<typeof ZMailingListWithDocument>>;
 
 export default {
   zod: ZMailingList,

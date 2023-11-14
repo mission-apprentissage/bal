@@ -1,5 +1,5 @@
 import { captureException } from "@sentry/node";
-import { Collection, CollectionInfo, MongoClient, MongoServerError, WithoutId } from "mongodb";
+import { Collection, CollectionInfo, MongoClient, MongoServerError } from "mongodb";
 import { CollectionName, IModelDescriptor } from "shared/models/common";
 import { IDocumentMap, modelDescriptors } from "shared/models/models";
 import { zodToMongoSchema } from "zod-mongodb-schema";
@@ -54,7 +54,7 @@ export const getDatabase = () => {
   return ensureInitialization().db();
 };
 
-export const getDbCollection = <K extends CollectionName>(name: K): Collection<WithoutId<IDocumentMap[K]>> => {
+export const getDbCollection = <K extends CollectionName>(name: K): Collection<IDocumentMap[K]> => {
   return ensureInitialization().db().collection(name);
 };
 

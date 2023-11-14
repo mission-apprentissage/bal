@@ -3,11 +3,13 @@ import { captureException } from "@sentry/node";
 import chardet from "chardet";
 import { Options } from "csv-parse";
 import iconv from "iconv-lite";
-import { Document, Filter, FindOneAndUpdateOptions, FindOptions, ObjectId, UpdateFilter } from "mongodb";
+import { IJobsSimple } from "job-processor";
+import { Filter, FindOneAndUpdateOptions, FindOptions, ObjectId, UpdateFilter } from "mongodb";
 import { oleoduc, transformData, writeData } from "oleoduc";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
-import { IDocument, IDocumentWithJobs } from "shared/models/document.model";
+import { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
+import { IMailingList } from "shared/models/mailingList.model";
 import { Readable } from "stream";
 import { JsonObject } from "type-fest";
 
@@ -33,60 +35,33 @@ import { importOcapiatContent, IOcapiatParsedContentLine, parseOcapiatContentLin
 
 const testMode = config.env === "test";
 
-interface ICreate extends Omit<IDocument, "_id"> {
-  _id: ObjectId;
-}
-
-export const createDocument = async (data: ICreate): Promise<IDocument> => {
+export const createDocument = async <T extends IDocument>(data: Omit<T, "created_at" | "updated_at">): Promise<T> => {
   const now = new Date();
   const doc = {
     ...data,
     updated_at: now,
     created_at: now,
-  };
-  const { insertedId } = await getDbCollection("documents").insertOne(doc);
+  } as T;
 
-  return {
-    ...doc,
-    _id: insertedId,
-  };
+  await getDbCollection("documents").insertOne(doc);
+
+  return doc;
 };
 
-export const findDocument = async (
-  filter: Filter<IDocument>,
-  options?: FindOptions<IDocument>
-): Promise<IDocument | null> => {
-  return await getDbCollection("documents").findOne(filter, options);
+export const findDocument = async <T extends IDocument>(
+  filter: Filter<T>,
+  options?: FindOptions<T>
+): Promise<T | null> => {
+  // @ts-expect-error
+  return (await getDbCollection("documents").findOne(filter, options)) as T | null;
 };
 
-export const findDocuments = async (filter: Filter<IDocument>, options?: FindOptions<IDocument>) => {
-  const documents = await getDbCollection("documents").find<IDocument>(filter, options).toArray();
+export const findDocuments = async <T extends IDocument>(filter: Filter<T>, options?: FindOptions<T>): Promise<T[]> => {
+  // @ts-expect-error
+  const documents = await getDbCollection("documents").find<T>(filter, options).toArray();
 
-  return documents;
-};
-
-export const findDocumentsWithImportJob = async (filter: Filter<IDocument>, pipeline: Document[] = []) => {
-  const documents = await getDbCollection("documents")
-    .aggregate([
-      {
-        $lookup: {
-          from: "jobs",
-          localField: "_id",
-          foreignField: "payload.document_id",
-          as: "jobs",
-        },
-      },
-      {
-        $match: {
-          "jobs.name": "import:document",
-          ...filter,
-        },
-      },
-      ...pipeline,
-    ])
-    .toArray();
-
-  return documents as IDocumentWithJobs[];
+  // @ts-expect-error
+  return documents as Promise<T[]>;
 };
 
 export const updateDocument = async (
@@ -130,12 +105,12 @@ export const readDocumentContent = async (
 };
 
 export const saveDocumentsColumns = async () => {
-  const documents = await findDocuments({});
+  const documents = await findDocuments<IUploadDocument>({ kind: "upload" });
 
   await Promise.all(documents.map((document) => saveDocumentColumns(document)));
 };
 
-export const saveDocumentColumns = async (document: IDocument) => {
+export const saveDocumentColumns = async (document: IUploadDocument) => {
   let columns: string[] = [];
   try {
     await readDocumentContent(
@@ -170,7 +145,7 @@ export const saveDocumentColumns = async (document: IDocument) => {
 };
 
 export const getDocumentColumns = async (type: string): Promise<string[]> => {
-  const document = await findDocument({ type_document: type });
+  const document = await findDocument<IUploadDocument>({ kind: "upload", type_document: type });
 
   if (!document) {
     return [];
@@ -227,16 +202,15 @@ export const getDocumentSample = async (type: string): Promise<IDocumentContent[
     .toArray();
 };
 
-interface ICreateEmptyDocumentOptions {
+interface ICreateUploadDocumentOptions {
   type_document: string;
-  fileSize?: number;
+  fileSize: number;
   filename: `${string}.${IDocument["ext_fichier"]}`;
-  mimetype?: string;
-  createDocumentDb?: boolean;
-  delimiter?: string;
+  delimiter: string;
+  added_by: ObjectId;
 }
 
-export const createEmptyDocument = async (options: ICreateEmptyDocumentOptions) => {
+export const createUploadDocument = async (options: ICreateUploadDocumentOptions): Promise<IUploadDocument> => {
   const documentId = new ObjectId();
   const documentHash = crypto.generateKey();
   const path = `uploads/${documentId}/${options.filename}`;
@@ -247,47 +221,67 @@ export const createEmptyDocument = async (options: ICreateEmptyDocumentOptions) 
 
   const extFichier = options.filename.split(".").at(-1) as IDocument["ext_fichier"];
 
-  const document = await createDocument({
+  const document = await createDocument<IUploadDocument>({
     _id: documentId,
+    kind: "upload",
     type_document: options.type_document,
     ext_fichier: extFichier,
     nom_fichier: options.filename,
     chemin_fichier: path,
-    taille_fichier: options.fileSize || 0,
+    taille_fichier: options.fileSize,
+    lines_count: 0,
     import_progress: 0,
     delimiter: options.delimiter,
     hash_secret: documentHash,
     hash_fichier: "",
-    added_by: new ObjectId().toString(),
-    updated_at: new Date(),
-    created_at: new Date(),
+    added_by: options.added_by.toString(),
+    job_id: null,
+    job_status: "pending",
   });
+
   return document;
 };
 
-interface IUploadDocumentOptionsWithCreate {
-  type_document: string;
-  fileSize: number;
-  filename: `${string}.${IDocument["ext_fichier"]}`;
-  mimetype: string;
-  createDocumentDb: true;
-}
+export const createMailingListDocument = async (
+  mailingList: IMailingList,
+  sourceDocuments: IUploadDocument[]
+): Promise<IMailingListDocument> => {
+  const documentId = new ObjectId();
+  const filename = `${MAILING_LIST_DOCUMENT_PREFIX}-${mailingList.source}-${documentId}.csv`;
 
-interface IUploadDocumentOptionsWithoutCreate {
+  const document = await createDocument<IMailingListDocument>({
+    _id: documentId,
+    kind: "mailingList",
+    type_document: `${MAILING_LIST_DOCUMENT_PREFIX}-${mailingList.source}`,
+    ext_fichier: "csv",
+    nom_fichier: filename,
+    chemin_fichier: `uploads/${documentId}/${filename}`,
+    taille_fichier: 0,
+    lines_count: sourceDocuments.reduce((acc, sourceDocument) => {
+      const lines_count = sourceDocument.lines_count ?? 0;
+      return acc + lines_count;
+    }, 0),
+    process_progress: 0,
+    hash_secret: crypto.generateKey(),
+    hash_fichier: "",
+    added_by: mailingList.added_by,
+    job_id: null,
+    job_status: "pending",
+  });
+
+  return document;
+};
+
+interface IUploadDocumentOptions {
   mimetype: string;
-  createDocumentDb?: false | void;
 }
 
 export const uploadFile = async (
   added_by: string,
   stream: Readable,
-  documentId: ObjectId = new ObjectId(),
-  options: IUploadDocumentOptionsWithCreate | IUploadDocumentOptionsWithoutCreate
+  doc: IUploadDocument,
+  options: IUploadDocumentOptions
 ) => {
-  const doc = await findDocument({ _id: documentId });
-  if (!doc) {
-    throw new Error("Impossible de trouver le document");
-  }
   const documentHash = doc.hash_secret || crypto.generateKey();
   const path = doc.chemin_fichier;
 
@@ -326,34 +320,14 @@ export const uploadFile = async (
     throw Boom.badRequest("Le contenu du fichier est invalide");
   }
 
-  if (options.createDocumentDb) {
-    if (!options.filename) {
-      throw Boom.badRequest("Missing filename");
-    }
-    await createDocument({
-      _id: documentId,
-      type_document: options.type_document,
-      ext_fichier: options.filename.split(".").pop() as IDocument["ext_fichier"],
-      nom_fichier: options.filename,
-      chemin_fichier: path,
-      import_progress: 0,
-      taille_fichier: options.fileSize,
-      hash_secret: documentHash,
-      hash_fichier,
-      added_by,
-      updated_at: new Date(),
-      created_at: new Date(),
-    });
-  }
+  await updateDocument({ _id: doc._id }, { $set: { hash_fichier } });
 
   if (isCsv) {
     await checkCsvFile(doc);
   }
-
-  return documentId;
 };
 
-export const checkCsvFile = async (document: IDocument) => {
+export const checkCsvFile = async (document: IUploadDocument) => {
   await sleep(3000);
   await readDocumentContent(
     document,
@@ -420,8 +394,11 @@ export const extractDocumentContent = async ({
   );
 
   let importedLines = 0;
-  let importedLength = 0;
-  let currentPercent = 0;
+  let importedSize = 0;
+
+  const updateProgress = setInterval(() => {
+    updateImportProgress(document._id, importedLines, importedSize, document.taille_fichier);
+  }, 5_000);
 
   await readDocumentContent(
     document,
@@ -429,54 +406,39 @@ export const extractDocumentContent = async ({
       delimiter,
     },
     async (json: JsonObject) => {
-      importedLength += Buffer.byteLength(JSON.stringify(Object.values(json)).replace(/^\[(.*)\]$/, "$1"));
-      importedLines += 1;
-      currentPercent = await updateImportProgress(
-        document._id,
-        importedLines,
-        importedLength,
-        document.taille_fichier,
-        currentPercent
-      );
       await importDocumentContent(document, [json], formatter);
+      importedSize += Buffer.byteLength(JSON.stringify(Object.values(json)).replace(/^\[(.*)\]$/, "$1"));
+      importedLines += 1;
     }
   );
 
-  await updateDocument(
-    { _id: document._id },
-    {
-      $set: {
-        import_progress: 100,
-      },
-    }
-  );
+  clearInterval(updateProgress);
+
+  await updateImportProgress(document._id, importedLines, document.taille_fichier, document.taille_fichier);
   logger.info("conversion csv to json ended");
 };
 
 export const updateImportProgress = async (
   _id: ObjectId,
   importedLines: number,
-  importedLength: number,
-  totalLength: number,
-  currentPercent: number
+  importedSize: number,
+  totalSize: number
 ) => {
-  const step_precent = 2; // every 2%
-  let newCurrentPercent = (importedLength * 100) / totalLength;
-  if (newCurrentPercent - currentPercent < step_precent) {
-    // Do not update
-    return currentPercent;
+  if (importedSize === 0) {
+    return;
   }
+
+  const avgLineSize = importedSize / importedLines;
+  const estimatedLineProcessed = Math.floor(totalSize / avgLineSize);
   await updateDocument(
     { _id },
     {
       $set: {
         lines_count: importedLines,
-        import_progress: newCurrentPercent,
+        import_progress: estimatedLineProcessed,
       },
     }
   );
-  newCurrentPercent = newCurrentPercent > 100 ? 99 : newCurrentPercent;
-  return newCurrentPercent;
 };
 
 export const importDocumentContent = async <TFileLine = unknown, TContentLine = unknown>(
@@ -546,9 +508,37 @@ export const deleteDocumentById = async (documentId: ObjectId) => {
   await getDbCollection("documents").deleteOne({ _id: document._id });
 };
 
+export const onImportDocumentJobExited = async (job: IJobsSimple) => {
+  let status: IUploadDocument["job_status"] = "pending";
+  switch (job.status) {
+    case "errored":
+      status = "error";
+      break;
+    case "finished":
+      status = "done";
+      break;
+    case "pending":
+      status = "pending";
+      break;
+    case "running":
+    case "will_start":
+      status = "importing";
+      break;
+  }
+
+  await updateDocument(
+    { job_id: job._id.toString() },
+    {
+      job_status: status,
+      job_error: job.output?.error,
+    }
+  );
+};
+
 export const handleDocumentFileContent = async ({ document_id }: Record<"document_id", ObjectId>) => {
-  const document = await findDocument({
+  const document = await findDocument<IUploadDocument>({
     _id: document_id,
+    kind: "upload",
   });
   if (!document) {
     throw new Error("Processor > /document: Can't find document");

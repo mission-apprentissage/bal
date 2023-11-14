@@ -1,5 +1,6 @@
 import { captureException } from "@sentry/node";
 import { program } from "commander";
+import { addJob, startJobProcessor } from "job-processor";
 import HttpTerminator from "lil-http-terminator";
 import { ObjectId } from "mongodb";
 
@@ -11,7 +12,6 @@ import { closeMailer } from "./common/services/mailer/mailer";
 import { closeSentry, initSentryProcessor } from "./common/services/sentry/sentry";
 import { sleep } from "./common/utils/asyncUtils";
 import config from "./config";
-import { addJob, processor } from "./modules/jobs/jobs_actions";
 
 program
   .configureHelp({
@@ -34,16 +34,10 @@ program
 
 async function startProcessor(signal: AbortSignal) {
   logger.info(`Process jobs queue - start`);
-  if (config.env !== "local") {
-    await addJob({
-      name: "crons:init",
-      queued: true,
-    });
-  }
-
-  await processor(signal);
+  await startJobProcessor(signal);
   logger.info(`Processor shut down`);
 }
+
 function createProcessExitSignal() {
   const abortController = new AbortController();
 
