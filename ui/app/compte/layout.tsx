@@ -1,4 +1,5 @@
 "use client";
+import { Container } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { FC, PropsWithChildren } from "react";
 
@@ -13,7 +14,7 @@ const ProfilLayout: FC<PropsWithChildren> = ({ children }) => {
     return null;
   }
 
-  return <>{children}</>;
+  return <Container maxWidth="xl">{children}</Container>;
 };
 
 export default ProfilLayout;

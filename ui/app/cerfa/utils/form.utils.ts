@@ -92,3 +92,12 @@ export const getValues = (fields: any) => {
 };
 
 export const isEmptyValue = (value: any) => value === "" || value === undefined || value === null;
+
+export const downloadFile = (data: string, filename: string) => {
+  const a = document.createElement("a");
+  a.href = data;
+  a.download = filename;
+  a.click();
+
+  return a;
+};

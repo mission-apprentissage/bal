@@ -1,11 +1,14 @@
 "use client";
 
 import { fr } from "@codegouvfr/react-dsfr";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { Box } from "@mui/material";
 import { FC, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
+import { apiPost } from "../../../utils/api.utils";
 import { CERFA_STEPS } from "../utils/cerfa.utils";
+import { downloadFile } from "../utils/form.utils";
 import CerfaAccordionItem from "./CerfaAccordionItem";
 
 export interface CerfaForm {
@@ -47,8 +50,19 @@ const CerfaForm: FC = () => {
     console.log("submitted", { values, errors });
   };
 
+  const download = async () => {
+    const data = await apiPost("/v1/cerfa", { body: values });
+
+    downloadFile(data.content, "cerfa.pdf");
+  };
+
   return (
     <Box>
+      <Box mb={2}>
+        <Button type="button" onClick={download}>
+          Télécharger
+        </Button>
+      </Box>
       <div className={fr.cx("fr-accordions-group")}>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>

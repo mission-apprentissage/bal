@@ -13,7 +13,7 @@ export const idccControl: CerfaControl[] = [
       return {
         cascade: {
           "employeur.codeIdcc_special": { value: codeIdcc },
-          "employeur.libelleIdcc": { value: fields["employeur.libelleIdcc"].enum[index].trim() },
+          "employeur.libelleIdcc": { value: fields["employeur.libelleIdcc"].enum?.[index].trim() },
         },
       };
     },

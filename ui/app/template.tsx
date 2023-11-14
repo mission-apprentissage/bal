@@ -1,7 +1,7 @@
 "use client";
 
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
-import { Box, Container } from "@mui/material";
+import { Box } from "@mui/material";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
@@ -25,9 +25,7 @@ const RootTemplate: FC<Props> = ({ children }) => {
       <QueryClientProvider client={queryClient}>
         <MuiDsfrThemeProvider>
           <Header />
-          <Container maxWidth="xl">
-            <Box minHeight="60vh">{children}</Box>
-          </Container>
+          <Box minHeight="60vh">{children}</Box>
           <Footer />
         </MuiDsfrThemeProvider>
       </QueryClientProvider>

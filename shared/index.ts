@@ -7,6 +7,7 @@ import { zCoreRoutes } from "./routes/core.routes";
 import { zDocumentRoutes } from "./routes/document.routes";
 import { zUploadRoutes } from "./routes/upload.routes";
 import { zUserAdminRoutes, zUserRoutes } from "./routes/user.routes";
+import { zCerfaRoutes } from "./routes/v1/cerfa.route";
 import { zGeoRoutes } from "./routes/v1/geo.route";
 import { zNafRoutes } from "./routes/v1/naf.route";
 import { zSiretRoutes } from "./routes/v1/siret.route";
@@ -37,6 +38,7 @@ export const zRoutes = {
     ...zCoreRoutes.get,
     ...zUploadRoutes.get,
     ...zDocumentRoutes.get,
+    ...zCerfaRoutes.get,
     ...zSiretRoutes.get,
     ...zGeoRoutes.get,
     ...zTcoRoutes.get,
@@ -48,6 +50,7 @@ export const zRoutes = {
     ...zAuthRoutes.post,
     ...zCoreRoutes.post,
     ...zUploadRoutes.post,
+    ...zCerfaRoutes.post,
     ...zSiretRoutes.post,
     ...zGeoRoutes.post,
     ...zTcoRoutes.post,
@@ -59,6 +62,7 @@ export const zRoutes = {
     ...zAuthRoutes.put,
     ...zCoreRoutes.put,
     ...zUploadRoutes.put,
+    ...zCerfaRoutes.put,
     ...zSiretRoutes.put,
     ...zGeoRoutes.put,
     ...zTcoRoutes.put,
@@ -70,6 +74,7 @@ export const zRoutes = {
     ...zAuthRoutes.delete,
     ...zCoreRoutes.delete,
     ...zUploadRoutes.delete,
+    ...zCerfaRoutes.delete,
     ...zSiretRoutes.delete,
     ...zGeoRoutes.delete,
     ...zTcoRoutes.delete,
