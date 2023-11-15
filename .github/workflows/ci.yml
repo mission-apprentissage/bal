@@ -16,6 +16,10 @@ jobs:
         image: mongo:6.0.2-focal
         ports:
           - "27017:27017"
+        volumes:
+          - ./.infra/local/mongo_keyfile:/tmp/mongo_keyfile
+          - ./.infra/local/mongod.conf:/etc/mongod.conf
+
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
