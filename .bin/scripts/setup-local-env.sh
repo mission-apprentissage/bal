@@ -23,9 +23,9 @@ echo "NEXT_PUBLIC_API_PORT=5001" >> "${ROOT_DIR}/ui/.env"
 
 
 yarn
-chmod 600 "${ROOT_DIR}/local_mongo_keyfile"
+chmod 600 "${ROOT_DIR}/.infra/local/mongo_keyfile"
 yarn services:start
-docker compose exec -it mongodb mongosh --eval "try { rs.status().ok } catch (e) { if (e.code === 94) {rs.initiate();} else {throw e} }"
+yarn setup:mongodb
 yarn build:dev
 yarn cli migrations:up
 yarn cli indexes:recreate
