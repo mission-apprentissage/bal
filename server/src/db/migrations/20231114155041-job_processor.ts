@@ -114,8 +114,14 @@ export const up = async (db: Db, _client: MongoClient) => {
   }
 
   await db.collection("mailingLists").updateMany({}, { $unset: { status: 1 } });
-  await db.dropCollection("jobs");
-  await db.dropCollection("session");
+  const collections = await db.listCollections().toArray();
+  const collectionNames = collections.map((c) => c.name);
+  if (collectionNames.includes("jobs")) {
+    await db.dropCollection("jobs");
+  }
+  if (collectionNames.includes("session")) {
+    await db.dropCollection("session");
+  }
 };
 
 export const down = async (_db: Db, _client: MongoClient) => {};
