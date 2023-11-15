@@ -119,9 +119,7 @@ export const up = async (db: Db, _client: MongoClient) => {
   if (collectionNames.includes("jobs")) {
     await db.dropCollection("jobs");
   }
-  if (collectionNames.includes("session")) {
-    await db.dropCollection("session");
-  }
+  await db.collection("session").deleteMany({});
 };
 
 export const down = async (_db: Db, _client: MongoClient) => {};
