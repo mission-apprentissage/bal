@@ -2383,20 +2383,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/node@npm:^7.60.0, @sentry/node@npm:^7.77.0":
-  version: 7.77.0
-  resolution: "@sentry/node@npm:7.77.0"
-  dependencies:
-    "@sentry-internal/tracing": 7.77.0
-    "@sentry/core": 7.77.0
-    "@sentry/types": 7.77.0
-    "@sentry/utils": 7.77.0
-    https-proxy-agent: ^5.0.0
-  checksum: 11034db59a547f3b35208f601fa4704dc7ef6e1f9730136562c1764de8f7b286b355b701711febb44b972ed7009b3467c21ffda15f07024f7dee36979ca9e1c1
-  languageName: node
-  linkType: hard
-
-"@sentry/node@npm:^7.80.0":
+"@sentry/node@npm:^7.60.0, @sentry/node@npm:^7.77.0, @sentry/node@npm:^7.80.0":
   version: 7.80.0
   resolution: "@sentry/node@npm:7.80.0"
   dependencies:
@@ -2475,7 +2462,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/utils@npm:7.77.0, @sentry/utils@npm:^7.60.0":
+"@sentry/utils@npm:7.77.0":
   version: 7.77.0
   resolution: "@sentry/utils@npm:7.77.0"
   dependencies:
@@ -2484,7 +2471,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/utils@npm:7.80.0":
+"@sentry/utils@npm:7.80.0, @sentry/utils@npm:^7.60.0":
   version: 7.80.0
   resolution: "@sentry/utils@npm:7.80.0"
   dependencies:
