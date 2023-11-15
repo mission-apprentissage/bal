@@ -6,7 +6,7 @@ fileignoreconfig:
 - filename: .bin/scripts/deploy-log-encrypt.sh
   checksum: 8ebe245e2a3719defc295d0de3d02c42e2cb82cb2ecc9507ce0dd4273a428e5e
 - filename: .bin/scripts/setup-local-env.sh
-  checksum: f4b8a49c565031ecec4ad3a178fb336fd32d9553c6314d0eb70b1ad4ce8342fe
+  checksum: 54fd4e752443d273eefcc0cd03e8e19e373607a1d2d7d3b3e1b52114ebe86f5f
 - filename: .github/workflows/_deploy.yml
   checksum: bfbfdbf9032949561988a0961dce57f2e786716de5fa5b7e937d5d3a6e5a7aad
 - filename: .github/workflows/deploy_preview.yml

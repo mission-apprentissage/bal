@@ -43,7 +43,7 @@ jobs:
 
       - name: start mongodb service
         run: |
-          chmod 600 .infra/local/mongo_keyfile
+          chmod 400 .infra/local/mongo_keyfile
           docker compose up -d --wait mongodb
           yarn setup:mongodb
 
