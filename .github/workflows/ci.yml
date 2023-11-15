@@ -45,7 +45,7 @@ jobs:
         run: |
           chmod 400 .infra/local/mongo_keyfile
           id
-          chown root:root .infra/local/mongo_keyfile
+          sudo chown root:root .infra/local/mongo_keyfile
           docker compose up -d --wait mongodb
           yarn setup:mongodb
 
