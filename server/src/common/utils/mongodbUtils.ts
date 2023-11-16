@@ -1,8 +1,8 @@
 import { captureException } from "@sentry/node";
 import { Collection, CollectionInfo, MongoClient, MongoServerError, WithoutId } from "mongodb";
-import { zodToMongoSchema } from "shared/helpers/mongoSchema/mongoSchemaBuilder";
 import { CollectionName, IModelDescriptor } from "shared/models/common";
 import { IDocumentMap, modelDescriptors } from "shared/models/models";
+import { zodToMongoSchema } from "zod-mongodb-schema";
 
 import logger from "@/common/logger";
 
