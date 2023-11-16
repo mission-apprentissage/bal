@@ -62,7 +62,7 @@ export const ZUploadDocumentPublic = ZUploadDocument.omit({
   hash_secret: true,
 });
 
-export const ZMailingListDocumentPublic = ZUploadDocument.omit({
+export const ZMailingListDocumentPublic = ZMailingListDocument.omit({
   hash_fichier: true,
   hash_secret: true,
 });
@@ -79,6 +79,7 @@ export const toPublicDocument = <T extends IDocument>(
   document: T
 ): T extends IUploadDocument ? z.output<typeof ZUploadDocumentPublic> : z.output<typeof ZMailingListDocumentPublic> => {
   const { hash_fichier: _hash_fichier, hash_secret: _hash_secret, ...publicDocument } = document;
+  // @ts-expect-error invalid union support
   return document.kind === "upload"
     ? ZUploadDocumentPublic.parse(publicDocument)
     : ZMailingListDocumentPublic.parse(publicDocument);
