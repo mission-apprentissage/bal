@@ -112,7 +112,7 @@ const AdminImportPage = () => {
                 <>
                   En cours d'importation
                   <br />
-                  {` ${Math.ceil(value ?? 0)}%`}
+                  {`${row.taille_fichier ? Math.min(Math.ceil(((value ?? 0) / row.taille_fichier) * 100), 100) : 100}%`}
                 </>
               );
             },
@@ -123,8 +123,8 @@ const AdminImportPage = () => {
             headerName: "Actions",
             getActions: ({ row }) => {
               if (
-                row.import_progress !== row.lines_count &&
-                row.import_progress !== 0 // TODO This is a quick cleaning method but if delete and job running nned to send a kill sig to job
+                row.job_status !== "done" &&
+                row.job_status !== "error" // TODO This is a quick cleaning method but if delete and job running nned to send a kill sig to job
               )
                 return [];
 

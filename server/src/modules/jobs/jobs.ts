@@ -72,7 +72,7 @@ export async function setupJobProcessor() {
       // BELOW SPECIFIC TO PRODUCT
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       "import:document": {
-        handler: async (job) => handleDocumentFileContent(job.payload as any),
+        handler: async (job) => handleDocumentFileContent(job, job.payload as any),
         onJobExited: onImportDocumentJobExited,
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

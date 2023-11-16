@@ -397,7 +397,7 @@ export const extractDocumentContent = async ({
   let importedSize = 0;
 
   const updateProgress = setInterval(() => {
-    updateImportProgress(document._id, importedLines, importedSize, document.taille_fichier);
+    updateImportProgress(document._id, importedLines, importedSize);
   }, 5_000);
 
   await readDocumentContent(
@@ -414,28 +414,21 @@ export const extractDocumentContent = async ({
 
   clearInterval(updateProgress);
 
-  await updateImportProgress(document._id, importedLines, document.taille_fichier, document.taille_fichier);
+  await updateImportProgress(document._id, importedLines, document.taille_fichier);
   logger.info("conversion csv to json ended");
 };
 
-export const updateImportProgress = async (
-  _id: ObjectId,
-  importedLines: number,
-  importedSize: number,
-  totalSize: number
-) => {
+export const updateImportProgress = async (_id: ObjectId, importedLines: number, importedSize: number) => {
   if (importedSize === 0) {
     return;
   }
 
-  const avgLineSize = importedSize / importedLines;
-  const estimatedLineProcessed = Math.floor(totalSize / avgLineSize);
   await updateDocument(
     { _id },
     {
       $set: {
         lines_count: importedLines,
-        import_progress: estimatedLineProcessed,
+        import_progress: importedSize,
       },
     }
   );
@@ -535,37 +528,48 @@ export const onImportDocumentJobExited = async (job: IJobsSimple) => {
   );
 };
 
-export const handleDocumentFileContent = async ({ document_id }: Record<"document_id", ObjectId>) => {
+export const handleDocumentFileContent = async (job: IJobsSimple, { document_id }: Record<"document_id", ObjectId>) => {
   const document = await findDocument<IUploadDocument>({
     _id: document_id,
     kind: "upload",
   });
+
   if (!document) {
     throw new Error("Processor > /document: Can't find document");
   }
-  switch (document.type_document) {
-    case DOCUMENT_TYPES.DECA:
-      await extractDocumentContent({
-        document,
-        delimiter: "|",
-        formatter: parseContentLine,
-      });
-      break;
-    case DOCUMENT_TYPES.OCAPIAT:
-      await extractDocumentContent({
-        document,
-        formatter: parseOcapiatContentLine,
-      });
-      break;
-    case DOCUMENT_TYPES.CONSTRUCTYS:
-      await extractDocumentContent({
-        document,
-        formatter: parseConstructysContentLine,
-      });
-      break;
 
-    default:
-      await extractDocumentContent({ document, delimiter: document.delimiter ?? DEFAULT_DELIMITER });
-      break;
+  try {
+    await updateDocument({ _id: document._id }, { $set: { job_id: job._id.toString(), job_status: "importing" } });
+
+    switch (document.type_document) {
+      case DOCUMENT_TYPES.DECA:
+        await extractDocumentContent({
+          document,
+          delimiter: "|",
+          formatter: parseContentLine,
+        });
+        break;
+      case DOCUMENT_TYPES.OCAPIAT:
+        await extractDocumentContent({
+          document,
+          formatter: parseOcapiatContentLine,
+        });
+        break;
+      case DOCUMENT_TYPES.CONSTRUCTYS:
+        await extractDocumentContent({
+          document,
+          formatter: parseConstructysContentLine,
+        });
+        break;
+
+      default:
+        await extractDocumentContent({ document, delimiter: document.delimiter ?? DEFAULT_DELIMITER });
+        break;
+    }
+
+    await updateDocument({ _id: document._id }, { $set: { job_error: null, job_status: "done" } });
+  } catch (err) {
+    await updateDocument({ _id: document._id }, { $set: { job_error: err.stack, job_status: "error" } });
+    throw err;
   }
 };
