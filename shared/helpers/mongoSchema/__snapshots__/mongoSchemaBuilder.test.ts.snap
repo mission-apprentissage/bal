@@ -1,5 +1,334 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`zodToMongoSchema > should convert deca schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "alternant": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "adresse": {
+          "additionalProperties": false,
+          "bsonType": "object",
+          "properties": {
+            "code_postal": {
+              "bsonType": "string",
+              "description": "Le code postal de l'adresse",
+            },
+            "numero": {
+              "bsonType": "number",
+              "description": "Le numéro de l'adresse",
+            },
+            "voie": {
+              "bsonType": "string",
+              "description": "La voie de l'adresse",
+            },
+          },
+        },
+        "courriel": {
+          "bsonType": "string",
+          "description": "L'adresse email de l'alternant",
+        },
+        "date_naissance": {
+          "bsonType": "date",
+          "description": "La date de naissance de l'alternant",
+        },
+        "departement_naissance": {
+          "bsonType": "string",
+          "description": "Le département de naissance de l'alternant",
+        },
+        "derniere_classe": {
+          "bsonType": "string",
+          "description": "La dernière classe de l'apprenant",
+        },
+        "handicap": {
+          "bsonType": "bool",
+          "description": "Indique si l'alternant est identifié comme porteur d'un handicap",
+        },
+        "nationalite": {
+          "bsonType": "number",
+          "description": "Le code de la nationalité de l'alternant",
+        },
+        "nom": {
+          "bsonType": "string",
+          "description": "Le nom de l'alternant",
+        },
+        "prenom": {
+          "bsonType": "string",
+          "description": "Le prenom de l'alternant",
+        },
+        "sexe": {
+          "bsonType": "string",
+          "description": "Le sexe de l'alternant",
+        },
+        "telephone": {
+          "bsonType": "string",
+          "description": "Le numéro de téléphone de l'alternant",
+        },
+      },
+      "required": [
+        "nom",
+        "prenom",
+        "sexe",
+        "date_naissance",
+        "departement_naissance",
+      ],
+    },
+    "columns": {
+      "bsonType": "array",
+      "description": "TEST ARRAY ",
+      "items": {
+        "bsonType": "string",
+      },
+    },
+    "created_at": {
+      "bsonType": "date",
+      "description": "Date d'ajout en base de données",
+    },
+    "date_debut_contrat": {
+      "bsonType": "date",
+      "description": "La date de début du contrat",
+    },
+    "date_effet_avenant": {
+      "bsonType": "date",
+      "description": "La date d'effet de l'avenant du contrat",
+    },
+    "date_effet_rupture": {
+      "bsonType": "date",
+      "description": "La date d'effet de la rupture",
+    },
+    "date_fin_contrat": {
+      "bsonType": "date",
+      "description": "La date de fin du contrat",
+    },
+    "date_suppression": {
+      "bsonType": "date",
+      "description": "La date de suppression ?",
+    },
+    "dispositif": {
+      "bsonType": "string",
+      "description": "dispositif",
+    },
+    "employeur": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "adresse": {
+          "additionalProperties": false,
+          "bsonType": "object",
+          "properties": {
+            "code_postal": {
+              "bsonType": "string",
+              "description": "Le code postal de l'adresse",
+            },
+          },
+          "required": [
+            "code_postal",
+          ],
+        },
+        "code_idcc": {
+          "bsonType": "string",
+          "description": "Le code IDCC de l'employeur",
+        },
+        "courriel": {
+          "bsonType": "string",
+          "description": "Email de l’employeur",
+        },
+        "denomination": {
+          "bsonType": "string",
+          "description": "Denomination de l'employeur",
+        },
+        "naf": {
+          "bsonType": "string",
+          "description": "Code NAF de l’entreprise",
+        },
+        "nombre_de_salaries": {
+          "bsonType": "number",
+          "description": "Effectif salarié de l'entreprise",
+        },
+        "siret": {
+          "bsonType": "string",
+          "description": "N° SIRET de l'employeur",
+        },
+        "telephone": {
+          "bsonType": "string",
+          "description": "Téléphone de l'employeur",
+        },
+      },
+    },
+    "etablissement_formation": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "siret": {
+          "bsonType": "string",
+          "description": "Le siret de l'établissement de la formation",
+          "pattern": "^[0-9]{14}$",
+        },
+      },
+    },
+    "flag_correction": {
+      "bsonType": "bool",
+      "description": "Flag correction",
+    },
+    "formation": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "code_diplome": {
+          "bsonType": "string",
+          "description": "Le code diplôme de la formation",
+        },
+        "date_debut_formation": {
+          "bsonType": "date",
+          "description": "La date de début de la formation",
+        },
+        "date_fin_formation": {
+          "bsonType": "date",
+          "description": "La date de fin de la formation",
+        },
+        "intitule_ou_qualification": {
+          "bsonType": "string",
+          "description": "L'adresse email de l'alternant",
+        },
+        "rncp": {
+          "bsonType": "string",
+          "description": "Le code RNCP de la formation",
+        },
+        "type_diplome": {
+          "bsonType": "string",
+          "description": "Catégorie par niveau du Diplôme ou titre visé par l'Alternant",
+        },
+      },
+    },
+    "no_avenant": {
+      "bsonType": "string",
+      "description": "Le numéro de l'avenant du contrat",
+    },
+    "no_contrat": {
+      "bsonType": "string",
+      "description": "Le numéro du contrat",
+    },
+    "organisme_formation": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "siret": {
+          "bsonType": "string",
+          "description": "Le SIRET de l'organisme de formation principal",
+        },
+        "uai_cfa": {
+          "bsonType": "string",
+          "description": "L'UAI de l'organisme responsable",
+        },
+      },
+    },
+    "rupture_avant_debut": {
+      "bsonType": "bool",
+      "description": "rupture_avant_debut",
+    },
+    "statut": {
+      "bsonType": "string",
+      "description": "Le statut du contrat",
+    },
+    "type_contrat": {
+      "bsonType": "string",
+      "description": "Le type de contrat ou avenant doit correspondre à la situation du contrat (premier contrat, succession de contrats, avenants).",
+      "enum": [
+        "11",
+        "21",
+        "22",
+        "23",
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+      ],
+    },
+    "updated_at": {
+      "bsonType": "date",
+      "description": "Date de mise à jour en base de données",
+    },
+  },
+  "required": [
+    "_id",
+    "no_contrat",
+    "date_debut_contrat",
+    "date_fin_contrat",
+    "alternant",
+    "formation",
+    "organisme_formation",
+    "employeur",
+  ],
+}
+`;
+
+exports[`zodToMongoSchema > should convert decaHistory schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "created_at": {
+      "bsonType": "date",
+      "description": "Date d'ajout en base de données",
+    },
+    "docId": {
+      "bsonType": "objectId",
+    },
+    "from": {
+      "bsonType": "string",
+      "description": "Value from",
+    },
+    "key": {
+      "bsonType": "string",
+      "description": "Modified key",
+    },
+    "resumeToken": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "_data": {
+          "bsonType": "string",
+          "description": "Resume token",
+        },
+      },
+      "required": [
+        "_data",
+      ],
+    },
+    "time": {
+      "bsonType": "date",
+      "description": "Modified time",
+    },
+    "to": {
+      "bsonType": "string",
+      "description": "Value to",
+    },
+  },
+  "required": [
+    "_id",
+    "key",
+    "from",
+    "to",
+    "resumeToken",
+    "docId",
+    "time",
+  ],
+}
+`;
+
 exports[`zodToMongoSchema > should convert documentContents schema 1`] = `
 {
   "additionalProperties": false,

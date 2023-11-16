@@ -1,8 +1,3 @@
-import { exec as nodeexec } from "node:child_process";
-import util from "node:util";
-
-const exec = util.promisify(nodeexec);
-
 import { addJob, initJobProcessor } from "job-processor";
 
 import {
@@ -32,13 +27,11 @@ export async function setupJobProcessor() {
       config.env === "preview" || config.env === "local"
         ? {}
         : {
-            "Run daily jobs each day at 02h30": {
-              cron_string: "30 2 * * *",
-              handler: async () => {
-                const { stdout, stderr } = await exec("/opt/app/scripts/run-dummy-outside-job.sh");
-                logger.info("stdout:", stdout);
-                logger.error("stderr:", stderr);
-                return stderr ? 1 : 0;
+            "Mise à jour des contrats deca": {
+              cron_string: "30 1 * * *",
+              // handler: async (job) => hydrateDeca(job.payload as any)
+              handler: () => {
+                return Promise.resolve(1);
               },
             },
           },

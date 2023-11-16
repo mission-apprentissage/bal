@@ -1,4 +1,6 @@
 import { IModelDescriptor } from "./common";
+import decaModelDescriptor, { IDeca } from "./deca.model/deca.model";
+import decaHistoryModelDescriptor, { IDecaHistory } from "./deca.model/decaHistory.model";
 import documentsModelDescriptor, { IDocument } from "./document.model";
 import documentContentsModelDescriptor, { IDocumentContent } from "./documentContent.model";
 import emailDeniedModelDescriptor, { IEmailDenied } from "./emailDenied.model";
@@ -18,6 +20,8 @@ export const modelDescriptors: IModelDescriptor[] = [
   documentsModelDescriptor,
   documentContentsModelDescriptor,
   emailDeniedModelDescriptor,
+  decaModelDescriptor,
+  decaHistoryModelDescriptor,
 ];
 
 export type IDocumentMap = {
@@ -30,4 +34,6 @@ export type IDocumentMap = {
   documentContents: IDocumentContent;
   mailingLists: IMailingList;
   emailDenied: IEmailDenied;
+  deca: IDeca;
+  decaHistory: IDecaHistory;
 };
