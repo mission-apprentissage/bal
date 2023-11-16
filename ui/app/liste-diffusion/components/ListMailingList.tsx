@@ -64,16 +64,18 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             flex: 1,
           },
           {
-            field: "status",
+            field: "document",
             headerName: "Statut",
             width: 200,
             valueFormatter: ({ value }) => {
+              const status: string = value?.job_status ?? "";
               return (
                 {
                   processing: "En cours de génération",
                   done: "Terminé",
                   error: "Erreur",
-                }[value as string] ?? ""
+                  pending: "En attente",
+                }[status] ?? "En attente"
               );
             },
           },

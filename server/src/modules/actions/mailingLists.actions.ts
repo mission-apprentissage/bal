@@ -6,7 +6,7 @@ import { addJob, IJobsSimple } from "job-processor";
 import { Filter, FindCursor, FindOptions, ObjectId, Sort } from "mongodb";
 import { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
-import { IMailingList, MAILING_LIST_MAX_ITERATION } from "shared/models/mailingList.model";
+import { IMailingList, IMailingListWithDocument, MAILING_LIST_MAX_ITERATION } from "shared/models/mailingList.model";
 
 import logger from "@/common/logger";
 import * as crypto from "@/common/utils/cryptoUtils";
@@ -65,6 +65,47 @@ export const findMailingLists = async (filter: Filter<IMailingList>, options?: F
   return getDbCollection("mailingLists").find(filter, options).toArray();
 };
 
+export const findMailingListWithDocument = async (filter: Filter<IMailingList>) => {
+  return getDbCollection("mailingLists")
+    .aggregate<IMailingListWithDocument>([
+      { $match: filter },
+
+      {
+        $sort: { created_at: -1 },
+      },
+      {
+        $lookup: {
+          from: "documents",
+          as: "document",
+          let: {
+            document_id: "$document_id",
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: [
+                    {
+                      $toString: "$$ROOT._id",
+                    },
+                    "$$document_id",
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: {
+          path: "$document",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ])
+    .toArray();
+};
+
 export const updateMailingList = async (filter: Filter<IMailingList>, data: Partial<IMailingList>) => {
   return getDbCollection("mailingLists").updateOne(filter, {
     $set: { ...data, updated_at: new Date() },
@@ -110,7 +151,13 @@ export const onMailingListJobExited = async (job: IJobsSimple) => {
 
 export const handleMailingListJob = async (job: IJobsSimple, payload: IPayload) => {
   try {
-    return processMailingList(job, payload);
+    const mailingList = await findMailingList({
+      _id: new ObjectId(payload.mailing_list_id),
+    });
+    if (!mailingList) throw new Error("Mailing list not found");
+    const result = await processMailingList(job, mailingList);
+
+    return result;
   } catch (error) {
     logger.error(error);
     const mailingList = await findMailingList({
@@ -118,19 +165,13 @@ export const handleMailingListJob = async (job: IJobsSimple, payload: IPayload) 
     });
     const outputDocumentId = mailingList?.document_id ?? null;
     if (outputDocumentId) {
-      await updateDocument({ _id: new ObjectId(outputDocumentId) }, { $set: { status: "error" } });
+      await updateDocument({ _id: new ObjectId(outputDocumentId) }, { $set: { job_status: "error" } });
     }
     throw error;
   }
 };
 
-export const processMailingList = async (job: IJobsSimple, payload: IPayload) => {
-  const mailingList = await findMailingList({
-    _id: new ObjectId(payload.mailing_list_id),
-  });
-
-  if (!mailingList) throw new Error("Mailing list not found");
-
+export const processMailingList = async (job: IJobsSimple, mailingList: IMailingList) => {
   const sourceDocuments = await findDocuments<IUploadDocument>({
     type_document: mailingList.source,
     kind: "upload",
@@ -144,14 +185,18 @@ export const processMailingList = async (job: IJobsSimple, payload: IPayload) =>
       document_id: outputDocument._id.toString(),
     }
   );
+  await updateDocument(
+    { _id: outputDocument._id },
+    { $set: { process_progress: 0, job_id: job._id.toString(), job_status: "processing" } }
+  );
 
   const batchSize = LIMIT_TRAINING_LINKS_PER_REQUEST;
   let skip = 0;
   let hasMore = true;
   let processed = 0;
 
-  const updateProgress = setInterval(() => {
-    updateDocument({ _id: outputDocument._id }, { $set: { import_progress: processed } });
+  const updateProgress = setInterval(async () => {
+    await updateDocument({ _id: outputDocument._id }, { $set: { process_progress: processed } });
   }, 5_000);
 
   while (hasMore) {
@@ -177,7 +222,7 @@ export const processMailingList = async (job: IJobsSimple, payload: IPayload) =>
       // wait 5 seconds to make sure ovh has time to process the file before download
       await sleep(5000);
       clearInterval(updateProgress);
-      await updateDocument({ _id: outputDocument._id }, { $set: { import_progress: processed, status: "done" } });
+      await updateDocument({ _id: outputDocument._id }, { $set: { process_progress: processed, job_status: "done" } });
 
       logger.info("All documents retrieved");
     }

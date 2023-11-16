@@ -17,7 +17,7 @@ import {
   createMailingListFile,
   deleteMailingList,
   findMailingList,
-  findMailingLists,
+  findMailingListWithDocument,
 } from "../actions/mailingLists.actions";
 import { Server } from "./server";
 import { noop } from "./utils/upload.utils";
@@ -54,14 +54,9 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const user = getUserFromRequest(request, zRoutes.get["/mailing-lists"]);
 
-      const mailingLists = await findMailingLists(
-        {
-          added_by: user._id.toString(),
-        },
-        {
-          sort: { created_at: -1 },
-        }
-      );
+      const mailingLists = await findMailingListWithDocument({
+        added_by: user._id.toString(),
+      });
 
       return response.status(200).send(mailingLists);
     }
@@ -111,8 +106,6 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       if (!mailingList) {
         throw Boom.forbidden("Forbidden");
       }
-
-      // TODO: Check if job is alright
 
       const document = mailingList.document_id
         ? await findDocument<IMailingListDocument>({
