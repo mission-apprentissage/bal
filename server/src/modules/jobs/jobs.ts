@@ -25,7 +25,10 @@ interface CronDef {
 export const CronsMap = {
   "Mise à jour des contrats deca": {
     cron_string: "30 1 * * *",
-    handler: () => addJob({ name: "hydrate:deca", payload: {} }),
+    // handler: () => addJob({ name: "hydrate:deca", payload: {} }),
+    handler: () => {
+      return Promise.resolve(1);
+    },
   },
 } satisfies Record<CronName, Omit<CronDef, "name">>;
 
