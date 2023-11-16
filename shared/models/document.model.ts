@@ -62,13 +62,12 @@ export const ZUploadDocumentPublic = ZUploadDocument.omit({
   hash_secret: true,
 });
 
-export const zDocumentPublic = z.discriminatedUnion("kind", [
-  ZUploadDocumentPublic,
-  ZMailingListDocument.omit({
-    hash_fichier: true,
-    hash_secret: true,
-  }),
-]);
+export const ZMailingListDocumentPublic = ZUploadDocument.omit({
+  hash_fichier: true,
+  hash_secret: true,
+});
+
+export const zDocumentPublic = z.discriminatedUnion("kind", [ZUploadDocumentPublic, ZMailingListDocumentPublic]);
 
 export type IDocument = z.output<typeof ZDocument>;
 export type IUploadDocument = z.output<typeof ZUploadDocument>;
@@ -78,12 +77,11 @@ export type IUploadDocumentJson = Jsonify<z.input<typeof ZUploadDocumentPublic>>
 
 export const toPublicDocument = <T extends IDocument>(
   document: T
-): T extends IUploadDocument ? z.output<typeof ZUploadDocument> : z.output<typeof ZMailingListDocument> => {
+): T extends IUploadDocument ? z.output<typeof ZUploadDocumentPublic> : z.output<typeof ZMailingListDocumentPublic> => {
   const { hash_fichier: _hash_fichier, hash_secret: _hash_secret, ...publicDocument } = document;
-  // @ts-expect-error invalid union support
   return document.kind === "upload"
-    ? ZUploadDocument.parse(publicDocument)
-    : ZMailingListDocument.parse(publicDocument);
+    ? ZUploadDocumentPublic.parse(publicDocument)
+    : ZMailingListDocumentPublic.parse(publicDocument);
 };
 
 export default {
