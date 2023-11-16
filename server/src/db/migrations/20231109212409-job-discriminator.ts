@@ -7,6 +7,9 @@ export const up = async (db: Db, _client: MongoClient) => {
     },
     {
       $unset: { cron_string: 1 },
+    },
+    {
+      bypassDocumentValidation: true,
     }
   );
   await db.collection("jobs").updateMany(
@@ -16,6 +19,9 @@ export const up = async (db: Db, _client: MongoClient) => {
     {
       $set: { status: "active" },
       $unset: { sync: 1 },
+    },
+    {
+      bypassDocumentValidation: true,
     }
   );
   await db.collection("jobs").updateMany(
@@ -24,6 +30,9 @@ export const up = async (db: Db, _client: MongoClient) => {
     },
     {
       $unset: { sync: 1, cron_string: 1 },
+    },
+    {
+      bypassDocumentValidation: true,
     }
   );
 };
