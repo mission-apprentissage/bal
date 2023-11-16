@@ -6,7 +6,7 @@ fileignoreconfig:
 - filename: .bin/scripts/deploy-log-encrypt.sh
   checksum: 8ebe245e2a3719defc295d0de3d02c42e2cb82cb2ecc9507ce0dd4273a428e5e
 - filename: .bin/scripts/setup-local-env.sh
-  checksum: 4be792d2e9ed457f7e8a8edf2c7c89f4c0f13d7c1239aeaf3ab270910698a15f
+  checksum: 54fd4e752443d273eefcc0cd03e8e19e373607a1d2d7d3b3e1b52114ebe86f5f
 - filename: .github/workflows/_deploy.yml
   checksum: bfbfdbf9032949561988a0961dce57f2e786716de5fa5b7e937d5d3a6e5a7aad
 - filename: .github/workflows/deploy_preview.yml
@@ -24,7 +24,7 @@ fileignoreconfig:
 - filename: .github/workflows/remove-preview.yml
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/.env_server
-  checksum: 6af84bb7aa4a9867d0fb6a0f73cf6f0325483c440dc8dc018c08a6d34d9eb48c
+  checksum: 507f894e9c00ea68cc041757ef12add648fc90d0409f9a2eab5c651e3da357bf
   ignore_detectors:
   - filename
 - filename: .infra/.env_ui
@@ -61,6 +61,8 @@ fileignoreconfig:
   checksum: 9c543f5fbadcb0467b6ba063b1eda18e46091102fa54331ba0fc34902932c605
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: df2838c8e4fdb523d03cc6895f3ff4a7150db0c2ba5b2b40c6aa381c16e6dcce
+- filename: .infra/files/scripts/seed.sh
+  checksum: 4b09f45b68160012dc9732fa27df819a2dec1e56603f4e4ff0f1b9fd344092d7
 - filename: .infra/scripts/deploy-app.sh
   checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
 - filename: .infra/scripts/ovh/create-backup-partition.sh
@@ -78,7 +80,7 @@ fileignoreconfig:
 - filename: .infra/vault/setup-local-env.sh
   checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: 3608bfabab27222796416187ec3d91a29ee4c0920bc57284874c51bd122b2be7
+  checksum: b0e17ee2eed2f8ec75d7820efabecda88bc08bb2b47dbe2e22cd34194da89182
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:
@@ -88,10 +90,12 @@ fileignoreconfig:
   checksum: ba707b7a55a8ff6e3354ef68db2c72315e02db9f09d0db60e06cf39d1bddb88a
 - filename: git-hooks/prepare-release.sh
   checksum: 6b3f6df5ce466087bbef64dd4bdf04a064aa1d49c464d93af04627632ccbab4d
+- filename: keyfile
+  checksum: ac6ecdc6b5f6de1e7179e4a142dc3e225c2721fd6b59518fa8517b7a2853e24f
 - filename: server/.env.local.example
   checksum: b760092fca0bbc8ba8c1d1d162b0461b992de867cbfde3dc4556226a1129e484
 - filename: server/.env.test
-  checksum: f8600dd496bc029a84a59caed4a23c6c8d961a53151a941098d8c273b0d67f09
+  checksum: ffdff3097b04077a11a1e403ef5fb9d2622a49b8f5ee73493c705f2967feac7c
 - filename: server/config/config.ts
   checksum: dee90e5b9ea1162aaffc204bd46a7801f8abba89fddd3f7077990321299ff3bf
 - filename: server/dev/load-env.mjs
@@ -106,6 +110,8 @@ fileignoreconfig:
   checksum: dec754c2aa978bc61d75d53a1d3f65c4ff49a9a0f37b6302532b1c343d9adb25
 - filename: server/src/modules/data/seed/seed-preview.ts
   checksum: c63289b52d6565490c1fd8176b68af4268602c9a0d5f31126647caf4ba354534
+- filename: server/src/modules/jobs/deca/watcher.ts
+  checksum: 2e242c6633ddbc53d748c49a49c60a204d85994abd6e4a95a11aaccea4c5ec4d
 - filename: server/src/modules/server/admin/upload.routes.ts
   checksum: 6181bbebf722c704b7c86a19a3ac46d56ab0dc98efe7b0eaba230989b5a6354f
 - filename: server/src/modules/server/index.ts

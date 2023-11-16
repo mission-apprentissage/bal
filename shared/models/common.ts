@@ -11,7 +11,9 @@ export type CollectionName =
   | "documents"
   | "documentContents"
   | "mailingLists"
-  | "emailDenied";
+  | "emailDenied"
+  | "deca"
+  | "decaHistory";
 
 export interface IModelDescriptor {
   zod: ZodType;

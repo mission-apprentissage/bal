@@ -1,8 +1,4 @@
-import { exec as nodeexec } from "node:child_process";
-import util from "node:util";
-
 import { CronName, IJobsCronTask, IJobsSimple } from "shared/models/job.model";
-const exec = util.promisify(nodeexec);
 
 import {
   create as createMigration,
@@ -17,6 +13,7 @@ import { createUser } from "../actions/users.actions";
 import { cronsInit, cronsScheduler } from "./crons_actions";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
+import { hydrateDeca } from "./deca/hydrate-deca";
 import { addJob, executeJob } from "./jobs_actions";
 
 interface CronDef {
@@ -26,13 +23,11 @@ interface CronDef {
 }
 
 export const CronsMap = {
-  "Run daily jobs each day at 02h30": {
-    cron_string: "30 2 * * *",
-    handler: async () => {
-      const { stdout, stderr } = await exec("/opt/app/scripts/run-dummy-outside-job.sh");
-      logger.info("stdout:", stdout);
-      logger.error("stderr:", stderr);
-      return stderr ? 1 : 0;
+  "Mise à jour des contrats deca": {
+    cron_string: "30 1 * * *",
+    // handler: () => addJob({ name: "hydrate:deca", payload: {} }),
+    handler: () => {
+      return Promise.resolve(1);
     },
   },
 } satisfies Record<CronName, Omit<CronDef, "name">>;
@@ -89,6 +84,9 @@ export async function runJob(job: IJobsCronTask | IJobsSimple): Promise<number> 
       case "generate:mailing-list":
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return handleMailingListJob(job.payload as any);
+
+      case "hydrate:deca":
+        return hydrateDeca(job.payload as any);
       default: {
         logger.warn(`Job not found ${job.name}`);
       }

@@ -51,8 +51,10 @@ services:
           memory: 2g
     ports:
       - "127.0.0.1:27017:27017"
+    command: ["-f", "/etc/mongod/mongod.conf"]
     volumes:
       - /opt/app/data/mongodb/db:/data/db
+      - /opt/app/configs/mongodb:/etc/mongod
     healthcheck:
       test: ["CMD", "mongosh", "--eval", '''db.runCommand("ping").ok''', "--quiet"]
       interval: 10s

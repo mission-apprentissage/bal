@@ -11,7 +11,7 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ ended_at: 1 }, { expireAfterSeconds: 3600 * 24 * 90 }], // 3 mois
 ];
 
-const zCronName = () => z.enum(["Run daily jobs each day at 02h30"]).describe("Le nom de la tâche");
+const zCronName = () => z.enum(["Mise à jour des contrats deca"]).describe("Le nom de la tâche");
 
 export const ZJobSimple = z
   .object({
