@@ -7,7 +7,6 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
   "properties": {
     "_id": {
       "bsonType": "objectId",
-      "description": "Identifiant unique",
     },
     "alternant": {
       "additionalProperties": false,
@@ -280,7 +279,6 @@ exports[`zodToMongoSchema > should convert decaHistory schema 1`] = `
   "properties": {
     "_id": {
       "bsonType": "objectId",
-      "description": "Identifiant unique",
     },
     "created_at": {
       "bsonType": "date",
@@ -288,7 +286,6 @@ exports[`zodToMongoSchema > should convert decaHistory schema 1`] = `
     },
     "docId": {
       "bsonType": "objectId",
-      "description": "Identifiant unique",
     },
     "from": {
       "bsonType": "string",
