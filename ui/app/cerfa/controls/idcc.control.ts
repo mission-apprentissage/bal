@@ -12,7 +12,7 @@ export const idccControl: CerfaControl[] = [
 
       return {
         cascade: {
-          "employeur.codeIdcc_special": { value: codeIdcc },
+          "employeur.codeIdcc_special": { value: codeIdcc, cascade: false },
           "employeur.libelleIdcc": { value: fields["employeur.libelleIdcc"].enum?.[index].trim() },
         },
       };
@@ -30,7 +30,7 @@ export const idccControl: CerfaControl[] = [
 
       return {
         cascade: {
-          "employeur.codeIdcc": { value: codeIdcc },
+          "employeur.codeIdcc": { value: codeIdcc, cascade: false },
           "employeur.libelleIdcc": { value: libelleIdcc?.trim() },
         },
       };

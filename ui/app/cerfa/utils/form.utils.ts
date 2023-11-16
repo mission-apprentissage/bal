@@ -69,7 +69,8 @@ export const validateField = async (
     if (validation?.cascade) {
       Object.entries(validation.cascade).forEach(([fieldName, cascade]) => {
         if (cascade?.value) {
-          setValue(fieldName, cascade.value, { shouldValidate: true });
+          const shouldValidate = cascade?.cascade ?? true;
+          setValue(fieldName, cascade.value, { shouldValidate });
         }
         if (validation?.reset) {
           resetField(fieldName);

@@ -1,3 +1,4 @@
+import { INDICE_DE_REPETITION_OPTIONS } from "../components/blocks/domain/indiceRepetitionOptions";
 import { CerfaControl } from ".";
 import { fetchSiret } from "./utils/api.utils";
 
@@ -82,6 +83,9 @@ export const employerSiretLogic: CerfaControl = {
           locked: false,
         },
         "employeur.adresse.repetitionVoie": {
+          value: INDICE_DE_REPETITION_OPTIONS.find(
+            (option) => option.label.toLowerCase() === result.indice_repetition_voie
+          )?.value,
           reset: true,
           locked: false,
         },
@@ -102,7 +106,7 @@ export const employerSiretLogic: CerfaControl = {
           cascade: false,
         },
         "employeur.adresse.commune": {
-          value: result.commune_implantation_nom || undefined,
+          value: result.localite || undefined,
           locked: false,
         },
         "employeur.adresse.departement": {
