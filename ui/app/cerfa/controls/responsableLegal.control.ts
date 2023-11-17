@@ -9,7 +9,7 @@ export const responsableLegalControl: CerfaControl[] = [
       return {
         cascade: {
           "apprenti.apprentiMineurNonEmancipe":
-            values.apprenti.apprentiMineur === true ? { locked: false, reset: true } : { locked: true, value: false },
+            values.apprenti.apprentiMineur === "oui" ? { locked: false, reset: true } : { locked: true, value: false },
         },
       };
     },

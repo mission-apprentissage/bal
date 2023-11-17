@@ -12,11 +12,15 @@ const InputController: FC<Props> = ({ name }) => {
   const fieldMethods = useFormContext();
   const fieldSchema = cerfaSchema.fields[name];
 
+  const values = fieldMethods.watch();
+
+  const computedFieldSchema = { ...fieldSchema, ...fieldSchema?._init?.({ values }) };
+
   return (
     <InputField
       name={name}
       fieldType={fieldSchema?.fieldType ?? "text"}
-      fieldSchema={fieldSchema}
+      fieldSchema={computedFieldSchema}
       fieldMethods={fieldMethods}
     />
   );

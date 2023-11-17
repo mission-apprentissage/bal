@@ -29,10 +29,12 @@ interface Props {
   fieldType: FieldType;
   fieldMethods: UseFormReturn<FieldValues, any, undefined>;
   fieldSchema: CerfaField;
-  inputProps?: UseFormRegisterReturn;
 }
 
-export type InputFieldProps = Omit<Props, "fieldType"> & Pick<InputProps, "state" | "stateRelatedMessage">;
+export type InputFieldProps = Pick<Props, "name" | "fieldMethods" | "fieldSchema"> &
+  Pick<InputProps, "state" | "stateRelatedMessage"> & {
+    inputProps: UseFormRegisterReturn;
+  };
 
 const TypesMapping: Record<FieldType, FC<InputFieldProps>> = {
   text: TextInput,

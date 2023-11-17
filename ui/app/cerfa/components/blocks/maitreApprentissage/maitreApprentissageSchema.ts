@@ -1,10 +1,14 @@
+import { NIVEAUX_DIPLOMES } from "shared/constants/diplomes";
+
+import { CerfaField } from "../../../utils/cerfaSchema";
 import { nomPattern } from "../domain/nomPattern";
 
-export const maitreApprentissageSchema = {
+export const maitreApprentissageSchema: Record<string, CerfaField> = {
   "maitre1.nom": {
+    label: "Nom de naissance",
+    placeholder: "Exemple : Dupont",
     required: true,
-    label: "Nom de naissance:",
-    requiredMessage: "le nom du maître d'apprentissage est obligatoire",
+    requiredMessage: "Le nom du maître d'apprentissage est obligatoire",
     mask: "C",
     maskBlocks: [
       {
@@ -13,11 +17,19 @@ export const maitreApprentissageSchema = {
         pattern: nomPattern,
       },
     ],
+    messages: [
+      {
+        type: "assistive",
+        content:
+          "Le nom doit strictement correspondre à l'identité officielle du maître d'apprentissage (attention aux inversions). Le nom de naissance ou nom de famille est celui qui figure sur l’acte de naissance.",
+      },
+    ],
   },
   "maitre1.prenom": {
+    label: "Prénom",
+    placeholder: "Exemple : Claire",
     required: true,
-    label: "Prénom:",
-    requiredMessage: "le prénom du maître d'apprentissage est obligatoire",
+    requiredMessage: "Le prénom du maître d'apprentissage est obligatoire",
     mask: "C",
     maskBlocks: [
       {
@@ -28,54 +40,99 @@ export const maitreApprentissageSchema = {
     ],
   },
   "maitre1.dateNaissance": {
-    required: true,
+    label: "Date de naissance",
     fieldType: "date",
-    showInfo: true,
-    label: "Date de naissance :",
+    required: true,
     requiredMessage: "la date de naissance du maître d'apprentissage est obligatoire",
+    messages: [
+      { type: "regulatory", content: "Le maître d'apprentissage doit être majeur à la date d'exécution du contrat" },
+    ],
   },
   "maitre1.nir": {
+    label: "Numéro de sécurité sociale (NIR)",
     required: true,
-    label: "NIR",
-    requiredMessage: "le NIR du maître d'apprentissage est obligatoire",
+    requiredMessage: "n'est pas un numéro de sécurité sociale valide",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
+    messages: [
+      {
+        type: "assistive",
+        content: `Il s'agit du numéro de sécurité sociale.
+      Ce numéro est inscrit sur la carte vitale des personnes majeures, en dessous du nom et du prénom du porteur. 
+      Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes physiques.`,
+      },
+    ],
   },
   "maitre1.emploiOccupe": {
-    required: true,
     label: "Emploi occupé",
-    requiredMessage: "l'emploi occupé du maître d'apprentissage est obligatoire",
-  },
-  "maitre1.diplome": {
+    placeholder: "Exemple : Chaudronnier",
     required: true,
-    label: "Diplôme ou titre le plus élevé obtenu",
-    requiredMessage: "Le diplôme du maître d'apprentissage est obligatoire",
+    requiredMessage: "L'emploi occupé est obligatoire",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
+    messages: [
+      {
+        type: "regulatory",
+        content: `Le maître d'apprentissage doit justifier d'une formation et d'une expérience professionnelle minimales :
+      - 1 an d'exercice d'une activité professionnelle correspondant à la finalité du diplôme ou du titre préparé par l'apprenti, s'il est titulaire d'un diplôme ou d'un titre dans un domaine en rapport avec la qualification préparée par l'apprenti 
+      - 2 ans d'exercice d'une activité professionnelle correspondant à la finalité du diplôme ou du titre préparé par l'apprenti, s'il n'est pas titulaire d'un diplôme ou d'un titre dans un domaine en rapport avec la qualification préparée par l'apprenti.
+      Ceci à défaut de dispositions conventionnelles particulières applicables dans l'entreprise (code du travail, art. R6223-22).
+      `,
+      },
+    ],
   },
   "maitre1.niveauDiplome": {
+    label: "Niveau de diplôme ou titre le plus élevé obtenu",
     fieldType: "select",
     required: true,
-    label: "Niveau de diplôme ou titre le plus élevé obtenu",
     requiredMessage: "Le niveau de diplôme du maître d'apprentissage est obligatoire",
-    options: [
-      { value: 0, label: "0 - Aucun diplôme ou titre" },
-      { value: 3, label: "3 -  CAP, BEP " },
-      { value: 4, label: "4 - Baccalauréat " },
-      { value: 5, label: "5 - DEUG, BTS, DUT, DEUST " },
-      { value: 6, label: "6 - Licence, licence professionnelle, BUT, Maîtrise " },
+    options: NIVEAUX_DIPLOMES,
+  },
+  "maitre1.diplome": {
+    label: "Diplôme ou titre le plus élevé obtenu",
+    placeholder: "Exemple : BTS Assistance technique d'ingénieur",
+    required: true,
+    requiredMessage: "Le diplôme du maître d'apprentissage est obligatoire",
+    mask: "C",
+    maskBlocks: [
       {
-        value: 7,
-        label:
-          "7 - Master, diplôme d'études approfondies, diplôme d'études supérieures spécialisées, diplôme d'ingénieur",
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
       },
-      { value: 8, label: "8 - Doctorat, habilitation à diriger des recherches " },
     ],
   },
   "maitre1.courriel": {
-    required: true,
     label: "Courriel",
-    requiredMessage: "Le courriel du maître d'apprentissage est obligatoire",
+    placeholder: "Exemple : jf.martin@email.fr",
+    required: true,
+    fieldType: "email",
+    requiredMessage: "Le courriel de l'employeur est obligatoire",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
   },
+
   "maitre2.nom": {
-    label: "Nom de naissance:",
-    requiredMessage: "le nom du maître d'apprentissage est obligatoire",
+    label: "Nom de naissance",
+    placeholder: "Exemple : Dupont",
     mask: "C",
     maskBlocks: [
       {
@@ -84,10 +141,17 @@ export const maitreApprentissageSchema = {
         pattern: nomPattern,
       },
     ],
+    messages: [
+      {
+        type: "assistive",
+        content:
+          "Le nom doit strictement correspondre à l'identité officielle du maître d'apprentissage (attention aux inversions). Le nom de naissance ou nom de famille est celui qui figure sur l’acte de naissance.",
+      },
+    ],
   },
   "maitre2.prenom": {
-    label: "Prénom:",
-    requiredMessage: "le prénom du maître d'apprentissage est obligatoire",
+    label: "Prénom",
+    placeholder: "Exemple : Claire",
     mask: "C",
     maskBlocks: [
       {
@@ -98,50 +162,87 @@ export const maitreApprentissageSchema = {
     ],
   },
   "maitre2.dateNaissance": {
+    label: "Date de naissance",
     fieldType: "date",
-    showInfo: true,
-    label: "Date de naissance :",
-    requiredMessage: "la date de naissance du maître d'apprentissage est obligatoire",
+    messages: [
+      { type: "regulatory", content: "Le maître d'apprentissage doit être majeur à la date d'exécution du contrat" },
+    ],
   },
   "maitre2.nir": {
-    label: "NIR",
-    requiredMessage: "le NIR du maître d'apprentissage est obligatoire",
+    label: "Numéro de sécurité sociale (NIR)",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
+    messages: [
+      {
+        type: "assistive",
+        content: `Il s'agit du numéro de sécurité sociale.
+      Ce numéro est inscrit sur la carte vitale des personnes majeures, en dessous du nom et du prénom du porteur. 
+      Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes physiques.`,
+      },
+    ],
   },
   "maitre2.emploiOccupe": {
     label: "Emploi occupé",
-    requiredMessage: "l'emploi occupé du maître d'apprentissage est obligatoire",
+    placeholder: "Exemple : Chaudronnier",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
+    messages: [
+      {
+        type: "regulatory",
+        content: `Le maître d'apprentissage doit justifier d'une formation et d'une expérience professionnelle minimales :
+      - 1 an d'exercice d'une activité professionnelle correspondant à la finalité du diplôme ou du titre préparé par l'apprenti, s'il est titulaire d'un diplôme ou d'un titre dans un domaine en rapport avec la qualification préparée par l'apprenti 
+      - 2 ans d'exercice d'une activité professionnelle correspondant à la finalité du diplôme ou du titre préparé par l'apprenti, s'il n'est pas titulaire d'un diplôme ou d'un titre dans un domaine en rapport avec la qualification préparée par l'apprenti.
+      Ceci à défaut de dispositions conventionnelles particulières applicables dans l'entreprise (code du travail, art. R6223-22).
+      `,
+      },
+    ],
+  },
+  "maitre2.niveauDiplome": {
+    label: "Niveau de diplôme ou titre le plus élevé obtenu",
+    fieldType: "select",
+    options: NIVEAUX_DIPLOMES,
   },
   "maitre2.diplome": {
     label: "Diplôme ou titre le plus élevé obtenu",
-    requiredMessage: "Le diplôme du maître d'apprentissage est obligatoire",
-  },
-  "maitre2.niveauDiplome": {
-    fieldType: "select",
-
-    label: "Niveau de diplôme ou titre le plus élevé obtenu",
-    requiredMessage: "Le niveau de diplôme du maître d'apprentissage est obligatoire",
-    options: [
-      { value: 0, label: "0 - Aucun diplôme ou titre" },
-      { value: 3, label: "3 -  CAP, BEP " },
-      { value: 4, label: "4 - Baccalauréat " },
-      { value: 5, label: "5 - DEUG, BTS, DUT, DEUST " },
-      { value: 6, label: "6 - Licence, licence professionnelle, BUT, Maîtrise " },
+    placeholder: "Exemple : BTS Assistance technique d'ingénieur",
+    mask: "C",
+    maskBlocks: [
       {
-        value: 7,
-        label:
-          "7 - Master, diplôme d'études approfondies, diplôme d'études supérieures spécialisées, diplôme d'ingénieur",
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
       },
-      { value: 8, label: "8 - Doctorat, habilitation à diriger des recherches " },
     ],
   },
   "maitre2.courriel": {
     label: "Courriel",
-    requiredMessage: "Le courriel du maître d'apprentissage est obligatoire",
+    placeholder: "Exemple : jf.martin@email.fr",
+    fieldType: "email",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
   },
   "employeur.attestationEligibilite": {
     fieldType: "consent",
     label:
-      "L'employeur atteste sur l'honneur que le(s) maître(s) d'apprentissage répond à l'ensemble des critères d'éligibilité à cette fonction.",
+      "L’employeur atteste sur l’honneur que le maître d’apprentissage répond à l’ensemble des critères d’éligibilité à cette fonction.",
     required: true,
     showInfo: true,
     requiredMessage:

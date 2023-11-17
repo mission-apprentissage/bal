@@ -123,7 +123,6 @@ export const employeurSchema: Record<string, CerfaField> = {
   "employeur.adresse.complement": {
     label: "Complément",
     placeholder: "Exemple : Hôtel de ville ; Entrée ; Bâtiment ; Etage ; Service",
-    requiredMessage: "le complement d'adress est obligatoire",
   },
   "employeur.adresse.codePostal": {
     label: "Code postal",
@@ -163,7 +162,7 @@ export const employeurSchema: Record<string, CerfaField> = {
     requiredMessage: "Le téléphone de l'employeur est obligatoire",
   },
   "employeur.courriel": {
-    label: "Courriel de l'employeur",
+    label: "Courriel",
     placeholder: "Exemple : contact@employeur.fr",
     required: true,
     fieldType: "email",

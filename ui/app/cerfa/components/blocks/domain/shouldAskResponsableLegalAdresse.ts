@@ -5,4 +5,4 @@ interface Form {
 }
 
 export const shouldAskResponsableLegalAdresse = ({ values }: Form) =>
-  shouldAskRepresentantLegal({ values }) && values.apprenti.responsableLegal.memeAdresse === false;
+  shouldAskRepresentantLegal({ values }) && values.apprenti.responsableLegal.memeAdresse === "non";

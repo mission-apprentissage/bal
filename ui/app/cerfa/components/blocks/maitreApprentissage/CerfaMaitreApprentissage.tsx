@@ -27,10 +27,10 @@ const CerfaMaitreApprentissage: FC = () => {
           <InputController name="maitre1.emploiOccupe" />
         </InputGroupItem>
         <InputGroupItem size={6}>
-          <InputController name="maitre1.diplome" />
+          <InputController name="maitre1.niveauDiplome" />
         </InputGroupItem>
         <InputGroupItem size={6}>
-          <InputController name="maitre1.niveauDiplome" />
+          <InputController name="maitre1.diplome" />
         </InputGroupItem>
         <InputGroupItem size={6}>
           <InputController name="maitre1.courriel" />
@@ -55,10 +55,10 @@ const CerfaMaitreApprentissage: FC = () => {
           <InputController name="maitre2.emploiOccupe" />
         </InputGroupItem>
         <InputGroupItem size={6}>
-          <InputController name="maitre2.diplome" />
+          <InputController name="maitre2.niveauDiplome" />
         </InputGroupItem>
         <InputGroupItem size={6}>
-          <InputController name="maitre2.niveauDiplome" />
+          <InputController name="maitre2.diplome" />
         </InputGroupItem>
         <InputGroupItem size={6}>
           <InputController name="maitre2.courriel" />

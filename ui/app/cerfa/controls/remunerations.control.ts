@@ -104,23 +104,24 @@ export const RemunerationsControl: CerfaControl[] = [
         return {
           cascade: {
             // @ts-expect-error: todo
-            [`${remuAnneePath}.dateDebut`]: { value: remunerationsAnnuelles[i].dateDebut },
+            [`${remuAnneePath}.dateDebut`]: { value: remunerationsAnnuelles[i].dateDebut, cascade: false },
             // @ts-expect-error: todo
-            [`${remuAnneePath}.dateFin`]: { value: remunerationsAnnuelles[i].dateFin },
+            [`${remuAnneePath}.dateFin`]: { value: remunerationsAnnuelles[i].dateFin, cascade: false },
             [`${remuAnneePath}.taux`]: {
               // @ts-expect-error: todo
               value: remunerationsAnnuelles[i].taux,
+              cascade: false,
               // @ts-expect-error: todo
               min: remunerationsAnnuelles[i].tauxMinimal,
             },
             // @ts-expect-error: todo
-            [`${remuAnneePath}.tauxMinimal`]: { value: remunerationsAnnuelles[i].tauxMinimal },
+            [`${remuAnneePath}.tauxMinimal`]: { value: remunerationsAnnuelles[i].tauxMinimal, cascade: false },
             // @ts-expect-error: todo
-            [`${remuAnneePath}.typeSalaire`]: { value: remunerationsAnnuelles[i].typeSalaire },
+            [`${remuAnneePath}.typeSalaire`]: { value: remunerationsAnnuelles[i].typeSalaire, cascade: false },
             // @ts-expect-error: todo
-            [`${remuAnneePath}.salaireBrut`]: { value: remunerationsAnnuelles[i].salaireBrut },
+            [`${remuAnneePath}.salaireBrut`]: { value: remunerationsAnnuelles[i].salaireBrut, cascade: false },
             // @ts-expect-error: todo
-            [`${remuAnneePath}.ordre`]: { value: remunerationsAnnuelles[i].ordre },
+            [`${remuAnneePath}.ordre`]: { value: remunerationsAnnuelles[i].ordre, cascade: false },
           },
         };
       },

@@ -24,7 +24,7 @@ export interface RadioOption {
 type SelectOptions = SelectOption[] | SelectNestedOption[] | RadioOption[];
 
 export interface CerfaField {
-  _init?: ({ value }) => CerfaField;
+  _init?: ({ values }) => CerfaField;
   required?: boolean;
   showInfo?: boolean;
   fieldType?: FieldType;

@@ -3,5 +3,5 @@ interface Form {
 }
 
 export const shouldAskRepresentantLegal = ({ values }: Form) => {
-  return values.apprenti.apprentiMineurNonEmancipe === true;
+  return values.apprenti.apprentiMineurNonEmancipe === "oui";
 };

@@ -1,152 +1,82 @@
-import { INDICE_DE_REPETITION_OPTIONS } from "../domain/indiceRepetitionOptions";
-import { shouldAskEtablissementFormation } from "./domain/shouldAskEtablissementFormation";
+import { DIPLOMES } from "shared/constants/diplomes";
 
-export const formationSchema = {
+import { CerfaField } from "../../../utils/cerfaSchema";
+
+export const formationSchema: Record<string, CerfaField> = {
   "organismeFormation.formationInterne": {
-    required: true,
+    label: "Le centre de formation est-il un CFA d’entreprise ?",
     fieldType: "radio",
+    required: true,
     completion: false,
-    label: "Le centre de formation est-il un CFA d'entreprise ?",
     requiredMessage: "Merci de préciser s'il sagit d'un CFA d'entreprise",
     options: [
       {
         label: "Oui",
-        value: true,
+        value: "oui",
       },
       {
         label: "Non",
-        value: false,
+        value: "non",
+      },
+    ],
+    messages: [
+      {
+        type: "assistive",
+        content: `Si votre apprenti suit sa formation théorique auprès d'un organisme extérieur à votre entreprise, l'établissement de formation n'est pas un CFA d'enterprise et vous devez cocher "non".`,
+      },
+      {
+        type: "bonus",
+        content: `Un CFA d'entreprise est interne à l’entreprise ou constitué par plusieurs entreprises partageant des perspectives communes d’évolution des métiers ou qui interviennent dans des secteurs d’activité complémentaires.
+        Les CFA d'entreprise sont souvent des organismes qui forment pour de grands groupes.`,
       },
     ],
   },
   "organismeFormation.siret": {
-    fieldType: "text",
+    label: "N° SIRET du CFA responsable",
+    placeholder: "Exemple : 98765432400019",
     required: true,
-    label: "N° SIRET du CFA responsable :",
     requiredMessage: "Le siret est obligatoire",
     validateMessage: "n'est pas un siret valide",
+    showInfo: true,
     mask: "C",
     maskBlocks: [
       {
         name: "C",
         mask: "Pattern",
-        pattern: "^\\d*$",
+        pattern: "^\\d{0,14}$",
+      },
+    ],
+    messages: [
+      {
+        type: "assistive",
+        content: `Vous devez renseigner le siret du CFA responsable. Le lieu principal de formation sera quant-à lui précisé dans d'autres champs ci-dessous.
+
+        Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).`,
       },
     ],
   },
-  "etablissementFormation.memeResponsable": {
-    fieldType: "consent",
-    required: true,
-    label: "Le lieu de formation est le même que l'organisme responsable",
-    options: [
-      {
-        label: "Oui",
-        value: true,
-      },
-      {
-        label: "Non",
-        value: false,
-      },
-    ],
-  },
-  "etablissementFormation.denomination": {
+  "organismeFormation.uaiCfa": {
+    label: "N° UAI du CFA",
+    placeholder: "Exemple : 0561910X",
     fieldType: "text",
     required: true,
-    completion: shouldAskEtablissementFormation,
-    label: "Dénomination du lieu de formation :",
-    requiredMessage: "la dénomination du lieu de formation est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
-  },
-  "etablissementFormation.siret": {
-    fieldType: "text",
-    completion: shouldAskEtablissementFormation,
-    label: "N° SIRET du lieu de formation :",
-    validateMessage: "n'est pas un siret valide",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d*$",
-      },
-    ],
-  },
-  "etablissementFormation.uaiCfa": {
-    fieldType: "text",
-    completion: shouldAskEtablissementFormation,
-    label: "N° UAI du CFA :",
+    showInfo: true,
+    requiredMessage: "Le N° UAI de l'organisme est obligatoire",
     validateMessage: "n'est pas un uai valide",
-  },
-  "etablissementFormation.adresse.numero": {
-    fieldType: "number",
-    required: false,
-    label: "N° :",
-    validateMessage: "le numéro de voie ne peut pas commencer par zéro",
-    mask: "C",
-    maskBlocks: [
+    messages: [
       {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d*$",
+        type: "bonus",
+        content:
+          "Chaque établissement scolaire (écoles, collèges, lycées, CFA, enseignement supérieur, public ou privé) est une Unité Administrative Immatriculée. Le numéro UAI est autocomplété ; il peut être recherché sur le catalogue des formations en apprentissage [lien https://catalogue.apprentissage.beta.gouv.fr]. Les 3 premiers numéros composant l'UAI correspondent au numéro de département de l'établissement.",
       },
     ],
   },
-  "etablissementFormation.adresse.repetitionVoie": {
-    fieldType: "select",
-    label: "Indice de répétition",
-    validateMessage: `n'est pas un indice de répétition valide`,
-    options: INDICE_DE_REPETITION_OPTIONS,
-  },
-  "etablissementFormation.adresse.voie": {
+  "organismeFormation.denomination": {
+    label: "Dénomination du CFA responsable",
+    placeholder: "Exemple : CFA Jean Moulin",
     fieldType: "text",
     required: true,
-    completion: shouldAskEtablissementFormation,
-    label: "Voie :",
-    requiredMessage: "le nom de voie est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
-  },
-  "etablissementFormation.adresse.complement": {
-    fieldType: "text",
-    required: false,
-    label: "Complément d'adresse (optionnel):",
-    requiredMessage: "le complement d'adress est obligatoire",
-  },
-  "etablissementFormation.adresse.codePostal": {
-    fieldType: "text",
-    required: true,
-    completion: shouldAskEtablissementFormation,
-    label: "Code postal :",
-    requiredMessage: "Le code postal est obligatoire",
-    validateMessage: "n'est pas un code postal valide",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d*$",
-      },
-    ],
-  },
-  "etablissementFormation.adresse.commune": {
-    fieldType: "text",
-    required: true,
-    completion: shouldAskEtablissementFormation,
-    label: "Commune: ",
-    requiredMessage: "la commune est obligatoire",
+    requiredMessage: "la dénomination du CFA responsable est obligatoire",
     mask: "C",
     maskBlocks: [
       {
@@ -157,9 +87,10 @@ export const formationSchema = {
     ],
   },
   "formation.rncp": {
+    label: "Code RNCP",
+    placeholder: "Exemple : 15151",
     fieldType: "text",
     required: true,
-    label: "Code RNCP : ",
     requiredMessage: "Le code RNCP est obligatoire",
     validateMessage: "n'est pas un code RNCP valide. Le code RNCP doit être définit et contenir entre 3 et 5 chiffres",
     mask: "RNCPX",
@@ -173,217 +104,52 @@ export const formationSchema = {
     unmask: false,
     minLength: 7,
     maxLength: 9,
+    messages: [
+      {
+        type: "bonus",
+        content: `Le code RNCP peut être recherché sur le site [France compétences](https://www.francecompetences.fr/recherche_certificationprofessionnelle/).
+      Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.`,
+      },
+    ],
   },
   "formation.codeDiplome": {
+    label: "Code diplôme (Éducation Nationale)",
+    placeholder: "Exemple : 32332111",
     fieldType: "text",
     required: true,
-    label: "Code diplôme (Éducation Nationale) : ",
     requiredMessage: "Le code diplôme est obligatoire",
     validateMessage:
       "n'est pas un code diplôme valide. Le code formation diplôme doit être au format 8 caractères ou 9 avec la lettre specialité",
-  },
-  "formation.typeDiplome": {
-    fieldType: "select",
-    required: true,
-    options: [
+    messages: [
       {
-        name: "Diplôme ou titre de niveau bac +5 et plus",
-        options: [
-          {
-            label: "80: Doctorat",
-            value: 80,
-          },
-          {
-            label: "71: Master professionnel/DESS",
-            value: 71,
-          },
-          {
-            label: "72: Master recherche/DEA",
-            value: 72,
-          },
-          {
-            label: "73: Master indifférencié",
-            value: 73,
-          },
-          {
-            label: "74: Diplôme d'ingénieur, diplôme d'école de commerce",
-            value: 74,
-          },
-          {
-            label: "79: Autre diplôme ou titre de niveau bac+5 ou plus",
-            value: 79,
-          },
-        ],
-      },
-      {
-        name: "Diplôme ou titre de niveau bac +3 et 4",
-        options: [
-          {
-            label: "61: 1 ère année de Master",
-            value: 61,
-          },
-          {
-            label: "62: Licence professionnelle",
-            value: 62,
-          },
-          {
-            label: "63: Licence générale",
-            value: 63,
-          },
-          {
-            label: "69: Autre diplôme ou titre de niveau bac +3 ou 4",
-            value: 69,
-          },
-        ],
-      },
-      {
-        name: "Diplôme ou titre de niveau bac +2",
-        options: [
-          {
-            label: "54: Brevet de Technicien Supérieur",
-            value: 54,
-          },
-          {
-            label: "55: Diplôme Universitaire de technologie",
-            value: 55,
-          },
-          {
-            label: "58: Autre diplôme ou titre de niveau bac+2",
-            value: 58,
-          },
-        ],
-      },
-      {
-        name: "Diplôme ou titre de niveau bac",
-        options: [
-          {
-            label: "41: Baccalauréat professionnel",
-            value: 41,
-          },
-          {
-            label: "42: Baccalauréat général",
-            value: 42,
-          },
-          {
-            label: "43: Baccalauréat technologique",
-            value: 43,
-          },
-          {
-            label: "49: Autre diplôme ou titre de niveau bac",
-            value: 49,
-          },
-        ],
-      },
-      {
-        name: "Diplôme ou titre de niveau CAP/BEP",
-        options: [
-          {
-            label: "33: CAP",
-            value: 33,
-          },
-          {
-            label: "34: BEP",
-            value: 34,
-          },
-          {
-            label: "35: Mention complémentaire",
-            value: 35,
-          },
-          {
-            label: "38: Autre diplôme ou titre de niveau CAP/BEP",
-            value: 38,
-          },
-        ],
-      },
-      {
-        name: "Aucun diplôme ni titre",
-        options: [
-          {
-            label: "25: Diplôme national du Brevet",
-            value: 25,
-          },
-          {
-            label: "26: Certificat de formation générale",
-            value: 26,
-          },
-          {
-            label: "13: Aucun diplôme ni titre professionnel",
-            value: 13,
-          },
-        ],
+        type: "bonus",
+        content: `Ce code à 8 caractères permet d'identifier un titre ou diplôme préparés par la voie de l'apprentissage, plus d'informations sur le site du [ministère de l'Education Nationale](https://www.education.gouv.fr/codification-des-formations-et-des-diplomes-11270).
+        Le code diplôme peut être recherché sur le catalogue des formations en apprentissage.
+        Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.`,
       },
     ],
-    label: "Diplôme ou titre visé par l'apprenti :",
-    requiredMessage: "Le diplôme ou titre visé est obligatoire",
-    validateMessage: " n'est pas un diplôme ou titre valide",
   },
   "formation.intituleQualification": {
     fieldType: "text",
     required: true,
-    label: "Intitulé précis :",
+    label: "Intitulé précis",
     requiredMessage: "L'intitulé du diplôme ou titre est obligatoire",
     validateMessage: " n'est pas un intitulé valide",
   },
-  "formation.dateDebutFormation": {
-    fieldType: "date",
+  "formation.typeDiplome": {
+    label: "Diplôme ou titre visé par l'apprenti",
+    fieldType: "select",
     required: true,
-    label: "Date de début du cycle de formation : ",
-    requiredMessage: "la date de début de cycle est obligatoire",
-    validateMessage: " n'est pas une date valide",
+    requiredMessage: "Le diplôme ou titre visé est obligatoire",
+    validateMessage: " n'est pas un diplôme ou titre valide",
+    options: DIPLOMES,
   },
-  "formation.dateFinFormation": {
-    fieldType: "date",
-    required: true,
-    label: "Date prévue de fin des épreuves ou examens : ",
-    requiredMessage: "la date de fin de cycle est obligatoire",
-    validateMessage: " n'est pas une date valide",
-  },
-  "formation.dureeFormationCalc": {},
-  "formation.dureeFormation": {
-    fieldType: "number",
-    required: true,
-    label: "Durée de la formation en heures :",
-    requiredMessage: "Le nombre d'heures de la formation est obligatoire",
-    validateMessage: " n'est pas un nombre d'heures valide",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d*$",
-      },
-    ],
-    min: 1,
-  },
-  "formation.dateObtentionDiplome": { fieldType: "date" },
-  "organismeFormation.denomination": {
-    fieldType: "text",
-    required: true,
-    label: "Dénomination du CFA responsable :",
-    requiredMessage: "la dénomination du CFA responsable est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
-  },
-  "organismeFormation.uaiCfa": {
-    fieldType: "text",
-    required: true,
-    showInfo: true,
-    label: "N° UAI du CFA :",
-    requiredMessage: "Le N° UAI de l'organisme est obligatoire",
-    validateMessage: "n'est pas un uai valide",
-  },
-  "organismeFormation.visaCfa": {
-    showInfo: true,
-  },
+
   "organismeFormation.adresse.numero": {
+    label: "N°",
+    placeholder: "Exemple : 1 ; 2",
+    precision: 0,
     fieldType: "number",
-    label: "N° :",
     validateMessage: "le numéro de voie ne peut pas commencer par zéro",
     mask: "C",
     maskBlocks: [
@@ -395,15 +161,20 @@ export const formationSchema = {
     ],
   },
   "organismeFormation.adresse.repetitionVoie": {
-    fieldType: "select",
     label: "Indice de répétition",
-    validateMessage: `n'est pas un indice de répétition valide`,
-    options: INDICE_DE_REPETITION_OPTIONS,
+    placeholder: "Exemple : BIS, A",
+    messages: [
+      {
+        type: "assistive",
+        content:
+          "Un indice de répétition est une mention qui complète un numéro de rue et permet de différencier plusieurs adresses portant le même numéro dans la même rue. Exemple :  bis, ter, quater, A, B, etc. sont des indices de répétition.",
+      },
+    ],
   },
   "organismeFormation.adresse.voie": {
-    fieldType: "text",
+    label: "Voie",
+    placeholder: "Exemple : RUE MICHELET",
     required: true,
-    label: "Voie :",
     requiredMessage: "le nom de voie est obligatoire",
     mask: "C",
     maskBlocks: [
@@ -415,14 +186,13 @@ export const formationSchema = {
     ],
   },
   "organismeFormation.adresse.complement": {
-    fieldType: "text",
-    label: "Complément d'adresse (optionnel):",
-    requiredMessage: "le complement d'adress est obligatoire",
+    label: "Complément",
+    placeholder: "Exemple : Hôtel de ville ; Entrée ; Bâtiment ; Etage ; Service",
   },
   "organismeFormation.adresse.codePostal": {
-    fieldType: "text",
+    label: "Code postal",
+    placeholder: "Exemple : 21000",
     required: true,
-    label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
     mask: "C",
@@ -430,14 +200,14 @@ export const formationSchema = {
       {
         name: "C",
         mask: "Pattern",
-        pattern: "^\\d*$",
+        pattern: "^\\d{0,5}$",
       },
     ],
   },
   "organismeFormation.adresse.commune": {
-    fieldType: "text",
+    label: "Commune",
+    placeholder: "Exemple : Dijon",
     required: true,
-    label: "Commune: ",
     requiredMessage: "la commune est obligatoire",
     mask: "C",
     maskBlocks: [
@@ -447,5 +217,199 @@ export const formationSchema = {
         pattern: "^.*$",
       },
     ],
+  },
+  "etablissementFormation.memeResponsable": {
+    fieldType: "radio",
+    required: true,
+    label: "Si le CFA responsable est le lieu de formation principal, cochez la case ci-contre",
+    options: [
+      {
+        label: "Oui",
+        value: "oui",
+      },
+      {
+        label: "Non",
+        value: "non",
+      },
+    ],
+  },
+  "etablissementFormation.siret": {
+    label: "N° SIRET CFA",
+    placeholder: "Exemple : 98765432400019",
+    requiredMessage: "Le siret est obligatoire",
+    validateMessage: "n'est pas un siret valide",
+    showInfo: true,
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d{0,14}$",
+      },
+    ],
+    messages: [
+      {
+        type: "assistive",
+        content: `Vous devez renseigner le siret du CFA responsable. Le lieu principal de formation sera quant-à lui précisé dans d'autres champs ci-dessous.
+
+        Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).`,
+      },
+    ],
+  },
+  "etablissementFormation.uaiCfa": {
+    label: "N° UAI du CFA",
+    placeholder: "Exemple : 0561910X",
+    fieldType: "text",
+    showInfo: true,
+    requiredMessage: "Le numéro UAI est obligatoire",
+    validateMessage: "Le numéro UAI n'est pas au format 8 chiffres + 1 lettre",
+    messages: [
+      {
+        type: "bonus",
+        content:
+          "Chaque établissement scolaire (écoles, collèges, lycées, CFA, enseignement supérieur, public ou privé) est une Unité Administrative Immatriculée. Le numéro UAI est autocomplété ; il peut être recherché sur le catalogue des formations en apprentissage [lien https://catalogue.apprentissage.beta.gouv.fr]. Les 3 premiers numéros composant l'UAI correspondent au numéro de département de l'établissement.",
+      },
+    ],
+  },
+  "etablissementFormation.denomination": {
+    label: "Dénomination du lieu de formation principal",
+    placeholder: "Exemple : CFA Jean Moulin",
+    fieldType: "text",
+    requiredMessage: "la dénomination du lieu de formation est obligatoire",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
+  },
+  "etablissementFormation.adresse.numero": {
+    label: "N°",
+    placeholder: "Exemple : 1 ; 2",
+    precision: 0,
+    fieldType: "number",
+    validateMessage: "le numéro de voie ne peut pas commencer par zéro",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
+  },
+  "etablissementFormation.adresse.repetitionVoie": {
+    label: "Indice de répétition",
+    placeholder: "Exemple : BIS, A",
+    messages: [
+      {
+        type: "assistive",
+        content:
+          "Un indice de répétition est une mention qui complète un numéro de rue et permet de différencier plusieurs adresses portant le même numéro dans la même rue. Exemple :  bis, ter, quater, A, B, etc. sont des indices de répétition.",
+      },
+    ],
+  },
+  "etablissementFormation.adresse.voie": {
+    label: "Voie",
+    placeholder: "Exemple : RUE MICHELET",
+    required: true,
+    requiredMessage: "le nom de voie est obligatoire",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
+  },
+  "etablissementFormation.adresse.complement": {
+    label: "Complément",
+    placeholder: "Exemple : Hôtel de ville ; Entrée ; Bâtiment ; Etage ; Service",
+  },
+  "etablissementFormation.adresse.codePostal": {
+    label: "Code postal",
+    placeholder: "Exemple : 21000",
+    required: true,
+    requiredMessage: "Le code postal est obligatoire",
+    validateMessage: "n'est pas un code postal valide",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d{0,5}$",
+      },
+    ],
+  },
+  "etablissementFormation.adresse.commune": {
+    label: "Commune",
+    placeholder: "Exemple : Dijon",
+    required: true,
+    requiredMessage: "la commune est obligatoire",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
+  },
+
+  "formation.dateDebutFormation": {
+    label: "Date de début de formation en CFA",
+    fieldType: "date",
+    required: true,
+    requiredMessage: "la date de début de cycle est obligatoire",
+    validateMessage: " n'est pas une date valide",
+    messages: [
+      {
+        type: "assistive",
+        content: "Date du 1er jour où débute effectivement la formation théorique en centre de formation.",
+      },
+      {
+        type: "regulatory",
+        content: `Le début de la période de formation au CFA ne peut intervenir plus de trois mois après le début d'exécution du contrat.
+
+        De la même façon, le début de la période en entreprise ne peut intervenir plus de trois mois après le début d'exécution du contrat.`,
+      },
+    ],
+  },
+  "formation.dateFinFormation": {
+    label: "Date prévue de fin des épreuves ou examens",
+    fieldType: "date",
+    required: true,
+    requiredMessage: "la date de fin de cycle est obligatoire",
+    validateMessage: " n'est pas une date valide",
+    messages: [
+      {
+        type: "regulatory",
+        content: `La date de fin du contrat doit englober l’ensemble des épreuves nécessaires à l’obtention du titre ou du diplôme. Lorsque la date précise n'est pas connue, il est possible de renseigner une date prévisionnelle avec une marge de 2 mois maximum. 
+
+      La date de fin de contrat intervient : 
+      au plus tôt le dernier jour de la dernière épreuve nécessaire à l’obtention du titre ou diplôme préparé par l'apprenti ;
+      au plus tard dans les deux mois après la dernière épreuve sanctionnant le cycle, ou à la veille du début du cycle de formation suivant.`,
+      },
+    ],
+  },
+  "formation.dureeFormation": {
+    label: "Durée de la formation en heures",
+    placeholder: "Exemple : 400 (heures)",
+    fieldType: "number",
+    required: true,
+    requiredMessage: "Le nombre d'heures de la formation est obligatoire",
+    validateMessage: " n'est pas un nombre d'heures valide",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^\\d*$",
+      },
+    ],
+    min: 1,
   },
 };

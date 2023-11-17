@@ -34,9 +34,6 @@ const CerfaApprenti: FC = () => {
           <InputController name="apprenti.lieuNaissanceFrance" />
         </InputGroupItem>
         <InputGroupItem size={6}>
-          <InputController name="apprenti.nationalite" />
-        </InputGroupItem>
-        <InputGroupItem size={6}>
           <InputController name="apprenti.communeNaissance" />
         </InputGroupItem>
         <InputGroupItem size={6}>
@@ -44,6 +41,9 @@ const CerfaApprenti: FC = () => {
         </InputGroupItem>
         <InputGroupItem size={6}>
           <InputController name="apprenti.nir" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
+          <InputController name="apprenti.nationalite" />
         </InputGroupItem>
         <InputGroupItem size={6}>
           <InputController name="apprenti.regimeSocial" />
@@ -88,6 +88,7 @@ const CerfaApprenti: FC = () => {
       <InputController name="apprenti.inscriptionSportifDeHautNiveau" />
       <InputController name="apprenti.handicap" />
       <InputController name="apprenti.situationAvantContrat" />
+
       <InputGroupContainer>
         <InputGroupItem size={6}>
           <InputController name="apprenti.diplomePrepare" />
@@ -112,12 +113,8 @@ const CerfaApprenti: FC = () => {
           <InputGroupItem size={6}>
             <InputController name="apprenti.responsableLegal.nom" />
           </InputGroupItem>
-          <InputGroupItem size={6}>
-            <InputController name="apprenti.responsableLegal.prenom" />
-          </InputGroupItem>
         </InputGroupContainer>
 
-        <InputGroupTitle>Adresse du représentant légal :</InputGroupTitle>
         <InputController name="apprenti.responsableLegal.memeAdresse" />
 
         <CollapseController show={shouldAskResponsableLegalAdresse}>
@@ -141,7 +138,7 @@ const CerfaApprenti: FC = () => {
               <InputController name="apprenti.responsableLegal.adresse.commune" />
             </InputGroupItem>
             <InputGroupItem size={6}>
-              <InputController name="apprenti.responsableLegal.adresse.pays" />
+              <InputController name="apprenti.responsableLegal.courriel" />
             </InputGroupItem>
           </InputGroupContainer>
         </CollapseController>

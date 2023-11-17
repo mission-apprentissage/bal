@@ -142,6 +142,10 @@ fileignoreconfig:
   checksum: 2123980fbc1470fc2791b08e838ad20207483a7770301014c3e44ac80f660c09
 - filename: ui/app/cerfa/components/blocks/employeur/employeurSchema.ts
   checksum: 217756fbe884f724f5dec9364f4aaf650f9d2f9397ec0bbe2c2270db321df395
+- filename: ui/app/cerfa/components/blocks/maitreApprentissage/maitreApprentissageSchema.ts
+  checksum: ab53ab76a76418da2c7e72d5ba590fecb2bcac5b0f03704f6ed0e52b4d822ec0
+- filename: ui/app/cerfa/components/blocks/apprenti/apprentiSchema.ts
+  checksum: da1c3238e14abaadd8c03e1ef1c1f242b7e28875af40e254efb1b246c2e21843
 scopeconfig:
 - scope: node
 custom_patterns:

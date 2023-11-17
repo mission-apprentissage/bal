@@ -1,5 +1,7 @@
+import { DIPLOMES } from "shared/constants/diplomes";
+import { PAYS } from "shared/constants/pays";
+
 import { CerfaField } from "../../../utils/cerfaSchema";
-import { INDICE_DE_REPETITION_OPTIONS } from "../domain/indiceRepetitionOptions";
 import { nomPattern } from "../domain/nomPattern";
 import { shouldAskRepresentantLegal } from "../domain/shouldAskRepresentantLegal";
 import { shouldAskResponsableLegalAdresse } from "../domain/shouldAskResponsableLegalAdresse";
@@ -165,31 +167,36 @@ Pas de limite d'âge si  l'apprenti :
     ],
   },
   "apprenti.nationalite": {
+    label: "Nationalité",
     required: true,
     fieldType: "select",
-    label: "Nationalité :",
     requiredMessage: "la nationalité de l'apprenti(e) est obligatoire",
     showInfo: true,
     options: [
       {
-        label: "1: Française",
-        value: 1,
+        label: "1. Française",
+        value: "1",
       },
       {
-        label: "2: Union Européenne",
-        value: 2,
+        label: "2. Union Européenne",
+        value: "2",
       },
       {
-        label: "3: Etranger hors Union Européenne",
-        value: 3,
+        label: "3. Etranger hors Union Européenne",
+        value: "3",
+      },
+    ],
+    messages: [
+      {
+        type: "regulatory",
+        content:
+          "Les demandes de titres et d'autorisation de travail pour un salarié étranger, non citoyen européen, peuvent être réalisées sur le site Etrangers en France. [https://administration-etrangers-en-france.interieur.gouv.fr/particuliers/#/](https://administration-etrangers-en-france.interieur.gouv.fr/particuliers/#/). Il n'est pas nécessaire de joindre cette autorisation avec le cerfa.",
       },
     ],
   },
   "apprenti.regimeSocial": {
+    label: "Régime social",
     fieldType: "select",
-    required: true,
-    label: "Régime social :",
-    requiredMessage: "le régime social de l'apprenti(e) est obligatoire",
     options: [
       {
         label: "1 MSA",
@@ -202,8 +209,9 @@ Pas de limite d'âge si  l'apprenti :
     ],
   },
   "apprenti.adresse.numero": {
+    label: "N°",
+    placeholder: "Exemple : 1 ; 2",
     fieldType: "number",
-    label: "N° :",
     validateMessage: "le numéro de voie ne peut pas commencer par zéro",
     mask: "C",
     maskBlocks: [
@@ -215,14 +223,20 @@ Pas de limite d'âge si  l'apprenti :
     ],
   },
   "apprenti.adresse.repetitionVoie": {
-    fieldType: "select",
     label: "Indice de répétition",
-    validateMessage: `n'est pas un indice de répétition valide`,
-    options: INDICE_DE_REPETITION_OPTIONS,
+    placeholder: "Exemple : BIS, A",
+    messages: [
+      {
+        type: "assistive",
+        content:
+          "Un indice de répétition est une mention qui complète un numéro de rue et permet de différencier plusieurs adresses portant le même numéro dans la même rue. Exemple :  bis, ter, quater, A, B, etc. sont des indices de répétition.",
+      },
+    ],
   },
   "apprenti.adresse.voie": {
+    label: "Voie",
+    placeholder: "Exemple : RUE MICHELET",
     required: true,
-    label: "Voie :",
     requiredMessage: "le nom de voie est obligatoire",
     mask: "C",
     maskBlocks: [
@@ -232,14 +246,22 @@ Pas de limite d'âge si  l'apprenti :
         pattern: "^.*$",
       },
     ],
+    messages: [
+      {
+        type: "assistive",
+        content: "L'adresse de l'établissement dans lequel le contrat s'exécute doit correspondre au siret renseigné",
+      },
+    ],
   },
   "apprenti.adresse.complement": {
-    label: "Complément d'adresse (optionnel):",
+    label: "Complément",
+    placeholder: "Exemple : Hôtel de ville ; Entrée ; Bâtiment ; Etage ; Service",
     requiredMessage: "le complement d'adress est obligatoire",
   },
   "apprenti.adresse.codePostal": {
+    label: "Code postal",
+    placeholder: "Exemple : 21000",
     required: true,
-    label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
     mask: "C",
@@ -247,13 +269,14 @@ Pas de limite d'âge si  l'apprenti :
       {
         name: "C",
         mask: "Pattern",
-        pattern: "^\\d*$",
+        pattern: "^\\d{0,5}$",
       },
     ],
   },
   "apprenti.adresse.commune": {
+    label: "Commune",
+    placeholder: "Exemple : Dijon",
     required: true,
-    label: "Commune: ",
     requiredMessage: "la commune est obligatoire",
     mask: "C",
     maskBlocks: [
@@ -270,815 +293,23 @@ Pas de limite d'âge si  l'apprenti :
     label: "Pays :",
     requiredMessage: "le pays est obligatoire",
     completion: false,
-    options: [
-      {
-        label: "Afghanistan",
-        value: "AF",
-      },
-      {
-        label: "Afrique du sud",
-        value: "ZA",
-      },
-      {
-        label: "Albanie",
-        value: "AL",
-      },
-      {
-        label: "Algerie",
-        value: "DZ",
-      },
-      {
-        label: "Allemagne",
-        value: "DE",
-      },
-      {
-        label: "Andorre",
-        value: "AD",
-      },
-      {
-        label: "Angola",
-        value: "AO",
-      },
-      {
-        label: "Antigua-et-barbuda",
-        value: "AG",
-      },
-      {
-        label: "Arabie saoudite",
-        value: "SA",
-      },
-      {
-        label: "Argentine",
-        value: "AR",
-      },
-      {
-        label: "Armenie",
-        value: "AM",
-      },
-      {
-        label: "Australie",
-        value: "AU",
-      },
-      {
-        label: "Autriche",
-        value: "AT",
-      },
-      {
-        label: "Azerbaidjan",
-        value: "AZ",
-      },
-      {
-        label: "Bahamas",
-        value: "BS",
-      },
-      {
-        label: "Bahrein",
-        value: "BH",
-      },
-      {
-        label: "Bangladesh",
-        value: "BD",
-      },
-      {
-        label: "Barbade",
-        value: "BB",
-      },
-      {
-        label: "Belgique",
-        value: "BE",
-      },
-      {
-        label: "Belize",
-        value: "BZ",
-      },
-      {
-        label: "Benin",
-        value: "BJ",
-      },
-      {
-        label: "Bhoutan",
-        value: "BT",
-      },
-      {
-        label: "Bielorussie",
-        value: "BY",
-      },
-      {
-        label: "Birmanie",
-        value: "MM",
-      },
-      {
-        label: "Bolivie",
-        value: "BO",
-      },
-      {
-        label: "Bonaire, saint eustache et saba",
-        value: "BQ",
-      },
-      {
-        label: "Bosnie-herzegovine",
-        value: "BA",
-      },
-      {
-        label: "Botswana",
-        value: "BW",
-      },
-      {
-        label: "Bresil",
-        value: "BR",
-      },
-      {
-        label: "Brunei",
-        value: "BN",
-      },
-      {
-        label: "Bulgarie",
-        value: "BG",
-      },
-      {
-        label: "Burkina",
-        value: "BF",
-      },
-      {
-        label: "Burundi",
-        value: "BI",
-      },
-      {
-        label: "Cambodge",
-        value: "KH",
-      },
-      {
-        label: "Cameroun",
-        value: "CM",
-      },
-      {
-        label: "Canada",
-        value: "CA",
-      },
-      {
-        label: "Cap-vert",
-        value: "CV",
-      },
-      {
-        label: "Centrafricaine (republique)",
-        value: "CF",
-      },
-      {
-        label: "Chili",
-        value: "CL",
-      },
-      {
-        label: "Chine",
-        value: "CN",
-      },
-      {
-        label: "Chypre",
-        value: "CY",
-      },
-      {
-        label: "Colombie",
-        value: "CO",
-      },
-      {
-        label: "Comores",
-        value: "KM",
-      },
-      {
-        label: "Congo",
-        value: "CG",
-      },
-      {
-        label: "Congo (republique democratique)",
-        value: "CD",
-      },
-      {
-        label: "Coree (republique de)",
-        value: "KR",
-      },
-      {
-        label: "Coree (republique populaire democratique de)",
-        value: "KP",
-      },
-      {
-        label: "Costa rica",
-        value: "CR",
-      },
-      {
-        label: "Cote d'ivoire",
-        value: "CI",
-      },
-      {
-        label: "Croatie",
-        value: "HR",
-      },
-      {
-        label: "Cuba",
-        value: "CU",
-      },
-      {
-        label: "Curaçao",
-        value: "CW",
-      },
-      {
-        label: "Danemark",
-        value: "DK",
-      },
-      {
-        label: "Djibouti",
-        value: "DJ",
-      },
-      {
-        label: "Dominicaine (republique)",
-        value: "DO",
-      },
-      {
-        label: "Dominique",
-        value: "DM",
-      },
-      {
-        label: "Egypte",
-        value: "EG",
-      },
-      {
-        label: "El salvador",
-        value: "SV",
-      },
-      {
-        label: "Emirats arabes unis",
-        value: "AE",
-      },
-      {
-        label: "Equateur",
-        value: "EC",
-      },
-      {
-        label: "Erythree",
-        value: "ER",
-      },
-      {
-        label: "Espagne",
-        value: "ES",
-      },
-      {
-        label: "Estonie",
-        value: "EE",
-      },
-      {
-        label: "Eswatini",
-        value: "SZ",
-      },
-      {
-        label: "Etats-unis",
-        value: "US",
-      },
-      {
-        label: "Ethiopie",
-        value: "ET",
-      },
-      {
-        label: "Ex-republique yougoslave de macedoine",
-        value: "MK",
-      },
-      {
-        label: "Fidji",
-        value: "FJ",
-      },
-      {
-        label: "Finlande",
-        value: "FI",
-      },
-      {
-        label: "France",
-        value: "FR",
-      },
-      {
-        label: "Gabon",
-        value: "GA",
-      },
-      {
-        label: "Gambie",
-        value: "GM",
-      },
-      {
-        label: "Georgie",
-        value: "GE",
-      },
-      {
-        label: "Ghana",
-        value: "GH",
-      },
-      {
-        label: "Grece",
-        value: "GR",
-      },
-      {
-        label: "Grenade",
-        value: "GD",
-      },
-      {
-        label: "Guatemala",
-        value: "GT",
-      },
-      {
-        label: "Guinee",
-        value: "GN",
-      },
-      {
-        label: "Guinee equatoriale",
-        value: "GQ",
-      },
-      {
-        label: "Guinee-bissau",
-        value: "GW",
-      },
-      {
-        label: "Guyana",
-        value: "GY",
-      },
-      {
-        label: "Haiti",
-        value: "HT",
-      },
-      {
-        label: "Honduras",
-        value: "HN",
-      },
-      {
-        label: "Hongrie",
-        value: "HU",
-      },
-      {
-        label: "Inde",
-        value: "IN",
-      },
-      {
-        label: "Indonesie",
-        value: "ID",
-      },
-      {
-        label: "Iran",
-        value: "IR",
-      },
-      {
-        label: "Iraq",
-        value: "IQ",
-      },
-      {
-        label: "Irlande, ou eire",
-        value: "IE",
-      },
-      {
-        label: "Islande",
-        value: "IS",
-      },
-      {
-        label: "Israel",
-        value: "IL",
-      },
-      {
-        label: "Italie",
-        value: "IT",
-      },
-      {
-        label: "Jamaique",
-        value: "JM",
-      },
-      {
-        label: "Japon",
-        value: "JP",
-      },
-      {
-        label: "Jordanie",
-        value: "JO",
-      },
-      {
-        label: "Kazakhstan",
-        value: "KZ",
-      },
-      {
-        label: "Kenya",
-        value: "KE",
-      },
-      {
-        label: "Kirghizistan",
-        value: "KG",
-      },
-      {
-        label: "Kiribati",
-        value: "KI",
-      },
-      {
-        label: "Kosovo",
-        value: "XK",
-      },
-      {
-        label: "Koweit",
-        value: "KW",
-      },
-      {
-        label: "Laos",
-        value: "LA",
-      },
-      {
-        label: "Lesotho",
-        value: "LS",
-      },
-      {
-        label: "Lettonie",
-        value: "LV",
-      },
-      {
-        label: "Liban",
-        value: "LB",
-      },
-      {
-        label: "Liberia",
-        value: "LR",
-      },
-      {
-        label: "Libye",
-        value: "LY",
-      },
-      {
-        label: "Liechtenstein",
-        value: "LI",
-      },
-      {
-        label: "Lituanie",
-        value: "LT",
-      },
-      {
-        label: "Luxembourg",
-        value: "LU",
-      },
-      {
-        label: "Madagascar",
-        value: "MG",
-      },
-      {
-        label: "Malaisie",
-        value: "MY",
-      },
-      {
-        label: "Malawi",
-        value: "MW",
-      },
-      {
-        label: "Maldives",
-        value: "MV",
-      },
-      {
-        label: "Mali",
-        value: "ML",
-      },
-      {
-        label: "Malte",
-        value: "MT",
-      },
-      {
-        label: "Maroc",
-        value: "MA",
-      },
-      {
-        label: "Marshall (iles)",
-        value: "MH",
-      },
-      {
-        label: "Maurice",
-        value: "MU",
-      },
-      {
-        label: "Mauritanie",
-        value: "MR",
-      },
-      {
-        label: "Mexique",
-        value: "MX",
-      },
-      {
-        label: "Micronesie (etats federes de)",
-        value: "FM",
-      },
-      {
-        label: "Moldavie",
-        value: "MD",
-      },
-      {
-        label: "Monaco",
-        value: "MC",
-      },
-      {
-        label: "Mongolie",
-        value: "MN",
-      },
-      {
-        label: "Montenegro",
-        value: "ME",
-      },
-      {
-        label: "Mozambique",
-        value: "MZ",
-      },
-      {
-        label: "Namibie",
-        value: "NA",
-      },
-      {
-        label: "Nauru",
-        value: "NR",
-      },
-      {
-        label: "Nepal",
-        value: "NP",
-      },
-      {
-        label: "Nicaragua",
-        value: "NI",
-      },
-      {
-        label: "Niger",
-        value: "NE",
-      },
-      {
-        label: "Nigeria",
-        value: "NG",
-      },
-      {
-        label: "Norvege",
-        value: "NO",
-      },
-      {
-        label: "Nouvelle-zelande",
-        value: "NZ",
-      },
-      {
-        label: "Oman",
-        value: "OM",
-      },
-      {
-        label: "Ouganda",
-        value: "UG",
-      },
-      {
-        label: "Ouzbekistan",
-        value: "UZ",
-      },
-      {
-        label: "Pakistan",
-        value: "PK",
-      },
-      {
-        label: "Palaos (iles)",
-        value: "PW",
-      },
-      {
-        label: "Palestine (etat de)",
-        value: "PS",
-      },
-      {
-        label: "Panama",
-        value: "PA",
-      },
-      {
-        label: "Papouasie-nouvelle-guinee",
-        value: "PG",
-      },
-      {
-        label: "Paraguay",
-        value: "PY",
-      },
-      {
-        label: "Pays-bas",
-        value: "NL",
-      },
-      {
-        label: "Perou",
-        value: "PE",
-      },
-      {
-        label: "Philippines",
-        value: "PH",
-      },
-      {
-        label: "Pologne",
-        value: "PL",
-      },
-      {
-        label: "Portugal",
-        value: "PT",
-      },
-      {
-        label: "Qatar",
-        value: "QA",
-      },
-      {
-        label: "Roumanie",
-        value: "RO",
-      },
-      {
-        label: "Royaume-uni",
-        value: "GB",
-      },
-      {
-        label: "Russie",
-        value: "RU",
-      },
-      {
-        label: "Rwanda",
-        value: "RW",
-      },
-      {
-        label: "Saint-christophe-et-nieves",
-        value: "KN",
-      },
-      {
-        label: "Saint-marin",
-        value: "SM",
-      },
-      {
-        label: "Saint-martin (partie neerlandaise)",
-        value: "SX",
-      },
-      {
-        label: "Saint-vincent-et-les grenadines",
-        value: "VC",
-      },
-      {
-        label: "Sainte-lucie",
-        value: "LC",
-      },
-      {
-        label: "Salomon (iles)",
-        value: "SB",
-      },
-      {
-        label: "Samoa occidentales",
-        value: "WS",
-      },
-      {
-        label: "Sao tome-et-principe",
-        value: "ST",
-      },
-      {
-        label: "Senegal",
-        value: "SN",
-      },
-      {
-        label: "Serbie",
-        value: "RS",
-      },
-      {
-        label: "Seychelles",
-        value: "SC",
-      },
-      {
-        label: "Sierra leone",
-        value: "SL",
-      },
-      {
-        label: "Singapour",
-        value: "SG",
-      },
-      {
-        label: "Slovaquie",
-        value: "SK",
-      },
-      {
-        label: "Slovenie",
-        value: "SI",
-      },
-      {
-        label: "Somalie",
-        value: "SO",
-      },
-      {
-        label: "Soudan",
-        value: "SD",
-      },
-      {
-        label: "Soudan du sud",
-        value: "SS",
-      },
-      {
-        label: "Sri lanka",
-        value: "LK",
-      },
-      {
-        label: "Suede",
-        value: "SE",
-      },
-      {
-        label: "Suisse",
-        value: "CH",
-      },
-      {
-        label: "Suriname",
-        value: "SR",
-      },
-      {
-        label: "Syrie",
-        value: "SY",
-      },
-      {
-        label: "Tadjikistan",
-        value: "TJ",
-      },
-      {
-        label: "Tanzanie",
-        value: "TZ",
-      },
-      {
-        label: "Tchad",
-        value: "TD",
-      },
-      {
-        label: "Tcheque (republique)",
-        value: "CZ",
-      },
-      {
-        label: "Thailande",
-        value: "TH",
-      },
-      {
-        label: "Timor oriental",
-        value: "TL",
-      },
-      {
-        label: "Togo",
-        value: "TG",
-      },
-      {
-        label: "Tonga",
-        value: "TO",
-      },
-      {
-        label: "Trinite-et-tobago",
-        value: "TT",
-      },
-      {
-        label: "Tunisie",
-        value: "TN",
-      },
-      {
-        label: "Turkmenistan",
-        value: "TM",
-      },
-      {
-        label: "Turquie",
-        value: "TR",
-      },
-      {
-        label: "Tuvalu",
-        value: "TV",
-      },
-      {
-        label: "Ukraine",
-        value: "UA",
-      },
-      {
-        label: "Uruguay",
-        value: "UY",
-      },
-      {
-        label: "Vanuatu",
-        value: "VU",
-      },
-      {
-        label: "Vatican, ou saint-siege",
-        value: "VA",
-      },
-      {
-        label: "Venezuela",
-        value: "VE",
-      },
-      {
-        label: "Viet nam",
-        value: "VN",
-      },
-      {
-        label: "Yemen",
-        value: "YE",
-      },
-      {
-        label: "Zambie",
-        value: "ZM",
-      },
-      {
-        label: "Zimbabwe",
-        value: "ZW",
+    options: PAYS.map((p) => ({ label: p.label, value: p.code })),
+  },
+  "apprenti.telephone": {
+    label: "Téléphone",
+    placeholder: "Exemple : 6 23 45 67 89",
+    fieldType: "phone",
+    messages: [
+      {
+        type: "assistive",
+        content: `Le numéro de téléphone utilisé ici est au format international. Dans ce format, le +33 (indicateur pays) remplace le premier "0" de votre numéro de téléphone, il faut donc commencer par le second chiffre de votre numéro.`,
       },
     ],
   },
-  "apprenti.telephone": {
-    required: true,
-    fieldType: "phone",
-    label: "Téléphone de l'apprenti(e) :",
-    showInfo: true,
-  },
   "apprenti.courriel": {
-    required: true,
+    label: "Courriel",
+    placeholder: "Exemple : jf.martin@email.fr",
     fieldType: "email",
-    label: "Courriel de l'apprenti(e) :",
     requiredMessage: "le courriel de l'apprenti(e) est obligatoire",
     mask: "C",
     maskBlocks: [
@@ -1089,10 +320,11 @@ Pas de limite d'âge si  l'apprenti :
       },
     ],
   },
+
   "apprenti.projetCreationRepriseEntreprise": {
+    label: "Déclare avoir un projet de création ou de reprise d'entreprise",
     required: true,
     fieldType: "radio",
-    label: "Déclare avoir un projet de création ou de reprise d’entreprise :",
     requiredMessage: "Cette déclaration est obligatoire",
     options: [
       {
@@ -1102,14 +334,19 @@ Pas de limite d'âge si  l'apprenti :
       {
         label: "Non",
         value: "non",
+      },
+    ],
+    messages: [
+      {
+        type: "regulatory",
+        content:
+          "Il n'existe aucune limite d'âge lorsque le contrat d'apprentissage est conclu par une personne qui a un projet de création ou de reprise d’entreprise dont la réalisation est subordonnée à l’obtention du diplôme ou titre sanctionnant la formation poursuivie.",
       },
     ],
   },
   "apprenti.inscriptionSportifDeHautNiveau": {
+    label: "Déclare être inscrit sur la liste des sportifs de haut niveau",
     fieldType: "radio",
-    required: true,
-    label: "Déclare être inscrit sur la liste des sportifs de haut niveau :",
-    requiredMessage: "Cette déclaration est obligatoire",
     options: [
       {
         label: "Oui",
@@ -1118,14 +355,19 @@ Pas de limite d'âge si  l'apprenti :
       {
         label: "Non",
         value: "non",
+      },
+    ],
+    messages: [
+      {
+        type: "regulatory",
+        content:
+          "Il n'existe aucune limite d’âge lorsque le contrat d’apprentissage est conclu par une personne inscrite en tant que sportif de haut niveau sur la liste arrêtée par le ministre chargé des sports (liste mentionnée au premier alinéa de l’article L. 221-2 du code du sport) et conformément au 5° de l’article L6222-2 du code du travail. Vous pouvez rechercher l'information sur l'inscription en tant que sportif de haut niveau sur le site du ministère des Sports et jeux olympiques et paralympiques [https://www.sports.gouv.fr/liste-des-sportifs-francais-de-haut-niveau-60](https://www.sports.gouv.fr/liste-des-sportifs-francais-de-haut-niveau-60)",
       },
     ],
   },
   "apprenti.handicap": {
+    label: "Déclare bénéficier de la reconnaissance travailleur handicapé",
     fieldType: "radio",
-    required: true,
-    label: "Déclare bénéficier de la reconnaissance travailleur handicapé :",
-    requiredMessage: "La déclaration de reconnaissance travailleur handicapé est obligatoire",
     options: [
       {
         label: "Oui",
@@ -1136,11 +378,151 @@ Pas de limite d'âge si  l'apprenti :
         value: "non",
       },
     ],
+    messages: [
+      {
+        type: "regulatory",
+        content:
+          "Il n'existe aucune limite d'âge lorsque le contrat d'apprentissage est conclu par une personne reconnue travailleur handicapé.",
+      },
+      {
+        type: "bonus",
+        content:
+          "Les contrats concernant des apprentis reconnus en qualité de travailleur handicapé (RQTH) bénéficient d'aménagements du contrat d'apprentissage. Plus de détails sur le site du ministère du Travail [https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/article/handicap-contrat-d-apprentissage-amenage#:~:text=Cette%20majoration%20est%20limit%C3%A9e%20%C3%A0,de%20travailleur%20handicap%C3%A9%20(RQTH).](https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/article/handicap-contrat-d-apprentissage-amenage#:~:text=Cette%20majoration%20est%20limit%C3%A9e%20%C3%A0,de%20travailleur%20handicap%C3%A9%20(RQTH).).",
+      },
+    ],
+  },
+  "apprenti.situationAvantContrat": {
+    label: "Situation avant ce contrat",
+    fieldType: "select",
+    required: true,
+    requiredMessage: "la situation de l'apprenti(e) avant ce contrat est obligatoire",
+    options: [
+      { value: "1", label: "1 - Scolaire" },
+      { value: "2", label: "2 - Prépa apprentissage" },
+      { value: "3", label: "3 - Etudiant" },
+      { value: "4", label: "4 - Contrat d’apprentissage" },
+      { value: "5", label: "5 - Contrat de professionnalisation" },
+      { value: "6", label: "6 - Contrat aidé" },
+      {
+        value: "7",
+        label:
+          "7 - En formation au CFA sous statut de stagiaire de la formation professionnelle, avant signature d’un contrat d’apprentissage (L6222-12-1 du code du travail)",
+      },
+      {
+        value: "8",
+        label:
+          "8 - En formation, au CFA sans contrat sous statut de stagiaire de la formation professionnelle, suite à rupture (5° de L6231-2 du code du travail)",
+      },
+      { value: "9", label: "9 - Autres situations sous statut de stagiaire de la formation professionnelle" },
+      { value: "10", label: "10 - Salarié" },
+      { value: "11", label: "11 - Personne à la recherche d’un emploi (inscrite ou non à Pôle emploi)" },
+      { value: "12", label: "12 - Inactif" },
+    ],
+    messages: [
+      { type: "assistive", content: "Situation dans laquelle se trouvait l'apprenti(e ) avant son embauche." },
+    ],
+  },
+
+  "apprenti.diplomePrepare": {
+    label: "Dernier diplôme ou titre préparé",
+    fieldType: "select",
+    required: true,
+    requiredMessage: "le dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
+    options: DIPLOMES,
+    messages: [
+      {
+        type: "assistive",
+        content: `Dernier diplôme ou titre préparé par l'apprenti(e) avant son embauche.
+        
+        Il faut sélectionner le diplôme ou le titre préparé avant la conclusion du présent contrat. 
+        
+        Exemple 1 : si l'entrée en apprentissage concerne la 2ème année de BTS, le dernier diplôme ou titre préparé est la 1ère année de BTS : il faut donc sélectionner "54 - Brevet de Technicien supérieur".
+        Exemple 2 : si l'entrée en apprentissage concerne la 1ère année de BTS, le dernier diplôme ou titre préparé est peut-être le Baccalauréat général : il faut donc sélectionner "42: Baccalauréat général"`,
+      },
+    ],
+  },
+  "apprenti.derniereClasse": {
+    label: "Dernière classe / année suivie",
+    fieldType: "select",
+    required: true,
+    requiredMessage: "la dernière classe / année suivie par l'apprenti(e) est obligatoire",
+    showInfo: true,
+    options: [
+      {
+        label: "01: l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre",
+        value: "01",
+      },
+      {
+        label:
+          "11: l'apprenti a suivi la 1ère année du cycle et l'a validée (examens réussis mais année non diplômante)",
+        value: "11",
+      },
+      {
+        label:
+          "12: l'apprenti a suivi la 1ère année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
+        value: "12",
+      },
+      {
+        label: "21: l'apprenti a suivi la 2è année du cycle et l'a validée (examens réussis mais année non diplômante)",
+        value: "21",
+      },
+      {
+        label:
+          "22: l'apprenti a suivi la 2è année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
+        value: "22",
+      },
+      {
+        label:
+          "31: l'apprenti a suivi la 3è année du cycle et l'a validée (examens réussis mais année non diplômante, cycle adaptés)",
+        value: "31",
+      },
+      {
+        label:
+          "32: l'apprenti a suivi la 3è année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
+        value: "32",
+      },
+      {
+        label: "40: l'apprenti a achevé le 1er cycle de l'enseignement secondaire (collège)",
+        value: "40",
+      },
+      {
+        label: "41: l'apprenti a interrompu ses études en classe de 3è",
+        value: "41",
+      },
+      {
+        label: "42: l'apprenti a interrompu ses études en classe de 4è",
+        value: "42",
+      },
+    ],
+    messages: [
+      {
+        type: "assistive",
+        content: `Dernière classe /année suivie par l'apprenti (e ) avant son embauche.
+
+      Il faut sélectionner la situation qui précède l'entrée en contrat d'apprentissage.
+      
+      Par exemple, si le diplôme préparé avant était une 1ère année de BTS et que cette dernière a été validée, il faut sélectionner "11 - l'apprenti a suivi la première année du cycle et l'a validée (examens réussis mais année non diplômante)".`,
+      },
+    ],
+  },
+  "apprenti.intituleDiplomePrepare": {
+    label: "Intitulé précis du dernier diplôme ou titre préparé",
+    placeholder: "Exemple : BTS Services et prestations des secteurs sanitaire et social",
+    required: true,
+    showInfo: true,
+    requiredMessage: "l'intitulé du dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
+  },
+  "apprenti.diplome": {
+    label: "Diplôme ou titre le plus élevé obtenu",
+    fieldType: "select",
+    required: true,
+    requiredMessage: "le diplôme ou titre le plus élevé obtenu par l'apprenti(e) est obligatoire",
+    options: DIPLOMES,
   },
   "apprenti.apprentiMineur": {
-    required: true,
+    label: "À la date de signature de ce contrat, l'apprenti(e) sera-t-il(elle) mineur(e) *",
     fieldType: "radio",
-    label: "À la date de signature de ce contrat, l'apprenti(e) sera-t-il(elle) mineur(e) ?",
+    required: true,
     requiredMessage: "l'apprenti(e) sera-t-il(elle) mineur(e) à la date de signature de ce contrat ?",
     options: [
       {
@@ -1154,10 +536,9 @@ Pas de limite d'âge si  l'apprenti :
     ],
   },
   "apprenti.apprentiMineurNonEmancipe": {
-    required: true,
-    fieldType: "radio",
     label: "L'apprenti est sous la responsabilité d'un représentant légal (non émancipé)",
-    showInfo: true,
+    fieldType: "radio",
+    required: true,
     requiredMessage: "Merci de renseigner si l'apprenti(e) mineur(e) est emancipé(e) ou non",
     options: [
       {
@@ -1169,27 +550,20 @@ Pas de limite d'âge si  l'apprenti :
         value: "non",
       },
     ],
-  },
-  "apprenti.responsableLegal.nom": {
-    // required: true,
-    _init: ({ values }: any) => ({ required: shouldAskRepresentantLegal({ values }) }),
-    showInfo: true,
-    label: "Nom du représentant légal:",
-    requiredMessage: "le nom du représentant légal est obligatoire",
-    mask: "C",
-    maskBlocks: [
+    messages: [
       {
-        name: "C",
-        mask: "Pattern",
-        pattern: nomPattern,
+        type: "assistive",
+        content: `Vous devez indiquer "oui" si l'apprenti est mineur non émancipé à la date de signature du contrat. Dans ce cas, le représentant légal devra également signer le contrat.
+
+      Un mineur émancipé peut accomplir seul les actes nécessitant la majorité légale. Plus d'informations à propos de l'émancipation sur le site du Service public [https://www.service-public.fr/particuliers/vosdroits/F1194](https://www.service-public.fr/particuliers/vosdroits/F1194)`,
       },
     ],
   },
-  "apprenti.responsableLegal.prenom": {
+  "apprenti.responsableLegal.nom": {
     _init: ({ values }: any) => ({ required: shouldAskRepresentantLegal({ values }) }),
+    label: "Nom de naissance et prénom",
     showInfo: true,
-    label: "Prénom du représentant légal:",
-    requiredMessage: "le prénom du représentant légal est obligatoire",
+    requiredMessage: "le nom du représentant légal est obligatoire",
     mask: "C",
     maskBlocks: [
       {
@@ -1201,9 +575,8 @@ Pas de limite d'âge si  l'apprenti :
   },
   "apprenti.responsableLegal.memeAdresse": {
     _init: ({ values }: any) => ({ required: shouldAskRepresentantLegal({ values }) }),
+    label: "L'apprenti(e) vit à la même adresse que son responsable légal",
     fieldType: "radio",
-    showInfo: true,
-    label: "l'apprenti(e) vit à la même adresse que son responsable légal",
     requiredMessage: "L'adresse du représentant légal est obligatoire",
     options: [
       {
@@ -1217,9 +590,10 @@ Pas de limite d'âge si  l'apprenti :
     ],
   },
   "apprenti.responsableLegal.adresse.numero": {
-    required: false,
+    label: "N°",
+    placeholder: "Exemple : 1 ; 2",
+    precision: 0,
     fieldType: "number",
-    label: "N° :",
     validateMessage: "le numéro de voie ne peut pas commencer par zéro",
     mask: "C",
     maskBlocks: [
@@ -1231,14 +605,19 @@ Pas de limite d'âge si  l'apprenti :
     ],
   },
   "apprenti.responsableLegal.adresse.repetitionVoie": {
-    fieldType: "select",
     label: "Indice de répétition",
-    validateMessage: `n'est pas un indice de répétition valide`,
-    options: INDICE_DE_REPETITION_OPTIONS,
+    placeholder: "Exemple : BIS, A",
+    messages: [
+      {
+        type: "assistive",
+        content:
+          "Un indice de répétition est une mention qui complète un numéro de rue et permet de différencier plusieurs adresses portant le même numéro dans la même rue. Exemple :  bis, ter, quater, A, B, etc. sont des indices de répétition.",
+      },
+    ],
   },
   "apprenti.responsableLegal.adresse.voie": {
-    _init: ({ values }: any) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
-    label: "Voie :",
+    label: "Voie",
+    placeholder: "Exemple : RUE MICHELET",
     requiredMessage: "le nom de voie est obligatoire",
     mask: "C",
     maskBlocks: [
@@ -1248,15 +627,21 @@ Pas de limite d'âge si  l'apprenti :
         pattern: "^.*$",
       },
     ],
+    messages: [
+      {
+        type: "assistive",
+        content: "L'adresse de l'établissement dans lequel le contrat s'exécute doit correspondre au siret renseigné",
+      },
+    ],
   },
   "apprenti.responsableLegal.adresse.complement": {
-    required: false,
-    label: "Complément d'adresse (optionnel):",
-    requiredMessage: "le complement d'adress est obligatoire",
+    label: "Complément",
+    placeholder: "Exemple : Hôtel de ville ; Entrée ; Bâtiment ; Etage ; Service",
   },
   "apprenti.responsableLegal.adresse.codePostal": {
     _init: ({ values }: any) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
-    label: "Code postal :",
+    label: "Code postal",
+    placeholder: "Exemple : 21000",
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
     mask: "C",
@@ -1264,14 +649,14 @@ Pas de limite d'âge si  l'apprenti :
       {
         name: "C",
         mask: "Pattern",
-        pattern: "^\\d*$",
+        pattern: "^\\d{0,5}$",
       },
     ],
   },
   "apprenti.responsableLegal.adresse.commune": {
     _init: ({ values }: any) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
-    maxLength: 80,
-    label: "Commune: ",
+    label: "Commune",
+    placeholder: "Exemple : Dijon",
     requiredMessage: "la commune est obligatoire",
     mask: "C",
     maskBlocks: [
@@ -1282,1197 +667,19 @@ Pas de limite d'âge si  l'apprenti :
       },
     ],
   },
-  "apprenti.responsableLegal.adresse.pays": {
-    _init: ({ values }: any) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
-    fieldType: "select",
-    label: "Pays :",
-    requiredMessage: "le pays est obligatoire",
-    options: [
-      {
-        label: "Afghanistan",
-        value: "AF",
-      },
-      {
-        label: "Afrique du sud",
-        value: "ZA",
-      },
-      {
-        label: "Albanie",
-        value: "AL",
-      },
-      {
-        label: "Algerie",
-        value: "DZ",
-      },
-      {
-        label: "Allemagne",
-        value: "DE",
-      },
-      {
-        label: "Andorre",
-        value: "AD",
-      },
-      {
-        label: "Angola",
-        value: "AO",
-      },
-      {
-        label: "Antigua-et-barbuda",
-        value: "AG",
-      },
-      {
-        label: "Arabie saoudite",
-        value: "SA",
-      },
-      {
-        label: "Argentine",
-        value: "AR",
-      },
-      {
-        label: "Armenie",
-        value: "AM",
-      },
-      {
-        label: "Australie",
-        value: "AU",
-      },
-      {
-        label: "Autriche",
-        value: "AT",
-      },
-      {
-        label: "Azerbaidjan",
-        value: "AZ",
-      },
-      {
-        label: "Bahamas",
-        value: "BS",
-      },
-      {
-        label: "Bahrein",
-        value: "BH",
-      },
-      {
-        label: "Bangladesh",
-        value: "BD",
-      },
-      {
-        label: "Barbade",
-        value: "BB",
-      },
-      {
-        label: "Belgique",
-        value: "BE",
-      },
-      {
-        label: "Belize",
-        value: "BZ",
-      },
-      {
-        label: "Benin",
-        value: "BJ",
-      },
-      {
-        label: "Bhoutan",
-        value: "BT",
-      },
-      {
-        label: "Bielorussie",
-        value: "BY",
-      },
-      {
-        label: "Birmanie",
-        value: "MM",
-      },
-      {
-        label: "Bolivie",
-        value: "BO",
-      },
-      {
-        label: "Bonaire, saint eustache et saba",
-        value: "BQ",
-      },
-      {
-        label: "Bosnie-herzegovine",
-        value: "BA",
-      },
-      {
-        label: "Botswana",
-        value: "BW",
-      },
-      {
-        label: "Bresil",
-        value: "BR",
-      },
-      {
-        label: "Brunei",
-        value: "BN",
-      },
-      {
-        label: "Bulgarie",
-        value: "BG",
-      },
-      {
-        label: "Burkina",
-        value: "BF",
-      },
-      {
-        label: "Burundi",
-        value: "BI",
-      },
-      {
-        label: "Cambodge",
-        value: "KH",
-      },
-      {
-        label: "Cameroun",
-        value: "CM",
-      },
-      {
-        label: "Canada",
-        value: "CA",
-      },
-      {
-        label: "Cap-vert",
-        value: "CV",
-      },
-      {
-        label: "Centrafricaine (republique)",
-        value: "CF",
-      },
-      {
-        label: "Chili",
-        value: "CL",
-      },
-      {
-        label: "Chine",
-        value: "CN",
-      },
-      {
-        label: "Chypre",
-        value: "CY",
-      },
-      {
-        label: "Colombie",
-        value: "CO",
-      },
-      {
-        label: "Comores",
-        value: "KM",
-      },
-      {
-        label: "Congo",
-        value: "CG",
-      },
-      {
-        label: "Congo (republique democratique)",
-        value: "CD",
-      },
-      {
-        label: "Coree (republique de)",
-        value: "KR",
-      },
-      {
-        label: "Coree (republique populaire democratique de)",
-        value: "KP",
-      },
-      {
-        label: "Costa rica",
-        value: "CR",
-      },
-      {
-        label: "Cote d'ivoire",
-        value: "CI",
-      },
-      {
-        label: "Croatie",
-        value: "HR",
-      },
-      {
-        label: "Cuba",
-        value: "CU",
-      },
-      {
-        label: "Curaçao",
-        value: "CW",
-      },
-      {
-        label: "Danemark",
-        value: "DK",
-      },
-      {
-        label: "Djibouti",
-        value: "DJ",
-      },
-      {
-        label: "Dominicaine (republique)",
-        value: "DO",
-      },
-      {
-        label: "Dominique",
-        value: "DM",
-      },
-      {
-        label: "Egypte",
-        value: "EG",
-      },
-      {
-        label: "El salvador",
-        value: "SV",
-      },
-      {
-        label: "Emirats arabes unis",
-        value: "AE",
-      },
-      {
-        label: "Equateur",
-        value: "EC",
-      },
-      {
-        label: "Erythree",
-        value: "ER",
-      },
-      {
-        label: "Espagne",
-        value: "ES",
-      },
-      {
-        label: "Estonie",
-        value: "EE",
-      },
-      {
-        label: "Eswatini",
-        value: "SZ",
-      },
-      {
-        label: "Etats-unis",
-        value: "US",
-      },
-      {
-        label: "Ethiopie",
-        value: "ET",
-      },
-      {
-        label: "Ex-republique yougoslave de macedoine",
-        value: "MK",
-      },
-      {
-        label: "Fidji",
-        value: "FJ",
-      },
-      {
-        label: "Finlande",
-        value: "FI",
-      },
-      {
-        label: "France",
-        value: "FR",
-      },
-      {
-        label: "Gabon",
-        value: "GA",
-      },
-      {
-        label: "Gambie",
-        value: "GM",
-      },
-      {
-        label: "Georgie",
-        value: "GE",
-      },
-      {
-        label: "Ghana",
-        value: "GH",
-      },
-      {
-        label: "Grece",
-        value: "GR",
-      },
-      {
-        label: "Grenade",
-        value: "GD",
-      },
-      {
-        label: "Guatemala",
-        value: "GT",
-      },
-      {
-        label: "Guinee",
-        value: "GN",
-      },
-      {
-        label: "Guinee equatoriale",
-        value: "GQ",
-      },
-      {
-        label: "Guinee-bissau",
-        value: "GW",
-      },
-      {
-        label: "Guyana",
-        value: "GY",
-      },
-      {
-        label: "Haiti",
-        value: "HT",
-      },
-      {
-        label: "Honduras",
-        value: "HN",
-      },
-      {
-        label: "Hongrie",
-        value: "HU",
-      },
-      {
-        label: "Inde",
-        value: "IN",
-      },
-      {
-        label: "Indonesie",
-        value: "ID",
-      },
-      {
-        label: "Iran",
-        value: "IR",
-      },
-      {
-        label: "Iraq",
-        value: "IQ",
-      },
-      {
-        label: "Irlande, ou eire",
-        value: "IE",
-      },
-      {
-        label: "Islande",
-        value: "IS",
-      },
-      {
-        label: "Israel",
-        value: "IL",
-      },
-      {
-        label: "Italie",
-        value: "IT",
-      },
-      {
-        label: "Jamaique",
-        value: "JM",
-      },
-      {
-        label: "Japon",
-        value: "JP",
-      },
-      {
-        label: "Jordanie",
-        value: "JO",
-      },
-      {
-        label: "Kazakhstan",
-        value: "KZ",
-      },
-      {
-        label: "Kenya",
-        value: "KE",
-      },
-      {
-        label: "Kirghizistan",
-        value: "KG",
-      },
-      {
-        label: "Kiribati",
-        value: "KI",
-      },
-      {
-        label: "Kosovo",
-        value: "XK",
-      },
-      {
-        label: "Koweit",
-        value: "KW",
-      },
-      {
-        label: "Laos",
-        value: "LA",
-      },
-      {
-        label: "Lesotho",
-        value: "LS",
-      },
-      {
-        label: "Lettonie",
-        value: "LV",
-      },
-      {
-        label: "Liban",
-        value: "LB",
-      },
-      {
-        label: "Liberia",
-        value: "LR",
-      },
-      {
-        label: "Libye",
-        value: "LY",
-      },
-      {
-        label: "Liechtenstein",
-        value: "LI",
-      },
-      {
-        label: "Lituanie",
-        value: "LT",
-      },
-      {
-        label: "Luxembourg",
-        value: "LU",
-      },
-      {
-        label: "Madagascar",
-        value: "MG",
-      },
-      {
-        label: "Malaisie",
-        value: "MY",
-      },
-      {
-        label: "Malawi",
-        value: "MW",
-      },
-      {
-        label: "Maldives",
-        value: "MV",
-      },
-      {
-        label: "Mali",
-        value: "ML",
-      },
-      {
-        label: "Malte",
-        value: "MT",
-      },
-      {
-        label: "Maroc",
-        value: "MA",
-      },
-      {
-        label: "Marshall (iles)",
-        value: "MH",
-      },
-      {
-        label: "Maurice",
-        value: "MU",
-      },
-      {
-        label: "Mauritanie",
-        value: "MR",
-      },
-      {
-        label: "Mexique",
-        value: "MX",
-      },
-      {
-        label: "Micronesie (etats federes de)",
-        value: "FM",
-      },
-      {
-        label: "Moldavie",
-        value: "MD",
-      },
-      {
-        label: "Monaco",
-        value: "MC",
-      },
-      {
-        label: "Mongolie",
-        value: "MN",
-      },
-      {
-        label: "Montenegro",
-        value: "ME",
-      },
-      {
-        label: "Mozambique",
-        value: "MZ",
-      },
-      {
-        label: "Namibie",
-        value: "NA",
-      },
-      {
-        label: "Nauru",
-        value: "NR",
-      },
-      {
-        label: "Nepal",
-        value: "NP",
-      },
-      {
-        label: "Nicaragua",
-        value: "NI",
-      },
-      {
-        label: "Niger",
-        value: "NE",
-      },
-      {
-        label: "Nigeria",
-        value: "NG",
-      },
-      {
-        label: "Norvege",
-        value: "NO",
-      },
-      {
-        label: "Nouvelle-zelande",
-        value: "NZ",
-      },
-      {
-        label: "Oman",
-        value: "OM",
-      },
-      {
-        label: "Ouganda",
-        value: "UG",
-      },
-      {
-        label: "Ouzbekistan",
-        value: "UZ",
-      },
-      {
-        label: "Pakistan",
-        value: "PK",
-      },
-      {
-        label: "Palaos (iles)",
-        value: "PW",
-      },
-      {
-        label: "Palestine (etat de)",
-        value: "PS",
-      },
-      {
-        label: "Panama",
-        value: "PA",
-      },
-      {
-        label: "Papouasie-nouvelle-guinee",
-        value: "PG",
-      },
-      {
-        label: "Paraguay",
-        value: "PY",
-      },
-      {
-        label: "Pays-bas",
-        value: "NL",
-      },
-      {
-        label: "Perou",
-        value: "PE",
-      },
-      {
-        label: "Philippines",
-        value: "PH",
-      },
-      {
-        label: "Pologne",
-        value: "PL",
-      },
-      {
-        label: "Portugal",
-        value: "PT",
-      },
-      {
-        label: "Qatar",
-        value: "QA",
-      },
-      {
-        label: "Roumanie",
-        value: "RO",
-      },
-      {
-        label: "Royaume-uni",
-        value: "GB",
-      },
-      {
-        label: "Russie",
-        value: "RU",
-      },
-      {
-        label: "Rwanda",
-        value: "RW",
-      },
-      {
-        label: "Saint-christophe-et-nieves",
-        value: "KN",
-      },
-      {
-        label: "Saint-marin",
-        value: "SM",
-      },
-      {
-        label: "Saint-martin (partie neerlandaise)",
-        value: "SX",
-      },
-      {
-        label: "Saint-vincent-et-les grenadines",
-        value: "VC",
-      },
-      {
-        label: "Sainte-lucie",
-        value: "LC",
-      },
-      {
-        label: "Salomon (iles)",
-        value: "SB",
-      },
-      {
-        label: "Samoa occidentales",
-        value: "WS",
-      },
-      {
-        label: "Sao tome-et-principe",
-        value: "ST",
-      },
-      {
-        label: "Senegal",
-        value: "SN",
-      },
-      {
-        label: "Serbie",
-        value: "RS",
-      },
-      {
-        label: "Seychelles",
-        value: "SC",
-      },
-      {
-        label: "Sierra leone",
-        value: "SL",
-      },
-      {
-        label: "Singapour",
-        value: "SG",
-      },
-      {
-        label: "Slovaquie",
-        value: "SK",
-      },
-      {
-        label: "Slovenie",
-        value: "SI",
-      },
-      {
-        label: "Somalie",
-        value: "SO",
-      },
-      {
-        label: "Soudan",
-        value: "SD",
-      },
-      {
-        label: "Soudan du sud",
-        value: "SS",
-      },
-      {
-        label: "Sri lanka",
-        value: "LK",
-      },
-      {
-        label: "Suede",
-        value: "SE",
-      },
-      {
-        label: "Suisse",
-        value: "CH",
-      },
-      {
-        label: "Suriname",
-        value: "SR",
-      },
-      {
-        label: "Syrie",
-        value: "SY",
-      },
-      {
-        label: "Tadjikistan",
-        value: "TJ",
-      },
-      {
-        label: "Tanzanie",
-        value: "TZ",
-      },
-      {
-        label: "Tchad",
-        value: "TD",
-      },
-      {
-        label: "Tcheque (republique)",
-        value: "CZ",
-      },
-      {
-        label: "Thailande",
-        value: "TH",
-      },
-      {
-        label: "Timor oriental",
-        value: "TL",
-      },
-      {
-        label: "Togo",
-        value: "TG",
-      },
-      {
-        label: "Tonga",
-        value: "TO",
-      },
-      {
-        label: "Trinite-et-tobago",
-        value: "TT",
-      },
-      {
-        label: "Tunisie",
-        value: "TN",
-      },
-      {
-        label: "Turkmenistan",
-        value: "TM",
-      },
-      {
-        label: "Turquie",
-        value: "TR",
-      },
-      {
-        label: "Tuvalu",
-        value: "TV",
-      },
-      {
-        label: "Ukraine",
-        value: "UA",
-      },
-      {
-        label: "Uruguay",
-        value: "UY",
-      },
-      {
-        label: "Vanuatu",
-        value: "VU",
-      },
-      {
-        label: "Vatican, ou saint-siege",
-        value: "VA",
-      },
-      {
-        label: "Venezuela",
-        value: "VE",
-      },
-      {
-        label: "Viet nam",
-        value: "VN",
-      },
-      {
-        label: "Yemen",
-        value: "YE",
-      },
-      {
-        label: "Zambie",
-        value: "ZM",
-      },
-      {
-        label: "Zimbabwe",
-        value: "ZW",
+  "apprenti.responsableLegal.courriel": {
+    label: "Courriel",
+    placeholder: "Exemple : jf.martin@email.fr",
+    fieldType: "email",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
       },
     ],
   },
 
-  "apprenti.situationAvantContrat": {
-    fieldType: "select",
-    required: true,
-    label: "Situation avant ce contrat :",
-    requiredMessage: "la situation de l'apprenti(e) avant ce contrat est obligatoire",
-    options: [
-      {
-        label: "1 Scolaire",
-        value: 1,
-      },
-      {
-        label: "2 Prépa apprentissage",
-        value: 2,
-      },
-      {
-        label: "3 Etudiant",
-        value: 3,
-      },
-      {
-        label: "4 Contrat d'apprentissage",
-        value: 4,
-      },
-      {
-        label: "5 Contrat de professionnalisation",
-        value: 5,
-      },
-      {
-        label: "6 Contrat aidé",
-        value: 6,
-      },
-      {
-        label:
-          "7 En formation au CFA sous statut de stagiaire de la formation professionnelle, avant signature d'un contrat d'apprentissage (L6222-12-1 du code du travail)",
-        value: 7,
-      },
-      {
-        label:
-          "8 En formation, au CFA sans contrat sous statut de stagiaire de la formation professionnelle, suite à rupture (5° de L6231-2 du code du travail)",
-        value: 8,
-      },
-      {
-        label: "9 Autres situations sous statut de stagiaire de la formation professionnelle",
-        value: 9,
-      },
-      {
-        label: "10 Salarié",
-        value: 10,
-      },
-      {
-        label: "11 Personne à la recherche d'un emploi (inscrite ou non à Pôle Emploi)",
-        value: 11,
-      },
-      {
-        label: "12 Inactif",
-        value: 12,
-      },
-    ],
-  },
-  "apprenti.diplomePrepare": {
-    fieldType: "select",
-    required: true,
-    options: [
-      {
-        name: "Diplôme ou titre de niveau bac +5 et plus",
-        options: [
-          {
-            label: "80: Doctorat",
-            value: 80,
-          },
-          {
-            label: "71: Master professionnel/DESS",
-            value: 71,
-          },
-          {
-            label: "72: Master recherche/DEA",
-            value: 72,
-          },
-          {
-            label: "73: Master indifférencié",
-            value: 73,
-          },
-          {
-            label: "74: Diplôme d'ingénieur, diplôme d'école de commerce",
-            value: 74,
-          },
-          {
-            label: "79: Autre diplôme ou titre de niveau bac+5 ou plus",
-            value: 79,
-          },
-        ],
-      },
-      {
-        name: "Diplôme ou titre de niveau bac +3 et 4",
-        options: [
-          {
-            label: "61: 1 ère année de Master",
-            value: 61,
-          },
-          {
-            label: "62: Licence professionnelle",
-            value: 62,
-          },
-          {
-            label: "63: Licence générale",
-            value: 63,
-          },
-          {
-            label: "69: Autre diplôme ou titre de niveau bac +3 ou 4",
-            value: 69,
-          },
-        ],
-      },
-      {
-        name: "Diplôme ou titre de niveau bac +2",
-        options: [
-          {
-            label: "54: Brevet de Technicien Supérieur",
-            value: 54,
-          },
-          {
-            label: "55: Diplôme Universitaire de technologie",
-            value: 55,
-          },
-          {
-            label: "58: Autre diplôme ou titre de niveau bac+2",
-            value: 58,
-          },
-        ],
-      },
-      {
-        name: "Diplôme ou titre de niveau bac",
-        options: [
-          {
-            label: "41: Baccalauréat professionnel",
-            value: 41,
-          },
-          {
-            label: "42: Baccalauréat général",
-            value: 42,
-          },
-          {
-            label: "43: Baccalauréat technologique",
-            value: 43,
-          },
-          {
-            label: "49: Autre diplôme ou titre de niveau bac",
-            value: 49,
-          },
-        ],
-      },
-      {
-        name: "Diplôme ou titre de niveau CAP/BEP",
-        options: [
-          {
-            label: "33: CAP",
-            value: 33,
-          },
-          {
-            label: "34: BEP",
-            value: 34,
-          },
-          {
-            label: "35: Mention complémentaire",
-            value: 35,
-          },
-          {
-            label: "38: Autre diplôme ou titre de niveau CAP/BEP",
-            value: 38,
-          },
-        ],
-      },
-      {
-        name: "Aucun diplôme ni titre",
-        options: [
-          {
-            label: "25: Diplôme national du Brevet",
-            value: 25,
-          },
-          {
-            label: "26: Certificat de formation générale",
-            value: 26,
-          },
-          {
-            label: "13: Aucun diplôme ni titre professionnel",
-            value: 13,
-          },
-        ],
-      },
-    ],
-    label: "Dernier diplôme ou titre préparé :",
-    requiredMessage: "le dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
-  },
-  "apprenti.derniereClasse": {
-    fieldType: "select",
-    required: true,
-    label: "Dernière classe / année suivie :",
-    requiredMessage: "la dernière classe / année suivie par l'apprenti(e) est obligatoire",
-    showInfo: true,
-    options: [
-      {
-        label: "01: l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre",
-        value: 1,
-      },
-      {
-        label:
-          "11: l'apprenti a suivi la 1ère année du cycle et l'a validée (examens réussis mais année non diplômante)",
-        value: 11,
-      },
-      {
-        label:
-          "12: l'apprenti a suivi la 1ère année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
-        value: 12,
-      },
-      {
-        label: "21: l'apprenti a suivi la 2è année du cycle et l'a validée (examens réussis mais année non diplômante)",
-        value: 21,
-      },
-      {
-        label:
-          "22: l'apprenti a suivi la 2è année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
-        value: 22,
-      },
-      {
-        label:
-          "31: l'apprenti a suivi la 3è année du cycle et l'a validée (examens réussis mais année non diplômante, cycle adaptés)",
-        value: 31,
-      },
-      {
-        label:
-          "32: l'apprenti a suivi la 3è année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
-        value: 32,
-      },
-      {
-        label: "40: l'apprenti a achevé le 1er cycle de l'enseignement secondaire (collège)",
-        value: 40,
-      },
-      {
-        label: "41: l'apprenti a interrompu ses études en classe de 3è",
-        value: 41,
-      },
-      {
-        label: "42: l'apprenti a interrompu ses études en classe de 4è",
-        value: 42,
-      },
-    ],
-  },
-  "apprenti.intituleDiplomePrepare": {
-    required: true,
-    showInfo: true,
-    label: "Intitulé précis du dernier diplôme ou titre préparé :",
-    requiredMessage: "l'intitulé du dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
-  },
-  "apprenti.diplome": {
-    fieldType: "select",
-    required: true,
-    showInfo: true,
-    options: [
-      {
-        name: "Diplôme ou titre de niveau bac +5 et plus",
-        options: [
-          {
-            label: "80: Doctorat",
-            value: 80,
-          },
-          {
-            label: "71: Master professionnel/DESS",
-            value: 71,
-          },
-          {
-            label: "72: Master recherche/DEA",
-            value: 72,
-          },
-          {
-            label: "73: Master indifférencié",
-            value: 73,
-          },
-          {
-            label: "74: Diplôme d'ingénieur, diplôme d'école de commerce",
-            value: 74,
-          },
-          {
-            label: "79: Autre diplôme ou titre de niveau bac+5 ou plus",
-            value: 79,
-          },
-        ],
-      },
-      {
-        name: "Diplôme ou titre de niveau bac +3 et 4",
-        options: [
-          {
-            label: "61: 1 ère année de Master",
-            value: 61,
-          },
-          {
-            label: "62: Licence professionnelle",
-            value: 62,
-          },
-          {
-            label: "63: Licence générale",
-            value: 63,
-          },
-          {
-            label: "69: Autre diplôme ou titre de niveau bac +3 ou 4",
-            value: 69,
-          },
-        ],
-      },
-      {
-        name: "Diplôme ou titre de niveau bac +2",
-        options: [
-          {
-            label: "54: Brevet de Technicien Supérieur",
-            value: 54,
-          },
-          {
-            label: "55: Diplôme Universitaire de technologie",
-            value: 55,
-          },
-          {
-            label: "58: Autre diplôme ou titre de niveau bac+2",
-            value: 58,
-          },
-        ],
-      },
-      {
-        name: "Diplôme ou titre de niveau bac",
-        options: [
-          {
-            label: "41: Baccalauréat professionnel",
-            value: 41,
-          },
-          {
-            label: "42: Baccalauréat général",
-            value: 42,
-          },
-          {
-            label: "43: Baccalauréat technologique",
-            value: 43,
-          },
-          {
-            label: "49: Autre diplôme ou titre de niveau bac",
-            value: 49,
-          },
-        ],
-      },
-      {
-        name: "Diplôme ou titre de niveau CAP/BEP",
-        options: [
-          {
-            label: "33: CAP",
-            value: 33,
-          },
-          {
-            label: "34: BEP",
-            value: 34,
-          },
-          {
-            label: "35: Mention complémentaire",
-            value: 35,
-          },
-          {
-            label: "38: Autre diplôme ou titre de niveau CAP/BEP",
-            value: 38,
-          },
-        ],
-      },
-      {
-        name: "Aucun diplôme ni titre",
-        options: [
-          {
-            label: "25: Diplôme national du Brevet",
-            value: 25,
-          },
-          {
-            label: "26: Certificat de formation générale",
-            value: 26,
-          },
-          {
-            label: "13: Aucun diplôme ni titre professionnel",
-            value: 13,
-          },
-        ],
-      },
-    ],
-    label: "Diplôme ou titre le plus élevé obtenu :",
-    requiredMessage: "le diplôme ou titre le plus élevé obtenu par l'apprenti(e) est obligatoire",
-  },
   "apprenti.age": { fieldType: "number" },
 };

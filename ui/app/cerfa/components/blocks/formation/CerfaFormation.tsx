@@ -18,14 +18,25 @@ const CerfaFormation: FC = () => {
 
         <InputGroupContainer>
           <InputGroupItem size={6}>
-            <InputController name="organismeFormation.denomination" />
+            <InputController name="organismeFormation.uaiCfa" />
           </InputGroupItem>
           <InputGroupItem size={6}>
-            <InputController name="organismeFormation.uaiCfa" />
+            <InputController name="organismeFormation.denomination" />
           </InputGroupItem>
         </InputGroupContainer>
 
-        <InputGroupTitle>Adresse du CFA responsable</InputGroupTitle>
+        <InputGroupContainer>
+          <InputGroupItem size={6}>
+            <InputController name="formation.rncp" />
+          </InputGroupItem>
+          <InputGroupItem size={6}>
+            <InputController name="formation.codeDiplome" />
+          </InputGroupItem>
+        </InputGroupContainer>
+        <InputController name="formation.intituleQualification" />
+        <InputController name="formation.typeDiplome" />
+
+        <InputGroupTitle>Adresse et contact du CFA responsable</InputGroupTitle>
 
         <InputGroupContainer>
           <InputGroupItem size={2}>
@@ -50,16 +61,43 @@ const CerfaFormation: FC = () => {
 
         <InputController name="etablissementFormation.memeResponsable" />
 
-        <InputGroupContainer>
-          <InputGroupItem size={6}>
-            <InputController name="formation.rncp" />
-          </InputGroupItem>
-          <InputGroupItem size={6}>
-            <InputController name="formation.codeDiplome" />
-          </InputGroupItem>
-        </InputGroupContainer>
-        <InputController name="formation.typeDiplome" />
-        <InputController name="formation.intituleQualification" />
+        <CollapseController show={shouldAskEtablissementFormation}>
+          <InputGroupTitle>Le lieu de formation</InputGroupTitle>
+
+          <InputController name="etablissementFormation.siret" />
+
+          <InputGroupContainer>
+            <InputGroupItem size={6}>
+              <InputController name="etablissementFormation.uaiCfa" />
+            </InputGroupItem>
+            <InputGroupItem size={6}>
+              <InputController name="etablissementFormation.denomination" />
+            </InputGroupItem>
+          </InputGroupContainer>
+
+          <InputGroupTitle>Adresse du lieu de formation</InputGroupTitle>
+
+          <InputGroupContainer>
+            <InputGroupItem size={2}>
+              <InputController name="etablissementFormation.adresse.numero" />
+            </InputGroupItem>
+            <InputGroupItem size={3}>
+              <InputController name="etablissementFormation.adresse.repetitionVoie" />
+            </InputGroupItem>
+            <InputGroupItem size={7}>
+              <InputController name="etablissementFormation.adresse.voie" />
+            </InputGroupItem>
+            <InputGroupItem size={6}>
+              <InputController name="etablissementFormation.adresse.complement" />
+            </InputGroupItem>
+            <InputGroupItem size={6}>
+              <InputController name="etablissementFormation.adresse.codePostal" />
+            </InputGroupItem>
+            <InputGroupItem size={6}>
+              <InputController name="etablissementFormation.adresse.commune" />
+            </InputGroupItem>
+          </InputGroupContainer>
+        </CollapseController>
 
         <InputGroupTitle>Organisation de la formation en CFA</InputGroupTitle>
 
@@ -75,44 +113,6 @@ const CerfaFormation: FC = () => {
           </InputGroupItem>
         </InputGroupContainer>
       </Box>
-
-      <CollapseController show={shouldAskEtablissementFormation}>
-        <InputGroupTitle>Le lieu de formation</InputGroupTitle>
-
-        <InputController name="etablissementFormation.siret" />
-
-        <InputGroupContainer>
-          <InputGroupItem size={6}>
-            <InputController name="etablissementFormation.denomination" />
-          </InputGroupItem>
-          <InputGroupItem size={6}>
-            <InputController name="etablissementFormation.uaiCfa" />
-          </InputGroupItem>
-        </InputGroupContainer>
-
-        <InputGroupTitle>Adresse du lieu de formation</InputGroupTitle>
-
-        <InputGroupContainer>
-          <InputGroupItem size={2}>
-            <InputController name="etablissementFormation.adresse.numero" />
-          </InputGroupItem>
-          <InputGroupItem size={3}>
-            <InputController name="etablissementFormation.adresse.repetitionVoie" />
-          </InputGroupItem>
-          <InputGroupItem size={7}>
-            <InputController name="etablissementFormation.adresse.voie" />
-          </InputGroupItem>
-          <InputGroupItem size={6}>
-            <InputController name="etablissementFormation.adresse.complement" />
-          </InputGroupItem>
-          <InputGroupItem size={6}>
-            <InputController name="etablissementFormation.adresse.codePostal" />
-          </InputGroupItem>
-          <InputGroupItem size={6}>
-            <InputController name="etablissementFormation.adresse.commune" />
-          </InputGroupItem>
-        </InputGroupContainer>
-      </CollapseController>
 
       <CheckEmptyFields schema={{}} blockName="formation" />
     </Box>

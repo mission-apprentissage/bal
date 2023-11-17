@@ -3,18 +3,13 @@ import { FC } from "react";
 
 import { InputFieldProps } from "./InputField";
 
-const ConsentInput: FC<InputFieldProps> = ({ name, fieldMethods, fieldSchema, state, stateRelatedMessage }) => {
+const ConsentInput: FC<InputFieldProps> = ({ fieldSchema, state, stateRelatedMessage, inputProps }) => {
   return (
     <Checkbox
       options={[
         {
           label: fieldSchema?.label ?? "",
-          nativeInputProps: {
-            name: name,
-            onChange: (event) => {
-              fieldMethods.setValue(name, event.target.checked);
-            },
-          },
+          nativeInputProps: inputProps,
         },
       ]}
       state={state}

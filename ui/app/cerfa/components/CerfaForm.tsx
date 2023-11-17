@@ -37,6 +37,9 @@ const CerfaForm: FC = () => {
       },
       apprenti: {
         dateNaissance: "",
+        projetCreationRepriseEntreprise: "non",
+        inscriptionSportifDeHautNiveau: "non",
+        handicap: "non",
       },
     },
   });
