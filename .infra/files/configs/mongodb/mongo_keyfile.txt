@@ -1,1 +1,1 @@
-{{vault[env_type].MNA_BAL_MONGODB_KEYFILE}}
+{{vault.MNA_BAL_MONGODB_KEYFILE}}

@@ -62,7 +62,7 @@ fileignoreconfig:
 - filename: .infra/files/configs/mongodb/seed.gpg
   checksum: df2838c8e4fdb523d03cc6895f3ff4a7150db0c2ba5b2b40c6aa381c16e6dcce
 - filename: .infra/files/scripts/seed.sh
-  checksum: 4b09f45b68160012dc9732fa27df819a2dec1e56603f4e4ff0f1b9fd344092d7
+  checksum: 7f946642b25cf10f111225b27e2f96f77cfc728bc22c4bc3ae95968acf8f6197
 - filename: .infra/scripts/deploy-app.sh
   checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
 - filename: .infra/scripts/ovh/create-backup-partition.sh
@@ -80,7 +80,7 @@ fileignoreconfig:
 - filename: .infra/vault/setup-local-env.sh
   checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: b0e17ee2eed2f8ec75d7820efabecda88bc08bb2b47dbe2e22cd34194da89182
+  checksum: bc79236b92bb239dae8fa2bf2e4b0ffc30e29285e13979cb71733d7a39261fb0
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:

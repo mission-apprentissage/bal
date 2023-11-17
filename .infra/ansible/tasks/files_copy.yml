@@ -23,7 +23,6 @@
     - item.path | basename != '.DS_Store'
     # seed.gpg should not be template replaced
     - item.path | basename != 'seed.gpg'
-    - item.path | basename != 'seed.gpg'
     - item.path | basename != 'mongo_keyfile.txt'
     # /app/tools is managed by infra
     - item.path | regex_search('^tools/?') == none
