@@ -6,6 +6,9 @@ export const employeurCodePostalControl: CerfaControl[] = [
     deps: ["employeur.adresse.codePostal"],
     process: async ({ values, signal }) => {
       const codePostal = values.employeur.adresse.codePostal;
+
+      if (codePostal.length < 5) return { error: "le code postal doit comporter 5 chiffres" };
+
       const { messages, result } = await fetchCodePostal({
         codePostal,
         signal,

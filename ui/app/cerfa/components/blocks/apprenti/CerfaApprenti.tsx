@@ -43,6 +43,9 @@ const CerfaApprenti: FC = () => {
           <InputController name="apprenti.departementNaissance" />
         </InputGroupItem>
         <InputGroupItem size={6}>
+          <InputController name="apprenti.nir" />
+        </InputGroupItem>
+        <InputGroupItem size={6}>
           <InputController name="apprenti.regimeSocial" />
         </InputGroupItem>
       </InputGroupContainer>

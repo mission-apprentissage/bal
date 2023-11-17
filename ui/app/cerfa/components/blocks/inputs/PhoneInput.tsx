@@ -28,6 +28,7 @@ const PhoneInput: FC<InputFieldProps> = ({
       label={fieldSchema.label}
       state={state}
       stateRelatedMessage={stateRelatedMessage}
+      hintText={fieldSchema.placeholder}
       phoneInputProps={{
         specialLabel: "",
         onChange: handleChange,
@@ -38,6 +39,7 @@ const PhoneInput: FC<InputFieldProps> = ({
         },
         countryCodeEditable: false,
         enableTerritories: true,
+        placeholder: fieldSchema.placeholder,
       }}
     />
   );

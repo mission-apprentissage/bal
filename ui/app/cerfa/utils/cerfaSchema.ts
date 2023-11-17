@@ -24,12 +24,15 @@ export interface RadioOption {
 type SelectOptions = SelectOption[] | SelectNestedOption[] | RadioOption[];
 
 export interface CerfaField {
+  _init?: ({ value }) => CerfaField;
   required?: boolean;
   showInfo?: boolean;
   fieldType?: FieldType;
   label?: string;
+  placeholder?: string;
   requiredMessage?: string;
   validateMessage?: string;
+  completion?: boolean;
   precision?: number;
   min?: number;
   mask?: string;
@@ -50,6 +53,7 @@ export interface CerfaField {
   minLength?: number;
   maxLength?: number;
   options?: SelectOptions;
+  messages?: { type: "assistive" | "regulatory" | "bonus"; content: string }[];
 }
 
 interface CerfaFields {

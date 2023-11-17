@@ -1,26 +1,36 @@
+import { CerfaField } from "../../../utils/cerfaSchema";
 import { INDICE_DE_REPETITION_OPTIONS } from "../domain/indiceRepetitionOptions";
 import { nomPattern } from "../domain/nomPattern";
 import { shouldAskRepresentantLegal } from "../domain/shouldAskRepresentantLegal";
 import { shouldAskResponsableLegalAdresse } from "../domain/shouldAskResponsableLegalAdresse";
 
-export const apprentiSchema = {
+export const apprentiSchema: Record<string, CerfaField> = {
   "apprenti.nom": {
+    label: "Nom de naissance de l'apprenti(e )",
+    placeholder: "Exemple : Martin",
     required: true,
     showInfo: true,
-    label: "Nom de naissance de l'apprenti(e) :",
-    requiredMessage: "Le nom de l'apprenti(e) est obligatoire",
+    requiredMessage: "Le nom de naissance de l'apprenti(e) est obligatoire",
     mask: "C",
     maskBlocks: [
       {
         name: "C",
         mask: "Pattern",
         pattern: nomPattern,
+      },
+    ],
+    messages: [
+      {
+        type: "assistive",
+        content:
+          "Le nom doit strictement correspondre à l'identité officielle de l'apprenti(e) (attention aux inversions). Le nom de naissance ou nom de famille est celui qui figure sur l’acte de naissance.",
       },
     ],
   },
   "apprenti.nomUsage": {
+    label: "Nom d'usage",
+    placeholder: "Exemple : Dupont ; Martin-Dupont",
     showInfo: true,
-    label: "Nom d'usage de l'apprenti(e) :",
     mask: "C",
     maskBlocks: [
       {
@@ -29,11 +39,19 @@ export const apprentiSchema = {
         pattern: nomPattern,
       },
     ],
+    messages: [
+      {
+        type: "assistive",
+        content:
+          "Le nom d'usage est le nom choisi par une personne pour être utilisé dans la vie courante : par exemple, une personne mariée peut  utiliser le nom de son époux(se). Plus d'information sur le site du Service public [https://www.service-public.fr/particuliers/vosdroits/F868](https://www.service-public.fr/particuliers/vosdroits/F868).",
+      },
+    ],
   },
   "apprenti.prenom": {
+    label: "Le premier prénom de l'apprenti(e ) selon l'état civil",
+    placeholder: "Exemple : Jean-François",
     required: true,
     showInfo: true,
-    label: "Prénom de l'apprenti(e) :",
     requiredMessage: "Le prénom de l'apprenti(e) est obligatoire",
     mask: "C",
     maskBlocks: [
@@ -50,6 +68,28 @@ export const apprentiSchema = {
     label: "Date de naissance :",
     requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
     showInfo: true,
+    messages: [
+      {
+        type: "bonus",
+        content:
+          "La date de naissance combinée à la date d'exécution du contrat définira si l'apprenti(e) est mineur(e) ou majeur(e) et est bien âgé de 15 ans ou plus. Si l'apprenti(e) est mineur(e) à la date de signature du contrat, vous devrez renseigner le cas d'émancipation ou les informations relatives au réprésentant légal.",
+      },
+      {
+        type: "regulatory",
+        content: `L'apprenti peut être âgé au maximum de 35 ans révolus (36 ans moins 1 jour) dans les cas suivants :
+
+- Apprenti signant un nouveau contrat pour accéder à un niveau de diplôme supérieur à celui déjà obtenu
+- Précédent contrat de l'apprenti rompu pour des raisons indépendantes de sa volonté
+- Précédent contrat de l'apprenti rompu pour inaptitude physique et temporaire
+Dans ces cas, il ne doit pas s'écouler plus d'1 an entre les 2 contrats.
+
+Pas de limite d'âge si  l'apprenti : 
+-  est reconnu travailleur handicapé
+- envisage de créer ou reprendre une entreprise supposant l'obtention d'un diplôme
+- est inscrit en tant que sportif de haut niveau
+- n'a pas obtenu son diplôme et conclue un nouveau contrat avec un autre employeur pour se présenter de nouveau à l'examen`,
+      },
+    ],
   },
   "apprenti.sexe": {
     required: true,
@@ -75,11 +115,52 @@ export const apprentiSchema = {
     options: [
       {
         label: "Oui",
-        value: true,
+        value: "oui",
       },
       {
         label: "Non",
-        value: false,
+        value: "non",
+      },
+    ],
+  },
+
+  "apprenti.communeNaissance": {
+    required: true,
+    label: "Commune de naissance :",
+    requiredMessage: "la commune de naissance est obligatoire",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
+  },
+  "apprenti.departementNaissance": {
+    required: true,
+    label: "Département de naissance :",
+    requiredMessage: "le département de naissance est obligatoire",
+    validateMessage: " n'est pas un département valide",
+    showInfo: true,
+  },
+  "apprenti.nir": {
+    label: "Numéro de sécurité sociale (NIR)",
+    requiredMessage: "n'est pas un numéro de sécurité sociale valide",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
+      },
+    ],
+    messages: [
+      {
+        type: "assistive",
+        content: `Il s'agit du numéro de sécurité sociale.
+      Ce numéro est inscrit sur la carte vitale des personnes majeures, en dessous du nom et du prénom du porteur. 
+      Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes physiques.`,
       },
     ],
   },
@@ -103,26 +184,6 @@ export const apprentiSchema = {
         value: 3,
       },
     ],
-  },
-  "apprenti.communeNaissance": {
-    required: true,
-    label: "Commune de naissance :",
-    requiredMessage: "la commune de naissance est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
-  },
-  "apprenti.departementNaissance": {
-    required: true,
-    label: "Département de naissance :",
-    requiredMessage: "le département de naissance est obligatoire",
-    validateMessage: " n'est pas un département valide",
-    showInfo: true,
   },
   "apprenti.regimeSocial": {
     fieldType: "select",
@@ -181,7 +242,6 @@ export const apprentiSchema = {
     label: "Code postal :",
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
-    pattern: "^[0-9]{5}$",
     mask: "C",
     maskBlocks: [
       {
@@ -1069,11 +1129,11 @@ export const apprentiSchema = {
     options: [
       {
         label: "Oui",
-        value: true,
+        value: "oui",
       },
       {
         label: "Non",
-        value: false,
+        value: "non",
       },
     ],
   },
@@ -1085,11 +1145,11 @@ export const apprentiSchema = {
     options: [
       {
         label: "Oui",
-        value: true,
+        value: "oui",
       },
       {
         label: "Non",
-        value: false,
+        value: "non",
       },
     ],
   },
@@ -1102,11 +1162,11 @@ export const apprentiSchema = {
     options: [
       {
         label: "Oui",
-        value: true,
+        value: "oui",
       },
       {
         label: "Non",
-        value: false,
+        value: "non",
       },
     ],
   },
@@ -1210,7 +1270,6 @@ export const apprentiSchema = {
   },
   "apprenti.responsableLegal.adresse.commune": {
     _init: ({ values }: any) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
-    path: "apprenti.responsableLegal.adresse.commune",
     maxLength: 80,
     label: "Commune: ",
     requiredMessage: "la commune est obligatoire",

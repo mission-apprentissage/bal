@@ -16,6 +16,7 @@ const TextInput: FC<InputFieldProps> = (props) => {
       label={fieldSchema.label}
       nativeInputProps={{
         ...inputProps,
+        placeholder: fieldSchema.placeholder,
       }}
       state={state}
       stateRelatedMessage={stateRelatedMessage}

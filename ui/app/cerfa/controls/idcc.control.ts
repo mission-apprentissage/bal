@@ -1,37 +1,42 @@
+import { idcc } from "shared/constants/idcc";
+
 import { CerfaControl } from ".";
 
 export const idccControl: CerfaControl[] = [
   {
     deps: ["employeur.codeIdcc"],
-    process: ({ values, fields }) => {
+    process: ({ values, fields: _ }) => {
       const codeIdcc = values.employeur.codeIdcc;
-      const index = fields["employeur.codeIdcc"].enum?.indexOf(codeIdcc);
-      if (index < 0) {
-        return { error: "Le code IDCC n'est pas valide" };
+      const foundIdcc = idcc?.[codeIdcc];
+
+      if (codeIdcc.length < 4) {
+        return { error: "Le code IDCC doit comporter 4 chiffres" };
+      }
+
+      if (!foundIdcc) {
+        return { error: "Le code IDCC est inconnu" };
       }
 
       return {
         cascade: {
           "employeur.codeIdcc_special": { value: codeIdcc, cascade: false },
-          "employeur.libelleIdcc": { value: fields["employeur.libelleIdcc"].enum?.[index].trim() },
+          "employeur.libelleIdcc": { value: foundIdcc.libelle.trim() },
         },
       };
     },
   },
   {
     deps: ["employeur.codeIdcc_special"],
-    process: ({ values, fields }) => {
+    process: ({ values, fields: _ }) => {
       const codeIdcc = values.employeur.codeIdcc_special;
+      const foundIdcc = idcc?.[codeIdcc];
 
-      const index = fields["employeur.codeIdcc"].enum?.indexOf(codeIdcc);
-      if (index === -1) return;
-
-      const libelleIdcc = fields["employeur.libelleIdcc"]?.enum?.[index];
+      if (!foundIdcc) return;
 
       return {
         cascade: {
           "employeur.codeIdcc": { value: codeIdcc, cascade: false },
-          "employeur.libelleIdcc": { value: libelleIdcc?.trim() },
+          "employeur.libelleIdcc": { value: foundIdcc.libelle?.trim() },
         },
       };
     },

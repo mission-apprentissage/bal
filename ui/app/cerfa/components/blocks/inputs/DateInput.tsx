@@ -7,7 +7,7 @@ const DateInput: FC<InputFieldProps> = ({ fieldSchema, state, stateRelatedMessag
   return (
     <Input
       label={fieldSchema.label}
-      nativeInputProps={{ ...inputProps, type: "date" }}
+      nativeInputProps={{ ...inputProps, placeholder: fieldSchema.placeholder, type: "date" }}
       state={state}
       stateRelatedMessage={stateRelatedMessage}
     />

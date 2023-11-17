@@ -14,6 +14,7 @@ const NumberInput: FC<InputFieldProps> = (props) => {
         inputMode: "numeric",
         pattern: "[0-9]*",
         type: "number",
+        placeholder: fieldSchema.placeholder,
       }}
       state={state}
       stateRelatedMessage={stateRelatedMessage}

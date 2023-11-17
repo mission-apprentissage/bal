@@ -16,7 +16,7 @@ const SelectInput: FC<InputFieldProps> = ({ fieldSchema, inputProps, state, stat
       state={state}
       stateRelatedMessage={stateRelatedMessage}
     >
-      <option value="">Sélectionnez une option</option>
+      <option value="">{fieldSchema.placeholder ?? "Sélectionnez une option"}</option>
       {groupedOptions
         ? groupedOptions?.map((group) => (
             <optgroup key={group.name} label={group.name}>

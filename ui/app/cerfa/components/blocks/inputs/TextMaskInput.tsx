@@ -68,6 +68,7 @@ const TextMaskInput: FC<InputFieldProps> = ({
         ...inputProps,
         minLength,
         maxLength,
+        placeholder: fieldSchema.placeholder,
       }}
       maskInputProps={{
         mask,
@@ -82,6 +83,7 @@ const TextMaskInput: FC<InputFieldProps> = ({
         autofix: true,
         lazy: false,
         blocks,
+        placeholder: fieldSchema.placeholder,
       }}
       state={state}
       stateRelatedMessage={stateRelatedMessage}

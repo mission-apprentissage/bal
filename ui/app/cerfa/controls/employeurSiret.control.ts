@@ -1,4 +1,3 @@
-import { INDICE_DE_REPETITION_OPTIONS } from "../components/blocks/domain/indiceRepetitionOptions";
 import { CerfaControl } from ".";
 import { fetchSiret } from "./utils/api.utils";
 
@@ -25,6 +24,8 @@ export const employerSiretLogic: CerfaControl = {
   process: async ({ values, signal }) => {
     const siret = values.employeur.siret;
 
+    if (siret.length < 14) return { error: "le siret doit comporter 14 chiffres" };
+
     const { messages, result } = await fetchSiret({
       siret,
       signal,
@@ -35,7 +36,7 @@ export const employerSiretLogic: CerfaControl = {
 
     if (result.api_entreprise === "KO") {
       return {
-        warning: `Le service de récupération des informations Siret est momentanément indisponible. Nous ne pouvons pas pre-remplir le formulaire.`,
+        warning: `Récupération automatique des données des autres champs impossible en raison d'une maintenance du service.`,
         cascade: unlockAllCascade,
       };
     }
@@ -83,9 +84,7 @@ export const employerSiretLogic: CerfaControl = {
           locked: false,
         },
         "employeur.adresse.repetitionVoie": {
-          value: INDICE_DE_REPETITION_OPTIONS.find(
-            (option) => option.label.toLowerCase() === result.indice_repetition_voie
-          )?.value,
+          value: result.indice_repetition_voie,
           reset: true,
           locked: false,
         },

@@ -1,6 +1,9 @@
 import { CerfaForm } from "../components/CerfaForm";
 import { ageApprentiControl } from "./ageApprenti.control";
 import { apprentiCodePostalControl } from "./apprentiCodePostal.control";
+import { apprentiDateNaissanceControl } from "./apprentiDateNaissance.control";
+import { apprentiNirControl } from "./apprentiNir.control";
+import { apprentiSexe } from "./apprentiSexe.control";
 import { avantagesNatureControl } from "./avantagesNature.control";
 import { codeDiplomeControl } from "./codeDiplome.control";
 import { ContratDatesControl } from "./ContratDates.control";
@@ -46,7 +49,10 @@ export const controls: CerfaControl[] = [
   ...etablissementFormationSiretControl,
   ...etablissementFormationCodePostalControl,
   ...organismeFormationCodePostalControl,
+  ...apprentiDateNaissanceControl,
+  ...apprentiSexe,
   ...apprentiCodePostalControl,
+  ...apprentiNirControl,
   ...employeurNafControl,
   ...employeurCodePostalControl,
   ...typeContratAppControl,

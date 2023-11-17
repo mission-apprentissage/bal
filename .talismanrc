@@ -68,7 +68,7 @@ fileignoreconfig:
 - filename: .infra/vault/setup-local-env.sh
   checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: f8856537503f627010a9ae647e02e26a1d6e106f209d4457c5470ad34b2ff44b
+  checksum: b01318cf1760adc941fc1b6359ef90dd8a7c0ec3e26b532755e7ab31c859721f
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:
@@ -140,6 +140,8 @@ fileignoreconfig:
   checksum: 4194653ea06bcc0e5ac336e888c26ec6b7d0626451c8a01b04398d9c406b8946
 - filename: ui/app/usage/validation/page.tsx
   checksum: 2123980fbc1470fc2791b08e838ad20207483a7770301014c3e44ac80f660c09
+- filename: ui/app/cerfa/components/blocks/employeur/employeurSchema.ts
+  checksum: 217756fbe884f724f5dec9364f4aaf650f9d2f9397ec0bbe2c2270db321df395
 scopeconfig:
 - scope: node
 custom_patterns:

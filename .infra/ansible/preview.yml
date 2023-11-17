@@ -5,12 +5,12 @@
   vars_files:
     - "../vault/vault.yml"
   tasks:
-    - include_tasks: ./tasks/files_copy.yml
+    # - include_tasks: ./tasks/files_copy.yml
 
-    - name: lancement preview system
-      shell:
-        chdir: /opt/app
-        cmd: docker compose -f docker-compose.preview-system.yml up -d --wait
+    # - name: lancement preview system
+    #   shell:
+    #     chdir: /opt/app
+    #     cmd: docker compose -f docker-compose.preview-system.yml up -d --wait
 
     - include_tasks: ./tasks/preview_pr.yml
       vars:
