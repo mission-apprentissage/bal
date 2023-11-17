@@ -1097,11 +1097,11 @@ Pas de limite d'âge si  l'apprenti :
     options: [
       {
         label: "Oui",
-        value: true,
+        value: "oui",
       },
       {
         label: "Non",
-        value: false,
+        value: "non",
       },
     ],
   },
@@ -1113,11 +1113,11 @@ Pas de limite d'âge si  l'apprenti :
     options: [
       {
         label: "Oui",
-        value: true,
+        value: "oui",
       },
       {
         label: "Non",
-        value: false,
+        value: "non",
       },
     ],
   },
@@ -1208,11 +1208,11 @@ Pas de limite d'âge si  l'apprenti :
     options: [
       {
         label: "Oui",
-        value: true,
+        value: "oui",
       },
       {
         label: "Non",
-        value: false,
+        value: "non",
       },
     ],
   },
