@@ -2,7 +2,7 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { IMailingListJson } from "shared/models/mailingList.model";
+import { IMailingListWithDocumentJson } from "shared/models/mailingList.model";
 
 import { apiGet } from "../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
@@ -10,12 +10,16 @@ import GeneratingMailingList from "./components/GeneratingMailingList";
 import ListMailingList from "./components/ListMailingList";
 
 const ListeDiffusionPage = () => {
-  const { data: mailingLists = [], refetch } = useQuery<IMailingListJson[]>({
+  const { data: mailingLists = [], refetch } = useQuery<IMailingListWithDocumentJson[]>({
     queryKey: ["mailingLists"],
     queryFn: async () => apiGet("/mailing-lists", {}),
   });
 
-  const generatingMailingList = mailingLists?.find((ml) => ml.status === "processing");
+  const generatingMailingList = mailingLists?.find((ml) => {
+    const status = ml.document?.job_status ?? "pending";
+
+    return status === "processing" || status === "pending";
+  });
 
   return (
     <>

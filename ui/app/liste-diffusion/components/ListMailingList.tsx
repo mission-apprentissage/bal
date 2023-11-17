@@ -2,7 +2,7 @@ import { fr } from "@codegouvfr/react-dsfr";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { FC, useState } from "react";
-import { IMailingListJson } from "shared/models/mailingList.model";
+import { IMailingListWithDocumentJson } from "shared/models/mailingList.model";
 import { IResErrorJson } from "shared/routes/common.routes";
 
 import Table from "../../../components/table/Table";
@@ -12,7 +12,7 @@ import { formatDate } from "../../../utils/date.utils";
 import { PAGES } from "../../components/breadcrumb/Breadcrumb";
 
 interface Props {
-  mailingLists?: IMailingListJson[];
+  mailingLists?: IMailingListWithDocumentJson[];
   onDelete?: () => void;
 }
 
@@ -64,16 +64,18 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             flex: 1,
           },
           {
-            field: "status",
+            field: "document",
             headerName: "Statut",
             width: 200,
             valueFormatter: ({ value }) => {
+              const status: string = value?.job_status ?? "";
               return (
                 {
                   processing: "En cours de génération",
                   done: "Terminé",
                   error: "Erreur",
-                }[value as string] ?? ""
+                  pending: "En attente",
+                }[status] ?? "En attente"
               );
             },
           },
@@ -92,8 +94,9 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             width: 150,
             getActions: ({ row }) => {
               const actions = [];
+              const status = row.document?.job_status ?? "processing";
 
-              if (row.status === "done") {
+              if (status === "done") {
                 actions.push(
                   <Button
                     key="download"
@@ -113,7 +116,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
                 );
               }
 
-              if (row.status !== "processing") {
+              if (status !== "processing") {
                 actions.push(
                   <Button
                     key="duplicate"

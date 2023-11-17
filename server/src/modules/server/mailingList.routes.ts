@@ -4,6 +4,7 @@ import Boom, { notFound } from "@hapi/boom";
 import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
 import { zRoutes } from "shared";
+import { IMailingListDocument } from "shared/models/document.model";
 import { Readable } from "stream";
 
 import logger from "../../common/logger";
@@ -11,13 +12,12 @@ import * as crypto from "../../common/utils/cryptoUtils";
 import { getFromStorage } from "../../common/utils/ovhUtils";
 import { getUserFromRequest } from "../../security/authenticationService";
 import { findDocument } from "../actions/documents.actions";
-import { findSimpleJob } from "../actions/job.actions";
 import {
   createMailingList,
   createMailingListFile,
   deleteMailingList,
   findMailingList,
-  findMailingLists,
+  findMailingListWithDocument,
 } from "../actions/mailingLists.actions";
 import { Server } from "./server";
 import { noop } from "./utils/upload.utils";
@@ -54,14 +54,9 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const user = getUserFromRequest(request, zRoutes.get["/mailing-lists"]);
 
-      const mailingLists = await findMailingLists(
-        {
-          added_by: user._id.toString(),
-        },
-        {
-          sort: { created_at: -1 },
-        }
-      );
+      const mailingLists = await findMailingListWithDocument({
+        added_by: user._id.toString(),
+      });
 
       return response.status(200).send(mailingLists);
     }
@@ -112,21 +107,17 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         throw Boom.forbidden("Forbidden");
       }
 
-      const job = await findSimpleJob({
-        name: "generate:mailing-list",
-        "payload.mailing_list_id": mailingList._id.toString(),
-      });
-
-      if (!job) {
-        throw Boom.notFound("Job not found");
-      }
-
-      const { processed, processed_count } = job.payload || {};
+      const document = mailingList.document_id
+        ? await findDocument<IMailingListDocument>({
+            _id: new ObjectId(mailingList.document_id),
+            kind: "mailingList",
+          })
+        : null;
 
       return response.status(200).send({
-        status: job.status,
-        processed: (processed as number) ?? 0,
-        processed_count: (processed_count as number) ?? 0,
+        status: document?.job_status ?? "pending",
+        process_progress: document?.process_progress ?? 0,
+        lines_count: document?.lines_count ?? 0,
       });
     }
   );

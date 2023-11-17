@@ -1,21 +1,21 @@
 import { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
+import { addJob } from "job-processor";
 import { ObjectId } from "mongodb";
 import { zRoutes } from "shared";
 import { FILE_SIZE_LIMIT } from "shared/constants/index";
-import { IDocument, toPublicDocument } from "shared/models/document.model";
+import { IDocument, IUploadDocument, toPublicDocument } from "shared/models/document.model";
 
 import logger from "@/common/logger";
 
 import { getUserFromRequest } from "../../../security/authenticationService";
 import {
-  createEmptyDocument,
+  createUploadDocument,
   deleteDocumentById,
-  findDocumentsWithImportJob,
+  findDocuments,
   getDocumentTypes,
   uploadFile,
 } from "../../actions/documents.actions";
-import { addJob } from "../../jobs/jobs_actions";
 import { Server } from "../server";
 
 const validateFile = (file: MultipartFile) => {
@@ -41,6 +41,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.post["/admin/upload"])],
     },
     async (request, response) => {
+      const user = getUserFromRequest(request, zRoutes.post["/admin/upload"]);
       const { type_document, delimiter } = request.query;
       const fileSize = parseInt(request.headers["content-length"] ?? "0");
 
@@ -61,11 +62,12 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         throw Boom.unauthorized("Le fichier n'est pas au bon format");
       }
 
-      const document = await createEmptyDocument({
+      const document = await createUploadDocument({
         type_document,
         fileSize,
         filename: data.filename as `${string}.${IDocument["ext_fichier"]}`,
         delimiter,
+        added_by: user._id,
       });
 
       if (!document) {
@@ -75,7 +77,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       try {
         const added_by = getUserFromRequest(request, zRoutes.post["/admin/upload"])._id.toString();
 
-        await uploadFile(added_by, data.file, document._id, {
+        await uploadFile(added_by, data.file, document, {
           mimetype: data.mimetype,
         });
 
@@ -109,18 +111,15 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/admin/documents"])],
     },
     async (_request, response) => {
-      const documents = await findDocumentsWithImportJob(
+      const documents = await findDocuments<IUploadDocument>(
         {
-          // exclude mailing lists files from the list
-          type_document: { $nin: [/mailing-list/] },
+          kind: "upload",
         },
-        [
-          {
-            $sort: {
-              created_at: -1,
-            },
+        {
+          sort: {
+            created_at: -1,
           },
-        ]
+        }
       );
 
       return response.status(200).send(documents.map(toPublicDocument));

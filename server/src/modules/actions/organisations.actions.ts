@@ -1,6 +1,6 @@
 import { internal } from "@hapi/boom";
 import companyEmailValidator from "company-email-validator";
-import { Filter, FindOptions } from "mongodb";
+import { Filter, FindOptions, ObjectId } from "mongodb";
 import { IPostRoutes, IResponse } from "shared";
 import { getSirenFromSiret } from "shared/helpers/common";
 import { IOrganisation } from "shared/models/organisation.model";
@@ -61,20 +61,15 @@ interface ICreateOrganisation extends Omit<IOrganisation, "_id"> {}
 export const createOrganisation = async (data: ICreateOrganisation): Promise<IOrganisation> => {
   const now = new Date();
   const organisation = {
+    _id: new ObjectId(),
     ...data,
     updated_at: now,
     created_at: now,
   };
-  const { insertedId: organisationId } = await getDbCollection("organisations").insertOne({
-    ...data,
-    updated_at: now,
-    created_at: now,
-  });
 
-  return {
-    ...organisation,
-    _id: organisationId,
-  };
+  await getDbCollection("organisations").insertOne(organisation);
+
+  return organisation;
 };
 
 export const findOrganisations = async (filter: Filter<IOrganisation> = {}) => {

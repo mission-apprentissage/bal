@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 import { zObjectId } from "../models/common";
-import { ZMailingList } from "../models/mailingList.model";
+import { ZMailingListDocument } from "../models/document.model";
+import { ZMailingList, ZMailingListWithDocument } from "../models/mailingList.model";
 import { IRoutesDef } from "./common.routes";
 
 export const zMailingListRoutes = {
@@ -10,7 +11,7 @@ export const zMailingListRoutes = {
       method: "get",
       path: "/mailing-lists",
       response: {
-        "200": z.array(ZMailingList),
+        "200": z.array(ZMailingListWithDocument),
       },
       securityScheme: {
         auth: "cookie-session",
@@ -51,9 +52,9 @@ export const zMailingListRoutes = {
       response: {
         "200": z
           .object({
-            status: z.enum(["pending", "will_start", "running", "finished", "blocked", "errored"]),
-            processed: z.number(),
-            processed_count: z.number(),
+            status: ZMailingListDocument.shape.job_status,
+            process_progress: z.number(),
+            lines_count: z.number(),
           })
           .strict(),
       },

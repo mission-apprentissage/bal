@@ -368,88 +368,248 @@ exports[`zodToMongoSchema > should convert documentContents schema 1`] = `
 
 exports[`zodToMongoSchema > should convert documents schema 1`] = `
 {
-  "additionalProperties": false,
-  "bsonType": "object",
-  "properties": {
-    "_id": {
-      "bsonType": "objectId",
-    },
-    "added_by": {
-      "bsonType": "string",
-      "description": "Qui a ajouté le fichier",
-    },
-    "chemin_fichier": {
-      "bsonType": "string",
-      "description": "Chemin du fichier binaire",
-    },
-    "columns": {
-      "bsonType": "array",
-      "description": "Liste des colonnes",
-      "items": {
-        "bsonType": "string",
+  "anyOf": [
+    {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+        },
+        "added_by": {
+          "bsonType": "string",
+          "description": "Qui a ajouté le fichier",
+        },
+        "chemin_fichier": {
+          "bsonType": "string",
+          "description": "Chemin du fichier binaire",
+        },
+        "columns": {
+          "anyOf": [
+            {
+              "bsonType": "array",
+              "items": {
+                "bsonType": "string",
+              },
+            },
+            {
+              "bsonType": "null",
+            },
+          ],
+          "description": "Liste des colonnes",
+        },
+        "created_at": {
+          "bsonType": "date",
+          "description": "Date d'ajout en base de données",
+        },
+        "delimiter": {
+          "bsonType": [
+            "string",
+            "null",
+          ],
+          "description": "Délimiteur",
+        },
+        "ext_fichier": {
+          "bsonType": "string",
+          "description": "Le type de fichier extension",
+          "enum": [
+            "xlsx",
+            "xls",
+            "csv",
+          ],
+        },
+        "hash_fichier": {
+          "bsonType": "string",
+          "description": "Checksum fichier",
+        },
+        "hash_secret": {
+          "bsonType": "string",
+          "description": "Hash fichier",
+        },
+        "import_progress": {
+          "anyOf": [
+            {
+              "bsonType": "number",
+            },
+            {
+              "bsonType": "null",
+            },
+          ],
+          "description": "Progress percentage (-1 not started)",
+        },
+        "job_error": {
+          "bsonType": [
+            "string",
+            "null",
+          ],
+          "description": "Erreur du job de génération",
+        },
+        "job_id": {
+          "bsonType": [
+            "string",
+            "null",
+          ],
+          "description": "Identifiant du job de génération",
+        },
+        "job_status": {
+          "bsonType": "string",
+          "description": "Status du job de génération",
+          "enum": [
+            "pending",
+            "importing",
+            "done",
+            "error",
+          ],
+        },
+        "kind": {
+          "bsonType": "string",
+        },
+        "lines_count": {
+          "anyOf": [
+            {
+              "bsonType": "int",
+            },
+            {
+              "bsonType": "null",
+            },
+          ],
+          "description": "Number of lines",
+        },
+        "nom_fichier": {
+          "bsonType": "string",
+          "description": "Le nom de fichier",
+        },
+        "taille_fichier": {
+          "bsonType": "int",
+          "description": "Taille du fichier en bytes",
+        },
+        "type_document": {
+          "bsonType": "string",
+          "description": "Le type de document (exemple: DECA, etc..)",
+        },
+        "updated_at": {
+          "anyOf": [
+            {
+              "bsonType": "date",
+            },
+            {
+              "bsonType": "null",
+            },
+          ],
+          "description": "Date de mise à jour en base de données",
+        },
       },
-    },
-    "created_at": {
-      "bsonType": "date",
-      "description": "Date d'ajout en base de données",
-    },
-    "delimiter": {
-      "bsonType": "string",
-      "description": "Délimiteur",
-    },
-    "ext_fichier": {
-      "bsonType": "string",
-      "description": "Le type de fichier extension",
-      "enum": [
-        "xlsx",
-        "xls",
-        "csv",
+      "required": [
+        "_id",
+        "kind",
+        "type_document",
+        "ext_fichier",
+        "nom_fichier",
+        "chemin_fichier",
+        "taille_fichier",
+        "hash_secret",
+        "hash_fichier",
+        "added_by",
+        "created_at",
+        "job_status",
       ],
     },
-    "hash_fichier": {
-      "bsonType": "string",
-      "description": "Checksum fichier",
+    {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "_id": {
+          "bsonType": "objectId",
+        },
+        "added_by": {
+          "bsonType": "string",
+          "description": "Qui a ajouté le fichier",
+        },
+        "chemin_fichier": {
+          "bsonType": "string",
+          "description": "Chemin du fichier binaire",
+        },
+        "created_at": {
+          "bsonType": "date",
+          "description": "Date d'ajout en base de données",
+        },
+        "ext_fichier": {
+          "bsonType": "string",
+          "description": "Le type de fichier extension",
+          "enum": [
+            "xlsx",
+            "xls",
+            "csv",
+          ],
+        },
+        "hash_fichier": {
+          "bsonType": "string",
+          "description": "Checksum fichier",
+        },
+        "hash_secret": {
+          "bsonType": "string",
+          "description": "Hash fichier",
+        },
+        "job_id": {
+          "bsonType": [
+            "string",
+            "null",
+          ],
+          "description": "Identifiant du job de génération",
+        },
+        "job_status": {
+          "bsonType": "string",
+          "description": "Status du job de génération",
+          "enum": [
+            "pending",
+            "processing",
+            "done",
+            "error",
+          ],
+        },
+        "kind": {
+          "bsonType": "string",
+        },
+        "lines_count": {
+          "bsonType": "int",
+          "description": "Number of lines",
+        },
+        "nom_fichier": {
+          "bsonType": "string",
+          "description": "Le nom de fichier",
+        },
+        "process_progress": {
+          "bsonType": "number",
+          "description": "Number of lines processed",
+        },
+        "taille_fichier": {
+          "bsonType": "int",
+          "description": "Taille du fichier en bytes",
+        },
+        "type_document": {
+          "bsonType": "string",
+          "description": "Le type de document (exemple: DECA, etc..)",
+        },
+        "updated_at": {
+          "bsonType": "date",
+          "description": "Date de mise à jour en base de données",
+        },
+      },
+      "required": [
+        "_id",
+        "kind",
+        "type_document",
+        "ext_fichier",
+        "nom_fichier",
+        "chemin_fichier",
+        "taille_fichier",
+        "hash_secret",
+        "hash_fichier",
+        "added_by",
+        "created_at",
+        "job_status",
+      ],
     },
-    "hash_secret": {
-      "bsonType": "string",
-      "description": "Hash fichier",
-    },
-    "import_progress": {
-      "bsonType": "number",
-      "description": "Progress percentage (-1 not started)",
-    },
-    "lines_count": {
-      "bsonType": "int",
-      "description": "Number of lines",
-    },
-    "nom_fichier": {
-      "bsonType": "string",
-      "description": "Le nom de fichier",
-    },
-    "taille_fichier": {
-      "bsonType": "int",
-      "description": "Taille du fichier en bytes",
-    },
-    "type_document": {
-      "bsonType": "string",
-      "description": "Le type de document (exemple: DECA, etc..)",
-    },
-    "updated_at": {
-      "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
-    },
-  },
-  "required": [
-    "_id",
-    "type_document",
-    "ext_fichier",
-    "nom_fichier",
-    "chemin_fichier",
-    "taille_fichier",
-    "hash_secret",
-    "hash_fichier",
-    "added_by",
-    "created_at",
   ],
 }
 `;
@@ -632,223 +792,6 @@ exports[`zodToMongoSchema > should convert events schema 1`] = `
 }
 `;
 
-exports[`zodToMongoSchema > should convert jobs schema 1`] = `
-{
-  "anyOf": [
-    {
-      "additionalProperties": false,
-      "bsonType": "object",
-      "properties": {
-        "_id": {
-          "bsonType": "objectId",
-        },
-        "created_at": {
-          "bsonType": "date",
-          "description": "Date d'ajout en base de données",
-        },
-        "ended_at": {
-          "anyOf": [
-            {
-              "bsonType": "date",
-            },
-            {
-              "bsonType": "null",
-            },
-          ],
-          "description": "Date de fin d'execution",
-        },
-        "name": {
-          "bsonType": "string",
-          "description": "Le nom de la tâche",
-        },
-        "output": {
-          "anyOf": [
-            {
-              "additionalProperties": true,
-              "bsonType": "object",
-            },
-            {
-              "bsonType": "null",
-            },
-          ],
-          "description": "Les valeurs de retours du job",
-        },
-        "payload": {
-          "anyOf": [
-            {
-              "additionalProperties": true,
-              "bsonType": "object",
-            },
-            {
-              "bsonType": "null",
-            },
-          ],
-          "description": "La donnée liéé à la tâche",
-        },
-        "scheduled_for": {
-          "bsonType": "date",
-          "description": "Date de lancement programmée",
-        },
-        "started_at": {
-          "anyOf": [
-            {
-              "bsonType": "date",
-            },
-            {
-              "bsonType": "null",
-            },
-          ],
-          "description": "Date de lancement",
-        },
-        "status": {
-          "bsonType": "string",
-          "description": "Statut courant du job",
-          "enum": [
-            "pending",
-            "will_start",
-            "running",
-            "finished",
-            "errored",
-          ],
-        },
-        "sync": {
-          "bsonType": "bool",
-          "description": "Si le job est synchrone",
-        },
-        "type": {
-          "bsonType": "string",
-        },
-        "updated_at": {
-          "bsonType": "date",
-          "description": "Date de mise à jour en base de données",
-        },
-      },
-      "required": [
-        "_id",
-        "name",
-        "type",
-        "status",
-        "sync",
-        "scheduled_for",
-        "updated_at",
-        "created_at",
-      ],
-    },
-    {
-      "additionalProperties": false,
-      "bsonType": "object",
-      "properties": {
-        "_id": {
-          "bsonType": "objectId",
-        },
-        "created_at": {
-          "bsonType": "date",
-          "description": "Date d'ajout en base de données",
-        },
-        "cron_string": {
-          "bsonType": "string",
-          "description": "standard cron string exemple: '*/2 * * * *'",
-        },
-        "name": {
-          "bsonType": "string",
-          "description": "Le nom de la tâche",
-          "enum": [
-            "Mise à jour des contrats deca",
-          ],
-        },
-        "scheduled_for": {
-          "bsonType": "date",
-          "description": "Date de lancement programmée",
-        },
-        "status": {
-          "bsonType": "string",
-          "description": "Statut courant du cron",
-          "enum": [
-            "active",
-          ],
-        },
-        "type": {
-          "bsonType": "string",
-        },
-        "updated_at": {
-          "bsonType": "date",
-          "description": "Date de mise à jour en base de données",
-        },
-      },
-      "required": [
-        "_id",
-        "name",
-        "type",
-        "status",
-        "cron_string",
-        "scheduled_for",
-        "updated_at",
-        "created_at",
-      ],
-    },
-    {
-      "additionalProperties": false,
-      "bsonType": "object",
-      "properties": {
-        "_id": {
-          "bsonType": "objectId",
-        },
-        "created_at": {
-          "bsonType": "date",
-          "description": "Date d'ajout en base de données",
-        },
-        "ended_at": {
-          "bsonType": "date",
-          "description": "Date de fin d'execution",
-        },
-        "name": {
-          "bsonType": "string",
-          "description": "Le nom de la tâche",
-          "enum": [
-            "Mise à jour des contrats deca",
-          ],
-        },
-        "scheduled_for": {
-          "bsonType": "date",
-          "description": "Date de lancement programmée",
-        },
-        "started_at": {
-          "bsonType": "date",
-          "description": "Date de lancement",
-        },
-        "status": {
-          "bsonType": "string",
-          "description": "Statut courant du job",
-          "enum": [
-            "pending",
-            "will_start",
-            "running",
-            "finished",
-            "errored",
-          ],
-        },
-        "type": {
-          "bsonType": "string",
-        },
-        "updated_at": {
-          "bsonType": "date",
-          "description": "Date de mise à jour en base de données",
-        },
-      },
-      "required": [
-        "_id",
-        "name",
-        "type",
-        "status",
-        "scheduled_for",
-        "updated_at",
-        "created_at",
-      ],
-    },
-  ],
-}
-`;
-
 exports[`zodToMongoSchema > should convert organisations schema 1`] = `
 {
   "additionalProperties": false,
@@ -1013,7 +956,7 @@ exports[`zodToMongoSchema > should convert sessions schema 1`] = `
     },
     "expires_at": {
       "bsonType": "date",
-      "description": "Date d'ajout en base de données",
+      "description": "Date d'expiration",
     },
     "token": {
       "bsonType": "string",

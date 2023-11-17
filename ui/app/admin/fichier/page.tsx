@@ -6,7 +6,7 @@ import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Box, Tooltip, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { IDocumentPublicWithJobsJson } from "shared/models/document.model";
+import { IUploadDocumentJson } from "shared/models/document.model";
 
 import Table from "../../../components/table/Table";
 import { apiDelete, apiGet } from "../../../utils/api.utils";
@@ -23,7 +23,7 @@ const AdminImportPage = () => {
   const [toDelete, setToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { data: documentLists, refetch } = useQuery<IDocumentPublicWithJobsJson[]>({
+  const { data: documentLists, refetch } = useQuery<IUploadDocumentJson[]>({
     queryKey: ["documentLists"],
     queryFn: async () => apiGet("/admin/documents", {}),
     refetchInterval: 1000,
@@ -97,27 +97,22 @@ const AdminImportPage = () => {
             headerName: "Statut",
             minWidth: 170,
             renderCell: ({ value, row }) => {
-              const job = row.jobs?.[0];
-              const output = job?.output as Record<string, string>;
-
-              if (!job) return "Terminé";
-
-              if (job.status === "finished") return "Terminé";
-              if (job.status === "errored")
+              if (row.job_status === "done") return "Terminé";
+              if (row.job_status === "error")
                 return (
                   <Box color={fr.colors.decisions.text.actionHigh.redMarianne.default}>
                     Erreur
-                    <Tooltip title={output.error} arrow>
+                    <Tooltip title={row.job_error} arrow>
                       <Box component="i" ml={1} className="ri-information-line" />
                     </Tooltip>
                   </Box>
                 );
-              if (row.nom_fichier.includes("mailing-list")) return "Terminé";
+              if (row.job_status === "pending") return "En attente";
               return (
                 <>
                   En cours d'importation
                   <br />
-                  {` ${Math.ceil(value ?? 0)}%`}
+                  {`${row.taille_fichier ? Math.min(Math.ceil(((value ?? 0) / row.taille_fichier) * 100), 100) : 100}%`}
                 </>
               );
             },
@@ -128,8 +123,8 @@ const AdminImportPage = () => {
             headerName: "Actions",
             getActions: ({ row }) => {
               if (
-                row.import_progress !== 100 &&
-                row.import_progress !== 0 // TODO This is a quick cleaning method but if delete and job running nned to send a kill sig to job
+                row.job_status !== "done" &&
+                row.job_status !== "error" // TODO This is a quick cleaning method but if delete and job running nned to send a kill sig to job
               )
                 return [];
 

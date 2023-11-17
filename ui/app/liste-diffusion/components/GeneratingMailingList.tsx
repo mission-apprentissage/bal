@@ -28,11 +28,11 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
         params: { id: mailingList._id },
       });
 
-      if (["finished", "blocked", "errored"].includes(data.status)) {
+      if (data.status !== "pending" && data.status !== "processing") {
         setAllowRefetch(false);
       }
 
-      if (data.status === "finished") {
+      if (data.status === "done") {
         onDone();
       }
 
@@ -42,9 +42,11 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const progression = Math.ceil(progress?.processed ?? 0);
+  const lineCount = progress?.lines_count ?? 0;
+  const importCount = progress?.process_progress ?? 0;
+  const progression = lineCount === 0 ? 0 : Math.ceil((importCount / lineCount) * 100);
 
-  if (progress?.status === "finished") {
+  if (progress?.status === "done") {
     return (
       <Box my={2}>
         <Alert
@@ -56,7 +58,7 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
     );
   }
 
-  if (progress?.status === "errored") {
+  if (progress?.status === "error") {
     return (
       <Box my={2}>
         <Alert
@@ -85,7 +87,7 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
         </Box>
         <Typography mb="2">Veuillez patienter pendant la génération de votre liste de diffusion.</Typography>
         <Typography mb="2">
-          Cette opération peut durer jusqu’à 2 heures selon la taille du fichier, vous pouvez quitter cette page et
+          Cette opération peut durer jusqu'à 2 heures selon la taille du fichier, vous pouvez quitter cette page et
           revenir plus tard.
         </Typography>
         <Typography mb="2">Progression : {progression} %</Typography>

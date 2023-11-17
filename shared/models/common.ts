@@ -3,7 +3,6 @@ import { ZodType } from "zod";
 
 export type CollectionName =
   | "users"
-  | "jobs"
   | "organisations"
   | "persons"
   | "events"

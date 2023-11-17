@@ -30,11 +30,13 @@ export async function closeSentry(): Promise<void> {
   await Sentry.close(2_000);
 }
 
-function extractUserData(request: FastifyRequest): {
+type UserData = {
   id?: string | number;
   username: string;
   email?: string;
-} & Record<string, unknown> {
+} & Record<string, unknown>;
+
+function extractUserData(request: FastifyRequest): UserData {
   const user = request.user;
 
   if (!user) {
@@ -54,13 +56,18 @@ function extractUserData(request: FastifyRequest): {
     };
   }
 
-  return {
+  const data: UserData = {
     segment: "session",
     id: user.value._id.toString(),
-    email: user.value.email,
-    username: user.value.email,
+    username: user.value.email ?? user.value._id.toString(),
     type: user.value.is_admin ? "admin" : "standard",
   };
+
+  if (user.value.email) {
+    data.email = user.value.email;
+  }
+
+  return data;
 }
 
 export function initSentryFastify(app: Server) {

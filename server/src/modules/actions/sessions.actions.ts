@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import jwt from "jsonwebtoken";
-import { Filter, FindOptions } from "mongodb";
+import { Filter, FindOptions, ObjectId } from "mongodb";
 import { ISession } from "shared/models/session.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
@@ -11,14 +11,16 @@ type TCreateSession = Pick<ISession, "token">;
 
 async function createSession(data: TCreateSession) {
   const now = new Date();
-  const { insertedId: _id } = await getDbCollection("sessions").insertOne({
+
+  const session = {
+    _id: new ObjectId(),
     ...data,
     updated_at: now,
     created_at: now,
     expires_at: new Date(now.getTime() + config.session.cookie.maxAge),
-  });
+  };
 
-  const session = await getSession({ _id });
+  await getDbCollection("sessions").insertOne(session);
 
   return session;
 }

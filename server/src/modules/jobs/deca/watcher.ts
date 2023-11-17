@@ -1,4 +1,5 @@
 import { get } from "lodash-es";
+import { ObjectId } from "mongodb";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
@@ -7,6 +8,7 @@ async function processChangeEvent(event: any): Promise<void> {
   for (const key of keys) {
     const previousValue = get(event.fullDocumentBeforeChange, key);
     const log = {
+      _id: new ObjectId(),
       key,
       from: previousValue,
       to: event.updateDescription.updatedFields[key],

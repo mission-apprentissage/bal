@@ -7,13 +7,14 @@ type TCreateDocumentContent = Omit<IDocumentContent, "_id" | "updated_at" | "cre
 
 export const createDocumentContent = async (data: TCreateDocumentContent) => {
   const now = new Date();
-  const { insertedId: _id } = await getDbCollection("documentContents").insertOne({
+  const documentContent: IDocumentContent = {
+    _id: new ObjectId(),
     ...data,
     updated_at: now,
     created_at: now,
-  });
+  };
 
-  const documentContent = await findOneDocumentContent({ _id });
+  const { insertedId: _id } = await getDbCollection("documentContents").insertOne(documentContent);
 
   return documentContent;
 };
