@@ -28,6 +28,7 @@ const CerfaForm: FC = () => {
     mode: "all",
     defaultValues: {
       employeur: {
+        privePublic: "prive",
         adresse: {
           departement: "",
         },
