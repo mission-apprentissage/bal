@@ -218,7 +218,7 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
   let processed = 0;
 
   const updateProgress = setInterval(async () => {
-    await updateDocument({ _id: outputDocument._id }, { $set: { process_progress: processed } });
+    await updateDocument({ _id: outputDocument._id }, { $set: { process_progress: processed + skip } });
   }, 5_000);
 
   while (hasMore) {
