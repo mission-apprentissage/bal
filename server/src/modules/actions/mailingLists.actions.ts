@@ -147,8 +147,10 @@ export const onMailingListJobExited = async (job: IJobsSimple) => {
   await updateDocument(
     { job_id: job._id.toString() },
     {
-      job_status: status,
-      job_error: job.output?.error,
+      $set: {
+        job_status: status,
+        job_error: job.output?.error,
+      },
     }
   );
 };
