@@ -456,6 +456,7 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
           "description": "Status du job de génération",
           "enum": [
             "pending",
+            "paused",
             "importing",
             "done",
             "error",
@@ -562,6 +563,7 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
           "description": "Status du job de génération",
           "enum": [
             "pending",
+            "paused",
             "processing",
             "done",
             "error",
