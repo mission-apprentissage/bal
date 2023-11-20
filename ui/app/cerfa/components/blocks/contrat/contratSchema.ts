@@ -1,12 +1,15 @@
+import { CerfaField } from "../../../utils/cerfaSchema";
 import { getLabelNumeroContratPrecedent } from "./domain/getLabelNumeroContratPrecedent";
 import { getTypeDerogationOptions } from "./domain/getTypeDerogationOptions";
 import { isRequiredNumeroContratPrecedent } from "./domain/isRequiredNumeroContratPrecedent";
 import { shouldAskDateEffetAvenant } from "./domain/shouldAskDateEffetAvenant";
 
-export const contratSchema = {
+export const contratSchema: Record<string, CerfaField> = {
   "contrat.typeContratApp": {
+    label: "Type de contrat ou d’avenant",
     fieldType: "select",
     required: true,
+    requiredMessage: "le type de contrat ou d'avenant est obligatoire",
     showInfo: true,
     options: [
       {
@@ -76,23 +79,41 @@ export const contratSchema = {
         ],
       },
     ],
-    label: "Type de contrat ou d'avenant",
-    requiredMessage: "le type de contrat ou d'avenant est obligatoire",
+    messages: [
+      {
+        type: "assistive",
+        content: `11 : c'est le tout premier contrat de l'apprenti, il n'a jamais été en apprentissage auparavant et vous serez son 1er employeur en apprentissage
+      21 : le contrat précédent de votre apprenti est arrivé à terme, vous signez ce nouveau contrat d'apprentissage avec lui pour prolonger l'apprentissage dans votre entreprise
+      22 : l'apprenti était en apprentissage chez un autre employeur, son contrat est arrivé à terme et vous signez ce contrat d'apprentissage avec lui
+      23 : l'apprenti était en apprentissage chez un autre employeur mais le contrat a été rompu avant son terme ; vous signez ce contrat d'apprentissage avec lui
+      33 :  vous devrez saisir au moins une nouvelle période de rémunération par rapport à la version précédente du contrat.  Le pourcentage de rémunération de la première période de l’avenant doit être supérieur ou égal au pourcentage de rémunération de la dernière période du contrat qui fait l'objet de cet avenant.`,
+      },
+    ],
   },
   "contrat.typeDerogation": {
-    fieldType: "select",
     _init: ({ values }) => ({ options: getTypeDerogationOptions({ values }) }),
-    showInfo: true,
     label: "Type de dérogation (optionnel)",
+    fieldType: "select",
+    showInfo: true,
+    messages: [
+      {
+        type: "assistive",
+        content: `A renseigner si une dérogation existe pour ce contrat (exemple : l'apprentissage commence à partir de 16 ans mais par dérogation, les jeunes âgés d'au moins 15 ans et un jour peuvent conclure un contrat d'apprentissage s'ils ont terminé la scolarité du 1er cycle de l'enseignement secondaire (collège).
+
+      [voir si info à contextualiser dès lors que l'utilisateur a saisi 21 ou 22 ] : En cas de réduction ou allongement de la durée du contrat, vous devrez aussi remplir une convention d'aménagement de durée, que vous signerez avec l'organisme de formation et votre apprenti.`,
+      },
+    ],
   },
   "contrat.numeroContratPrecedent": {
-    fieldType: "text",
     _init: ({ values }) => ({
       label: getLabelNumeroContratPrecedent({ values }),
       required: isRequiredNumeroContratPrecedent({ values }),
     }),
+    placeholder: "Exemple : 02B202212000000",
+    fieldType: "text",
     showInfo: true,
     requiredMessage: "la numéro du contrat précédent est obligatoire",
+    validateMessage: "n'est pas un numéro valide",
     mask: "DEP Y M N 0000",
     maskBlocks: [
       {
@@ -244,49 +265,104 @@ export const contratSchema = {
         maxLength: 2,
       },
     ],
-    validateMessage: "n'est pas un numéro valide",
   },
   "contrat.dateSignature": {
-    required: true,
+    label: "Date de signature du présent contrat",
     fieldType: "date",
-    showInfo: true,
-    label: "Date de signature du présent contrat :",
+    required: true,
     requiredMessage: "la date de signature du contrat est obligatoire",
+    showInfo: true,
+    messages: [
+      {
+        type: "assistive",
+        content: `Date à laquelle le présent contrat de travail (qu’il s’agisse d’un contrat initial ou d’un avenant) est conclu par les deux parties, c'est à dire le jour où les deux signatures des parties au contrat (employeur et apprenti) sont recueillies. 
+Le contrat doit être signé avant de débuter.
+      `,
+      },
+    ],
   },
   "contrat.dateFinContrat": {
-    required: true,
+    label: "Date de fin du contrat ou de la période d'apprentissage",
     fieldType: "date",
-    showInfo: true,
-    label: "Date de fin du contrat ou de la période d'apprentissage :",
+    required: true,
     requiredMessage: "la date de fin de contrat est obligatoire",
+    showInfo: true,
+    messages: [
+      {
+        type: "assistive",
+        content: `Le contrat ne peut pas se terminer avant la fin de la formation dans l'organisme de formation, examens compris.
+
+      La période de contrat doit donc englober la date du dernier examen qui sanctionne l'obtention du diplôme. 
+      Si celle-ci n'est pas connue au moment de la conclusion du contrat, vous pouvez renseigner une date située maximum 2 mois au-delà de la date de fin prévisionnelle des examens.
+      
+      La date de fin de contrat intervient donc : 
+      au plus tôt le dernier jour de la dernière épreuve nécessaire à l’obtention du titre ou diplôme préparé par l'apprenti ;
+      au plus tard dans les deux mois après la dernière épreuve sanctionnant le cycle, ou à la veille du début du cycle de formation suivant.
+      
+      Dans le cadre d’un CDI, vous devez donc également préciser la date de fin de l’action de formation (examens inclus).`,
+      },
+    ],
   },
   "contrat.dateDebutContrat": {
-    required: true,
+    label: "Date de début d'exécution du contrat",
     fieldType: "date",
-    showInfo: true,
-    label: "Date de début d'exécution du contrat :",
+    required: true,
     requiredMessage: "la date de début d'exécution de contrat est obligatoire",
+    showInfo: true,
+    messages: [
+      {
+        type: "assistive",
+        content: `Indiquez la date du 1er jour où débute effectivement le contrat (chez l'employeur ou dans le centre de formation).`,
+      },
+      {
+        type: "bonus",
+        content: `A partir de cette date, vous avez 5 jours ouvrables pour transmettre le document à votre OPCO (les étapes sur la suite de la procédure seron détaillées lorsque vous téléchargerez le présent document).
+        La date de début d'exécution du contrat est liée à la date de naissance de l'apprenti pour le calcul des périodes de rémunération.`,
+      },
+      {
+        type: "regulatory",
+        content: `Cette date correspond à la date de début du cycle de formation au sens de l’article L6222-7-1. [https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038951821](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038951821)`,
+      },
+    ],
   },
   "contrat.dateDebutFormationPratique": {
-    required: true,
+    label: "Date de début de formation pratique chez l'employeur",
     fieldType: "date",
-    showInfo: true,
-    label: "Date de début de formation pratique chez l’employeur :",
+    required: true,
     requiredMessage: "la date de début de la formation pratique est obligatoire",
+    showInfo: true,
+    messages: [
+      {
+        type: "assistive",
+        content: "Date du 1er jour où débute effectivement la formation pratique chez l’employeur.",
+      },
+      {
+        type: "bonus",
+        content:
+          "La formation pratique en entreprise doit démarrer au plus tôt 3 mois avant le début des cours et au plus tard 3 mois après le début des cours.",
+      },
+    ],
   },
   "contrat.dateEffetAvenant": {
+    label: "Date d'effet d'avenant",
     fieldType: "date",
     _init: ({ values }) => ({ required: shouldAskDateEffetAvenant({ values }) }),
     showInfo: true,
-    label: "Date d'effet d'avenant :",
     requiredMessage: "S'agissant d'un avenant sa date d'effet est obligatoire ",
+    messages: [
+      {
+        type: "assistive",
+        content: "Date à laquelle le changement va s'opérer.",
+      },
+    ],
   },
   "contrat.dureeTravailHebdoHeures": {
-    required: true,
+    label: "Heures",
+    placeholder: "Exemple : 35",
     fieldType: "number",
-    showInfo: true,
+    required: true,
     requiredMessage: "la durée hebdomadaire de travail est obligatoire",
-    label: "Heures:",
+    showInfo: true,
     mask: "C",
     maskBlocks: [
       {
@@ -295,16 +371,21 @@ export const contratSchema = {
         pattern: "^\\d*$",
       },
     ],
-    validate: ({ value }) => {
-      if (value > 40) {
-        return { error: "la durée de travail hebdomadaire en heures ne peut excéder 40h" };
-      }
-    },
+    messages: [
+      {
+        type: "regulatory",
+        content: `L’horaire collectif de travail de l’entreprise peut être inférieur ou supérieur à 35 heures. 
+        Toutefois, la durée légale du travail effectif est fixée à 35h par semaine. Dans certains secteurs, quand l'organisation du travail le justifie, elle peut être portée à 40h.
+        La circulaire n° 2012-15 du 19 juillet 2012 de la DGEFP précise que le Cerfa doit indiquer 35 heures dans le cas de salariés travaillant plus de 35 heures hebdomadaires, les heures au-delà étant récupérées sous forme de RTT.
+        
+        Le temps de formation en CFA est du temps de travail effectif et compte dans l'horaire de travail. En savoir plus sur le site du Service Public  [https://www.service-public.fr/particuliers/vosdroits/F2918](https://www.service-public.fr/particuliers/vosdroits/F2918) - ouverture dans un nouvel onglet`,
+      },
+    ],
   },
   "contrat.dureeTravailHebdoMinutes": {
+    label: "Minutes",
     fieldType: "number",
     showInfo: true,
-    label: "Minutes:",
     mask: "C",
     maskBlocks: [
       {
@@ -313,25 +394,20 @@ export const contratSchema = {
         pattern: "^\\d*$",
       },
     ],
-    validate: ({ value }) => {
-      if (value > 59) {
-        return { error: "la durée de travail hebdomadaire en minutes ne peut excéder 59 minutes" };
-      }
-    },
   },
   "contrat.travailRisque": {
+    label: "Travail sur machines dangereuses ou exposition à des risques particuliers",
     fieldType: "radio",
     required: true,
     requiredMessage: "Cette déclaration est obligatoire",
-    label: "Travail sur machines dangereuses ou exposition à des risques particuliers: ",
     options: [
       {
         label: "Oui",
-        value: true,
+        value: "oui",
       },
       {
         label: "Non",
-        value: false,
+        value: "non",
       },
     ],
   },
@@ -383,7 +459,6 @@ export const contratSchema = {
       {
         label: "SMC",
         value: "SMC",
-        locked: true,
       },
     ],
   },
@@ -396,17 +471,17 @@ export const contratSchema = {
     options: [
       {
         label: "Oui",
-        value: true,
+        value: "oui",
       },
       {
         label: "Non",
-        value: false,
+        value: "non",
       },
     ],
   },
   "contrat.avantageNourriture": {
+    label: "Nourriture",
     fieldType: "number",
-    label: "Nourriture:",
     requiredMessage: "Cette déclaration est obligatoire",
     min: 1,
     mask: "X € / rep\\as",
@@ -422,8 +497,8 @@ export const contratSchema = {
     ],
   },
   "contrat.avantageLogement": {
+    label: "Logement",
     fieldType: "number",
-    label: "Logement:",
     min: 1,
     mask: "X € / mois",
     precision: 2,
@@ -438,14 +513,8 @@ export const contratSchema = {
     ],
   },
   "contrat.autreAvantageEnNature": {
-    fieldType: "consent",
     label: "Autres avantages",
-    options: [
-      {
-        label: "true",
-        value: true,
-      },
-    ],
+    fieldType: "consent",
   },
   "contrat.smic": {},
 };

@@ -32,6 +32,7 @@ export interface CerfaField {
   placeholder?: string;
   requiredMessage?: string;
   validateMessage?: string;
+  locked?: boolean;
   completion?: boolean;
   precision?: number;
   min?: number;
@@ -66,7 +67,6 @@ interface CerfaSchema {
 }
 
 const cerfaSchema: CerfaSchema = {
-  // @ts-expect-error: todo
   fields: {
     ...employeurSchema,
     ...maitreApprentissageSchema,

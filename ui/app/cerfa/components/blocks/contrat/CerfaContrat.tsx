@@ -17,8 +17,6 @@ const CerfaContrat: FC = () => {
   return (
     <Box>
       <InputController name="contrat.typeContratApp" />
-      <TypeDerogationField />
-      <NumeroContratPrecedentField />
 
       <InputGroupContainer>
         <InputGroupItem size={6}>
@@ -34,6 +32,9 @@ const CerfaContrat: FC = () => {
           <InputController name="contrat.dateDebutFormationPratique" />
         </InputGroupItem>
       </InputGroupContainer>
+
+      <TypeDerogationField />
+      <NumeroContratPrecedentField />
 
       <CollapseController show={shouldAskDateEffetAvenant}>
         <InputController name="contrat.dateEffetAvenant" />
