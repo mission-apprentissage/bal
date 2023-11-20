@@ -5,7 +5,7 @@ import documentsModelDescriptor, { IDocument } from "./document.model";
 import documentContentsModelDescriptor, { IDocumentContent } from "./documentContent.model";
 import emailDeniedModelDescriptor, { IEmailDenied } from "./emailDenied.model";
 import eventsModelDescriptor, { IEvent } from "./events/event.model";
-import { IMailingList } from "./mailingList.model";
+import mailingListModelDescriptor, { IMailingList } from "./mailingList.model";
 import organisationsModelDescriptor, { IOrganisation } from "./organisation.model";
 import personsModelDescriptor, { IPerson } from "./person.model";
 import sessionsModelDescriptor, { ISession } from "./session.model";
@@ -22,6 +22,7 @@ export const modelDescriptors: IModelDescriptor[] = [
   emailDeniedModelDescriptor,
   decaModelDescriptor,
   decaHistoryModelDescriptor,
+  mailingListModelDescriptor,
 ];
 
 export type IDocumentMap = {
