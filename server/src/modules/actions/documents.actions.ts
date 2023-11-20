@@ -372,32 +372,37 @@ export const processCsvFile = async (chunk: Buffer) => {
   return iconv.encode(toEncodeChunk, "utf8");
 };
 
-export const extractDocumentContent = async ({
-  document,
-  delimiter = DEFAULT_DELIMITER,
-  formatter = (line) => line,
-}: {
-  document: IDocument;
-  delimiter?: string | string[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  formatter?: (line: any) => any;
-}) => {
+export const extractDocumentContent = async (
+  {
+    document,
+    delimiter = DEFAULT_DELIMITER,
+    formatter = (line) => line,
+  }: {
+    document: IDocument;
+    delimiter?: string | string[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formatter?: (line: any) => any;
+  },
+  signal: AbortSignal
+) => {
   logger.info("conversion csv to json started");
-  await updateDocument(
-    { _id: document._id },
+  await updateDocument({ _id: document._id }, [
     {
       $set: {
-        lines_count: 0,
-        import_progress: 0,
+        lines_count: { $ifNull: ["$lines_count", 0] },
+        import_progress: { $ifNull: ["$lines_count", 0] },
       },
-    }
-  );
+    },
+  ]);
 
+  let skip = document.lines_count ?? 0;
   let importedLines = 0;
   let importedSize = 0;
 
   const updateProgress = setInterval(() => {
-    updateImportProgress(document._id, importedLines, importedSize);
+    if (skip === 0) {
+      updateImportProgress(document._id, importedLines, importedSize);
+    }
   }, 5_000);
 
   await readDocumentContent(
@@ -406,7 +411,17 @@ export const extractDocumentContent = async ({
       delimiter,
     },
     async (json: JsonObject) => {
-      await importDocumentContent(document, [json], formatter);
+      if (signal.aborted) {
+        clearInterval(updateProgress);
+        updateImportProgress(document._id, importedLines, importedSize);
+        throw signal.reason;
+      }
+
+      if (skip === 0) {
+        await importDocumentContent(document, [json], formatter);
+      } else {
+        skip--;
+      }
       importedSize += Buffer.byteLength(JSON.stringify(Object.values(json)).replace(/^\[(.*)\]$/, "$1"));
       importedLines += 1;
     }
@@ -513,8 +528,10 @@ export const onImportDocumentJobExited = async (job: IJobsSimple) => {
     case "pending":
       status = "pending";
       break;
+    case "paused":
+      status = "paused";
+      break;
     case "running":
-    case "will_start":
       status = "importing";
       break;
   }
@@ -528,7 +545,11 @@ export const onImportDocumentJobExited = async (job: IJobsSimple) => {
   );
 };
 
-export const handleDocumentFileContent = async (job: IJobsSimple, { document_id }: Record<"document_id", ObjectId>) => {
+export const handleDocumentFileContent = async (
+  job: IJobsSimple,
+  { document_id }: Record<"document_id", ObjectId>,
+  signal: AbortSignal
+) => {
   const document = await findDocument<IUploadDocument>({
     _id: document_id,
     kind: "upload",
@@ -543,33 +564,46 @@ export const handleDocumentFileContent = async (job: IJobsSimple, { document_id 
 
     switch (document.type_document) {
       case DOCUMENT_TYPES.DECA:
-        await extractDocumentContent({
-          document,
-          delimiter: "|",
-          formatter: parseContentLine,
-        });
+        await extractDocumentContent(
+          {
+            document,
+            delimiter: "|",
+            formatter: parseContentLine,
+          },
+          signal
+        );
         break;
       case DOCUMENT_TYPES.OCAPIAT:
-        await extractDocumentContent({
-          document,
-          formatter: parseOcapiatContentLine,
-        });
+        await extractDocumentContent(
+          {
+            document,
+            formatter: parseOcapiatContentLine,
+          },
+          signal
+        );
         break;
       case DOCUMENT_TYPES.CONSTRUCTYS:
-        await extractDocumentContent({
-          document,
-          formatter: parseConstructysContentLine,
-        });
+        await extractDocumentContent(
+          {
+            document,
+            formatter: parseConstructysContentLine,
+          },
+          signal
+        );
         break;
 
       default:
-        await extractDocumentContent({ document, delimiter: document.delimiter ?? DEFAULT_DELIMITER });
+        await extractDocumentContent({ document, delimiter: document.delimiter ?? DEFAULT_DELIMITER }, signal);
         break;
     }
 
     await updateDocument({ _id: document._id }, { $set: { job_error: null, job_status: "done" } });
   } catch (err) {
-    await updateDocument({ _id: document._id }, { $set: { job_error: err.stack, job_status: "error" } });
+    if (err === signal.reason) {
+      await updateDocument({ _id: document._id }, { $set: { job_status: "paused" } });
+    } else {
+      await updateDocument({ _id: document._id }, { $set: { job_error: err.stack, job_status: "error" } });
+    }
     throw err;
   }
 };

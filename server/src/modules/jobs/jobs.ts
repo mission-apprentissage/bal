@@ -72,8 +72,9 @@ export async function setupJobProcessor() {
       // BELOW SPECIFIC TO PRODUCT
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       "import:document": {
-        handler: async (job) => handleDocumentFileContent(job, job.payload as any),
+        handler: async (job, signal) => handleDocumentFileContent(job, job.payload as any, signal),
         onJobExited: onImportDocumentJobExited,
+        resumable: true,
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       "documents:save-columns": {
@@ -81,8 +82,9 @@ export async function setupJobProcessor() {
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       "generate:mailing-list": {
-        handler: async (job) => handleMailingListJob(job, job.payload as any),
+        handler: async (job, signal) => handleMailingListJob(job, job.payload as any, signal),
         onJobExited: onMailingListJobExited,
+        resumable: true,
       },
     },
   });

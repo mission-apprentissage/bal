@@ -32,6 +32,7 @@ services:
           memory: 2g
       replicas: 2
     env_file: .env_server
+    stop_grace_period: 60s
     volumes:
       - /opt/app/data/server:/data
     logging:
@@ -55,8 +56,10 @@ services:
       resources:
         limits:
           memory: 2g
+      replicas: 2
     command: ["yarn", "cli", "processor"]
     env_file: .env_server
+    stop_grace_period: 2h
     volumes:
       - /opt/app/data/server:/data
     logging:
@@ -76,6 +79,7 @@ services:
           memory: 256m
       replicas: 2
     env_file: .env_ui
+    stop_grace_period: 60s
     logging:
       driver: "fluentd"
       options:

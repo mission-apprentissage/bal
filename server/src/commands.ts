@@ -30,6 +30,12 @@ program
     await closeMailer();
     await closeMongodbConnection();
     await closeSentry();
+
+    setTimeout(() => {
+      // Make sure to exit, even if we didn't close all ressources cleanly
+      // eslint-disable-next-line n/no-process-exit
+      process.exit(1);
+    }, 60_000).unref();
   });
 
 async function startProcessor(signal: AbortSignal) {

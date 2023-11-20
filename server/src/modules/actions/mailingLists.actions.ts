@@ -1,6 +1,7 @@
 import { Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 
+import { internal } from "@hapi/boom";
 import { stringify } from "csv-stringify";
 import { addJob, IJobsSimple } from "job-processor";
 import { Filter, FindCursor, FindOptions, ObjectId, Sort } from "mongodb";
@@ -25,6 +26,7 @@ import { noop } from "../server/utils/upload.utils";
 import {
   createMailingListDocument,
   deleteDocumentById,
+  findDocument,
   findDocuments,
   importDocumentContent,
   updateDocument,
@@ -134,8 +136,10 @@ export const onMailingListJobExited = async (job: IJobsSimple) => {
     case "pending":
       status = "pending";
       break;
+    case "paused":
+      status = "paused";
+      break;
     case "running":
-    case "will_start":
       status = "processing";
       break;
   }
@@ -149,13 +153,13 @@ export const onMailingListJobExited = async (job: IJobsSimple) => {
   );
 };
 
-export const handleMailingListJob = async (job: IJobsSimple, payload: IPayload) => {
+export const handleMailingListJob = async (job: IJobsSimple, payload: IPayload, signal: AbortSignal) => {
   try {
     const mailingList = await findMailingList({
       _id: new ObjectId(payload.mailing_list_id),
     });
     if (!mailingList) throw new Error("Mailing list not found");
-    const result = await processMailingList(job, mailingList);
+    const result = await processMailingList(job, mailingList, signal);
 
     return result;
   } catch (error) {
@@ -171,11 +175,18 @@ export const handleMailingListJob = async (job: IJobsSimple, payload: IPayload) 
   }
 };
 
-export const processMailingList = async (job: IJobsSimple, mailingList: IMailingList) => {
-  const sourceDocuments = await findDocuments<IUploadDocument>({
-    type_document: mailingList.source,
-    kind: "upload",
-  });
+async function findOrCreateMailingListDocument(
+  mailingList: IMailingList,
+  sourceDocuments: IUploadDocument[]
+): Promise<IMailingListDocument> {
+  if (mailingList.document_id) {
+    const outputDocument = await findDocument<IMailingListDocument>({ _id: new ObjectId(mailingList.document_id) });
+
+    if (!outputDocument) {
+      throw internal("Unable to resume generate:mailing-list: output document not found");
+    }
+    return outputDocument;
+  }
 
   const outputDocument = await createMailingListDocument(mailingList, sourceDocuments);
 
@@ -185,13 +196,22 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
       document_id: outputDocument._id.toString(),
     }
   );
-  await updateDocument(
-    { _id: outputDocument._id },
-    { $set: { process_progress: 0, job_id: job._id.toString(), job_status: "processing" } }
-  );
+
+  return outputDocument;
+}
+
+export const processMailingList = async (job: IJobsSimple, mailingList: IMailingList, signal: AbortSignal) => {
+  const sourceDocuments = await findDocuments<IUploadDocument>({
+    type_document: mailingList.source,
+    kind: "upload",
+  });
+
+  const outputDocument = await findOrCreateMailingListDocument(mailingList, sourceDocuments);
+
+  await updateDocument({ _id: outputDocument._id }, { $set: { job_id: job._id.toString(), job_status: "processing" } });
 
   const batchSize = LIMIT_TRAINING_LINKS_PER_REQUEST;
-  let skip = 0;
+  let skip = outputDocument.process_progress ?? 0;
   let hasMore = true;
   let processed = 0;
 
@@ -200,10 +220,17 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
   }, 5_000);
 
   while (hasMore) {
+    if (signal.aborted) {
+      clearInterval(updateProgress);
+      await updateDocument(
+        { _id: outputDocument._id },
+        { $set: { job_status: "paused", process_progress: processed } }
+      );
+      throw signal.reason;
+    }
+
     const wishes = await getDbCollection("documentContents")
-      .find({
-        type_document: mailingList.source,
-      })
+      .find({ type_document: mailingList.source }, { sort: { _id: 1 } })
       .limit(batchSize)
       .skip(skip)
       .toArray();

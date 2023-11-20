@@ -108,6 +108,7 @@ const AdminImportPage = () => {
                   </Box>
                 );
               if (row.job_status === "pending") return "En attente";
+              if (row.job_status === "paused") return "En pause";
               return (
                 <>
                   En cours d'importation
