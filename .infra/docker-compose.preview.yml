@@ -58,9 +58,6 @@ services:
     command: ["yarn", "cli", "processor"]
     env_file: .env_server
     stop_grace_period: 900s
-    deploy:
-      <<: *deploy-default
-      replicas: 2
     volumes:
       - server:/data
 
