@@ -149,7 +149,6 @@ export const onMailingListJobExited = async (job: IJobsSimple) => {
     {
       $set: {
         job_status: status,
-        job_error: job.output?.error,
       },
     }
   );

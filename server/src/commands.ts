@@ -1,3 +1,5 @@
+import { setMaxListeners } from "node:events";
+
 import { captureException } from "@sentry/node";
 import { program } from "commander";
 import { addJob, startJobProcessor } from "job-processor";
@@ -68,7 +70,9 @@ function createProcessExitSignal() {
     });
   });
 
-  return abortController.signal;
+  const signal = abortController.signal;
+  setMaxListeners(100, signal);
+  return signal;
 }
 
 program
