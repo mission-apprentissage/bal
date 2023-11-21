@@ -451,10 +451,8 @@ export const buildRemuneration = (data) => {
       finRemuneration = true;
       result2 = {
         21: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutA2,
-          // @ts-expect-error: todo
-          dateFin: dateFinContrat,
+          dateDebut: format(dateDebutA2, "yyyy-MM-dd"),
+          dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
           typeSalaire: "SMIC",
@@ -465,10 +463,8 @@ export const buildRemuneration = (data) => {
     } else {
       result2 = {
         21: {
-          // @ts-expect-error: todo
-          dateDebut: dateDebutA2,
-          // @ts-expect-error: todo
-          dateFin: dateFinA2,
+          dateDebut: format(dateDebutA2, "yyyy-MM-dd"),
+          dateFin: format(dateFinA2, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
           typeSalaire: "SMIC",

@@ -44,33 +44,36 @@ export const Remunerations = () => {
       </Typography>
       <Box mb={2}>
         <Alert
-          severity="info"
-          small
-          description={
-            <>
-              Le calcul de la rémunération est généré automatiquement à partir des informations <br />
-              que vous avez remplies. <br />
-              <strong>
-                Le calcul indique la rémunération minimale légale, l&apos;employeur pouvant décider d&apos;attribuer
-                <br /> une rémunération plus avantageuse.
-              </strong>
-            </>
-          }
-        />
-        <Alert
           severity="warning"
           small
           description={
             <>
               <Typography>
-                <strong>Attention : Ne tient pas encore compte de situations spécifiques</strong>
-                <br />
-                Exemples : rémunération du contrat d&apos;apprentissage préparant à une licence professionnelle,
-                majorations <br />
-                En savoir plus sur les situations spécifiques sur le{" "}
-                <Link href="https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/contrat-apprentissage#salaire">
-                  site du Ministère du Travail, de l&apos;Emploi et de l&apos;Insertion
-                </Link>
+                Le calcul de rémunération proposé est réalisé en fonction des éléments du contrat que vous avez
+                renseignés. Toutefois, veuillez noter que ce calcul :
+              </Typography>
+              <Box component="ul">
+                <Typography component="li">
+                  indique la rémunération minimale légale calculée sur la base du SMIC, vous pouvez décider d'attribuer
+                  une rémunération plus avantageuse ;
+                </Typography>
+                <Typography component="li">
+                  ne tient pas compte de la rémunération minimale légale calculée sur la base du SMC (salaire minimum
+                  conventionnel) qui doit s'appliquer lorsque l'apprenti a 21 ans et seulement si le SMC est supérieur
+                  au SMIC (voir si on peut contextualiser cette info)
+                </Typography>
+                <Typography component="li">
+                  ne tient pas encore compte de situations spécifiques (exemples : entrée en apprentissage en cours de
+                  cycle de formation, rémunération du contrat d'apprentissage préparant à une licence professionnelle,
+                  majorations règlementaires, apprentis ayant une reconnaissance de travailleur handicapé). En savoir
+                  plus sur les situations spécifiques sur le{" "}
+                  <Link href="https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/contrat-apprentissage#salaire">
+                    site du Ministère du Travail, de l&apos;Emploi et de l&apos;Insertion
+                  </Link>
+                </Typography>
+              </Box>
+              <Typography>
+                Vous pouvez donc modifier les montants indiqués pour tenir compte de ces éléments.
               </Typography>
             </>
           }
@@ -111,14 +114,16 @@ export const Remunerations = () => {
                     {anneeLabel}
                   </Box>
                 )}
-                <Box key={i}>
-                  <InputController name={`contrat.remunerationsAnnuelles[${i}].dateDebut`} />
-                  <Box mt="1.7rem !important">au</Box>
-                  <InputController name={`contrat.remunerationsAnnuelles[${i}].dateFin`} />
+
+                <InputController name={`contrat.remunerationsAnnuelles[${i}].dateDebut`} />
+                <InputController name={`contrat.remunerationsAnnuelles[${i}].dateFin`} />
+                <Box display="flex">
                   <InputController name={`contrat.remunerationsAnnuelles[${i}].taux`} />
-                  <Box>
-                    soit {annee.salaireBrut} € / mois. <br />
-                    Seuil minimal légal {annee.tauxMinimal} %
+                  <Box mt={4}>
+                    <Typography variant="caption" whiteSpace="nowrap">
+                      soit {annee.salaireBrut} € / mois. <br />
+                      Seuil minimal légal {annee.tauxMinimal} %
+                    </Typography>
                   </Box>
                 </Box>
               </Box>

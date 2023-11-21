@@ -12,6 +12,7 @@ import { getFieldDeps, getFieldStateFromFormState, validateField } from "../../.
 import ConsentInput from "./ConsentInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
+import NumberStepperInput from "./NumberStepperInput";
 import PhoneInput from "./PhoneInput";
 import RadioInput from "./RadioInput";
 import SelectInput from "./SelectInput";
@@ -43,7 +44,7 @@ export type InputFieldProps = Pick<Props, "name" | "fieldMethods" | "fieldSchema
 const TypesMapping: Record<FieldType, FC<InputFieldProps>> = {
   text: TextInput,
   number: NumberInput,
-  numberStepper: NumberInput,
+  numberStepper: NumberStepperInput,
   email: TextInput,
   phone: PhoneInput,
   date: DateInput,
@@ -64,15 +65,12 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
     );
   }
 
-  const { name, fieldMethods, fieldSchema: initialFieldSchema } = fieldProps;
-
-  const fieldSchema = initialFieldSchema ?? {
-    fieldType: "text",
-  };
+  const { name, fieldMethods, fieldSchema } = fieldProps;
 
   const inputProps = fieldMethods.register(name, {
     required: fieldSchema.required && fieldSchema.requiredMessage,
     deps: getFieldDeps(name),
+    disabled: fieldSchema.locked,
     validate: {
       controls: async (_, formValues) => {
         try {
@@ -108,7 +106,7 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
         ml={2}
         mt={fieldSchema.fieldType === "phone" ? 7 : 4}
         bgcolor={fr.colors.decisions.background.alt.blueFrance.default}
-        minWidth={40}
+        minWidth={name.endsWith("taux") ? 0 : 40}
       >
         {fieldSchema.messages && (
           <Button

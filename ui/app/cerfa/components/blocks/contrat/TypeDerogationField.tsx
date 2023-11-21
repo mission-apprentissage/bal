@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 
 import InputController from "../inputs/InputController";
@@ -13,21 +13,17 @@ const TypeDerogationField = () => {
   const apprentiDateNaissanceEmpty = apprentiDateNaissance === "";
 
   return (
-    <>
-      <InputController name="contrat.typeDerogation" />
+    <Box mb={2}>
+      <Box>
+        <InputController name="contrat.typeDerogation" />
+      </Box>
       {(dateDebutContratEmpty || apprentiDateNaissanceEmpty) && (
-        <Typography component="span">
-          Pour renseigner une dérogation, vous devez renseigner au préalable les champs : champs :{" "}
-          <Typography sx={{ textDecoration: apprentiDateNaissanceEmpty ? "underline" : "none" }} component="span">
-            date de naissance de l’apprenti
-          </Typography>
-          ,{" "}
-          <Typography sx={{ textDecoration: dateDebutContratEmpty ? "underline" : "none" }} component="span">
-            date de début d&apos;exécution du contrat
-          </Typography>
+        <Typography component="span" variant="caption">
+          Pour renseigner une dérogation, vous devez renseigner au préalable les champs : date de naissance de
+          l’apprenti, date de début d&apos;exécution du contrat
         </Typography>
       )}
-    </>
+    </Box>
   );
 };
 

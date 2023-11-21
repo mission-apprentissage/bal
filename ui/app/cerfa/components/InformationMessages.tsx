@@ -3,6 +3,9 @@ import { Box, Typography } from "@mui/material";
 import { FC } from "react";
 import { useRecoilState } from "recoil";
 
+import { BonusAvatar } from "../../../icons/BonusAvatar";
+import { InformationAvatar } from "../../../icons/InformationAvatar";
+import { RegulatoryAvatar } from "../../../icons/RegulatoryAvatar";
 import Markdown from "../../components/Markdown";
 import { informationMessagesState } from "../atoms/informationMessages.atom";
 import { InformationMessage } from "../utils/cerfaSchema";
@@ -12,9 +15,22 @@ interface Props {
 }
 
 const SETTINGS = {
-  assistive: { title: "Le saviez-vous ?", color: fr.colors.decisions.background.contrast.info.default },
-  regulatory: { title: "Info légale", color: fr.colors.decisions.background.contrast.warning.default },
-  bonus: { title: "Bonus", color: fr.colors.decisions.background.contrast.yellowMoutarde.default },
+  assistive: {
+    backgroundColor: fr.colors.decisions.background.contrast.info.default,
+    title: { content: "Information", color: fr.colors.decisions.background.flat.info.default },
+    icon: <InformationAvatar />,
+  },
+
+  regulatory: {
+    backgroundColor: fr.colors.decisions.background.contrast.greenTilleulVerveine.default,
+    title: { content: "Réglementation", color: fr.colors.decisions.background.flat.greenTilleulVerveine.default },
+    icon: <RegulatoryAvatar />,
+  },
+  bonus: {
+    backgroundColor: fr.colors.decisions.background.contrast.purpleGlycine.default,
+    title: { content: "Le saviez-vous ?", color: fr.colors.decisions.background.flat.purpleGlycine.default },
+    icon: <BonusAvatar />,
+  },
 };
 
 const InformationMessages: FC<Props> = () => {
@@ -24,13 +40,16 @@ const InformationMessages: FC<Props> = () => {
     <Box p={2} pt={0} position="sticky" top={24}>
       {messages?.map((message) => {
         const { type, content } = message;
-        const { color, title } = SETTINGS[type];
+        const { backgroundColor, title, icon } = SETTINGS[type];
 
         return (
-          <Box key={type} bgcolor={color} borderRadius="4px" p={2} mb={2}>
-            <Typography variant="h6" gutterBottom>
-              {title}
-            </Typography>
+          <Box key={type} bgcolor={backgroundColor} borderRadius="4px" p={2} mb={2}>
+            <Box display="flex" alignItems="center" mb={1}>
+              <Box mr={2}>{icon}</Box>
+              <Typography variant="h6" gutterBottom color={title.color}>
+                {title.content}
+              </Typography>
+            </Box>
             <Markdown>{content}</Markdown>
           </Box>
         );

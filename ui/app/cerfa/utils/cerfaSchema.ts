@@ -82,6 +82,15 @@ const cerfaSchema: CerfaSchema = {
   logics: controls,
 };
 
+export const getFieldSchema = (name: string) => {
+  if (name.startsWith("contrat.remunerationsAnnuelles")) {
+    const fieldName = name.split(".").slice(-1)[0];
+
+    return cerfaSchema.fields[`contrat.remunerationsAnnuelles[].${fieldName}`];
+  }
+  return cerfaSchema.fields[name];
+};
+
 export const indexedDependencies = (() => {
   const names = {};
   controls.forEach((rule) => {

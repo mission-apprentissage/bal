@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useFormContext } from "react-hook-form";
 
-import cerfaSchema from "../../../utils/cerfaSchema";
+import { getFieldSchema } from "../../../utils/cerfaSchema";
 import InputField from "./InputField";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 
 const InputController: FC<Props> = ({ name }) => {
   const fieldMethods = useFormContext();
-  const fieldSchema = cerfaSchema.fields[name];
+  const fieldSchema = getFieldSchema(name);
 
   const values = fieldMethods.watch();
 
