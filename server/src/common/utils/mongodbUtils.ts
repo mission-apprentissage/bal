@@ -7,6 +7,7 @@ import { zodToMongoSchema } from "zod-mongodb-schema";
 import logger from "@/common/logger";
 
 import config from "../../config";
+import { sleep } from "./asyncUtils";
 
 let mongodbClient: MongoClient | null = null;
 
@@ -45,8 +46,10 @@ export const connectToMongodb = async (uri: string) => {
 
 export const getMongodbClient = () => mongodbClient;
 
-export const closeMongodbConnection = () => {
+export const closeMongodbConnection = async () => {
   logger.warn("Closing MongoDB");
+  // Let 100ms for possible callback cleanup to register tasks in mongodb queue
+  await sleep(200);
   return mongodbClient?.close();
 };
 

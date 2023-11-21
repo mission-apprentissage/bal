@@ -1,3 +1,5 @@
+import { setMaxListeners } from "node:events";
+
 import { captureException } from "@sentry/node";
 import { program } from "commander";
 import { addJob, startJobProcessor } from "job-processor";
@@ -30,6 +32,12 @@ program
     await closeMailer();
     await closeMongodbConnection();
     await closeSentry();
+
+    setTimeout(() => {
+      // Make sure to exit, even if we didn't close all ressources cleanly
+      // eslint-disable-next-line n/no-process-exit
+      process.exit(1);
+    }, 60_000).unref();
   });
 
 async function startProcessor(signal: AbortSignal) {
@@ -62,7 +70,9 @@ function createProcessExitSignal() {
     });
   });
 
-  return abortController.signal;
+  const signal = abortController.signal;
+  setMaxListeners(100, signal);
+  return signal;
 }
 
 program

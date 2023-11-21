@@ -75,6 +75,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
                   done: "Terminé",
                   error: "Erreur",
                   pending: "En attente",
+                  paused: "En pause",
                 }[status] ?? "En attente"
               );
             },

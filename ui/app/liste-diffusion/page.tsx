@@ -18,7 +18,7 @@ const ListeDiffusionPage = () => {
   const generatingMailingList = mailingLists?.find((ml) => {
     const status = ml.document?.job_status ?? "pending";
 
-    return status === "processing" || status === "pending";
+    return status === "processing" || status === "pending" || status === "paused";
   });
 
   return (

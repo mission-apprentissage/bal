@@ -456,6 +456,7 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
           "description": "Status du job de génération",
           "enum": [
             "pending",
+            "paused",
             "importing",
             "done",
             "error",
@@ -562,6 +563,7 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
           "description": "Status du job de génération",
           "enum": [
             "pending",
+            "paused",
             "processing",
             "done",
             "error",
@@ -788,6 +790,125 @@ exports[`zodToMongoSchema > should convert events schema 1`] = `
         "errors",
       ],
     },
+  ],
+}
+`;
+
+exports[`zodToMongoSchema > should convert mailingLists schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "added_by": {
+      "bsonType": "string",
+      "description": "L'utilisateur ayant crée la liste",
+    },
+    "campaign_name": {
+      "bsonType": "string",
+      "description": "Nom de la campagne",
+    },
+    "created_at": {
+      "bsonType": "date",
+      "description": "Date d'ajout en base de données",
+    },
+    "document_id": {
+      "bsonType": "string",
+      "description": "Identifiant du document généré",
+    },
+    "email": {
+      "bsonType": "string",
+      "description": "Nom de la colonne email",
+    },
+    "identifier_columns": {
+      "bsonType": "array",
+      "description": "Liste des colonnes d'identifiants",
+      "items": {
+        "bsonType": "string",
+      },
+    },
+    "output_columns": {
+      "bsonType": "array",
+      "description": "Liste des colonnes de sortie",
+      "items": {
+        "additionalProperties": false,
+        "bsonType": "object",
+        "properties": {
+          "column": {
+            "bsonType": "string",
+          },
+          "grouped": {
+            "bsonType": "bool",
+          },
+          "output": {
+            "bsonType": "string",
+          },
+        },
+        "required": [
+          "column",
+          "output",
+          "grouped",
+        ],
+      },
+    },
+    "secondary_email": {
+      "bsonType": "string",
+      "description": "Nom de la colonne email secondaire",
+    },
+    "source": {
+      "bsonType": "string",
+      "description": "Source de la campagne",
+    },
+    "training_columns": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "description": "Liste des colonnes lié à la formation",
+      "properties": {
+        "cfd": {
+          "bsonType": "string",
+        },
+        "cle_ministere_educatif": {
+          "bsonType": "string",
+        },
+        "code_insee": {
+          "bsonType": "string",
+        },
+        "code_postal": {
+          "bsonType": "string",
+        },
+        "mef": {
+          "bsonType": "string",
+        },
+        "rncp": {
+          "bsonType": "string",
+        },
+        "uai_formateur": {
+          "bsonType": "string",
+        },
+        "uai_formateur_responsable": {
+          "bsonType": "string",
+        },
+        "uai_lieu_formation": {
+          "bsonType": "string",
+        },
+      },
+    },
+    "updated_at": {
+      "bsonType": "date",
+      "description": "Date de mise à jour en base de données",
+    },
+  },
+  "required": [
+    "_id",
+    "campaign_name",
+    "source",
+    "email",
+    "identifier_columns",
+    "output_columns",
+    "training_columns",
+    "added_by",
   ],
 }
 `;

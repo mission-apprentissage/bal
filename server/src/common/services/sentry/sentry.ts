@@ -17,7 +17,7 @@ function getOptions(): Sentry.NodeOptions {
       new Sentry.Integrations.Http({ tracing: true }),
       new Sentry.Integrations.Mongo({ useMongoose: false }),
       new CaptureConsole({ levels: ["error"] }) as any,
-      new ExtraErrorData({ depth: 8 }) as any,
+      new ExtraErrorData({ depth: 16 }) as any,
     ],
   };
 }
