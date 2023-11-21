@@ -19,8 +19,7 @@ export const employeurSchema: Record<string, CerfaField> = {
     messages: [
       {
         type: "assistive",
-        content:
-          "Ce formulaire est reservé aux contrats des employeurs privés, rendez-vous sur Celia [https://celia.emploi.gouv.fr/](https://celia.emploi.gouv.fr/) pour transmettre le contrat d'un employeur public. Si vous représentez une Société d'économie mixte ou un EPIC (établissement public à caractère industriel et commercial), vous pouvez continuer la saisie.",
+        content: `Ce formulaire est reservé aux contrats des employeurs privés, rendez-vous sur Celia [https://celia.emploi.gouv.fr/](https://celia.emploi.gouv.fr/) pour transmettre le contrat d'un employeur public. Si vous représentez une Société d'économie mixte ou un EPIC (établissement public à caractère industriel et commercial), vous pouvez continuer la saisie.`,
       },
     ],
   },

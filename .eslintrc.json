@@ -12,7 +12,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint", "simple-import-sort", "import", "unused-imports"],
+  "plugins": ["react", "react-hooks", "@typescript-eslint", "simple-import-sort", "import", "unused-imports"],
   "rules": {
     "simple-import-sort/imports": "error",
     "react/react-in-jsx-scope": "off",
@@ -37,7 +37,14 @@
     ],
     "import/no-useless-path-segments": ["error"],
     "import/no-duplicates": ["error", { "considerQueryString": true }],
-    "import/no-unassigned-import": ["off"]
+    "import/no-unassigned-import": ["off"],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": [
+      "warn",
+      {
+        "additionalHooks": "useRecoilCallback"
+      }
+    ]
   },
   "settings": {
     "react": {

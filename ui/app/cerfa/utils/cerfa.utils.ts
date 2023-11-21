@@ -1,10 +1,21 @@
+import { FC } from "react";
+
 import CerfaApprenti from "../components/blocks/apprenti/CerfaApprenti";
 import CerfaContrat from "../components/blocks/contrat/CerfaContrat";
 import CerfaEmployeur from "../components/blocks/employeur/CerfaEmployeur";
 import CerfaFormation from "../components/blocks/formation/CerfaFormation";
 import CerfaMaitreApprentissage from "../components/blocks/maitreApprentissage/CerfaMaitreApprentissage";
 
-export const CERFA_STEPS = {
+export interface CerfaStep {
+  label: string;
+  id: string;
+  order: number;
+  component: FC;
+}
+
+export type CerfaStepType = "EMPLOYEUR" | "APPRENTI" | "MAITRE_APPRENTISSAGE" | "CONTRAT" | "FORMATION";
+
+export const CERFA_STEPS: Record<CerfaStepType, CerfaStep> = {
   EMPLOYEUR: {
     label: "Employeur",
     id: "employeur",

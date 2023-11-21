@@ -19,65 +19,32 @@ const CerfaEmployeur: FC = () => {
       <InputGroupTitle>Adresse et contact de l’établissement d’exécution du contrat</InputGroupTitle>
 
       <InputGroupContainer>
-        <InputGroupItem size={2}>
+        <InputGroupItem size={3}>
           <InputController name="employeur.adresse.numero" />
         </InputGroupItem>
-        <InputGroupItem size={3}>
+        <InputGroupItem size={4}>
           <InputController name="employeur.adresse.repetitionVoie" />
         </InputGroupItem>
-        <InputGroupItem size={7}>
-          <InputController name="employeur.adresse.voie" />
-        </InputGroupItem>
       </InputGroupContainer>
 
+      <InputController name="employeur.adresse.voie" />
       <InputController name="employeur.adresse.complement" />
+      <InputController name="employeur.adresse.codePostal" />
+      <InputController name="employeur.adresse.commune" />
 
-      <InputGroupContainer>
-        <InputGroupItem size={2}>
-          <InputController name="employeur.adresse.codePostal" />
-        </InputGroupItem>
-        <InputGroupItem size={10}>
-          <InputController name="employeur.adresse.commune" />
-        </InputGroupItem>
-      </InputGroupContainer>
-
-      <InputGroupContainer>
-        <InputGroupItem size={6}>
-          <InputController name="employeur.telephone" />
-        </InputGroupItem>
-        <InputGroupItem size={6}>
-          <InputController name="employeur.courriel" />
-        </InputGroupItem>
-      </InputGroupContainer>
+      <InputController name="employeur.telephone" />
+      <InputController name="employeur.courriel" />
 
       <InputGroupTitle>Établissement d’exécution du contrat</InputGroupTitle>
 
-      <InputGroupContainer>
-        <InputGroupItem size={6}>
-          <InputController name="employeur.typeEmployeur" />
-        </InputGroupItem>
-        <InputGroupItem size={6}>
-          <InputController name="employeur.employeurSpecifique" />
-        </InputGroupItem>
-      </InputGroupContainer>
-      <InputGroupContainer>
-        <InputGroupItem size={6}>
-          <InputController name="employeur.naf" />
-        </InputGroupItem>
-        <InputGroupItem size={6}>
-          <InputController name="employeur.nombreDeSalaries" />
-        </InputGroupItem>
-      </InputGroupContainer>
+      <InputController name="employeur.typeEmployeur" />
+      <InputController name="employeur.employeurSpecifique" />
+      <InputController name="employeur.naf" />
+      <InputController name="employeur.nombreDeSalaries" />
 
       <InputController name="employeur.codeIdcc_special" />
-      <InputGroupContainer>
-        <InputGroupItem size={6}>
-          <InputController name="employeur.codeIdcc" />
-        </InputGroupItem>
-        <InputGroupItem size={6}>
-          <InputController name="employeur.libelleIdcc" />
-        </InputGroupItem>
-      </InputGroupContainer>
+      <InputController name="employeur.codeIdcc" />
+      <InputController name="employeur.libelleIdcc" />
 
       <CheckEmptyFields schema={{}} blockName="employeur" />
     </Box>

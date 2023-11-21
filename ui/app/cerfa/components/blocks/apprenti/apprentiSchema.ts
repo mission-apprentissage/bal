@@ -161,8 +161,8 @@ Pas de limite d'âge si  l'apprenti :
       {
         type: "assistive",
         content: `Il s'agit du numéro de sécurité sociale.
-      Ce numéro est inscrit sur la carte vitale des personnes majeures, en dessous du nom et du prénom du porteur. 
-      Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes physiques.`,
+Ce numéro est inscrit sur la carte vitale des personnes majeures, en dessous du nom et du prénom du porteur. 
+Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes physiques.`,
       },
     ],
   },
@@ -434,10 +434,11 @@ Pas de limite d'âge si  l'apprenti :
         type: "assistive",
         content: `Dernier diplôme ou titre préparé par l'apprenti(e) avant son embauche.
         
-        Il faut sélectionner le diplôme ou le titre préparé avant la conclusion du présent contrat. 
+Il faut sélectionner le diplôme ou le titre préparé avant la conclusion du présent contrat. 
         
-        Exemple 1 : si l'entrée en apprentissage concerne la 2ème année de BTS, le dernier diplôme ou titre préparé est la 1ère année de BTS : il faut donc sélectionner "54 - Brevet de Technicien supérieur".
-        Exemple 2 : si l'entrée en apprentissage concerne la 1ère année de BTS, le dernier diplôme ou titre préparé est peut-être le Baccalauréat général : il faut donc sélectionner "42: Baccalauréat général"`,
+Exemple 1 : si l'entrée en apprentissage concerne la 2ème année de BTS, le dernier diplôme ou titre préparé est la 1ère année de BTS : il faut donc sélectionner "54 - Brevet de Technicien supérieur".
+
+Exemple 2 : si l'entrée en apprentissage concerne la 1ère année de BTS, le dernier diplôme ou titre préparé est peut-être le Baccalauréat général : il faut donc sélectionner "42: Baccalauréat général"`,
       },
     ],
   },
@@ -499,9 +500,9 @@ Pas de limite d'âge si  l'apprenti :
         type: "assistive",
         content: `Dernière classe /année suivie par l'apprenti (e ) avant son embauche.
 
-      Il faut sélectionner la situation qui précède l'entrée en contrat d'apprentissage.
+Il faut sélectionner la situation qui précède l'entrée en contrat d'apprentissage.
       
-      Par exemple, si le diplôme préparé avant était une 1ère année de BTS et que cette dernière a été validée, il faut sélectionner "11 - l'apprenti a suivi la première année du cycle et l'a validée (examens réussis mais année non diplômante)".`,
+Par exemple, si le diplôme préparé avant était une 1ère année de BTS et que cette dernière a été validée, il faut sélectionner "11 - l'apprenti a suivi la première année du cycle et l'a validée (examens réussis mais année non diplômante)".`,
       },
     ],
   },
@@ -555,7 +556,7 @@ Pas de limite d'âge si  l'apprenti :
         type: "assistive",
         content: `Vous devez indiquer "oui" si l'apprenti est mineur non émancipé à la date de signature du contrat. Dans ce cas, le représentant légal devra également signer le contrat.
 
-      Un mineur émancipé peut accomplir seul les actes nécessitant la majorité légale. Plus d'informations à propos de l'émancipation sur le site du Service public [https://www.service-public.fr/particuliers/vosdroits/F1194](https://www.service-public.fr/particuliers/vosdroits/F1194)`,
+Un mineur émancipé peut accomplir seul les actes nécessitant la majorité légale. Plus d'informations à propos de l'émancipation sur le site du Service public [https://www.service-public.fr/particuliers/vosdroits/F1194](https://www.service-public.fr/particuliers/vosdroits/F1194)`,
       },
     ],
   },

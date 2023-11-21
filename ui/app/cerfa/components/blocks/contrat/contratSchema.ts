@@ -83,10 +83,10 @@ export const contratSchema: Record<string, CerfaField> = {
       {
         type: "assistive",
         content: `11 : c'est le tout premier contrat de l'apprenti, il n'a jamais été en apprentissage auparavant et vous serez son 1er employeur en apprentissage
-      21 : le contrat précédent de votre apprenti est arrivé à terme, vous signez ce nouveau contrat d'apprentissage avec lui pour prolonger l'apprentissage dans votre entreprise
-      22 : l'apprenti était en apprentissage chez un autre employeur, son contrat est arrivé à terme et vous signez ce contrat d'apprentissage avec lui
-      23 : l'apprenti était en apprentissage chez un autre employeur mais le contrat a été rompu avant son terme ; vous signez ce contrat d'apprentissage avec lui
-      33 :  vous devrez saisir au moins une nouvelle période de rémunération par rapport à la version précédente du contrat.  Le pourcentage de rémunération de la première période de l’avenant doit être supérieur ou égal au pourcentage de rémunération de la dernière période du contrat qui fait l'objet de cet avenant.`,
+21 : le contrat précédent de votre apprenti est arrivé à terme, vous signez ce nouveau contrat d'apprentissage avec lui pour prolonger l'apprentissage dans votre entreprise
+22 : l'apprenti était en apprentissage chez un autre employeur, son contrat est arrivé à terme et vous signez ce contrat d'apprentissage avec lui
+23 : l'apprenti était en apprentissage chez un autre employeur mais le contrat a été rompu avant son terme ; vous signez ce contrat d'apprentissage avec lui
+33 :  vous devrez saisir au moins une nouvelle période de rémunération par rapport à la version précédente du contrat.  Le pourcentage de rémunération de la première période de l’avenant doit être supérieur ou égal au pourcentage de rémunération de la dernière période du contrat qui fait l'objet de cet avenant.`,
       },
     ],
   },
@@ -98,9 +98,9 @@ export const contratSchema: Record<string, CerfaField> = {
     messages: [
       {
         type: "assistive",
-        content: `A renseigner si une dérogation existe pour ce contrat (exemple : l'apprentissage commence à partir de 16 ans mais par dérogation, les jeunes âgés d'au moins 15 ans et un jour peuvent conclure un contrat d'apprentissage s'ils ont terminé la scolarité du 1er cycle de l'enseignement secondaire (collège).
+        content: `L'apprentissage commence à partir de 16 ans mais par dérogation, les jeunes âgés d'au moins 15 ans et un jour peuvent conclure un contrat d'apprentissage s'ils ont terminé la scolarité du 1er cycle de l'enseignement secondaire (collège).
 
-      [voir si info à contextualiser dès lors que l'utilisateur a saisi 21 ou 22 ] : En cas de réduction ou allongement de la durée du contrat, vous devrez aussi remplir une convention d'aménagement de durée, que vous signerez avec l'organisme de formation et votre apprenti.`,
+En cas de réduction ou allongement de la durée du contrat, vous devrez aussi remplir une convention d'aménagement de durée, que vous signerez avec l'organisme de formation et votre apprenti.`,
       },
     ],
   },
@@ -292,14 +292,14 @@ Le contrat doit être signé avant de débuter.
         type: "assistive",
         content: `Le contrat ne peut pas se terminer avant la fin de la formation dans l'organisme de formation, examens compris.
 
-      La période de contrat doit donc englober la date du dernier examen qui sanctionne l'obtention du diplôme. 
-      Si celle-ci n'est pas connue au moment de la conclusion du contrat, vous pouvez renseigner une date située maximum 2 mois au-delà de la date de fin prévisionnelle des examens.
+La période de contrat doit donc englober la date du dernier examen qui sanctionne l'obtention du diplôme. 
+Si celle-ci n'est pas connue au moment de la conclusion du contrat, vous pouvez renseigner une date située maximum 2 mois au-delà de la date de fin prévisionnelle des examens.
       
-      La date de fin de contrat intervient donc : 
-      au plus tôt le dernier jour de la dernière épreuve nécessaire à l’obtention du titre ou diplôme préparé par l'apprenti ;
-      au plus tard dans les deux mois après la dernière épreuve sanctionnant le cycle, ou à la veille du début du cycle de formation suivant.
+La date de fin de contrat intervient donc : 
+au plus tôt le dernier jour de la dernière épreuve nécessaire à l’obtention du titre ou diplôme préparé par l'apprenti ;
+au plus tard dans les deux mois après la dernière épreuve sanctionnant le cycle, ou à la veille du début du cycle de formation suivant.
       
-      Dans le cadre d’un CDI, vous devez donc également préciser la date de fin de l’action de formation (examens inclus).`,
+Dans le cadre d’un CDI, vous devez donc également préciser la date de fin de l’action de formation (examens inclus).`,
       },
     ],
   },
@@ -317,7 +317,7 @@ Le contrat doit être signé avant de débuter.
       {
         type: "bonus",
         content: `A partir de cette date, vous avez 5 jours ouvrables pour transmettre le document à votre OPCO (les étapes sur la suite de la procédure seron détaillées lorsque vous téléchargerez le présent document).
-        La date de début d'exécution du contrat est liée à la date de naissance de l'apprenti pour le calcul des périodes de rémunération.`,
+La date de début d'exécution du contrat est liée à la date de naissance de l'apprenti pour le calcul des périodes de rémunération.`,
       },
       {
         type: "regulatory",
@@ -375,10 +375,10 @@ Le contrat doit être signé avant de débuter.
       {
         type: "regulatory",
         content: `L’horaire collectif de travail de l’entreprise peut être inférieur ou supérieur à 35 heures. 
-        Toutefois, la durée légale du travail effectif est fixée à 35h par semaine. Dans certains secteurs, quand l'organisation du travail le justifie, elle peut être portée à 40h.
-        La circulaire n° 2012-15 du 19 juillet 2012 de la DGEFP précise que le Cerfa doit indiquer 35 heures dans le cas de salariés travaillant plus de 35 heures hebdomadaires, les heures au-delà étant récupérées sous forme de RTT.
-        
-        Le temps de formation en CFA est du temps de travail effectif et compte dans l'horaire de travail. En savoir plus sur le site du Service Public  [https://www.service-public.fr/particuliers/vosdroits/F2918](https://www.service-public.fr/particuliers/vosdroits/F2918) - ouverture dans un nouvel onglet`,
+Toutefois, la durée légale du travail effectif est fixée à 35h par semaine. Dans certains secteurs, quand l'organisation du travail le justifie, elle peut être portée à 40h.
+La circulaire n° 2012-15 du 19 juillet 2012 de la DGEFP précise que le Cerfa doit indiquer 35 heures dans le cas de salariés travaillant plus de 35 heures hebdomadaires, les heures au-delà étant récupérées sous forme de RTT.
+
+Le temps de formation en CFA est du temps de travail effectif et compte dans l'horaire de travail. En savoir plus sur le site du Service Public  [https://www.service-public.fr/particuliers/vosdroits/F2918](https://www.service-public.fr/particuliers/vosdroits/F2918) - ouverture dans un nouvel onglet`,
       },
     ],
   },

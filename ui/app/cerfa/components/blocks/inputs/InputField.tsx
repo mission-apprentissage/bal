@@ -2,7 +2,9 @@ import { InputProps } from "@codegouvfr/react-dsfr/Input";
 import { Typography } from "@mui/material";
 import { FC } from "react";
 import { FieldValues, UseFormRegisterReturn, UseFormReturn } from "react-hook-form";
+import { useRecoilState } from "recoil";
 
+import { informationMessagesState } from "../../../atoms/informationMessages.atom";
 import { CerfaField } from "../../../utils/cerfaSchema";
 import { getFieldDeps, getFieldStateFromFormState, validateField } from "../../../utils/form.utils";
 import ConsentInput from "./ConsentInput";
@@ -33,7 +35,7 @@ interface Props {
 
 export type InputFieldProps = Pick<Props, "name" | "fieldMethods" | "fieldSchema"> &
   Pick<InputProps, "state" | "stateRelatedMessage"> & {
-    inputProps: UseFormRegisterReturn;
+    inputProps: UseFormRegisterReturn & { onFocus: () => void };
   };
 
 const TypesMapping: Record<FieldType, FC<InputFieldProps>> = {
@@ -50,6 +52,7 @@ const TypesMapping: Record<FieldType, FC<InputFieldProps>> = {
 
 const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
   const Component = TypesMapping[fieldType];
+  const [_, setInformationMessages] = useRecoilState(informationMessagesState);
 
   if (!Component) {
     return (
@@ -80,13 +83,17 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
     },
   });
 
+  const onFocus = () => {
+    setInformationMessages(fieldSchema.messages);
+  };
+
   const { state, stateRelatedMessage } = getFieldStateFromFormState(fieldMethods.formState, name);
 
   return (
     <Component
       {...fieldProps}
       fieldSchema={fieldSchema}
-      inputProps={inputProps}
+      inputProps={{ ...inputProps, onFocus }}
       state={state}
       stateRelatedMessage={stateRelatedMessage}
     />

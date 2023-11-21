@@ -27,7 +27,7 @@ export const formationSchema: Record<string, CerfaField> = {
       {
         type: "bonus",
         content: `Un CFA d'entreprise est interne à l’entreprise ou constitué par plusieurs entreprises partageant des perspectives communes d’évolution des métiers ou qui interviennent dans des secteurs d’activité complémentaires.
-        Les CFA d'entreprise sont souvent des organismes qui forment pour de grands groupes.`,
+Les CFA d'entreprise sont souvent des organismes qui forment pour de grands groupes.`,
       },
     ],
   },
@@ -51,7 +51,7 @@ export const formationSchema: Record<string, CerfaField> = {
         type: "assistive",
         content: `Vous devez renseigner le siret du CFA responsable. Le lieu principal de formation sera quant-à lui précisé dans d'autres champs ci-dessous.
 
-        Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).`,
+Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).`,
       },
     ],
   },
@@ -108,7 +108,7 @@ export const formationSchema: Record<string, CerfaField> = {
       {
         type: "bonus",
         content: `Le code RNCP peut être recherché sur le site [France compétences](https://www.francecompetences.fr/recherche_certificationprofessionnelle/).
-      Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.`,
+Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.`,
       },
     ],
   },
@@ -124,8 +124,8 @@ export const formationSchema: Record<string, CerfaField> = {
       {
         type: "bonus",
         content: `Ce code à 8 caractères permet d'identifier un titre ou diplôme préparés par la voie de l'apprentissage, plus d'informations sur le site du [ministère de l'Education Nationale](https://www.education.gouv.fr/codification-des-formations-et-des-diplomes-11270).
-        Le code diplôme peut être recherché sur le catalogue des formations en apprentissage.
-        Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.`,
+Le code diplôme peut être recherché sur le catalogue des formations en apprentissage.
+Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.`,
       },
     ],
   },
@@ -252,7 +252,7 @@ export const formationSchema: Record<string, CerfaField> = {
         type: "assistive",
         content: `Vous devez renseigner le siret du CFA responsable. Le lieu principal de formation sera quant-à lui précisé dans d'autres champs ci-dessous.
 
-        Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).`,
+Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).`,
       },
     ],
   },
@@ -374,7 +374,7 @@ export const formationSchema: Record<string, CerfaField> = {
         type: "regulatory",
         content: `Le début de la période de formation au CFA ne peut intervenir plus de trois mois après le début d'exécution du contrat.
 
-        De la même façon, le début de la période en entreprise ne peut intervenir plus de trois mois après le début d'exécution du contrat.`,
+De la même façon, le début de la période en entreprise ne peut intervenir plus de trois mois après le début d'exécution du contrat.`,
       },
     ],
   },
@@ -389,9 +389,9 @@ export const formationSchema: Record<string, CerfaField> = {
         type: "regulatory",
         content: `La date de fin du contrat doit englober l’ensemble des épreuves nécessaires à l’obtention du titre ou du diplôme. Lorsque la date précise n'est pas connue, il est possible de renseigner une date prévisionnelle avec une marge de 2 mois maximum. 
 
-      La date de fin de contrat intervient : 
-      au plus tôt le dernier jour de la dernière épreuve nécessaire à l’obtention du titre ou diplôme préparé par l'apprenti ;
-      au plus tard dans les deux mois après la dernière épreuve sanctionnant le cycle, ou à la veille du début du cycle de formation suivant.`,
+La date de fin de contrat intervient : 
+au plus tôt le dernier jour de la dernière épreuve nécessaire à l’obtention du titre ou diplôme préparé par l'apprenti ;
+au plus tard dans les deux mois après la dernière épreuve sanctionnant le cycle, ou à la veille du début du cycle de formation suivant.`,
       },
     ],
   },

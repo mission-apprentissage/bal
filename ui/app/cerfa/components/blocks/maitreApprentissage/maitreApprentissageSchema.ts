@@ -64,8 +64,8 @@ export const maitreApprentissageSchema: Record<string, CerfaField> = {
       {
         type: "assistive",
         content: `Il s'agit du numéro de sécurité sociale.
-      Ce numéro est inscrit sur la carte vitale des personnes majeures, en dessous du nom et du prénom du porteur. 
-      Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes physiques.`,
+Ce numéro est inscrit sur la carte vitale des personnes majeures, en dessous du nom et du prénom du porteur. 
+Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes physiques.`,
       },
     ],
   },
@@ -86,9 +86,9 @@ export const maitreApprentissageSchema: Record<string, CerfaField> = {
       {
         type: "regulatory",
         content: `Le maître d'apprentissage doit justifier d'une formation et d'une expérience professionnelle minimales :
-      - 1 an d'exercice d'une activité professionnelle correspondant à la finalité du diplôme ou du titre préparé par l'apprenti, s'il est titulaire d'un diplôme ou d'un titre dans un domaine en rapport avec la qualification préparée par l'apprenti 
-      - 2 ans d'exercice d'une activité professionnelle correspondant à la finalité du diplôme ou du titre préparé par l'apprenti, s'il n'est pas titulaire d'un diplôme ou d'un titre dans un domaine en rapport avec la qualification préparée par l'apprenti.
-      Ceci à défaut de dispositions conventionnelles particulières applicables dans l'entreprise (code du travail, art. R6223-22).
+- 1 an d'exercice d'une activité professionnelle correspondant à la finalité du diplôme ou du titre préparé par l'apprenti, s'il est titulaire d'un diplôme ou d'un titre dans un domaine en rapport avec la qualification préparée par l'apprenti 
+- 2 ans d'exercice d'une activité professionnelle correspondant à la finalité du diplôme ou du titre préparé par l'apprenti, s'il n'est pas titulaire d'un diplôme ou d'un titre dans un domaine en rapport avec la qualification préparée par l'apprenti.
+Ceci à défaut de dispositions conventionnelles particulières applicables dans l'entreprise (code du travail, art. R6223-22).
       `,
       },
     ],
@@ -182,8 +182,8 @@ export const maitreApprentissageSchema: Record<string, CerfaField> = {
       {
         type: "assistive",
         content: `Il s'agit du numéro de sécurité sociale.
-      Ce numéro est inscrit sur la carte vitale des personnes majeures, en dessous du nom et du prénom du porteur. 
-      Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes physiques.`,
+Ce numéro est inscrit sur la carte vitale des personnes majeures, en dessous du nom et du prénom du porteur. 
+Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes physiques.`,
       },
     ],
   },
@@ -202,9 +202,9 @@ export const maitreApprentissageSchema: Record<string, CerfaField> = {
       {
         type: "regulatory",
         content: `Le maître d'apprentissage doit justifier d'une formation et d'une expérience professionnelle minimales :
-      - 1 an d'exercice d'une activité professionnelle correspondant à la finalité du diplôme ou du titre préparé par l'apprenti, s'il est titulaire d'un diplôme ou d'un titre dans un domaine en rapport avec la qualification préparée par l'apprenti 
-      - 2 ans d'exercice d'une activité professionnelle correspondant à la finalité du diplôme ou du titre préparé par l'apprenti, s'il n'est pas titulaire d'un diplôme ou d'un titre dans un domaine en rapport avec la qualification préparée par l'apprenti.
-      Ceci à défaut de dispositions conventionnelles particulières applicables dans l'entreprise (code du travail, art. R6223-22).
+- 1 an d'exercice d'une activité professionnelle correspondant à la finalité du diplôme ou du titre préparé par l'apprenti, s'il est titulaire d'un diplôme ou d'un titre dans un domaine en rapport avec la qualification préparée par l'apprenti 
+- 2 ans d'exercice d'une activité professionnelle correspondant à la finalité du diplôme ou du titre préparé par l'apprenti, s'il n'est pas titulaire d'un diplôme ou d'un titre dans un domaine en rapport avec la qualification préparée par l'apprenti.
+Ceci à défaut de dispositions conventionnelles particulières applicables dans l'entreprise (code du travail, art. R6223-22).
       `,
       },
     ],

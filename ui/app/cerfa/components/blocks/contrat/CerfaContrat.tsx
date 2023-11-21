@@ -4,8 +4,6 @@ import { FC } from "react";
 import CollapseController from "../../CollapseController";
 import CheckEmptyFields from "../CheckEmptyFields";
 import InputController from "../inputs/InputController";
-import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
-import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
 import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
 import { AvantagesNatures } from "./AvantagesNatures";
 import { shouldAskDateEffetAvenant } from "./domain/shouldAskDateEffetAvenant";
@@ -18,20 +16,10 @@ const CerfaContrat: FC = () => {
     <Box>
       <InputController name="contrat.typeContratApp" />
 
-      <InputGroupContainer>
-        <InputGroupItem size={6}>
-          <InputController name="contrat.dateSignature" />
-        </InputGroupItem>
-        <InputGroupItem size={6}>
-          <InputController name="contrat.dateFinContrat" />
-        </InputGroupItem>
-        <InputGroupItem size={6}>
-          <InputController name="contrat.dateDebutContrat" />
-        </InputGroupItem>
-        <InputGroupItem size={6}>
-          <InputController name="contrat.dateDebutFormationPratique" />
-        </InputGroupItem>
-      </InputGroupContainer>
+      <InputController name="contrat.dateSignature" />
+      <InputController name="contrat.dateFinContrat" />
+      <InputController name="contrat.dateDebutContrat" />
+      <InputController name="contrat.dateDebutFormationPratique" />
 
       <TypeDerogationField />
       <NumeroContratPrecedentField />
@@ -42,14 +30,8 @@ const CerfaContrat: FC = () => {
 
       <InputGroupTitle fontWeight={700}>Durée hebdomadaire du travail</InputGroupTitle>
 
-      <InputGroupContainer>
-        <InputGroupItem size={3}>
-          <InputController name="contrat.dureeTravailHebdoHeures" />
-        </InputGroupItem>
-        <InputGroupItem size={3}>
-          <InputController name="contrat.dureeTravailHebdoMinutes" />
-        </InputGroupItem>
-      </InputGroupContainer>
+      <InputController name="contrat.dureeTravailHebdoHeures" />
+      <InputController name="contrat.dureeTravailHebdoMinutes" />
 
       <InputController name="contrat.travailRisque" />
       <Remunerations />
