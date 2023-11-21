@@ -1,5 +1,7 @@
+import { fr } from "@codegouvfr/react-dsfr";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { InputProps } from "@codegouvfr/react-dsfr/Input";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { FC } from "react";
 import { FieldValues, UseFormRegisterReturn, UseFormReturn } from "react-hook-form";
 import { useRecoilState } from "recoil";
@@ -90,13 +92,35 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
   const { state, stateRelatedMessage } = getFieldStateFromFormState(fieldMethods.formState, name);
 
   return (
-    <Component
-      {...fieldProps}
-      fieldSchema={fieldSchema}
-      inputProps={{ ...inputProps, onFocus }}
-      state={state}
-      stateRelatedMessage={stateRelatedMessage}
-    />
+    <Box display="flex" alignItems="flex-start">
+      <Box flexGrow={1}>
+        <Component
+          {...fieldProps}
+          fieldSchema={fieldSchema}
+          inputProps={{ ...inputProps, onFocus }}
+          state={state}
+          stateRelatedMessage={stateRelatedMessage}
+        />
+        {/* Trigger input margin bottom */}
+        <Box />
+      </Box>
+      <Box
+        ml={2}
+        mt={fieldSchema.fieldType === "phone" ? 7 : 4}
+        bgcolor={fr.colors.decisions.background.alt.blueFrance.default}
+        minWidth={40}
+      >
+        {fieldSchema.messages && (
+          <Button
+            type="button"
+            iconId="ri-information-line"
+            onClick={onFocus}
+            priority="tertiary no outline"
+            title="Informations complémentaires"
+          />
+        )}
+      </Box>
+    </Box>
   );
 };
 
