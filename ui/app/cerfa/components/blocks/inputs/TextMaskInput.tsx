@@ -84,9 +84,11 @@ const TextMaskInput: FC<InputFieldProps> = ({
         lazy: false,
         blocks,
         placeholder: fieldSchema.placeholder,
+        disabled: inputProps.disabled,
       }}
       state={state}
       stateRelatedMessage={stateRelatedMessage}
+      disabled={inputProps.disabled}
     />
   );
 };

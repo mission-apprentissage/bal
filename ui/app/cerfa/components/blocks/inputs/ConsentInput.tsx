@@ -14,6 +14,7 @@ const ConsentInput: FC<InputFieldProps> = ({ fieldSchema, state, stateRelatedMes
       ]}
       state={state}
       stateRelatedMessage={stateRelatedMessage}
+      disabled={inputProps.disabled}
     />
   );
 };

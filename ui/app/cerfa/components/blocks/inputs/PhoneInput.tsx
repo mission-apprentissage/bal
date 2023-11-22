@@ -40,7 +40,9 @@ const PhoneInput: FC<InputFieldProps> = ({
         countryCodeEditable: false,
         enableTerritories: true,
         placeholder: fieldSchema.placeholder,
+        disabled: inputProps.disabled,
       }}
+      disabled={inputProps.disabled}
     />
   );
 };

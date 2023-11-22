@@ -34,6 +34,7 @@ const NumberStepperInput: FC<InputFieldProps> = ({
         }}
         state={state}
         stateRelatedMessage={stateRelatedMessage}
+        disabled={inputProps.disabled}
       />
       <Box minWidth={40} mx={2} mt={4}>
         <Button style={{ minWidth: 40 }} type="button" onClick={decrement} priority="secondary" title="Décrementer">

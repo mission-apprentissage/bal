@@ -36,6 +36,7 @@ const RadioInput: FC<InputFieldProps> = ({
       state={state}
       stateRelatedMessage={stateRelatedMessage}
       orientation="horizontal"
+      disabled={inputProps.disabled}
     />
   );
 };

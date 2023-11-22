@@ -10,6 +10,7 @@ const DateInput: FC<InputFieldProps> = ({ fieldSchema, state, stateRelatedMessag
       nativeInputProps={{ ...inputProps, placeholder: fieldSchema.placeholder, type: "date" }}
       state={state}
       stateRelatedMessage={stateRelatedMessage}
+      disabled={inputProps.disabled}
     />
   );
 };

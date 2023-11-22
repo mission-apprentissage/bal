@@ -15,6 +15,7 @@ const SelectInput: FC<InputFieldProps> = ({ fieldSchema, inputProps, state, stat
       nativeSelectProps={{ ...inputProps }}
       state={state}
       stateRelatedMessage={stateRelatedMessage}
+      disabled={inputProps.disabled}
     >
       <option value="">{fieldSchema.placeholder ?? "Sélectionnez une option"}</option>
       {groupedOptions

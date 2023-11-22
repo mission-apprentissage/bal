@@ -20,6 +20,7 @@ const TextInput: FC<InputFieldProps> = (props) => {
       }}
       state={state}
       stateRelatedMessage={stateRelatedMessage}
+      disabled={inputProps.disabled}
     />
   );
 };
