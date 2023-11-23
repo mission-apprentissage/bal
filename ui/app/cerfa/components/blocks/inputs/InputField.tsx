@@ -7,6 +7,7 @@ import { FieldValues, UseFormRegisterReturn, UseFormReturn } from "react-hook-fo
 import { useRecoilState } from "recoil";
 
 import { informationMessagesState } from "../../../atoms/informationMessages.atom";
+import { showOverlayState } from "../../../atoms/showOverlay.atom";
 import { CerfaField } from "../../../utils/cerfaSchema";
 import { getFieldDeps, getFieldStateFromFormState, validateField } from "../../../utils/form.utils";
 import ConsentInput from "./ConsentInput";
@@ -56,6 +57,7 @@ const TypesMapping: Record<FieldType, FC<InputFieldProps>> = {
 const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
   const Component = TypesMapping[fieldType];
   const [_, setInformationMessages] = useRecoilState(informationMessagesState);
+  const [_showOverlay, setShowOverlay] = useRecoilState(showOverlayState);
 
   if (!Component) {
     return (
@@ -72,12 +74,23 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
     deps: getFieldDeps(name),
     disabled: fieldSchema.locked,
     validate: {
+      loading: () => {
+        if (fieldSchema.showsOverlay) {
+          setShowOverlay(true);
+        }
+
+        return true;
+      },
       controls: async (_, formValues) => {
         try {
-          return validateField(name, formValues, fieldMethods);
+          const validation = await validateField(name, formValues, fieldMethods);
+
+          return validation;
         } catch (e) {
           console.error(e);
           return "Une erreur technique est survenue";
+        } finally {
+          setShowOverlay(false);
         }
       },
     },
@@ -90,35 +103,37 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
   const { state, stateRelatedMessage } = getFieldStateFromFormState(fieldMethods.formState, name);
 
   return (
-    <Box display="flex" alignItems="flex-start">
-      <Box flexGrow={1}>
-        <Component
-          {...fieldProps}
-          fieldSchema={fieldSchema}
-          inputProps={{ ...inputProps, onFocus }}
-          state={state}
-          stateRelatedMessage={stateRelatedMessage}
-        />
-        {/* Trigger input margin bottom */}
-        <Box />
-      </Box>
-      <Box
-        ml={2}
-        mt={fieldSchema.fieldType === "phone" ? 7 : 4}
-        bgcolor={fr.colors.decisions.background.alt.blueFrance.default}
-        minWidth={name.endsWith("taux") ? 0 : 40}
-      >
-        {fieldSchema.messages && (
-          <Button
-            type="button"
-            iconId="ri-information-line"
-            onClick={onFocus}
-            priority="tertiary no outline"
-            title="Informations complémentaires"
+    <>
+      <Box display="flex" alignItems="flex-start">
+        <Box flexGrow={1}>
+          <Component
+            {...fieldProps}
+            fieldSchema={fieldSchema}
+            inputProps={{ ...inputProps, onFocus }}
+            state={state}
+            stateRelatedMessage={stateRelatedMessage}
           />
-        )}
+          {/* Trigger input margin bottom */}
+          <Box />
+        </Box>
+        <Box
+          ml={2}
+          mt={fieldSchema.fieldType === "phone" ? 7 : 4}
+          bgcolor={fr.colors.decisions.background.alt.blueFrance.default}
+          minWidth={name.endsWith("taux") ? 0 : 40}
+        >
+          {fieldSchema.messages && (
+            <Button
+              type="button"
+              iconId="ri-information-line"
+              onClick={onFocus}
+              priority="tertiary no outline"
+              title="Informations complémentaires"
+            />
+          )}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

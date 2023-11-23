@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { FC } from "react";
 
+import CheckEmptyFields from "../../CheckEmptyFields";
 import InputController from "../inputs/InputController";
 import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
 
@@ -28,6 +29,8 @@ const CerfaMaitreApprentissage: FC = () => {
       <InputController name="maitre2.courriel" />
 
       <InputController name="employeur.attestationEligibilite" />
+
+      <CheckEmptyFields blockName={["maitre1", "maitre2"]} />
     </Box>
   );
 };

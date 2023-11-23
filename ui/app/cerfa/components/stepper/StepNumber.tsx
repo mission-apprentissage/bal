@@ -6,7 +6,7 @@ interface Props {
   active: boolean;
 }
 
-const StyledBox = styled(Box)<Props>(({ active }) => ({
+const StyledBox = styled(Box, { shouldForwardProp: (propName) => propName !== "active" })<Props>(({ active }) => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",

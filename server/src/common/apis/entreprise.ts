@@ -52,8 +52,9 @@ export const getEntreprise = async (siren: string) => {
   const [entreprise, siege_social, numero_tva, extrait_kbis] = await Promise.all([
     getEntreprisePart(`insee/sirene/unites_legales/${siren}`),
     getEntreprisePart(`insee/sirene/unites_legales/${siren}/siege_social`),
-    getEntreprisePart(`european_commission/unites_legales/${siren}/numero_tva`),
-    getEntreprisePart(`infogreffe/rcs/unites_legales/${siren}/extrait_kbis`),
+    // not critical, so we catch errors
+    getEntreprisePart(`european_commission/unites_legales/${siren}/numero_tva`).catch(() => null),
+    getEntreprisePart(`infogreffe/rcs/unites_legales/${siren}/extrait_kbis`).catch(() => null),
   ]);
 
   return {

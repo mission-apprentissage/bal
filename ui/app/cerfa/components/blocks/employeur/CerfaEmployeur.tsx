@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { FC } from "react";
 
-import CheckEmptyFields from "../CheckEmptyFields";
+import CheckEmptyFields from "../../CheckEmptyFields";
 import InputController from "../inputs/InputController";
 import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
 import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
@@ -46,7 +46,7 @@ const CerfaEmployeur: FC = () => {
       <InputController name="employeur.codeIdcc" />
       <InputController name="employeur.libelleIdcc" />
 
-      <CheckEmptyFields schema={{}} blockName="employeur" />
+      <CheckEmptyFields blockName="employeur" />
     </Box>
   );
 };

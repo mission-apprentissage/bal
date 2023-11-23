@@ -13,7 +13,11 @@ const Markdown: FC<Props> = ({ children }) => {
     <ReactMarkdown
       components={{
         a({ children, ...rest }) {
-          return <Link {...rest}>{children}</Link>;
+          return (
+            <Link {...rest} style={{ wordBreak: "break-word" }}>
+              {children}
+            </Link>
+          );
         },
       }}
     >

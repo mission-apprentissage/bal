@@ -41,6 +41,7 @@ export interface CerfaField {
   completion?: boolean;
   precision?: number;
   min?: number;
+  showsOverlay?: boolean;
   mask?: string;
   unmask?: boolean;
   maskBlocks?: {

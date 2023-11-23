@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { FC } from "react";
 
+import CheckEmptyFields from "../../CheckEmptyFields";
 import CollapseController from "../../CollapseController";
-import CheckEmptyFields from "../CheckEmptyFields";
 import InputController from "../inputs/InputController";
 import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
 import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
@@ -73,7 +73,7 @@ const CerfaFormation: FC = () => {
         <InputController name="formation.dureeFormation" />
       </Box>
 
-      <CheckEmptyFields schema={{}} blockName="formation" />
+      <CheckEmptyFields blockName={["formation", "organismeFormation", "etablissementFormation"]} />
     </Box>
   );
 };

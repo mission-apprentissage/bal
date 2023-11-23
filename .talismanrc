@@ -145,7 +145,7 @@ fileignoreconfig:
 - filename: ui/app/cerfa/components/blocks/maitreApprentissage/maitreApprentissageSchema.ts
   checksum: ab53ab76a76418da2c7e72d5ba590fecb2bcac5b0f03704f6ed0e52b4d822ec0
 - filename: ui/app/cerfa/components/blocks/apprenti/apprentiSchema.ts
-  checksum: da1c3238e14abaadd8c03e1ef1c1f242b7e28875af40e254efb1b246c2e21843
+  checksum: 1122e1eb72f23cfe3671012e65eea48dfa288ac790bbd76ab6c99c6795fe97be
 scopeconfig:
 - scope: node
 custom_patterns:

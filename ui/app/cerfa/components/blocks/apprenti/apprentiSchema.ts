@@ -1,5 +1,4 @@
 import { DIPLOMES } from "shared/constants/diplomes";
-import { PAYS } from "shared/constants/pays";
 
 import { CerfaField } from "../../../utils/cerfaSchema";
 import { nomPattern } from "../domain/nomPattern";
@@ -197,6 +196,8 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
   "apprenti.regimeSocial": {
     label: "Régime social",
     fieldType: "select",
+    required: true,
+    requiredMessage: "le régime social est manquant",
     options: [
       {
         label: "1 MSA",
@@ -287,14 +288,6 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
       },
     ],
   },
-  "apprenti.adresse.pays": {
-    required: true,
-    fieldType: "select",
-    label: "Pays :",
-    requiredMessage: "le pays est obligatoire",
-    completion: false,
-    options: PAYS.map((p) => ({ label: p.label, value: p.code })),
-  },
   "apprenti.telephone": {
     label: "Téléphone",
     placeholder: "Exemple : 6 23 45 67 89",
@@ -345,7 +338,7 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     ],
   },
   "apprenti.inscriptionSportifDeHautNiveau": {
-    label: "Déclare être inscrit sur la liste des sportifs de haut niveau",
+    label: "Déclare être inscrit(e) sur la liste des sportifs de haut niveau",
     fieldType: "radio",
     options: [
       {
@@ -446,7 +439,7 @@ Exemple 2 : si l'entrée en apprentissage concerne la 1ère année de BTS, le de
     label: "Dernière classe / année suivie",
     fieldType: "select",
     required: true,
-    requiredMessage: "la dernière classe / année suivie par l'apprenti(e) est obligatoire",
+    requiredMessage: "la dernière classe / année suivie par l'apprenti(e) est manquante",
     showInfo: true,
     options: [
       {
@@ -511,7 +504,7 @@ Par exemple, si le diplôme préparé avant était une 1ère année de BTS et qu
     placeholder: "Exemple : BTS Services et prestations des secteurs sanitaire et social",
     required: true,
     showInfo: true,
-    requiredMessage: "l'intitulé du dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
+    requiredMessage: "l'intitulé du dernier diplôme ou titre préparé par l'apprenti(e) est manquant",
   },
   "apprenti.diplome": {
     label: "Diplôme ou titre le plus élevé obtenu",
@@ -571,6 +564,22 @@ Un mineur émancipé peut accomplir seul les actes nécessitant la majorité lé
         name: "C",
         mask: "Pattern",
         pattern: nomPattern,
+      },
+    ],
+  },
+  "apprenti.responsableLegal.courriel": {
+    _init: ({ values }: any) => ({ required: shouldAskRepresentantLegal({ values }) }),
+    label: "Courriel",
+    placeholder: "Exemple : jf.martin@email.fr",
+    fieldType: "email",
+    required: true,
+    requiredMessage: "le courriel du représentant légal est manquant",
+    mask: "C",
+    maskBlocks: [
+      {
+        name: "C",
+        mask: "Pattern",
+        pattern: "^.*$",
       },
     ],
   },
@@ -659,19 +668,6 @@ Un mineur émancipé peut accomplir seul les actes nécessitant la majorité lé
     label: "Commune",
     placeholder: "Exemple : Dijon",
     requiredMessage: "la commune est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
-  },
-  "apprenti.responsableLegal.courriel": {
-    label: "Courriel",
-    placeholder: "Exemple : jf.martin@email.fr",
-    fieldType: "email",
     mask: "C",
     maskBlocks: [
       {

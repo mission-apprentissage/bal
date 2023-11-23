@@ -60,7 +60,7 @@ export const Remunerations = () => {
                 <Typography component="li">
                   ne tient pas compte de la rémunération minimale légale calculée sur la base du SMC (salaire minimum
                   conventionnel) qui doit s'appliquer lorsque l'apprenti a 21 ans et seulement si le SMC est supérieur
-                  au SMIC (voir si on peut contextualiser cette info)
+                  au SMIC
                 </Typography>
                 <Typography component="li">
                   ne tient pas encore compte de situations spécifiques (exemples : entrée en apprentissage en cours de

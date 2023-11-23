@@ -29,7 +29,7 @@ export const employeurSchema: Record<string, CerfaField> = {
     required: true,
     requiredMessage: "Le siret est obligatoire",
     validateMessage: "n'est pas un siret valide",
-    showInfo: true,
+    showsOverlay: true,
     mask: "C",
     maskBlocks: [
       {

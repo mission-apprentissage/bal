@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { FC } from "react";
 
+import CheckEmptyFields from "../../CheckEmptyFields";
 import CollapseController from "../../CollapseController";
-import CheckEmptyFields from "../CheckEmptyFields";
 import InputController from "../inputs/InputController";
 import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
 import { AvantagesNatures } from "./AvantagesNatures";
@@ -37,7 +37,7 @@ const CerfaContrat: FC = () => {
       <Remunerations />
       <AvantagesNatures />
 
-      <CheckEmptyFields schema={{}} blockName="contrat" />
+      <CheckEmptyFields blockName="contrat" />
     </Box>
   );
 };

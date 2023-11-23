@@ -9,11 +9,13 @@ import { useRecoilState } from "recoil";
 
 import { apiPost } from "../../../utils/api.utils";
 import { activeStepState } from "../atoms/activeStep.atom";
+import { showOverlayState } from "../atoms/showOverlay.atom";
 import { CERFA_STEPS, CerfaStep } from "../utils/cerfa.utils";
 import { downloadFile } from "../utils/form.utils";
 import { employeurSchema } from "./blocks/employeur/employeurSchema";
 import CerfaAccordionItem from "./CerfaAccordionItem";
 import InformationMessages from "./InformationMessages";
+import LoadingOverlay from "./LoadingOverlay";
 import Stepper from "./stepper/Stepper";
 
 export interface CerfaForm {
@@ -26,6 +28,7 @@ export interface CerfaForm {
 
 const CerfaForm: FC = () => {
   const [activeStep, setActiveStep] = useRecoilState(activeStepState);
+  const [showOverlay] = useRecoilState(showOverlayState);
   const handleExpandChange = (step: CerfaStep) => {
     setActiveStep(step);
   };
@@ -104,6 +107,7 @@ const CerfaForm: FC = () => {
           <InformationMessages messages={employeurSchema["employeur.siret"].messages} />
         </Grid>
       </Grid>
+      {showOverlay && <LoadingOverlay />}
     </FormProvider>
   );
 };

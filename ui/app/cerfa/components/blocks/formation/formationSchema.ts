@@ -37,7 +37,7 @@ Les CFA d'entreprise sont souvent des organismes qui forment pour de grands grou
     required: true,
     requiredMessage: "Le siret est obligatoire",
     validateMessage: "n'est pas un siret valide",
-    showInfo: true,
+    showsOverlay: true,
     mask: "C",
     maskBlocks: [
       {
@@ -238,7 +238,7 @@ Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez re
     placeholder: "Exemple : 98765432400019",
     requiredMessage: "Le siret est obligatoire",
     validateMessage: "n'est pas un siret valide",
-    showInfo: true,
+    showsOverlay: true,
     mask: "C",
     maskBlocks: [
       {

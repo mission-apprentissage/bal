@@ -6,11 +6,75 @@ const parseDate = (date: string): Date => {
   return parse(date, "P", new Date(), { locale: fr });
 };
 
-const LATEST_AVAILABLE_SMIC_YEAR = 2022;
+const LATEST_AVAILABLE_SMIC_YEAR = 2023;
 
 const SMICs = {
+  2023: {
+    smics: [
+      {
+        annee: 2023,
+        mensuel: 1747.2,
+        horaire: 11.52,
+        heuresHebdomadaires: 35,
+        minimumGaranti: 4.1,
+        dateEntreeEnVigueur: "01/05/2023",
+        dateEntreeEnVigueurObj: parseDate("01/05/2023"),
+        dateParutionJo: "27/04/2023",
+        dateParutionJoObj: parseDate("27/04/2023"),
+        exceptions: {
+          976: {
+            departement: 976,
+            nomDepartement: "Mayotte",
+            mensuel: 1319.5,
+            horaire: 8.7,
+            heuresHebdomadaires: 35,
+          },
+        },
+      },
+      {
+        annee: 2023,
+        mensuel: 1709.28,
+        horaire: 11.27,
+        heuresHebdomadaires: 35,
+        minimumGaranti: 4.01,
+        dateEntreeEnVigueur: "01/01/2023",
+        dateEntreeEnVigueurObj: parseDate("01/01/2023"),
+        dateParutionJo: "23/12/2022",
+        dateParutionJoObj: parseDate("23/12/2022"),
+        exceptions: {
+          976: {
+            departement: 976,
+            nomDepartement: "Mayotte",
+            mensuel: 1290.68,
+            horaire: 8.51,
+            heuresHebdomadaires: 35,
+          },
+        },
+      },
+    ],
+  },
   2022: {
     smics: [
+      {
+        annee: 2022,
+        mensuel: 1678.95,
+        horaire: 11.07,
+        heuresHebdomadaires: 35,
+        minimumGaranti: 3.94,
+        dateEntreeEnVigueur: "01/08/2022",
+        dateEntreeEnVigueurObj: parseDate("01/08/2022"),
+        dateParutionJo: "29/07/2022",
+        dateParutionJoObj: parseDate("29/07/2022"),
+        exceptions: {
+          976: {
+            departement: 976,
+            nomDepartement: "Mayotte",
+            mensuel: 1266.42,
+            horaire: 8.35,
+            heuresHebdomadaires: 35,
+          },
+        },
+      },
       {
         annee: 2022,
         mensuel: 1645.58,

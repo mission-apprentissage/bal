@@ -1,13 +1,15 @@
 import { CerfaForm } from "../components/CerfaForm";
 import { CerfaControl } from ".";
-import { apiService } from "./utils/api.utils";
+import { fetchCodePostal } from "./utils/api.utils";
 
 export const apprentiCodePostalControl: CerfaControl[] = [
   {
     deps: ["apprenti.adresse.codePostal"],
     process: async ({ values, signal }: CerfaForm) => {
       const codePostal = values.apprenti.adresse.codePostal;
-      const { messages, result } = await apiService.fetchCodePostal({
+
+      if (codePostal.length < 5) return { error: "le code postal doit comporter 5 chiffres" };
+      const { messages, result } = await fetchCodePostal({
         codePostal,
         signal,
       });

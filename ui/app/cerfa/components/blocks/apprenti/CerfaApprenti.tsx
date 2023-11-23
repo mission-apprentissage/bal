@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { FC } from "react";
 
+import CheckEmptyFields from "../../CheckEmptyFields";
 import CollapseController from "../../CollapseController";
-import CheckEmptyFields from "../CheckEmptyFields";
 import { shouldAskRepresentantLegal } from "../domain/shouldAskRepresentantLegal";
 import { shouldAskResponsableLegalAdresse } from "../domain/shouldAskResponsableLegalAdresse";
 import InputController from "../inputs/InputController";
@@ -60,6 +60,7 @@ const CerfaApprenti: FC = () => {
       <CollapseController show={shouldAskRepresentantLegal}>
         <InputGroupTitle>Représentant légal</InputGroupTitle>
         <InputController name="apprenti.responsableLegal.nom" />
+        <InputController name="apprenti.responsableLegal.courriel" />
         <InputController name="apprenti.responsableLegal.memeAdresse" />
 
         <CollapseController show={shouldAskResponsableLegalAdresse}>
@@ -75,11 +76,10 @@ const CerfaApprenti: FC = () => {
           <InputController name="apprenti.responsableLegal.adresse.complement" />
           <InputController name="apprenti.responsableLegal.adresse.codePostal" />
           <InputController name="apprenti.responsableLegal.adresse.commune" />
-          <InputController name="apprenti.responsableLegal.courriel" />
         </CollapseController>
       </CollapseController>
 
-      <CheckEmptyFields schema={{}} blockName="apprenti" />
+      <CheckEmptyFields blockName="apprenti" />
     </Box>
   );
 };

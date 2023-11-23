@@ -25,6 +25,7 @@ export const PhoneInput = memo(
       textArea: _textArea,
       nativeTextAreaProps: _nativeTextAreaProps,
       nativeInputProps,
+      phoneInputProps,
       ...rest
     } = props;
 
@@ -69,7 +70,7 @@ export const PhoneInput = memo(
                 ),
                 classes.nativeInputOrTextArea
               )}
-              {...props.phoneInputProps}
+              {...phoneInputProps}
             />
           );
 
