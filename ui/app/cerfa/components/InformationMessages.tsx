@@ -1,5 +1,5 @@
 import { fr } from "@codegouvfr/react-dsfr";
-import { Box, Typography } from "@mui/material";
+import { Box, Grow, Typography } from "@mui/material";
 import { FC } from "react";
 import { useRecoilState } from "recoil";
 
@@ -8,11 +8,6 @@ import { InformationAvatar } from "../../../icons/InformationAvatar";
 import { RegulatoryAvatar } from "../../../icons/RegulatoryAvatar";
 import Markdown from "../../components/Markdown";
 import { informationMessagesState } from "../atoms/informationMessages.atom";
-import { InformationMessage } from "../utils/cerfaSchema";
-
-interface Props {
-  messages: InformationMessage[] | undefined;
-}
 
 const SETTINGS = {
   assistive: {
@@ -33,7 +28,7 @@ const SETTINGS = {
   },
 };
 
-const InformationMessages: FC<Props> = () => {
+const InformationMessages: FC = () => {
   const [messages] = useRecoilState(informationMessagesState);
 
   return (
@@ -43,15 +38,17 @@ const InformationMessages: FC<Props> = () => {
         const { backgroundColor, title, icon } = SETTINGS[type];
 
         return (
-          <Box key={type} bgcolor={backgroundColor} borderRadius="4px" p={2} mb={2}>
-            <Box display="flex" alignItems="center" mb={1}>
-              <Box mr={2}>{icon}</Box>
-              <Typography variant="h6" gutterBottom color={title.color}>
-                {title.content}
-              </Typography>
+          <Grow in key={`${type}-${content?.slice(0, 10)}`}>
+            <Box bgcolor={backgroundColor} borderRadius="4px" p={2} mb={2}>
+              <Box display="flex" alignItems="center" mb={1}>
+                <Box mr={2}>{icon}</Box>
+                <Typography variant="h6" gutterBottom color={title.color}>
+                  {title.content}
+                </Typography>
+              </Box>
+              <Markdown>{content}</Markdown>
             </Box>
-            <Markdown>{content}</Markdown>
-          </Box>
+          </Grow>
         );
       })}
     </Box>

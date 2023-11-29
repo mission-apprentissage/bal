@@ -4,8 +4,8 @@ import { employeurSchema } from "../components/blocks/employeur/employeurSchema"
 import { formationSchema } from "../components/blocks/formation/formationSchema";
 import { FieldType } from "../components/blocks/inputs/InputField";
 import { maitreApprentissageSchema } from "../components/blocks/maitreApprentissage/maitreApprentissageSchema";
+import { signaturesSchema } from "../components/blocks/signatures/signaturesSchema";
 import { CerfaControl, controls } from "../controls";
-
 export interface SelectOption {
   label: string;
   value: string | number;
@@ -42,7 +42,12 @@ export interface CerfaField {
   precision?: number;
   min?: number;
   showsOverlay?: boolean;
+  pattern?: {
+    value: RegExp;
+    message: string;
+  };
   mask?: string;
+  definitions?: Record<string, string | RegExp>;
   unmask?: boolean;
   maskBlocks?: {
     name: string;
@@ -79,6 +84,7 @@ const cerfaSchema: CerfaSchema = {
     ...apprentiSchema,
     ...contratSchema,
     ...formationSchema,
+    ...signaturesSchema,
   },
   logics: controls,
 };

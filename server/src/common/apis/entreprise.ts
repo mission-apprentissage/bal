@@ -50,8 +50,8 @@ export const getEntreprisePart = (endpoint: string) => {
 export const getEntreprise = async (siren: string) => {
   // fetch all parts in parallel
   const [entreprise, siege_social, numero_tva, extrait_kbis] = await Promise.all([
-    getEntreprisePart(`insee/sirene/unites_legales/${siren}`),
-    getEntreprisePart(`insee/sirene/unites_legales/${siren}/siege_social`),
+    getEntreprisePart(`insee/sirene/unites_legales/diffusibles/${siren}`),
+    getEntreprisePart(`insee/sirene/unites_legales/${siren}/diffusibles/siege_social`),
     // not critical, so we catch errors
     getEntreprisePart(`european_commission/unites_legales/${siren}/numero_tva`).catch(() => null),
     getEntreprisePart(`infogreffe/rcs/unites_legales/${siren}/extrait_kbis`).catch(() => null),
@@ -69,7 +69,7 @@ export const getEtablissement = async (siret: string) => {
   return executeWithRateLimiting(async (client) => {
     try {
       logger.debug(`[Entreprise API] Fetching etablissement ${siret}...`);
-      const response = await client.get(`insee/sirene/etablissements/${siret}`, {
+      const response = await client.get(`insee/sirene/etablissements/diffusibles/${siret}`, {
         params: apiParams,
       });
       if (!response?.data?.data) {

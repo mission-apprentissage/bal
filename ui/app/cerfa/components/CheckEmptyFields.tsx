@@ -6,6 +6,7 @@ import { FC, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 import cerfaSchema from "../utils/cerfaSchema";
+import { countBlockErrors } from "../utils/form.utils";
 import ListErrors from "./ListErrors";
 
 interface Props {
@@ -43,10 +44,12 @@ const CheckEmptyFields: FC<Props> = ({ blockName }) => {
     blockErrors = { ...blockErrors, ...errors?.[blockName] };
   }
 
+  const numberOfErrors = countBlockErrors(blockErrors);
+
   return (
     <Box>
       <Box mb={2}>
-        <Button type="button" onClick={triggerBlockValidation}>
+        <Button type="button" priority="secondary" onClick={triggerBlockValidation}>
           Est-ce que tous mes champs sont remplis ?
         </Button>
       </Box>
@@ -56,9 +59,10 @@ const CheckEmptyFields: FC<Props> = ({ blockName }) => {
           closable
           description={
             <Box ml={2} mt={2}>
-              <Typography gutterBottom color={fr.colors.decisions.text.default.error.default}>{`Il y a ${
-                Object.keys(blockErrors).length
-              } champs non remplis :`}</Typography>
+              <Typography
+                gutterBottom
+                color={fr.colors.decisions.text.default.error.default}
+              >{`Il y a ${numberOfErrors} champs non remplis :`}</Typography>
               <Box component="ul" ml={1}>
                 {isArray ? (
                   blockName.map((name) => <ListErrors key={name} name={name} errors={blockErrors} />)

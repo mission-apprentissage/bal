@@ -43,7 +43,7 @@ export const maitreApprentissageSchema: Record<string, CerfaField> = {
     label: "Date de naissance",
     fieldType: "date",
     required: true,
-    requiredMessage: "la date de naissance du maître d'apprentissage est obligatoire",
+    requiredMessage: "La date de naissance du maître d'apprentissage est obligatoire",
     messages: [
       { type: "regulatory", content: "Le maître d'apprentissage doit être majeur à la date d'exécution du contrat" },
     ],
@@ -52,14 +52,10 @@ export const maitreApprentissageSchema: Record<string, CerfaField> = {
     label: "Numéro de sécurité sociale (NIR)",
     required: true,
     requiredMessage: "Le numéro de sécurité sociale du maître d'apprentissage est manquant",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    mask: "0000C00000000",
+    definitions: {
+      C: /[1-9AB]/,
+    },
     messages: [
       {
         type: "assistive",
@@ -74,14 +70,6 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     placeholder: "Exemple : Chaudronnier",
     required: true,
     requiredMessage: "L'emploi occupé est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
     messages: [
       {
         type: "regulatory",
@@ -105,14 +93,6 @@ Ceci à défaut de dispositions conventionnelles particulières applicables dans
     placeholder: "Exemple : BTS Assistance technique d'ingénieur",
     required: true,
     requiredMessage: "Le diplôme du maître d'apprentissage est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
   },
   "maitre1.courriel": {
     label: "Courriel",
@@ -120,14 +100,10 @@ Ceci à défaut de dispositions conventionnelles particulières applicables dans
     required: true,
     fieldType: "email",
     requiredMessage: "Le courriel de l'employeur est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    pattern: {
+      value: /\S+@\S+\.\S+/,
+      message: `Le courriel doit comporter "@" et "." pour être valide.`,
+    },
   },
 
   "maitre2.nom": {
@@ -170,14 +146,10 @@ Ceci à défaut de dispositions conventionnelles particulières applicables dans
   },
   "maitre2.nir": {
     label: "Numéro de sécurité sociale (NIR)",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    mask: "0000C00000000",
+    definitions: {
+      C: /[1-9AB]/,
+    },
     messages: [
       {
         type: "assistive",
@@ -190,14 +162,6 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
   "maitre2.emploiOccupe": {
     label: "Emploi occupé",
     placeholder: "Exemple : Chaudronnier",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
     messages: [
       {
         type: "regulatory",
@@ -217,29 +181,17 @@ Ceci à défaut de dispositions conventionnelles particulières applicables dans
   "maitre2.diplome": {
     label: "Diplôme ou titre le plus élevé obtenu",
     placeholder: "Exemple : BTS Assistance technique d'ingénieur",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
   },
   "maitre2.courriel": {
     label: "Courriel",
     placeholder: "Exemple : jf.martin@email.fr",
     fieldType: "email",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    pattern: {
+      value: /\S+@\S+\.\S+/,
+      message: `Le courriel doit comporter "@" et "." pour être valide.`,
+    },
   },
-  "employeur.attestationEligibilite": {
+  "maitre1.attestationEligibilite": {
     fieldType: "consent",
     label:
       "L’employeur atteste sur l’honneur que le maître d’apprentissage répond à l’ensemble des critères d’éligibilité à cette fonction.",

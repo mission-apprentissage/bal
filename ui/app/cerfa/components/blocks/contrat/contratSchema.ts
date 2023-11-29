@@ -5,11 +5,29 @@ import { isRequiredNumeroContratPrecedent } from "./domain/isRequiredNumeroContr
 import { shouldAskDateEffetAvenant } from "./domain/shouldAskDateEffetAvenant";
 
 export const contratSchema: Record<string, CerfaField> = {
+  "contrat.modeContractuel": {
+    label: "Mode contractuel de l’apprentissage",
+    fieldType: "select",
+    required: true,
+    requiredMessage: "Veuillez sélectionner une option",
+    options: [
+      { label: "1 - durée limitée", value: "1" },
+      { label: "2 - dans le cadre d'un CDI", value: "2" },
+      { label: "3 - entreprise de travail temporaire", value: "3" },
+      { label: "4 - activités saisonnières à deux employeurs", value: "4" },
+    ],
+    messages: [
+      {
+        type: "bonus",
+        content: `Quand le contrat d'apprentissage est à durée limitée, la fin est appelée "fin de contrat" et dans le cadre d'un contrat CDI, la fin est appelée "fin de période d'apprentissage".`,
+      },
+    ],
+  },
   "contrat.typeContratApp": {
     label: "Type de contrat ou d’avenant",
     fieldType: "select",
     required: true,
-    requiredMessage: "le type de contrat ou d'avenant est obligatoire",
+    requiredMessage: "Le type de contrat ou d'avenant est obligatoire",
     showInfo: true,
     options: [
       {
@@ -112,7 +130,7 @@ En cas de réduction ou allongement de la durée du contrat, vous devrez aussi r
     placeholder: "Exemple : 02B202212000000",
     fieldType: "text",
     showInfo: true,
-    requiredMessage: "la numéro du contrat précédent est obligatoire",
+    requiredMessage: "La numéro du contrat précédent est obligatoire",
     validateMessage: "n'est pas un numéro valide",
     mask: "DEP Y M N 0000",
     maskBlocks: [
@@ -266,48 +284,12 @@ En cas de réduction ou allongement de la durée du contrat, vous devrez aussi r
       },
     ],
   },
-  "contrat.dateSignature": {
-    label: "Date de signature du présent contrat",
-    fieldType: "date",
-    required: true,
-    requiredMessage: "la date de signature du contrat est obligatoire",
-    showInfo: true,
-    messages: [
-      {
-        type: "assistive",
-        content: `Date à laquelle le présent contrat de travail (qu’il s’agisse d’un contrat initial ou d’un avenant) est conclu par les deux parties, c'est à dire le jour où les deux signatures des parties au contrat (employeur et apprenti) sont recueillies. 
-Le contrat doit être signé avant de débuter.
-      `,
-      },
-    ],
-  },
-  "contrat.dateFinContrat": {
-    label: "Date de fin du contrat ou de la période d'apprentissage",
-    fieldType: "date",
-    required: true,
-    requiredMessage: "la date de fin de contrat est obligatoire",
-    showInfo: true,
-    messages: [
-      {
-        type: "assistive",
-        content: `Le contrat ne peut pas se terminer avant la fin de la formation dans l'organisme de formation, examens compris.
 
-La période de contrat doit donc englober la date du dernier examen qui sanctionne l'obtention du diplôme. 
-Si celle-ci n'est pas connue au moment de la conclusion du contrat, vous pouvez renseigner une date située maximum 2 mois au-delà de la date de fin prévisionnelle des examens.
-      
-La date de fin de contrat intervient donc : 
-au plus tôt le dernier jour de la dernière épreuve nécessaire à l’obtention du titre ou diplôme préparé par l'apprenti ;
-au plus tard dans les deux mois après la dernière épreuve sanctionnant le cycle, ou à la veille du début du cycle de formation suivant.
-      
-Dans le cadre d’un CDI, vous devez donc également préciser la date de fin de l’action de formation (examens inclus).`,
-      },
-    ],
-  },
   "contrat.dateDebutContrat": {
     label: "Date de début d'exécution du contrat",
     fieldType: "date",
     required: true,
-    requiredMessage: "la date de début d'exécution de contrat est obligatoire",
+    requiredMessage: "La date de début d'exécution de contrat est obligatoire",
     showInfo: true,
     messages: [
       {
@@ -329,7 +311,7 @@ La date de début d'exécution du contrat est liée à la date de naissance de l
     label: "Date de début de formation pratique chez l'employeur",
     fieldType: "date",
     required: true,
-    requiredMessage: "la date de début de la formation pratique est obligatoire",
+    requiredMessage: "La date de début de la formation pratique est obligatoire",
     showInfo: true,
     messages: [
       {
@@ -340,6 +322,43 @@ La date de début d'exécution du contrat est liée à la date de naissance de l
         type: "bonus",
         content:
           "La formation pratique en entreprise doit démarrer au plus tôt 3 mois avant le début des cours et au plus tard 3 mois après le début des cours.",
+      },
+    ],
+  },
+  "contrat.dateFinContrat": {
+    label: "Date de fin du contrat ou de la période d'apprentissage",
+    fieldType: "date",
+    required: true,
+    requiredMessage: "La date de fin de contrat est obligatoire",
+    showInfo: true,
+    messages: [
+      {
+        type: "assistive",
+        content: `Le contrat ne peut pas se terminer avant la fin de la formation dans l'organisme de formation, examens compris.
+
+La période de contrat doit donc englober la date du dernier examen qui sanctionne l'obtention du diplôme. 
+Si celle-ci n'est pas connue au moment de la conclusion du contrat, vous pouvez renseigner une date située maximum 2 mois au-delà de la date de fin prévisionnelle des examens.
+      
+La date de fin de contrat intervient donc : 
+au plus tôt le dernier jour de la dernière épreuve nécessaire à l’obtention du titre ou diplôme préparé par l'apprenti ;
+au plus tard dans les deux mois après la dernière épreuve sanctionnant le cycle, ou à la veille du début du cycle de formation suivant.
+      
+Dans le cadre d’un CDI, vous devez donc également préciser la date de fin de l’action de formation (examens inclus).`,
+      },
+    ],
+  },
+  "contrat.dateSignature": {
+    label: "Date de signature du présent contrat",
+    fieldType: "date",
+    required: true,
+    requiredMessage: "La date de signature du contrat est obligatoire",
+    showInfo: true,
+    messages: [
+      {
+        type: "assistive",
+        content: `Date à laquelle le présent contrat de travail (qu’il s’agisse d’un contrat initial ou d’un avenant) est conclu par les deux parties, c'est à dire le jour où les deux signatures des parties au contrat (employeur et apprenti) sont recueillies. 
+Le contrat doit être signé avant de débuter.
+      `,
       },
     ],
   },
@@ -361,7 +380,7 @@ La date de début d'exécution du contrat est liée à la date de naissance de l
     placeholder: "Exemple : 35",
     fieldType: "number",
     required: true,
-    requiredMessage: "la durée hebdomadaire de travail est obligatoire",
+    requiredMessage: "La durée hebdomadaire de travail est obligatoire",
     showInfo: true,
     mask: "C",
     maskBlocks: [
@@ -413,7 +432,7 @@ Le temps de formation en CFA est du temps de travail effectif et compte dans l'h
   },
   "contrat.salaireEmbauche": {
     locked: true,
-    label: "Salaire brut mensuel à l'embauche:",
+    label: "Salaire brut mensuel à l'embauche",
   },
   "contrat.remunerationsAnnuelles[].dateDebut": {
     label: "Date de début",
@@ -459,6 +478,51 @@ Le temps de formation en CFA est du temps de travail effectif et compte dans l'h
       {
         label: "SMC",
         value: "SMC",
+      },
+    ],
+  },
+  "contrat.caisseRetraiteSupplementaire": {
+    label: "Caisse de retraite complémentaire",
+    fieldType: "select",
+    required: true,
+    requiredMessage: "La caisse de retraite complémentaire est manquante",
+    options: [
+      { label: "AGIRC-ARRCO", value: "AGIRC-ARRCO" },
+      { label: "Banque de France", value: "Banque de France" },
+      { label: "CARCDSF", value: "CARCDSF" },
+      { label: "CARMF", value: "CARMF" },
+      { label: "CARPIMKO", value: "CARPIMKO" },
+      { label: "CARPV", value: "CARPV" },
+      { label: "CAVAMAC", value: "CAVAMAC" },
+      { label: "CAVEC", value: "CAVEC" },
+      { label: "CAVOM", value: "CAVOM" },
+      { label: "CAVP", value: "CAVP" },
+      { label: "CIPAV", value: "CIPAV" },
+      { label: "CNBF", value: "CNBF" },
+      { label: "CNIEG", value: "CNIEG" },
+      { label: "CPRN", value: "CPRN" },
+      { label: "CPRP", value: "CPRP" },
+      { label: "CROPERA", value: "CROPERA" },
+      { label: "CRP", value: "CRP" },
+      { label: "CRPCEN", value: "CRPCEN" },
+      { label: "CRPCF", value: "CRPCF" },
+      { label: "CRPN ", value: "CRPN " },
+      { label: "ENIM", value: "ENIM" },
+      { label: "FSPOEIE", value: "FSPOEIE" },
+      { label: "IRCANTEC", value: "IRCANTEC" },
+      { label: "IRCEC", value: "IRCEC" },
+      { label: "MSA", value: "MSA" },
+      { label: "Port autonome de Strasbourg", value: "Port autonome de Strasbourg" },
+      { label: "RATP ", value: "RATP " },
+      { label: "Retraite des mines", value: "Retraite des mines" },
+      { label: "SNCF", value: "SNCF" },
+      { label: "SSI", value: "SSI" },
+    ],
+    messages: [
+      {
+        type: "assistive",
+        content:
+          "Le rattachement à une caisse de retraite complémentaire est une obligation de l’employeur dès la première embauche d’un salarié. Vous pouvez vous rapprocher de votre comptable ou de l’URSSAF.",
       },
     ],
   },

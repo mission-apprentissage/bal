@@ -76,15 +76,7 @@ Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entr
     placeholder: "Exemple : CFA Jean Moulin",
     fieldType: "text",
     required: true,
-    requiredMessage: "la dénomination du CFA responsable est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "La dénomination du CFA responsable est obligatoire",
   },
   "formation.rncp": {
     label: "Code RNCP",
@@ -175,15 +167,7 @@ Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez re
     label: "Voie",
     placeholder: "Exemple : RUE MICHELET",
     required: true,
-    requiredMessage: "le nom de voie est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "Le nom de voie est obligatoire",
   },
   "organismeFormation.adresse.complement": {
     label: "Complément",
@@ -208,15 +192,7 @@ Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez re
     label: "Commune",
     placeholder: "Exemple : Dijon",
     required: true,
-    requiredMessage: "la commune est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "La commune est obligatoire",
   },
   "etablissementFormation.memeResponsable": {
     fieldType: "radio",
@@ -275,15 +251,7 @@ Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entr
     label: "Dénomination du lieu de formation principal",
     placeholder: "Exemple : CFA Jean Moulin",
     fieldType: "text",
-    requiredMessage: "la dénomination du lieu de formation est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "La dénomination du lieu de formation est obligatoire",
   },
   "etablissementFormation.adresse.numero": {
     label: "N°",
@@ -315,15 +283,7 @@ Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entr
     label: "Voie",
     placeholder: "Exemple : RUE MICHELET",
     required: true,
-    requiredMessage: "le nom de voie est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "Le nom de voie est obligatoire",
   },
   "etablissementFormation.adresse.complement": {
     label: "Complément",
@@ -348,22 +308,14 @@ Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entr
     label: "Commune",
     placeholder: "Exemple : Dijon",
     required: true,
-    requiredMessage: "la commune est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "La commune est obligatoire",
   },
 
   "formation.dateDebutFormation": {
     label: "Date de début de formation en CFA",
     fieldType: "date",
     required: true,
-    requiredMessage: "la date de début de cycle est obligatoire",
+    requiredMessage: "La date de début de cycle est obligatoire",
     validateMessage: " n'est pas une date valide",
     messages: [
       {
@@ -382,7 +334,7 @@ De la même façon, le début de la période en entreprise ne peut intervenir pl
     label: "Date prévue de fin des épreuves ou examens",
     fieldType: "date",
     required: true,
-    requiredMessage: "la date de fin de cycle est obligatoire",
+    requiredMessage: "La date de fin de cycle est obligatoire",
     validateMessage: " n'est pas une date valide",
     messages: [
       {

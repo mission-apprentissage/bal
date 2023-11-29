@@ -27,10 +27,10 @@ const CerfaFormation: FC = () => {
         <InputGroupTitle>Adresse et contact du CFA responsable</InputGroupTitle>
 
         <InputGroupContainer>
-          <InputGroupItem size={3}>
+          <InputGroupItem size={4}>
             <InputController name="organismeFormation.adresse.numero" />
           </InputGroupItem>
-          <InputGroupItem size={4}>
+          <InputGroupItem size={5}>
             <InputController name="organismeFormation.adresse.repetitionVoie" />
           </InputGroupItem>
         </InputGroupContainer>

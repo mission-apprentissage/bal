@@ -3,6 +3,8 @@ import { Box, styled } from "@mui/material";
 import { FC } from "react";
 import { FieldError, FieldErrorsImpl, Merge, useFormContext } from "react-hook-form";
 
+import { isFieldError } from "../utils/form.utils";
+
 interface Props {
   name?: string;
   errors: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
@@ -15,11 +17,6 @@ const StyledListItem = styled("li")(() => ({
     textDecoration: "underline",
   },
 }));
-
-const isFieldError = (obj: Props["errors"]): obj is FieldError => {
-  if (!obj) return false;
-  return "type" in obj && "message" in obj;
-};
 
 const ListErrors: FC<Props> = ({ errors, name }) => {
   const { setFocus } = useFormContext();

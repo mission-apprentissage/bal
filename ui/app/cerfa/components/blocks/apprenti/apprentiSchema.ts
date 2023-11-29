@@ -1,3 +1,4 @@
+import { departements } from "shared/constants/departements";
 import { DIPLOMES } from "shared/constants/diplomes";
 
 import { CerfaField } from "../../../utils/cerfaSchema";
@@ -66,7 +67,7 @@ export const apprentiSchema: Record<string, CerfaField> = {
   "apprenti.dateNaissance": {
     fieldType: "date",
     required: true,
-    label: "Date de naissance :",
+    label: "Date de naissance",
     requiredMessage: "La date de naissance de l'apprenti(e) est obligatoire",
     showInfo: true,
     messages: [
@@ -95,8 +96,8 @@ Pas de limite d'âge si  l'apprenti :
   "apprenti.sexe": {
     required: true,
     fieldType: "radio",
-    label: "Sexe :",
-    requiredMessage: "le sexe de l'apprenti(e) est obligatoire",
+    label: "Sexe",
+    requiredMessage: "Le sexe de l'apprenti(e) est obligatoire",
     options: [
       {
         label: "Féminin",
@@ -111,8 +112,8 @@ Pas de limite d'âge si  l'apprenti :
   "apprenti.lieuNaissanceFrance": {
     required: true,
     fieldType: "radio",
-    label: "L’apprenti(e) est né(e) en France (Metropolitaine, DOM-TOM...) :",
-    requiredMessage: "le lieu de naissance de l'apprenti(e) est obligatoire",
+    label: "L’apprenti(e) est né(e) en France (Metropolitaine, DOM-TOM...)",
+    requiredMessage: "Le lieu de naissance de l'apprenti(e) est obligatoire",
     options: [
       {
         label: "Oui",
@@ -126,36 +127,34 @@ Pas de limite d'âge si  l'apprenti :
   },
 
   "apprenti.communeNaissance": {
+    label: "Commune de naissance",
+    placeholder: "Exemple : Bourg-en-Bresse",
     required: true,
-    label: "Commune de naissance :",
-    requiredMessage: "la commune de naissance est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "La commune de naissance est manquante",
   },
   "apprenti.departementNaissance": {
+    label: "Département de naissance",
+    fieldType: "select",
     required: true,
-    label: "Département de naissance :",
-    requiredMessage: "le département de naissance est obligatoire",
-    validateMessage: " n'est pas un département valide",
-    showInfo: true,
+    requiredMessage: "Le département de naissance est obligatoire",
+    options: Object.keys(departements).map((code) => ({
+      label: `${code} - ${departements[code].name}`,
+      value: code,
+    })),
+    messages: [
+      {
+        type: "assistive",
+        content: "Pour les personnes nées à l'étranger, indiquez 99.",
+      },
+    ],
   },
   "apprenti.nir": {
     label: "Numéro de sécurité sociale (NIR)",
-    requiredMessage: "n'est pas un numéro de sécurité sociale valide",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "N'est pas un numéro de sécurité sociale valide",
+    mask: "0000C00000000",
+    definitions: {
+      C: /[1-9AB]/,
+    },
     messages: [
       {
         type: "assistive",
@@ -169,7 +168,7 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     label: "Nationalité",
     required: true,
     fieldType: "select",
-    requiredMessage: "la nationalité de l'apprenti(e) est obligatoire",
+    requiredMessage: "La nationalité de l'apprenti(e) est obligatoire",
     showInfo: true,
     options: [
       {
@@ -197,7 +196,7 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     label: "Régime social",
     fieldType: "select",
     required: true,
-    requiredMessage: "le régime social est manquant",
+    requiredMessage: "Le régime social est manquant",
     options: [
       {
         label: "1 MSA",
@@ -238,15 +237,7 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     label: "Voie",
     placeholder: "Exemple : RUE MICHELET",
     required: true,
-    requiredMessage: "le nom de voie est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "Le nom de voie est obligatoire",
     messages: [
       {
         type: "assistive",
@@ -257,7 +248,7 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
   "apprenti.adresse.complement": {
     label: "Complément",
     placeholder: "Exemple : Hôtel de ville ; Entrée ; Bâtiment ; Etage ; Service",
-    requiredMessage: "le complement d'adress est obligatoire",
+    requiredMessage: "Le complement d'adress est obligatoire",
   },
   "apprenti.adresse.codePostal": {
     label: "Code postal",
@@ -278,15 +269,7 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     label: "Commune",
     placeholder: "Exemple : Dijon",
     required: true,
-    requiredMessage: "la commune est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "La commune est obligatoire",
   },
   "apprenti.telephone": {
     label: "Téléphone",
@@ -303,15 +286,11 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     label: "Courriel",
     placeholder: "Exemple : jf.martin@email.fr",
     fieldType: "email",
-    requiredMessage: "le courriel de l'apprenti(e) est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "Le courriel de l'apprenti(e) est obligatoire",
+    pattern: {
+      value: /\S+@\S+\.\S+/,
+      message: `Le courriel doit comporter "@" et "." pour être valide.`,
+    },
   },
 
   "apprenti.projetCreationRepriseEntreprise": {
@@ -388,7 +367,7 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     label: "Situation avant ce contrat",
     fieldType: "select",
     required: true,
-    requiredMessage: "la situation de l'apprenti(e) avant ce contrat est obligatoire",
+    requiredMessage: "La situation de l'apprenti(e) avant ce contrat est obligatoire",
     options: [
       { value: "1", label: "1 - Scolaire" },
       { value: "2", label: "2 - Prépa apprentissage" },
@@ -420,7 +399,7 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     label: "Dernier diplôme ou titre préparé",
     fieldType: "select",
     required: true,
-    requiredMessage: "le dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
+    requiredMessage: "Le dernier diplôme ou titre préparé par l'apprenti(e) est obligatoire",
     options: DIPLOMES,
     messages: [
       {
@@ -439,7 +418,7 @@ Exemple 2 : si l'entrée en apprentissage concerne la 1ère année de BTS, le de
     label: "Dernière classe / année suivie",
     fieldType: "select",
     required: true,
-    requiredMessage: "la dernière classe / année suivie par l'apprenti(e) est manquante",
+    requiredMessage: "La dernière classe / année suivie par l'apprenti(e) est manquante",
     showInfo: true,
     options: [
       {
@@ -504,20 +483,20 @@ Par exemple, si le diplôme préparé avant était une 1ère année de BTS et qu
     placeholder: "Exemple : BTS Services et prestations des secteurs sanitaire et social",
     required: true,
     showInfo: true,
-    requiredMessage: "l'intitulé du dernier diplôme ou titre préparé par l'apprenti(e) est manquant",
+    requiredMessage: "L'intitulé du dernier diplôme ou titre préparé par l'apprenti(e) est manquant",
   },
   "apprenti.diplome": {
     label: "Diplôme ou titre le plus élevé obtenu",
     fieldType: "select",
     required: true,
-    requiredMessage: "le diplôme ou titre le plus élevé obtenu par l'apprenti(e) est obligatoire",
+    requiredMessage: "Le diplôme ou titre le plus élevé obtenu par l'apprenti(e) est obligatoire",
     options: DIPLOMES,
   },
   "apprenti.apprentiMineur": {
     label: "À la date de signature de ce contrat, l'apprenti(e) sera-t-il(elle) mineur(e) *",
     fieldType: "radio",
     required: true,
-    requiredMessage: "l'apprenti(e) sera-t-il(elle) mineur(e) à la date de signature de ce contrat ?",
+    requiredMessage: "L'apprenti(e) sera-t-il(elle) mineur(e) à la date de signature de ce contrat ?",
     options: [
       {
         label: "Oui",
@@ -557,7 +536,7 @@ Un mineur émancipé peut accomplir seul les actes nécessitant la majorité lé
     _init: ({ values }: any) => ({ required: shouldAskRepresentantLegal({ values }) }),
     label: "Nom de naissance et prénom",
     showInfo: true,
-    requiredMessage: "le nom du représentant légal est obligatoire",
+    requiredMessage: "Le nom du représentant légal est obligatoire",
     mask: "C",
     maskBlocks: [
       {
@@ -573,15 +552,11 @@ Un mineur émancipé peut accomplir seul les actes nécessitant la majorité lé
     placeholder: "Exemple : jf.martin@email.fr",
     fieldType: "email",
     required: true,
-    requiredMessage: "le courriel du représentant légal est manquant",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "Le courriel du représentant légal est manquant",
+    pattern: {
+      value: /\S+@\S+\.\S+/,
+      message: `Le courriel doit comporter "@" et "." pour être valide.`,
+    },
   },
   "apprenti.responsableLegal.memeAdresse": {
     _init: ({ values }: any) => ({ required: shouldAskRepresentantLegal({ values }) }),
@@ -628,15 +603,7 @@ Un mineur émancipé peut accomplir seul les actes nécessitant la majorité lé
   "apprenti.responsableLegal.adresse.voie": {
     label: "Voie",
     placeholder: "Exemple : RUE MICHELET",
-    requiredMessage: "le nom de voie est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "Le nom de voie est obligatoire",
     messages: [
       {
         type: "assistive",
@@ -667,15 +634,7 @@ Un mineur émancipé peut accomplir seul les actes nécessitant la majorité lé
     _init: ({ values }: any) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),
     label: "Commune",
     placeholder: "Exemple : Dijon",
-    requiredMessage: "la commune est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "La commune est obligatoire",
   },
 
   "apprenti.age": { fieldType: "number" },

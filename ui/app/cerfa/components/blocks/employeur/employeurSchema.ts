@@ -16,12 +16,6 @@ export const employeurSchema: Record<string, CerfaField> = {
         value: "prive",
       },
     ],
-    messages: [
-      {
-        type: "assistive",
-        content: `Ce formulaire est reservé aux contrats des employeurs privés, rendez-vous sur Celia [https://celia.emploi.gouv.fr/](https://celia.emploi.gouv.fr/) pour transmettre le contrat d'un employeur public. Si vous représentez une Société d'économie mixte ou un EPIC (établissement public à caractère industriel et commercial), vous pouvez continuer la saisie.`,
-      },
-    ],
   },
   "employeur.siret": {
     label: "Siret",
@@ -57,14 +51,6 @@ export const employeurSchema: Record<string, CerfaField> = {
     required: true,
     showInfo: true,
     requiredMessage: "La dénomination de l'employeur est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
     messages: [
       {
         type: "assistive",
@@ -103,15 +89,8 @@ export const employeurSchema: Record<string, CerfaField> = {
     label: "Voie",
     placeholder: "Exemple : RUE MICHELET",
     required: true,
-    requiredMessage: "le nom de voie est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "Le nom de voie est obligatoire",
+
     messages: [
       {
         type: "assistive",
@@ -129,28 +108,13 @@ export const employeurSchema: Record<string, CerfaField> = {
     required: true,
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d{0,5}$",
-      },
-    ],
+    mask: "00000",
   },
   "employeur.adresse.commune": {
     label: "Commune",
     placeholder: "Exemple : Dijon",
     required: true,
-    requiredMessage: "la commune est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "La commune est obligatoire",
   },
   "employeur.telephone": {
     label: "Téléphone",
@@ -158,7 +122,7 @@ export const employeurSchema: Record<string, CerfaField> = {
     fieldType: "phone",
     required: true,
     showInfo: true,
-    requiredMessage: "Le téléphone de l'employeur est obligatoire",
+    requiredMessage: "Le téléphone de l'employeur est manquant",
   },
   "employeur.courriel": {
     label: "Courriel",
@@ -166,21 +130,17 @@ export const employeurSchema: Record<string, CerfaField> = {
     required: true,
     fieldType: "email",
     showInfo: true,
-    requiredMessage: "Le courriel de l'employeur est obligatoire",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^.*$",
-      },
-    ],
+    requiredMessage: "Le courriel de l'employeur est manquant",
+    pattern: {
+      value: /\S+@\S+\.\S+/,
+      message: `Le courriel doit comporter "@" et "." pour être valide.`,
+    },
   },
   "employeur.typeEmployeur": {
     label: "Type d’employeur",
     fieldType: "select",
     required: true,
-    requiredMessage: "le type d'employeur est obligatoire",
+    requiredMessage: "Le type d'employeur est obligatoire",
     options: [
       {
         label: "11 Entreprise inscrite au répertoire des métiers ou au registre des entreprises pour l’Alsace-Moselle",
@@ -228,14 +188,30 @@ export const employeurSchema: Record<string, CerfaField> = {
     placeholder: "Exemple : 84.11Z",
     required: true,
     showInfo: true,
-    requiredMessage: "le code NAF est obligatoire",
+    requiredMessage: "Le code NAF est obligatoire",
     validateMessage: "le code NAF n'est pas au bon format",
-    mask: "C",
+    mask: "AA.BBCC",
     maskBlocks: [
       {
-        name: "C",
+        name: "AA",
+        mask: "MaskedRange",
+        from: 1,
+        to: 99,
+        maxLength: 2,
+      },
+      {
+        name: "BB",
+        mask: "MaskedRange",
+        from: 1,
+        to: 99,
+        maxLength: 2,
+      },
+      {
+        name: "CC",
         mask: "Pattern",
-        pattern: "^([0-9]{1,2})\\.?([0-9A-Za-z]{0,3})$",
+        // any letter
+        pattern: "^[a-zA-Z]$",
+        maxLength: 1,
       },
     ],
     messages: [
@@ -246,7 +222,7 @@ export const employeurSchema: Record<string, CerfaField> = {
       {
         type: "bonus",
         content:
-          "En savoir plus sur le site du ministère de l'Economie [https://www.economie.gouv.fr/entreprises/activite-entreprise-code-ape-code-naf]. Pour connaître votre code NAF, vous pouvez consulter l'Annuaire des entreprises [https://annuaire-entreprises.data.gouv.fr/](https://annuaire-entreprises.data.gouv.fr/).",
+          "En savoir plus sur le [site du ministère de l'Economie](https://www.economie.gouv.fr/entreprises/activite-entreprise-code-ape-code-naf). Pour connaître votre code NAF, vous pouvez consulter [l'Annuaire des entreprises](https://annuaire-entreprises.data.gouv.fr/).",
       },
     ],
   },
@@ -280,9 +256,9 @@ export const employeurSchema: Record<string, CerfaField> = {
   // TODO: tranform to select when API down
   "employeur.codeIdcc": {
     label: "Code IDCC de la convention",
+    placeholder: "Exemple : 1000",
     required: true,
-    showInfo: true,
-    requiredMessage: "le code idcc est obligatoire",
+    requiredMessage: "Le code idcc est obligatoire",
     validateMessage: "le code IDCC n'est pas au bon format",
     mask: "C",
     maskBlocks: [
@@ -307,7 +283,6 @@ export const employeurSchema: Record<string, CerfaField> = {
   },
   "employeur.codeIdcc_special": {
     fieldType: "radio",
-    showInfo: true,
     label: "Convention collective appliquée",
     options: [
       {
@@ -321,7 +296,9 @@ export const employeurSchema: Record<string, CerfaField> = {
     ],
   },
   "employeur.libelleIdcc": {
-    label: "Libellé de la convention collective appliquée:",
-    requiredMessage: "Le libellé de la convention collective est obligatoire",
+    label: "Libellé de la convention collective appliquée",
+    placeholder: "Exemple : Convention collective nationale du personnel des cabinets d'avocats",
+    required: true,
+    requiredMessage: "Le libellé de la convention collective est manquant",
   },
 };

@@ -32,7 +32,12 @@ export const employerSiretLogic: CerfaControl = {
     });
 
     const resultLength = Object.keys(result).length;
-    if (resultLength === 0) return { error: messages.error };
+    if (resultLength === 0) {
+      if (messages.error.includes("non diffusible")) {
+        return { error: "Siret non diffusible : récupération automatique des données des autres champs impossible." };
+      }
+      return { error: messages.error };
+    }
 
     if (result.api_entreprise === "KO") {
       return {
@@ -42,7 +47,7 @@ export const employerSiretLogic: CerfaControl = {
     }
 
     if (result.ferme) {
-      return { error: `Le Siret ${siret} est un établissement fermé.` };
+      return { error: `Siret inactif : le siret ${siret} correspond à un établissement fermé` };
     }
 
     if (result.secretSiret) {
@@ -54,39 +59,37 @@ export const employerSiretLogic: CerfaControl = {
 
     return {
       cascade: {
+        "employeur.siret": {
+          success: true,
+          stateRelatedMessage:
+            "Le siret est valide et actif. Des champs ont été remplis automatiquement, vous avez la possibilité de les modifier si besoin. Si vous constatez une erreur manifeste sur les données remplies automatiquement, rendez-vous sur le site de l'INSEE pour savoir comment corriger les informations à la source : https://www.insee.fr/fr/information/2015441",
+          cascade: false,
+        },
         "employeur.denomination": {
           value: result.enseigne || result.entreprise_raison_sociale,
-          locked: false,
         },
         "employeur.naf": {
           value: result.naf_code,
-          locked: false,
           cascade: false,
         },
         "employeur.codeIdcc": {
           value: result.conventionCollective?.idcc ? `${result.conventionCollective?.idcc}` : undefined,
-          locked: false,
         },
         "employeur.codeIdcc_special": {
           value: result.conventionCollective?.idcc ? `${result.conventionCollective?.idcc}` : undefined,
-          locked: false,
         },
         "employeur.libelleIdcc": {
           value: result.conventionCollective?.titre || undefined,
-          locked: !!result.conventionCollective?.titre,
         },
         "employeur.nombreDeSalaries": {
           value: result.entreprise_tranche_effectif_salarie?.de || undefined,
-          locked: false,
         },
         "employeur.adresse.numero": {
           value: result.numero_voie || undefined,
-          locked: false,
         },
         "employeur.adresse.repetitionVoie": {
           value: result.indice_repetition_voie,
           reset: true,
-          locked: false,
         },
         "employeur.adresse.voie": {
           value:

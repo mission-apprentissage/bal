@@ -35,6 +35,7 @@ export const Remunerations = () => {
   return (
     <Box
       padding={4}
+      mb={4}
       border="1px dashed black"
       borderRadius="8px"
       borderColor={fr.colors.decisions.border.plain.grey.default}

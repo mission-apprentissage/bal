@@ -6,10 +6,16 @@ import { FC } from "react";
 import { FieldValues, UseFormRegisterReturn, UseFormReturn } from "react-hook-form";
 import { useRecoilState } from "recoil";
 
+import { fieldsState } from "../../../atoms/fields.atom";
 import { informationMessagesState } from "../../../atoms/informationMessages.atom";
 import { showOverlayState } from "../../../atoms/showOverlay.atom";
 import { CerfaField } from "../../../utils/cerfaSchema";
-import { getFieldDeps, getFieldStateFromFormState, validateField } from "../../../utils/form.utils";
+import {
+  getFieldDeps,
+  getFieldStateFromFormState,
+  getInformationMessageMarginTop,
+  validateField,
+} from "../../../utils/form.utils";
 import ConsentInput from "./ConsentInput";
 import DateInput from "./DateInput";
 import NumberInput from "./NumberInput";
@@ -58,6 +64,7 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
   const Component = TypesMapping[fieldType];
   const [_, setInformationMessages] = useRecoilState(informationMessagesState);
   const [_showOverlay, setShowOverlay] = useRecoilState(showOverlayState);
+  const [fields, setFields] = useRecoilState(fieldsState);
 
   if (!Component) {
     return (
@@ -73,6 +80,7 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
     required: fieldSchema.required && fieldSchema.requiredMessage,
     deps: getFieldDeps(name),
     disabled: fieldSchema.locked,
+    pattern: fieldSchema.pattern,
     validate: {
       loading: () => {
         if (fieldSchema.showsOverlay) {
@@ -83,7 +91,7 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
       },
       controls: async (_, formValues) => {
         try {
-          const validation = await validateField(name, formValues, fieldMethods);
+          const validation = await validateField(name, formValues, fieldMethods, setFields);
 
           return validation;
         } catch (e) {
@@ -98,9 +106,10 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
 
   const onFocus = () => {
     setInformationMessages(fieldSchema.messages);
+    fieldMethods.clearErrors(name);
   };
 
-  const { state, stateRelatedMessage } = getFieldStateFromFormState(fieldMethods.formState, name);
+  const { state, stateRelatedMessage } = getFieldStateFromFormState(fieldMethods.formState, fields, name);
 
   return (
     <>
@@ -118,7 +127,7 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
         </Box>
         <Box
           ml={2}
-          mt={fieldSchema.fieldType === "phone" ? 7 : 4}
+          mt={getInformationMessageMarginTop(fieldSchema)}
           bgcolor={fr.colors.decisions.background.alt.blueFrance.default}
           minWidth={name.endsWith("taux") ? 0 : 40}
         >

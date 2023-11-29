@@ -1,10 +1,11 @@
 import { InputProps } from "@codegouvfr/react-dsfr/Input";
 import { differenceInYears, parseISO } from "date-fns";
 import { get, setWith } from "lodash";
-import { FieldValues, FormState, UseFormReturn } from "react-hook-form";
+import { FieldError, FieldErrorsImpl, FieldValues, FormState, Merge, UseFormReturn } from "react-hook-form";
+import { SetterOrUpdater } from "recoil";
 
 import { CerfaForm } from "../components/CerfaForm";
-import cerfaSchema, { indexedRules } from "./cerfaSchema";
+import cerfaSchema, { CerfaField, indexedRules } from "./cerfaSchema";
 
 // luxon
 // export const caclAgeAtDate = (dateNaissanceString: string, dateString: string) => {
@@ -33,14 +34,19 @@ export const caclAgeAtDate = (dateNaissanceString: string, dateString: string) =
   };
 };
 
-interface FieldState {
-  state: InputProps["state"];
-  stateRelatedMessage: string | undefined;
+export interface FieldState {
+  state?: InputProps["state"];
+  stateRelatedMessage?: string;
 }
 
-export const getFieldStateFromFormState = (formState: FormState<CerfaForm>, name: string): FieldState => {
-  const state = get(formState.errors, name) ? "error" : "default";
-  const stateRelatedMessage = get(formState.errors, name)?.message?.toString();
+export const getFieldStateFromFormState = (
+  formState: FormState<CerfaForm>,
+  fieldsState: Record<string, FieldState | undefined>,
+  name: string
+): FieldState => {
+  const state = get(fieldsState, name)?.state || (get(formState.errors, name) ? "error" : "default");
+  const stateRelatedMessage =
+    get(fieldsState, name)?.stateRelatedMessage || get(formState.errors, name)?.message?.toString();
 
   return { state, stateRelatedMessage };
 };
@@ -53,7 +59,8 @@ export const getFieldDeps = (name: string) => {
 export const validateField = async (
   name: string,
   formValues: FieldValues,
-  fieldMethods: UseFormReturn<FieldValues>
+  fieldMethods: UseFormReturn<FieldValues>,
+  setFields: SetterOrUpdater<Record<string, FieldState | undefined>>
 ) => {
   const { setValue, resetField } = fieldMethods;
   const controls = indexedRules[name];
@@ -68,6 +75,12 @@ export const validateField = async (
 
     if (validation?.cascade) {
       Object.entries(validation.cascade).forEach(([fieldName, cascade]) => {
+        if (cascade?.success) {
+          setFields((fields) => ({
+            ...fields,
+            [fieldName]: { state: "success", stateRelatedMessage: cascade.stateRelatedMessage },
+          }));
+        }
         if (cascade?.value) {
           const shouldValidate = cascade?.cascade ?? true;
           setValue(fieldName, cascade.value, { shouldValidate });
@@ -101,4 +114,36 @@ export const downloadFile = (data: string, filename: string) => {
   a.click();
 
   return a;
+};
+
+export const getInformationMessageMarginTop = (fieldSchema: CerfaField) => {
+  switch (fieldSchema.fieldType) {
+    case "phone":
+      return 7;
+    case "consent":
+      return 0;
+    default:
+      return 4;
+  }
+};
+
+export const isFieldError = (
+  error: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
+): error is FieldError => {
+  if (!error) return false;
+  return "type" in error && "message" in error;
+};
+
+export const countBlockErrors = (errors: FormState<FieldValues>["errors"]) => {
+  let count = 0;
+
+  Object.entries(errors).forEach(([_, value]) => {
+    if (isFieldError(value as FieldError)) {
+      count++;
+    } else {
+      count += countBlockErrors(value as FormState<FieldValues>["errors"]);
+    }
+  });
+
+  return count;
 };

@@ -14,7 +14,7 @@ const TextMaskInput: FC<InputFieldProps> = ({
   stateRelatedMessage,
 }) => {
   const { setValue } = fieldMethods;
-  const { mask, maskBlocks, precision, min, unmask, minLength, maxLength } = fieldSchema;
+  const { mask, maskBlocks, precision, min, minLength, maxLength } = fieldSchema;
 
   const blocks = useMemo(() => {
     return maskBlocks?.reduce(
@@ -49,6 +49,7 @@ const TextMaskInput: FC<InputFieldProps> = ({
         else if (item.mask === "Pattern")
           acc[item.name] = {
             mask: item.pattern ? new RegExp(item.pattern) : undefined,
+            maxLength: item.maxLength,
           };
         else
           acc[item.name] = {
@@ -72,19 +73,20 @@ const TextMaskInput: FC<InputFieldProps> = ({
       }}
       maskInputProps={{
         mask,
-        unmask: unmask ?? true,
-        placeholderChar: "_",
+        // unmask: unmask ?? true,
+        // placeholderChar: "_",
         onAccept: (value) => {
           setValue(name, value);
         },
         onComplete: (value) => {
           setValue(name, value);
         },
-        autofix: true,
+        // autofix: true,
         lazy: false,
         blocks,
         placeholder: fieldSchema.placeholder,
         disabled: inputProps.disabled,
+        definitions: fieldSchema.definitions,
       }}
       state={state}
       stateRelatedMessage={stateRelatedMessage}

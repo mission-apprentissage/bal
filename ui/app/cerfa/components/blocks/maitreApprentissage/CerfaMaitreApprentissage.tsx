@@ -28,7 +28,7 @@ const CerfaMaitreApprentissage: FC = () => {
       <InputController name="maitre2.diplome" />
       <InputController name="maitre2.courriel" />
 
-      <InputController name="employeur.attestationEligibilite" />
+      <InputController name="maitre1.attestationEligibilite" />
 
       <CheckEmptyFields blockName={["maitre1", "maitre2"]} />
     </Box>

@@ -27,10 +27,10 @@ const CerfaApprenti: FC = () => {
 
       <InputGroupTitle>Adresse et contact de l’apprenti(e)</InputGroupTitle>
       <InputGroupContainer>
-        <InputGroupItem size={3}>
+        <InputGroupItem size={4}>
           <InputController name="apprenti.adresse.numero" />
         </InputGroupItem>
-        <InputGroupItem size={4}>
+        <InputGroupItem size={5}>
           <InputController name="apprenti.adresse.repetitionVoie" />
         </InputGroupItem>
       </InputGroupContainer>
@@ -38,7 +38,6 @@ const CerfaApprenti: FC = () => {
       <InputController name="apprenti.adresse.complement" />
       <InputController name="apprenti.adresse.codePostal" />
       <InputController name="apprenti.adresse.commune" />
-      <InputController name="apprenti.adresse.pays" />
       <InputController name="apprenti.telephone" />
       <InputController name="apprenti.courriel" />
 
@@ -65,10 +64,10 @@ const CerfaApprenti: FC = () => {
 
         <CollapseController show={shouldAskResponsableLegalAdresse}>
           <InputGroupContainer>
-            <InputGroupItem size={3}>
+            <InputGroupItem size={4}>
               <InputController name="apprenti.responsableLegal.adresse.numero" />
             </InputGroupItem>
-            <InputGroupItem size={4}>
+            <InputGroupItem size={5}>
               <InputController name="apprenti.responsableLegal.adresse.repetitionVoie" />
             </InputGroupItem>
           </InputGroupContainer>

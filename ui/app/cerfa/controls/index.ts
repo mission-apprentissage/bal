@@ -29,7 +29,17 @@ import { typeContratAppControl } from "./typeContratApp.control";
 import { typeDerogationControl } from "./typeDerogation.control";
 
 interface ControlResult {
-  cascade?: Record<string, { value?: any; reset?: boolean; locked?: boolean; cascade?: boolean }>;
+  cascade?: Record<
+    string,
+    {
+      value?: any;
+      reset?: boolean;
+      locked?: boolean;
+      cascade?: boolean;
+      success?: boolean;
+      stateRelatedMessage?: string;
+    }
+  >;
   cache?: string;
   error?: string;
   warning?: string;

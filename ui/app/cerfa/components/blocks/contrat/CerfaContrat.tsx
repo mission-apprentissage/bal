@@ -16,10 +16,10 @@ const CerfaContrat: FC = () => {
     <Box>
       <InputController name="contrat.typeContratApp" />
 
-      <InputController name="contrat.dateSignature" />
-      <InputController name="contrat.dateFinContrat" />
       <InputController name="contrat.dateDebutContrat" />
       <InputController name="contrat.dateDebutFormationPratique" />
+      <InputController name="contrat.dateFinContrat" />
+      <InputController name="contrat.dateSignature" />
 
       <TypeDerogationField />
       <NumeroContratPrecedentField />
@@ -35,6 +35,8 @@ const CerfaContrat: FC = () => {
 
       <InputController name="contrat.travailRisque" />
       <Remunerations />
+
+      <InputController name="contrat.caisseRetraiteSupplementaire" />
       <AvantagesNatures />
 
       <CheckEmptyFields blockName="contrat" />

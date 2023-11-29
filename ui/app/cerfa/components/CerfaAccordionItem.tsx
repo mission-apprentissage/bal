@@ -23,7 +23,7 @@ const CerfaAccordionItem: FC<PropsWithChildren<Props>> = ({ label, completion, c
             }
             className={fr.cx(completion === 100 ? "fr-icon-checkbox-circle-fill" : "fr-icon-edit-fill")}
           />
-          {`${label} - ${completion}%`}
+          {`${label}`}
         </>
       }
     >

@@ -2793,11 +2793,11 @@ export const idcc: Record<string, Idcc> = {
   },
   "9998": {
     code: "9998",
-    libelle: "___Convention non encore en vigueur___",
+    libelle: "Convention collective en cours de négociation",
   },
   "9999": {
     code: "9999",
-    libelle: "___Sans convention collective___",
+    libelle: "Aucune convention collective",
   },
   "0003": {
     code: "0003",

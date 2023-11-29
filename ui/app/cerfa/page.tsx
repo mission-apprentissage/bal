@@ -1,5 +1,5 @@
 "use client";
-import { Container, Typography } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import { FC } from "react";
 import { RecoilRoot } from "recoil";
 
@@ -11,10 +11,15 @@ const CerfaPage: FC = () => {
     <>
       <Container maxWidth="xl">
         <Breadcrumb pages={[PAGES.nouveauDossier()]} />
-        <Typography variant="h2" gutterBottom>
-          Contrat
-        </Typography>
       </Container>
+      <Grid container spacing={2} mb={4}>
+        <Grid item xs={3} />
+        <Grid item xs={9}>
+          <Typography variant="h1" gutterBottom>
+            Cerfa 10103*10
+          </Typography>
+        </Grid>
+      </Grid>
       <RecoilRoot>
         <CerfaForm />
       </RecoilRoot>

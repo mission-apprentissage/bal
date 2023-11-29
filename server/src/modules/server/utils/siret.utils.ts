@@ -72,7 +72,7 @@ const findDataFromSiret = async (providedSiret: string) => {
           api_entreprise: `Le Siret ${siret} existe`,
         },
       };
-    } else if (/^5[0-9]{2}/.test(`${e.reason}`)) {
+    } else if (/^5[0-9]{2}/.test(`${e.reason}`) || e.reason === 429) {
       return {
         result: {
           siret: siret,
@@ -102,6 +102,15 @@ const findDataFromSiret = async (providedSiret: string) => {
     };
   }
 
+  if (etablissementApiInfo?.status_diffusion !== "diffusible") {
+    return {
+      result: {},
+      messages: {
+        error: `Siret non diffusible`,
+      },
+    };
+  }
+
   let conventionCollective = null;
   try {
     conventionCollective = await getOpcoData(siret);
@@ -125,6 +134,15 @@ const findDataFromSiret = async (providedSiret: string) => {
       result: {},
       messages: {
         error: `Le Siren ${siren} n'existe pas ou n'a été retrouvé`,
+      },
+    };
+  }
+
+  if (entrepriseApiInfo?.status_diffusion !== "diffusible") {
+    return {
+      result: {},
+      messages: {
+        error: `Siren non diffusible`,
       },
     };
   }
