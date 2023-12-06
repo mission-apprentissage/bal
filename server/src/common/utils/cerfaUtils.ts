@@ -291,7 +291,10 @@ export const pdfFields: PdfField[] = [
     getValue: (value) => {
       const atPos = value.indexOf("@");
       const part2 = (value as string).split("@")[1];
-      if (atPos < 24 && part2.length < 8) return part2;
+      if (atPos < 24) {
+        if (part2.length < 10) return part2;
+        return part2.substring(0, 10);
+      }
       return value.substring(24, 99).substring(0, 10);
     },
   },
@@ -326,7 +329,10 @@ export const pdfFields: PdfField[] = [
     getValue: (value) => {
       const atPos = value.indexOf("@");
       const part2 = (value as string).split("@")[1];
-      if (atPos < 24 && part2.length < 8) return part2;
+      if (atPos < 24) {
+        if (part2.length < 10) return part2;
+        return part2.substring(0, 10);
+      }
       return value.substring(24, 99).substring(0, 10);
     },
   },
@@ -336,6 +342,11 @@ export const pdfFields: PdfField[] = [
     type: "PDFTextField",
     attribute: "maitre2.courriel",
     getValue: (value) => {
+      const atPos = value.indexOf("@");
+      const part2 = (value as string).split("@")[1];
+      if (atPos < 24) {
+        return part2.substring(10, 99);
+      }
       return value.substring(33, 99);
     },
   },
@@ -351,6 +362,11 @@ export const pdfFields: PdfField[] = [
     type: "PDFTextField",
     attribute: "maitre1.courriel",
     getValue: (value) => {
+      const atPos = value.indexOf("@");
+      const part2 = (value as string).split("@")[1];
+      if (atPos < 24) {
+        return part2.substring(10, 99);
+      }
       return value.substring(33, 99);
     },
   },
