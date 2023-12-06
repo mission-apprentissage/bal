@@ -84,317 +84,422 @@ export const pdfFields: PdfField[] = [
     name: "*Pour les employeurs du secteur public, adhésion de l’apprenti au régime spécifique d’assurance chômage :",
     ref: 619,
     type: "PDFCheckBox",
+    attribute: "",
   },
 
   /**
    * Apprenti
    */
-  { name: "Sexe F", ref: 621, type: "PDFCheckBox" },
-  { name: "Sexe M", ref: 620, type: "PDFCheckBox" },
+
+  { name: "Sexe F", ref: 621, type: "PDFCheckBox", attribute: "apprenti.sexe", getValue: (value) => value === "F" },
+  { name: "Sexe M", ref: 620, type: "PDFCheckBox", attribute: "apprenti.sexe", getValue: (value) => value === "M" },
   {
     name: "Déclare être inscrit sur la liste des sportifs de haut niveau NON",
     ref: 623,
     type: "PDFCheckBox",
+    attribute: "apprenti.inscriptionSportifDeHautNiveau",
+    getValue: (value) => value === "non",
   },
   {
     name: "Déclare être inscrit sur la liste des sportifs de haut niveau OUI",
     ref: 622,
     type: "PDFCheckBox",
+    attribute: "apprenti.inscriptionSportifDeHautNiveau",
+    getValue: (value) => value === "oui",
   },
   {
     name: "Déclare bénéficier de la reconnaissance travailleur handicapé NON",
     ref: 625,
     type: "PDFCheckBox",
+    attribute: "apprenti.handicap",
+    getValue: (value) => value === "non",
   },
   {
     name: "Déclare bénéficier de la reconnaissance travailleur handicapé OUI",
     ref: 624,
     type: "PDFCheckBox",
+    attribute: "apprenti.handicap",
+    getValue: (value) => value === "oui",
   },
   {
     name: "Déclare avoir un projet de création ou de reprise d’entreprise OUI",
     ref: 626,
     type: "PDFCheckBox",
+    attribute: "apprenti.projetCreationRepriseEntreprise",
+    getValue: (value) => value === "oui",
   },
   {
     name: "Déclare avoir un projet de création ou de reprise d’entreprise NON",
     ref: 627,
     type: "PDFCheckBox",
+    attribute: "apprenti.projetCreationRepriseEntreprise",
+    getValue: (value) => value === "non",
   },
-
   {
     name: "Nom de naissance de l’apprenti(e) :",
     ref: 628,
     type: "PDFTextField",
+    attribute: "apprenti.nom",
   },
-  { name: "Nom d’usage", ref: 629, type: "PDFTextField" },
-  { name: "NIR de l’apprenti(e)", ref: 631, type: "PDFTextField" },
-  { name: "Adresse de l’apprenti(e) N°", ref: 635, type: "PDFTextField" },
+  { name: "Nom d’usage", ref: 629, type: "PDFTextField", attribute: "apprenti.nomUsage" },
+  { name: "NIR de l’apprenti(e)", ref: 631, type: "PDFTextField", attribute: "apprenti.nir" },
+  {
+    name: "Adresse de l’apprenti(e) N°",
+    ref: 635,
+    type: "PDFTextField",
+    attribute: "apprenti.adresse.numero",
+    // TODO "apprenti.adresse.repetitionVoie"
+  },
   {
     name: "Adresse de l’apprenti(e) Voie",
     ref: 632,
     type: "PDFTextField",
+    attribute: "apprenti.adresse.voie",
   },
   {
     name: "Adresse de l’apprenti(e) Complément",
     ref: 633,
     type: "PDFTextField",
+    attribute: "apprenti.adresse.complement",
   },
-  { name: "Adresse de l’apprenti(e) CP", ref: 634, type: "PDFTextField" },
+  { name: "Adresse de l’apprenti(e) CP", ref: 634, type: "PDFTextField", attribute: "apprenti.adresse.codePostal" },
   {
     name: "Adresse de l’apprenti(e) Commune",
     ref: 636,
     type: "PDFTextField",
+    attribute: "apprenti.adresse.commune",
   },
   {
     name: "Adresse de l’apprenti(e) Téléphone",
     ref: 637,
     type: "PDFTextField",
+    attribute: "apprenti.telephone",
+    getValue: (value) => value?.value,
   },
   {
     name: "Adresse de l’apprenti(e) Courriel1",
     ref: 638,
     type: "PDFTextField",
+    attribute: "apprenti.courriel",
+    getValue: (value) => (value as string).split("@")[0],
   },
   {
     name: "Adresse de l’apprenti(e) Courriel2",
     ref: 639,
     type: "PDFTextField",
+    attribute: "apprenti.courriel",
+    getValue: (value) => (value as string).split("@")[1],
   },
   {
     name: "Le premier prénom de l’apprenti(e) selon l’état civil :",
     ref: 630,
     type: "PDFTextField",
+    attribute: "apprenti.prenom",
   },
   {
     name: "Département naissance apprenti",
     ref: 648,
     type: "PDFTextField",
+    attribute: "apprenti.departementNaissance",
   },
-  { name: "Nationalité apprenti", ref: 650, type: "PDFTextField" },
-  { name: "Régime social apprenti", ref: 651, type: "PDFTextField" },
-  { name: "Situation avant ce contrat", ref: 652, type: "PDFTextField" },
+  { name: "Nationalité apprenti", ref: 650, type: "PDFTextField", attribute: "apprenti.nationalite" },
+  { name: "Régime social apprenti", ref: 651, type: "PDFTextField", attribute: "apprenti.regimeSocial" },
+  { name: "Situation avant ce contrat", ref: 652, type: "PDFTextField", attribute: "apprenti.situationAvantContrat" },
   {
     name: "Dernier diplôme ou titre préparé",
     ref: 653,
     type: "PDFTextField",
+    attribute: "apprenti.diplomePrepare",
   },
-  { name: "Commune naissance apprenti", ref: 649, type: "PDFTextField" },
+  { name: "Commune naissance apprenti", ref: 649, type: "PDFTextField", attribute: "apprenti.communeNaissance" },
   {
     name: "Intitulé précis du dernier diplôme ou titre préparé :",
     ref: 655,
     type: "PDFTextField",
+    attribute: "apprenti.intituleDiplomePrepare",
   },
   {
     name: "Dernière classe / année suivie",
     ref: 654,
     type: "PDFTextField",
+    attribute: "apprenti.derniereClasse",
   },
   {
     name: "Diplôme ou titre le plus élevé obtenu",
     ref: 656,
     type: "PDFTextField",
+    attribute: "apprenti.diplome",
   },
   {
     name: "Représentant légal Nom / Prénom",
     ref: 640,
     type: "PDFTextField",
+    attribute: "apprenti.responsableLegal.nom",
   },
   {
     name: "Maître d’apprentissage n° 2Nom de naissance",
     ref: 658,
     type: "PDFTextField",
+    attribute: "maitre2.nom",
   },
   {
     name: "Maître d’apprentissage n°1 Nom de naissance",
     ref: 657,
     type: "PDFTextField",
+    attribute: "maitre1.nom",
   },
   {
     name: "Adresse du représentant légal Courriel1",
     ref: 646,
     type: "PDFTextField",
+    attribute: "apprenti.responsableLegal.courriel",
   },
   {
     name: "Adresse du représentant légal Courriel2",
     ref: 647,
     type: "PDFTextField",
+    attribute: "apprenti.responsableLegal.courriel", // TODO
   },
   {
     name: "Maître d’apprentissage n°1 Prénom",
     ref: 659,
     type: "PDFTextField",
+    attribute: "maitre1.prenom",
   },
   {
     name: "Maître d’apprentissage n°1 NIR",
     ref: 660,
     type: "PDFTextField",
+    attribute: "maitre1.nir",
   },
   {
     name: "Maître d’apprentissage n°1 Courriel1",
     ref: 661,
     type: "PDFTextField",
+    attribute: "maitre1.courriel",
+    getValue: (value) => {
+      const atPos = value.indexOf("@");
+      if (atPos < 24) return (value as string).split("@")[0];
+      return value.substring(0, 24);
+    },
   },
   {
     name: "Maître d’apprentissage n°1 Courriel2",
     ref: 662,
     type: "PDFTextField",
+    attribute: "maitre1.courriel",
+    getValue: (value) => {
+      const atPos = value.indexOf("@");
+      const part2 = (value as string).split("@")[1];
+      if (atPos < 24 && part2.length < 8) return part2;
+      return value.substring(24, 99).substring(0, 10);
+    },
   },
   {
     name: "Maître d’apprentissage n°2 Prénom",
     ref: 665,
     type: "PDFTextField",
+    attribute: "maitre2.prenom",
   },
   {
     name: "Maître d’apprentissage n°2 NIR",
     ref: 666,
     type: "PDFTextField",
+    attribute: "maitre2.nir",
   },
   {
     name: "Maître d’apprentissage n°2 Courriel1",
     ref: 667,
     type: "PDFTextField",
+    attribute: "maitre2.courriel",
+    getValue: (value) => {
+      const atPos = value.indexOf("@");
+      if (atPos < 24) return (value as string).split("@")[0];
+      return value.substring(0, 24);
+    },
   },
   {
     name: "Maître d’apprentissage n°2 Courriel2",
     ref: 668,
     type: "PDFTextField",
+    attribute: "maitre2.courriel",
+    getValue: (value) => {
+      const atPos = value.indexOf("@");
+      const part2 = (value as string).split("@")[1];
+      if (atPos < 24 && part2.length < 8) return part2;
+      return value.substring(24, 99).substring(0, 10);
+    },
   },
   {
     name: "Maître d’apprentissage n°2 Courriel2suite",
     ref: 669,
     type: "PDFTextField",
+    attribute: "maitre2.courriel",
+    getValue: (value) => {
+      return value.substring(33, 99);
+    },
   },
   {
     name: "Maître d’apprentissage n°2 Emploi occupé :",
     ref: 670,
     type: "PDFTextField",
+    attribute: "maitre2.emploiOccupe",
   },
   {
     name: "Maître d’apprentissage n°1 Courriel2suite",
     ref: 663,
     type: "PDFTextField",
+    attribute: "maitre1.courriel",
+    getValue: (value) => {
+      return value.substring(33, 99);
+    },
   },
   {
     name: "Maître d’apprentissage n°1 Emploi occupé :",
     ref: 664,
     type: "PDFTextField",
+    attribute: "maitre1.emploiOccupe",
   },
   {
     name: "Maître d’apprentissage n°2 Diplôme ou titre le plus élevé obtenu :",
     ref: 103,
     type: "PDFTextField",
+    attribute: "maitre2.diplome",
   },
   {
     name: "Maître d’apprentissage n°1Diplôme ou titre le plus élevé obtenu :",
     ref: 105,
     type: "PDFTextField",
+    attribute: "maitre1.diplome",
   },
   {
     name: "Maître d’apprentissage n°2 Niveau de diplôme ou titre le plus élevé obtenu :",
     ref: 106,
     type: "PDFTextField",
+    attribute: "maitre2.niveauDiplome",
   },
   {
     name: "Maître d’apprentissage n°1 Niveau de diplôme ou titre le plus élevé obtenu :",
     ref: 104,
     type: "PDFTextField",
+    attribute: "maitre1.niveauDiplome",
   },
-  { name: "Type de dérogation :", ref: 110, type: "PDFTextField" },
+  { name: "Type de dérogation :", ref: 110, type: "PDFTextField", attribute: "contrat.typeDerogation" },
   {
     name: "Date de début d’exécution du contrat : _af_date",
     ref: 114,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Date de début de formation pratique chez l’employeur : _af_date",
     ref: 124,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Maître d’apprentissage n°1 Date naissance_af_date",
     ref: 672,
     type: "PDFTextField",
+    attribute: "maitre1.dateNaissance",
   },
   {
     name: "Maître d’apprentissage n°2 Date naissance_af_date",
     ref: 671,
     type: "PDFTextField",
+    attribute: "maitre2.dateNaissance",
   },
   {
     name: "Apprenti Date naissance_af_date",
     ref: 673,
     type: "PDFTextField",
+    attribute: "apprenti.dateNaissance",
   },
   {
     name: "Date de conclusion : _af_date",
     ref: 113,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Si avenant, date d’effet :_af_date",
     ref: 121,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "ate de fin du contrat ou de la période d'apprentissage_af_date",
     ref: 111,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Type de contrat ou d’avenant :",
     ref: 107,
     type: "PDFTextField",
+    attribute: "contrat.typeContratApp",
   },
   {
     name: "Durée hebdomadaire du travail  heure",
     ref: 112,
     type: "PDFTextField",
+    attribute: "contrat.dureeTravailHebdoHeures",
   },
   {
     name: "Durée hebdomadaire du travail  minutes",
     ref: 115,
     type: "PDFTextField",
+    attribute: "contrat.dureeTravailHebdoMinutes",
   },
   {
     name: "Travail sur machines dangereuses ou exposition à des risques particuliers : NON",
     ref: 122,
     type: "PDFCheckBox",
+    attribute: "contrat.travailRisque",
+    getValue: (value) => value === "non",
   },
   {
     name: "Numéro du contrat précédent ou du contrat sur lequel porte l’avenant :",
     ref: 116,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Salaire brut mensuel à l’embauche :",
     ref: 108,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Caisse de retraite complémentaire :",
     ref: 117,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Avantages en nature, le cas échéant : Nourriture",
     ref: 118,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Avantages en nature, le cas échéant : Logement",
     ref: 123,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Avantages en nature, le cas échéant : Autre",
     ref: 109,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Travail sur machines dangereuses ou exposition à des risques particuliers : OUI",
     ref: 120,
     type: "PDFCheckBox",
+    attribute: "contrat.travailRisque",
+    getValue: (value) => value === "oui",
   },
   { name: "CFA d’entreprise NON", ref: 127, type: "PDFCheckBox" },
   {

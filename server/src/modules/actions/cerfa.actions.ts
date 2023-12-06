@@ -21,7 +21,6 @@ export const createCerfaPdf = async (data: Record<string, any>) => {
   const pdfDoc = await PDFDocument.load(pdfCerfaEmpty);
 
   const form = pdfDoc.getForm();
-
   pdfFields
     .filter((field) => field.attribute && field.type === "PDFTextField")
     .forEach((field) => {
@@ -29,9 +28,9 @@ export const createCerfaPdf = async (data: Record<string, any>) => {
       const formValue = get(data, field.attribute as string);
       const value = getValueForPdf(formValue, field);
 
-      console.log({ name: field.name, formValue, value });
+      // console.log({ attribute: field.attribute, name: field.name, formValue, value });
 
-      pdfField.setText(value as string);
+      pdfField.setText(`${value}` as string);
     });
 
   pdfFields
