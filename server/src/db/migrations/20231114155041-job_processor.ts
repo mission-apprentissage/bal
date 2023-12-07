@@ -110,10 +110,10 @@ export const up = async (db: Db, _client: MongoClient) => {
       update.job_status = doc.mailingLists?.status === "done" ? "done" : "error";
     }
 
-    await db.collection("documents").updateOne({ _id: doc._id }, { $set: update });
+    await db.collection("documents").updateOne({ _id: doc._id }, { $set: update }, { bypassDocumentValidation: true });
   }
 
-  await db.collection("mailingLists").updateMany({}, { $unset: { status: 1 } });
+  await db.collection("mailingLists").updateMany({}, { $unset: { status: 1 } }, { bypassDocumentValidation: true });
   const collections = await db.listCollections().toArray();
   const collectionNames = collections.map((c) => c.name);
   if (collectionNames.includes("jobs")) {
