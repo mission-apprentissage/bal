@@ -1,20 +1,29 @@
+import { IncomingMessage } from "node:http";
+
 import { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
+import { oleoduc } from "oleoduc";
 import { zRoutes } from "shared";
 import { FILE_SIZE_LIMIT } from "shared/constants/index";
+import { Readable } from "stream";
 
 import logger from "@/common/logger";
 
+import { getFromStorage } from "../../common/utils/ovhUtils";
 // import { createUploadDocument, uploadFile } from "../../actions/documents.actions";
 import { uploadSupportFile } from "../actions/documents.actions";
 import { Server } from "./server";
 
 const validateFile = (file: MultipartFile) => {
-  if (file.mimetype !== "text/csv") {
+  if (
+    file.mimetype !== "text/csv" &&
+    file.mimetype !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" &&
+    file.mimetype !== "application/vnd.ms-excel"
+  ) {
     return false;
   }
 
-  if (!file.filename.endsWith(".csv")) {
+  if (!file.filename.endsWith(".csv") && !file.filename.endsWith(".xlsx") && !file.filename.endsWith(".xls")) {
     return false;
   }
 
@@ -73,4 +82,87 @@ export const uploadSupportRoutes = ({ server }: { server: Server }) => {
       }
     }
   );
+
+  server.get(
+    "/support/files-list",
+    {
+      schema: zRoutes.get["/support/files-list"],
+      onRequest: [server.auth(zRoutes.get["/support/files-list"])],
+    },
+    async (request, response) => {
+      // TODO
+
+      return response.status(200).send([{ id: "" }]);
+    }
+  );
+
+  server.get(
+    "/support/file/download",
+    {
+      schema: zRoutes.get["/support/file/download"],
+      onRequest: [server.auth(zRoutes.get["/support/file/download"])],
+    },
+    async (request, response) => {
+      const { id } = request.query;
+      const [_key, _email, ...parts] = id.split("/");
+      const remerge = parts.join("-");
+
+      let stream: IncomingMessage | Readable;
+      let fileNotFound = false;
+      try {
+        stream = await getFromStorage(id, {
+          account: "mna",
+          storage: "mna-support",
+        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        if (error.message.includes("Status code 404")) {
+          fileNotFound = true;
+        } else {
+          throw Boom.badData("Impossible de télécharger le fichier");
+        }
+      }
+
+      if (fileNotFound) {
+        logger.info("file not found");
+      }
+
+      const fileName = remerge;
+
+      response.raw.writeHead(200, {
+        "Content-Type": "application/octet-stream",
+        "Content-Disposition": `attachment; filename="${fileName}"`,
+      });
+
+      await oleoduc(
+        // @ts-ignore
+        stream,
+        response.raw
+      );
+    }
+  );
+
+  // server.delete(
+  //   "/mailing-list/:id",
+  //   {
+  //     schema: zRoutes.delete["/mailing-list/:id"],
+  //     onRequest: [server.auth(zRoutes.delete["/mailing-list/:id"])],
+  //   },
+  //   async (request, response) => {
+  //     const user = getUserFromRequest(request, zRoutes.delete["/mailing-list/:id"]);
+  //     const { id } = request.params;
+
+  //     const mailingList = await findMailingList({
+  //       _id: new ObjectId(id),
+  //     });
+
+  //     if (!mailingList || user._id.toString() !== mailingList?.added_by) {
+  //       throw Boom.forbidden("Forbidden");
+  //     }
+
+  //     await deleteMailingList(mailingList);
+
+  //     return response.status(200).send({ success: true });
+  //   }
+  // );
 };

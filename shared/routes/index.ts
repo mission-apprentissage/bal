@@ -25,6 +25,7 @@ const zRoutesGet = {
   ...zDocumentRoutes.get,
   ...zAdminOrganisationRoutes.get,
   ...zMailingListRoutes.get,
+  ...zUploadSupportRoutes.get,
 } as const;
 
 const zRoutesPost = {

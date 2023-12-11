@@ -90,6 +90,10 @@ export const PAGES = {
     title: "Listes de diffusion",
     path: "/liste-diffusion",
   }),
+  listeDepot: () => ({
+    title: "Fichiers déposés",
+    path: "/support/liste-fichiers",
+  }),
   nouvelleListe: () => ({
     title: "Créer une liste de diffusion",
     path: "/liste-diffusion/nouvelle-liste",
