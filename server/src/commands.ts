@@ -215,13 +215,19 @@ program
   .action(createJobAction("documents:save-columns"));
 
 program
-  .command("hydrate:deca")
+  .command("deca:hydrate")
   .description("Remplissage des contrats Deca")
   .option("-f, --from <string>", "Récupère les données disponibles via l'API Deca depuis une date yyyy-MM-dd")
   .option("-t, --to <string>", "Récupère les données disponibles via l'API Deca jusuqu'a une date yyyy-MM-dd")
   .option("-c, --chunk <number>", "Chunk days default 1")
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("hydrate:deca"));
+
+program
+  .command("deca:merge")
+  .description("Deca merge")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("deca:merge"));
 
 program.hook("preAction", (_, actionCommand) => {
   const command = actionCommand.name();

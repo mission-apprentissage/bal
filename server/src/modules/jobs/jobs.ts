@@ -18,6 +18,7 @@ import { handleMailingListJob, onMailingListJobExited } from "../actions/mailing
 import { createUser } from "../actions/users.actions";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
+import { mergeDecaDumps } from "./deca/merge-dumps-deca";
 
 export async function setupJobProcessor() {
   return initJobProcessor({
@@ -90,6 +91,10 @@ export async function setupJobProcessor() {
         handler: async (job, signal) => handleMailingListJob(job, job.payload as any, signal),
         onJobExited: onMailingListJobExited,
         resumable: true,
+      },
+
+      "deca:merge": {
+        handler: async () => mergeDecaDumps(),
       },
     },
   });
