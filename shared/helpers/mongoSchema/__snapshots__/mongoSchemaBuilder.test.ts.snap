@@ -1133,6 +1133,10 @@ exports[`zodToMongoSchema > should convert users schema 1`] = `
       "bsonType": "bool",
       "description": "Est administrateur",
     },
+    "is_support": {
+      "bsonType": "bool",
+      "description": "Est support",
+    },
     "password": {
       "bsonType": "string",
       "description": "Mot de passe de l'utilisateur",

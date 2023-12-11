@@ -39,8 +39,13 @@ export async function setupJobProcessor() {
       "users:create": {
         handler: async (job) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { organisationId, ...rest } = job.payload as any;
-          await createUser({ organisation_id: organisationId, ...rest });
+          const { organisationId, admin, support, ...rest } = job.payload as any;
+          await createUser({
+            organisation_id: organisationId,
+            ...(admin ? { is_admin: admin } : {}),
+            ...(support ? { is_support: support } : {}),
+            ...rest,
+          });
         },
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

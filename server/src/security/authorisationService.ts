@@ -2,7 +2,7 @@ import Boom from "@hapi/boom";
 import { FastifyRequest } from "fastify";
 import { IUserWithPerson } from "shared/models/user.model";
 import { IRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
-import { AccessPermission, AdminRole, NoneRole, Role } from "shared/security/permissions";
+import { AccessPermission, AdminRole, NoneRole, Role, SupportRole } from "shared/security/permissions";
 
 import { IAccessToken } from "./accessTokenService";
 import { getUserFromRequest } from "./authenticationService";
@@ -19,7 +19,7 @@ export function getUserRole(userOrToken: IAccessToken | IUserWithPerson): Role {
     return NoneRole;
   }
 
-  return userOrToken.is_admin ? AdminRole : NoneRole;
+  return userOrToken.is_admin ? AdminRole : userOrToken.is_support ? SupportRole : NoneRole;
 }
 
 export function isAuthorized<S extends Pick<IRouteSchema, "method" | "path"> & WithSecurityScheme>(

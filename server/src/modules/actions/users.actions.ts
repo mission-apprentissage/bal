@@ -13,6 +13,7 @@ type ICreateUser = {
   password: string;
   organisation_id: string;
   is_admin?: boolean;
+  is_support?: boolean;
 };
 
 const DEFAULT_LOOKUP = {

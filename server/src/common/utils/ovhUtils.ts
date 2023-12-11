@@ -6,6 +6,7 @@ import { createRequestStream, createUploadStream } from "./httpUtils";
 
 interface Options {
   storage?: string;
+  account?: "mna" | "sbs";
   contentType?: string;
 }
 
@@ -82,8 +83,14 @@ async function authenticate(uri: string) {
 }
 
 async function requestObjectAccess(path: string, options: Options = {}) {
-  const storage = options.storage || config.ovhStorage.containerName;
-  const { baseUrl, token } = await authenticate(config.ovhStorage.uri);
+  const ovhStorageAccount = options.account
+    ? options.account === "mna"
+      ? config.ovhStorageMna
+      : config.ovhStorage
+    : config.ovhStorage;
+
+  const storage = options.storage || ovhStorageAccount.containerName;
+  const { baseUrl, token } = await authenticate(ovhStorageAccount.uri);
 
   return {
     url: encodeURI(`${baseUrl}/${storage}${path === "/" ? "" : `/${path}`}`),
