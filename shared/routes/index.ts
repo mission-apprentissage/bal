@@ -10,6 +10,7 @@ import { zMailingListRoutes } from "./mailingList.routes";
 import { zAdminOrganisationRoutes } from "./organisation.routes";
 import { zPersonRoutes } from "./person.routes";
 import { zUploadRoutes } from "./upload.routes";
+import { zUploadSupportRoutes } from "./upload.support.routes";
 import { zUserAdminRoutes, zUserRoutes } from "./user.routes";
 import { zOrganisationV1Routes } from "./v1/organisation.routes";
 
@@ -33,6 +34,7 @@ const zRoutesPost = {
   ...zUploadRoutes.post,
   ...zOrganisationV1Routes.post,
   ...zMailingListRoutes.post,
+  ...zUploadSupportRoutes.post,
 } as const;
 
 const zRoutesPut = {} as const;

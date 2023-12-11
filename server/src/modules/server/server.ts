@@ -29,6 +29,7 @@ import { mailingListRoutes } from "./mailingList.routes";
 import { auth } from "./middlewares/authMiddleware";
 import { errorMiddleware } from "./middlewares/errorMiddleware";
 import { logMiddleware } from "./middlewares/logMiddleware";
+import { uploadSupportRoutes } from "./upload.support.routes";
 import { userRoutes } from "./user.routes";
 import { organisationRoutes } from "./v1/organisation.routes";
 
@@ -130,6 +131,7 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
   uploadAdminRoutes({ server });
   mailingListRoutes({ server });
   documentsRoutes({ server });
+  uploadSupportRoutes({ server });
 };
 
 export const registerV1Routes: RegisterRoutes = ({ server }) => {

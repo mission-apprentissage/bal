@@ -24,7 +24,7 @@ fileignoreconfig:
 - filename: .github/workflows/remove-preview.yml
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/.env_server
-  checksum: 507f894e9c00ea68cc041757ef12add648fc90d0409f9a2eab5c651e3da357bf
+  checksum: d92e5989f3fbfe2a06c8f4c5dd6f4ccd33c7740a554ccbd3084097da82162201
   ignore_detectors:
   - filename
 - filename: .infra/.env_ui
@@ -80,7 +80,7 @@ fileignoreconfig:
 - filename: .infra/vault/setup-local-env.sh
   checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: bc79236b92bb239dae8fa2bf2e4b0ffc30e29285e13979cb71733d7a39261fb0
+  checksum: 9c85e7f99941ffc94c92ee7b3bfae3c8b1ad6ba45e935c87f50cd9c4396288c3
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:
@@ -95,7 +95,7 @@ fileignoreconfig:
 - filename: server/.env.local.example
   checksum: b760092fca0bbc8ba8c1d1d162b0461b992de867cbfde3dc4556226a1129e484
 - filename: server/.env.test
-  checksum: ffdff3097b04077a11a1e403ef5fb9d2622a49b8f5ee73493c705f2967feac7c
+  checksum: 39ceb0a4f3d9cffe8d980a69205a2b800a875cbe994842f97ff1f9282b2a6e1f
 - filename: server/config/config.ts
   checksum: dee90e5b9ea1162aaffc204bd46a7801f8abba89fddd3f7077990321299ff3bf
 - filename: server/dev/load-env.mjs

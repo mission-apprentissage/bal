@@ -360,6 +360,38 @@ export const checkCsvFile = async (document: IUploadDocument) => {
   );
 };
 
+export const uploadSupportFile = async (stream: Readable, chemin_fichier: string, options: IUploadDocumentOptions) => {
+  const { scanStream, getScanResults } = await clamav.getScanner();
+
+  if (!options.mimetype) {
+    throw Boom.badRequest("Missing mimetype");
+  }
+
+  await oleoduc(
+    stream,
+    scanStream,
+    testMode
+      ? noop()
+      : await uploadToStorage(chemin_fichier, {
+          contentType: options.mimetype,
+          account: "mna",
+          storage: "mna-support",
+        })
+  );
+
+  const { isInfected, viruses } = await getScanResults();
+
+  if (isInfected) {
+    if (!testMode) {
+      const listViruses = viruses.join(",");
+      logger.error(`Uploaded file ${chemin_fichier} is infected by ${listViruses}. Deleting file from storage...`);
+
+      await deleteFromStorage(chemin_fichier);
+    }
+    throw Boom.badRequest("Le contenu du fichier est invalide");
+  }
+};
+
 /**
  * Convert a buffer to utf8 if needed and check if file does not contain empty column names
  */
