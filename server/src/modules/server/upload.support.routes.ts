@@ -2,14 +2,14 @@ import { IncomingMessage } from "node:http";
 
 import { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
-import { oleoduc } from "oleoduc";
+import { oleoduc, transformData, writeData } from "oleoduc";
 import { zRoutes } from "shared";
 import { FILE_SIZE_LIMIT } from "shared/constants/index";
 import { Readable } from "stream";
 
 import logger from "@/common/logger";
 
-import { getFromStorage } from "../../common/utils/ovhUtils";
+import { deleteFromStorage, getFromStorage } from "../../common/utils/ovhUtils";
 // import { createUploadDocument, uploadFile } from "../../actions/documents.actions";
 import { uploadSupportFile } from "../actions/documents.actions";
 import { Server } from "./server";
@@ -90,9 +90,23 @@ export const uploadSupportRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/support/files-list"])],
     },
     async (request, response) => {
-      // TODO
-
-      return response.status(200).send([{ id: "" }]);
+      const stream = await getFromStorage("/", {
+        account: "mna",
+        storage: "mna-support",
+      });
+      let result: { id: string }[] = [];
+      await oleoduc(
+        // @ts-ignore
+        stream,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        transformData((line: any) => JSON.parse(line)),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        writeData((resp: any) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          result = resp.map(({ name }: any) => ({ id: name }));
+        })
+      );
+      return response.status(200).send(result);
     }
   );
 
@@ -142,27 +156,21 @@ export const uploadSupportRoutes = ({ server }: { server: Server }) => {
     }
   );
 
-  // server.delete(
-  //   "/mailing-list/:id",
-  //   {
-  //     schema: zRoutes.delete["/mailing-list/:id"],
-  //     onRequest: [server.auth(zRoutes.delete["/mailing-list/:id"])],
-  //   },
-  //   async (request, response) => {
-  //     const user = getUserFromRequest(request, zRoutes.delete["/mailing-list/:id"]);
-  //     const { id } = request.params;
+  server.delete(
+    "/support/file/delete",
+    {
+      schema: zRoutes.delete["/support/file/delete"],
+      onRequest: [server.auth(zRoutes.delete["/support/file/delete"])],
+    },
+    async (request, response) => {
+      const { id } = request.query;
 
-  //     const mailingList = await findMailingList({
-  //       _id: new ObjectId(id),
-  //     });
+      await deleteFromStorage(id, {
+        account: "mna",
+        storage: "mna-support",
+      });
 
-  //     if (!mailingList || user._id.toString() !== mailingList?.added_by) {
-  //       throw Boom.forbidden("Forbidden");
-  //     }
-
-  //     await deleteMailingList(mailingList);
-
-  //     return response.status(200).send({ success: true });
-  //   }
-  // );
+      return response.status(200).send({ success: true });
+    }
+  );
 };

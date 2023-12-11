@@ -18,7 +18,7 @@ export const zUploadSupportRoutes = {
       },
       securityScheme: {
         auth: "cookie-session",
-        access: null,
+        access: "admin",
         ressources: {},
       },
     },
@@ -35,7 +35,7 @@ export const zUploadSupportRoutes = {
       },
       securityScheme: {
         auth: "cookie-session",
-        access: null,
+        access: "admin",
         ressources: {},
       },
     },
@@ -55,6 +55,25 @@ export const zUploadSupportRoutes = {
         "200": ZResOk,
       },
       securityScheme: null,
+    },
+  },
+  delete: {
+    "/support/file/delete": {
+      method: "delete",
+      path: "/support/file/delete",
+      querystring: z
+        .object({
+          id: z.string(),
+        })
+        .strict(),
+      response: {
+        "200": z.object({ success: z.literal(true) }).strict(),
+      },
+      securityScheme: {
+        auth: "cookie-session",
+        access: "admin",
+        ressources: {},
+      },
     },
   },
 } as const satisfies IRoutesDef;

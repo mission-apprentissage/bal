@@ -31,7 +31,7 @@ const SupportFileList: FC<Props> = ({ list, onDelete }) => {
     setIsDeleting(true);
     try {
       if (!toDelete) throw new Error("Nothing to delete");
-      await apiDelete(`/mailing-list/:id`, { params: { id: toDelete } });
+      await apiDelete("/support/file/delete", { querystring: { id: toDelete } });
       onDelete?.();
     } catch (error) {
       console.error(error);
