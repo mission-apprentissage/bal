@@ -13,7 +13,7 @@ const ListeDiffusionLayout: FC<PropsWithChildren> = ({ children }) => {
     return null;
   }
 
-  if (!user.is_support) {
+  if (!user.is_support && !user.is_admin) {
     push("/404");
     return null;
   }
