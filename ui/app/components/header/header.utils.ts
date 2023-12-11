@@ -52,7 +52,7 @@ export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps):
     ];
   }
 
-  if (user?.is_support) {
+  if (user?.is_support || user?.is_admin) {
     navigation = [
       ...navigation,
       {
