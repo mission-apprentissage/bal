@@ -1,4 +1,5 @@
 "use client";
+import { getLink } from "@codegouvfr/react-dsfr/link";
 import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
@@ -17,6 +18,8 @@ const ListeDiffusionPage = () => {
     queryFn: async () => apiGet("/support/files-list", {}),
   });
 
+  const { Link } = getLink();
+
   return (
     <>
       <Breadcrumb pages={[PAGES.listeDiffusion()]} />
@@ -26,7 +29,10 @@ const ListeDiffusionPage = () => {
           Liste des fichiers déposés
         </Typography>
       </Box>
-      <Typography sx={{ mt: 3 }}>Liste des fichiers déposés via {`${publicConfig.baseUrl}/support/depot`}</Typography>
+      <Typography sx={{ mt: 3 }}>
+        Liste des fichiers déposés via
+        <Link href={`${publicConfig.baseUrl}/support/depot`}>{`${publicConfig.baseUrl}/support/depot`}</Link>
+      </Typography>
 
       <SupportFileList list={list} onDelete={refetch} />
     </>
