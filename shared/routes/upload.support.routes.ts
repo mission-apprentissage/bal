@@ -18,7 +18,7 @@ export const zUploadSupportRoutes = {
       },
       securityScheme: {
         auth: "cookie-session",
-        access: "admin",
+        access: { some: ["support", "admin"] },
         ressources: {},
       },
     },
@@ -35,7 +35,7 @@ export const zUploadSupportRoutes = {
       },
       securityScheme: {
         auth: "cookie-session",
-        access: "admin",
+        access: { some: ["support", "admin"] },
         ressources: {},
       },
     },
@@ -71,7 +71,7 @@ export const zUploadSupportRoutes = {
       },
       securityScheme: {
         auth: "cookie-session",
-        access: "admin",
+        access: { some: ["support", "admin"] },
         ressources: {},
       },
     },

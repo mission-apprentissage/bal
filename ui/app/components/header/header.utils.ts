@@ -52,22 +52,24 @@ export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps):
     ];
   }
 
-  navigation = [
-    ...navigation,
-    {
-      text: "Support",
-      isActive: [PAGES.listeDepot().path].includes(pathname),
-      menuLinks: [
-        {
-          linkProps: {
-            href: PAGES.listeDepot().path,
+  if (user?.is_support) {
+    navigation = [
+      ...navigation,
+      {
+        text: "Support",
+        isActive: [PAGES.listeDepot().path].includes(pathname),
+        menuLinks: [
+          {
+            linkProps: {
+              href: PAGES.listeDepot().path,
+            },
+            isActive: pathname === PAGES.listeDepot().path,
+            text: PAGES.listeDepot().title,
           },
-          isActive: pathname === PAGES.listeDepot().path,
-          text: PAGES.listeDepot().title,
-        },
-      ],
-    },
-  ];
+        ],
+      },
+    ];
+  }
 
   if (user?.is_admin) {
     navigation = [

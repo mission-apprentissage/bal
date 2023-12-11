@@ -1,6 +1,6 @@
-export type Permission = "admin";
+export type Permission = "admin" | "support";
 
-export type RoleNames = "none" | "admin";
+export type RoleNames = "none" | "admin" | "support";
 
 export interface Role {
   name: RoleNames;
@@ -10,6 +10,11 @@ export interface Role {
 export const NoneRole = {
   name: "none",
   permissions: [],
+} satisfies Role;
+
+export const SupportRole = {
+  name: "support",
+  permissions: ["support"],
 } satisfies Role;
 
 export const AdminRole = {
