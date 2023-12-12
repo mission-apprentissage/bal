@@ -18,7 +18,7 @@ export const ZDecaHistory = z
         _data: z.string().describe("Resume token"),
       })
       .strict(),
-    docId: zObjectId,
+    deca_id: zObjectId,
     time: z.date().describe("Modified time"),
     created_at: z.date().optional().describe("Date d'ajout en base de données"),
   })

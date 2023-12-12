@@ -49,7 +49,7 @@ async function processChangeEvent(event: any): Promise<void> {
         // eslint-disable-next-line no-underscore-dangle
         resumeToken: event._id,
         // eslint-disable-next-line no-underscore-dangle
-        docId: event.documentKey._id,
+        deca_id: event.documentKey._id,
         //   op: event.operationType,
         time: new Date(event.clusterTime.getHighBits() * 1000),
       };

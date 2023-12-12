@@ -331,6 +331,28 @@ const fixAfterRawImport = async (dbname: string) => {
       },
     ]
   );
+  // @ts-expect-error
+  await getDbCollection(dbname).updateMany(
+    { "alternant.adresse.code_postal": { $regex: /^[0-9A-Ba-b]{4}$/, $options: "si" } },
+    [
+      {
+        $set: {
+          "alternant.adresse.code_postal": { $concat: ["0", "$alternant.adresse.code_postal"] },
+        },
+      },
+    ]
+  );
+  // @ts-expect-error
+  await getDbCollection(dbname).updateMany(
+    { "alternant.adresse.code_postal": { $regex: /^[0-9A-Ba-b]{3}$/, $options: "si" } },
+    [
+      {
+        $set: {
+          "alternant.adresse.code_postal": { $concat: ["00", "$alternant.adresse.code_postal"] },
+        },
+      },
+    ]
+  );
 
   // @ts-expect-error
   await getDbCollection(dbname).updateMany(
