@@ -5388,6 +5388,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"deep-object-diff@npm:^1.1.9":
+  version: 1.1.9
+  resolution: "deep-object-diff@npm:1.1.9"
+  checksum: ecd42455e4773f653595d28070295e7aaa8402db5f8ab21d0bec115a7cb4de5e207a5665514767da5f025c96597f1d3a0a4888aeb4dd49e03c996871a3aa05ef
+  languageName: node
+  linkType: hard
+
 "deepmerge@npm:^4.2.2, deepmerge@npm:^4.3.1":
   version: 4.3.1
   resolution: "deepmerge@npm:4.3.1"
@@ -14075,6 +14082,7 @@ __metadata:
     csv-parse: ^5.4.0
     csv-stringify: ^6.4.0
     date-fns: ^2.30.0
+    deep-object-diff: ^1.1.9
     deepmerge: ^4.3.1
     dotenv: ^16.3.1
     ejs: ^3.1.9

@@ -46,7 +46,7 @@ export const ZDeca = z
 
     alternant: ZDecaApprenant,
     formation: ZDecaFormation,
-    etablissement_formation: ZDecaEtablissementFormation,
+    etablissement_formation: ZDecaEtablissementFormation.optional(),
     organisme_formation: ZDecaOrganismeFormation.optional(),
     employeur: ZDecaEmployeur,
     updated_at: z.date().optional().describe("Date de mise à jour en base de données"),

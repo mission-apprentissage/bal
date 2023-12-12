@@ -2,7 +2,11 @@ import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
 // from 4 355 923
 // to   4 525 415
+// yarn cli indexes:recreate
 // mongoimport --uri "mongodb://__system:password@localhost:27017/?authSource=local&directConnection=true" -d "mna-bal" -c deca --jsonArray --file ./mna-bal.deca.json
+// yarn cli db:validate
+// add deca_lba deca_tdb deca_tmp
+// mongoimport --uri "mongodb://__system:password@localhost:27017/?authSource=local&directConnection=true" -d "mna-bal" -c deca_tmp --jsonArray --file ./mna-bal.deca.json
 // Import "2023-11 Extraction LBA initialisation.csv" dans deca_lba
 // Import "2023-11_extraction_tba_initialisation.csv" dans deca_tdb
 // Run History in parrallel "yarn cli deca:history"
@@ -13,12 +17,24 @@ export const mergeDecaDumps = async () => {
   // await stageTDB();
   // CREATE INDEXES
   // // @ts-expect-error
-  // await getDbCollection("deca_lba").createIndex({ no_contrat: 1, type_contrat: 1, "alternant.nom": 1 }, { unique: true, name: "no_contrat_1_type_contrat_1_alternant.nom_1" });
+  // await getDbCollection("deca_tmp").createIndex(
+  //   { no_contrat: 1, type_contrat: 1, "alternant.nom": 1 },
+  //   { unique: true, name: "no_contrat_1_type_contrat_1_alternant.nom_1" }
+  // );
   // // @ts-expect-error
-  // await getDbCollection("deca_tdb").createIndex({ no_contrat: 1, type_contrat: 1, "alternant.nom": 1 }, { unique: true, name: "no_contrat_1_type_contrat_1_alternant.nom_1" });
+  // await getDbCollection("deca_lba").createIndex(
+  //   { no_contrat: 1, type_contrat: 1, "alternant.nom": 1 },
+  //   { unique: true, name: "no_contrat_1_type_contrat_1_alternant.nom_1" }
+  // );
+  // // @ts-expect-error
+  // await getDbCollection("deca_tdb").createIndex(
+  //   { no_contrat: 1, type_contrat: 1, "alternant.nom": 1 },
+  //   { unique: true, name: "no_contrat_1_type_contrat_1_alternant.nom_1" }
+  // );
   // MERGE INTO
-  // await mergeCollections({ from: "deca_lba", to: "deca" });
-  // await mergeCollections({ from: "deca_tdb", to: "deca" });
+  // await mergeCollections({ from: "deca_lba", to: "deca_tmp" });
+  // await mergeCollections({ from: "deca_tdb", to: "deca_tmp" });
+  // await mergeCollections({ from: "deca_tmp", to: "deca" });
 };
 
 // eslint-disable-next-line unused-imports/no-unused-vars
@@ -257,6 +273,64 @@ const fixAfterRawImport = async (dbname: string) => {
   ]);
 
   // @ts-expect-error
+  await getDbCollection(dbname).updateMany({ "employeur.code_idcc": { $regex: /\.0$/, $options: "si" } }, [
+    {
+      $set: {
+        "employeur.code_idcc": {
+          $replaceAll: { input: "$employeur.code_idcc", find: ".0", replacement: "" },
+        },
+      },
+    },
+  ]);
+  // @ts-expect-error
+  await getDbCollection(dbname).updateMany({ "employeur.code_idcc": { $regex: /^0$/, $options: "si" } }, [
+    {
+      $set: {
+        "employeur.code_idcc": "0000",
+      },
+    },
+  ]);
+  // @ts-expect-error
+  await getDbCollection(dbname).updateMany({ "employeur.code_idcc": { $regex: /^[0-9]{3}$/, $options: "si" } }, [
+    {
+      $set: {
+        "employeur.code_idcc": { $concat: ["0", "$employeur.code_idcc"] },
+      },
+    },
+  ]);
+  // @ts-expect-error
+  await getDbCollection(dbname).updateMany({ "employeur.code_idcc": { $regex: /^[0-9]{2}$/, $options: "si" } }, [
+    {
+      $set: {
+        "employeur.code_idcc": { $concat: ["00", "$employeur.code_idcc"] },
+      },
+    },
+  ]);
+
+  // @ts-expect-error
+  await getDbCollection(dbname).updateMany(
+    { "employeur.adresse.code_postal": { $regex: /^[0-9A-Ba-b]{4}$/, $options: "si" } },
+    [
+      {
+        $set: {
+          "employeur.adresse.code_postal": { $concat: ["0", "$employeur.adresse.code_postal"] },
+        },
+      },
+    ]
+  );
+  // @ts-expect-error
+  await getDbCollection(dbname).updateMany(
+    { "employeur.adresse.code_postal": { $regex: /^[0-9A-Ba-b]{3}$/, $options: "si" } },
+    [
+      {
+        $set: {
+          "employeur.adresse.code_postal": { $concat: ["00", "$employeur.adresse.code_postal"] },
+        },
+      },
+    ]
+  );
+
+  // @ts-expect-error
   await getDbCollection(dbname).updateMany(
     { "employeur.siret": { $exists: true, $not: { $regex: /^[0-9]{14}$/, $options: "si" } } },
     [
@@ -314,9 +388,67 @@ const mergeCollections = async ({ from, to }: { from: string; to: string }) => {
               formation: {
                 $mergeObjects: ["$formation", "$$new.formation"],
               },
+            },
+          },
+          {
+            $replaceRoot: {
+              newRoot: {
+                $mergeObjects: ["$$new", "$$ROOT"],
+              },
+            },
+          },
+        ],
+        whenNotMatched: "insert",
+      },
+    },
+  ]);
+
+  // @ts-expect-error
+  await getDbCollection(from).aggregate([
+    {
+      $match: {
+        etablissement_formation: { $exists: true },
+      },
+    },
+    {
+      $merge: {
+        into: to,
+        on: ["no_contrat", "type_contrat", "alternant.nom"],
+        whenMatched: [
+          {
+            $addFields: {
               etablissement_formation: {
                 $mergeObjects: ["$etablissement_formation", "$$new.etablissement_formation"],
               },
+            },
+          },
+          {
+            $replaceRoot: {
+              newRoot: {
+                $mergeObjects: ["$$new", "$$ROOT"],
+              },
+            },
+          },
+        ],
+        whenNotMatched: "insert",
+      },
+    },
+  ]);
+
+  // @ts-expect-error
+  await getDbCollection(from).aggregate([
+    {
+      $match: {
+        organisme_formation: { $exists: true },
+      },
+    },
+    {
+      $merge: {
+        into: to,
+        on: ["no_contrat", "type_contrat", "alternant.nom"],
+        whenMatched: [
+          {
+            $addFields: {
               organisme_formation: {
                 $mergeObjects: ["$organisme_formation", "$$new.organisme_formation"],
               },

@@ -111,7 +111,7 @@ fileignoreconfig:
 - filename: server/src/modules/data/seed/seed-preview.ts
   checksum: c63289b52d6565490c1fd8176b68af4268602c9a0d5f31126647caf4ba354534
 - filename: server/src/modules/jobs/deca/merge-dumps-deca.ts
-  checksum: c95b6fb252155d96906d107bdb6506a68aec52ad096919bc4a99c2594be698e2
+  checksum: a3f14a61aa4507713006457c08408ad2ee033c28c4005419f9d0aba3be23c8d9
 - filename: server/src/modules/jobs/deca/watcher.ts
   checksum: 2e242c6633ddbc53d748c49a49c60a204d85994abd6e4a95a11aaccea4c5ec4d
 - filename: server/src/modules/server/admin/upload.routes.ts

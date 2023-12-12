@@ -11,8 +11,8 @@ export const ZDecaHistory = z
   .object({
     _id: zObjectId,
     key: z.string().describe("Modified key"),
-    from: z.string().describe("Value from"),
-    to: z.string().describe("Value to"),
+    from: z.any().describe("Value from"),
+    to: z.any().describe("Value to"),
     resumeToken: z
       .object({
         _data: z.string().describe("Resume token"),
