@@ -25,8 +25,8 @@ function deepFlattenToObject(obj: any, prefix = "") {
   }, {});
 }
 
-// const excludedFieldsFromHistory = [];
-const excludedFieldsFromHistory = ["type_employeur", "employeur_specifique", "type_derogation", "employeur.code_idcc"];
+const excludedFieldsFromHistory: string[] = [];
+// const excludedFieldsFromHistory = ["type_employeur", "employeur_specifique", "type_derogation", "employeur.code_idcc"];
 async function processChangeEvent(event: any): Promise<void> {
   let updatedFields = null;
   // if (event.operationType === "update") {

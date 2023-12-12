@@ -1,8 +1,9 @@
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
-// history 68 235
-// from 4 355 923
-// to   4 525 415
+// from 4 355 923 Contrats
+// to   4 525 415 Contrats
+// 169 492 nouveaux contrats (inclus la différence de type de contrat)
+// 29 117 contrats mis à jour  (68 235 updates de champs)
 // yarn cli indexes:recreate
 // mongoimport --uri "mongodb://__system:password@localhost:27017/?authSource=local&directConnection=true" -d "mna-bal" -c deca --jsonArray --file ./mna-bal.deca.json
 // yarn cli db:validate
