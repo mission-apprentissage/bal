@@ -10,7 +10,12 @@ import { ZDecaOrganismeFormation } from "./parts/deca.organismeFormation.part";
 
 const collectionName = "deca" as const;
 
-const indexes: IModelDescriptor["indexes"] = [];
+const indexes: IModelDescriptor["indexes"] = [
+  [
+    { no_contrat: 1, type_contrat: 1, "alternant.nom": 1 },
+    { unique: true, name: "no_contrat_1_type_contrat_1_alternant.nom_1" },
+  ],
+];
 
 export const ZDeca = z
   .object({
