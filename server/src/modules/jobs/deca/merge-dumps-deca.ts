@@ -39,6 +39,7 @@ export const mergeDecaDumps = async () => {
   // await mergeCollections({ from: "deca_tmp", to: "deca" });
 };
 
+// @ts-expect-error
 // eslint-disable-next-line unused-imports/no-unused-vars
 const stageLBA = async () => {
   await reKeyField("deca_lba", "nocontrat", "no_contrat");
@@ -76,6 +77,7 @@ const stageLBA = async () => {
   await fixAfterRawImport("deca_lba");
 };
 
+// @ts-expect-error
 // eslint-disable-next-line unused-imports/no-unused-vars
 const stageTDB = async () => {
   await reKeyField("deca_tdb", "nom", "alternant.nom");
@@ -392,6 +394,7 @@ const reKeyField = async (dbname: string, oldName: string, newName: string) => {
   ]);
 };
 
+// @ts-expect-error
 // eslint-disable-next-line unused-imports/no-unused-vars
 const mergeCollections = async ({ from, to }: { from: string; to: string }) => {
   // @ts-expect-error
