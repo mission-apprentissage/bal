@@ -229,6 +229,12 @@ program
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("deca:merge"));
 
+program
+  .command("deca:history")
+  .description("Deca history")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("deca:history"));
+
 program.hook("preAction", (_, actionCommand) => {
   const command = actionCommand.name();
   // on définit le module du logger en global pour distinguer les logs des jobs

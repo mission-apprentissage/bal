@@ -5,6 +5,7 @@ import { getDbCollection } from "../../../common/utils/mongodbUtils";
 // mongoimport --uri "mongodb://__system:password@localhost:27017/?authSource=local&directConnection=true" -d "mna-bal" -c deca --jsonArray --file ./mna-bal.deca.json
 // Import "2023-11 Extraction LBA initialisation.csv" dans deca_lba
 // Import "2023-11_extraction_tba_initialisation.csv" dans deca_tdb
+// Run History in parrallel "yarn cli deca:history"
 // Run merge "yarn cli deca:merge"
 export const mergeDecaDumps = async () => {
   // PREPARE COLLECTIONS
@@ -18,7 +19,6 @@ export const mergeDecaDumps = async () => {
   // MERGE INTO
   // await mergeCollections({ from: "deca_lba", to: "deca" });
   // await mergeCollections({ from: "deca_tdb", to: "deca" });
-  // HISTORY
 };
 
 // eslint-disable-next-line unused-imports/no-unused-vars

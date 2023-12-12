@@ -19,6 +19,7 @@ import { createUser } from "../actions/users.actions";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
 import { mergeDecaDumps } from "./deca/merge-dumps-deca";
+import { createHistory } from "./deca/watcher";
 
 export async function setupJobProcessor() {
   return initJobProcessor({
@@ -95,6 +96,9 @@ export async function setupJobProcessor() {
 
       "deca:merge": {
         handler: async () => mergeDecaDumps(),
+      },
+      "deca:history": {
+        handler: async () => createHistory(),
       },
     },
   });
