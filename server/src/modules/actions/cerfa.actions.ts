@@ -64,6 +64,32 @@ export const createCerfaPdf = async (rawData: Record<string, any>) => {
   //     ref: field.ref.objectNumber,
   //   });
   // });
+  if (rawData.apprenti.adresse.repetitionVoie) {
+    const addr = rawData.apprenti.adresse;
+    rawData.apprenti.adresse.complement = `${addr.numero ?? ""} ${addr.repetitionVoie}/${addr.complement ?? ""}`;
+  }
+  if (rawData.apprenti.responsableLegal.adresse.repetitionVoie) {
+    const addr = rawData.apprenti.responsableLegal.adresse;
+    rawData.apprenti.responsableLegal.adresse.complement = `${addr.numero ?? ""} ${addr.repetitionVoie}/${
+      addr.complement ?? ""
+    }`;
+  }
+  if (rawData.employeur.adresse.repetitionVoie) {
+    const addr = rawData.employeur.adresse;
+    rawData.employeur.adresse.complement = `${addr.numero ?? ""} ${addr.repetitionVoie}/${addr.complement ?? ""}`;
+  }
+  if (rawData.organismeFormation.adresse.repetitionVoie) {
+    const addr = rawData.organismeFormation.adresse;
+    rawData.organismeFormation.adresse.complement = `${addr.numero ?? ""} ${addr.repetitionVoie}/${
+      addr.complement ?? ""
+    }`;
+  }
+  if (rawData.etablissementFormation.adresse.repetitionVoie) {
+    const addr = rawData.etablissementFormation.adresse;
+    rawData.etablissementFormation.adresse.complement = `${addr.numero ?? ""} ${addr.repetitionVoie}/${
+      addr.complement ?? ""
+    }`;
+  }
 
   pdfFields
     .filter((field) => field.attribute && field.type === "PDFTextField")

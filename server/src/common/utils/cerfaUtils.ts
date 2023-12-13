@@ -149,7 +149,6 @@ export const pdfFields: PdfField[] = [
     ref: 635,
     type: "PDFTextField",
     attribute: "apprenti.adresse.numero",
-    // TODO "apprenti.adresse.repetitionVoie"
   },
   {
     name: "Adresse de l’apprenti(e) Voie",
@@ -249,6 +248,7 @@ export const pdfFields: PdfField[] = [
     type: "PDFTextField",
     attribute: "maitre1.nom",
   },
+  { type: "PDFCheckBox", name: "employeur atteste", ref: 837, attribute: "maitre1.attestationEligibilite" },
   {
     name: "Adresse du représentant légal Courriel1",
     ref: 646,
