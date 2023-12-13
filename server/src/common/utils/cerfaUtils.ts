@@ -7,6 +7,7 @@ export interface PdfField {
 }
 
 export const pdfFields: PdfField[] = [
+  { type: "PDFTextField", name: "mode contractuel", ref: 830, attribute: "contrat.modeContractuel" },
   {
     name: "employeur public",
     ref: 603,
@@ -253,12 +254,14 @@ export const pdfFields: PdfField[] = [
     ref: 646,
     type: "PDFTextField",
     attribute: "apprenti.responsableLegal.courriel",
+    getValue: (value) => (value as string).split("@")[0],
   },
   {
     name: "Adresse du représentant légal Courriel2",
     ref: 647,
     type: "PDFTextField",
-    attribute: "apprenti.responsableLegal.courriel", // TODO
+    attribute: "apprenti.responsableLegal.courriel",
+    getValue: (value) => (value as string).split("@")[1],
   },
   {
     name: "Maître d’apprentissage n°1 Prénom",
@@ -405,13 +408,13 @@ export const pdfFields: PdfField[] = [
     name: "Date de début d’exécution du contrat : _af_date",
     ref: 114,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.dateDebutContrat",
   },
   {
     name: "Date de début de formation pratique chez l’employeur : _af_date",
     ref: 124,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.dateDebutFormationPratique",
   },
   {
     name: "Maître d’apprentissage n°1 Date naissance_af_date",
@@ -435,19 +438,19 @@ export const pdfFields: PdfField[] = [
     name: "Date de conclusion : _af_date",
     ref: 113,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.dateSignature",
   },
   {
     name: "Si avenant, date d’effet :_af_date",
     ref: 121,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.dateEffetAvenant",
   },
   {
     name: "ate de fin du contrat ou de la période d'apprentissage_af_date",
     ref: 111,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.dateFinContrat",
   },
   {
     name: "Type de contrat ou d’avenant :",
@@ -478,13 +481,13 @@ export const pdfFields: PdfField[] = [
     name: "Numéro du contrat précédent ou du contrat sur lequel porte l’avenant :",
     ref: 116,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.numeroContratPrecedent",
   },
   {
     name: "Salaire brut mensuel à l’embauche :",
     ref: 108,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.remunerationsAnnuelles.11.salaireBrut",
   },
   {
     name: "Caisse de retraite complémentaire :",
@@ -529,31 +532,31 @@ export const pdfFields: PdfField[] = [
     name: "Adresse du représentant légal N°",
     ref: 641,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "apprenti.responsableLegal.adresse.numero",
   },
   {
     name: "Adresse du représentant légal Voie",
     ref: 642,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "apprenti.responsableLegal.adresse.voie",
   },
   {
     name: "Adresse du représentant légal Complément",
     ref: 643,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "apprenti.responsableLegal.adresse.complement",
   },
   {
     name: "Adresse du représentant légal CP",
     ref: 644,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "apprenti.responsableLegal.adresse.codePostal",
   },
   {
     name: "Adresse du représentant légal Commune",
     ref: 645,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "apprenti.responsableLegal.adresse.commune",
   },
   {
     name: "CFA d’entreprise OUI",
