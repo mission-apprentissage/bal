@@ -39,6 +39,7 @@ import { cerfaRoutes } from "./v1/cerfa.routes";
 import { geoRoutes } from "./v1/geo.routes";
 import { nafRoutes } from "./v1/naf.routes";
 import { siretRoutes } from "./v1/siret.routes";
+import { tcoRoutes } from "./v1/tco.routes";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -206,4 +207,5 @@ export const registerV1Routes: RegisterRoutes = ({ server }) => {
   siretRoutes({ server });
   geoRoutes({ server });
   nafRoutes({ server });
+  tcoRoutes({ server });
 };

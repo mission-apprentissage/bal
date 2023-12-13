@@ -2,7 +2,7 @@ export interface PdfField {
   name: string;
   ref: number;
   type: "PDFTextField" | "PDFCheckBox" | "PDFSignature";
-  attribute?: string;
+  attribute: string;
   getValue?: (value: any) => string | boolean;
 }
 
@@ -490,25 +490,26 @@ export const pdfFields: PdfField[] = [
     name: "Caisse de retraite complémentaire :",
     ref: 117,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.caisseRetraiteSupplementaire",
   },
   {
     name: "Avantages en nature, le cas échéant : Nourriture",
     ref: 118,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.avantageNourriture",
   },
   {
     name: "Avantages en nature, le cas échéant : Logement",
     ref: 123,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.avantageLogement",
   },
   {
     name: "Avantages en nature, le cas échéant : Autre",
     ref: 109,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.autreAvantageEnNature",
+    getValue: (value) => (value ? "X" : ""),
   },
   {
     name: "Travail sur machines dangereuses ou exposition à des risques particuliers : OUI",
@@ -517,197 +518,328 @@ export const pdfFields: PdfField[] = [
     attribute: "contrat.travailRisque",
     getValue: (value) => value === "oui",
   },
-  { name: "CFA d’entreprise NON", ref: 127, type: "PDFCheckBox" },
+  {
+    name: "CFA d’entreprise NON",
+    ref: 127,
+    type: "PDFCheckBox",
+    attribute: "organismeFormation.formationInterne",
+    getValue: (value) => value === "non",
+  },
   {
     name: "Adresse du représentant légal N°",
     ref: 641,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Adresse du représentant légal Voie",
     ref: 642,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Adresse du représentant légal Complément",
     ref: 643,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Adresse du représentant légal CP",
     ref: 644,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Adresse du représentant légal Commune",
     ref: 645,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
-  { name: "CFA d’entreprise OUI", ref: 119, type: "PDFCheckBox" },
+  {
+    name: "CFA d’entreprise OUI",
+    ref: 119,
+    type: "PDFCheckBox",
+    attribute: "organismeFormation.formationInterne",
+    getValue: (value) => value === "oui",
+  },
   {
     name: "Visa du CFA (cachet et signature du directeur) :",
     ref: 126,
     type: "PDFSignature",
+    attribute: "",
   },
   {
     name: "Si le CFA responsable est le lieu de formation principal cochez la case ci-contre",
     ref: 132,
     type: "PDFCheckBox",
+    attribute: "etablissementFormation.memeResponsable",
+    getValue: (value) => value === "oui",
   },
   {
     name: "L’employeur atteste disposer de l’ensemble des pièces justificatives nécessaires au dépôt du contrat",
     ref: 52,
     type: "PDFCheckBox",
+    attribute: "signatures.attestationPiecesJustificatives",
   },
-  { name: "Fait à", ref: 53, type: "PDFTextField" },
-  { name: "Signature de l’employeur", ref: 51, type: "PDFSignature" },
-  { name: "Signature de l’apprenti(e)", ref: 54, type: "PDFSignature" },
+  { name: "Fait à", ref: 53, type: "PDFTextField", attribute: "signatures.lieu" },
+  { name: "Signature de l’employeur", ref: 51, type: "PDFSignature", attribute: "" },
+  { name: "Signature de l’apprenti(e)", ref: 54, type: "PDFSignature", attribute: "" },
   {
     name: "Signature du représentant légal de l’apprenti(e) mineur(e)",
     ref: 50,
     type: "PDFSignature",
+    attribute: "",
   },
   {
     name: "Adresse du CFA responsable N°",
     ref: 130,
     type: "PDFTextField",
+    attribute: "organismeFormation.adresse.numero",
   },
   {
     name: "Adresse du CFA responsable Complément",
     ref: 125,
     type: "PDFTextField",
+    attribute: "organismeFormation.adresse.complement",
   },
   {
     name: "Adresse du CFA responsable CP",
     ref: 129,
     type: "PDFTextField",
+    attribute: "organismeFormation.adresse.codePostal",
   },
   {
     name: "Adresse du CFA responsable Commune",
     ref: 131,
     type: "PDFTextField",
+    attribute: "organismeFormation.adresse.commune",
   },
   {
     name: "Adresse du lieu de formation principal : N°",
     ref: 55,
     type: "PDFTextField",
+    attribute: "etablissementFormation.adresse.numero",
   },
   {
     name: "Adresse du lieu de formation principal : Complément",
     ref: 69,
     type: "PDFTextField",
+    attribute: "etablissementFormation.adresse.complement",
   },
   {
     name: "Adresse du lieu de formation principal : CP",
     ref: 59,
     type: "PDFTextField",
+    attribute: "etablissementFormation.adresse.codePostal",
   },
   {
     name: "Adresse du lieu de formation principal : Commune",
     ref: 60,
     type: "PDFTextField",
+    attribute: "etablissementFormation.adresse.commune",
   },
   {
     name: "Adresse du lieu de formation principal : Voie",
     ref: 56,
     type: "PDFTextField",
+    attribute: "etablissementFormation.adresse.voie",
   },
-  { name: "N° SIRET :", ref: 62, type: "PDFTextField" },
+  {
+    name: "N° SIRET :",
+    ref: 62,
+    type: "PDFTextField",
+    attribute: "etablissementFormation.siret",
+  },
   {
     name: "Dénomination du lieu de formation principal :",
     ref: 70,
     type: "PDFTextField",
+    attribute: "etablissementFormation.denomination",
   },
   {
     name: "Date prévue de fin des épreuves ou examens :_af_date",
     ref: 71,
     type: "PDFTextField",
+    attribute: "formation.dateFinFormation",
   },
   {
     name: "Date de début de formation en CFA :  _af_date",
     ref: 72,
     type: "PDFTextField",
+    attribute: "formation.dateDebutFormation",
   },
-  { name: "N° UAI :", ref: 64, type: "PDFTextField" },
-  { name: "Code RNCP", ref: 65, type: "PDFTextField" },
-  { name: "Code du diplôme", ref: 57, type: "PDFTextField" },
+  { name: "N° UAI :", ref: 64, type: "PDFTextField", attribute: "etablissementFormation.uaiCfa" },
+  { name: "Code RNCP", ref: 65, type: "PDFTextField", attribute: "formation.rncp" },
+  { name: "Code du diplôme", ref: 57, type: "PDFTextField", attribute: "formation.codeDiplome" },
   {
     name: "Diplôme ou titre visé par l’apprenti : Intitulé précis :",
     ref: 58,
     type: "PDFTextField",
+    attribute: "formation.intituleQualification",
   },
   {
     name: "Diplôme ou titre visé par l’apprenti :",
     ref: 61,
     type: "PDFTextField",
+    attribute: "formation.typeDiplome",
   },
-  { name: "Durée de la formation :", ref: 73, type: "PDFTextField" },
+  { name: "Durée de la formation :", ref: 73, type: "PDFTextField", attribute: "formation.dureeFormation" },
   {
     name: "Adresse du CFA responsable Voie",
     ref: 128,
     type: "PDFTextField",
+    attribute: "organismeFormation.adresse.voie",
   },
   {
     name: "Dénomination du CFA responsable :",
     ref: 66,
     type: "PDFTextField",
+    attribute: "organismeFormation.denomination",
   },
-  { name: "N° UAI du CFA", ref: 63, type: "PDFTextField" },
-  { name: "N° SIRET CFA", ref: 67, type: "PDFTextField" },
+  { name: "N° UAI du CFA", ref: 63, type: "PDFTextField", attribute: "organismeFormation.uaiCfa" },
+  { name: "N° SIRET CFA", ref: 67, type: "PDFTextField", attribute: "organismeFormation.siret" },
   {
     name: "Rémunération - 2e  année, du _af_date",
     ref: 84,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Rémunération - 3e  année, du _af_date",
     ref: 92,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Rémunération - 4e  année, du _af_date",
     ref: 89,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Rémunération - 2e  année, au_af_date",
     ref: 87,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Rémunération - 3e  année, au_af_date",
     ref: 77,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Rémunération - 4e  année, au_af_date",
     ref: 93,
     type: "PDFTextField",
+    attribute: "", // TODO
   },
   {
     name: "Rémunération - 1re  année, du _af_date",
     ref: 68,
     type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.11.dateDebut",
   },
   {
     name: "Rémunération - 1re  année, au_af_date",
     ref: 101,
     type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.11.dateFin",
   },
-  { name: "1e année % du", ref: 161, type: "PDFTextField" },
-  { name: "1e année % du *", ref: 162, type: "PDFTextField" },
-  { name: "1e année du_af_date", ref: 98, type: "PDFTextField" },
-  { name: "1e année au_af_date", ref: 76, type: "PDFTextField" },
-  { name: "2e année du_af_date", ref: 100, type: "PDFTextField" },
-  { name: "3e année du_af_date", ref: 86, type: "PDFTextField" },
-  { name: "4e année du_af_date", ref: 94, type: "PDFTextField" },
-  { name: "2e année au_af_date", ref: 78, type: "PDFTextField" },
-  { name: "3e année au_af_date", ref: 80, type: "PDFTextField" },
-  { name: "4e année au_af_date", ref: 95, type: "PDFTextField" },
-  { name: "2e année % du", ref: 163, type: "PDFTextField" },
-  { name: "3e année % du", ref: 164, type: "PDFTextField" },
-  { name: "4e année % du", ref: 165, type: "PDFTextField" },
-  { name: "2e année % du *", ref: 166, type: "PDFTextField" },
-  { name: "3e année % du *", ref: 167, type: "PDFTextField" },
-  { name: "4e année % du *", ref: 168, type: "PDFTextField" },
+  {
+    name: "1e année % du",
+    ref: 161,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.11.taux",
+  },
+  {
+    name: "1e année % du *",
+    ref: 162,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.11.typeSalaire",
+  },
+  {
+    name: "1e année du_af_date",
+    ref: 98,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.12.dateDebut",
+  },
+  {
+    name: "1e année au_af_date",
+    ref: 76,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.12.dateFin",
+  },
+  {
+    name: "2e année du_af_date",
+    ref: 100,
+    type: "PDFTextField",
+    attribute: "", // TODO
+  },
+  {
+    name: "3e année du_af_date",
+    ref: 86,
+    type: "PDFTextField",
+    attribute: "", // TODO
+  },
+  {
+    name: "4e année du_af_date",
+    ref: 94,
+    type: "PDFTextField",
+    attribute: "", // TODO
+  },
+  {
+    name: "2e année au_af_date",
+    ref: 78,
+    type: "PDFTextField",
+    attribute: "", // TODO
+  },
+  {
+    name: "3e année au_af_date",
+    ref: 80,
+    type: "PDFTextField",
+    attribute: "", // TODO
+  },
+  {
+    name: "4e année au_af_date",
+    ref: 95,
+    type: "PDFTextField",
+    attribute: "", // TODO
+  },
+  {
+    name: "2e année % du",
+    ref: 163,
+    type: "PDFTextField",
+    attribute: "", // TODO
+  },
+  {
+    name: "3e année % du",
+    ref: 164,
+    type: "PDFTextField",
+    attribute: "", // TODO
+  },
+  {
+    name: "4e année % du",
+    ref: 165,
+    type: "PDFTextField",
+    attribute: "", // TODO
+  },
+  {
+    name: "2e année % du *",
+    ref: 166,
+    type: "PDFTextField",
+    attribute: "", // TODO
+  },
+  {
+    name: "3e année % du *",
+    ref: 167,
+    type: "PDFTextField",
+    attribute: "", // TODO
+  },
+  {
+    name: "4e année % du *",
+    ref: 168,
+    type: "PDFTextField",
+    attribute: "", // TODO
+  },
 ];
