@@ -39,7 +39,7 @@ export const createCerfaPdf = async (rawData: Record<string, any>) => {
 
   const pdfDoc = await PDFDocument.load(pdfCerfaEmpty);
 
-  const remunerationsOrdered = rawData.contrat.remunerationsAnnuelles.reduce((acc: remOrderedBy, item: remItem) => {
+  const remunerationsOrdered = rawData.contrat.remunerationsAnnuelles?.reduce((acc: remOrderedBy, item: remItem) => {
     return {
       ...acc,
       [item.ordre.replace(".", "")]: item,

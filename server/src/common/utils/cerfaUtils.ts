@@ -512,7 +512,7 @@ export const pdfFields: PdfField[] = [
     ref: 109,
     type: "PDFTextField",
     attribute: "contrat.autreAvantageEnNature",
-    getValue: (value) => (value ? "X" : ""),
+    getValue: (value) => (value ? "ok" : ""),
   },
   {
     name: "Travail sur machines dangereuses ou exposition à des risques particuliers : OUI",

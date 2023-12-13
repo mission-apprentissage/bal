@@ -117,7 +117,12 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
           <Component
             {...fieldProps}
             fieldSchema={fieldSchema}
-            inputProps={{ ...inputProps, disabled: fieldSchema.locked, onFocus, type: fieldSchema.fieldType }}
+            inputProps={{
+              ...inputProps,
+              disabled: fieldSchema.locked,
+              onFocus,
+              // type: fieldSchema.fieldType
+            }}
             state={state}
             stateRelatedMessage={stateRelatedMessage}
           />
