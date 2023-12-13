@@ -55,6 +55,16 @@ export const createCerfaPdf = async (rawData: Record<string, any>) => {
   };
 
   const form = pdfDoc.getForm();
+
+  // const fields = form.getFields();
+  // fields.forEach((field) => {
+  //   console.log({
+  //     type: field.constructor.name,
+  //     name: field.getName(),
+  //     ref: field.ref.objectNumber,
+  //   });
+  // });
+
   pdfFields
     .filter((field) => field.attribute && field.type === "PDFTextField")
     .forEach((field) => {

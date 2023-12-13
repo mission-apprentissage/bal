@@ -698,42 +698,7 @@ export const pdfFields: PdfField[] = [
   },
   { name: "N° UAI du CFA", ref: 63, type: "PDFTextField", attribute: "organismeFormation.uaiCfa" },
   { name: "N° SIRET CFA", ref: 67, type: "PDFTextField", attribute: "organismeFormation.siret" },
-  {
-    name: "Rémunération - 2e  année, du _af_date",
-    ref: 84,
-    type: "PDFTextField",
-    attribute: "", // TODO
-  },
-  {
-    name: "Rémunération - 3e  année, du _af_date",
-    ref: 92,
-    type: "PDFTextField",
-    attribute: "", // TODO
-  },
-  {
-    name: "Rémunération - 4e  année, du _af_date",
-    ref: 89,
-    type: "PDFTextField",
-    attribute: "", // TODO
-  },
-  {
-    name: "Rémunération - 2e  année, au_af_date",
-    ref: 87,
-    type: "PDFTextField",
-    attribute: "", // TODO
-  },
-  {
-    name: "Rémunération - 3e  année, au_af_date",
-    ref: 77,
-    type: "PDFTextField",
-    attribute: "", // TODO
-  },
-  {
-    name: "Rémunération - 4e  année, au_af_date",
-    ref: 93,
-    type: "PDFTextField",
-    attribute: "", // TODO
-  },
+  ///// 1er Année
   {
     name: "Rémunération - 1re  année, du _af_date",
     ref: 68,
@@ -771,75 +736,162 @@ export const pdfFields: PdfField[] = [
     attribute: "contrat.remunerationsAnnuelles.12.dateFin",
   },
   {
-    name: "2e année du_af_date",
-    ref: 100,
+    name: "1e année % du1",
     type: "PDFTextField",
-    attribute: "", // TODO
+    ref: 90,
+    attribute: "contrat.remunerationsAnnuelles.12.taux",
   },
   {
-    name: "3e année du_af_date",
-    ref: 86,
+    name: "1e année % du *1",
     type: "PDFTextField",
-    attribute: "", // TODO
+    ref: 83,
+    attribute: "contrat.remunerationsAnnuelles.12.typeSalaire",
+  },
+  ////// 2eme année
+  {
+    name: "Rémunération - 2e  année, du _af_date",
+    ref: 84,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.21.dateDebut",
   },
   {
-    name: "4e année du_af_date",
-    ref: 94,
+    name: "Rémunération - 2e  année, au_af_date",
+    ref: 87,
     type: "PDFTextField",
-    attribute: "", // TODO
-  },
-  {
-    name: "2e année au_af_date",
-    ref: 78,
-    type: "PDFTextField",
-    attribute: "", // TODO
-  },
-  {
-    name: "3e année au_af_date",
-    ref: 80,
-    type: "PDFTextField",
-    attribute: "", // TODO
-  },
-  {
-    name: "4e année au_af_date",
-    ref: 95,
-    type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.remunerationsAnnuelles.21.dateFin",
   },
   {
     name: "2e année % du",
     ref: 163,
     type: "PDFTextField",
-    attribute: "", // TODO
-  },
-  {
-    name: "3e année % du",
-    ref: 164,
-    type: "PDFTextField",
-    attribute: "", // TODO
-  },
-  {
-    name: "4e année % du",
-    ref: 165,
-    type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.remunerationsAnnuelles.21.taux",
   },
   {
     name: "2e année % du *",
     ref: 166,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.remunerationsAnnuelles.21.typeSalaire",
+  },
+  {
+    name: "2e année du_af_date",
+    ref: 100,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.22.dateDebut",
+  },
+  {
+    name: "2e année au_af_date",
+    ref: 78,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.22.dateFin",
+  },
+  {
+    type: "PDFTextField",
+    name: "2e année % du1",
+    ref: 79,
+    attribute: "contrat.remunerationsAnnuelles.22.taux",
+  },
+  {
+    type: "PDFTextField",
+    name: "2e année % du *1",
+    ref: 81,
+    attribute: "contrat.remunerationsAnnuelles.22.typeSalaire",
+  },
+  ////// 3eme année
+  {
+    name: "Rémunération - 3e  année, du _af_date",
+    ref: 92,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.31.dateDebut",
+  },
+  {
+    name: "Rémunération - 3e  année, au_af_date",
+    ref: 77,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.31.dateFin",
+  },
+  {
+    name: "3e année % du",
+    ref: 164,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.31.taux",
   },
   {
     name: "3e année % du *",
     ref: 167,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.remunerationsAnnuelles.31.typeSalaire",
+  },
+  {
+    name: "3e année du_af_date",
+    ref: 86,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.32.dateDebut",
+  },
+  {
+    name: "3e année au_af_date",
+    ref: 80,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.32.dateFin",
+  },
+  {
+    type: "PDFTextField",
+    name: "3e année % du1",
+    ref: 88,
+    attribute: "contrat.remunerationsAnnuelles.32.taux",
+  },
+  {
+    type: "PDFTextField",
+    name: "3e année % du *1",
+    ref: 75,
+    attribute: "contrat.remunerationsAnnuelles.32.typeSalaire",
+  },
+  ////// 4eme année
+  {
+    name: "Rémunération - 4e  année, du _af_date",
+    ref: 89,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.41.dateDebut",
+  },
+  {
+    name: "Rémunération - 4e  année, au_af_date",
+    ref: 93,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.41.dateFin",
+  },
+  {
+    name: "4e année % du",
+    ref: 165,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.41.taux",
   },
   {
     name: "4e année % du *",
     ref: 168,
     type: "PDFTextField",
-    attribute: "", // TODO
+    attribute: "contrat.remunerationsAnnuelles.41.typeSalaire",
+  },
+  {
+    name: "4e année du_af_date",
+    ref: 94,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.42.dateDebut",
+  },
+  {
+    name: "4e année au_af_date",
+    ref: 95,
+    type: "PDFTextField",
+    attribute: "contrat.remunerationsAnnuelles.42.dateFin",
+  },
+  {
+    type: "PDFTextField",
+    name: "4e année % du1",
+    ref: 133,
+    attribute: "contrat.remunerationsAnnuelles.42.taux",
+  },
+  {
+    type: "PDFTextField",
+    name: "4e année % du *1",
+    ref: 134,
+    attribute: "contrat.remunerationsAnnuelles.42.typeSalaire",
   },
 ];
