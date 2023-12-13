@@ -79,7 +79,6 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
   const inputProps = fieldMethods.register(name, {
     required: fieldSchema.required && fieldSchema.requiredMessage,
     deps: getFieldDeps(name),
-    disabled: fieldSchema.locked,
     pattern: fieldSchema.pattern,
     validate: {
       loading: () => {
@@ -118,7 +117,7 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
           <Component
             {...fieldProps}
             fieldSchema={fieldSchema}
-            inputProps={{ ...inputProps, onFocus }}
+            inputProps={{ ...inputProps, disabled: fieldSchema.locked, onFocus }}
             state={state}
             stateRelatedMessage={stateRelatedMessage}
           />
