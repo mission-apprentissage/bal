@@ -72,7 +72,7 @@ export const getCoordinatesFromAddressData = async ({
   code_postal,
   localite,
   code_insee,
-}) => {
+}: any) => {
   const coordUpdated = await findGeoCoordinateFromAdresse({
     numero_voie,
     type_voie,
@@ -92,7 +92,7 @@ export const getCoordinatesFromAddressData = async ({
     },
   };
 };
-
+// @ts-expect-error: TODO
 export const getAddressDataFromCoordinates = async ({ latitude, longitude }) => {
   const result = await findAddressFromGeoCoordinates({ latitude, longitude });
 
@@ -105,6 +105,7 @@ export const getAddressDataFromCoordinates = async ({ latitude, longitude }) => 
     };
   }
 
+  // @ts-expect-error: TODO
   const { insee_com, code_dept, postal_code, nom_comm, nom_voie, numero_voie, type_voie } = result.value;
 
   const { nom_dept, nom_region, code_region, nom_academie, num_academie } = findDataByDepartementNum(code_dept);

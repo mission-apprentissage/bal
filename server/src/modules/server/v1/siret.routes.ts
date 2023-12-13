@@ -42,11 +42,13 @@ export const siretRoutes = ({ server }: { server: Server }) => {
             data.result.entreprise_forme_juridique = refResult.forme_juridique.label;
           }
           if (refResult.label) {
+            // @ts-expect-error: TODO
             data.result.label = refResult.label;
           }
           if (refResult.uai) {
             referentielData.uai = refResult.uai;
           } else if (refResult.uai_potentiels.length > 0) {
+            // @ts-expect-error: TODO
             referentielData.uai = lookupUaiCatalogue(refResult.uai_potentiels);
           }
         }

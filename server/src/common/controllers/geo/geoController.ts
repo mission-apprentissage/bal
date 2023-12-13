@@ -10,7 +10,7 @@ import {
 
 export const findCode = async (code: string, codeInsee: string | null) => {
   try {
-    const { records = [] } = await getMunicipality(code, codeInsee);
+    const { records = [] }: any = await getMunicipality(code, codeInsee);
     if (records.length === 0) {
       return {
         info: "Erreur: Non trouvé",
@@ -57,6 +57,7 @@ export const findGeoCoordinateFromAdresse = async ({
   localite,
   code_insee,
 }: Adresse) => {
+  // @ts-expect-error
   const { geo_coordonnees, results_count } = await getGeoCoordinateFromAdresse({
     numero_voie,
     type_voie,

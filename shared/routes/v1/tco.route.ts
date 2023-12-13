@@ -11,7 +11,7 @@ export const zTcoRoutes = {
         })
         .passthrough(),
       response: {
-        "200": z.any(),
+        "2xx": z.any(),
       },
     },
   },

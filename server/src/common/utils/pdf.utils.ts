@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+// @ts-expect-error: TODO
 import { utcToZonedTime } from "date-fns-tz";
 import { PDFDocument, PDFFont, rgb, StandardFonts } from "pdf-lib";
 import typeVoie from "shared/constants/typeVoie";
@@ -43,7 +44,9 @@ const formatCourriel = (value: string, options: BuildFieldDrawOptions) => {
   const [user, domain] = value.split("@");
   return [
     { text: user },
+    // @ts-expect-error: TODO
     { text: "@", options: { color: rgb(0, 0, 0), x: 25 + options.writtingFont.widthOfTextAtSize(user, 11) } },
+    // @ts-expect-error: TODO
     { text: domain, options: { x: 25 + options.writtingFont.widthOfTextAtSize(user + "@", 11) } },
   ];
 };
@@ -73,7 +76,7 @@ interface Remuneration {
 }
 
 type RemunerationsAnnuelles = Record<string, Remuneration>;
-
+// @ts-expect-error: TODO
 const fieldsPositions: NestedField = {
   employeur: {
     denomination: {
@@ -341,6 +344,7 @@ const fieldsPositions: NestedField = {
             { text: value || "" },
             {
               text: options?.prenom || "",
+              // @ts-expect-error: TODO
               options: { x: 35 + options?.writtingFont?.widthOfTextAtSize(value || "", 11) },
             },
           ];
@@ -1054,18 +1058,22 @@ const buildRemunerations = async (remunerationsAnnuelles: RemunerationsAnnuelles
       ...result,
       await buildFieldDraw(
         remunerationAnnuelle.dateDebut,
+        // @ts-expect-error: TODO
         fieldsPositions.contrat.remunerationsAnnuelles[remunerationAnnuelle.ordre].dateDebut
       ),
       await buildFieldDraw(
         remunerationAnnuelle.dateFin,
+        // @ts-expect-error: TODO
         fieldsPositions.contrat.remunerationsAnnuelles[remunerationAnnuelle.ordre].dateFin
       ),
       await buildFieldDraw(
         remunerationAnnuelle.taux,
+        // @ts-expect-error: TODO
         fieldsPositions.contrat.remunerationsAnnuelles[remunerationAnnuelle.ordre].taux
       ),
       await buildFieldDraw(
         remunerationAnnuelle.typeSalaire,
+        // @ts-expect-error: TODO
         fieldsPositions.contrat.remunerationsAnnuelles[remunerationAnnuelle.ordre].typeSalaire
       ),
     ];
@@ -1082,6 +1090,7 @@ const drawDraftWatermark = async (pdfDoc: PDFDocument) => {
       size: 100,
       opacity: 0.1,
       font: await pdfDoc.embedFont(StandardFonts.Courier),
+      // @ts-expect-error: TODO
       rotate: { type: "degrees", angle: 45 },
     });
   }
@@ -1121,41 +1130,69 @@ const generatePdf = async (
   const pdfPagesContent: Field[][] = [
     [
       // TODO EMPLOYEUR
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.privePublic, fieldsPositions.employeur.privePublic),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.denomination, fieldsPositions.employeur.denomination),
       await buildFieldDraw(
         (cerfa.employeur.adresse.numero ?? "") + (cerfa.employeur.adresse.repetitionVoie ?? ""),
+        // @ts-expect-error: TODO
         fieldsPositions.employeur.adresse.numero
       ),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.adresse.voie, fieldsPositions.employeur.adresse.voie),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.adresse.complement, fieldsPositions.employeur.adresse.complement),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.adresse.codePostal, fieldsPositions.employeur.adresse.codePostal),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.adresse.commune, fieldsPositions.employeur.adresse.commune),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.telephone, fieldsPositions.employeur.telephone),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.courriel, fieldsPositions.employeur.courriel, { writtingFont }),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.siret, fieldsPositions.employeur.siret),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.typeEmployeur, fieldsPositions.employeur.typeEmployeur),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.employeurSpecifique, fieldsPositions.employeur.employeurSpecifique),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.naf, fieldsPositions.employeur.naf),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.nombreDeSalaries, fieldsPositions.employeur.nombreDeSalaries),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.libelleIdcc, fieldsPositions.employeur.libelleIdcc),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.codeIdcc, fieldsPositions.employeur.codeIdcc),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.regimeSpecifique, fieldsPositions.employeur.regimeSpecifique),
 
       //TODO APPRENTI(E)
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.nom, fieldsPositions.apprenti.nom),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.prenom, fieldsPositions.apprenti.prenom),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.nir, fieldsPositions.apprenti.nir),
       await buildFieldDraw(
         (cerfa.apprenti.adresse.numero ?? "") + (cerfa.apprenti.adresse.repetitionVoie ?? ""),
+        // @ts-expect-error: TODO
         fieldsPositions.apprenti.adresse.numero
       ),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.adresse.voie, fieldsPositions.apprenti.adresse.voie),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.adresse.complement, fieldsPositions.apprenti.adresse.complement),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.adresse.codePostal, fieldsPositions.apprenti.adresse.codePostal),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.adresse.commune, fieldsPositions.apprenti.adresse.commune),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.telephone, fieldsPositions.apprenti.telephone),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.courriel, fieldsPositions.apprenti.courriel, { writtingFont }),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.responsableLegal.nom, fieldsPositions.apprenti.responsableLegal.nom, {
         prenom: cerfa.apprenti.responsableLegal.prenom,
         writtingFont,
@@ -1163,96 +1200,152 @@ const generatePdf = async (
       await buildFieldDraw(
         (cerfa.apprenti.responsableLegal.adresse.numero ?? "") +
           (cerfa.apprenti.responsableLegal.adresse.repetitionVoie ?? ""),
+        // @ts-expect-error: TODO
         fieldsPositions.apprenti.responsableLegal.adresse.numero
       ),
       await buildFieldDraw(
         cerfa.apprenti.responsableLegal.adresse.voie,
+        // @ts-expect-error: TODO
         fieldsPositions.apprenti.responsableLegal.adresse.voie
       ),
       await buildFieldDraw(
         cerfa.apprenti.responsableLegal.adresse.complement,
+        // @ts-expect-error: TODO
         fieldsPositions.apprenti.responsableLegal.adresse.complement
       ),
       await buildFieldDraw(
         cerfa.apprenti.responsableLegal.adresse.codePostal,
+        // @ts-expect-error: TODO
         fieldsPositions.apprenti.responsableLegal.adresse.codePostal
       ),
       await buildFieldDraw(
         cerfa.apprenti.responsableLegal.adresse.commune,
+        // @ts-expect-error: TODO
         fieldsPositions.apprenti.responsableLegal.adresse.commune
       ),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.dateNaissance, fieldsPositions.apprenti.dateNaissance),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.sexe, fieldsPositions.apprenti.sexe),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.departementNaissance, fieldsPositions.apprenti.departementNaissance),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.communeNaissance, fieldsPositions.apprenti.communeNaissance),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.nationalite, fieldsPositions.apprenti.nationalite),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.regimeSocial, fieldsPositions.apprenti.regimeSocial),
       await buildFieldDraw(
         cerfa.apprenti.inscriptionSportifDeHautNiveau,
+        // @ts-expect-error: TODO
         fieldsPositions.apprenti.inscriptionSportifDeHautNiveau
       ),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.handicap, fieldsPositions.apprenti.handicap),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.situationAvantContrat, fieldsPositions.apprenti.situationAvantContrat),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.diplomePrepare, fieldsPositions.apprenti.diplomePrepare),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.intituleDiplomePrepare, fieldsPositions.apprenti.intituleDiplomePrepare),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.derniereClasse, fieldsPositions.apprenti.derniereClasse),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.apprenti.diplome, fieldsPositions.apprenti.diplome),
 
       //TODO Maitre d'aprentissage
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.maitre1.nom, fieldsPositions.maitre.maitre1.nom),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.maitre1.prenom, fieldsPositions.maitre.maitre1.prenom),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.maitre1.dateNaissance, fieldsPositions.maitre.maitre1.dateNaissance),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.maitre2.nom, fieldsPositions.maitre.maitre2.nom),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.maitre2.prenom, fieldsPositions.maitre.maitre2.prenom),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.maitre2.dateNaissance, fieldsPositions.maitre.maitre2.dateNaissance),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.attestationEligibilite, fieldsPositions.employeur.attestationEligibilite),
     ],
     [
       //TODO Le Contrat
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.typeContratApp, fieldsPositions.contrat.typeContratApp),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.typeDerogation, fieldsPositions.contrat.typeDerogation),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.numeroContratPrecedent, fieldsPositions.contrat.numeroContratPrecedent),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.dateConclusion, fieldsPositions.contrat.dateConclusion),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.dateDebutContrat, fieldsPositions.contrat.dateDebutContrat),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.dateEffetAvenant, fieldsPositions.contrat.dateEffetAvenant),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.dateFinContrat, fieldsPositions.contrat.dateFinContrat),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.dureeTravailHebdoHeures, fieldsPositions.contrat.dureeTravailHebdoHeures),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.dureeTravailHebdoMinutes, fieldsPositions.contrat.dureeTravailHebdoMinutes),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.travailRisque, fieldsPositions.contrat.travailRisque),
       ...(await buildRemunerations(cerfa.contrat.remunerationsAnnuelles)),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.salaireEmbauche, fieldsPositions.contrat.salaireEmbauche),
       await buildFieldDraw(
         cerfa.contrat.caisseRetraiteComplementaire,
+        // @ts-expect-error: TODO
         fieldsPositions.contrat.caisseRetraiteComplementaire
       ),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.avantageNourriture, fieldsPositions.contrat.avantageNourriture),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.avantageLogement, fieldsPositions.contrat.avantageLogement),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.autreAvantageEnNature, fieldsPositions.contrat.autreAvantageEnNature),
 
       //TODO La Formation
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.organismeFormation.formationInterne, fieldsPositions.formation.formationInterne),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.organismeFormation.uaiCfa, fieldsPositions.formation.uaiCfa),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.organismeFormation.siret, fieldsPositions.formation.siret),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.organismeFormation.denomination, fieldsPositions.formation.denomination),
-
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.formation.rncp, fieldsPositions.formation.rncp),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.formation.codeDiplome, fieldsPositions.formation.codeDiplome),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.formation.intituleQualification, fieldsPositions.formation.intituleQualification),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.formation.typeDiplome, fieldsPositions.formation.typeDiplome),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.formation.dateDebutFormation, fieldsPositions.formation.dateDebutFormation),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.formation.dateFinFormation, fieldsPositions.formation.dateFinFormation),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.formation.dureeFormation, fieldsPositions.formation.dureeFormation),
 
       await buildFieldDraw(
         (cerfa.organismeFormation.adresse.numero ?? "") + (cerfa.organismeFormation.adresse.repetitionVoie ?? ""),
+        // @ts-expect-error: TODO
         fieldsPositions.formation.adresse.numero
       ),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.organismeFormation.adresse.voie, fieldsPositions.formation.adresse.voie),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.organismeFormation.adresse.complement, fieldsPositions.formation.adresse.complement),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.organismeFormation.adresse.codePostal, fieldsPositions.formation.adresse.codePostal),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.organismeFormation.adresse.commune, fieldsPositions.formation.adresse.commune),
-
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.employeur.attestationPieces, fieldsPositions.employeur.attestationPieces),
+      // @ts-expect-error: TODO
       await buildFieldDraw(cerfa.contrat.lieuSignatureContrat, fieldsPositions.contrat.lieuSignatureContrat),
     ],
   ];
@@ -1268,6 +1361,7 @@ const generatePdf = async (
         const titles = ite === 0 ? capitalizeFirstLetter(text) : text;
         for (let kndex = 0; kndex < titles.length; kndex++) {
           const options = typeof t === "object" ? t.options : {};
+          // @ts-expect-error: TODO
           page.drawText(titles, {
             x: x,
             y: y,
@@ -1283,6 +1377,7 @@ const generatePdf = async (
 
   if (draft) {
     await drawDraftWatermark(pdfDoc);
+    // @ts-expect-error: TODO
     await drawFooter(pdfDoc, {
       date: DateTime.now().toFormat("dd/MM/yyyy"),
       firstname,
