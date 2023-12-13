@@ -20,14 +20,15 @@ export const tcoRoutes = ({ server }: { server: Server }) => {
         if (data.messages.error) {
           throw Boom.notFound(data.messages.error);
         }
-        return response.send(data);
+        return response.status(200).send(data);
       } else if (rncp) {
         const { data } = await findRncp(rncp);
 
         if (data.messages.error) {
           throw Boom.notFound(data.messages.error);
         }
-        return response.send(data);
+
+        return response.status(200).send(data);
       }
 
       return response.status(404).send({ message: "Something went wrong" });

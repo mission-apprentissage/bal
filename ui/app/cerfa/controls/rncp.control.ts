@@ -34,10 +34,11 @@ export const rncpControl: CerfaControl[] = [
       }
 
       if (result.cfds.length > 1) {
-        //Todo: handle many cfds
+        // TODO: handle many cfds
+        const selectedCFD = result.cfds[0]; // TODO métier
         return {
           cascade: {
-            "formation.codeDiplome": { value: result.cfds.join(","), cascade: false },
+            "formation.codeDiplome": { value: selectedCFD, cascade: false },
             "formation.intituleQualification": { value: result.intitule_diplome },
           },
         };
