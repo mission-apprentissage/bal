@@ -45,7 +45,7 @@ interface Props {
 
 export type InputFieldProps = Pick<Props, "name" | "fieldMethods" | "fieldSchema"> &
   Pick<InputProps, "state" | "stateRelatedMessage"> & {
-    inputProps: UseFormRegisterReturn & { onFocus: () => void };
+    inputProps: UseFormRegisterReturn & { onFocus: () => void; type?: string };
   };
 
 const TypesMapping: Record<FieldType, FC<InputFieldProps>> = {
@@ -117,7 +117,7 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
           <Component
             {...fieldProps}
             fieldSchema={fieldSchema}
-            inputProps={{ ...inputProps, disabled: fieldSchema.locked, onFocus }}
+            inputProps={{ ...inputProps, disabled: fieldSchema.locked, onFocus, type: fieldSchema.fieldType }}
             state={state}
             stateRelatedMessage={stateRelatedMessage}
           />

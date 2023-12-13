@@ -7,6 +7,7 @@ import { apprentiSexe } from "./apprentiSexe.control";
 import { avantagesNatureControl } from "./avantagesNature.control";
 import { codeDiplomeControl } from "./codeDiplome.control";
 import { ContratDatesControl } from "./ContratDates.control";
+import { courrielControl } from "./courriel.control";
 import { dateFormationControl } from "./dateFormation.control";
 import { dureeTravailControl } from "./dureeTravail.control";
 import { employeurCodePostalControl } from "./employeurCodePostal.control";
@@ -82,4 +83,5 @@ export const controls: CerfaControl[] = [
   ...RemunerationsControl,
   ...rncpControl,
   ...codeDiplomeControl,
+  ...courrielControl,
 ];
