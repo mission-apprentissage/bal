@@ -2,6 +2,7 @@
 import { getLink } from "@codegouvfr/react-dsfr/link";
 import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import cryptoRandomString from "crypto-random-string";
 
 import { publicConfig } from "../../../config.public";
 import { apiGet } from "../../../utils/api.utils";
@@ -32,6 +33,10 @@ const ListeDiffusionPage = () => {
       <Typography sx={{ mt: 3 }}>
         Liste des fichiers déposés via
         <Link href={`${publicConfig.baseUrl}/support/depot`}>{`${publicConfig.baseUrl}/support/depot`}</Link>
+      </Typography>
+      <Typography sx={{ my: 3 }}>
+        Clé pour utilisateur (actualiser la page pour regenerer) <br />{" "}
+        <strong>{cryptoRandomString({ length: 30, type: "alphanumeric" })}</strong>
       </Typography>
 
       <SupportFileList list={list} onDelete={refetch} />

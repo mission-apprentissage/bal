@@ -5084,6 +5084,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"crypto-random-string@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "crypto-random-string@npm:5.0.0"
+  dependencies:
+    type-fest: ^2.12.2
+  checksum: 42c8ad00764e865c7c8975b82b21d3a5b482ceaf141f04d76afa5537c718705b1c2c28082c69e71dba10a6a161bcd4b778e49ec2dbf031bc16dba361d7d2c9c6
+  languageName: node
+  linkType: hard
+
 "css-in-js-utils@npm:^3.1.0":
   version: 3.1.0
   resolution: "css-in-js-utils@npm:3.1.0"
@@ -15633,6 +15642,7 @@ __metadata:
     "@types/react": ^18.2.20
     "@types/react-dom": ^18.2.7
     client-only: ^0.0.1
+    crypto-random-string: ^5.0.0
     date-fns: ^2.30.0
     framer-motion: ^10.16.0
     luxon: ^3.4.0
