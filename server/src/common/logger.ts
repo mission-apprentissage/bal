@@ -33,16 +33,19 @@ const createStreams = () => {
   return streams;
 };
 
+function errorSerialiser(err: any) {
+  return {
+    ...bunyan.stdSerializers.err(err),
+    ...(err.errInfo ? { errInfo: err.errInfo } : {}),
+  };
+}
+
 export default bunyan.createLogger({
   name: config.appName,
   serializers: {
     ...bunyan.stdSerializers,
-    err: function (err) {
-      return {
-        ...bunyan.stdSerializers.err(err),
-        ...(err.errInfo ? { errInfo: err.errInfo } : {}),
-      };
-    },
+    err: errorSerialiser,
+    error: errorSerialiser,
   },
   /** @ts-expect-error */
   streams: createStreams(),
