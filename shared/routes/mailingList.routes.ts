@@ -11,7 +11,7 @@ export const zMailingListRoutes = {
       method: "get",
       path: "/mailing-lists",
       response: {
-        "200": z.array(ZMailingListWithDocument),
+        "200": z.array(ZMailingListWithDocument.passthrough()), // TODO to fix @moroine    "message": "Unrecognized key(s) in object: 'import_progress'"
       },
       securityScheme: {
         auth: "cookie-session",
