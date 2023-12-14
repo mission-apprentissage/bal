@@ -37,7 +37,7 @@ export const ContratDatesControl: CerfaControl[] = [
       const dateDebutFormation = parseISO(values.formation.dateDebutFormation);
       const dateDebutFormation3MonthsBefore = subMonths(dateDebutFormation, 3);
 
-      if (isAfter(dateDebutContrat, dateDebutFormation3MonthsBefore)) {
+      if (isBefore(dateDebutContrat, dateDebutFormation3MonthsBefore)) {
         return {
           error: "Le contrat peut commencer au maximum 3 mois avant le début de la formation",
         };
