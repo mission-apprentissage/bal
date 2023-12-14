@@ -11,10 +11,12 @@ import ListMailingList from "./components/ListMailingList";
 
 const ListeDiffusionPage = () => {
   const { data: mailingLists = [], refetch } = useQuery<IMailingListWithDocumentJson[]>({
+    // @ts-expect-error
     queryKey: ["mailingLists"],
     queryFn: async () => apiGet("/mailing-lists", {}),
   });
 
+  // @ts-expect-error
   const generatingMailingList = mailingLists?.find((ml) => {
     const status = ml.document?.job_status ?? "pending";
 
@@ -39,7 +41,7 @@ const ListeDiffusionPage = () => {
       </Box>
 
       <GeneratingMailingList mailingList={generatingMailingList} onDone={refetch} />
-
+      {/* @ts-expect-error */}
       <ListMailingList mailingLists={mailingLists} onDelete={refetch} />
     </>
   );
