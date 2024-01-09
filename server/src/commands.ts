@@ -230,6 +230,12 @@ program
   .action(createJobAction("deca:merge"));
 
 program
+  .command("job:hydrate:from_deca")
+  .description("Hydrate organisation and persons from deca")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("job:hydrate:from_deca"));
+
+program
   .command("deca:history")
   .description("Deca history")
   .option("-q, --queued", "Run job asynchronously", false)

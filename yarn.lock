@@ -12208,6 +12208,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"p-map@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "p-map@npm:7.0.1"
+  checksum: 553c218f582b9c7f96159dd55d082fc6df386ea86a78a3798b768f87f761d6f01ea52dd76225e69199720fa0684901d38353cd0978a39ef4f7f4fd287c4e9262
+  languageName: node
+  linkType: hard
+
 "p-queue@npm:^7.2.0":
   version: 7.3.4
   resolution: "p-queue@npm:7.3.4"
@@ -14112,6 +14119,7 @@ __metadata:
     nodemailer-html-to-text: ^3.2.0
     oleoduc: ^0.8.0
     omit-deep: ^0.3.0
+    p-map: ^7.0.1
     pino-pretty: ^10.2.3
     rate-limiter-flexible: ^2.4.2
     shared: "workspace:*"
