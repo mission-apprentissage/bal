@@ -4,6 +4,7 @@ import { Filter, FindOptions, ObjectId } from "mongodb";
 import { IPostRoutes, IResponse } from "shared";
 import { getSirenFromSiret } from "shared/helpers/common";
 import { IOrganisation } from "shared/models/organisation.model";
+import { z } from "zod";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -136,8 +137,13 @@ export const updateOrganisation = async (organisation: IOrganisation, data: Part
   );
 };
 
-export const updateOrganisationAndPerson = async (siret: string, courriel: string, source: string) => {
+export const updateOrganisationAndPerson = async (siret: string, argCourriel: string, source: string) => {
   const siren = getSirenFromSiret(siret);
+
+  const courrielParsed = z.string().email().safeParse(argCourriel);
+  if (!courrielParsed.success) return;
+
+  const courriel = courrielParsed.data;
 
   if (!courriel.split("@")[1]) return;
   const domain = courriel.split("@")[1].toLowerCase();
