@@ -13,7 +13,7 @@ import {
   OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE,
   OPCO_EP_CODE_RETOUR_EMAIL_TROUVE,
 } from "../../common/apis/opcoEp";
-import { getDecaVerification } from "./deca.actions";
+import { getDbVerification } from "./deca.actions";
 
 export const validation = async ({
   email,
@@ -22,7 +22,7 @@ export const validation = async ({
   email: string;
   siret: string;
 }): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
-  const testDeca = await getDecaVerification(siret, email);
+  const testDeca = await getDbVerification(siret, email);
 
   if (testDeca.is_valid) {
     return testDeca;
@@ -31,6 +31,7 @@ export const validation = async ({
   const siren = getSirenFromSiret(siret);
   const testAkto = await getAktoVerification(siren, email);
   if (testAkto) {
+    await updateOrganisationAndPerson(siret, email, "AKTO");
     return {
       is_valid: true,
       on: "email",
@@ -39,6 +40,7 @@ export const validation = async ({
 
   const testOpcoEp = await getOpcoEpVerification(siret, email);
   if (testOpcoEp.codeRetour === OPCO_EP_CODE_RETOUR_EMAIL_TROUVE) {
+    await updateOrganisationAndPerson(siret, email, "OPCO_EP");
     return {
       is_valid: true,
       on: "email",
@@ -46,6 +48,7 @@ export const validation = async ({
   }
 
   if (testOpcoEp.codeRetour === OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE) {
+    await updateOrganisationAndPerson(siret, email, "OPCO_EP");
     return {
       is_valid: true,
       on: "domain",
@@ -133,6 +136,38 @@ export const updateOrganisation = async (organisation: IOrganisation, data: Part
   );
 };
 
+export const updateOrganisationAndPerson = async (siret: string, courriel: string, source: string) => {
+  const siren = getSirenFromSiret(siret);
+
+  if (!courriel.split("@")[1]) return;
+  const domain = courriel.split("@")[1].toLowerCase();
+
+  const organisation = await updateOrganisationData({
+    siren,
+    sirets: [siret],
+    email_domains: [domain],
+    source,
+  });
+
+  await getDbCollection("persons").updateOne(
+    {
+      email: courriel,
+    },
+    {
+      $addToSet: {
+        ...(organisation && { organisations: organisation._id.toString() }),
+        sirets: siret,
+      },
+      $setOnInsert: {
+        email: courriel,
+      },
+    },
+    {
+      upsert: true,
+    }
+  );
+};
+
 interface IUpdateOrganisationData {
   siren: string;
   sirets: string[];
@@ -146,7 +181,6 @@ export const updateOrganisationData = async ({ siren, sirets, email_domains, sou
     {
       siren,
       etablissements: sirets.map((siret) => ({ siret })),
-      email_domains: email_domains,
     }
   );
 
