@@ -1,10 +1,15 @@
+import dns from "node:dns";
+
 import { internal } from "@hapi/boom";
 import companyEmailValidator from "company-email-validator";
 import { Filter, FindOptions, ObjectId } from "mongodb";
 import { IPostRoutes, IResponse } from "shared";
 import { getSirenFromSiret } from "shared/helpers/common";
 import { IOrganisation } from "shared/models/organisation.model";
+import util from "util";
 import { z } from "zod";
+
+const dnsLookup = util.promisify(dns.lookup);
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -146,7 +151,17 @@ export const updateOrganisationAndPerson = async (siret: string, argCourriel: st
   const courriel = courrielParsed.data;
 
   if (!courriel.split("@")[1]) return;
+
   const domain = courriel.split("@")[1].toLowerCase();
+
+  let dnsTest = true;
+  try {
+    await dnsLookup(domain);
+    dnsTest = true;
+  } catch (error) {
+    dnsTest = false;
+  }
+  if (!dnsTest) return;
 
   const organisation = await updateOrganisationData({
     siren,
