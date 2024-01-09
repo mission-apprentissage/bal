@@ -157,17 +157,14 @@ export const updateOrganisationAndPerson = async (
 
   if (!courriel.split("@")[1]) return;
 
-  const domain = courriel.split("@")[1].toLowerCase();
+  let domain = courriel.split("@")[1].toLowerCase();
 
   if (dns_lookup) {
-    let dnsTest = true;
     try {
       await dnsLookup(domain);
-      dnsTest = true;
     } catch (error) {
-      dnsTest = false;
+      domain = "";
     }
-    if (!dnsTest) return;
   }
   const organisation = await updateOrganisationData({
     siren,
@@ -229,7 +226,8 @@ export const updateOrganisationData = async ({ siren, sirets, email_domains, sou
   }
 
   const newDomains = email_domains.filter(
-    (domain) => !organisation.email_domains?.includes(domain) && companyEmailValidator.isCompanyDomain(domain)
+    (domain) =>
+      !organisation.email_domains?.includes(domain) && companyEmailValidator.isCompanyDomain(domain) && domain !== ""
   );
 
   if (newDomains.length) {
