@@ -19,7 +19,7 @@ async function runDoc(docDeca: IDeca) {
   if (countA > 1) return; // bad data multiple email
 
   try {
-    await updateOrganisationAndPerson(siret, courriel, DOCUMENT_TYPES.DECA);
+    await updateOrganisationAndPerson(siret, courriel, DOCUMENT_TYPES.DECA, true);
   } catch (error) {
     console.log(error);
   }

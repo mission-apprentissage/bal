@@ -142,7 +142,12 @@ export const updateOrganisation = async (organisation: IOrganisation, data: Part
   );
 };
 
-export const updateOrganisationAndPerson = async (siret: string, argCourriel: string, source: string) => {
+export const updateOrganisationAndPerson = async (
+  siret: string,
+  argCourriel: string,
+  source: string,
+  dns_lookup = false
+) => {
   const siren = getSirenFromSiret(siret);
 
   const courrielParsed = z.string().email().safeParse(argCourriel);
@@ -154,15 +159,16 @@ export const updateOrganisationAndPerson = async (siret: string, argCourriel: st
 
   const domain = courriel.split("@")[1].toLowerCase();
 
-  let dnsTest = true;
-  try {
-    await dnsLookup(domain);
-    dnsTest = true;
-  } catch (error) {
-    dnsTest = false;
+  if (dns_lookup) {
+    let dnsTest = true;
+    try {
+      await dnsLookup(domain);
+      dnsTest = true;
+    } catch (error) {
+      dnsTest = false;
+    }
+    if (!dnsTest) return;
   }
-  if (!dnsTest) return;
-
   const organisation = await updateOrganisationData({
     siren,
     sirets: [siret],
