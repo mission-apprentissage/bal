@@ -18,9 +18,10 @@ import { handleMailingListJob, onMailingListJobExited } from "../actions/mailing
 import { createUser } from "../actions/users.actions";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
-import { run_hydrate_from_deca } from "./deca/hydrate-organization-person-deca";
 import { mergeDecaDumps } from "./deca/merge-dumps-deca";
 import { createHistory } from "./deca/watcher";
+import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
+import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
 
 export async function setupJobProcessor() {
   return initJobProcessor({
@@ -101,8 +102,11 @@ export async function setupJobProcessor() {
       "deca:history": {
         handler: async () => createHistory(),
       },
-      "job:hydrate:from_deca": {
+      "job:validation:hydrate_from_deca": {
         handler: async () => run_hydrate_from_deca(),
+      },
+      "job:validation:hydrate_from_constructys": {
+        handler: async () => run_hydrate_from_constructys(),
       },
     },
   });

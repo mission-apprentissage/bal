@@ -24,7 +24,7 @@ fileignoreconfig:
 - filename: .github/workflows/remove-preview.yml
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/.env_server
-  checksum: d92e5989f3fbfe2a06c8f4c5dd6f4ccd33c7740a554ccbd3084097da82162201
+  checksum: 8b3d72cbac53e380b43113401dbd6113c168e93514741bf354d537924fb43d59
   ignore_detectors:
   - filename
 - filename: .infra/.env_ui
@@ -80,7 +80,7 @@ fileignoreconfig:
 - filename: .infra/vault/setup-local-env.sh
   checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: 9c85e7f99941ffc94c92ee7b3bfae3c8b1ad6ba45e935c87f50cd9c4396288c3
+  checksum: 7e3385396572e362b25dbe7cd4b3646ed4410a1774983b66d5730d620ac3bc10
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:

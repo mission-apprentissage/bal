@@ -7,7 +7,7 @@ import parentLogger from "@/common/logger";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 import { updateOrganisationAndPerson } from "../../actions/organisations.actions";
 
-const logger = parentLogger.child({ module: "job:hydrate:from_deca" });
+const logger = parentLogger.child({ module: "job:validation:hydrate_from_deca" });
 
 async function runDoc(docDeca: IDeca) {
   const courriel = docDeca.employeur.courriel || null;
@@ -19,7 +19,7 @@ async function runDoc(docDeca: IDeca) {
   if (countA > 1) return; // bad data multiple email
 
   try {
-    await updateOrganisationAndPerson(siret, courriel, DOCUMENT_TYPES.DECA, true);
+    await updateOrganisationAndPerson(siret, courriel, DOCUMENT_TYPES.DECA, false);
   } catch (error) {
     console.log(error);
   }
@@ -47,7 +47,7 @@ export async function run_hydrate_from_deca() {
 
   const cursor = getDbCollection("deca").find({});
 
-  for await (const _r of pMapIterable(cursor, runDoc, { concurrency: 100 })) {
+  for await (const _r of pMapIterable(cursor, runDoc, { concurrency: 5000 })) {
     if (progress.done % 1_000 === 0) {
       printProgress();
     }
