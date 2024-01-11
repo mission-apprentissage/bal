@@ -1,3 +1,4 @@
+import { internal } from "@hapi/boom";
 import { captureException } from "@sentry/node";
 import Ftp from "basic-ftp";
 import { Writable } from "stream";
@@ -18,13 +19,14 @@ class FTPClient {
     try {
       await this.client.access(options);
     } catch (error) {
-      captureException(error);
-      logger.error("FTP connection failed", error);
+      const err = internal("FTP connection failed");
+      err.cause = error;
+      throw err;
     }
   }
 
   async list() {
-    console.log(await this.client.list());
+    logger.info(await this.client.list());
   }
 
   /**
@@ -41,7 +43,7 @@ class FTPClient {
    */
   async downloadFile(remoteFile: string, destination: Writable | string) {
     try {
-      this.client.trackProgress((info) => logger.info(`${(info.bytes / 1000000).toFixed(2)} MB`));
+      this.client.trackProgress((info) => logger.info(`${(info.bytes / 1_000_000).toFixed(2)} MB`));
       await this.client.downloadTo(destination, remoteFile);
       this.client.trackProgress();
       logger.info(`File successfully downloaded.`);

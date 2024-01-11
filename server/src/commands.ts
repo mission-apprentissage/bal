@@ -245,11 +245,6 @@ program
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("job:validation:hydrate_from_ocapiat"));
 program
-  .command("job:validation:hydrate_from_constructys")
-  .description("Hydrate organisation and persons from constructys")
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("job:validation:hydrate_from_constructys"));
-program
   .command("organisation:sanitize:domains")
   .description("Sanitize organisationdomain")
   .option("-q, --queued", "Run job asynchronously", false)

@@ -1,3 +1,4 @@
+import { internal } from "@hapi/boom";
 import { pMapIterable } from "p-map";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { IDeca } from "shared/models/deca.model/deca.model";
@@ -21,12 +22,12 @@ async function runDoc(docDeca: IDeca) {
   try {
     await updateOrganisationAndPerson(siret, courriel, DOCUMENT_TYPES.DECA, false);
   } catch (error) {
-    console.log(error);
+    internal(error);
   }
 }
 
 export async function run_hydrate_from_deca() {
-  const [totalCount] = await Promise.all([getDbCollection("deca").countDocuments()]);
+  const totalCount = await getDbCollection("deca").countDocuments();
 
   const progress = {
     total: totalCount,

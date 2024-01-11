@@ -25,15 +25,10 @@ export const run_hydrate_from_ocapiat = async () => {
     added_by: new ObjectId(),
   });
 
+  let fileSize = 0;
   const myTransform = new PassThrough({
-    construct(callback) {
-      // @ts-expect-error
-      this.fileSize = 0;
-      callback();
-    },
     transform(chunk, _encoding, callback) {
-      // @ts-expect-error
-      this.fileSize += chunk.length;
+      fileSize += chunk.length;
       callback(null, chunk);
     },
   });
@@ -51,8 +46,7 @@ export const run_hydrate_from_ocapiat = async () => {
     { _id: document._id },
     {
       $set: {
-        // @ts-expect-error
-        taille_fichier: myTransform.fileSize,
+        taille_fichier: fileSize,
       },
     }
   );

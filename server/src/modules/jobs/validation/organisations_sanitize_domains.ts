@@ -30,7 +30,7 @@ async function runDoc(doc: IOrganisation) {
 }
 
 export const run_organisations_sanitize_domains = async () => {
-  const [totalCount] = await Promise.all([getDbCollection("organisations").countDocuments()]);
+  const totalCount = await getDbCollection("organisations").countDocuments();
 
   const progress = {
     total: totalCount,
