@@ -10,17 +10,17 @@ import { initFtpConnection } from "../../../common/utils/ftpUtils";
 import { DEFAULT_DELIMITER } from "../../../common/utils/parserUtils";
 import config from "../../../config";
 import { createUploadDocument, updateDocument, uploadFile } from "../../actions/documents.actions";
-const logger = parentLogger.child({ module: "job:validation:hydrate_from_constructys" });
+const logger = parentLogger.child({ module: "job:validation:hydrate_from_ocapiat" });
 
-export const run_hydrate_from_constructys = async () => {
-  logger.info("Constructys data import starting...");
+export const run_hydrate_from_ocapiat = async () => {
+  logger.info("Ocapiat data import starting...");
 
   logger.info("Get remote file...");
 
   const document = await createUploadDocument({
-    type_document: DOCUMENT_TYPES.CONSTRUCTYS,
+    type_document: DOCUMENT_TYPES.OCAPIAT,
     fileSize: 0,
-    filename: "constructys-data.csv",
+    filename: "ocapiat-data.csv",
     delimiter: DEFAULT_DELIMITER,
     added_by: new ObjectId(),
   });
@@ -38,16 +38,15 @@ export const run_hydrate_from_constructys = async () => {
     },
   });
 
-  const remoteFileName = "CTYS_MATCHA.csv";
+  const remoteFileName = "ContactsEntreprisesOPSIcsv.csv";
 
-  const client = await initFtpConnection(myTransform, config.ftp.constructys);
+  const client = await initFtpConnection(myTransform, config.ftp.ocapiat);
 
   client.downloadFile(remoteFileName, myTransform);
 
-  await uploadFile("job:validation:hydrate_from_constructys", myTransform, document, {
+  await uploadFile("job:validation:hydrate_from_ocapiat", myTransform, document, {
     mimetype: "text/csv",
   });
-
   await updateDocument(
     { _id: document._id },
     {

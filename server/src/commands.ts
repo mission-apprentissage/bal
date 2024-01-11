@@ -239,6 +239,16 @@ program
   .description("Hydrate organisation and persons from constructys")
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("job:validation:hydrate_from_constructys"));
+program
+  .command("job:validation:hydrate_from_ocapiat")
+  .description("Hydrate organisation and persons from ocapiat")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("job:validation:hydrate_from_ocapiat"));
+program
+  .command("job:validation:hydrate_from_constructys")
+  .description("Hydrate organisation and persons from constructys")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("job:validation:hydrate_from_constructys"));
 
 program
   .command("deca:history")

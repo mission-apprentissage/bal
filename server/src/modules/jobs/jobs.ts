@@ -21,6 +21,7 @@ import { validateModels } from "./db/schemaValidation";
 import { mergeDecaDumps } from "./deca/merge-dumps-deca";
 import { createHistory } from "./deca/watcher";
 import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
+import { run_hydrate_from_ocapiat } from "./validation/hydrate_from_ocapiat";
 import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
 
 export async function setupJobProcessor() {
@@ -107,6 +108,9 @@ export async function setupJobProcessor() {
       },
       "job:validation:hydrate_from_constructys": {
         handler: async () => run_hydrate_from_constructys(),
+      },
+      "job:validation:hydrate_from_ocapiat": {
+        handler: async () => run_hydrate_from_ocapiat(),
       },
     },
   });
