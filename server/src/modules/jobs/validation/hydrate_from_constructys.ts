@@ -1,15 +1,15 @@
 import { PassThrough } from "node:stream";
 
+import { addJob } from "job-processor";
 import { ObjectId } from "mongodb";
-import { oleoduc } from "oleoduc";
+import { DOCUMENT_TYPES } from "shared/constants/documents";
 
 import parentLogger from "@/common/logger";
 
 import { initFtpConnection } from "../../../common/utils/ftpUtils";
-import { uploadToStorage } from "../../../common/utils/ovhUtils";
 import { DEFAULT_DELIMITER } from "../../../common/utils/parserUtils";
 import config from "../../../config";
-import { createUploadDocument } from "../../actions/documents.actions";
+import { createUploadDocument, uploadFile } from "../../actions/documents.actions";
 const logger = parentLogger.child({ module: "job:validation:hydrate_from_constructys" });
 
 export const run_hydrate_from_constructys = async () => {
@@ -18,14 +18,25 @@ export const run_hydrate_from_constructys = async () => {
   logger.info("Get remote file...");
 
   const document = await createUploadDocument({
-    type_document: "constructys",
-    fileSize: 0,
+    type_document: DOCUMENT_TYPES.CONSTRUCTYS,
+    fileSize: 69056276,
     filename: "constructys-data.csv",
     delimiter: DEFAULT_DELIMITER,
     added_by: new ObjectId(),
   });
 
   const myTransform = new PassThrough();
+  //   {
+  //   construct(callback) {
+  //     this.length = 0;
+  //     callback();
+  //   },
+  //   transform(chunk, encoding, callback) {
+  //     this.length += chunk.length;
+  //     console.log(`this.length=${this.length}, read ${chunk.length} bytes`);
+  //     callback(null, chunk);
+  //   },
+  // }
 
   const remoteFileName = "CTYS_MATCHA.csv";
 
@@ -33,16 +44,15 @@ export const run_hydrate_from_constructys = async () => {
 
   client.downloadFile(remoteFileName, myTransform);
 
-  await oleoduc(
-    myTransform,
-    // transformData(processCsvFile),
-    await uploadToStorage(document.chemin_fichier, {
-      contentType: "text/csv",
-    })
-  );
+  await uploadFile("job:validation:hydrate_from_constructys", myTransform, document, {
+    mimetype: "text/csv",
+  });
 
-  // logger.info("Importing file...");
-  // const opco_label = "Constructys"; // source
-  // const result = await importer(destination, opco_label, 10); // parallelism = 10
-  // return result;
+  await addJob({
+    name: "import:document",
+    payload: {
+      document_id: document._id,
+    },
+    queued: true,
+  });
 };
