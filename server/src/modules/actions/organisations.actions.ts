@@ -146,7 +146,8 @@ export const updateOrganisationAndPerson = async (
   siret: string,
   argCourriel: string,
   source: string,
-  dns_lookup = false
+  dns_lookup = false,
+  content?: { nom: string; prenom: string }
 ) => {
   const siren = getSirenFromSiret(siret);
 
@@ -178,12 +179,22 @@ export const updateOrganisationAndPerson = async (
       email: courriel,
     },
     {
+      $set: {
+        updated_at: new Date(),
+      },
       $addToSet: {
         ...(organisation && { organisations: organisation._id.toString() }),
         sirets: siret,
       },
       $setOnInsert: {
         email: courriel,
+        ...(content?.nom && {
+          nom: content?.nom,
+        }),
+        ...(content?.prenom && {
+          prenom: content?.prenom,
+        }),
+        created_at: new Date(),
       },
     },
     {

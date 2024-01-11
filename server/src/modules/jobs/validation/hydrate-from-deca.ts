@@ -47,7 +47,7 @@ export async function run_hydrate_from_deca() {
 
   const cursor = getDbCollection("deca").find({});
 
-  for await (const _r of pMapIterable(cursor, runDoc, { concurrency: 5000 })) {
+  for await (const _r of pMapIterable(cursor, runDoc, { concurrency: 3000 })) {
     if (progress.done % 1_000 === 0) {
       printProgress();
     }
