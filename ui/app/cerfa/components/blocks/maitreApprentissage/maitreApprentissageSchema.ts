@@ -52,8 +52,9 @@ export const maitreApprentissageSchema: Record<string, CerfaField> = {
     label: "Numéro de sécurité sociale (NIR)",
     required: true,
     requiredMessage: "Le numéro de sécurité sociale du maître d'apprentissage est manquant",
-    mask: "0000C00000000",
+    mask: "S 00 0C 00 000 000",
     definitions: {
+      S: /[1-2]/,
       C: /[1-9AB]/,
     },
     messages: [
@@ -146,8 +147,9 @@ Ceci à défaut de dispositions conventionnelles particulières applicables dans
   },
   "maitre2.nir": {
     label: "Numéro de sécurité sociale (NIR)",
-    mask: "0000C00000000",
+    mask: "S 00 0C 00 000 000",
     definitions: {
+      S: /[1-2]/,
       C: /[1-9AB]/,
     },
     messages: [

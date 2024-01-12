@@ -38,14 +38,7 @@ Les CFA d'entreprise sont souvent des organismes qui forment pour de grands grou
     requiredMessage: "Le siret est obligatoire",
     validateMessage: "n'est pas un siret valide",
     showsOverlay: true,
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d{0,14}$",
-      },
-    ],
+    mask: "00000000000000",
     messages: [
       {
         type: "assistive",
@@ -85,14 +78,14 @@ Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entr
     required: true,
     requiredMessage: "Le code RNCP est obligatoire",
     validateMessage: "n'est pas un code RNCP valide. Le code RNCP doit être définit et contenir entre 3 et 5 chiffres",
-    mask: "RNCPX",
-    maskBlocks: [
-      {
-        name: "X",
-        mask: "Pattern",
-        pattern: "^\\d*$",
-      },
-    ],
+    mask: "RNCP0[0000]",
+    // maskBlocks: [
+    //   {
+    //     name: "X",
+    //     mask: "Pattern",
+    //     pattern: "^\\d*$",
+    //   },
+    // ],
     unmask: false,
     minLength: 7,
     maxLength: 9,
@@ -112,6 +105,10 @@ Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez re
     requiredMessage: "Le code diplôme est obligatoire",
     validateMessage:
       "n'est pas un code diplôme valide. Le code formation diplôme doit être au format 8 caractères ou 9 avec la lettre specialité",
+    mask: "00C00000",
+    definitions: {
+      C: /[1-9a-zA-Z]/,
+    },
     messages: [
       {
         type: "bonus",
@@ -179,14 +176,7 @@ Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez re
     required: true,
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d{0,5}$",
-      },
-    ],
+    mask: "00000",
   },
   "organismeFormation.adresse.commune": {
     label: "Commune",
@@ -215,14 +205,7 @@ Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez re
     requiredMessage: "Le siret est obligatoire",
     validateMessage: "n'est pas un siret valide",
     showsOverlay: true,
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d{0,14}$",
-      },
-    ],
+    mask: "00000000000000",
     messages: [
       {
         type: "assistive",
@@ -295,14 +278,7 @@ Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entr
     required: true,
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d{0,5}$",
-      },
-    ],
+    mask: "00000",
   },
   "etablissementFormation.adresse.commune": {
     label: "Commune",

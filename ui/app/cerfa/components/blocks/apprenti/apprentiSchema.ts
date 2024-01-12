@@ -151,8 +151,10 @@ Pas de limite d'âge si  l'apprenti :
   "apprenti.nir": {
     label: "Numéro de sécurité sociale (NIR)",
     requiredMessage: "N'est pas un numéro de sécurité sociale valide",
-    mask: "0000C00000000",
+    mask: "S 00 0C 00 000 000",
+    maskLazy: false,
     definitions: {
+      S: /[1-2]/,
       C: /[1-9AB]/,
     },
     messages: [
@@ -256,14 +258,7 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     required: true,
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d{0,5}$",
-      },
-    ],
+    mask: "00000",
   },
   "apprenti.adresse.commune": {
     label: "Commune",
@@ -621,14 +616,7 @@ Un mineur émancipé peut accomplir seul les actes nécessitant la majorité lé
     placeholder: "Exemple : 21000",
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d{0,5}$",
-      },
-    ],
+    mask: "00000",
   },
   "apprenti.responsableLegal.adresse.commune": {
     _init: ({ values }: any) => ({ required: shouldAskResponsableLegalAdresse({ values }) }),

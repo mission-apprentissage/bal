@@ -1,8 +1,39 @@
 import { addMonths, differenceInMonths, isAfter, isBefore, parseISO, subMonths } from "date-fns";
 
+import { caclAgeAtDate } from "../utils/form.utils";
 import { CerfaControl } from ".";
 
 export const ContratDatesControl: CerfaControl[] = [
+  {
+    deps: ["contrat.dateDebutContrat", "maitre1.dateNaissance"],
+    process: ({ values }) => {
+      const { dateDebutContrat } = values.contrat;
+      const { dateNaissance } = values.maitre1;
+      if (!dateDebutContrat || !dateNaissance) return;
+      const { exactAge: ageMaitre } = caclAgeAtDate(dateNaissance, dateDebutContrat);
+
+      if (ageMaitre < 18) {
+        return {
+          error: "Le maître d'apprentissage doit être majeur à la date de début d'exécution du contrat.",
+        };
+      }
+    },
+  },
+  {
+    deps: ["contrat.dateDebutContrat", "maitre2.dateNaissance"],
+    process: ({ values }) => {
+      const { dateDebutContrat } = values.contrat;
+      const { dateNaissance } = values.maitre2;
+      if (!dateDebutContrat || !dateNaissance) return;
+      const { exactAge: ageMaitre } = caclAgeAtDate(dateNaissance, dateDebutContrat);
+
+      if (ageMaitre < 18) {
+        return {
+          error: "Le maître d'apprentissage doit être majeur à la date de début d'exécution du contrat.",
+        };
+      }
+    },
+  },
   {
     deps: ["contrat.dateDebutContrat", "contrat.dateEffetAvenant"],
     process: ({ values }) => {
@@ -80,6 +111,10 @@ export const ContratDatesControl: CerfaControl[] = [
       if (!values.contrat.dateDebutContrat || !values.contrat.dateFinContrat) return;
       const dateDebutContrat = parseISO(values.contrat.dateDebutContrat);
       const dateFinContrat = parseISO(values.contrat.dateFinContrat);
+
+      if (isBefore(dateFinContrat, dateDebutContrat)) {
+        return { error: "La date de début d'exécution du contrat doit être antérieure à la date de fin du contrat" };
+      }
 
       const dureeContrat = differenceInMonths(dateFinContrat, dateDebutContrat);
       if (dureeContrat < 6) {

@@ -1,47 +1,102 @@
-import { Button } from "@codegouvfr/react-dsfr/Button";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
+import { Box, Typography } from "@mui/material";
+import { FC } from "react";
 
-const modal = createModal({
+export const modal = createModal({
   id: "download-cerfa-modal",
   isOpenedByDefault: false,
 });
 
-const DownloadModal = () => {
+interface Props {
+  onDownload: () => void;
+}
+
+const DownloadModal: FC<Props> = ({ onDownload }) => {
   const download = () => {
-    modal.open();
+    onDownload();
   };
 
   return (
-    <>
-      <Button priority="secondary" type="button" nativeButtonProps={modal.buttonProps}>
-        Télécharger
-      </Button>
-      <modal.Component
-        title="Accept terms"
-        iconId="fr-icon-checkbox-circle-line"
-        buttons={[
+    <modal.Component
+      title="Télécharger le Cerfa en l’état"
+      size="large"
+      buttons={[
+        {
+          children: "Annuler",
+        },
+        {
+          iconId: "ri-check-line",
+          onClick: () => {
+            download();
+          },
+          children: "Télécharger",
+        },
+      ]}
+    >
+      <Alert
+        closable
+        title="Vous avez des champs obligatoires non remplis"
+        description="N’oubliez pas de compléter votre document avant de le transmettre à votre organisme compétent."
+        onClose={function noRefCheck() {}}
+        severity="info"
+      />
+      <Box my={2}>
+        <Typography variant="subtitle2">Aucune donnée ne sera conservée.</Typography>
+        <Typography gutterBottom>
+          Vous pourrez toujours modifier le CERFA téléchargé depuis votre poste de travail.
+        </Typography>
+      </Box>
+
+      <RadioButtons
+        legend="Voulez-vous télécharger l’annexe des champs non remplis ou en erreurs ?"
+        hintText="Ce document sera sous la forme d’un fichier PDF séparé."
+        name="annexe_fields"
+        options={[
           {
-            linkProps: { href: "https://example.com", target: "_blank" },
-            doClosesModal: false, //Default true, clicking a button close the modal.
-            children: "Learn more",
+            label: "Oui",
+            nativeInputProps: {
+              value: "oui",
+            },
           },
           {
-            iconId: "ri-check-line",
-            onClick: () => {
-              download();
+            label: "Non",
+            nativeInputProps: {
+              value: "non",
             },
-            children: "Ok",
           },
         ]}
-      >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh
-        finibus et. Aenean eu enim justo. Vestibulum aliquam hendrerit molestie. Mauris malesuada nisi sit amet augue
-        accumsan tincidunt. Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros facilisis libero, vitae commodo
-        nunc quam et ligula. Ut nec ipsum sapien. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer
-        id nisi nec nulla luctus lacinia non eu turpis. Etiam in ex imperdiet justo tincidunt egestas. Ut porttitor urna
-        ac augue cursus tincidunt sit amet sed orci.
-      </modal.Component>
-    </>
+        orientation="horizontal"
+      />
+
+      <RadioButtons
+        legend="Voulez-vous télécharger un document annexe indiquant les démarches à réaliser et comportant des informations utiles pour la suite ?"
+        hintText="Ce document sera sous la forme d’un fichier PDF séparé."
+        name="annexe_guide"
+        options={[
+          {
+            label: "Oui",
+            nativeInputProps: {
+              value: "oui",
+            },
+          },
+          {
+            label: "Non",
+            nativeInputProps: {
+              value: "non",
+            },
+          },
+        ]}
+        orientation="horizontal"
+      />
+
+      <Typography>Cliquez sur télécharger pour obtenir le ou les documents sélectionnés.</Typography>
+      <Typography className="fr-hint-text">
+        Si vous avez sélectionné “Oui” à l’un des documents mentionnés, vous obtiendrez un fichier compressé comprenant
+        les documents sélectionnés.
+      </Typography>
+    </modal.Component>
   );
 };
 

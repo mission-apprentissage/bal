@@ -378,18 +378,11 @@ Le contrat doit être signé avant de débuter.
   "contrat.dureeTravailHebdoHeures": {
     label: "Heures",
     placeholder: "Exemple : 35",
-    fieldType: "number",
+    fieldType: "text",
     required: true,
     requiredMessage: "La durée hebdomadaire de travail est obligatoire",
     showInfo: true,
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d*$",
-      },
-    ],
+    mask: "00",
     messages: [
       {
         type: "regulatory",
@@ -403,16 +396,12 @@ Le temps de formation en CFA est du temps de travail effectif et compte dans l'h
   },
   "contrat.dureeTravailHebdoMinutes": {
     label: "Minutes",
-    fieldType: "number",
+    fieldType: "text",
     showInfo: true,
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d*$",
-      },
-    ],
+    mask: "M0",
+    definitions: {
+      M: /[0-5]/,
+    },
   },
   "contrat.travailRisque": {
     label: "Travail sur machines dangereuses ou exposition à des risques particuliers",

@@ -10,7 +10,7 @@ export const ageApprentiControl: CerfaControl[] = [
       const dateNaissance = parseISO(values.apprenti.dateNaissance);
 
       if (isFuture(dateNaissance)) {
-        return { error: "La date de naissance de peut pas être dans le futur" };
+        return { error: "La date de naissance ne peut pas être dans le futur" };
       }
     },
   },

@@ -9,6 +9,7 @@ import { CerfaControl, controls } from "../controls";
 export interface SelectOption {
   label: string;
   value: string | number;
+  locked?: boolean;
 }
 
 export interface SelectNestedOption {
@@ -41,6 +42,7 @@ export interface CerfaField {
   completion?: boolean;
   precision?: number;
   min?: number;
+  max?: number;
   showsOverlay?: boolean;
   pattern?: {
     value: RegExp;
@@ -62,6 +64,7 @@ export interface CerfaField {
     max?: number;
     signed?: boolean;
   }[];
+  maskLazy?: boolean;
   minLength?: number;
   maxLength?: number;
   options?: SelectOptions;

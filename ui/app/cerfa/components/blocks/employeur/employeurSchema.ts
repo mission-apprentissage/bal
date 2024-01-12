@@ -24,14 +24,7 @@ export const employeurSchema: Record<string, CerfaField> = {
     requiredMessage: "Le siret est obligatoire",
     validateMessage: "n'est pas un siret valide",
     showsOverlay: true,
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d{0,14}$",
-      },
-    ],
+    mask: "00000000000000",
     messages: [
       {
         type: "assistive",
@@ -108,7 +101,7 @@ export const employeurSchema: Record<string, CerfaField> = {
     required: true,
     requiredMessage: "Le code postal est obligatoire",
     validateMessage: "n'est pas un code postal valide",
-    // mask: "00000",
+    mask: "00000",
   },
   "employeur.adresse.commune": {
     label: "Commune",
@@ -190,30 +183,7 @@ export const employeurSchema: Record<string, CerfaField> = {
     showInfo: true,
     requiredMessage: "Le code NAF est obligatoire",
     validateMessage: "le code NAF n'est pas au bon format",
-    // mask: "AA.BBCC",
-    // maskBlocks: [
-    //   {
-    //     name: "AA",
-    //     mask: "MaskedRange",
-    //     from: 1,
-    //     to: 99,
-    //     maxLength: 2,
-    //   },
-    //   {
-    //     name: "BB",
-    //     mask: "MaskedRange",
-    //     from: 1,
-    //     to: 99,
-    //     maxLength: 2,
-    //   },
-    //   {
-    //     name: "CC",
-    //     mask: "Pattern",
-    //     // any letter
-    //     pattern: "^[a-zA-Z]$",
-    //     maxLength: 1,
-    //   },
-    // ],
+    mask: "00.00a",
     messages: [
       {
         type: "assistive",

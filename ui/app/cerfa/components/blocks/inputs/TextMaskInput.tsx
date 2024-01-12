@@ -73,20 +73,17 @@ const TextMaskInput: FC<InputFieldProps> = ({
       }}
       maskInputProps={{
         mask,
-        // unmask: unmask ?? true,
-        // placeholderChar: "_",
         onAccept: (value) => {
           setValue(name, value);
         },
         onComplete: (value) => {
           setValue(name, value);
         },
-        // autofix: true,
-        lazy: false,
+        lazy: fieldSchema?.maskLazy ?? true,
         blocks,
         placeholder: fieldSchema.placeholder,
         disabled: inputProps.disabled,
-        definitions: fieldSchema.definitions,
+        definitions: fieldSchema.definitions ?? {},
       }}
       state={state}
       stateRelatedMessage={stateRelatedMessage}

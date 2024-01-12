@@ -22,14 +22,14 @@ const SelectInput: FC<InputFieldProps> = ({ fieldSchema, inputProps, state, stat
         ? groupedOptions?.map((group) => (
             <optgroup key={group.name} label={group.name}>
               {group.options.map((option) => (
-                <option key={option.label} value={option.value}>
+                <option key={option.label} value={option.value} disabled={option.locked}>
                   {option.label}
                 </option>
               ))}
             </optgroup>
           ))
         : flatOptions?.map((option) => (
-            <option key={option.label} value={option.value}>
+            <option key={option.label} value={option.value} disabled={option.locked}>
               {option.label}
             </option>
           ))}

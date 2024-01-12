@@ -6,9 +6,33 @@ const parseDate = (date: string): Date => {
   return parse(date, "P", new Date(), { locale: fr });
 };
 
-const LATEST_AVAILABLE_SMIC_YEAR = 2023;
+const LATEST_AVAILABLE_SMIC_YEAR = 2024;
 
 const SMICs = {
+  2024: {
+    smics: [
+      {
+        annee: 2024,
+        mensuel: 1766.92,
+        horaire: 11.65,
+        heuresHebdomadaires: 35,
+        minimumGaranti: 4.15,
+        dateEntreeEnVigueur: "01/01/2024",
+        dateEntreeEnVigueurObj: parseDate("01/01/2024"),
+        dateParutionJo: "21/12/2023",
+        dateParutionJoObj: parseDate("21/12/2023"),
+        exceptions: {
+          976: {
+            departement: 976,
+            nomDepartement: "Mayotte",
+            mensuel: 1334.67,
+            horaire: 8.8,
+            heuresHebdomadaires: 35,
+          },
+        },
+      },
+    ],
+  },
   2023: {
     smics: [
       {

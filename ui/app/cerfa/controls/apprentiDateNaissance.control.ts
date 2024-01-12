@@ -8,11 +8,13 @@ export const apprentiDateNaissanceControl: CerfaControl[] = [
     deps: ["apprenti.dateNaissance", "apprenti.nir"],
     process: async ({ values }: CerfaForm) => {
       const dateNaissance = values.apprenti.dateNaissance;
-      const nir = values.apprenti.nir as string;
+      let nir = values.apprenti.nir as string;
 
       if (isEmpty(dateNaissance) || isEmpty(nir)) {
         return {};
       }
+
+      nir = nir.replace(/ /g, "");
 
       if (nir?.length < 3) {
         return {};

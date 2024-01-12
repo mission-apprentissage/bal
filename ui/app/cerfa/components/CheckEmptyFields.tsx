@@ -53,7 +53,16 @@ const CheckEmptyFields: FC<Props> = ({ blockName }) => {
           Est-ce que tous mes champs sont remplis ?
         </Button>
       </Box>
-      {showErrors && (
+      {showErrors && numberOfErrors === 0 && (
+        <Alert
+          small
+          closable
+          description="Tous les champs sont remplis"
+          onClose={() => setShowErrors(false)}
+          severity="success"
+        />
+      )}
+      {showErrors && !!numberOfErrors && (
         <Alert
           small
           closable

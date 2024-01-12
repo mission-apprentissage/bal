@@ -8,12 +8,15 @@ export const apprentiNirControl: CerfaControl[] = [
     deps: ["apprenti.nir"],
     process: async ({ values }: CerfaForm) => {
       const dateNaissance = values.apprenti.dateNaissance;
+      const departementNaissance = values.apprenti.departementNaissance;
       const sexe = values.apprenti.sexe;
-      const nir = values.apprenti.nir as string;
+      let nir = values.apprenti?.nir as string;
 
       if (isEmpty(nir)) {
         return {};
       }
+
+      nir = nir.replace(/ /g, "");
 
       if (!isEmpty(sexe)) {
         if (sexe === "M" && !nir.startsWith("1")) {
@@ -54,6 +57,16 @@ export const apprentiNirControl: CerfaControl[] = [
       if (!nir.startsWith("2") && !nir.startsWith("1")) {
         return {
           error: "Le NIR doit commencer par 1 ou 2",
+        };
+      }
+
+      if (nir?.length < 7) {
+        return {};
+      }
+
+      if (!isEmpty(departementNaissance) && nir?.substring(5, 7) !== departementNaissance) {
+        return {
+          error: "Le département renseigné ne correspond pas aux 6e et 7e chiffre du NIR",
         };
       }
 

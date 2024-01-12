@@ -15,6 +15,7 @@ import { CERFA_STEPS, CerfaStep } from "../utils/cerfa.utils";
 import { downloadFile } from "../utils/form.utils";
 import InputController from "./blocks/inputs/InputController";
 import CerfaAccordionItem from "./CerfaAccordionItem";
+import DownloadModal, { modal } from "./DownloadModal";
 import InformationMessages from "./InformationMessages";
 import LoadingOverlay from "./LoadingOverlay";
 import Stepper from "./stepper/Stepper";
@@ -54,6 +55,7 @@ const CerfaForm: FC = () => {
         dateDebutContrat: "",
         dateDebutFormationPratique: "",
         dateFinContrat: "",
+        dureeTravailHebdoMinutes: "00",
       },
       apprenti: {
         nom: "",
@@ -75,11 +77,18 @@ const CerfaForm: FC = () => {
   const download = async () => {
     const data = await apiPost("/v1/cerfa", { body: values });
 
-    downloadFile(data.content, `${values.apprenti.nom}-${values.apprenti.prenom}-cerfa_10103*10.pdf`);
+    let filename = "cerfa_10103*10.pdf";
+
+    if (values.apprenti.nom && values.apprenti.prenom) {
+      filename = `${values.apprenti.nom}-${values.apprenti.prenom}-${filename}`;
+    }
+
+    downloadFile(data.content, filename);
   };
 
   return (
     <FormProvider {...methods}>
+      <DownloadModal onDownload={download} />
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <Box mb={2} p={2} pt={0} position="sticky" top={24}>
@@ -89,7 +98,7 @@ const CerfaForm: FC = () => {
               <Typography variant="subtitle2" gutterBottom>
                 Téléchargez à tout moment
               </Typography>
-              <Button priority="secondary" type="button" onClick={download}>
+              <Button priority="secondary" type="button" onClick={() => modal.open()}>
                 Télécharger
               </Button>
             </Box>
