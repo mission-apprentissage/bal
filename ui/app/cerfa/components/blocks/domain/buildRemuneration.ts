@@ -307,6 +307,7 @@ export const buildRemuneration = (data) => {
 
   const smicObj = findSmicAtDate(dateDebutContrat);
   let SMIC = smicObj.mensuel;
+  const SMC = data?.smc ? parseFloat(data.smc) : 0;
   const departementEmployeur: keyof (typeof SMICs)[2020]["smics"][0]["exceptions"] = data.employeurAdresseDepartement;
   let isSmicException = false;
   if (smicObj?.exceptions?.[departementEmployeur]) {
@@ -315,12 +316,20 @@ export const buildRemuneration = (data) => {
   }
 
   const seuils = [17, 18, 21, 26];
-  const getSeuils = (age) => {
+  const getSeuils = (age: number) => {
     if (age <= seuils[0]) return 0;
     if (age >= seuils[1] && age < seuils[2]) return 1;
     if (age >= seuils[2] && age < seuils[3]) return 2;
-    if (age >= seuils[3]) return 3;
+    return 3;
   };
+
+  const smcApplies = (age: number) => {
+    if (!SMC) return false;
+    return age >= 21 && data.smc > SMIC;
+  };
+
+  let applicableMinimum = SMIC;
+  let applicableMinimumType: "SMC" | "SMIC" = "SMIC";
 
   const taux = {
     a1: {
@@ -349,8 +358,7 @@ export const buildRemuneration = (data) => {
     },
   };
 
-  const isChangingTaux = (currentAge, nextAge) => {
-    // @ts-expect-error: todo
+  const isChangingTaux = (currentAge: number, nextAge: number) => {
     return getSeuils(nextAge) > getSeuils(currentAge);
   };
 
@@ -370,12 +378,12 @@ export const buildRemuneration = (data) => {
     11: emptyLineObj,
     12: emptyLineObj,
   };
-  // @ts-expect-error: todo
   const taux11 = taux.a1[getSeuils(ageA1)];
-  // @ts-expect-error: todo
   const taux12 = taux.a1[getSeuils(ageA2)];
   const selectedTaux11 = getTaux(1.1, taux11);
   const selectedTaux12 = getTaux(1.2, taux12);
+  applicableMinimum = smcApplies(ageA1) ? SMC : SMIC;
+  applicableMinimumType = smcApplies(ageA1) ? "SMC" : "SMIC";
   if (isChangingTaux(ageA1, ageA2) && !(isAnniversaireInLastMonth && getYear(dateFinContrat) === getYear(dateFinA1))) {
     const dateDebut12 = setMonth(setDay(anniversaireA1, 1), getMonth(anniversaireA1) + 1);
     const dateFin11 = subDays(dateDebut12, 1);
@@ -388,8 +396,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux11) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux11) / 100),
         },
         12: emptyLineObj,
       };
@@ -401,16 +409,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin11, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux11) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux11) / 100),
         },
         12: {
           dateDebut: format(dateDebut12, "yyyy-MM-dd"),
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux12,
           tauxMinimal: taux12,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux12) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux12) / 100),
         },
       };
     } else {
@@ -420,16 +428,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin11, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux11) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux11) / 100),
         },
         12: {
           dateDebut: format(dateDebut12, "yyyy-MM-dd"),
           dateFin: format(dateFinA1, "yyyy-MM-dd"),
           taux: selectedTaux12,
           tauxMinimal: taux12,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux12) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux12) / 100),
         },
       };
     }
@@ -442,8 +450,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux11) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux11) / 100),
         },
         12: emptyLineObj,
       };
@@ -454,8 +462,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinA1, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux11) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux11) / 100),
         },
         12: emptyLineObj,
       };
@@ -467,12 +475,12 @@ export const buildRemuneration = (data) => {
     22: emptyLineObj,
   };
 
-  // @ts-expect-error: todo
   const taux21 = taux.a2[getSeuils(ageA2)];
-  // @ts-expect-error: todo
   const taux22 = taux.a2[getSeuils(ageA3)];
   const selectedTaux21 = getTaux(2.1, taux21);
   const selectedTaux22 = getTaux(2.2, taux22);
+  applicableMinimum = smcApplies(ageA2) ? SMC : SMIC;
+  applicableMinimumType = smcApplies(ageA2) ? "SMC" : "SMIC";
   if (
     isChangingTaux(ageA2, ageA3) &&
     !finRemuneration &&
@@ -489,8 +497,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux21) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux21) / 100),
         },
         22: emptyLineObj,
       };
@@ -502,16 +510,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin21, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux21) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux21) / 100),
         },
         22: {
           dateDebut: format(dateDebut22, "yyyy-MM-dd"),
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux22,
           tauxMinimal: taux22,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux22) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux22) / 100),
         },
       };
     } else {
@@ -521,16 +529,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin21, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux21) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux21) / 100),
         },
         22: {
           dateDebut: format(dateDebut22, "yyyy-MM-dd"),
           dateFin: format(dateFinA2, "yyyy-MM-dd"),
           taux: selectedTaux22,
           tauxMinimal: taux22,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux22) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux22) / 100),
         },
       };
     }
@@ -543,8 +551,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux21) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux21) / 100),
         },
         22: emptyLineObj,
       };
@@ -555,8 +563,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinA2, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux21) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux21) / 100),
         },
         22: emptyLineObj,
       };
@@ -567,12 +575,12 @@ export const buildRemuneration = (data) => {
     31: emptyLineObj,
     32: emptyLineObj,
   };
-  // @ts-expect-error: todo
   const taux31 = taux.a3[getSeuils(ageA3)];
-  // @ts-expect-error: todo
   const taux32 = taux.a3[getSeuils(ageA4)];
   const selectedTaux31 = getTaux(3.1, taux31);
   const selectedTaux32 = getTaux(3.2, taux32);
+  applicableMinimum = smcApplies(ageA3) ? SMC : SMIC;
+  applicableMinimumType = smcApplies(ageA3) ? "SMC" : "SMIC";
   if (
     isChangingTaux(ageA3, ageA4) &&
     !finRemuneration &&
@@ -589,8 +597,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux31) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux31) / 100),
         },
         32: emptyLineObj,
       };
@@ -602,16 +610,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin31, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux31) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux31) / 100),
         },
         32: {
           dateDebut: format(dateDebut32, "yyyy-MM-dd"),
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux32,
           tauxMinimal: taux32,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux32) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux32) / 100),
         },
       };
     } else {
@@ -621,16 +629,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin31, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux31) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux31) / 100),
         },
         32: {
           dateDebut: format(dateDebut32, "yyyy-MM-dd"),
           dateFin: format(dateFinA3, "yyyy-MM-dd"),
           taux: selectedTaux32,
           tauxMinimal: taux32,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux32) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux32) / 100),
         },
       };
     }
@@ -643,8 +651,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux31) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux31) / 100),
         },
         32: emptyLineObj,
       };
@@ -655,8 +663,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinA3, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux31) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux31) / 100),
         },
         32: emptyLineObj,
       };
@@ -667,12 +675,12 @@ export const buildRemuneration = (data) => {
     41: emptyLineObj,
     42: emptyLineObj,
   };
-  // @ts-expect-error: todo
   const taux41 = taux.a4[getSeuils(ageA4)];
-  // @ts-expect-error: todo
   const taux42 = taux.a4[getSeuils(ageA5)];
   const selectedTaux41 = getTaux(4.1, taux41);
   const selectedTaux42 = getTaux(4.2, taux42);
+  applicableMinimum = smcApplies(ageA4) ? SMC : SMIC;
+  applicableMinimumType = smcApplies(ageA4) ? "SMC" : "SMIC";
 
   if (isChangingTaux(ageA4, ageA5) && !finRemuneration && !isAnniversaireInLastMonth) {
     const dateDebut42 = setMonth(setDay(anniversaireA4, 1), getMonth(anniversaireA4) + 1);
@@ -686,8 +694,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux41,
           tauxMinimal: taux41,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux41) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux41) / 100),
         },
         42: emptyLineObj,
       };
@@ -698,16 +706,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin41, "yyyy-MM-dd"),
           taux: selectedTaux41,
           tauxMinimal: taux41,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux41) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux41) / 100),
         },
         42: {
           dateDebut: format(dateDebut42, "yyyy-MM-dd"),
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux42,
           tauxMinimal: taux42,
-          typeSalaire: "SMIC",
-          salaireBrut: ceilUp((SMIC * selectedTaux42) / 100),
+          typeSalaire: applicableMinimumType,
+          salaireBrut: ceilUp((applicableMinimum * selectedTaux42) / 100),
         },
       };
     }
@@ -718,8 +726,8 @@ export const buildRemuneration = (data) => {
         dateFin: format(dateFinContrat, "yyyy-MM-dd"),
         taux: selectedTaux41,
         tauxMinimal: taux41,
-        typeSalaire: "SMIC",
-        salaireBrut: ceilUp((SMIC * selectedTaux41) / 100),
+        typeSalaire: applicableMinimumType,
+        salaireBrut: ceilUp((applicableMinimum * selectedTaux41) / 100),
       },
       42: emptyLineObj,
     };

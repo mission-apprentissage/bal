@@ -7,6 +7,8 @@ import { useFormContext } from "react-hook-form";
 
 import CollapseController from "../../CollapseController";
 import InputController from "../inputs/InputController";
+import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
+import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
 import ConditionItem from "./ConditionItem";
 import { shouldShowRemunerationsAnnuelles } from "./domain/shouldShowRemunerationsAnnuelles";
 
@@ -105,6 +107,7 @@ export const Remunerations = () => {
         </Box>
       )}
       <CollapseController show={shouldShowRemunerationsAnnuelles}>
+        <InputController name="contrat.smc" />
         <Box>
           {remunerationsAnnuelles?.map((annee, i) => {
             const anneeLabel = getAnneeLabel(annee.ordre);
@@ -116,8 +119,15 @@ export const Remunerations = () => {
                   </Box>
                 )}
 
-                <InputController name={`contrat.remunerationsAnnuelles[${i}].dateDebut`} />
-                <InputController name={`contrat.remunerationsAnnuelles[${i}].dateFin`} />
+                <InputGroupContainer>
+                  <InputGroupItem size={6}>
+                    <InputController name={`contrat.remunerationsAnnuelles[${i}].dateDebut`} />
+                  </InputGroupItem>
+                  <InputGroupItem size={6}>
+                    <InputController name={`contrat.remunerationsAnnuelles[${i}].dateFin`} />
+                  </InputGroupItem>
+                </InputGroupContainer>
+
                 <Box display="flex">
                   <InputController name={`contrat.remunerationsAnnuelles[${i}].taux`} />
                   <Box mt={4}>

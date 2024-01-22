@@ -419,6 +419,12 @@ Le temps de formation en CFA est du temps de travail effectif et compte dans l'h
       },
     ],
   },
+  "contrat.smc": {
+    label: "Salaire minimum conventionnel (SMC)",
+    fieldType: "number",
+    required: true,
+    requiredMessage: "Le salaire minimum conventionnel est obligatoire",
+  },
   "contrat.salaireEmbauche": {
     locked: true,
     label: "Salaire brut mensuel à l'embauche",

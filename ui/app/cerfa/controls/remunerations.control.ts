@@ -22,6 +22,7 @@ export const RemunerationsControl: CerfaControl[] = [
       "apprenti.dateNaissance",
       "contrat.dateDebutContrat",
       "contrat.dateFinContrat",
+      "contrat.smc",
       "apprenti.age",
     ],
     process: ({ values }) => {
@@ -91,8 +92,10 @@ export const RemunerationsControl: CerfaControl[] = [
         const apprentiAge = values.apprenti.age;
         const dateDebutContrat = values.contrat.dateDebutContrat;
         const dateFinContrat = values.contrat.dateFinContrat;
+        const smc = values.contrat.smc;
 
         const { remunerationsAnnuelles } = buildRemuneration({
+          smc,
           apprentiDateNaissance,
           apprentiAge,
           dateDebutContrat,
