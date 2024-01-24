@@ -452,13 +452,13 @@ Le temps de formation en CFA est du temps de travail effectif et compte dans l'h
   },
   "contrat.remunerationsAnnuelles[].taux": {
     fieldType: "numberStepper",
-    label: "% de rémunération du SMIC",
+    label: "% de rémunération du SMIC ou SMC",
     required: true,
   },
   "contrat.remunerationsAnnuelles[].tauxMinimal": {
     fieldType: "number",
     showInfo: true,
-    label: "% de rémunération du SMIC",
+    label: "% de rémunération du SMIC ou SMC",
     required: true,
   },
   "contrat.remunerationsAnnuelles[].typeSalaire": {

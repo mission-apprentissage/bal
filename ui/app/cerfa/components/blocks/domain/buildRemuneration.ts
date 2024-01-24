@@ -1,4 +1,4 @@
-import { addDays, format, getMonth, getYear, parse, parseISO, setDay, setMonth, subDays } from "date-fns";
+import { addDays, format, getMonth, getYear, parse, parseISO, setDate, setMonth, subDays } from "date-fns";
 import addYears from "date-fns/addYears";
 import { fr } from "date-fns/locale";
 
@@ -385,7 +385,7 @@ export const buildRemuneration = (data) => {
   applicableMinimum = smcApplies(ageA1) ? SMC : SMIC;
   applicableMinimumType = smcApplies(ageA1) ? "SMC" : "SMIC";
   if (isChangingTaux(ageA1, ageA2) && !(isAnniversaireInLastMonth && getYear(dateFinContrat) === getYear(dateFinA1))) {
-    const dateDebut12 = setMonth(setDay(anniversaireA1, 1), getMonth(anniversaireA1) + 1);
+    const dateDebut12 = setMonth(setDate(anniversaireA1, 1), getMonth(anniversaireA1) + 1);
     const dateFin11 = subDays(dateDebut12, 1);
 
     if (dateFin11 >= dateFinContrat) {
@@ -486,7 +486,7 @@ export const buildRemuneration = (data) => {
     !finRemuneration &&
     !(isAnniversaireInLastMonth && getYear(dateFinContrat) === getYear(dateFinA2))
   ) {
-    const dateDebut22 = setMonth(setDay(anniversaireA2, 1), getMonth(anniversaireA2) + 1);
+    const dateDebut22 = setMonth(setDate(anniversaireA2, 1), getMonth(anniversaireA2) + 1);
     const dateFin21 = subDays(dateDebut22, 1);
 
     if (dateFin21 >= dateFinContrat) {
@@ -586,7 +586,7 @@ export const buildRemuneration = (data) => {
     !finRemuneration &&
     !(isAnniversaireInLastMonth && getYear(dateFinContrat) === getYear(dateFinA3))
   ) {
-    const dateDebut32 = setMonth(setDay(anniversaireA3, 1), getMonth(anniversaireA3) + 1);
+    const dateDebut32 = setMonth(setDate(anniversaireA3, 1), getMonth(anniversaireA3) + 1);
     const dateFin31 = subDays(dateDebut32, 1);
 
     if (dateFin31 >= dateFinContrat) {
@@ -683,7 +683,7 @@ export const buildRemuneration = (data) => {
   applicableMinimumType = smcApplies(ageA4) ? "SMC" : "SMIC";
 
   if (isChangingTaux(ageA4, ageA5) && !finRemuneration && !isAnniversaireInLastMonth) {
-    const dateDebut42 = setMonth(setDay(anniversaireA4, 1), getMonth(anniversaireA4) + 1);
+    const dateDebut42 = setMonth(setDate(anniversaireA4, 1), getMonth(anniversaireA4) + 1);
     const dateFin41 = subDays(dateDebut42, 1);
 
     if (dateFin41 >= dateFinContrat) {
