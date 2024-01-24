@@ -107,7 +107,7 @@ Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez re
       "n'est pas un code diplôme valide. Le code formation diplôme doit être au format 8 caractères ou 9 avec la lettre specialité",
     mask: "00C00000",
     definitions: {
-      C: /[1-9a-zA-Z]/,
+      C: /[0-9a-zA-Z]/,
     },
     messages: [
       {
