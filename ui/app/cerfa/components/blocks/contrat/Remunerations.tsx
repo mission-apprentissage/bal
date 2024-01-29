@@ -1,10 +1,13 @@
 import { fr } from "@codegouvfr/react-dsfr";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { getLink } from "@codegouvfr/react-dsfr/link";
+import { Notice } from "@codegouvfr/react-dsfr/Notice";
 import { Box, Typography } from "@mui/material";
+import { format, getDate, parseISO, setDate, subMonths } from "date-fns";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
+import { formatDate } from "../../../../../utils/date.utils";
 import CollapseController from "../../CollapseController";
 import InputController from "../inputs/InputController";
 import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
@@ -137,6 +140,21 @@ export const Remunerations = () => {
                     </Typography>
                   </Box>
                 </Box>
+                {annee.isChangingTaux &&
+                  (() => {
+                    const age = annee.newSeuil;
+                    const applicationDate = formatDate(annee.dateDebut);
+                    const birthday = getDate(parseISO(apprentiDateNaissance));
+                    const birthdayDate = format(
+                      setDate(subMonths(new Date(annee.dateDebut), 1), birthday),
+                      "dd/MM/yyyy"
+                    );
+                    return (
+                      <Notice
+                        title={`Votre apprenti aura ${age} ans en date du ${birthdayDate}. Ce faisant, un nouveau seuil s’applique en date du ${applicationDate}.`}
+                      />
+                    );
+                  })()}
               </Box>
             );
           })}

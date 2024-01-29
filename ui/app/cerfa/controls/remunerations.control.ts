@@ -125,6 +125,8 @@ export const RemunerationsControl: CerfaControl[] = [
             [`${remuAnneePath}.salaireBrut`]: { value: remunerationsAnnuelles[i].salaireBrut, cascade: false },
             // @ts-expect-error: todo
             [`${remuAnneePath}.ordre`]: { value: remunerationsAnnuelles[i].ordre, cascade: false },
+            [`${remuAnneePath}.isChangingTaux`]: { value: remunerationsAnnuelles[i]?.isChangingTaux, cascade: false },
+            [`${remuAnneePath}.newSeuil`]: { value: remunerationsAnnuelles[i]?.newSeuil, cascade: false },
           },
         };
       },

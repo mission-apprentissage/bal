@@ -1,4 +1,4 @@
-import { addMonths, differenceInMonths, isAfter, isBefore, parseISO, subMonths } from "date-fns";
+import { addMonths, differenceInMonths, isAfter, isBefore, parseISO, startOfDay, subMonths } from "date-fns";
 
 import { caclAgeAtDate } from "../utils/form.utils";
 import { CerfaControl } from ".";
@@ -43,6 +43,18 @@ export const ContratDatesControl: CerfaControl[] = [
       if (isAfter(dateDebutContrat, dateEffetAvenant)) {
         return {
           error: "La date de début de contrat ne peut pas être après la date d'effet de l'avenant",
+        };
+      }
+    },
+  },
+  {
+    deps: ["contrat.dateFinContrat"],
+    process: ({ values }) => {
+      if (!values.contrat.dateFinContrat) return;
+      const dateFinContrat = parseISO(values.contrat.dateFinContrat);
+      if (isBefore(dateFinContrat, startOfDay(new Date()))) {
+        return {
+          error: "La date de conclusion du formulaire doit être antérieure ou égale à la date courante",
         };
       }
     },

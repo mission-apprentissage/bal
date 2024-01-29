@@ -223,21 +223,17 @@ export const employeurSchema: Record<string, CerfaField> = {
       },
     ],
   },
-  // TODO: tranform to select when API down
+  // TODO: transform to select when API down
   "employeur.codeIdcc": {
     label: "Code IDCC de la convention",
     placeholder: "Exemple : 1000",
     required: true,
     requiredMessage: "Le code idcc est obligatoire",
     validateMessage: "le code IDCC n'est pas au bon format",
-    mask: "C",
-    maskBlocks: [
-      {
-        name: "C",
-        mask: "Pattern",
-        pattern: "^\\d{0,4}$",
-      },
-    ],
+    mask: "I[000]",
+    definitions: {
+      I: /[1-9]/,
+    },
     messages: [
       {
         type: "assistive",

@@ -1,4 +1,4 @@
-import { addDays, format, getMonth, getYear, parse, parseISO, setDate, setMonth, subDays } from "date-fns";
+import { format, getMonth, getYear, parse, parseISO, setDate, setMonth, subDays } from "date-fns";
 import addYears from "date-fns/addYears";
 import { fr } from "date-fns/locale";
 
@@ -283,26 +283,27 @@ export const buildRemuneration = (data) => {
   const dateFinA1 = subDays(addYears(dateDebutContrat, 1), 1);
   const dateDebutA2 = addYears(dateDebutContrat, 1);
   const dateFinA2 = subDays(addYears(dateDebutA2, 1), 1);
-  const dateDebutA3 = addDays(dateDebutA2, 1);
+  const dateDebutA3 = addYears(dateDebutA2, 1);
   const dateFinA3 = subDays(addYears(dateDebutA3, 1), 1);
-  const dateDebutA4 = addDays(dateDebutA3, 1);
+  const dateDebutA4 = addYears(dateDebutA3, 1);
 
   const ageA1 = Math.floor(data.apprentiAge);
   const anniversaireA1 = addYears(apprentiDateNaissance, ageA1 + 1);
   const ageA2 = ageA1 + 1;
-  const anniversaireA2 = addDays(anniversaireA1, 1);
+  const anniversaireA2 = addYears(anniversaireA1, 1);
   const ageA3 = ageA2 + 1;
-  const anniversaireA3 = addDays(anniversaireA2, 1);
+  const anniversaireA3 = addYears(anniversaireA2, 1);
   const ageA4 = ageA3 + 1;
-  const anniversaireA4 = addDays(anniversaireA3, 1);
+  const anniversaireA4 = addYears(anniversaireA3, 1);
   const ageA5 = ageA4 + 1;
 
   // Kept for debug
   // console.log([
-  //   { date: apprentiDateNaissance.toFormat("yyyy-MM-dd"), age: ageA1 },
-  //   { date: anniversaireA1.toFormat("yyyy-MM-dd"), age: ageA2 },
-  //   { date: anniversaireA2.toFormat("yyyy-MM-dd"), age: ageA3 },
-  //   { date: anniversaireA3.toFormat("yyyy-MM-dd"), age: ageA4 },
+  //   { date: format(apprentiDateNaissance, "dd/MM/yyyy"), age: ageA1 },
+  //   { date: format(anniversaireA1, "dd/MM/yyyy"), age: ageA2 },
+  //   { date: format(anniversaireA2, "dd/MM/yyyy"), age: ageA3 },
+  //   { date: format(anniversaireA3, "dd/MM/yyyy"), age: ageA4 },
+  //   { date: format(anniversaireA4, "dd/MM/yyyy"), age: ageA5 },
   // ]);
 
   const smicObj = findSmicAtDate(dateDebutContrat);
@@ -365,13 +366,24 @@ export const buildRemuneration = (data) => {
   const getTaux = (part, tauxValue) => Math.max(selectedTaux?.[part] ?? 0, tauxValue);
 
   let finRemuneration = false;
-  const emptyLineObj = {
+  const emptyLineObj: {
+    dateDebut: string;
+    dateFin: string;
+    taux: number;
+    tauxMinimal: number;
+    typeSalaire: "SMIC" | "SMC";
+    salaireBrut: number;
+    isChangingTaux?: boolean;
+    newSeuil?: number;
+  } = {
     dateDebut: "",
     dateFin: "",
     taux: 0,
     tauxMinimal: 0,
     typeSalaire: "SMIC",
     salaireBrut: 0,
+    isChangingTaux: false,
+    newSeuil: undefined,
   };
 
   let result1 = {
@@ -419,6 +431,8 @@ export const buildRemuneration = (data) => {
           tauxMinimal: taux12,
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux12) / 100),
+          isChangingTaux: true,
+          newSeuil: ageA2,
         },
       };
     } else {
@@ -438,6 +452,8 @@ export const buildRemuneration = (data) => {
           tauxMinimal: taux12,
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux12) / 100),
+          isChangingTaux: true,
+          newSeuil: ageA2,
         },
       };
     }
@@ -520,6 +536,8 @@ export const buildRemuneration = (data) => {
           tauxMinimal: taux22,
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux22) / 100),
+          isChangingTaux: true,
+          newSeuil: ageA3,
         },
       };
     } else {
@@ -539,6 +557,8 @@ export const buildRemuneration = (data) => {
           tauxMinimal: taux22,
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux22) / 100),
+          isChangingTaux: true,
+          newSeuil: ageA3,
         },
       };
     }
@@ -620,6 +640,8 @@ export const buildRemuneration = (data) => {
           tauxMinimal: taux32,
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux32) / 100),
+          isChangingTaux: true,
+          newSeuil: ageA4,
         },
       };
     } else {
@@ -639,6 +661,8 @@ export const buildRemuneration = (data) => {
           tauxMinimal: taux32,
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux32) / 100),
+          isChangingTaux: true,
+          newSeuil: ageA4,
         },
       };
     }
@@ -716,6 +740,8 @@ export const buildRemuneration = (data) => {
           tauxMinimal: taux42,
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux42) / 100),
+          isChangingTaux: true,
+          newSeuil: ageA5,
         },
       };
     }
@@ -743,6 +769,8 @@ export const buildRemuneration = (data) => {
           typeSalaire: result[part].typeSalaire,
           salaireBrut: ceilUp(result[part].salaireBrut),
           ordre: `${part.toString()[0]}.${part.toString()[1]}`,
+          isChangingTaux: result[part].isChangingTaux,
+          newSeuil: result[part].newSeuil,
         }
       : undefined;
 

@@ -9,10 +9,6 @@ export const idccControl: CerfaControl[] = [
       const codeIdcc = values.employeur.codeIdcc;
       const foundIdcc = idcc?.[codeIdcc];
 
-      if (codeIdcc.length < 4) {
-        return { error: "Le code IDCC doit comporter 4 chiffres" };
-      }
-
       if (!foundIdcc) {
         return { error: "Le code IDCC est inconnu" };
       }
