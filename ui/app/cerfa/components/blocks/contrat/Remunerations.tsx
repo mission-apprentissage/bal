@@ -14,6 +14,7 @@ import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
 import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
 import ConditionItem from "./ConditionItem";
 import { shouldShowRemunerationsAnnuelles } from "./domain/shouldShowRemunerationsAnnuelles";
+import { shouldShowSmc } from "./domain/shouldShowSmc";
 
 const { Link } = getLink();
 
@@ -110,7 +111,9 @@ export const Remunerations = () => {
         </Box>
       )}
       <CollapseController show={shouldShowRemunerationsAnnuelles}>
-        <InputController name="contrat.smc" />
+        <CollapseController show={shouldShowSmc}>
+          <InputController name="contrat.smc" />
+        </CollapseController>
         <Box>
           {remunerationsAnnuelles?.map((annee, i) => {
             const anneeLabel = getAnneeLabel(annee.ordre);

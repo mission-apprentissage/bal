@@ -22,7 +22,8 @@ export const ageApprentiControl: CerfaControl[] = [
         values.apprenti.dateNaissance,
         values.contrat.dateDebutContrat
       );
-      if (ageDebutContrat <= 15) {
+
+      if (ageDebutContrat < 15) {
         return { error: "L'apprenti(e) doit avoir au moins 15 ans à la date de début d'exécution du contrat" };
       }
       return {
