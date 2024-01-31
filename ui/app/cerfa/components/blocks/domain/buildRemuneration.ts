@@ -1,4 +1,4 @@
-import { format, getMonth, getYear, parse, parseISO, setDate, setMonth, subDays } from "date-fns";
+import { addMonths, format, getDate, getMonth, getYear, parse, parseISO, setDate, setMonth, subDays } from "date-fns";
 import addYears from "date-fns/addYears";
 import { fr } from "date-fns/locale";
 
@@ -279,6 +279,9 @@ export const buildRemuneration = (data) => {
   const dateFinContrat = parseISO(data.dateFinContrat);
   const apprentiDateNaissance = parseISO(data.apprentiDateNaissance);
   const isAnniversaireInLastMonth = getMonth(dateFinContrat) === getMonth(apprentiDateNaissance);
+  const isAnniversaireDebutContrat =
+    getDate(dateDebutContrat) === getDate(apprentiDateNaissance) &&
+    getMonth(dateDebutContrat) === getMonth(apprentiDateNaissance);
 
   const dateFinA1 = subDays(addYears(dateDebutContrat, 1), 1);
   const dateDebutA2 = addYears(dateDebutContrat, 1);
@@ -288,7 +291,7 @@ export const buildRemuneration = (data) => {
   const dateDebutA4 = addYears(dateDebutA3, 1);
 
   const ageA1 = Math.floor(data.apprentiAge);
-  const anniversaireA1 = addYears(apprentiDateNaissance, ageA1 + 1);
+  const anniversaireA1 = isAnniversaireDebutContrat ? dateDebutContrat : addYears(apprentiDateNaissance, ageA1 + 1);
   const ageA2 = ageA1 + 1;
   const anniversaireA2 = addYears(anniversaireA1, 1);
   const ageA3 = ageA2 + 1;
@@ -299,11 +302,11 @@ export const buildRemuneration = (data) => {
 
   // Kept for debug
   // console.log([
-  //   { date: format(apprentiDateNaissance, "dd/MM/yyyy"), age: ageA1 },
-  //   { date: format(anniversaireA1, "dd/MM/yyyy"), age: ageA2 },
-  //   { date: format(anniversaireA2, "dd/MM/yyyy"), age: ageA3 },
-  //   { date: format(anniversaireA3, "dd/MM/yyyy"), age: ageA4 },
-  //   { date: format(anniversaireA4, "dd/MM/yyyy"), age: ageA5 },
+  //   { apprentiDateNaissance: format(apprentiDateNaissance, "dd/MM/yyyy"), ageA1: ageA1 },
+  //   { anniversaireA1: format(anniversaireA1, "dd/MM/yyyy"), ageA2: ageA2 },
+  //   { anniversaireA2: format(anniversaireA2, "dd/MM/yyyy"), ageA3: ageA3 },
+  //   { anniversaireA3: format(anniversaireA3, "dd/MM/yyyy"), ageA4: ageA4 },
+  //   { anniversaireA4: format(anniversaireA4, "dd/MM/yyyy"), ageA5: ageA5 },
   // ]);
 
   const smicObj = findSmicAtDate(dateDebutContrat);
@@ -360,6 +363,10 @@ export const buildRemuneration = (data) => {
   };
 
   const isChangingTaux = (currentAge: number, nextAge: number) => {
+    if (isAnniversaireDebutContrat) {
+      return getSeuils(nextAge - 1) > getSeuils(currentAge - 1);
+    }
+
     return getSeuils(nextAge) > getSeuils(currentAge);
   };
 
@@ -432,7 +439,7 @@ export const buildRemuneration = (data) => {
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux12) / 100),
           isChangingTaux: true,
-          newSeuil: ageA2,
+          newSeuil: isAnniversaireDebutContrat ? ageA1 : ageA2,
         },
       };
     } else {
@@ -453,7 +460,7 @@ export const buildRemuneration = (data) => {
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux12) / 100),
           isChangingTaux: true,
-          newSeuil: ageA2,
+          newSeuil: isAnniversaireDebutContrat ? ageA1 : ageA2,
         },
       };
     }
@@ -502,7 +509,7 @@ export const buildRemuneration = (data) => {
     !finRemuneration &&
     !(isAnniversaireInLastMonth && getYear(dateFinContrat) === getYear(dateFinA2))
   ) {
-    const dateDebut22 = setMonth(setDate(anniversaireA2, 1), getMonth(anniversaireA2) + 1);
+    const dateDebut22 = addMonths(setDate(anniversaireA2, 1), 1);
     const dateFin21 = subDays(dateDebut22, 1);
 
     if (dateFin21 >= dateFinContrat) {
@@ -537,7 +544,7 @@ export const buildRemuneration = (data) => {
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux22) / 100),
           isChangingTaux: true,
-          newSeuil: ageA3,
+          newSeuil: isAnniversaireDebutContrat ? ageA2 : ageA3,
         },
       };
     } else {
@@ -558,7 +565,7 @@ export const buildRemuneration = (data) => {
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux22) / 100),
           isChangingTaux: true,
-          newSeuil: ageA3,
+          newSeuil: isAnniversaireDebutContrat ? ageA2 : ageA3,
         },
       };
     }
@@ -641,7 +648,7 @@ export const buildRemuneration = (data) => {
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux32) / 100),
           isChangingTaux: true,
-          newSeuil: ageA4,
+          newSeuil: isAnniversaireDebutContrat ? ageA3 : ageA4,
         },
       };
     } else {
@@ -662,7 +669,7 @@ export const buildRemuneration = (data) => {
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux32) / 100),
           isChangingTaux: true,
-          newSeuil: ageA4,
+          newSeuil: isAnniversaireDebutContrat ? ageA3 : ageA4,
         },
       };
     }
@@ -741,7 +748,7 @@ export const buildRemuneration = (data) => {
           typeSalaire: applicableMinimumType,
           salaireBrut: ceilUp((applicableMinimum * selectedTaux42) / 100),
           isChangingTaux: true,
-          newSeuil: ageA5,
+          newSeuil: isAnniversaireDebutContrat ? ageA4 : ageA5,
         },
       };
     }

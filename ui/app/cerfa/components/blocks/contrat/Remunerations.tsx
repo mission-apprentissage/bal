@@ -148,10 +148,9 @@ export const Remunerations = () => {
                     const age = annee.newSeuil;
                     const applicationDate = formatDate(annee.dateDebut);
                     const birthday = getDate(parseISO(apprentiDateNaissance));
-                    const birthdayDate = format(
-                      setDate(subMonths(new Date(annee.dateDebut), 1), birthday),
-                      "dd/MM/yyyy"
-                    );
+                    const birthdayDate = birthday
+                      ? format(setDate(subMonths(new Date(annee.dateDebut), 1), birthday), "dd/MM/yyyy")
+                      : undefined;
                     return (
                       <Notice
                         title={`Votre apprenti aura ${age} ans en date du ${birthdayDate}. Ce faisant, un nouveau seuil s’applique en date du ${applicationDate}.`}
