@@ -13,7 +13,7 @@ const NumberInput: FC<InputFieldProps> = (props) => {
         {...props}
         inputProps={{
           ...inputProps,
-          type: "number",
+          // type: "number",
         }}
       />
     );

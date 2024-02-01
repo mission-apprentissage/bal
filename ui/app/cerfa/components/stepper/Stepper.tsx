@@ -14,7 +14,7 @@ const Stepper: FC = () => {
       {Object.entries(CERFA_STEPS).map(([key, cerfaStep]) => (
         <Step
           key={key}
-          active={activeStep.id === cerfaStep.id}
+          active={activeStep?.id === cerfaStep.id}
           stepNumber={cerfaStep.order}
           onClick={() => {
             setActiveStep(cerfaStep);

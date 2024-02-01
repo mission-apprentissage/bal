@@ -19,6 +19,11 @@ const unlockAllCascade = {
   "employeur.privePublic": { locked: false, reset: true, value: true },
 };
 
+const SUCCESS = {
+  success: true,
+  stateRelatedMessage: "Récupéré automatiquement à partir du siret",
+};
+
 export const employerSiretLogic: CerfaControl = {
   deps: ["employeur.siret"],
   process: async ({ values, signal }) => {
@@ -62,33 +67,41 @@ export const employerSiretLogic: CerfaControl = {
         "employeur.siret": {
           success: true,
           stateRelatedMessage:
-            "Le siret est valide et actif. Des champs ont été remplis automatiquement, vous avez la possibilité de les modifier si besoin. Si vous constatez une erreur manifeste sur les données remplies automatiquement, rendez-vous sur le site de l'INSEE pour savoir comment corriger les informations à la source : https://www.insee.fr/fr/information/2015441",
+            "Le siret est valide et actif. Des champs ont été remplis automatiquement, vous avez la possibilité de les modifier si besoin. Si vous constatez une erreur manifeste sur les données remplies automatiquement, rendez-vous sur le site de l'INSEE pour savoir comment corriger les informations à la source : https://www.insee.fr/fr/information/2015441)",
           cascade: false,
         },
         "employeur.denomination": {
           value: result.enseigne || result.entreprise_raison_sociale,
+          ...((result.enseigne || result.entreprise_raison_sociale) && SUCCESS),
         },
         "employeur.naf": {
           value: result.naf_code,
           cascade: false,
+          ...(result.naf_code && SUCCESS),
         },
         "employeur.codeIdcc": {
           value: result.conventionCollective?.idcc ? `${result.conventionCollective?.idcc}` : undefined,
+          ...(result.conventionCollective?.idcc && SUCCESS),
         },
         "employeur.codeIdcc_special": {
           value: result.conventionCollective?.idcc ? `${result.conventionCollective?.idcc}` : undefined,
+          ...(result.conventionCollective?.idcc && SUCCESS),
         },
         "employeur.libelleIdcc": {
           value: result.conventionCollective?.titre || undefined,
+          ...(result.conventionCollective?.titre && SUCCESS),
         },
         "employeur.nombreDeSalaries": {
           value: result.entreprise_tranche_effectif_salarie?.de || undefined,
+          ...(result.entreprise_tranche_effectif_salarie?.de && SUCCESS),
         },
         "employeur.adresse.numero": {
           value: result.numero_voie || undefined,
+          ...(result.numero_voie && SUCCESS),
         },
         "employeur.adresse.repetitionVoie": {
           value: result.indice_repetition_voie,
+          ...SUCCESS,
           reset: true,
         },
         "employeur.adresse.voie": {
@@ -97,31 +110,38 @@ export const employerSiretLogic: CerfaControl = {
               ? `${result.type_voie ? `${result.type_voie} ` : undefined}${result.nom_voie}`
               : undefined,
           locked: false,
+          ...((result.type_voie || result.nom_voie) && SUCCESS),
         },
         "employeur.adresse.complement": {
           value: result.complement_adresse || undefined,
+          ...(result.complement_adresse && SUCCESS),
           locked: false,
         },
         "employeur.adresse.codePostal": {
           value: result.code_postal || undefined,
           locked: false,
           cascade: false,
+          ...(result.code_postal && SUCCESS),
         },
         "employeur.adresse.commune": {
           value: result.localite || undefined,
           locked: false,
+          ...(result.localite && SUCCESS),
         },
         "employeur.adresse.departement": {
           value: result.num_departement || undefined,
           locked: false,
+          ...(result.num_departement && SUCCESS),
         },
         "employeur.adresse.region": {
           value: result.num_region || undefined,
           locked: true,
+          ...(result.num_region && SUCCESS),
         },
         "employeur.privePublic": {
           value: result.public ?? true,
           locked: false,
+          ...(result.public && SUCCESS),
         },
       },
     };

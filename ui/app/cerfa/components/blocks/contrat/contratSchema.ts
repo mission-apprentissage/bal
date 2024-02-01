@@ -101,9 +101,13 @@ export const contratSchema: Record<string, CerfaField> = {
       {
         type: "assistive",
         content: `11 : c'est le tout premier contrat de l'apprenti, il n'a jamais été en apprentissage auparavant et vous serez son 1er employeur en apprentissage
+        
 21 : le contrat précédent de votre apprenti est arrivé à terme, vous signez ce nouveau contrat d'apprentissage avec lui pour prolonger l'apprentissage dans votre entreprise
+        
 22 : l'apprenti était en apprentissage chez un autre employeur, son contrat est arrivé à terme et vous signez ce contrat d'apprentissage avec lui
+        
 23 : l'apprenti était en apprentissage chez un autre employeur mais le contrat a été rompu avant son terme ; vous signez ce contrat d'apprentissage avec lui
+        
 33 :  vous devrez saisir au moins une nouvelle période de rémunération par rapport à la version précédente du contrat.  Le pourcentage de rémunération de la première période de l’avenant doit être supérieur ou égal au pourcentage de rémunération de la dernière période du contrat qui fait l'objet de cet avenant.`,
       },
     ],
@@ -133,6 +137,7 @@ En cas de réduction ou allongement de la durée du contrat, vous devrez aussi r
     requiredMessage: "La numéro du contrat précédent est obligatoire",
     validateMessage: "n'est pas un numéro valide",
     mask: "DEP Y M N 0000",
+    maskLazy: false,
     maskBlocks: [
       {
         name: "D",
@@ -540,10 +545,12 @@ Le temps de formation en CFA est du temps de travail effectif et compte dans l'h
   },
   "contrat.avantageNourriture": {
     label: "Nourriture",
-    fieldType: "number",
+    fieldType: "text",
     requiredMessage: "Cette déclaration est obligatoire",
     min: 1,
-    mask: "X € / rep\\as",
+    placeholder: "€ / repas",
+    mask: "X € / repas",
+    maskLazy: true,
     precision: 2,
     maskBlocks: [
       {
@@ -557,8 +564,9 @@ Le temps de formation en CFA est du temps de travail effectif et compte dans l'h
   },
   "contrat.avantageLogement": {
     label: "Logement",
-    fieldType: "number",
+    fieldType: "text",
     min: 1,
+    placeholder: "€ / mois",
     mask: "X € / mois",
     precision: 2,
     maskBlocks: [

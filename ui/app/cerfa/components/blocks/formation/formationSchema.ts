@@ -121,12 +121,13 @@ Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez re
   "formation.intituleQualification": {
     fieldType: "text",
     required: true,
-    label: "Intitulé précis",
+    label: "Intitulé précis du diplôme ou titre visé par l'apprenti(e)",
+    placeholder: "Exemple : CAP Maçon",
     requiredMessage: "L'intitulé du diplôme ou titre est obligatoire",
     validateMessage: " n'est pas un intitulé valide",
   },
   "formation.typeDiplome": {
-    label: "Diplôme ou titre visé par l'apprenti",
+    label: "Diplôme ou titre visé par l'apprenti(e)",
     fieldType: "select",
     required: true,
     requiredMessage: "Le diplôme ou titre visé est obligatoire",

@@ -11,6 +11,7 @@ const StyledBox = styled(Box, { shouldForwardProp: (propName) => propName !== "a
   justifyContent: "center",
   alignItems: "center",
   margin: 8,
+  minWidth: 32,
   width: 32,
   height: 32,
   border: "1px solid",

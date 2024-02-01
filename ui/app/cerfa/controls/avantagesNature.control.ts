@@ -26,19 +26,4 @@ export const avantagesNatureControl: CerfaControl[] = [
       }
     },
   },
-  {
-    target: "avantageNature",
-    blocCompletion: "contat",
-    deps: ["contrat.avantageNourriture", "contrat.avantageLogement", "contrat.autreAvantageEnNature"],
-    process: ({ values }) => {
-      const isMissingField =
-        values.contrat.avantageNature &&
-        !values.contrat.avantageNourriture &&
-        !values.contrat.avantageLogement &&
-        !values.contrat.autreAvantageEnNature;
-      if (isMissingField) {
-        return { error: "Sous partie avantage en nature" };
-      }
-    },
-  },
 ];

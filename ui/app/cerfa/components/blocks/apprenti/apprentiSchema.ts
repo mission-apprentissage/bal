@@ -1,4 +1,4 @@
-import { departements } from "shared/constants/departements";
+import { departementsList } from "shared/constants/departements";
 import { DIPLOMES } from "shared/constants/diplomes";
 
 import { CerfaField } from "../../../utils/cerfaSchema";
@@ -8,7 +8,7 @@ import { shouldAskResponsableLegalAdresse } from "../domain/shouldAskResponsable
 
 export const apprentiSchema: Record<string, CerfaField> = {
   "apprenti.nom": {
-    label: "Nom de naissance de l'apprenti(e )",
+    label: "Nom de naissance de l'apprenti(e)",
     placeholder: "Exemple : Martin",
     required: true,
     showInfo: true,
@@ -50,7 +50,7 @@ export const apprentiSchema: Record<string, CerfaField> = {
     ],
   },
   "apprenti.prenom": {
-    label: "Le premier prénom de l'apprenti(e ) selon l'état civil",
+    label: "Le premier prénom de l'apprenti(e) selon l'état civil",
     placeholder: "Exemple : Jean-François",
     required: true,
     showInfo: true,
@@ -137,8 +137,8 @@ Pas de limite d'âge si  l'apprenti :
     fieldType: "select",
     required: true,
     requiredMessage: "Le département de naissance est obligatoire",
-    options: Object.keys(departements).map((code) => ({
-      label: `${code} - ${departements[code].name}`,
+    options: departementsList.map(({ code, name }) => ({
+      label: `${code} - ${name}`,
       value: code,
     })),
     messages: [
@@ -267,7 +267,7 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     requiredMessage: "La commune est obligatoire",
   },
   "apprenti.telephone": {
-    label: "Téléphone",
+    label: "Téléphone de l'apprenti(e)",
     placeholder: "Exemple : 6 23 45 67 89",
     fieldType: "phone",
     messages: [
@@ -278,7 +278,7 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     ],
   },
   "apprenti.courriel": {
-    label: "Courriel",
+    label: "Courriel de l'apprenti(e)",
     placeholder: "Exemple : jf.martin@email.fr",
     fieldType: "email",
     requiredMessage: "Le courriel de l'apprenti(e) est obligatoire",
@@ -385,9 +385,7 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
       { value: "11", label: "11 - Personne à la recherche d’un emploi (inscrite ou non à Pôle emploi)" },
       { value: "12", label: "12 - Inactif" },
     ],
-    messages: [
-      { type: "assistive", content: "Situation dans laquelle se trouvait l'apprenti(e ) avant son embauche." },
-    ],
+    messages: [{ type: "assistive", content: "Situation dans laquelle se trouvait l'apprenti(e) avant son embauche." }],
   },
 
   "apprenti.diplomePrepare": {
@@ -465,7 +463,7 @@ Exemple 2 : si l'entrée en apprentissage concerne la 1ère année de BTS, le de
     messages: [
       {
         type: "assistive",
-        content: `Dernière classe /année suivie par l'apprenti (e ) avant son embauche.
+        content: `Dernière classe /année suivie par l'apprenti (e) avant son embauche.
 
 Il faut sélectionner la situation qui précède l'entrée en contrat d'apprentissage.
       
@@ -532,6 +530,7 @@ Un mineur émancipé peut accomplir seul les actes nécessitant la majorité lé
     label: "Nom de naissance et prénom",
     showInfo: true,
     requiredMessage: "Le nom du représentant légal est obligatoire",
+    placeholder: "Exemple : Martin Jean-François",
     mask: "C",
     maskBlocks: [
       {
@@ -543,7 +542,7 @@ Un mineur émancipé peut accomplir seul les actes nécessitant la majorité lé
   },
   "apprenti.responsableLegal.courriel": {
     _init: ({ values }: any) => ({ required: shouldAskRepresentantLegal({ values }) }),
-    label: "Courriel",
+    label: "Courriel du responsable légal",
     placeholder: "Exemple : jf.martin@email.fr",
     fieldType: "email",
     required: true,

@@ -28,6 +28,16 @@ export interface CerfaForm {
   fields?: any;
 }
 
+const scrollToSection = () => {
+  const employeurElement = document.getElementById(`${CERFA_STEPS.EMPLOYEUR.id}-collapse`)?.parentNode;
+  // @ts-expect-error TODO
+  const top = employeurElement?.offsetTop;
+
+  setTimeout(() => {
+    window.scrollTo({ top: top, behavior: "smooth" });
+  }, 200);
+};
+
 const CerfaForm: FC = () => {
   const [activeStep, setActiveStep] = useRecoilState(activeStepState);
   const [showOverlay] = useRecoilState(showOverlayState);
@@ -37,14 +47,18 @@ const CerfaForm: FC = () => {
   };
 
   useEffect(() => {
-    setInformationMessage(activeStep.messages);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToSection();
+  }, [activeStep]);
+
+  useEffect(() => {
+    setInformationMessage(activeStep?.messages);
   }, [activeStep, setInformationMessage]);
 
   const methods = useForm({
     mode: "all",
     defaultValues: {
       employeur: {
+        siret: "",
         privePublic: "prive",
         adresse: {
           departement: "",
@@ -90,21 +104,28 @@ const CerfaForm: FC = () => {
     <FormProvider {...methods}>
       <DownloadModal onDownload={download} />
       <Grid container spacing={2}>
-        <Grid item xs={3}>
+        <Grid
+          item
+          xs={3}
+          sx={{
+            borderRight: `1px solid ${fr.colors.decisions.border.default.grey.default}`,
+          }}
+        >
           <Box mb={2} p={2} pt={0} position="sticky" top={24}>
             <Stepper />
 
             <Box mt={12}>
-              <Typography variant="subtitle2" gutterBottom>
-                Téléchargez à tout moment
-              </Typography>
-              <Button priority="secondary" type="button" onClick={() => modal.open()}>
+              <Typography gutterBottom>Téléchargez à tout moment</Typography>
+              <Button priority="primary" type="button" onClick={() => modal.open()}>
                 Télécharger
               </Button>
             </Box>
           </Box>
         </Grid>
         <Grid item xs={6}>
+          <Typography variant="h1" mb={2}>
+            Cerfa 10103*10
+          </Typography>
           <Box mx={1}>
             <InputController name="contrat.modeContractuel" />
           </Box>
@@ -118,10 +139,12 @@ const CerfaForm: FC = () => {
                     id={cerfaStep.id}
                     label={cerfaStep.label}
                     completion={0} // TODO : compute completion
-                    expanded={cerfaStep.id === activeStep.id}
+                    expanded={cerfaStep.id === activeStep?.id}
                     onExpandedChange={() => handleExpandChange(cerfaStep)}
                   >
-                    <Component />
+                    <Box pl={2}>
+                      <Component />
+                    </Box>
                   </CerfaAccordionItem>
                 );
               })}

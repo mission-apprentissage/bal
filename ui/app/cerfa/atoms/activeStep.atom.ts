@@ -1,8 +1,8 @@
 import { atom } from "recoil";
 
-import { CERFA_STEPS } from "../utils/cerfa.utils";
+import { CerfaStep } from "../utils/cerfa.utils";
 
-export const activeStepState = atom({
+export const activeStepState = atom<CerfaStep | undefined>({
   key: "activeStep",
-  default: CERFA_STEPS.EMPLOYEUR,
+  default: undefined,
 });

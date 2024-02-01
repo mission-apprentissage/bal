@@ -21,8 +21,8 @@ const { Link } = getLink();
 const getAnneeLabel = (ordre: 1.1 | 2.1 | 3.1 | 4.1) => {
   return {
     1.1: "1ère année d'exécution du contrat",
-    2.1: "2ère année d'exécution du contrat",
-    3.1: "3ère année d'exécution du contrat",
+    2.1: "2ème année d'exécution du contrat",
+    3.1: "3ème année d'exécution du contrat",
     4.1: "4ème année d'exécution du contrat",
   }[ordre];
 };

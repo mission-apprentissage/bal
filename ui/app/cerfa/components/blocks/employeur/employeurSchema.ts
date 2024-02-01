@@ -83,7 +83,6 @@ export const employeurSchema: Record<string, CerfaField> = {
     placeholder: "Exemple : RUE MICHELET",
     required: true,
     requiredMessage: "Le nom de voie est obligatoire",
-
     messages: [
       {
         type: "assistive",
@@ -116,9 +115,16 @@ export const employeurSchema: Record<string, CerfaField> = {
     required: true,
     showInfo: true,
     requiredMessage: "Le téléphone de l'employeur est manquant",
+    messages: [
+      {
+        type: "assistive",
+        content: `Le numéro de téléphone est ici au format international : vous n'avez pas à renseigner le 1er "0". 
+        Ce numéro de téléphone sera utilisé pour vous contacter en cas d'erreur ou de précision nécessaire sur ce contrat : le renseigner peut vous faire gagner du temps par la suite.`,
+      },
+    ],
   },
   "employeur.courriel": {
-    label: "Courriel",
+    label: "Courriel de l'employeur",
     placeholder: "Exemple : contact@employeur.fr",
     required: true,
     fieldType: "email",
