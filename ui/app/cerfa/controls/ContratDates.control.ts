@@ -161,4 +161,87 @@ export const ContratDatesControl: CerfaControl[] = [
       }
     },
   },
+  {
+    deps: ["contrat.dateSignature"],
+    process: ({ values }) => {
+      const { dateSignature, dateDebutContrat } = values.contrat;
+      const { dateNaissance, responsableLegal } = values.apprenti;
+
+      if (!dateSignature) return {};
+
+      const dateSignatureDate = parseISO(dateSignature);
+
+      if (dateNaissance) {
+        const { exactAge: ageApprenti } = caclAgeAtDate(dateNaissance, dateSignature);
+
+        if (ageApprenti < 18 && !responsableLegal.nom) {
+          return {
+            error:
+              "Un responsable légal doit être renseigné si l'apprenti est mineur à la date de conclusion du contrat",
+          };
+        }
+      }
+
+      if (dateDebutContrat) {
+        const dateDebutContratDate = parseISO(dateDebutContrat);
+
+        if (isAfter(dateSignatureDate, dateDebutContratDate)) {
+          return {
+            error:
+              "La date de conclusion d’un contrat initial doit être antérieure ou égale à sa date de début d’exécution",
+          };
+        }
+      }
+
+      return {};
+    },
+  },
+  {
+    deps: ["contrat.dateDebutFormationPratique"],
+    process: ({ values }) => {
+      const { dateDebutFormationPratique, dateDebutContrat, dateSignature, dateFinContrat } = values.contrat;
+
+      if (!dateDebutFormationPratique) return {};
+      const dateDebutFormationPratiqueDate = parseISO(dateDebutFormationPratique);
+
+      if (dateDebutContrat) {
+        const dateDebutContratDate = parseISO(dateDebutContrat);
+
+        if (isBefore(dateDebutFormationPratiqueDate, dateDebutContratDate)) {
+          return {
+            error:
+              "La date de début de formation pratique ne peut être antérieure à la date de début d'exécution du contrat",
+          };
+        }
+
+        if (isAfter(dateDebutFormationPratiqueDate, addMonths(dateDebutContratDate, 3))) {
+          return {
+            error:
+              "La date de début de formation pratique ne peut être postérieure à 3 mois après la date de début d'exécution du contrat",
+          };
+        }
+      }
+
+      if (dateSignature) {
+        const dateSignatureDate = parseISO(dateSignature);
+
+        if (isBefore(dateDebutFormationPratiqueDate, dateSignatureDate)) {
+          return {
+            error:
+              "La date de début de formation pratique ne peut pas être antérieure à la date de conclusion du contrat",
+          };
+        }
+      }
+
+      if (dateFinContrat) {
+        const dateFinContratDate = parseISO(dateFinContrat);
+
+        if (isAfter(dateDebutFormationPratiqueDate, dateFinContratDate)) {
+          return {
+            error: "La date de début de formation pratique ne peut pas être postérieure à la date de fin du contrat",
+          };
+        }
+      }
+    },
+  },
 ];
