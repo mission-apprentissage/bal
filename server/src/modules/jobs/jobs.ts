@@ -20,6 +20,10 @@ import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
 import { mergeDecaDumps } from "./deca/merge-dumps-deca";
 import { createHistory } from "./deca/watcher";
+import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
+import { run_hydrate_from_ocapiat } from "./validation/hydrate_from_ocapiat";
+import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
+import { run_organisations_sanitize_domains } from "./validation/organisations_sanitize_domains";
 
 export async function setupJobProcessor() {
   return initJobProcessor({
@@ -29,10 +33,12 @@ export async function setupJobProcessor() {
       config.env === "preview" || config.env === "local"
         ? {}
         : {
-            "Mise à jour des contrats deca": {
-              cron_string: "30 1 * * *",
-              // handler: async (job) => hydrateDeca(job.payload as any)
-              handler: () => {
+            "Mise à jour des organisations et des persons": {
+              cron_string: "0 1 * * 6",
+              handler: async () => {
+                await run_hydrate_from_constructys();
+                await run_hydrate_from_ocapiat();
+                await run_organisations_sanitize_domains();
                 return Promise.resolve(1);
               },
             },
@@ -99,6 +105,18 @@ export async function setupJobProcessor() {
       },
       "deca:history": {
         handler: async () => createHistory(),
+      },
+      "job:validation:hydrate_from_deca": {
+        handler: async () => run_hydrate_from_deca(),
+      },
+      "job:validation:hydrate_from_constructys": {
+        handler: async () => run_hydrate_from_constructys(),
+      },
+      "job:validation:hydrate_from_ocapiat": {
+        handler: async () => run_hydrate_from_ocapiat(),
+      },
+      "organisation:sanitize:domains": {
+        handler: async () => run_organisations_sanitize_domains(),
       },
     },
   });

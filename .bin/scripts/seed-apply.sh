@@ -3,7 +3,7 @@
 set -euo pipefail
 
 if [ -z "${1:-}" ]; then
-    readonly TARGET_DB="mongodb://__system:password@localhost:27017/?authSource=local&directConnection=true"
+    readonly TARGET_DB="mongodb://__system:password@localhost:27017/mna-bal?authSource=local&directConnection=true"
 else
     readonly TARGET_DB="$1"
     shift
