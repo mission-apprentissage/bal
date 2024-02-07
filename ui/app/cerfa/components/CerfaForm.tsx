@@ -55,7 +55,7 @@ const CerfaForm: FC = () => {
   }, [activeStep, setInformationMessage]);
 
   const methods = useForm({
-    mode: "all",
+    mode: "onBlur",
     defaultValues: {
       employeur: {
         siret: "",

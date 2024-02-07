@@ -1,4 +1,4 @@
-import { differenceInMonths, parseISO } from "date-fns";
+import { differenceInMonths, isAfter, isBefore, parseISO } from "date-fns";
 
 import { CerfaControl } from ".";
 
@@ -6,28 +6,70 @@ export const dateFormationControl: CerfaControl[] = [
   {
     deps: ["formation.dateDebutFormation", "formation.dateFinFormation"],
     process: ({ values }) => {
-      if (!values.formation.dateDebutFormation || !values.formation.dateFinFormation) return;
-      const dateDebutFormation = parseISO(values.formation.dateDebutContrat);
-      const dateFinFormation = parseISO(values.formation.dateDebutContrat);
+      const { dateDebutFormation, dateFinFormation } = values.formation;
+      if (!dateDebutFormation || !dateFinFormation) return;
+      const dateDebutFormationDate = parseISO(values.formation.dateDebutContrat);
+      const dateFinFormationDate = parseISO(values.formation.dateDebutContrat);
 
-      const dureeContrat = differenceInMonths(dateDebutFormation, dateFinFormation);
-
-      if (dateDebutFormation >= dateFinFormation) {
+      if (isAfter(dateDebutFormationDate, dateFinFormationDate)) {
         return {
-          error: "Date de début du cycle de formation ne peut pas être après la date de fin du cycle",
+          error: "La date de début de formation théorique ne peut pas être postérieure à la date de fin de formation",
         };
       }
 
+      const dureeContrat = differenceInMonths(dateDebutFormationDate, dateFinFormationDate);
+
       if (dureeContrat < 6) {
         return {
-          error: "La durée de la formation de peut pas être inférieure à 6 mois",
+          error: "La durée de formation ne peut pas être inférieure à 6 mois",
         };
       }
 
       if (dureeContrat > 48) {
         return {
-          error: "La durée de la formation de peut pas être supérieure à 4 ans",
+          error: "La durée de formation ne peut pas être supérieure à 4 ans",
         };
+      }
+    },
+  },
+  {
+    deps: ["formation.dateFinFormation"],
+    process: ({ values }) => {
+      const {
+        contrat: { dateDebutContrat, dateFinContrat, dateSignature },
+        formation: { dateFinFormation },
+      } = values.formation;
+      if (!dateFinFormation) return {};
+      const dateFinFormationDate = parseISO(dateFinFormation);
+
+      if (dateDebutContrat) {
+        const dateDebutContratDate = parseISO(dateDebutContrat);
+
+        if (isBefore(dateFinFormationDate, dateDebutContratDate)) {
+          return {
+            error: "La date ne peut être antérieure à la date de début d'exécution du contrat",
+          };
+        }
+      }
+
+      if (dateFinContrat) {
+        const dateFinContratDate = parseISO(dateFinContrat);
+
+        if (isAfter(dateFinFormationDate, dateFinContratDate)) {
+          return {
+            error: "La date ne peut être postérieure à la date de fin de contrat",
+          };
+        }
+      }
+
+      if (dateSignature) {
+        const dateSignatureDate = parseISO(dateSignature);
+
+        if (isBefore(dateFinFormationDate, dateSignatureDate)) {
+          return {
+            error: "La date ne peut être antérieure à la date de conclusion du contrat",
+          };
+        }
       }
     },
   },
@@ -38,7 +80,7 @@ export const dateFormationControl: CerfaControl[] = [
 
       if (dureeFormation > 9999) {
         return {
-          error: "la durée de la formation ne peut excéder 9999",
+          error: "La durée de la formation ne peut excéder 9999",
         };
       }
     },

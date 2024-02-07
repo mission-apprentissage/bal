@@ -113,15 +113,29 @@ const findDataFromSiret = async (providedSiret: string) => {
 
   let conventionCollective = null;
   try {
-    conventionCollective = await getOpcoData(siret);
+    const { numero_idcc, ...rest } = await getConventionCollective(siret);
+    if (!numero_idcc) throw new Error("IDCC not found");
+    conventionCollective = { ...rest, idcc: numero_idcc };
   } catch (e) {
     console.log(e);
     conventionCollective = {
-      idcc: null,
-      opco_nom: null,
-      opco_siren: null,
       status: "ERROR",
     };
+  }
+
+  console.log({ conventionCollective });
+  if (conventionCollective?.status === "ERROR") {
+    try {
+      conventionCollective = await getOpcoData(siret);
+    } catch (e) {
+      console.log(e);
+      conventionCollective = {
+        idcc: null,
+        opco_nom: null,
+        opco_siren: null,
+        status: "ERROR",
+      };
+    }
   }
 
   const siren = siret.substring(0, 9);
@@ -161,28 +175,11 @@ const findDataFromSiret = async (providedSiret: string) => {
     }
   }
 
-  let complement_conventionCollective = {
-    active: false,
-    date_publication: null,
-    etat: null,
-    titre_court: null,
-    titre: null,
-    url: null,
-  };
-  if (conventionCollective?.status !== "ERROR") {
-    try {
-      const { active, date_publication, etat, titre_court, titre, url } = await getConventionCollective(siret);
-      complement_conventionCollective = { active, date_publication, etat, titre_court, titre, url };
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  conventionCollective = { ...conventionCollective, ...complement_conventionCollective };
   console.log({
     etablissementApiInfo,
     acheminement_postal: etablissementApiInfo.adresse.acheminement_postal,
     entrepriseApiInfo,
-    complement_conventionCollective,
+    conventionCollective,
   });
   let code_dept = etablissementApiInfo.adresse.code_commune.substring(0, 2);
   code_dept = code_dept === "97" ? etablissementApiInfo.adresse.code_commune.substring(0, 3) : code_dept;

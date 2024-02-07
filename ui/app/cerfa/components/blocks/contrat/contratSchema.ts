@@ -1,5 +1,6 @@
-import { CerfaField } from "../../../utils/cerfaSchema";
+import { CerfaField, SelectNestedOption } from "../../../utils/cerfaSchema";
 import { getLabelNumeroContratPrecedent } from "./domain/getLabelNumeroContratPrecedent";
+import { getTypeContratApprentiOptions } from "./domain/getTypeContratApprentiOptions";
 import { getTypeDerogationOptions } from "./domain/getTypeDerogationOptions";
 import { isRequiredNumeroContratPrecedent } from "./domain/isRequiredNumeroContratPrecedent";
 import { shouldAskDateEffetAvenant } from "./domain/shouldAskDateEffetAvenant";
@@ -24,79 +25,12 @@ export const contratSchema: Record<string, CerfaField> = {
     ],
   },
   "contrat.typeContratApp": {
+    _init: ({ values }) => ({ options: getTypeContratApprentiOptions({ values }) as SelectNestedOption[] }),
     label: "Type de contrat ou d’avenant",
     fieldType: "select",
     required: true,
     requiredMessage: "Le type de contrat ou d'avenant est obligatoire",
     showInfo: true,
-    options: [
-      {
-        name: "Contrat initial",
-        options: [
-          {
-            label: "11 Premier contrat d'apprentissage de l'apprenti",
-            value: 11,
-          },
-        ],
-      },
-      {
-        name: "Succession de contrats",
-        options: [
-          {
-            label: "21 Nouveau contrat avec un apprenti qui a terminé son précédent contrat auprès d'un même employeur",
-            value: 21,
-          },
-          {
-            label:
-              "22 Nouveau contrat avec un apprenti qui a terminé son précédent contrat auprès d'un autre employeur",
-            value: 22,
-          },
-          {
-            label:
-              "23 Nouveau contrat avec un apprenti dont le précédent contrat auprès d'un autre employeur a été rompu",
-            value: 23,
-          },
-        ],
-      },
-      {
-        name: "Avenant : modification des conditions du contrat",
-        options: [
-          {
-            label: "31 Modification de la situation juridique de l'employeur",
-            value: 31,
-          },
-          {
-            label: "32 Changement d'employeur dans le cadre d'un contrat saisonnier",
-            value: 32,
-          },
-          {
-            label: "33 Prolongation du contrat suite à un échec à l'examen de l'apprenti",
-            value: 33,
-          },
-          {
-            label: "34 Prolongation du contrat suite à la reconnaissance de l'apprenti comme travailleur handicapé",
-            value: 34,
-          },
-          {
-            label: "35 Modification du diplôme préparé par l'apprenti",
-            value: 35,
-          },
-          {
-            label:
-              "36 Autres changements : changement de maître d'apprentissage, de durée de travail hebdomadaire, réduction de durée, etc.",
-            value: 36,
-          },
-          {
-            label: "37 Modification du lieu d'exécution du contrat",
-            value: 37,
-          },
-          {
-            label: "38 Modification du lieu principal de réalisation de la formation théorique",
-            value: 38,
-          },
-        ],
-      },
-    ],
     messages: [
       {
         type: "assistive",
@@ -431,7 +365,7 @@ Le temps de formation en CFA est du temps de travail effectif et compte dans l'h
     requiredMessage: "Le salaire minimum conventionnel est obligatoire",
   },
   "contrat.salaireEmbauche": {
-    locked: true,
+    // locked: true,
     label: "Salaire brut mensuel à l'embauche",
   },
   "contrat.remunerationsAnnuelles[].dateDebut": {

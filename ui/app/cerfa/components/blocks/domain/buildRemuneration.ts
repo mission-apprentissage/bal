@@ -406,6 +406,8 @@ export const buildRemuneration = (data) => {
   if (isChangingTaux(ageA1, ageA2) && !(isAnniversaireInLastMonth && getYear(dateFinContrat) === getYear(dateFinA1))) {
     const dateDebut12 = setMonth(setDate(anniversaireA1, 1), getMonth(anniversaireA1) + 1);
     const dateFin11 = subDays(dateDebut12, 1);
+    applicableMinimum = smcApplies(ageA2) ? SMC : SMIC;
+    applicableMinimumType = smcApplies(ageA2) ? "SMC" : "SMIC";
 
     if (dateFin11 >= dateFinContrat) {
       finRemuneration = true;
@@ -511,6 +513,8 @@ export const buildRemuneration = (data) => {
   ) {
     const dateDebut22 = addMonths(setDate(anniversaireA2, 1), 1);
     const dateFin21 = subDays(dateDebut22, 1);
+    applicableMinimum = smcApplies(ageA3) ? SMC : SMIC;
+    applicableMinimumType = smcApplies(ageA3) ? "SMC" : "SMIC";
 
     if (dateFin21 >= dateFinContrat) {
       finRemuneration = true;
@@ -615,6 +619,8 @@ export const buildRemuneration = (data) => {
   ) {
     const dateDebut32 = setMonth(setDate(anniversaireA3, 1), getMonth(anniversaireA3) + 1);
     const dateFin31 = subDays(dateDebut32, 1);
+    applicableMinimum = smcApplies(ageA4) ? SMC : SMIC;
+    applicableMinimumType = smcApplies(ageA4) ? "SMC" : "SMIC";
 
     if (dateFin31 >= dateFinContrat) {
       finRemuneration = true;
@@ -716,6 +722,8 @@ export const buildRemuneration = (data) => {
   if (isChangingTaux(ageA4, ageA5) && !finRemuneration && !isAnniversaireInLastMonth) {
     const dateDebut42 = setMonth(setDate(anniversaireA4, 1), getMonth(anniversaireA4) + 1);
     const dateFin41 = subDays(dateDebut42, 1);
+    applicableMinimum = smcApplies(ageA5) ? SMC : SMIC;
+    applicableMinimumType = smcApplies(ageA5) ? "SMC" : "SMIC";
 
     if (dateFin41 >= dateFinContrat) {
       finRemuneration = true;

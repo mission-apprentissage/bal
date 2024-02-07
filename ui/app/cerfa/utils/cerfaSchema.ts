@@ -8,7 +8,7 @@ import { signaturesSchema } from "../components/blocks/signatures/signaturesSche
 import { CerfaControl, controls } from "../controls";
 export interface SelectOption {
   label: string;
-  value: string | number;
+  value: string;
   locked?: boolean;
 }
 
@@ -22,7 +22,7 @@ export interface RadioOption {
   value: string | number;
 }
 
-type SelectOptions = SelectOption[] | SelectNestedOption[] | RadioOption[];
+export type SelectOptions = SelectOption[] | SelectNestedOption[] | RadioOption[];
 
 export interface InformationMessage {
   type: "assistive" | "regulatory" | "bonus";

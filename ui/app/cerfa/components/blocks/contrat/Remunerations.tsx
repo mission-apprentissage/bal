@@ -127,15 +127,15 @@ export const Remunerations = () => {
 
                 <InputGroupContainer>
                   <InputGroupItem size={6}>
-                    <InputController name={`contrat.remunerationsAnnuelles[${i}].dateDebut`} />
+                    <InputController name={`contrat.remunerationsAnnuelles.${i}.dateDebut`} />
                   </InputGroupItem>
                   <InputGroupItem size={6}>
-                    <InputController name={`contrat.remunerationsAnnuelles[${i}].dateFin`} />
+                    <InputController name={`contrat.remunerationsAnnuelles.${i}.dateFin`} />
                   </InputGroupItem>
                 </InputGroupContainer>
 
                 <Box display="flex">
-                  <InputController name={`contrat.remunerationsAnnuelles[${i}].taux`} />
+                  <InputController name={`contrat.remunerationsAnnuelles.${i}.taux`} />
                   <Box mt={4}>
                     <Typography variant="caption" whiteSpace="nowrap">
                       soit {annee.salaireBrut} € / mois. <br />

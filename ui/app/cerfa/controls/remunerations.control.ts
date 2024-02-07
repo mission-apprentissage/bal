@@ -54,26 +54,26 @@ export const RemunerationsControl: CerfaControl[] = [
 
       const oldRemusCascade = Object.fromEntries(
         oldRemus?.flatMap((remu, i) => [
-          [`contrat.remunerationsAnnuelles[${i}].dateDebut`, undefined],
-          [`contrat.remunerationsAnnuelles[${i}].dateFin`, undefined],
-          [`contrat.remunerationsAnnuelles[${i}].taux`, undefined],
-          [`contrat.remunerationsAnnuelles[${i}].tauxMinimal`, undefined],
-          [`contrat.remunerationsAnnuelles[${i}].typeSalaire`, undefined],
-          [`contrat.remunerationsAnnuelles[${i}].salaireBrut`, undefined],
-          [`contrat.remunerationsAnnuelles[${i}].ordre`, undefined],
+          [`contrat.remunerationsAnnuelles.${i}.dateDebut`, undefined],
+          [`contrat.remunerationsAnnuelles.${i}.dateFin`, undefined],
+          [`contrat.remunerationsAnnuelles.${i}.taux`, undefined],
+          [`contrat.remunerationsAnnuelles.${i}.tauxMinimal`, undefined],
+          [`contrat.remunerationsAnnuelles.${i}.typeSalaire`, undefined],
+          [`contrat.remunerationsAnnuelles.${i}.salaireBrut`, undefined],
+          [`contrat.remunerationsAnnuelles.${i}.ordre`, undefined],
         ])
       );
 
       const newRemus = Object.fromEntries(
         remunerationsAnnuelles?.flatMap((remu: any, i) => {
           return [
-            [`contrat.remunerationsAnnuelles[${i}].dateDebut`, { value: remu.dateDebut }],
-            [`contrat.remunerationsAnnuelles[${i}].dateFin`, { value: remu.dateFin }],
-            [`contrat.remunerationsAnnuelles[${i}].taux`, { value: remu.taux, min: remu.tauxMinimal }],
-            [`contrat.remunerationsAnnuelles[${i}].tauxMinimal`, { value: remu.tauxMinimal }],
-            [`contrat.remunerationsAnnuelles[${i}].typeSalaire`, { value: remu.typeSalaire }],
-            [`contrat.remunerationsAnnuelles[${i}].salaireBrut`, { value: remu.salaireBrut }],
-            [`contrat.remunerationsAnnuelles[${i}].ordre`, { value: remu.ordre }],
+            [`contrat.remunerationsAnnuelles.${i}.dateDebut`, { value: remu.dateDebut }],
+            [`contrat.remunerationsAnnuelles.${i}.dateFin`, { value: remu.dateFin }],
+            [`contrat.remunerationsAnnuelles.${i}.taux`, { value: remu.taux, min: remu.tauxMinimal }],
+            [`contrat.remunerationsAnnuelles.${i}.tauxMinimal`, { value: remu.tauxMinimal }],
+            [`contrat.remunerationsAnnuelles.${i}.typeSalaire`, { value: remu.typeSalaire }],
+            [`contrat.remunerationsAnnuelles.${i}.salaireBrut`, { value: remu.salaireBrut }],
+            [`contrat.remunerationsAnnuelles.${i}.ordre`, { value: remu.ordre }],
           ];
         })
       );
@@ -82,7 +82,7 @@ export const RemunerationsControl: CerfaControl[] = [
     },
   },
   ...new Array(16).fill(0).map((_item, i): CerfaControl => {
-    const remuAnneePath = `contrat.remunerationsAnnuelles[${i}]`;
+    const remuAnneePath = `contrat.remunerationsAnnuelles.${i}`;
     return {
       deps: [`${remuAnneePath}.taux`],
       process: ({ values }) => {
@@ -106,6 +106,10 @@ export const RemunerationsControl: CerfaControl[] = [
 
         return {
           cascade: {
+            ...(i === 0 &&
+              remunerationsAnnuelles[i]?.salaireBrut && {
+                "contrat.salaireEmbauche": { value: remunerationsAnnuelles[i]?.salaireBrut },
+              }),
             // @ts-expect-error: todo
             [`${remuAnneePath}.dateDebut`]: { value: remunerationsAnnuelles[i].dateDebut, cascade: false },
             // @ts-expect-error: todo
@@ -132,14 +136,4 @@ export const RemunerationsControl: CerfaControl[] = [
       },
     };
   }),
-  {
-    deps: ["contrat.remunerationsAnnuelles[0].salaireBrut"],
-    process: ({ values }) => {
-      return {
-        cascade: {
-          "contrat.salaireEmbauche": { value: values.contrat.remunerationsAnnuelles[0].salaireBrut },
-        },
-      };
-    },
-  },
 ];
