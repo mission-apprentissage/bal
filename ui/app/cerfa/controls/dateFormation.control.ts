@@ -6,10 +6,12 @@ export const dateFormationControl: CerfaControl[] = [
   {
     deps: ["formation.dateDebutFormation", "formation.dateFinFormation"],
     process: ({ values }) => {
-      const { dateDebutFormation, dateFinFormation } = values.formation;
+      const {
+        formation: { dateDebutFormation, dateFinFormation },
+      } = values;
       if (!dateDebutFormation || !dateFinFormation) return;
-      const dateDebutFormationDate = parseISO(values.formation.dateDebutContrat);
-      const dateFinFormationDate = parseISO(values.formation.dateDebutContrat);
+      const dateDebutFormationDate = parseISO(dateDebutFormation);
+      const dateFinFormationDate = parseISO(dateFinFormation);
 
       if (isAfter(dateDebutFormationDate, dateFinFormationDate)) {
         return {
@@ -38,7 +40,7 @@ export const dateFormationControl: CerfaControl[] = [
       const {
         contrat: { dateDebutContrat, dateFinContrat, dateSignature },
         formation: { dateFinFormation },
-      } = values.formation;
+      } = values;
       if (!dateFinFormation) return {};
       const dateFinFormationDate = parseISO(dateFinFormation);
 
@@ -76,7 +78,9 @@ export const dateFormationControl: CerfaControl[] = [
   {
     deps: ["formation.dureeFormation"],
     process: ({ values }) => {
-      const dureeFormation = values.formation.dureeFormation;
+      const {
+        formation: { dureeFormation },
+      } = values;
 
       if (dureeFormation > 9999) {
         return {

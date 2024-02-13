@@ -9,6 +9,7 @@ import InputController from "../inputs/InputController";
 import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
 import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
 import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
+import DateNaissanceField from "./DateNaissanceField";
 
 const CerfaApprenti: FC = () => {
   return (
@@ -16,7 +17,7 @@ const CerfaApprenti: FC = () => {
       <InputController name="apprenti.nom" />
       <InputController name="apprenti.nomUsage" />
       <InputController name="apprenti.prenom" />
-      <InputController name="apprenti.dateNaissance" />
+      <DateNaissanceField />
       <InputController name="apprenti.sexe" />
       <InputController name="apprenti.lieuNaissanceFrance" />
       <InputController name="apprenti.communeNaissance" />

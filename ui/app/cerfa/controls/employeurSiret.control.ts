@@ -69,6 +69,15 @@ export const employerSiretLogic: CerfaControl = {
           stateRelatedMessage:
             "Le siret est valide et actif. Des champs ont été remplis automatiquement, vous avez la possibilité de les modifier si besoin. Si vous constatez une erreur manifeste sur les données remplies automatiquement, rendez-vous sur le site de l'INSEE pour savoir comment corriger les informations à la source : https://www.insee.fr/fr/information/2015441)",
           cascade: false,
+          informationMessages:
+            (result.public && [
+              {
+                type: "assistive",
+                content:
+                  "La catégorie juridique de l’entreprise semble relever du secteur public. Si c’est bien le cas, rendez-vous sur CELIA [Contrat apprentissage employeur public dématérialisé pour la fonction publique (emploi.gouv.fr)] pour compléter votre cerfa.",
+              },
+            ]) ??
+            [],
         },
         "employeur.denomination": {
           value: result.enseigne || result.entreprise_raison_sociale,
@@ -139,7 +148,7 @@ export const employerSiretLogic: CerfaControl = {
           ...(result.num_region && SUCCESS),
         },
         "employeur.privePublic": {
-          value: result.public ?? true,
+          value: result.public ? "public" : "prive",
           locked: false,
           ...(result.public && SUCCESS),
         },

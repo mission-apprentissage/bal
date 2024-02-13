@@ -86,6 +86,19 @@ export const fetchCfdrncp: APIServiceAction<FetchCfdrncpParams> = async ({ rncp,
   }
 };
 
+export const controlEmail = async (email: string) => {
+  try {
+    return apiPost("/v1/controls/email", {
+      body: {
+        email,
+      },
+    });
+  } catch (e: any) {
+    if (e.name === "AbortError") throw e;
+    return { error: e.prettyMessage ?? "Une erreur technique est survenue" };
+  }
+};
+
 export const apiService = {
   fetchSiret,
   fetchCodePostal,

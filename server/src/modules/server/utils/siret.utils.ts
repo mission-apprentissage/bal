@@ -1,7 +1,9 @@
-import { getOpcoData } from "../../../common/apis/cfaDock";
-import { getConventionCollective, getEntreprise, getEtablissement } from "../../../common/apis/entreprise";
+import { categoriesJuridiques, Siasp } from "shared/constants/categoriesJuridiques";
+
+import { getEntreprise, getEtablissement } from "../../../common/apis/entreprise";
 import { findDataByDepartementNum } from "../../../common/controllers/geo/geoController";
 import { getCoordinatesFromAddressData } from "../../../common/utils/geoUtils";
+import { getConventionCollective } from "./conventionCollective.utils";
 
 export const getDataFromSiret = async (providedSiret: string, { withGeoloc = true } = {}) => {
   const siretData = await findDataFromSiret(providedSiret);
@@ -113,29 +115,12 @@ const findDataFromSiret = async (providedSiret: string) => {
 
   let conventionCollective = null;
   try {
-    const { numero_idcc, ...rest } = await getConventionCollective(siret);
-    if (!numero_idcc) throw new Error("IDCC not found");
-    conventionCollective = { ...rest, idcc: numero_idcc };
+    conventionCollective = await getConventionCollective(siret);
   } catch (e) {
     console.log(e);
     conventionCollective = {
       status: "ERROR",
     };
-  }
-
-  console.log({ conventionCollective });
-  if (conventionCollective?.status === "ERROR") {
-    try {
-      conventionCollective = await getOpcoData(siret);
-    } catch (e) {
-      console.log(e);
-      conventionCollective = {
-        idcc: null,
-        opco_nom: null,
-        opco_siren: null,
-        status: "ERROR",
-      };
-    }
   }
 
   const siren = siret.substring(0, 9);
@@ -161,20 +146,6 @@ const findDataFromSiret = async (providedSiret: string) => {
     };
   }
 
-  if (conventionCollective?.status === "ERROR") {
-    try {
-      conventionCollective = await getOpcoData(siren);
-    } catch (e) {
-      console.log(e);
-      conventionCollective = {
-        idcc: null,
-        opco_nom: null,
-        opco_siren: null,
-        status: "ERROR",
-      };
-    }
-  }
-
   console.log({
     etablissementApiInfo,
     acheminement_postal: etablissementApiInfo.adresse.acheminement_postal,
@@ -185,7 +156,7 @@ const findDataFromSiret = async (providedSiret: string) => {
   code_dept = code_dept === "97" ? etablissementApiInfo.adresse.code_commune.substring(0, 3) : code_dept;
   const { nom_dept, nom_region, code_region, nom_academie, num_academie } = findDataByDepartementNum(code_dept);
 
-  const isPublicSector = await isPublic(entrepriseApiInfo?.forme_juridique.code);
+  const isPublicSector = isPublic(entrepriseApiInfo?.forme_juridique.code);
 
   return {
     result: {
@@ -283,13 +254,15 @@ const buildAdresse = (adresse: Adresse) => {
   return `${l1}${l2}${l3}${l4}${l5}${l6}${l7}`;
 };
 
-const isPublic = async (code: string) => {
-  console.log({ code });
-  // TODO
-  // const match = await CategoriesJuridique.findOne({ CATEGJURID: code, SIASP: { $ne: "HFP" } }).lean();
-  // if (!match) {
-  //   return false;
-  // }
-  // return true;
-  return false;
-};
+const isPublic = (code: string) =>
+  Boolean(
+    categoriesJuridiques.find(
+      ({ category_juridique_id, siasp }) =>
+        category_juridique_id === code &&
+        [
+          Siasp.FONCTION_PUBLIQUE_D_ETAT,
+          Siasp.FONCTION_PUBLIQUE_HOSPITALIERE,
+          Siasp.FONCTION_PUBLIQUE_TERRITORIALE,
+        ].includes(siasp as Siasp)
+    )
+  );

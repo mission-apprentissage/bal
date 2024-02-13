@@ -5,20 +5,7 @@ import { FieldError, FieldErrorsImpl, FieldValues, FormState, Merge, UseFormRetu
 import { SetterOrUpdater } from "recoil";
 
 import { CerfaForm } from "../components/CerfaForm";
-import cerfaSchema, { CerfaField, indexedRules } from "./cerfaSchema";
-
-// luxon
-// export const caclAgeAtDate = (dateNaissanceString: string, dateString: string) => {
-//   const dateNaissance = DateTime.fromISO(dateNaissanceString).setLocale("fr-FR");
-//   const dateObj = DateTime.fromISO(dateString).setLocale("fr-FR");
-//   const diffInYears = dateObj.diff(dateNaissance, "years");
-//   const { years } = diffInYears.toObject();
-//   const age = years ? Math.floor(years) : 0;
-//   return {
-//     age,
-//     exactAge: years,
-//   };
-// };
+import cerfaSchema, { CerfaField, indexedRules, InformationMessage } from "./cerfaSchema";
 
 export const caclAgeAtDate = (dateNaissanceString: string, dateString: string) => {
   const dateNaissance = parseISO(dateNaissanceString);
@@ -37,6 +24,7 @@ export const caclAgeAtDate = (dateNaissanceString: string, dateString: string) =
 export interface FieldState {
   state?: InputProps["state"];
   stateRelatedMessage?: string;
+  informationMessages?: InformationMessage[];
 }
 
 export const getFieldStateFromFormState = (
@@ -79,6 +67,12 @@ export const validateField = async (
           setFields((fields) => ({
             ...fields,
             [fieldName]: { state: "success", stateRelatedMessage: cascade.stateRelatedMessage },
+          }));
+        }
+        if (cascade?.informationMessages) {
+          setFields((fields) => ({
+            ...fields,
+            [fieldName]: { ...fields[fieldName], informationMessages: cascade.informationMessages },
           }));
         }
         if (cascade?.value) {

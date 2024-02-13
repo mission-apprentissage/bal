@@ -332,9 +332,6 @@ export const buildRemuneration = (data) => {
     return age >= 21 && data.smc > SMIC;
   };
 
-  let applicableMinimum = SMIC;
-  let applicableMinimumType: "SMC" | "SMIC" = "SMIC";
-
   const taux = {
     a1: {
       0: 27,
@@ -401,13 +398,13 @@ export const buildRemuneration = (data) => {
   const taux12 = taux.a1[getSeuils(ageA2)];
   const selectedTaux11 = getTaux(1.1, taux11);
   const selectedTaux12 = getTaux(1.2, taux12);
-  applicableMinimum = smcApplies(ageA1) ? SMC : SMIC;
-  applicableMinimumType = smcApplies(ageA1) ? "SMC" : "SMIC";
+  const applicableMinimum11 = smcApplies(ageA1) ? SMC : SMIC;
+  const applicableMinimumType11 = smcApplies(ageA1) ? "SMC" : "SMIC";
+  const applicableMinimum12 = smcApplies(ageA2) ? SMC : SMIC;
+  const applicableMinimumType12 = smcApplies(ageA2) ? "SMC" : "SMIC";
   if (isChangingTaux(ageA1, ageA2) && !(isAnniversaireInLastMonth && getYear(dateFinContrat) === getYear(dateFinA1))) {
     const dateDebut12 = setMonth(setDate(anniversaireA1, 1), getMonth(anniversaireA1) + 1);
     const dateFin11 = subDays(dateDebut12, 1);
-    applicableMinimum = smcApplies(ageA2) ? SMC : SMIC;
-    applicableMinimumType = smcApplies(ageA2) ? "SMC" : "SMIC";
 
     if (dateFin11 >= dateFinContrat) {
       finRemuneration = true;
@@ -417,8 +414,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux11) / 100),
+          typeSalaire: applicableMinimumType11,
+          salaireBrut: ceilUp((applicableMinimum11 * selectedTaux11) / 100),
         },
         12: emptyLineObj,
       };
@@ -430,16 +427,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin11, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux11) / 100),
+          typeSalaire: applicableMinimumType11,
+          salaireBrut: ceilUp((applicableMinimum11 * selectedTaux11) / 100),
         },
         12: {
           dateDebut: format(dateDebut12, "yyyy-MM-dd"),
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux12,
           tauxMinimal: taux12,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux12) / 100),
+          typeSalaire: applicableMinimumType12,
+          salaireBrut: ceilUp((applicableMinimum12 * selectedTaux12) / 100),
           isChangingTaux: true,
           newSeuil: isAnniversaireDebutContrat ? ageA1 : ageA2,
         },
@@ -451,16 +448,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin11, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux11) / 100),
+          typeSalaire: applicableMinimumType11,
+          salaireBrut: ceilUp((applicableMinimum11 * selectedTaux11) / 100),
         },
         12: {
           dateDebut: format(dateDebut12, "yyyy-MM-dd"),
           dateFin: format(dateFinA1, "yyyy-MM-dd"),
           taux: selectedTaux12,
           tauxMinimal: taux12,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux12) / 100),
+          typeSalaire: applicableMinimumType12,
+          salaireBrut: ceilUp((applicableMinimum12 * selectedTaux12) / 100),
           isChangingTaux: true,
           newSeuil: isAnniversaireDebutContrat ? ageA1 : ageA2,
         },
@@ -475,8 +472,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux11) / 100),
+          typeSalaire: applicableMinimumType11,
+          salaireBrut: ceilUp((applicableMinimum11 * selectedTaux11) / 100),
         },
         12: emptyLineObj,
       };
@@ -487,8 +484,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinA1, "yyyy-MM-dd"),
           taux: selectedTaux11,
           tauxMinimal: taux11,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux11) / 100),
+          typeSalaire: applicableMinimumType11,
+          salaireBrut: ceilUp((applicableMinimum11 * selectedTaux11) / 100),
         },
         12: emptyLineObj,
       };
@@ -504,8 +501,10 @@ export const buildRemuneration = (data) => {
   const taux22 = taux.a2[getSeuils(ageA3)];
   const selectedTaux21 = getTaux(2.1, taux21);
   const selectedTaux22 = getTaux(2.2, taux22);
-  applicableMinimum = smcApplies(ageA2) ? SMC : SMIC;
-  applicableMinimumType = smcApplies(ageA2) ? "SMC" : "SMIC";
+  const applicableMinimum21 = smcApplies(ageA2) ? SMC : SMIC;
+  const applicableMinimumType21 = smcApplies(ageA2) ? "SMC" : "SMIC";
+  const applicableMinimum22 = smcApplies(ageA3) ? SMC : SMIC;
+  const applicableMinimumType22 = smcApplies(ageA3) ? "SMC" : "SMIC";
   if (
     isChangingTaux(ageA2, ageA3) &&
     !finRemuneration &&
@@ -513,8 +512,6 @@ export const buildRemuneration = (data) => {
   ) {
     const dateDebut22 = addMonths(setDate(anniversaireA2, 1), 1);
     const dateFin21 = subDays(dateDebut22, 1);
-    applicableMinimum = smcApplies(ageA3) ? SMC : SMIC;
-    applicableMinimumType = smcApplies(ageA3) ? "SMC" : "SMIC";
 
     if (dateFin21 >= dateFinContrat) {
       finRemuneration = true;
@@ -524,8 +521,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux21) / 100),
+          typeSalaire: applicableMinimumType21,
+          salaireBrut: ceilUp((applicableMinimum21 * selectedTaux21) / 100),
         },
         22: emptyLineObj,
       };
@@ -537,16 +534,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin21, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux21) / 100),
+          typeSalaire: applicableMinimumType21,
+          salaireBrut: ceilUp((applicableMinimum21 * selectedTaux21) / 100),
         },
         22: {
           dateDebut: format(dateDebut22, "yyyy-MM-dd"),
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux22,
           tauxMinimal: taux22,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux22) / 100),
+          typeSalaire: applicableMinimumType22,
+          salaireBrut: ceilUp((applicableMinimum22 * selectedTaux22) / 100),
           isChangingTaux: true,
           newSeuil: isAnniversaireDebutContrat ? ageA2 : ageA3,
         },
@@ -558,16 +555,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin21, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux21) / 100),
+          typeSalaire: applicableMinimumType21,
+          salaireBrut: ceilUp((applicableMinimum21 * selectedTaux21) / 100),
         },
         22: {
           dateDebut: format(dateDebut22, "yyyy-MM-dd"),
           dateFin: format(dateFinA2, "yyyy-MM-dd"),
           taux: selectedTaux22,
           tauxMinimal: taux22,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux22) / 100),
+          typeSalaire: applicableMinimumType22,
+          salaireBrut: ceilUp((applicableMinimum22 * selectedTaux22) / 100),
           isChangingTaux: true,
           newSeuil: isAnniversaireDebutContrat ? ageA2 : ageA3,
         },
@@ -582,8 +579,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux21) / 100),
+          typeSalaire: applicableMinimumType21,
+          salaireBrut: ceilUp((applicableMinimum21 * selectedTaux21) / 100),
         },
         22: emptyLineObj,
       };
@@ -594,8 +591,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinA2, "yyyy-MM-dd"),
           taux: selectedTaux21,
           tauxMinimal: taux21,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux21) / 100),
+          typeSalaire: applicableMinimumType21,
+          salaireBrut: ceilUp((applicableMinimum21 * selectedTaux21) / 100),
         },
         22: emptyLineObj,
       };
@@ -610,8 +607,10 @@ export const buildRemuneration = (data) => {
   const taux32 = taux.a3[getSeuils(ageA4)];
   const selectedTaux31 = getTaux(3.1, taux31);
   const selectedTaux32 = getTaux(3.2, taux32);
-  applicableMinimum = smcApplies(ageA3) ? SMC : SMIC;
-  applicableMinimumType = smcApplies(ageA3) ? "SMC" : "SMIC";
+  const applicableMinimum31 = smcApplies(ageA3) ? SMC : SMIC;
+  const applicableMinimumType31 = smcApplies(ageA3) ? "SMC" : "SMIC";
+  const applicableMinimum32 = smcApplies(ageA4) ? SMC : SMIC;
+  const applicableMinimumType32 = smcApplies(ageA4) ? "SMC" : "SMIC";
   if (
     isChangingTaux(ageA3, ageA4) &&
     !finRemuneration &&
@@ -619,8 +618,6 @@ export const buildRemuneration = (data) => {
   ) {
     const dateDebut32 = setMonth(setDate(anniversaireA3, 1), getMonth(anniversaireA3) + 1);
     const dateFin31 = subDays(dateDebut32, 1);
-    applicableMinimum = smcApplies(ageA4) ? SMC : SMIC;
-    applicableMinimumType = smcApplies(ageA4) ? "SMC" : "SMIC";
 
     if (dateFin31 >= dateFinContrat) {
       finRemuneration = true;
@@ -630,8 +627,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux31) / 100),
+          typeSalaire: applicableMinimumType31,
+          salaireBrut: ceilUp((applicableMinimum31 * selectedTaux31) / 100),
         },
         32: emptyLineObj,
       };
@@ -643,16 +640,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin31, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux31) / 100),
+          typeSalaire: applicableMinimumType31,
+          salaireBrut: ceilUp((applicableMinimum31 * selectedTaux31) / 100),
         },
         32: {
           dateDebut: format(dateDebut32, "yyyy-MM-dd"),
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux32,
           tauxMinimal: taux32,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux32) / 100),
+          typeSalaire: applicableMinimumType32,
+          salaireBrut: ceilUp((applicableMinimum32 * selectedTaux32) / 100),
           isChangingTaux: true,
           newSeuil: isAnniversaireDebutContrat ? ageA3 : ageA4,
         },
@@ -664,16 +661,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin31, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux31) / 100),
+          typeSalaire: applicableMinimumType31,
+          salaireBrut: ceilUp((applicableMinimum31 * selectedTaux31) / 100),
         },
         32: {
           dateDebut: format(dateDebut32, "yyyy-MM-dd"),
           dateFin: format(dateFinA3, "yyyy-MM-dd"),
           taux: selectedTaux32,
           tauxMinimal: taux32,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux32) / 100),
+          typeSalaire: applicableMinimumType32,
+          salaireBrut: ceilUp((applicableMinimum32 * selectedTaux32) / 100),
           isChangingTaux: true,
           newSeuil: isAnniversaireDebutContrat ? ageA3 : ageA4,
         },
@@ -688,8 +685,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux31) / 100),
+          typeSalaire: applicableMinimumType31,
+          salaireBrut: ceilUp((applicableMinimum31 * selectedTaux31) / 100),
         },
         32: emptyLineObj,
       };
@@ -700,8 +697,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinA3, "yyyy-MM-dd"),
           taux: selectedTaux31,
           tauxMinimal: taux31,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux31) / 100),
+          typeSalaire: applicableMinimumType31,
+          salaireBrut: ceilUp((applicableMinimum31 * selectedTaux31) / 100),
         },
         32: emptyLineObj,
       };
@@ -716,14 +713,14 @@ export const buildRemuneration = (data) => {
   const taux42 = taux.a4[getSeuils(ageA5)];
   const selectedTaux41 = getTaux(4.1, taux41);
   const selectedTaux42 = getTaux(4.2, taux42);
-  applicableMinimum = smcApplies(ageA4) ? SMC : SMIC;
-  applicableMinimumType = smcApplies(ageA4) ? "SMC" : "SMIC";
+  const applicableMinimum41 = smcApplies(ageA4) ? SMC : SMIC;
+  const applicableMinimumType41 = smcApplies(ageA4) ? "SMC" : "SMIC";
+  const applicableMinimum42 = smcApplies(ageA5) ? SMC : SMIC;
+  const applicableMinimumType42 = smcApplies(ageA5) ? "SMC" : "SMIC";
 
   if (isChangingTaux(ageA4, ageA5) && !finRemuneration && !isAnniversaireInLastMonth) {
     const dateDebut42 = setMonth(setDate(anniversaireA4, 1), getMonth(anniversaireA4) + 1);
     const dateFin41 = subDays(dateDebut42, 1);
-    applicableMinimum = smcApplies(ageA5) ? SMC : SMIC;
-    applicableMinimumType = smcApplies(ageA5) ? "SMC" : "SMIC";
 
     if (dateFin41 >= dateFinContrat) {
       finRemuneration = true;
@@ -733,8 +730,8 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux41,
           tauxMinimal: taux41,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux41) / 100),
+          typeSalaire: applicableMinimumType41,
+          salaireBrut: ceilUp((applicableMinimum41 * selectedTaux41) / 100),
         },
         42: emptyLineObj,
       };
@@ -745,16 +742,16 @@ export const buildRemuneration = (data) => {
           dateFin: format(dateFin41, "yyyy-MM-dd"),
           taux: selectedTaux41,
           tauxMinimal: taux41,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux41) / 100),
+          typeSalaire: applicableMinimumType41,
+          salaireBrut: ceilUp((applicableMinimum41 * selectedTaux41) / 100),
         },
         42: {
           dateDebut: format(dateDebut42, "yyyy-MM-dd"),
           dateFin: format(dateFinContrat, "yyyy-MM-dd"),
           taux: selectedTaux42,
           tauxMinimal: taux42,
-          typeSalaire: applicableMinimumType,
-          salaireBrut: ceilUp((applicableMinimum * selectedTaux42) / 100),
+          typeSalaire: applicableMinimumType42,
+          salaireBrut: ceilUp((applicableMinimum42 * selectedTaux42) / 100),
           isChangingTaux: true,
           newSeuil: isAnniversaireDebutContrat ? ageA4 : ageA5,
         },
@@ -767,8 +764,8 @@ export const buildRemuneration = (data) => {
         dateFin: format(dateFinContrat, "yyyy-MM-dd"),
         taux: selectedTaux41,
         tauxMinimal: taux41,
-        typeSalaire: applicableMinimumType,
-        salaireBrut: ceilUp((applicableMinimum * selectedTaux41) / 100),
+        typeSalaire: applicableMinimumType41,
+        salaireBrut: ceilUp((applicableMinimum41 * selectedTaux41) / 100),
       },
       42: emptyLineObj,
     };

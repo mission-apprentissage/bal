@@ -6,7 +6,7 @@ import { FC } from "react";
 import { FieldValues, UseFormRegisterReturn, UseFormReturn } from "react-hook-form";
 import { useRecoilState } from "recoil";
 
-import { fieldsState } from "../../../atoms/fields.atom";
+import { activeFieldState, fieldsState } from "../../../atoms/fields.atom";
 import { informationMessagesState } from "../../../atoms/informationMessages.atom";
 import { showOverlayState } from "../../../atoms/showOverlay.atom";
 import { CerfaField } from "../../../utils/cerfaSchema";
@@ -63,6 +63,7 @@ const TypesMapping: Record<FieldType, FC<InputFieldProps>> = {
 const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
   const Component = TypesMapping[fieldType];
   const [_, setInformationMessages] = useRecoilState(informationMessagesState);
+  const [_activeField, setActiveField] = useRecoilState(activeFieldState);
   const [_showOverlay, setShowOverlay] = useRecoilState(showOverlayState);
   const [fields, setFields] = useRecoilState(fieldsState);
 
@@ -105,6 +106,7 @@ const InputField: FC<Props> = ({ fieldType, ...fieldProps }) => {
 
   const onFocus = () => {
     setInformationMessages(fieldSchema.messages);
+    setActiveField(name);
     fieldMethods.clearErrors(name);
   };
 

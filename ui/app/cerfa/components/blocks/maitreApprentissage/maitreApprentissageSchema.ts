@@ -52,10 +52,11 @@ export const maitreApprentissageSchema: Record<string, CerfaField> = {
     label: "Numéro de sécurité sociale (NIR)",
     required: true,
     requiredMessage: "Le numéro de sécurité sociale du maître d'apprentissage est manquant",
-    mask: "S 00 0C 00 000 000",
+    mask: "S 00 M0 0C 000 000",
     maskLazy: false,
     definitions: {
       S: /[1-2]/,
+      M: /[0-1]/,
       C: /[1-9AB]/,
     },
     messages: [
@@ -102,10 +103,6 @@ Ceci à défaut de dispositions conventionnelles particulières applicables dans
     required: true,
     fieldType: "email",
     requiredMessage: "Le courriel de l'employeur est obligatoire",
-    pattern: {
-      value: /\S+@\S+\.\S+/,
-      message: `Le courriel doit comporter "@" et "." pour être valide.`,
-    },
   },
 
   "maitre2.nom": {
@@ -148,10 +145,11 @@ Ceci à défaut de dispositions conventionnelles particulières applicables dans
   },
   "maitre2.nir": {
     label: "Numéro de sécurité sociale (NIR)",
-    mask: "S 00 0C 00 000 000",
+    mask: "S 00 M0 0C 000 000",
     maskLazy: false,
     definitions: {
       S: /[1-2]/,
+      M: /[0-1]/,
       C: /[1-9AB]/,
     },
     messages: [
@@ -190,10 +188,6 @@ Ceci à défaut de dispositions conventionnelles particulières applicables dans
     label: "Courriel du maître d'apprentissage",
     placeholder: "Exemple : jf.martin@email.fr",
     fieldType: "email",
-    pattern: {
-      value: /\S+@\S+\.\S+/,
-      message: `Le courriel doit comporter "@" et "." pour être valide.`,
-    },
   },
   "maitre1.attestationEligibilite": {
     fieldType: "consent",

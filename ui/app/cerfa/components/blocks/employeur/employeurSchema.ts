@@ -130,10 +130,6 @@ export const employeurSchema: Record<string, CerfaField> = {
     fieldType: "email",
     showInfo: true,
     requiredMessage: "Le courriel de l'employeur est manquant",
-    pattern: {
-      value: /\S+@\S+\.\S+/,
-      message: `Le courriel doit comporter "@" et "." pour être valide.`,
-    },
   },
   "employeur.typeEmployeur": {
     label: "Type d’employeur",

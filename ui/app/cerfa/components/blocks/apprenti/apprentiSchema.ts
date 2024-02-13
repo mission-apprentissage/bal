@@ -151,10 +151,11 @@ Pas de limite d'âge si  l'apprenti :
   "apprenti.nir": {
     label: "Numéro de sécurité sociale (NIR)",
     requiredMessage: "N'est pas un numéro de sécurité sociale valide",
-    mask: "S 00 0C 00 000 000",
+    mask: "S 00 M0 0C 000 000",
     maskLazy: false,
     definitions: {
       S: /[1-2]/,
+      M: /[0-1]/,
       C: /[1-9AB]/,
     },
     messages: [
@@ -282,10 +283,6 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     placeholder: "Exemple : jf.martin@email.fr",
     fieldType: "email",
     requiredMessage: "Le courriel de l'apprenti(e) est obligatoire",
-    pattern: {
-      value: /\S+@\S+\.\S+/,
-      message: `Le courriel doit comporter "@" et "." pour être valide.`,
-    },
   },
 
   "apprenti.projetCreationRepriseEntreprise": {
@@ -547,10 +544,6 @@ Un mineur émancipé peut accomplir seul les actes nécessitant la majorité lé
     fieldType: "email",
     required: true,
     requiredMessage: "Le courriel du représentant légal est manquant",
-    pattern: {
-      value: /\S+@\S+\.\S+/,
-      message: `Le courriel doit comporter "@" et "." pour être valide.`,
-    },
   },
   "apprenti.responsableLegal.memeAdresse": {
     _init: ({ values }: any) => ({ required: shouldAskRepresentantLegal({ values }) }),

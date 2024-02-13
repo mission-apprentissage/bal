@@ -3,6 +3,15 @@ interface Idcc {
   libelle: string;
 }
 
+export enum IdccSources {
+  RECHERCHE_ENTREPRISE_API = "RECHERCHE_ENTREPRISE_API",
+  API_ENTREPRISE = "API_ENTREPRISE",
+  CFA_DOCK_SIRET = "CFA_DOCK_SIRET",
+  CFA_DOCK_SIREN = "CFA_DOCK_SIREN",
+}
+
+export type IdccSource = keyof typeof IdccSources;
+
 export const idcc: Record<string, Idcc> = {
   "1000": {
     code: "1000",

@@ -2,6 +2,13 @@ import logger from "../logger";
 import { ApiError, apiRateLimiter } from "../utils/apiUtils";
 import getApiClient from "./client";
 
+interface OpcoData {
+  idcc?: string;
+  opco_nom?: string;
+  opco_siren?: string;
+  status?: string;
+}
+
 // Cf Documentation : https://www.cfadock.fr/Home/ApiDescription
 const executeWithRateLimiting = apiRateLimiter("apiCfaDock", {
   //2 requests per second
@@ -13,7 +20,7 @@ const executeWithRateLimiting = apiRateLimiter("apiCfaDock", {
   }),
 });
 
-export const getOpcoData = (siret: string) => {
+export const getOpcoData = (siret: string): Promise<Promise<OpcoData>> => {
   return executeWithRateLimiting(async (client) => {
     try {
       logger.debug(`[CfaDock API] Search opco data ${siret}...`);

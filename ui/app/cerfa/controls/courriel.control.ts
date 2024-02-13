@@ -1,72 +1,57 @@
-import * as Yup from "yup";
-
 import { CerfaControl } from ".";
+import { emailControl } from "./common/email.control";
 
 export const courrielControl: CerfaControl[] = [
   {
     deps: ["employeur.courriel"],
     process: async ({ values }) => {
-      const employeur = values.employeur.courriel;
-      try {
-        await Yup.string().email().validate(employeur);
-      } catch (error) {
-        return { error: "Le courriel doit être valide." };
-      }
-      return {};
+      const {
+        employeur: { courriel },
+      } = values;
+
+      return emailControl(courriel);
     },
   },
   {
     deps: ["apprenti.responsableLegal.courriel"],
     process: async ({ values }) => {
-      const responsableLegal = values.apprenti.responsableLegal.courriel;
-      try {
-        await Yup.string().email().validate(responsableLegal);
-      } catch (error) {
-        return { error: "Le courriel doit être valide." };
-      }
-      return {};
+      const {
+        apprenti: {
+          responsableLegal: { courriel },
+        },
+      } = values;
+
+      return emailControl(courriel);
     },
   },
   {
     deps: ["apprenti.courriel"],
     process: async ({ values }) => {
-      const apprenti = values.apprenti.courriel;
+      const {
+        apprenti: { courriel },
+      } = values;
 
-      try {
-        await Yup.string().email().validate(apprenti);
-      } catch (error) {
-        return { error: "Le courriel doit être valide." };
-      }
-
-      return {};
+      return emailControl(courriel);
     },
   },
   {
     deps: ["maitre1.courriel"],
     process: async ({ values }) => {
-      const maitre1 = values.maitre1.courriel;
+      const {
+        maitre1: { courriel },
+      } = values.maitre1.courriel;
 
-      try {
-        await Yup.string().email().validate(maitre1);
-      } catch (error) {
-        return { error: "Le courriel doit être valide." };
-      }
-
-      return {};
+      return emailControl(courriel);
     },
   },
   {
     deps: ["maitre2.courriel"],
     process: async ({ values }) => {
-      const maitre2 = values.maitre2.courriel;
+      const {
+        maitre2: { courriel },
+      } = values;
 
-      try {
-        await Yup.string().email().validate(maitre2);
-      } catch (error) {
-        return { error: "Le courriel doit être valide." };
-      }
-
-      return {};
+      return emailControl(courriel);
     },
   },
 ];

@@ -36,6 +36,7 @@ import { documentsRoutes } from "./documents.routes";
 import { userRoutes } from "./user.routes";
 import { authValidateJWT, authValidateSession, authWebHookKey } from "./utils/auth.strategies";
 import { cerfaRoutes } from "./v1/cerfa.routes";
+import { controlsRoutes } from "./v1/controls.routes";
 import { geoRoutes } from "./v1/geo.routes";
 import { nafRoutes } from "./v1/naf.routes";
 import { siretRoutes } from "./v1/siret.routes";
@@ -208,4 +209,5 @@ export const registerV1Routes: RegisterRoutes = ({ server }) => {
   geoRoutes({ server });
   nafRoutes({ server });
   tcoRoutes({ server });
+  controlsRoutes({ server });
 };

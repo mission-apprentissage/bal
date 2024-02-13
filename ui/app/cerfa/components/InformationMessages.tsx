@@ -7,6 +7,7 @@ import { BonusAvatar } from "../../../icons/BonusAvatar";
 import { InformationAvatar } from "../../../icons/InformationAvatar";
 import { RegulatoryAvatar } from "../../../icons/RegulatoryAvatar";
 import Markdown from "../../components/Markdown";
+import { activeFieldState, fieldsState } from "../atoms/fields.atom";
 import { informationMessagesState } from "../atoms/informationMessages.atom";
 
 const SETTINGS = {
@@ -29,11 +30,15 @@ const SETTINGS = {
 };
 
 const InformationMessages: FC = () => {
-  const [messages] = useRecoilState(informationMessagesState);
+  const [messages = []] = useRecoilState(informationMessagesState);
+  const [activeField] = useRecoilState(activeFieldState);
+  const [fields] = useRecoilState(fieldsState);
+
+  const activeFieldMessages = fields[activeField]?.informationMessages ?? [];
 
   return (
     <Box p={2} pt={0} position="sticky" top={24}>
-      {messages?.map((message) => {
+      {[...activeFieldMessages, ...messages]?.map((message) => {
         const { type, content } = message;
         const { backgroundColor, title, icon } = SETTINGS[type];
 

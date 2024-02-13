@@ -1,4 +1,5 @@
 import { CerfaForm } from "../components/CerfaForm";
+import { InformationMessage } from "../utils/cerfaSchema";
 import { ageApprentiControl } from "./ageApprenti.control";
 import { apprentiCodePostalControl } from "./apprentiCodePostal.control";
 import { apprentiDateNaissanceControl } from "./apprentiDateNaissance.control";
@@ -40,6 +41,7 @@ interface ControlResult {
       cascade?: boolean;
       success?: boolean;
       stateRelatedMessage?: string;
+      informationMessages?: InformationMessage[];
     }
   >;
   cache?: string;
