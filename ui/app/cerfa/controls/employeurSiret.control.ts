@@ -74,7 +74,7 @@ export const employerSiretLogic: CerfaControl = {
               {
                 type: "assistive",
                 content:
-                  "La catégorie juridique de l’entreprise semble relever du secteur public. Si c’est bien le cas, rendez-vous sur CELIA [Contrat apprentissage employeur public dématérialisé pour la fonction publique (emploi.gouv.fr)] pour compléter votre cerfa.",
+                  "La catégorie juridique de l’entreprise semble relever du secteur public. Si c’est bien le cas, rendez-vous sur [CELIA](https://celia.emploi.gouv.fr/) pour compléter votre cerfa.",
               },
             ]) ??
             [],
@@ -146,11 +146,6 @@ export const employerSiretLogic: CerfaControl = {
           value: result.num_region || undefined,
           locked: true,
           ...(result.num_region && SUCCESS),
-        },
-        "employeur.privePublic": {
-          value: result.public ? "public" : "prive",
-          locked: false,
-          ...(result.public && SUCCESS),
         },
       },
     };
