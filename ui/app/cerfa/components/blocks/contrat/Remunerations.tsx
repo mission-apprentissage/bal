@@ -54,7 +54,7 @@ export const Remunerations = () => {
             label: "En savoir plus",
             content: (
               <Markdown>
-                {`Exemples de situations spécifiques à l'apprentissage : entrée en apprentissage en cours de cycle de formation, rémunération du contrat d'apprentissage préparant à une licence professionnelle, majorations règlementaires, apprentis ayant une reconnaissance de travailleur handicapé).
+                {`Exemples de situations spécifiques à l'apprentissage : entrée en apprentissage en cours de cycle de formation, rémunération du contrat d'apprentissage préparant à une licence professionnelle, majorations règlementaires, apprentis ayant une reconnaissance de travailleur handicapé, succession de contrats avec le même employeur ou avec un employeur différent.
             
 En savoir plus sur les situations spécifiques sur le [site du Ministère du Travail, de l'Emploi et de l'Insertion](https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/contrat-apprentissage#salaire).`}
               </Markdown>
