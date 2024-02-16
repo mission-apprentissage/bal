@@ -29,6 +29,7 @@ import { RemunerationsControl } from "./remunerations.control";
 import { responsableLegalControl } from "./responsableLegal.control";
 import { responsableLegalCodePostalControl } from "./responsableLegalCodePostal.control";
 import { rncpControl } from "./rncp.control";
+import { telephoneControl } from "./telephone.control";
 import { typeContratAppControl } from "./typeContratApp.control";
 import { typeDerogationControl } from "./typeDerogation.control";
 
@@ -92,4 +93,5 @@ export const controls: CerfaControl[] = [
   ...rncpControl,
   ...codeDiplomeControl,
   ...courrielControl,
+  ...telephoneControl,
 ];

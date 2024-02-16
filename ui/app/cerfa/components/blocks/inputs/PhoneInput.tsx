@@ -13,8 +13,6 @@ const PhoneInput: FC<InputFieldProps> = ({
   state,
   stateRelatedMessage,
 }) => {
-  const value = fieldMethods.getValues()?.[name]?.value?.replace("+", "") ?? "";
-
   const handleChange: PhoneInputProps["onChange"] = (val, country) => {
     fieldMethods.setValue(name, {
       value: `+${val}`,
@@ -22,25 +20,32 @@ const PhoneInput: FC<InputFieldProps> = ({
     });
   };
 
+  const handleBlur: PhoneInputProps["onBlur"] = (e) => {
+    inputProps.onBlur(e);
+    fieldMethods.trigger(name);
+  };
+
   return (
     <FormPhoneInput
-      {...inputProps}
       label={fieldSchema.label}
       state={state}
       stateRelatedMessage={stateRelatedMessage}
       hintText={fieldSchema.placeholder}
       phoneInputProps={{
+        inputProps: {
+          ref: inputProps.ref,
+          onBlur: handleBlur,
+        },
         specialLabel: "",
         onChange: handleChange,
-        value,
         country: "fr",
         masks: {
           fr: ". .. .. .. ..",
         },
         countryCodeEditable: false,
         enableTerritories: true,
+        disableDropdown: true,
         placeholder: fieldSchema.placeholder,
-        disabled: inputProps.disabled,
       }}
       disabled={inputProps.disabled}
     />
