@@ -10,7 +10,13 @@ export const signaturesSchema: Record<string, CerfaField> = {
     messages: [
       {
         type: "assistive",
-        content: `Pendant la durée du contrat d’apprentissage, et après son terme, il peut vous être demandé de fournir l’original du contrat signé, les pièces permettant d’attester du respect des déclarations figurant dans le contrat d’apprentissage ainsi que la convention de formation, et le cas échéant la convention tripartite. Il vous appartient donc de conserver l’ensemble de ces documents originaux.`,
+        content: `Pendant la durée du contrat d’apprentissage, et après son terme, il peut vous être demandé de fournir :
+        
+- l’original du contrat signé,
+- les pièces permettant d’attester du respect des déclarations figurant dans le contrat d’apprentissage
+- la convention de formation, et le cas échéant la convention d'allongement ou réduction de durée du contrat (fournie par l'organisme de formation)
+
+Vous devez donc conserver l’ensemble de ces documents originaux.`,
       },
     ],
   },

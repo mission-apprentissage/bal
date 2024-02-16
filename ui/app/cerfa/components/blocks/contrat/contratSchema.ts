@@ -1,7 +1,7 @@
 import { CerfaField, SelectNestedOption } from "../../../utils/cerfaSchema";
 import { getLabelNumeroContratPrecedent } from "./domain/getLabelNumeroContratPrecedent";
 import { getTypeContratApprentiOptions } from "./domain/getTypeContratApprentiOptions";
-import { getTypeDerogationOptions } from "./domain/getTypeDerogationOptions";
+import { getTypeDerogationInformationMessages, getTypeDerogationOptions } from "./domain/getTypeDerogationOptions";
 import { isRequiredNumeroContratPrecedent } from "./domain/isRequiredNumeroContratPrecedent";
 import { shouldAskDateEffetAvenant } from "./domain/shouldAskDateEffetAvenant";
 
@@ -20,7 +20,7 @@ export const contratSchema: Record<string, CerfaField> = {
     messages: [
       {
         type: "bonus",
-        content: `Quand le contrat d'apprentissage est à durée limitée, la fin est appelée "fin de contrat" et dans le cadre d'un contrat CDI, la fin est appelée "fin de période d'apprentissage".`,
+        content: `Quand le contrat d'apprentissage est à durée limitée (CDL équivalent à CDD) la fin est appelée "fin de contrat" et dans le cadre d'un contrat CDI, la fin est appelée "fin de période d'apprentissage".`,
       },
     ],
   },
@@ -47,16 +47,19 @@ export const contratSchema: Record<string, CerfaField> = {
     ],
   },
   "contrat.typeDerogation": {
-    _init: ({ values }) => ({ options: getTypeDerogationOptions({ values }) }),
+    _init: ({ values }) => ({
+      options: getTypeDerogationOptions({ values }),
+      messages: getTypeDerogationInformationMessages({ values }),
+    }),
     label: "Type de dérogation (optionnel)",
     fieldType: "select",
     showInfo: true,
     messages: [
       {
         type: "assistive",
-        content: `L'apprentissage commence à partir de 16 ans mais par dérogation, les jeunes âgés d'au moins 15 ans et un jour peuvent conclure un contrat d'apprentissage s'ils ont terminé la scolarité du 1er cycle de l'enseignement secondaire (collège).
+        content: `A renseigner si une dérogation existe pour ce contrat (exemple : l'apprentissage commence à partir de 16 ans mais par dérogation, les jeunes âgés d'au moins 15 ans et un jour peuvent conclure un contrat d'apprentissage s'ils ont terminé la scolarité du 1er cycle de l'enseignement secondaire (collège).
 
-En cas de réduction ou allongement de la durée du contrat, vous devrez aussi remplir une convention d'aménagement de durée, que vous signerez avec l'organisme de formation et votre apprenti.`,
+En cas d'allongement ou de réduction de la durée du contrat, le CFA vous enverra une convention d'aménagement à remplir et à signer.`,
       },
     ],
   },
@@ -237,12 +240,11 @@ En cas de réduction ou allongement de la durée du contrat, vous devrez aussi r
       },
       {
         type: "bonus",
-        content: `A partir de cette date, vous avez 5 jours ouvrables pour transmettre le document à votre OPCO (les étapes sur la suite de la procédure seron détaillées lorsque vous téléchargerez le présent document).
-La date de début d'exécution du contrat est liée à la date de naissance de l'apprenti pour le calcul des périodes de rémunération.`,
+        content: `A partir de cette date, vous avez 5 jours ouvrables pour transmettre le document à votre OPCO (les étapes sur la suite de la procédure seron détaillées lorsque vous téléchargerez le présent document).`,
       },
       {
         type: "regulatory",
-        content: `Cette date correspond à la date de début du cycle de formation au sens de l’article L6222-7-1. [https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038951821](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038951821)`,
+        content: `Cette date correspond à la date de début du cycle de formation au sens de [l’article L6222-7-1](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038951821).`,
       },
     ],
   },
@@ -276,13 +278,17 @@ La date de début d'exécution du contrat est liée à la date de naissance de l
         content: `Le contrat ne peut pas se terminer avant la fin de la formation dans l'organisme de formation, examens compris.
 
 La période de contrat doit donc englober la date du dernier examen qui sanctionne l'obtention du diplôme. 
-Si celle-ci n'est pas connue au moment de la conclusion du contrat, vous pouvez renseigner une date située maximum 2 mois au-delà de la date de fin prévisionnelle des examens.
-      
-La date de fin de contrat intervient donc : 
+Si celle-ci n'est pas connue au moment de la conclusion du contrat, vous pouvez renseigner une date située maximum 2 mois au-delà de la date de fin prévisionnelle des examens.`,
+        collapse: {
+          label: "Détails",
+          content: `La date de fin de contrat intervient donc : 
+
 au plus tôt le dernier jour de la dernière épreuve nécessaire à l’obtention du titre ou diplôme préparé par l'apprenti ;
+
 au plus tard dans les deux mois après la dernière épreuve sanctionnant le cycle, ou à la veille du début du cycle de formation suivant.
-      
+  
 Dans le cadre d’un CDI, vous devez donc également préciser la date de fin de l’action de formation (examens inclus).`,
+        },
       },
     ],
   },
@@ -327,9 +333,16 @@ Le contrat doit être signé avant de débuter.
         type: "regulatory",
         content: `L’horaire collectif de travail de l’entreprise peut être inférieur ou supérieur à 35 heures. 
 Toutefois, la durée légale du travail effectif est fixée à 35h par semaine. Dans certains secteurs, quand l'organisation du travail le justifie, elle peut être portée à 40h.
-La circulaire n° 2012-15 du 19 juillet 2012 de la DGEFP précise que le Cerfa doit indiquer 35 heures dans le cas de salariés travaillant plus de 35 heures hebdomadaires, les heures au-delà étant récupérées sous forme de RTT.
-
-Le temps de formation en CFA est du temps de travail effectif et compte dans l'horaire de travail. En savoir plus sur le site du Service Public  [https://www.service-public.fr/particuliers/vosdroits/F2918](https://www.service-public.fr/particuliers/vosdroits/F2918) - ouverture dans un nouvel onglet`,
+        
+Le temps de formation en CFA est du temps de travail effectif et compte dans l'horaire de travail.`,
+        collapse: {
+          label: "Détails",
+          content: `La circulaire n° 2012-15 du 19 juillet 2012 de la DGEFP précise que le Cerfa doit indiquer 35 heures dans le cas de salariés travaillant plus de 35 heures hebdomadaires, les heures au-delà étant récupérées sous forme de RTT.
+  
+En savoir plus sur la durée du temps de travail de l'apprenti sur le [site du Service Public](https://www.service-public.fr/particuliers/vosdroits/F2918)
+  
+Les majorations pour heures supplémentaires sont applicables aux apprentis. Toutefois, les apprentis de moins de 18 ans ne peuvent pas effectuer d’heures supplémentaires sauf autorisation de l’inspecteur du travail après avis conforme du médecin du travail.`,
+        },
       },
     ],
   },
@@ -341,6 +354,23 @@ Le temps de formation en CFA est du temps de travail effectif et compte dans l'h
     definitions: {
       M: /[0-5]/,
     },
+    messages: [
+      {
+        type: "regulatory",
+        content: `L’horaire collectif de travail de l’entreprise peut être inférieur ou supérieur à 35 heures. 
+Toutefois, la durée légale du travail effectif est fixée à 35h par semaine. Dans certains secteurs, quand l'organisation du travail le justifie, elle peut être portée à 40h.
+        
+Le temps de formation en CFA est du temps de travail effectif et compte dans l'horaire de travail.`,
+        collapse: {
+          label: "Détails",
+          content: `La circulaire n° 2012-15 du 19 juillet 2012 de la DGEFP précise que le Cerfa doit indiquer 35 heures dans le cas de salariés travaillant plus de 35 heures hebdomadaires, les heures au-delà étant récupérées sous forme de RTT.
+  
+En savoir plus sur la durée du temps de travail de l'apprenti sur le [site du Service Public](https://www.service-public.fr/particuliers/vosdroits/F2918)
+  
+Les majorations pour heures supplémentaires sont applicables aux apprentis. Toutefois, les apprentis de moins de 18 ans ne peuvent pas effectuer d’heures supplémentaires sauf autorisation de l’inspecteur du travail après avis conforme du médecin du travail.`,
+        },
+      },
+    ],
   },
   "contrat.travailRisque": {
     label: "Travail sur machines dangereuses ou exposition à des risques particuliers",
@@ -357,12 +387,52 @@ Le temps de formation en CFA est du temps de travail effectif et compte dans l'h
         value: "non",
       },
     ],
+    messages: [
+      {
+        type: "regulatory",
+        content: `Pour les apprentis mineurs, certaines catégories de travaux ne sont pas autorisées. Dans certains cas spécifiquement prévus par la règlementation, des dérogations sont possibles.
+
+Pour les apprentis en contrat à durée limitée, quel que soit leur âge, leur sont interdits l'exécution des travaux listés à l’article D. 4154-1 du code du travail.`,
+        collapse: {
+          label: "Détails",
+          content: `Catégories restreintes pour les mineurs dans l'article L. 4153-8 du code du travail. Dérogations listées dans [l'article L. 4153-9 du code du travail](https://code.travail.gouv.fr/code-du-travail/l4153-9)
+
+La règlementation relative aux travaux interdits et réglementés pour les jeunes âgés de quinze ans au moins et de moins de dix-huit ans est détaillée aux [articles D. 4153-15 à D. 4153-37 du code du travail](https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006072050/LEGISCTA000018488483/#LEGISCTA000028058860).  Le cadre des dérogations est précisé aux [articles R. 4153-38 à R. 4153-45 du code du travail](https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006072050/LEGISCTA000018488563/#LEGISCTA000028058656).
+
+Le cadre des dérogations pour un apprenti en contrat à durée limitée est précisé aux [articles D. 4154-2 à D. 4154-6 du code du travail](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000037001003/2021-06-14).`,
+        },
+      },
+    ],
   },
   "contrat.smc": {
     label: "Salaire minimum conventionnel (SMC)",
     fieldType: "number",
     required: true,
     requiredMessage: "Le salaire minimum conventionnel est obligatoire",
+    messages: [
+      {
+        type: "assistive",
+        content: `Lorsque l'apprenti a 21 ans ou plus, si le SMC existe et que son montant est plus avantageux pour l'apprenti, son application est obligatoire.`,
+        collapse: {
+          label: "En savoir plus",
+          content: `La base sur laquelle est calculée la rémunération de l'apprenti correspond au salaire le plus avantageux entre le salaire minimum de croissance (SMIC, qui correspond au salaire minimum légal que le salarié doit percevoir), et le salaire minimum conventionnel (SMC) indiqué dans la convention collective applicable à votre activité.
+
+Si salaire minimum conventionnel est supérieur au SMIC, c’est le salaire minimum conventionnel qui s’applique. En revanche, lorsque le montant du salaire minimum conventionnel est inférieur au SMIC, vous devez verser au minimum un salaire qui se base sur le montant du SMIC.`,
+        },
+      },
+      {
+        type: "bonus",
+        content: `Le salaire minimum conventionnel (SMC) est le salaire minimum prévu par une convention collective de branche, issu d’une « grille de classification », applicable à un salarié.
+
+Dans certains secteurs, il existe aussi des majorations prévues par la convention collective.`,
+        collapse: {
+          label: "En savoir plus",
+          content: `Si vous ne connaissez pas le SMC applicable, consultez votre convention collective.
+
+L'information figure en général dans la partie "Salaires". Vous devez vous référer à la position du poste occupé par l'apprenti dans la classification hiérarchique pour  déterminer la rémunération minimum applicable à l’apprenti à partir du salaire de base et du pourcentage appliqué.`,
+        },
+      },
+    ],
   },
   "contrat.salaireEmbauche": {
     // locked: true,

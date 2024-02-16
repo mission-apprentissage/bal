@@ -1,6 +1,4 @@
 import { fr } from "@codegouvfr/react-dsfr";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import { getLink } from "@codegouvfr/react-dsfr/link";
 import { Notice } from "@codegouvfr/react-dsfr/Notice";
 import { Box, Typography } from "@mui/material";
 import { format, getDate, parseISO, setDate, subMonths } from "date-fns";
@@ -8,6 +6,8 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 
 import { formatDate } from "../../../../../utils/date.utils";
+import InformationMessage from "../../../../components/InformationMessage";
+import Markdown from "../../../../components/Markdown";
 import CollapseController from "../../CollapseController";
 import InputController from "../inputs/InputController";
 import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
@@ -15,8 +15,6 @@ import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
 import ConditionItem from "./ConditionItem";
 import { shouldShowRemunerationsAnnuelles } from "./domain/shouldShowRemunerationsAnnuelles";
 import { shouldShowSmc } from "./domain/shouldShowSmc";
-
-const { Link } = getLink();
 
 const getAnneeLabel = (ordre: 1.1 | 2.1 | 3.1 | 4.1) => {
   return {
@@ -50,41 +48,34 @@ export const Remunerations = () => {
         Rémunération
       </Typography>
       <Box mb={2}>
-        <Alert
-          severity="warning"
-          small
-          description={
-            <>
-              <Typography>
-                Le calcul de rémunération proposé est réalisé en fonction des éléments du contrat que vous avez
-                renseignés. Toutefois, veuillez noter que ce calcul :
+        <InformationMessage
+          type="assistive"
+          collapse={{
+            label: "En savoir plus",
+            content: (
+              <Markdown>
+                {`Exemples de situations spécifiques à l'apprentissage : entrée en apprentissage en cours de cycle de formation, rémunération du contrat d'apprentissage préparant à une licence professionnelle, majorations règlementaires, apprentis ayant une reconnaissance de travailleur handicapé).
+            
+En savoir plus sur les situations spécifiques sur le [site du Ministère du Travail, de l'Emploi et de l'Insertion](https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/contrat-apprentissage#salaire).`}
+              </Markdown>
+            ),
+          }}
+        >
+          <>
+            <Typography>
+              Le calcul de rémunération proposé est réalisé en fonction des éléments du contrat que vous avez
+              renseignés. Toutefois, veuillez noter que ce calcul :
+            </Typography>
+            <Box component="ul">
+              <Typography component="li">
+                indique la rémunération minimale légale et que vous pouvez décider d'attribuer une rémunération plus
+                avantageuse ;
               </Typography>
-              <Box component="ul">
-                <Typography component="li">
-                  indique la rémunération minimale légale calculée sur la base du SMIC, vous pouvez décider d'attribuer
-                  une rémunération plus avantageuse ;
-                </Typography>
-                <Typography component="li">
-                  ne tient pas compte de la rémunération minimale légale calculée sur la base du SMC (salaire minimum
-                  conventionnel) qui doit s'appliquer lorsque l'apprenti a 21 ans et seulement si le SMC est supérieur
-                  au SMIC
-                </Typography>
-                <Typography component="li">
-                  ne tient pas encore compte de situations spécifiques (exemples : entrée en apprentissage en cours de
-                  cycle de formation, rémunération du contrat d'apprentissage préparant à une licence professionnelle,
-                  majorations règlementaires, apprentis ayant une reconnaissance de travailleur handicapé). En savoir
-                  plus sur les situations spécifiques sur le{" "}
-                  <Link href="https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/contrat-apprentissage#salaire">
-                    site du Ministère du Travail, de l&apos;Emploi et de l&apos;Insertion
-                  </Link>
-                </Typography>
-              </Box>
-              <Typography>
-                Vous pouvez donc modifier les montants indiqués pour tenir compte de ces éléments.
-              </Typography>
-            </>
-          }
-        />
+              <Typography component="li">ne tient pas encore compte de situations spécifiques</Typography>
+            </Box>
+            <Typography>Vous pouvez donc modifier les montants indiqués pour tenir compte de ces éléments.</Typography>
+          </>
+        </InformationMessage>
       </Box>
 
       {(dateDebutContrat === "" ||

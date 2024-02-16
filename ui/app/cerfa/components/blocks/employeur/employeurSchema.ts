@@ -29,12 +29,17 @@ export const employeurSchema: Record<string, CerfaField> = {
       {
         type: "assistive",
         content:
-          "Vous devez renseigner le siret correspondant à l'établissement du lieu d'exécution du contrat, là où l'apprenti(e)suivra sa formation pratique ; il ne correspond donc pas forcément au siège de l'entreprise. Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).",
+          "Vous devez renseigner le siret correspondant à l'établissement du lieu d'exécution du contrat, là où l'apprenti(e) suivra sa formation pratique ; il ne correspond donc pas forcément au siège de l'entreprise.",
+        collapse: {
+          label: "En savoir plus",
+          content:
+            "Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).",
+        },
       },
       {
         type: "bonus",
         content:
-          "Vous ne connaissez pas votre siret ? Rendez-vous sur l'annuaire des entreprises : [https://annuaire-entreprises.data.gouv.fr/](https://annuaire-entreprises.data.gouv.fr/)",
+          "Vous ne connaissez pas votre siret ? Rendez-vous sur l'[annuaire des entreprises](https://annuaire-entreprises.data.gouv.fr/)",
       },
     ],
   },
@@ -130,6 +135,12 @@ export const employeurSchema: Record<string, CerfaField> = {
     fieldType: "email",
     showInfo: true,
     requiredMessage: "Le courriel de l'employeur est manquant",
+    messages: [
+      {
+        type: "bonus",
+        content: "Cette adresse email peut être utilisée par l'ASP dans le cadre du paiement des aides.",
+      },
+    ],
   },
   "employeur.typeEmployeur": {
     label: "Type d’employeur",
@@ -194,7 +205,12 @@ export const employeurSchema: Record<string, CerfaField> = {
       {
         type: "bonus",
         content:
-          "En savoir plus sur le [site du ministère de l'Economie](https://www.economie.gouv.fr/entreprises/activite-entreprise-code-ape-code-naf). Pour connaître votre code NAF, vous pouvez consulter [l'Annuaire des entreprises](https://annuaire-entreprises.data.gouv.fr/).",
+          "Pour connaître votre code NAF, vous pouvez consulter l'[Annuaire des entreprises](https://annuaire-entreprises.data.gouv.fr/).",
+        collapse: {
+          label: "En savoir plus",
+          content:
+            "En savoir plus sur le [site du ministère de l'Economie](https://www.economie.gouv.fr/entreprises/activite-entreprise-code-ape-code-naf).",
+        },
       },
     ],
   },
@@ -221,7 +237,8 @@ export const employeurSchema: Record<string, CerfaField> = {
       },
       {
         type: "regulatory",
-        content: "Article L. 130-1.-I du code de la sécurité sociale",
+        content:
+          "**[Article L. 130-1.-I du code de la sécurité sociale](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038610270/2021-10-08/)**",
       },
     ],
   },
@@ -245,7 +262,17 @@ export const employeurSchema: Record<string, CerfaField> = {
       {
         type: "bonus",
         content:
-          "L'Identifiant Des Conventions Collectives est un code de 1 à 4 chiffres sous lequel une convention collective est enregistrée. Sauf exception, cette information se trouve inscrite sur les bulletins de salaires émis par votre entreprise. Si vous ne connaissez pas votre IDCC, recherchez-le avec votre siret ou votre nom sur l'Annuaire des entreprises : https://annuaire-entreprises.data.gouv.fr/ ou recherche-le par mot-clé d'activité sur le site du Ministère du Travail [https://www.elections-professionnelles.travail.gouv.fr/web/guest/recherche-idcc](https://www.elections-professionnelles.travail.gouv.fr/web/guest/recherche-idcc).",
+          "L'Identifiant Des Conventions Collectives est un code de 1 à 4 chiffres sous lequel une convention collective est enregistrée. Sauf exception, cette information se trouve inscrite sur les bulletins de salaires émis par votre entreprise.",
+        collapse: {
+          label: "Retouver votre IDCC",
+          content:
+            "Si vous ne connaissez pas votre IDCC, recherchez-le avec votre siret ou votre nom sur l'Annuaire des entreprises : [https://annuaire-entreprises.data.gouv.fr/](https://annuaire-entreprises.data.gouv.fr/) ou recherche-le par mot-clé d'activité sur le [site du Ministère du Travail](https://www.elections-professionnelles.travail.gouv.fr/web/guest/recherche-idcc).",
+        },
+      },
+      {
+        type: "regulatory",
+        content:
+          "La convention collective est un texte conclu au niveau d’une branche d’activité (par exemple, : Transports routiers). Elle adapte les règles du Code du travail sur des points précis, en fonction des situations particulières de la branche (primes, congés, salaires minima, préavis, prévoyance…).",
       },
     ],
   },

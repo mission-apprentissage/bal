@@ -3,6 +3,7 @@ import { InformationMessage } from "../utils/cerfaSchema";
 import { ageApprentiControl } from "./ageApprenti.control";
 import { apprentiCodePostalControl } from "./apprentiCodePostal.control";
 import { apprentiDateNaissanceControl } from "./apprentiDateNaissance.control";
+import { apprentiNationaliteControl } from "./apprentiNationalite.control";
 import { apprentiNirControl } from "./apprentiNir.control";
 import { apprentiSexe } from "./apprentiSexe.control";
 import { avantagesNatureControl } from "./avantagesNature.control";
@@ -69,6 +70,7 @@ export const controls: CerfaControl[] = [
   ...apprentiSexe,
   ...apprentiCodePostalControl,
   ...apprentiNirControl,
+  ...apprentiNationaliteControl,
   ...employeurNafControl,
   ...employeurCodePostalControl,
   ...typeContratAppControl,

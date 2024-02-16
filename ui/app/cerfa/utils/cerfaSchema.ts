@@ -27,6 +27,10 @@ export type SelectOptions = SelectOption[] | SelectNestedOption[] | RadioOption[
 export interface InformationMessage {
   type: "assistive" | "regulatory" | "bonus";
   content: string;
+  collapse?: {
+    label: string;
+    content: string;
+  };
 }
 
 export interface CerfaField {

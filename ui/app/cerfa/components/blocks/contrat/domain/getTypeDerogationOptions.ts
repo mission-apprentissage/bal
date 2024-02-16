@@ -1,3 +1,4 @@
+import { InformationMessage } from "../../../../utils/cerfaSchema";
 import { caclAgeAtDate } from "../../../../utils/form.utils";
 import { CerfaForm } from "../../../CerfaForm";
 
@@ -63,4 +64,27 @@ export const getTypeDerogationOptions = ({ values }: CerfaForm) => {
     }
     return { ...option, locked };
   });
+};
+
+export const getTypeDerogationInformationMessages = ({ values }: CerfaForm): InformationMessage[] => {
+  const {
+    contrat: { typeDerogation },
+  } = values;
+
+  if (["21", "22"].includes(typeDerogation))
+    return [
+      {
+        type: "assistive",
+        content: `A renseigner si une dérogation existe pour ce contrat (exemple : l'apprentissage commence à partir de 16 ans mais par dérogation, les jeunes âgés d'au moins 15 ans et un jour peuvent conclure un contrat d'apprentissage s'ils ont terminé la scolarité du 1er cycle de l'enseignement secondaire (collège)).
+
+En cas d'allongement ou de réduction de la durée du contrat, le CFA vous enverra une convention d'aménagement à remplir et à signer.`,
+      },
+    ];
+
+  return [
+    {
+      type: "assistive",
+      content: `A renseigner si une dérogation existe pour ce contrat (exemple : l'apprentissage commence à partir de 16 ans mais par dérogation, les jeunes âgés d'au moins 15 ans et un jour peuvent conclure un contrat d'apprentissage s'ils ont terminé la scolarité du 1er cycle de l'enseignement secondaire (collège).`,
+    },
+  ];
 };

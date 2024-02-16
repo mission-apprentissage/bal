@@ -25,7 +25,7 @@ export const apprentiSchema: Record<string, CerfaField> = {
       {
         type: "assistive",
         content:
-          "Le nom doit strictement correspondre à l'identité officielle de l'apprenti(e) (attention aux inversions). Le nom de naissance ou nom de famille est celui qui figure sur l’acte de naissance.",
+          "Le nom d'usage est le nom choisi par une personne pour être utilisé dans la vie courante : par exemple, une personne mariée peut  utiliser le nom de son époux(se). Plus d'information sur le [site du Service public](https://www.service-public.fr/particuliers/vosdroits/F868).",
       },
     ],
   },
@@ -78,18 +78,29 @@ export const apprentiSchema: Record<string, CerfaField> = {
       },
       {
         type: "regulatory",
-        content: `L'apprenti peut être âgé au maximum de 35 ans révolus (36 ans moins 1 jour) dans les cas suivants :
+        content:
+          "Sauf dérogation, une personne ne peut être engagée en qualité d'apprenti que si elle est âgée entre seize ans au moins et vingt-neuf ans révolus au début de l'apprentissage.",
+        collapse: {
+          label: "Voir les dérogations ",
+          content: `Dérogation <15 ans
 
-- Apprenti signant un nouveau contrat pour accéder à un niveau de diplôme supérieur à celui déjà obtenu
-- Précédent contrat de l'apprenti rompu pour des raisons indépendantes de sa volonté
-- Précédent contrat de l'apprenti rompu pour inaptitude physique et temporaire
-Dans ces cas, il ne doit pas s'écouler plus d'1 an entre les 2 contrats.
+Les jeunes âgés d'au moins quinze ans peuvent débuter un contrat d'apprentissage s'ils justifient avoir accompli la scolarité du premier cycle de l'enseignement secondaire. 
+Les jeunes qui atteignent l'âge de quinze ans avant le terme de l'année civile peuvent être inscrits, sous statut scolaire, dans un lycée professionnel ou dans un centre de formation d'apprentis pour débuter leur formation, dans des conditions fixées par décret en Conseil d'Etat. 
 
-Pas de limite d'âge si  l'apprenti : 
--  est reconnu travailleur handicapé
-- envisage de créer ou reprendre une entreprise supposant l'obtention d'un diplôme
-- est inscrit en tant que sportif de haut niveau
+Dérogation >29 ans 
+
+L'apprenti peut être âgé au maximum de 35 ans révolus (36 ans moins 1 jour) dans les cas suivants : 
+- Apprenti signant un nouveau contrat pour accéder à un niveau de diplôme supérieur à celui déjà obtenu 
+- Précédent contrat de l'apprenti rompu pour des raisons indépendantes de sa volonté 
+- Précédent contrat de l'apprenti rompu pour inaptitude physique et temporaire 
+Dans ces cas, il ne doit pas s'écouler plus d'1 an entre les 2 contrats. 
+
+Pas de limite d'âge si l'apprenti : 
+- est reconnu travailleur handicapé 
+- envisage de créer ou reprendre une entreprise supposant l'obtention d'un diplôme 
+- est inscrit en tant que sportif de haut niveau 
 - n'a pas obtenu son diplôme et conclue un nouveau contrat avec un autre employeur pour se présenter de nouveau à l'examen`,
+        },
       },
     ],
   },
@@ -161,9 +172,9 @@ Pas de limite d'âge si  l'apprenti :
     messages: [
       {
         type: "assistive",
-        content: `Il s'agit du numéro de sécurité sociale.
-Ce numéro est inscrit sur la carte vitale des personnes majeures, en dessous du nom et du prénom du porteur. 
-Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes physiques.`,
+        content: `Le numéro de sécurité sociale est inscrit sur la carte vitale, en dessous du nom et du prénom du porteur.
+
+Il est officiellement appelé NIR - "Numéro d'Inscription au Répertoire des personnes physiques".`,
       },
     ],
   },
@@ -185,13 +196,6 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
       {
         label: "3. Etranger hors Union Européenne",
         value: "3",
-      },
-    ],
-    messages: [
-      {
-        type: "regulatory",
-        content:
-          "Les demandes de titres et d'autorisation de travail pour un salarié étranger, non citoyen européen, peuvent être réalisées sur le site Etrangers en France. [https://administration-etrangers-en-france.interieur.gouv.fr/particuliers/#/](https://administration-etrangers-en-france.interieur.gouv.fr/particuliers/#/). Il n'est pas nécessaire de joindre cette autorisation avec le cerfa.",
       },
     ],
   },
@@ -303,8 +307,9 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
     messages: [
       {
         type: "regulatory",
-        content:
-          "Il n'existe aucune limite d'âge lorsque le contrat d'apprentissage est conclu par une personne qui a un projet de création ou de reprise d’entreprise dont la réalisation est subordonnée à l’obtention du diplôme ou titre sanctionnant la formation poursuivie.",
+        content: `Il n'existe aucune limite d'âge lorsque le contrat d'apprentissage est conclu par une personne qui a un projet de création ou de reprise d’entreprise dont la réalisation est subordonnée à l’obtention du diplôme ou titre sanctionnant la formation poursuivie.
+
+Vous devrez fournir une attestation sur l'honneur de l'apprenti de + de 29 ans en création d'entreprise, en plus du CERFA et des autres pièces demandées.`,
       },
     ],
   },
@@ -325,7 +330,12 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
       {
         type: "regulatory",
         content:
-          "Il n'existe aucune limite d’âge lorsque le contrat d’apprentissage est conclu par une personne inscrite en tant que sportif de haut niveau sur la liste arrêtée par le ministre chargé des sports (liste mentionnée au premier alinéa de l’article L. 221-2 du code du sport) et conformément au 5° de l’article L6222-2 du code du travail. Vous pouvez rechercher l'information sur l'inscription en tant que sportif de haut niveau sur le site du ministère des Sports et jeux olympiques et paralympiques [https://www.sports.gouv.fr/liste-des-sportifs-francais-de-haut-niveau-60](https://www.sports.gouv.fr/liste-des-sportifs-francais-de-haut-niveau-60)",
+          "Il n'existe aucune limite d’âge lorsque le contrat d’apprentissage est conclu par une personne inscrite en tant que sportif de haut niveau sur la liste arrêtée par le ministre chargé des sports et conformément au 5° de l’article L6222-2 du code du travail.",
+        collapse: {
+          label: "Information facile",
+          content: `Liste mentionnée au premier alinéa de l’article L. 221-2 du code du sport.
+          Vous pouvez rechercher l'information sur l'inscription en tant que sportif de haut niveau sur le [site du ministère des Sports et jeux olympiques et paralympiques](https://www.sports.gouv.fr/liste-des-sportifs-francais-de-haut-niveau-60)`,
+        },
       },
     ],
   },
@@ -351,7 +361,18 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
       {
         type: "bonus",
         content:
-          "Les contrats concernant des apprentis reconnus en qualité de travailleur handicapé (RQTH) bénéficient d'aménagements du contrat d'apprentissage. Plus de détails sur le site du ministère du Travail [https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/article/handicap-contrat-d-apprentissage-amenage#:~:text=Cette%20majoration%20est%20limit%C3%A9e%20%C3%A0,de%20travailleur%20handicap%C3%A9%20(RQTH).](https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/article/handicap-contrat-d-apprentissage-amenage#:~:text=Cette%20majoration%20est%20limit%C3%A9e%20%C3%A0,de%20travailleur%20handicap%C3%A9%20(RQTH).).",
+          "Les contrats concernant des apprentis reconnus en qualité de travailleur handicapé (RQTH) bénéficient d'aménagements du contrat d'apprentissage.",
+
+        collapse: {
+          label: "Plus de détails",
+          content: `**Détails sur les aménagements**
+
+Plus de détails sur le [site du ministère du Travail](https://travail-emploi.gouv.fr/formation-professionnelle/formation-en-alternance-10751/apprentissage/article/handicap-contrat-d-apprentissage-amenage#:~:text=Cette%20majoration%20est%20limit%C3%A9e%20%C3%A0,de%20travailleur%20handicap%C3%A9%20(RQTH)).
+          
+**Guide apprentissage et handicap**
+
+[https://travail-emploi.gouv.fr/IMG/pdf/guideaprentissage_handicap2023_28072023.pdf](https://travail-emploi.gouv.fr/IMG/pdf/guideaprentissage_handicap2023_28072023.pdf)`,
+        },
       },
     ],
   },
@@ -395,12 +416,14 @@ Il est officiellement appelé Numéro d'Inscription au Répertoire des personnes
       {
         type: "assistive",
         content: `Dernier diplôme ou titre préparé par l'apprenti(e) avant son embauche.
-        
-Il faut sélectionner le diplôme ou le titre préparé avant la conclusion du présent contrat. 
-        
+Il faut sélectionner le diplôme ou le titre préparé avant la conclusion du présent contrat.`,
+        collapse: {
+          label: "Exemples",
+          content: `
 Exemple 1 : si l'entrée en apprentissage concerne la 2ème année de BTS, le dernier diplôme ou titre préparé est la 1ère année de BTS : il faut donc sélectionner "54 - Brevet de Technicien supérieur".
 
 Exemple 2 : si l'entrée en apprentissage concerne la 1ère année de BTS, le dernier diplôme ou titre préparé est peut-être le Baccalauréat général : il faut donc sélectionner "42: Baccalauréat général"`,
+        },
       },
     ],
   },
@@ -460,11 +483,13 @@ Exemple 2 : si l'entrée en apprentissage concerne la 1ère année de BTS, le de
     messages: [
       {
         type: "assistive",
-        content: `Dernière classe /année suivie par l'apprenti (e) avant son embauche.
+        content: `Dernière classe /année suivie par l'apprenti(e) avant son embauche.
 
-Il faut sélectionner la situation qui précède l'entrée en contrat d'apprentissage.
-      
-Par exemple, si le diplôme préparé avant était une 1ère année de BTS et que cette dernière a été validée, il faut sélectionner "11 - l'apprenti a suivi la première année du cycle et l'a validée (examens réussis mais année non diplômante)".`,
+Sélectionnez la situation qui précède l'entrée en contrat d'apprentissage.`,
+        collapse: {
+          label: "Exemple",
+          content: `Par exemple, si le diplôme préparé avant était une 1ère année de BTS et que cette dernière a été validée, il faut sélectionner "11 - l'apprenti a suivi la première année du cycle et l'a validée (examens réussis mais année non diplômante)".`,
+        },
       },
     ],
   },
@@ -481,6 +506,18 @@ Par exemple, si le diplôme préparé avant était une 1ère année de BTS et qu
     required: true,
     requiredMessage: "Le diplôme ou titre le plus élevé obtenu par l'apprenti(e) est obligatoire",
     options: DIPLOMES,
+    messages: [
+      {
+        type: "assistive",
+        content: `Sélectionnez le titre ou diplôme le plus élevé obtenu par l'apprenti.`,
+        collapse: {
+          label: "Exemple",
+          content: `Par exemple, pour une entrée en apprentissage en vue de préparer une 2ème année de BTS, le  diplôme le plus élevé obtenu est le Baccalauréat (même si la première année de BTS a été validée, elle ne donne pas lieu à délivrance d'un titre ou diplôme).
+
+Par exemple, pour une entrée en apprentissage en vue de préparer un CAP suite à une reconversion, il est possible que le diplôme le plus élevé obtenu soit un Master 2 dans une autre spécialité de formation que celle du CAP.`,
+        },
+      },
+    ],
   },
   "apprenti.apprentiMineur": {
     label: "À la date de signature de ce contrat, l'apprenti(e) sera-t-il(elle) mineur(e) *",
@@ -516,9 +553,13 @@ Par exemple, si le diplôme préparé avant était une 1ère année de BTS et qu
     messages: [
       {
         type: "assistive",
-        content: `Vous devez indiquer "oui" si l'apprenti est mineur non émancipé à la date de signature du contrat. Dans ce cas, le représentant légal devra également signer le contrat.
+        content: `Vous devez indiquer "oui" si l'apprenti est mineur non émancipé à la date de signature du contrat. Dans ce cas, le représentant légal devra également signer le contrat.`,
+        collapse: {
+          label: "Emancipation",
+          content: `Un mineur émancipé peut accomplir seul les actes nécessitant la majorité légale.
 
-Un mineur émancipé peut accomplir seul les actes nécessitant la majorité légale. Plus d'informations à propos de l'émancipation sur le site du Service public [https://www.service-public.fr/particuliers/vosdroits/F1194](https://www.service-public.fr/particuliers/vosdroits/F1194)`,
+Plus d'informations à propos de l'émancipation sur le [site du Service public](https://www.service-public.fr/particuliers/vosdroits/F1194)`,
+        },
       },
     ],
   },

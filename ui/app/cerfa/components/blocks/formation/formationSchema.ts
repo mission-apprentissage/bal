@@ -22,7 +22,7 @@ export const formationSchema: Record<string, CerfaField> = {
     messages: [
       {
         type: "assistive",
-        content: `Si votre apprenti suit sa formation théorique auprès d'un organisme extérieur à votre entreprise, l'établissement de formation n'est pas un CFA d'enterprise et vous devez cocher "non".`,
+        content: `Si votre apprenti suit sa formation théorique auprès d'un organisme extérieur à votre entreprise, l'établissement de formation n'est pas un CFA d'entreprise et vous devez cocher "non".`,
       },
       {
         type: "bonus",
@@ -42,9 +42,17 @@ Les CFA d'entreprise sont souvent des organismes qui forment pour de grands grou
     messages: [
       {
         type: "assistive",
-        content: `Vous devez renseigner le siret du CFA responsable. Le lieu principal de formation sera quant-à lui précisé dans d'autres champs ci-dessous.
+        content: `Vous devez renseigner le siret du CFA responsable. Le lieu principal de formation sera quant-à lui précisé dans d'autres champs ci-dessous.`,
+        collapse: {
+          label: "En savoir plus",
+          content: `Le siret comporte 14 chiffres. Il doit être présent et actif dans la base [Entreprises de l'INSEE](https://www.sirene.fr/sirene/public/accueil) (regroupant employeurs privés et publics).`,
+        },
+      },
+      {
+        type: "bonus",
+        content: `En tant qu'entreprise signataire, vous pouvez donner mandat à l'organisme de formation signataire de compléter le contrat d'apprentissage (le mandat couvre les opérations prévues à l’[article L. 6224-1 du code du travail](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000038951657)).
 
-Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).`,
+Dans ce cas, il faudra cocher cette information dans la convention de formation assortie à ce contrat et qui sera fournie par l'organisme de formation (modèle de convention en annexe 2 du [Précis de l'apprentissage](https://travail-emploi.gouv.fr/demarches-ressources-documentaires/documentation-et-publications-officielles/guides/precis-apprentissage)).`,
       },
     ],
   },
@@ -60,7 +68,7 @@ Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entr
       {
         type: "bonus",
         content:
-          "Chaque établissement scolaire (écoles, collèges, lycées, CFA, enseignement supérieur, public ou privé) est une Unité Administrative Immatriculée. Le numéro UAI est autocomplété ; il peut être recherché sur le catalogue des formations en apprentissage [lien https://catalogue.apprentissage.beta.gouv.fr]. Les 3 premiers numéros composant l'UAI correspondent au numéro de département de l'établissement.",
+          "Chaque établissement scolaire (écoles, collèges, lycées, CFA, enseignement supérieur, public ou privé) est une Unité Administrative Immatriculée. Le numéro UAI est autocomplété ; il peut être recherché sur le [catalogue des formations en apprentissage](https://catalogue.apprentissage.beta.gouv.fr).",
       },
     ],
   },
@@ -111,10 +119,14 @@ Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez re
     },
     messages: [
       {
+        type: "assistive",
+        content: `Identification d'un titre ou diplôme préparé par voie d'apprentissage. Il est aussi appelé "code formation diplôme" ou "code scolarité". Plus dinformations sur le [ministère de l'Education Nationale](https://www.education.gouv.fr/codification-des-formations-et-des-diplomes-11270).
+
+Le code diplôme peut être recherché sur le [catalogue des formations en apprentissage](https://catalogue-apprentissage.intercariforef.org/).`,
+      },
+      {
         type: "bonus",
-        content: `Ce code à 8 caractères permet d'identifier un titre ou diplôme préparés par la voie de l'apprentissage, plus d'informations sur le site du [ministère de l'Education Nationale](https://www.education.gouv.fr/codification-des-formations-et-des-diplomes-11270).
-Le code diplôme peut être recherché sur le catalogue des formations en apprentissage.
-Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez renseigner un code diplôme pour déduire le code RNCP correspondant.`,
+        content: `Ce code à 8 caractères permet d'identifier un titre ou diplôme préparés par la voie de l'apprentissages.`,
       },
     ],
   },
@@ -210,9 +222,11 @@ Le code diplôme peut être déduit du code RNCP et à l'inverse, vous pouvez re
     messages: [
       {
         type: "assistive",
-        content: `Vous devez renseigner le siret du CFA responsable. Le lieu principal de formation sera quant-à lui précisé dans d'autres champs ci-dessous.
-
-Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entreprises de l'INSEE (regroupant employeurs privés et publics).`,
+        content: `Vous devez renseigner le siret du CFA responsable. Le lieu principal de formation sera quant-à lui précisé dans d'autres champs ci-dessous.`,
+        collapse: {
+          label: "En savoir plus",
+          content: `Le siret comporte 14 chiffres. Il doit être présent et actif dans la base [Entreprises de l'INSEE](https://www.sirene.fr/sirene/public/accueil) (regroupant employeurs privés et publics).`,
+        },
       },
     ],
   },
@@ -227,7 +241,11 @@ Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entr
       {
         type: "bonus",
         content:
-          "Chaque établissement scolaire (écoles, collèges, lycées, CFA, enseignement supérieur, public ou privé) est une Unité Administrative Immatriculée. Le numéro UAI est autocomplété ; il peut être recherché sur le catalogue des formations en apprentissage [lien https://catalogue.apprentissage.beta.gouv.fr]. Les 3 premiers numéros composant l'UAI correspondent au numéro de département de l'établissement.",
+          "Chaque établissement scolaire (écoles, collèges, lycées, CFA, enseignement supérieur, public ou privé) est une Unité Administrative Immatriculée. Le numéro UAI est autocomplété.",
+        collapse: {
+          label: "En savoir plus",
+          content: `Il peut être recherché sur le [catalogue des formations en apprentissage](https://catalogue.apprentissage.beta.gouv.fr). Les 3 premiers numéros composant l'UAI correspondent au numéro de département de l'établissement.`,
+        },
       },
     ],
   },
@@ -301,9 +319,7 @@ Le siret comporte 14 chiffres. Il doit être présent et actif dans la base Entr
       },
       {
         type: "regulatory",
-        content: `Le début de la période de formation au CFA ne peut intervenir plus de trois mois après le début d'exécution du contrat.
-
-De la même façon, le début de la période en entreprise ne peut intervenir plus de trois mois après le début d'exécution du contrat.`,
+        content: `Le début de la période de formation au CFA et le début de la période en entreprise ne peuvent intervenir plus de trois mois après le début d'exécution du contrat.`,
       },
     ],
   },
@@ -316,11 +332,15 @@ De la même façon, le début de la période en entreprise ne peut intervenir pl
     messages: [
       {
         type: "regulatory",
-        content: `La date de fin du contrat doit englober l’ensemble des épreuves nécessaires à l’obtention du titre ou du diplôme. Lorsque la date précise n'est pas connue, il est possible de renseigner une date prévisionnelle avec une marge de 2 mois maximum. 
+        content: `La date de fin du contrat doit englober l’ensemble des épreuves nécessaires à l’obtention du titre ou du diplôme. Lorsque la date précise n'est pas connue, il est possible de renseigner une date prévisionnelle avec une marge de 2 mois maximum.`,
+        collapse: {
+          label: "En savoir plus",
+          content: `La date de fin de contrat intervient : 
 
-La date de fin de contrat intervient : 
 au plus tôt le dernier jour de la dernière épreuve nécessaire à l’obtention du titre ou diplôme préparé par l'apprenti ;
+
 au plus tard dans les deux mois après la dernière épreuve sanctionnant le cycle, ou à la veille du début du cycle de formation suivant.`,
+        },
       },
     ],
   },
@@ -340,5 +360,15 @@ au plus tard dans les deux mois après la dernière épreuve sanctionnant le cyc
       },
     ],
     min: 1,
+    messages: [
+      {
+        type: "regulatory",
+        content: `La quotité de formation théorique du contrat d’apprentissage ne peut pas être inférieure à 25% de la durée globale du contrat`,
+        collapse: {
+          label: "Calcul de quotité",
+          content: `Cette quotité de formation est calculée sur la base de la durée légale annuelle de travail, soit 1 607 heures, sauf aménagements spécifiques en cas de pratique du sport à haut niveau ou reconnaissance de handicap.`,
+        },
+      },
+    ],
   },
 };
