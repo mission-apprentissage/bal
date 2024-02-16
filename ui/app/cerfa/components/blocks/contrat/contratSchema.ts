@@ -546,6 +546,18 @@ L'information figure en général dans la partie "Salaires". Vous devez vous ré
         value: "non",
       },
     ],
+    messages: [
+      {
+        type: "bonus",
+        content: `Les avantages en nature sont constitués par la fourniture par l’employeur d’un bien ou service. La mise à disposition peut être gratuite ou moyennant une participation du salarié inférieure à leur valeur réelle.`,
+        collapse: {
+          label: "Exemples",
+          content: `Par exemple, une prime-panier, la mise à disposition d'un logement sont des avantages en nature, mais aussi la mise à disposition d'un véhicule, d'outils de communication (ordinateur, téléphone), lorsqu'ils peuvent être utilisés à usage privé.
+        
+En savoir plus sur le [site de l'URSSAF](https://www.urssaf.fr/portail/home/employeur/calculer-les-cotisations/les-elements-a-prendre-en-compte/les-avantages-en-nature.html)`,
+        },
+      },
+    ],
   },
   "contrat.avantageNourriture": {
     label: "Nourriture",
