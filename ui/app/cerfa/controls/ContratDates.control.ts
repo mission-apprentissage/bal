@@ -26,14 +26,16 @@ export const ContratDatesControl: CerfaControl[] = [
             "Votre apprenti(e) a plus de 30 ans à la date de début d’exécution du contrat, veuillez vérifier qu’il ou elle se situe bien dans un des cas d’exception prévus par la loi",
         };
       } else {
-        return {
-          cascade: {
-            "contrat.dateDebutContrat": {
-              success: true,
-              stateRelatedMessage: `L'apprenti a ${ageApprenti} ans à la date de début d'exécution du contrat.`,
+        if (ageApprenti >= 15) {
+          return {
+            cascade: {
+              "contrat.dateDebutContrat": {
+                success: true,
+                stateRelatedMessage: `L'apprenti a ${ageApprenti} ans à la date de début d'exécution du contrat.`,
+              },
             },
-          },
-        };
+          };
+        }
       }
     },
   },
