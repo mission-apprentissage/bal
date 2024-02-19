@@ -16,7 +16,7 @@ export const idccControl: CerfaControl[] = [
       return {
         cascade: {
           "employeur.codeIdcc_special": { value: codeIdcc, cascade: false },
-          "employeur.libelleIdcc": { value: foundIdcc.libelle.trim() },
+          "employeur.libelleIdcc": { value: foundIdcc.libelle?.trim() },
         },
       };
     },
