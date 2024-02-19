@@ -1,4 +1,4 @@
-import { addMonths, differenceInMonths, isAfter, isBefore, parseISO, startOfDay, subMonths } from "date-fns";
+import { addMonths, differenceInMonths, isAfter, isBefore, parseISO, startOfDay } from "date-fns";
 
 import { caclAgeAtDate } from "../utils/form.utils";
 import { CerfaControl } from ".";
@@ -121,26 +121,6 @@ export const ContratDatesControl: CerfaControl[] = [
     },
   },
   {
-    deps: ["contrat.dateDebutContrat", "formation.dateDebutFormation"],
-    process: ({ values }) => {
-      const {
-        contrat: { dateDebutContrat },
-        formation: { dateDebutFormation },
-      } = values;
-
-      if (!dateDebutContrat || !dateDebutFormation) return;
-      const dateDebutContratDate = parseISO(dateDebutContrat);
-      const dateDebutFormationDate = parseISO(dateDebutFormation);
-      const dateDebutFormation3MonthsBefore = subMonths(dateDebutFormationDate, 3);
-
-      if (isBefore(dateDebutContratDate, dateDebutFormation3MonthsBefore)) {
-        return {
-          error: "Le contrat peut commencer au maximum 3 mois avant le début de la formation",
-        };
-      }
-    },
-  },
-  {
     deps: ["contrat.dateSignature", "formation.dateDebutFormation"],
     process: ({ values }) => {
       const {
@@ -225,7 +205,7 @@ export const ContratDatesControl: CerfaControl[] = [
     deps: ["contrat.dateSignature"],
     process: ({ values }) => {
       const {
-        apprenti: { dateNaissance, responsableLegal },
+        apprenti: { dateNaissance, apprentiMineurNonEmancipe, responsableLegal },
         contrat: { dateSignature, dateDebutContrat },
       } = values;
 
@@ -236,7 +216,7 @@ export const ContratDatesControl: CerfaControl[] = [
       if (dateNaissance) {
         const { exactAge: ageApprenti } = caclAgeAtDate(dateNaissance, dateSignature);
 
-        if (ageApprenti < 18 && !responsableLegal.nom) {
+        if (ageApprenti < 18 && !responsableLegal.nom && apprentiMineurNonEmancipe !== "non") {
           return {
             error:
               "Un responsable légal doit être renseigné si l'apprenti est mineur à la date de conclusion du contrat",
