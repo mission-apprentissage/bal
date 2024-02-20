@@ -14,7 +14,7 @@ import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
 import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
 import ConditionItem from "./ConditionItem";
 import { shouldShowRemunerationsAnnuelles } from "./domain/shouldShowRemunerationsAnnuelles";
-import { shouldShowSmc } from "./domain/shouldShowSmc";
+import SmcField from "./SmcField";
 
 const getAnneeLabel = (ordre: 1.1 | 2.1 | 3.1 | 4.1) => {
   return {
@@ -102,9 +102,7 @@ En savoir plus sur les situations spécifiques sur le [site du Ministère du Tra
         </Box>
       )}
       <CollapseController show={shouldShowRemunerationsAnnuelles}>
-        <CollapseController show={shouldShowSmc}>
-          <InputController name="contrat.smc" />
-        </CollapseController>
+        <SmcField />
         <Box>
           {remunerationsAnnuelles?.map((annee, i) => {
             const anneeLabel = getAnneeLabel(annee.ordre);

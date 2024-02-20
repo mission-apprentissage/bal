@@ -32,9 +32,13 @@ export const getFieldStateFromFormState = (
   fieldsState: Record<string, FieldState | undefined>,
   name: string
 ): FieldState => {
-  const state = get(fieldsState, name)?.state || (get(formState.errors, name) ? "error" : "default");
-  const stateRelatedMessage =
-    get(fieldsState, name)?.stateRelatedMessage || get(formState.errors, name)?.message?.toString();
+  const error = get(formState.errors, name);
+
+  const fieldState = get(fieldsState, name)?.state ?? "default";
+  const fieldStateRelatedMessage = get(fieldsState, name)?.stateRelatedMessage;
+
+  const state = error ? "error" : fieldState;
+  const stateRelatedMessage = error?.message?.toString() || fieldStateRelatedMessage;
 
   return { state, stateRelatedMessage };
 };
@@ -59,6 +63,7 @@ export const validateField = async (
 
     if (validation?.error) {
       error = validation.error;
+      setFields((fields) => ({ ...fields, [name]: { state: undefined, stateRelatedMessage: undefined } }));
     }
 
     if (validation?.cascade) {

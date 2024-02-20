@@ -1,3 +1,12 @@
+export const IDCC_ETATS_JURIDIQUE = {
+  VIGUEUR_ETEN: "VIGUEUR_ETEN",
+  VIGUEUR_NON_ETEN: "VIGUEUR_NON_ETEN",
+  MODIFIE: "MODIFIE",
+  REMPLACE: "REMPLACE",
+  PERIME: "PERIME",
+  ABROGE: "ABROGE",
+};
+
 interface IdccMeta {
   legifrance?: {
     etat_juridique: string | null;
@@ -35,6 +44,13 @@ export enum IdccSources {
 }
 
 export type IdccSource = keyof typeof IdccSources;
+
+export const isIdccEnVigueur = (idcc: Idcc): boolean =>
+  idcc._meta.legifrance?.some(
+    (idcc) =>
+      idcc.etat_juridique &&
+      [IDCC_ETATS_JURIDIQUE.VIGUEUR_ETEN, IDCC_ETATS_JURIDIQUE.VIGUEUR_NON_ETEN].includes(idcc.etat_juridique)
+  ) ?? true;
 
 export const idcc: Idccs = {
   "0014": {
@@ -108,9 +124,9 @@ export const idcc: Idccs = {
     },
   },
   "0023": {
-    libelle: null,
+    libelle: "Personnel sédentaire des entreprises de navigation",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635659",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -254,9 +270,9 @@ export const idcc: Idccs = {
     },
   },
   "0054": {
-    libelle: null,
+    libelle: "Métallurgie : Région parisienne (industries métallurgiques, mécaniques et connexes)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635149",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -693,9 +709,9 @@ export const idcc: Idccs = {
     },
   },
   "0255": {
-    libelle: null,
+    libelle: "Bâtiment ETAM",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635482",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -825,9 +841,9 @@ export const idcc: Idccs = {
     },
   },
   "0349": {
-    libelle: null,
+    libelle: "Agences de voyages et d'excursions de la région parisienne : guides-interprètes",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635697",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -859,9 +875,9 @@ export const idcc: Idccs = {
     },
   },
   "0363": {
-    libelle: null,
+    libelle: "Ciment : industrie de la fabrication des ciments",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635462",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -911,9 +927,10 @@ export const idcc: Idccs = {
     },
   },
   "0390": {
-    libelle: null,
+    libelle:
+      "Enseignement privé : maîtres de l'enseignement primaire, professeurs de l'enseignement secondaire, personnels des services administratifs et économiques, psychologues",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635268",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -947,9 +964,9 @@ export const idcc: Idccs = {
     },
   },
   "0398": {
-    libelle: null,
+    libelle: "Matériaux : négoce des matériaux de construction (cadres, ETAM et ouvriers)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635643",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -964,9 +981,9 @@ export const idcc: Idccs = {
     },
   },
   "0403": {
-    libelle: null,
+    libelle: "",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635623",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1009,9 +1026,9 @@ export const idcc: Idccs = {
     },
   },
   "0412": {
-    libelle: null,
+    libelle: "Agences de voyages et de tourisme : personnels, guides accompagnateurs et accompagnateurs",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635847",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1129,9 +1146,9 @@ export const idcc: Idccs = {
     },
   },
   "0450": {
-    libelle: null,
+    libelle: "Jouets : entreprises de commerce de gros de jouets, bimboloterie, bazars",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635654",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1344,9 +1361,9 @@ export const idcc: Idccs = {
     },
   },
   "0504": {
-    libelle: null,
+    libelle: "Industries alimentaires diverses",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635380",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1378,9 +1395,9 @@ export const idcc: Idccs = {
     },
   },
   "0533": {
-    libelle: null,
+    libelle: "Matériaux : négoce des matériaux de construction (cadres, ETAM et ouvriers)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635634",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1430,9 +1447,9 @@ export const idcc: Idccs = {
     },
   },
   "0562": {
-    libelle: null,
+    libelle: "Aides familiales rurales et personnel de l'aide à domicile en milieu rural (ADMR)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635416",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1502,9 +1519,9 @@ export const idcc: Idccs = {
     },
   },
   "0598": {
-    libelle: null,
+    libelle: "Presse quotidienne régionale et départementale : ouvriers et employés",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000019459287",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1567,10 +1584,9 @@ export const idcc: Idccs = {
     },
   },
   "0635": {
-    libelle:
-      "Convention collective nationale du négoce en fournitures dentaires (annexée à la convention collective nationale des commerces de gros 0573)",
+    libelle: "Négoce en fournitures dentaires",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635851",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1631,9 +1647,9 @@ export const idcc: Idccs = {
     },
   },
   "0650": {
-    libelle: null,
+    libelle: "Métallurgie : ingénieurs et cadres",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635842",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1648,9 +1664,9 @@ export const idcc: Idccs = {
     },
   },
   "0652": {
-    libelle: null,
+    libelle: "Matériaux : négoce des matériaux de construction (cadres, ETAM et ouvriers)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635417",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1711,10 +1727,9 @@ export const idcc: Idccs = {
     },
   },
   "0673": {
-    libelle:
-      "Convention collective nationale de la fourrure (annexée à la convention collective nationale de la couture parisienne 0303)",
+    libelle: "Fourrure",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635193",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1766,9 +1781,9 @@ export const idcc: Idccs = {
     },
   },
   "0693": {
-    libelle: null,
+    libelle: "Presse quotidienne régionale et départementale : ouvriers et employés",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635680",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1783,9 +1798,9 @@ export const idcc: Idccs = {
     },
   },
   "0698": {
-    libelle: null,
+    libelle: "Presse quotidienne régionale et départementale : ouvriers et employés",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635465",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1800,9 +1815,9 @@ export const idcc: Idccs = {
     },
   },
   "0700": {
-    libelle: null,
+    libelle: "Production des papiers, cartons et celluloses (Ingénieurs et cadres)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635440",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1845,9 +1860,9 @@ export const idcc: Idccs = {
     },
   },
   "0707": {
-    libelle: null,
+    libelle: "Transformation des papiers-cartons et de la pellicule cellulosique (ingénieurs et cadres)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635669",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1917,9 +1932,10 @@ export const idcc: Idccs = {
     },
   },
   "0731": {
-    libelle: null,
+    libelle:
+      "Quincaillerie : commerces de quincaillerie, fournitures industrielles, fers-métaux et équipements de la maison",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635592",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -1970,9 +1986,9 @@ export const idcc: Idccs = {
     },
   },
   "0735": {
-    libelle: null,
+    libelle: "Machines à coudre : commerce",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635695",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -2032,9 +2048,9 @@ export const idcc: Idccs = {
     },
   },
   "0766": {
-    libelle: null,
+    libelle: "Presse périodique : employés",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635169",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -2105,9 +2121,9 @@ export const idcc: Idccs = {
     },
   },
   "0781": {
-    libelle: null,
+    libelle: "Presse quotidienne régionale et départementale : cadres",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635951",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -2169,10 +2185,9 @@ export const idcc: Idccs = {
     },
   },
   "0802": {
-    libelle:
-      "Convention collective nationale de la distribution de papiers-cartons commerces de gros pour les ouvriers, employés, techniciens et agents de maîtrise",
+    libelle: "Distribution et commerces de gros des papiers et cartons (OETAM)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635441",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -2216,9 +2231,9 @@ export const idcc: Idccs = {
     },
   },
   "0832": {
-    libelle: null,
+    libelle: "Ciment : industrie de la fabrication des ciments",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635684",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -2233,9 +2248,9 @@ export const idcc: Idccs = {
     },
   },
   "0833": {
-    libelle: null,
+    libelle: "Ciment : industrie de la fabrication des ciments",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635676",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -2404,10 +2419,9 @@ export const idcc: Idccs = {
     },
   },
   "0925": {
-    libelle:
-      "Convention collective nationale des ingénieurs et cadres de la distribution des papiers et cartons, commerce de gros",
+    libelle: "Distribution et commerce de gros des papiers et cartons (ingénieurs et cadres)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635914",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -2433,9 +2447,9 @@ export const idcc: Idccs = {
     },
   },
   "0951": {
-    libelle: null,
+    libelle: "Théâtre : entreprises de spectacles vivants (théâtres privés)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635726",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -2517,9 +2531,9 @@ export const idcc: Idccs = {
     },
   },
   "0972": {
-    libelle: null,
+    libelle: "Parfumerie, esthétique",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635182",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -2682,9 +2696,9 @@ export const idcc: Idccs = {
     },
   },
   "1014": {
-    libelle: null,
+    libelle: "Sociétés d'économie mixte d'autoroutes",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635915",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -2726,9 +2740,9 @@ export const idcc: Idccs = {
     },
   },
   "1018": {
-    libelle: null,
+    libelle: "Presse quotidienne régionale et départementale : cadres",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635952",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -2964,9 +2978,9 @@ export const idcc: Idccs = {
     },
   },
   "1083": {
-    libelle: null,
+    libelle: "Presse quotidienne régionale et départementale : ouvriers et employés",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635245",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3011,9 +3025,9 @@ export const idcc: Idccs = {
     },
   },
   "1119": {
-    libelle: null,
+    libelle: "Industries de la fabrication de la chaux",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635668",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3098,9 +3112,9 @@ export const idcc: Idccs = {
     },
   },
   "1177": {
-    libelle: null,
+    libelle: "Industries de la fabrication de la chaux",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635913",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3115,9 +3129,9 @@ export const idcc: Idccs = {
     },
   },
   "1178": {
-    libelle: null,
+    libelle: "Industries de la fabrication de la chaux",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635667",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3211,9 +3225,10 @@ export const idcc: Idccs = {
     },
   },
   "1211": {
-    libelle: null,
+    libelle:
+      "Enseignement privé : maîtres de l'enseignement primaire, professeurs de l'enseignement secondaire, personnels des services administratifs et économiques, psychologues",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635866",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3347,9 +3362,9 @@ export const idcc: Idccs = {
     },
   },
   "1258": {
-    libelle: null,
+    libelle: "Organismes d'aide ou de maintien à domicile",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635478",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3478,9 +3493,9 @@ export const idcc: Idccs = {
     },
   },
   "1281": {
-    libelle: null,
+    libelle: "Presse périodique régionale",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635615",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3495,9 +3510,9 @@ export const idcc: Idccs = {
     },
   },
   "1282": {
-    libelle: null,
+    libelle: "Commissaires-priseurs : études et organismes professionnels",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635257",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3620,9 +3635,10 @@ export const idcc: Idccs = {
     },
   },
   "1314": {
-    libelle: null,
+    libelle:
+      "Organisations syndicales des salariés : Fédération des travailleurs des commerces et industries de l'alimentation CGT-FO, 198, avenue du Maine, 75630 PARIS CEDEX 14.",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALITEXT000005640320",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3665,9 +3681,9 @@ export const idcc: Idccs = {
     },
   },
   "1325": {
-    libelle: null,
+    libelle: "",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALITEXT000005675904",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3682,9 +3698,10 @@ export const idcc: Idccs = {
     },
   },
   "1326": {
-    libelle: null,
+    libelle:
+      "Enseignement privé : maîtres de l'enseignement primaire, professeurs de l'enseignement secondaire, personnels des services administratifs et économiques, psychologues",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635956",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3700,9 +3717,10 @@ export const idcc: Idccs = {
     },
   },
   "1334": {
-    libelle: null,
+    libelle:
+      "Enseignement privé : maîtres de l'enseignement primaire, professeurs de l'enseignement secondaire, personnels des services administratifs et économiques, psychologues",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635957",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3717,9 +3735,10 @@ export const idcc: Idccs = {
     },
   },
   "1336": {
-    libelle: null,
+    libelle:
+      "Enseignement privé : maîtres de l'enseignement primaire, professeurs de l'enseignement secondaire, personnels des services administratifs et économiques, psychologues",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635706",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3780,9 +3799,9 @@ export const idcc: Idccs = {
     },
   },
   "1370": {
-    libelle: null,
+    libelle: "Hôtels de tourisme trois, quatre et quatre étoiles de luxe (région parisienne)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635658",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -3797,9 +3816,10 @@ export const idcc: Idccs = {
     },
   },
   "1383": {
-    libelle: null,
+    libelle:
+      "Quincaillerie : commerces de quincaillerie, fournitures industrielles, fers-métaux et équipements de la maison",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635591",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -4086,9 +4106,9 @@ export const idcc: Idccs = {
     },
   },
   "1423": {
-    libelle: null,
+    libelle: "Navigation de plaisance",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635429",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -4164,9 +4184,9 @@ export const idcc: Idccs = {
     },
   },
   "1436": {
-    libelle: null,
+    libelle: "Sucreries, sucreries-distilleries et raffineries de sucre",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635888",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -4181,9 +4201,9 @@ export const idcc: Idccs = {
     },
   },
   "1446": {
-    libelle: null,
+    libelle: "Enseignement technique privé hors contrat : personnels enseignants, chefs de travaux",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635878",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -4363,9 +4383,9 @@ export const idcc: Idccs = {
     },
   },
   "1492": {
-    libelle: null,
+    libelle: "Production des papiers-cartons et celluloses (OEDTAM)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635192",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -4380,9 +4400,9 @@ export const idcc: Idccs = {
     },
   },
   "1495": {
-    libelle: null,
+    libelle: "Transformation des papiers-cartons et industries connexes (OEDTAM)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635194",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -4512,9 +4532,9 @@ export const idcc: Idccs = {
     },
   },
   "1511": {
-    libelle: null,
+    libelle: "Crédit immobilier",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635406",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -4960,9 +4980,9 @@ export const idcc: Idccs = {
     },
   },
   "1563": {
-    libelle: null,
+    libelle: "Presse périodique régionale",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635486",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -5211,9 +5231,9 @@ export const idcc: Idccs = {
     },
   },
   "1601": {
-    libelle: null,
+    libelle: "Bourse",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635208",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -5471,9 +5491,10 @@ export const idcc: Idccs = {
     },
   },
   "1624": {
-    libelle: null,
+    libelle:
+      "Commerce de gros de la confiserie, chocolaterie, biscuiterie et alimentation fine et des négociants-distributeurs de levure",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635225",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -5535,9 +5556,9 @@ export const idcc: Idccs = {
     },
   },
   "1635": {
-    libelle: null,
+    libelle: "Métallurgie : Gironde et Landes",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000025393730",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -5694,9 +5715,9 @@ export const idcc: Idccs = {
     },
   },
   "1689": {
-    libelle: null,
+    libelle: "Fabriques d'articles de papeterie et de bureau : ouvriers, employés, agents de maîtrise, cadres",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635681",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -5757,9 +5778,9 @@ export const idcc: Idccs = {
     },
   },
   "1710": {
-    libelle: null,
+    libelle: "Agences de voyages et de tourisme : personnels, guides accompagnateurs et accompagnateurs",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635399",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -5781,9 +5802,9 @@ export const idcc: Idccs = {
     },
   },
   "1726": {
-    libelle: null,
+    libelle: "Métreurs vérificateurs, économistes de la construction (cabinets)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635230",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -5900,9 +5921,9 @@ export const idcc: Idccs = {
     },
   },
   "1761": {
-    libelle: null,
+    libelle: "Commerce de gros des tissus, tapis et linge de maison",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635247",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -5917,9 +5938,9 @@ export const idcc: Idccs = {
     },
   },
   "1763": {
-    libelle: null,
+    libelle: "Manutention portuaire",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635468",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -5934,9 +5955,10 @@ export const idcc: Idccs = {
     },
   },
   "1788": {
-    libelle: null,
+    libelle:
+      "Enseignement privé : maîtres de l'enseignement primaire, professeurs de l'enseignement secondaire, personnels des services administratifs et économiques, psychologues",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635288",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -6059,9 +6081,9 @@ export const idcc: Idccs = {
     },
   },
   "1810": {
-    libelle: null,
+    libelle: "Entreprises de propreté (1er juillet 1994)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635711",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -6140,9 +6162,10 @@ export const idcc: Idccs = {
     },
   },
   "1841": {
-    libelle: null,
+    libelle:
+      "Bâtiment de la région parisienne : ouvriers, employés, techniciens et agents de maîtrise, ingénieurs, assimilés et cadres",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000017960038",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -6215,9 +6238,9 @@ export const idcc: Idccs = {
     },
   },
   "1871": {
-    libelle: null,
+    libelle: "Presse d'information spécialisée (employés)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635764",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -6232,9 +6255,9 @@ export const idcc: Idccs = {
     },
   },
   "1874": {
-    libelle: null,
+    libelle: "Presse d'information spécialisée (cadres, techniciens et agents de maîtrise)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635761",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -6302,9 +6325,9 @@ export const idcc: Idccs = {
     },
   },
   "1895": {
-    libelle: null,
+    libelle: "Presse quotidienne régionale et départementale : cadres",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635259",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -6319,9 +6342,9 @@ export const idcc: Idccs = {
     },
   },
   "1903": {
-    libelle: null,
+    libelle: "Agences de presse",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635336",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -6469,9 +6492,9 @@ export const idcc: Idccs = {
     },
   },
   "1937": {
-    libelle: null,
+    libelle: "Audio-vidéo-informatique",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635843",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -6674,9 +6697,9 @@ export const idcc: Idccs = {
     },
   },
   "1972": {
-    libelle: null,
+    libelle: "Presse magazine et d'information : employés",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000023276712",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -6690,9 +6713,9 @@ export const idcc: Idccs = {
     },
   },
   "1974": {
-    libelle: null,
+    libelle: "Navigation intérieure (transport de passagers)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635578",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -6897,9 +6920,9 @@ export const idcc: Idccs = {
     },
   },
   "2014": {
-    libelle: null,
+    libelle: "Agences de presse",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635100",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -6914,9 +6937,9 @@ export const idcc: Idccs = {
     },
   },
   "2018": {
-    libelle: null,
+    libelle: "Presse magazine et d'information : cadres",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000023276150",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -7128,9 +7151,9 @@ export const idcc: Idccs = {
     },
   },
   "2101": {
-    libelle: null,
+    libelle: "Enseignement privé à distance",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635332",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -7172,9 +7195,9 @@ export const idcc: Idccs = {
     },
   },
   "2111": {
-    libelle: null,
+    libelle: "Salariés du particulier employeur",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635792",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -7410,9 +7433,9 @@ export const idcc: Idccs = {
     },
   },
   "2162": {
-    libelle: null,
+    libelle: "Professions de la photographie",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635791",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -7427,9 +7450,9 @@ export const idcc: Idccs = {
     },
   },
   "2174": {
-    libelle: null,
+    libelle: "Navigation intérieure (transport de marchandises : personnel sédentaire)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635584",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -7801,9 +7824,10 @@ export const idcc: Idccs = {
     },
   },
   "2310": {
-    libelle: null,
+    libelle:
+      "Spectacles : rapports entre entrepreneurs de spectacles et artistes dramatiques, lyriques, chorégraphiques, marionnettistes, de variétés et musiciens en tournées",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635589",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -7819,9 +7843,9 @@ export const idcc: Idccs = {
     },
   },
   "2322": {
-    libelle: null,
+    libelle: "Chanson, variétés, jazz, musiques actuelles",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000021213399",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -7944,9 +7968,9 @@ export const idcc: Idccs = {
     },
   },
   "2344": {
-    libelle: null,
+    libelle: "Sidérurgie",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000021284958",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -8079,9 +8103,9 @@ export const idcc: Idccs = {
     },
   },
   "2395": {
-    libelle: null,
+    libelle: "Assistants maternels du particulier employeur",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635807",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -8145,9 +8169,9 @@ export const idcc: Idccs = {
     },
   },
   "2408": {
-    libelle: null,
+    libelle: "Enseignement privé : personnels administratifs, personnels d'éducation et documentalistes",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635816",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -8162,9 +8186,9 @@ export const idcc: Idccs = {
     },
   },
   "2409": {
-    libelle: null,
+    libelle: "Travaux publics (Tome IV : Cadres)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000018925934",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -8178,9 +8202,10 @@ export const idcc: Idccs = {
     },
   },
   "2410": {
-    libelle: null,
+    libelle:
+      "Biscotteries, biscuiteries, chocolateries, confiseries, aliments de l'enfance et de la diététique, préparations pour desserts",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635817",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -8315,9 +8340,9 @@ export const idcc: Idccs = {
     },
   },
   "2493": {
-    libelle: null,
+    libelle: "Coiffure et professions connexes",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635125",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -8391,9 +8416,9 @@ export const idcc: Idccs = {
     },
   },
   "2526": {
-    libelle: null,
+    libelle: "Organisations professionnelles de l'habitat social",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635376",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -8472,9 +8497,9 @@ export const idcc: Idccs = {
     },
   },
   "2542": {
-    libelle: null,
+    libelle: "Métallurgie : Aisne (industries métallurgiques, mécaniques et connexes)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000019938657",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -8561,9 +8586,9 @@ export const idcc: Idccs = {
     },
   },
   "2579": {
-    libelle: null,
+    libelle: "Métallurgie (Loir-et-Cher)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000023278100",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -8605,9 +8630,9 @@ export const idcc: Idccs = {
     },
   },
   "2594": {
-    libelle: null,
+    libelle: "Remontées mécaniques : installateurs",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000021259110",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -8737,9 +8762,9 @@ export const idcc: Idccs = {
     },
   },
   "2622": {
-    libelle: null,
+    libelle: "Crédit maritime mutuel",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000019906336",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -9172,9 +9197,9 @@ export const idcc: Idccs = {
     },
   },
   "2754": {
-    libelle: null,
+    libelle: "Magasins prestataires de services de cuisine à usage domestique",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000019765628",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -9866,9 +9891,9 @@ export const idcc: Idccs = {
     },
   },
   "3151": {
-    libelle: null,
+    libelle: "Industries de la fabrication de la chaux",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000027556857",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -9935,9 +9960,9 @@ export const idcc: Idccs = {
     },
   },
   "3201": {
-    libelle: null,
+    libelle: "Éditeurs de la presse magazine Cadres (28 novembre 2013)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000028837824",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -9952,9 +9977,9 @@ export const idcc: Idccs = {
     },
   },
   "3202": {
-    libelle: null,
+    libelle: "Éditeurs de la presse magazine Employés (28 novembre 2013)",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000028837830",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -10134,9 +10159,9 @@ export const idcc: Idccs = {
     },
   },
   "3211": {
-    libelle: null,
+    libelle: "Etablissements privés",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000031822323",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -13449,9 +13474,9 @@ export const idcc: Idccs = {
     },
   },
   "7009": {
-    libelle: "Convention collective nationale des entreprises d'accouvage et de sélection de produits avicoles",
+    libelle: "Entreprises d'accouvage et de sélection avicoles",
     nature: "CONVENTION COLLECTIVE NATIONALE",
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635480",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -13510,9 +13535,9 @@ export const idcc: Idccs = {
     },
   },
   "7011": {
-    libelle: null,
+    libelle: "Entreprises paysagistes : personnel d'encadrement",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635270",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -13632,9 +13657,9 @@ export const idcc: Idccs = {
     },
   },
   "7016": {
-    libelle: null,
+    libelle: "Jardiniers et jardiniers gardiens de propriétés privées",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635718",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [
@@ -17222,9 +17247,10 @@ export const idcc: Idccs = {
     },
   },
   "1740 1841 1843": {
-    libelle: null,
+    libelle:
+      "Bâtiment de la région parisienne : ouvriers, employés, techniciens et agents de maîtrise, ingénieurs, assimilés et cadres",
     nature: null,
-    url: null,
+    url: "https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635390",
     convention_nationale_associees: null,
     _meta: {
       legifrance: [

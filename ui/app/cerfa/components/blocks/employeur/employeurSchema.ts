@@ -249,10 +249,7 @@ export const employeurSchema: Record<string, CerfaField> = {
     required: true,
     requiredMessage: "Le code idcc est obligatoire",
     validateMessage: "le code IDCC n'est pas au bon format",
-    mask: "I[000]",
-    definitions: {
-      I: /[1-9]/,
-    },
+    mask: "00[00]",
     messages: [
       {
         type: "assistive",
