@@ -1,6 +1,6 @@
-import { CerfaField } from "../../../utils/cerfaSchema";
+import { CerfaFields } from "../types/cerfa.types";
 
-export const employeurSchema: Record<string, CerfaField> = {
+export const employeurSchema: CerfaFields = {
   "employeur.privePublic": {
     fieldType: "radio",
     required: true,

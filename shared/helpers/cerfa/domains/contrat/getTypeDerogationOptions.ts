@@ -1,6 +1,6 @@
-import { InformationMessage } from "../../../../utils/cerfaSchema";
-import { caclAgeAtDate } from "../../../../utils/form.utils";
-import { CerfaForm } from "../../../CerfaForm";
+import { CerfaForm, InformationMessage } from "shared/helpers/cerfa/types/cerfa.types";
+
+import { caclAgeAtDate } from "../../utils/dates";
 
 const TYPE_DEROGATIONS_OPTIONS = [
   {

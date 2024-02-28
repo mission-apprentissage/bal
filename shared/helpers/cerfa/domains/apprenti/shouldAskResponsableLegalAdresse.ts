@@ -1,8 +1,5 @@
+import { CerfaForm } from "../../types/cerfa.types";
 import { shouldAskRepresentantLegal } from "./shouldAskRepresentantLegal";
 
-interface Form {
-  values: any;
-}
-
-export const shouldAskResponsableLegalAdresse = ({ values }: Form) =>
+export const shouldAskResponsableLegalAdresse = ({ values }: CerfaForm) =>
   shouldAskRepresentantLegal({ values }) && values.apprenti.responsableLegal.memeAdresse === "non";

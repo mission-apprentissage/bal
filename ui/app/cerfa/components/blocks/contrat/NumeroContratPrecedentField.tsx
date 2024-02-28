@@ -1,6 +1,7 @@
+import { shouldAskNumeroContratPrecedent } from "shared/helpers/cerfa/domains/contrat/shouldAskContratPrecedent";
+
 import CollapseController from "../../CollapseController";
 import InputController from "../inputs/InputController";
-import { shouldAskNumeroContratPrecedent } from "./domain/shouldAskContratPrecedent";
 
 const NumeroContratPrecedentField = () => {
   // const { watch, getFieldState } = useFormContext();

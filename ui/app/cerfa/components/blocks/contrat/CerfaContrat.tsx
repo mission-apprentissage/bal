@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
 import { FC } from "react";
+import { shouldAskDateEffetAvenant } from "shared/helpers/cerfa/domains/contrat/shouldAskDateEffetAvenant";
 
 import CheckEmptyFields from "../../CheckEmptyFields";
 import CollapseController from "../../CollapseController";
 import InputController from "../inputs/InputController";
 import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
 import { AvantagesNatures } from "./AvantagesNatures";
-import { shouldAskDateEffetAvenant } from "./domain/shouldAskDateEffetAvenant";
 import NumeroContratPrecedentField from "./NumeroContratPrecedentField";
 import { Remunerations } from "./Remunerations";
 import TypeDerogationField from "./TypeDerogationField";

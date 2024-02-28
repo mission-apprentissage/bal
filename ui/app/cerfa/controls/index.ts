@@ -1,5 +1,5 @@
-import { CerfaForm } from "../components/CerfaForm";
-import { InformationMessage } from "../utils/cerfaSchema";
+import { CerfaForm, InformationMessage } from "shared/helpers/cerfa/types/cerfa.types";
+
 import { ageApprentiControl } from "./ageApprenti.control";
 import { apprentiCodePostalControl } from "./apprentiCodePostal.control";
 import { apprentiDateNaissanceControl } from "./apprentiDateNaissance.control";

@@ -1,4 +1,4 @@
-import { CerfaForm } from "../../../CerfaForm";
+import { CerfaForm } from "../../types/cerfa.types";
 
 export const getLabelNumeroContratPrecedent = ({ values }: CerfaForm) =>
   [21, 22, 23].includes(values.contrat.typeContratApp)

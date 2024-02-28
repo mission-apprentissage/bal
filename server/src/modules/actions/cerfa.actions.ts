@@ -1,12 +1,15 @@
 import fs from "node:fs/promises";
 
+import Zip from "adm-zip";
 import { get } from "lodash-es";
 import { PDFDocument } from "pdf-lib";
 
 import { PdfField, pdfFields } from "../../common/utils/cerfaUtils";
 import { getStaticFilePath } from "../../common/utils/getStaticFilePath";
+import { drawCerfaErrors } from "../server/utils/cerfaErrorsUtils";
 
 const PATH_EMPTY_CERFA_PDF = getStaticFilePath("./cerfa/cerfa_10103-11_modif.pdf");
+const PATH_CERFA_GUIDE_PDF = getStaticFilePath("./cerfa/guide_cerfa_apprentissage.pdf");
 
 export const getValueForPdf = (formValue: string | undefined, field: PdfField): string | boolean => {
   if (!formValue) return "";
@@ -56,35 +59,27 @@ export const createCerfaPdf = async (rawData: Record<string, any>) => {
 
   const form = pdfDoc.getForm();
 
-  // const fields = form.getFields();
-  // fields.forEach((field) => {
-  //   console.log({
-  //     type: field.constructor.name,
-  //     name: field.getName(),
-  //     ref: field.ref.objectNumber,
-  //   });
-  // });
-  if (rawData.apprenti.adresse.repetitionVoie) {
+  if (rawData.apprenti.adresse?.repetitionVoie) {
     const addr = rawData.apprenti.adresse;
     rawData.apprenti.adresse.complement = `${addr.numero ?? ""} ${addr.repetitionVoie}/${addr.complement ?? ""}`;
   }
-  if (rawData.apprenti.responsableLegal.adresse.repetitionVoie) {
+  if (rawData.apprenti.responsableLegal?.adresse?.repetitionVoie) {
     const addr = rawData.apprenti.responsableLegal.adresse;
     rawData.apprenti.responsableLegal.adresse.complement = `${addr.numero ?? ""} ${addr.repetitionVoie}/${
       addr.complement ?? ""
     }`;
   }
-  if (rawData.employeur.adresse.repetitionVoie) {
+  if (rawData.employeur?.adresse?.repetitionVoie) {
     const addr = rawData.employeur.adresse;
     rawData.employeur.adresse.complement = `${addr.numero ?? ""} ${addr.repetitionVoie}/${addr.complement ?? ""}`;
   }
-  if (rawData.organismeFormation.adresse.repetitionVoie) {
+  if (rawData.organismeFormation?.adresse?.repetitionVoie) {
     const addr = rawData.organismeFormation.adresse;
     rawData.organismeFormation.adresse.complement = `${addr.numero ?? ""} ${addr.repetitionVoie}/${
       addr.complement ?? ""
     }`;
   }
-  if (rawData.etablissementFormation.adresse.repetitionVoie) {
+  if (rawData.etablissementFormation?.adresse?.repetitionVoie) {
     const addr = rawData.etablissementFormation.adresse;
     rawData.etablissementFormation.adresse.complement = `${addr.numero ?? ""} ${addr.repetitionVoie}/${
       addr.complement ?? ""
@@ -117,5 +112,40 @@ export const createCerfaPdf = async (rawData: Record<string, any>) => {
       }
     });
 
-  return pdfDoc.saveAsBase64({ updateFieldAppearances: false, dataUri: true });
+  return pdfDoc.save({ updateFieldAppearances: false });
+};
+
+export const createCerfaErrorsPdf = async (errors: Record<string, any>) => {
+  const pdfDoc = await PDFDocument.create();
+
+  drawCerfaErrors(pdfDoc, errors);
+
+  return pdfDoc.save({ updateFieldAppearances: false });
+};
+
+export const createCerfaGuidePdf = async () => {
+  return fs.readFile(PATH_CERFA_GUIDE_PDF);
+};
+
+interface CerfaZipOptions {
+  includeErrors?: boolean;
+  includeGuide?: boolean;
+}
+
+export const createCerfaZip = async (pdf: Buffer, errors: Record<string, any>, options: CerfaZipOptions) => {
+  const zip = new Zip();
+
+  zip.addFile("cerfa.pdf", pdf);
+
+  if (options.includeErrors) {
+    const errorsPdf = await createCerfaErrorsPdf(errors);
+    zip.addFile("cerfa-errors.pdf", errorsPdf as Buffer);
+  }
+
+  if (options.includeGuide) {
+    const guidePdf = await createCerfaGuidePdf();
+    zip.addFile("cerfa-guide.pdf", guidePdf);
+  }
+
+  return zip.toBuffer();
 };

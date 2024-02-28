@@ -1,10 +1,10 @@
 import { getLink } from "@codegouvfr/react-dsfr/link";
 import { Box, Typography } from "@mui/material";
+import { shouldShowEmployeurTypeInformation } from "shared/helpers/cerfa/domains/employeur/shouldShowEmployeurTypeInformation";
 
 import InformationMessage from "../../../../components/InformationMessage";
 import CollapseController from "../../CollapseController";
 import InputController from "../inputs/InputController";
-import { shouldShowEmployeurTypeInformation } from "./domain/shouldShowEmployeurTypeInformation";
 
 const { Link } = getLink();
 

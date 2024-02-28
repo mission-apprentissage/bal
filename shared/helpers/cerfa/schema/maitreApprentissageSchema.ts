@@ -1,9 +1,9 @@
 import { NIVEAUX_DIPLOMES } from "shared/constants/diplomes";
 
-import { CerfaField } from "../../../utils/cerfaSchema";
-import { nomPattern } from "../domain/nomPattern";
+import { nomPattern } from "../domains/common/nomPattern";
+import { CerfaFields } from "../types/cerfa.types";
 
-export const maitreApprentissageSchema: Record<string, CerfaField> = {
+export const maitreApprentissageSchema: CerfaFields = {
   "maitre1.nom": {
     label: "Nom de naissance",
     placeholder: "Exemple : Dupont",

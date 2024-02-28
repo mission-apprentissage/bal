@@ -1,6 +1,6 @@
 import { zCerfaRoutes } from "shared/routes/v1/cerfa.route";
 
-import { createCerfaPdf } from "../../actions/cerfa.actions";
+import { createCerfaPdf, createCerfaZip } from "../../actions/cerfa.actions";
 import { Server } from "../server";
 
 export const cerfaRoutes = ({ server }: { server: Server }) => {
@@ -10,11 +10,25 @@ export const cerfaRoutes = ({ server }: { server: Server }) => {
       schema: zCerfaRoutes.post["/v1/cerfa"],
     },
     async (request, response) => {
-      const values = request.body;
+      const { values, errors, output } = request.body;
+      const { include_guide: includeGuide, include_errors: includeErrors } = output ?? {};
 
-      const pdfBase64 = await createCerfaPdf(values as Record<string, any>);
+      const cerfa = await createCerfaPdf(values);
 
-      return response.status(200).send({ content: pdfBase64 });
+      const isZip = includeGuide || includeErrors;
+
+      if (isZip) {
+        const zip = await createCerfaZip(cerfa as Buffer, errors, {
+          includeErrors: includeErrors as boolean,
+          includeGuide: includeGuide as boolean,
+        });
+
+        // send zip
+        return response.status(200).type("application/zip").send(zip);
+      }
+
+      // send pdf
+      return response.status(200).type("application/pdf").send(cerfa);
     }
   );
 };

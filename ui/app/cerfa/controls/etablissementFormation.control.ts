@@ -1,4 +1,5 @@
-import { shouldAskEtablissementFormation } from "../components/blocks/formation/domain/shouldAskEtablissementFormation";
+import { shouldAskEtablissementFormation } from "shared/helpers/cerfa/domains/formation/shouldAskEtablissementFormation";
+
 import { CerfaControl } from ".";
 import { createCopyOrRestoreRule } from "./utils/createCopyOrRestoreRule";
 import { createCopyRules } from "./utils/createCopyRules";

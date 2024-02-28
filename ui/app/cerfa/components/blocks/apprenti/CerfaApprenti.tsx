@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import { FC } from "react";
+import { shouldAskRepresentantLegal } from "shared/helpers/cerfa/domains/apprenti/shouldAskRepresentantLegal";
+import { shouldAskResponsableLegalAdresse } from "shared/helpers/cerfa/domains/apprenti/shouldAskResponsableLegalAdresse";
 
 import CheckEmptyFields from "../../CheckEmptyFields";
 import CollapseController from "../../CollapseController";
-import { shouldAskRepresentantLegal } from "../domain/shouldAskRepresentantLegal";
-import { shouldAskResponsableLegalAdresse } from "../domain/shouldAskResponsableLegalAdresse";
 import InputController from "../inputs/InputController";
 import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
 import InputGroupItem from "../inputs/inputGroup/InputGroupItem";

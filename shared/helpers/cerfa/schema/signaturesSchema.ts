@@ -1,6 +1,6 @@
-import { CerfaField } from "../../../utils/cerfaSchema";
+import { CerfaFields } from "../types/cerfa.types";
 
-export const signaturesSchema: Record<string, CerfaField> = {
+export const signaturesSchema: CerfaFields = {
   "signatures.attestationPiecesJustificatives": {
     label: "L'employeur atteste disposer de l'ensemble des pièces justificatives nécessaires au dépôt du contrat.",
     fieldType: "consent",

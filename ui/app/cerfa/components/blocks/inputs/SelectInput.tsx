@@ -1,7 +1,7 @@
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { FC } from "react";
+import { SelectNestedOption, SelectOption } from "shared/helpers/cerfa/types/cerfa.types";
 
-import { SelectNestedOption, SelectOption } from "../../../utils/cerfaSchema";
 import { InputFieldProps } from "./InputField";
 
 const SelectInput: FC<InputFieldProps> = ({ fieldSchema, inputProps, state, stateRelatedMessage }) => {

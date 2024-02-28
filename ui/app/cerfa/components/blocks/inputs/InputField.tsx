@@ -5,11 +5,11 @@ import { Box, Typography } from "@mui/material";
 import { FC } from "react";
 import { FieldValues, UseFormRegisterReturn, UseFormReturn } from "react-hook-form";
 import { useRecoilState } from "recoil";
+import { CerfaField, FieldType } from "shared/helpers/cerfa/types/cerfa.types";
 
 import { activeFieldState, fieldsState } from "../../../atoms/fields.atom";
 import { informationMessagesState } from "../../../atoms/informationMessages.atom";
 import { showOverlayState } from "../../../atoms/showOverlay.atom";
-import { CerfaField } from "../../../utils/cerfaSchema";
 import {
   getFieldDeps,
   getFieldStateFromFormState,
@@ -24,17 +24,6 @@ import PhoneInput from "./PhoneInput";
 import RadioInput from "./RadioInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
-
-export type FieldType =
-  | "text"
-  | "number"
-  | "select"
-  | "radio"
-  | "email"
-  | "date"
-  | "numberStepper"
-  | "consent"
-  | "phone";
 
 interface Props {
   name: string;

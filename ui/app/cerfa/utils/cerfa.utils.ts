@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { InformationMessage } from "shared/helpers/cerfa/types/cerfa.types";
 
 import CerfaApprenti from "../components/blocks/apprenti/CerfaApprenti";
 import CerfaContrat from "../components/blocks/contrat/CerfaContrat";
@@ -6,7 +7,6 @@ import CerfaEmployeur from "../components/blocks/employeur/CerfaEmployeur";
 import CerfaFormation from "../components/blocks/formation/CerfaFormation";
 import CerfaMaitreApprentissage from "../components/blocks/maitreApprentissage/CerfaMaitreApprentissage";
 import CerfaSignatures from "../components/blocks/signatures/CerfaSignatures";
-import { InformationMessage } from "./cerfaSchema";
 
 export interface CerfaStep {
   label: string;

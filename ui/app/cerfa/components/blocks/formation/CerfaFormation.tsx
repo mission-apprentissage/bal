@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { FC } from "react";
+import { shouldAskEtablissementFormation } from "shared/helpers/cerfa/domains/formation/shouldAskEtablissementFormation";
 
 import CheckEmptyFields from "../../CheckEmptyFields";
 import CollapseController from "../../CollapseController";
@@ -7,7 +8,6 @@ import InputController from "../inputs/InputController";
 import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
 import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
 import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
-import { shouldAskEtablissementFormation } from "./domain/shouldAskEtablissementFormation";
 
 const CerfaFormation: FC = () => {
   return (

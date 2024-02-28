@@ -1,12 +1,14 @@
-import { apprentiSchema } from "./components/blocks/apprenti/apprentiSchema";
-import { contratSchema } from "./components/blocks/contrat/contratSchema";
-import { employeurSchema } from "./components/blocks/employeur/employeurSchema";
-import { formationSchema } from "./components/blocks/formation/formationSchema";
-import { maitreApprentissageSchema } from "./components/blocks/maitreApprentissage/maitreApprentissageSchema";
+import { apprentiSchema } from "shared/helpers/cerfa/schema/apprentiSchema";
+import { contratSchema } from "shared/helpers/cerfa/schema/contratSchema";
+import { employeurSchema } from "shared/helpers/cerfa/schema/employeurSchema";
+import { formationSchema } from "shared/helpers/cerfa/schema/formationSchema";
+import { maitreApprentissageSchema } from "shared/helpers/cerfa/schema/maitreApprentissageSchema";
+import { CerfaForm } from "shared/helpers/cerfa/types/cerfa.types";
+
 import cerfaSchema from "./utils/cerfaSchema";
 import { getValues, isEmptyValue } from "./utils/form.utils";
 
-export const getFormStatus = ({ fields, values }: any) => {
+export const getFormStatus = ({ fields, values }: CerfaForm) => {
   const formErrors = getBlocErrors({ fields, values });
 
   const contratStatus = getContratCompletion(fields, "contrat", formErrors);

@@ -1,6 +1,5 @@
-import { SelectNestedOption } from "../../../../utils/cerfaSchema";
-import { caclAgeAtDate } from "../../../../utils/form.utils";
-import { CerfaForm } from "../../../CerfaForm";
+import { CerfaForm, SelectNestedOption } from "../../types/cerfa.types";
+import { caclAgeAtDate } from "../../utils/dates";
 
 const TYPE_CONTRAT_APPRENTI_OPTIONS: SelectNestedOption[] = [
   {

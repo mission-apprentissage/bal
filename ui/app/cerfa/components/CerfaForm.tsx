@@ -6,9 +6,11 @@ import { Box, Grid, Typography } from "@mui/material";
 import { FC, useEffect } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
+import { omitDeep } from "shared/helpers/cerfa/utils/omitDeep";
 
-import { apiPost } from "../../../utils/api.utils";
+import { apiPostRaw } from "../../../utils/api.utils";
 import { activeStepState } from "../atoms/activeStep.atom";
+import { downloadOptionsState } from "../atoms/downloadOptions.atom";
 import { informationMessagesState } from "../atoms/informationMessages.atom";
 import { showOverlayState } from "../atoms/showOverlay.atom";
 import { CERFA_STEPS, CerfaStep } from "../utils/cerfa.utils";
@@ -19,14 +21,6 @@ import DownloadModal, { modal } from "./DownloadModal";
 import InformationMessages from "./InformationMessages";
 import LoadingOverlay from "./LoadingOverlay";
 import Stepper from "./stepper/Stepper";
-
-export interface CerfaForm {
-  values: any;
-  dossier?: any;
-  signal?: any;
-  cache?: any;
-  fields?: any;
-}
 
 const scrollToSection = () => {
   const employeurElement = document.getElementById(`${CERFA_STEPS.EMPLOYEUR.id}-collapse`)?.parentNode;
@@ -42,6 +36,7 @@ const CerfaForm: FC = () => {
   const [activeStep, setActiveStep] = useRecoilState(activeStepState);
   const [showOverlay] = useRecoilState(showOverlayState);
   const [_, setInformationMessage] = useRecoilState(informationMessagesState);
+  const [downloadOptions] = useRecoilState(downloadOptionsState);
   const handleExpandChange = (step: CerfaStep) => {
     setActiveStep(step);
   };
@@ -89,15 +84,32 @@ const CerfaForm: FC = () => {
   };
 
   const download = async () => {
-    const data = await apiPost("/v1/cerfa", { body: values });
+    // remove ref from errors
+    const err = omitDeep(errors, "ref");
+    const data = await apiPostRaw("/v1/cerfa", {
+      body: {
+        values,
+        errors: err,
+        output: {
+          include_errors: downloadOptions.includeErrors,
+          include_guide: downloadOptions.includeGuide,
+        },
+      },
+    });
 
     let filename = "cerfa_10103*10.pdf";
+
+    if (data.headers.get("Content-Type") === "application/zip") {
+      filename = "cerfa_10103*10.zip";
+    }
 
     if (values.apprenti.nom && values.apprenti.prenom) {
       filename = `${values.apprenti.nom}-${values.apprenti.prenom}-${filename}`;
     }
 
-    downloadFile(data.content, filename);
+    const content = await data.blob();
+
+    downloadFile(content, filename);
   };
 
   return (

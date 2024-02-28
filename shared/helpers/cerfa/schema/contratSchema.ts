@@ -1,12 +1,15 @@
-import { CerfaField, SelectNestedOption } from "../../../utils/cerfaSchema";
-import { getLabelNumeroContratPrecedent } from "./domain/getLabelNumeroContratPrecedent";
-import { getSmcMessages } from "./domain/getSmcMessages";
-import { getTypeContratApprentiOptions } from "./domain/getTypeContratApprentiOptions";
-import { getTypeDerogationInformationMessages, getTypeDerogationOptions } from "./domain/getTypeDerogationOptions";
-import { isRequiredNumeroContratPrecedent } from "./domain/isRequiredNumeroContratPrecedent";
-import { shouldAskDateEffetAvenant } from "./domain/shouldAskDateEffetAvenant";
+import { getLabelNumeroContratPrecedent } from "../domains/contrat/getLabelNumeroContratPrecedent";
+import { getSmcMessages } from "../domains/contrat/getSmcMessages";
+import { getTypeContratApprentiOptions } from "../domains/contrat/getTypeContratApprentiOptions";
+import {
+  getTypeDerogationInformationMessages,
+  getTypeDerogationOptions,
+} from "../domains/contrat/getTypeDerogationOptions";
+import { isRequiredNumeroContratPrecedent } from "../domains/contrat/isRequiredNumeroContratPrecedent";
+import { shouldAskDateEffetAvenant } from "../domains/contrat/shouldAskDateEffetAvenant";
+import { CerfaFields, SelectNestedOption } from "../types/cerfa.types";
 
-export const contratSchema: Record<string, CerfaField> = {
+export const contratSchema: CerfaFields = {
   "contrat.modeContractuel": {
     label: "Mode contractuel de l’apprentissage",
     fieldType: "select",

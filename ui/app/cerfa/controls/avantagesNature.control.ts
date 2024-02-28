@@ -1,4 +1,5 @@
-import { shouldAskAvantageNature } from "../components/blocks/contrat/domain/shouldAskAvantageNature";
+import { shouldAskAvantageNature } from "shared/helpers/cerfa/domains/contrat/shouldAskAvantageNature";
+
 import { CerfaControl } from ".";
 
 export const avantagesNatureControl: CerfaControl[] = [

@@ -2,10 +2,10 @@ import Notice from "@codegouvfr/react-dsfr/Notice";
 import { FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { idcc, isIdccEnVigueur } from "shared/constants/idcc";
+import { shouldShowSmc } from "shared/helpers/cerfa/domains/contrat/shouldShowSmc";
 
 import CollapseController from "../../CollapseController";
 import InputController from "../inputs/InputController";
-import { shouldShowSmc } from "./domain/shouldShowSmc";
 
 const SmcField: FC = () => {
   const {

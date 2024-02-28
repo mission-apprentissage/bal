@@ -1,7 +1,6 @@
 import { idcc } from "shared/constants/idcc";
 
-import { InformationMessage } from "../../../../utils/cerfaSchema";
-import { CerfaForm } from "../../../CerfaForm";
+import { CerfaForm, InformationMessage } from "../../types/cerfa.types";
 
 const getMessages = (url?: string | null): InformationMessage[] => {
   return [

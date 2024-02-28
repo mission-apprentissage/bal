@@ -2,8 +2,8 @@ import Notice from "@codegouvfr/react-dsfr/Notice";
 import { Box } from "@mui/material";
 import { FC } from "react";
 import { useFormContext } from "react-hook-form";
+import { caclAgeAtDate } from "shared/helpers/cerfa/utils/dates";
 
-import { caclAgeAtDate } from "../../../utils/form.utils";
 import InputController from "../inputs/InputController";
 
 const DateNaissanceField: FC = () => {

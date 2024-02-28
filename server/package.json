@@ -26,6 +26,7 @@
     "@sentry/integrations": "^7.64.0",
     "@sentry/node": "^7.64.0",
     "@sentry/tracing": "^7.64.0",
+    "adm-zip": "^0.5.10",
     "axios": "^0.24.0",
     "axios-cache-interceptor": "^1.2.0",
     "bunyan": "^1.8.15",
@@ -63,6 +64,7 @@
     "npm": "please-use-yarn"
   },
   "devDependencies": {
+    "@types/adm-zip": "^0.5.5",
     "@types/bunyan": "^1.8.8",
     "@types/bunyan-prettystream": "^0.1.32",
     "@types/clamscan": "^2.0.4",

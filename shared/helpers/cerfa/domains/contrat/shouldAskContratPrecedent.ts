@@ -1,4 +1,4 @@
-import { CerfaForm } from "../../../CerfaForm";
+import { CerfaForm } from "shared/helpers/cerfa/types/cerfa.types";
 
 export const shouldAskNumeroContratPrecedent = ({ values }: CerfaForm) => {
   const typeContratApp = values.contrat.typeContratApp;

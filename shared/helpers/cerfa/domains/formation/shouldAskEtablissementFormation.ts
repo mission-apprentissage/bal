@@ -1,4 +1,4 @@
-import { CerfaForm } from "../../../CerfaForm";
+import { CerfaForm } from "../../types/cerfa.types";
 
 export const shouldAskEtablissementFormation = ({ values }: CerfaForm) =>
   values.etablissementFormation?.memeResponsable === "non";

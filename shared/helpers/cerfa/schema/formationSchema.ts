@@ -1,8 +1,8 @@
 import { DIPLOMES } from "shared/constants/diplomes";
 
-import { CerfaField } from "../../../utils/cerfaSchema";
+import { CerfaFields } from "../types/cerfa.types";
 
-export const formationSchema: Record<string, CerfaField> = {
+export const formationSchema: CerfaFields = {
   "organismeFormation.formationInterne": {
     label: "Le centre de formation est-il un CFA d’entreprise ?",
     fieldType: "radio",

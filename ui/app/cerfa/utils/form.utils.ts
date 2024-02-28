@@ -1,25 +1,10 @@
 import { InputProps } from "@codegouvfr/react-dsfr/Input";
-import { differenceInYears, parseISO } from "date-fns";
 import { get, setWith } from "lodash";
 import { FieldError, FieldErrorsImpl, FieldValues, FormState, Merge, UseFormReturn } from "react-hook-form";
 import { SetterOrUpdater } from "recoil";
+import { CerfaField, CerfaForm, InformationMessage } from "shared/helpers/cerfa/types/cerfa.types";
 
-import { CerfaForm } from "../components/CerfaForm";
-import cerfaSchema, { CerfaField, indexedRules, InformationMessage } from "./cerfaSchema";
-
-export const caclAgeAtDate = (dateNaissanceString: string, dateString: string) => {
-  const dateNaissance = parseISO(dateNaissanceString);
-  const dateObj = parseISO(dateString);
-
-  // Note: differenceInYears already gives a whole number
-  const years = differenceInYears(dateObj, dateNaissance);
-  const age = years > 0 ? years : 0;
-
-  return {
-    age,
-    exactAge: age, // since differenceInYears already returns a whole number
-  };
-};
+import { indexedRules } from "./cerfaSchema";
 
 export interface FieldState {
   state?: InputProps["state"];
@@ -106,11 +91,24 @@ export const getValues = (fields: any) => {
 
 export const isEmptyValue = (value: any) => value === "" || value === undefined || value === null;
 
-export const downloadFile = (data: string, filename: string) => {
+export const downloadFile = (data, filename: string) => {
+  // Step 5: Create a download link for the Blob
+  const url = URL.createObjectURL(data);
   const a = document.createElement("a");
-  a.href = data;
+  a.href = url;
+
+  // Step 6: Set the download attribute and trigger the download
   a.download = filename;
+  document.body.appendChild(a);
   a.click();
+
+  // Step 7: Clean up the temporary URL
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  // const a = document.createElement("a");
+  // a.href = data;
+  // a.download = filename;
+  // a.click();
 
   return a;
 };

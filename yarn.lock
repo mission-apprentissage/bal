@@ -2452,6 +2452,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/adm-zip@npm:^0.5.5":
+  version: 0.5.5
+  resolution: "@types/adm-zip@npm:0.5.5"
+  dependencies:
+    "@types/node": "*"
+  checksum: 808c25b8a1c2e1c594cf9b1514e7953105cf96e19e38aa7dc109ff2537bda7345b950ef1f4e54a6e824e5503e29d24b0ff6d0aa1ff9bd4afb79ef0ef2df9ebab
+  languageName: node
+  linkType: hard
+
 "@types/bunyan-prettystream@npm:^0.1.32":
   version: 0.1.32
   resolution: "@types/bunyan-prettystream@npm:0.1.32"
@@ -3206,6 +3215,13 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 538ba38af0cc9e5ef983aee196c4b8b4d87c0c94532334fa7e065b2c8a1f85863467bb774231aae91613fcda5e68740c15d97b1967ae3394d20faddddd8af61d
+  languageName: node
+  linkType: hard
+
+"adm-zip@npm:^0.5.10":
+  version: 0.5.10
+  resolution: "adm-zip@npm:0.5.10"
+  checksum: 07ed91cf6423bf5dca4ee63977bc7635e91b8d21829c00829d48dce4c6932e1b19e6cfcbe44f1931c956e68795ae97183fc775913883fa48ce88a1ac11fb2034
   languageName: node
   linkType: hard
 
@@ -14230,6 +14246,7 @@ __metadata:
     "@sentry/integrations": ^7.64.0
     "@sentry/node": ^7.64.0
     "@sentry/tracing": ^7.64.0
+    "@types/adm-zip": ^0.5.5
     "@types/bunyan": ^1.8.8
     "@types/bunyan-prettystream": ^0.1.32
     "@types/clamscan": ^2.0.4
@@ -14243,6 +14260,7 @@ __metadata:
     "@types/omit-deep": ^0.3.0
     "@types/tcp-port-used": ^1.0.1
     "@types/uuid": ^9.0.2
+    adm-zip: ^0.5.10
     axios: ^0.24.0
     axios-cache-interceptor: ^1.2.0
     bunyan: ^1.8.15

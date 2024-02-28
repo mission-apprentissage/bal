@@ -3,6 +3,10 @@ import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { Box, Typography } from "@mui/material";
 import { FC } from "react";
+import { useFormContext } from "react-hook-form";
+import { useRecoilState } from "recoil";
+
+import { downloadOptionsState } from "../atoms/downloadOptions.atom";
 
 export const modal = createModal({
   id: "download-cerfa-modal",
@@ -14,6 +18,8 @@ interface Props {
 }
 
 const DownloadModal: FC<Props> = ({ onDownload }) => {
+  const [downloadOptions, setDownloadOptions] = useRecoilState(downloadOptionsState);
+  const { trigger } = useFormContext();
   const download = () => {
     onDownload();
   };
@@ -58,12 +64,19 @@ const DownloadModal: FC<Props> = ({ onDownload }) => {
             label: "Oui",
             nativeInputProps: {
               value: "oui",
+              checked: downloadOptions.includeErrors,
+              onChange: () => {
+                setDownloadOptions({ ...downloadOptions, includeErrors: true });
+                trigger();
+              },
             },
           },
           {
             label: "Non",
             nativeInputProps: {
               value: "non",
+              checked: downloadOptions.includeErrors === false,
+              onChange: () => setDownloadOptions({ ...downloadOptions, includeErrors: false }),
             },
           },
         ]}
@@ -79,12 +92,16 @@ const DownloadModal: FC<Props> = ({ onDownload }) => {
             label: "Oui",
             nativeInputProps: {
               value: "oui",
+              checked: downloadOptions.includeGuide,
+              onChange: () => setDownloadOptions({ ...downloadOptions, includeGuide: true }),
             },
           },
           {
             label: "Non",
             nativeInputProps: {
               value: "non",
+              checked: downloadOptions.includeGuide === false,
+              onChange: () => setDownloadOptions({ ...downloadOptions, includeGuide: false }),
             },
           },
         ]}

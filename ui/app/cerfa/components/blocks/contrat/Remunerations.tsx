@@ -4,6 +4,7 @@ import { Box, Typography } from "@mui/material";
 import { format, getDate, parseISO, setDate, subMonths } from "date-fns";
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { shouldShowRemunerationsAnnuelles } from "shared/helpers/cerfa/domains/contrat/shouldShowRemunerationsAnnuelles";
 
 import { formatDate } from "../../../../../utils/date.utils";
 import InformationMessage from "../../../../components/InformationMessage";
@@ -13,7 +14,6 @@ import InputController from "../inputs/InputController";
 import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
 import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
 import ConditionItem from "./ConditionItem";
-import { shouldShowRemunerationsAnnuelles } from "./domain/shouldShowRemunerationsAnnuelles";
 import SmcField from "./SmcField";
 
 const getAnneeLabel = (ordre: 1.1 | 2.1 | 3.1 | 4.1) => {

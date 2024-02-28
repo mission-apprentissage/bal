@@ -1,12 +1,12 @@
 import { departementsList } from "shared/constants/departements";
 import { DIPLOMES } from "shared/constants/diplomes";
 
-import { CerfaField } from "../../../utils/cerfaSchema";
-import { nomPattern } from "../domain/nomPattern";
-import { shouldAskRepresentantLegal } from "../domain/shouldAskRepresentantLegal";
-import { shouldAskResponsableLegalAdresse } from "../domain/shouldAskResponsableLegalAdresse";
+import { shouldAskRepresentantLegal } from "../domains/apprenti/shouldAskRepresentantLegal";
+import { shouldAskResponsableLegalAdresse } from "../domains/apprenti/shouldAskResponsableLegalAdresse";
+import { nomPattern } from "../domains/common/nomPattern";
+import { CerfaFields } from "../types/cerfa.types";
 
-export const apprentiSchema: Record<string, CerfaField> = {
+export const apprentiSchema: CerfaFields = {
   "apprenti.nom": {
     label: "Nom de naissance de l'apprenti(e)",
     placeholder: "Exemple : Martin",

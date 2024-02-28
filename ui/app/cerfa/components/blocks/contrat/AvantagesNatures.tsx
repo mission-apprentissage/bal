@@ -1,8 +1,8 @@
 import React from "react";
+import { shouldAskAvantageNature } from "shared/helpers/cerfa/domains/contrat/shouldAskAvantageNature";
 
 import CollapseController from "../../CollapseController";
 import InputController from "../inputs/InputController";
-import { shouldAskAvantageNature } from "./domain/shouldAskAvantageNature";
 
 export const AvantagesNatures = () => {
   return (

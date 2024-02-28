@@ -55,7 +55,7 @@ export const siretRoutes = ({ server }: { server: Server }) => {
       }
 
       let dataResult = data.result;
-      if (Object.keys(dataResult).length > 0) {
+      if (Object.keys(dataResult)?.length > 0) {
         dataResult = { ...data.result, ...referentielData };
       }
 

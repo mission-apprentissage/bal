@@ -1,4 +1,5 @@
-import { shouldAskRepresentantLegal } from "../components/blocks/domain/shouldAskRepresentantLegal";
+import { shouldAskRepresentantLegal } from "shared/helpers/cerfa/domains/apprenti/shouldAskRepresentantLegal";
+
 import { CerfaControl } from ".";
 import { createCopyRules } from "./utils/createCopyRules";
 

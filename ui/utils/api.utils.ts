@@ -190,10 +190,10 @@ export class ApiError extends Error {
   }
 }
 
-export async function apiPost<P extends keyof IRoutes["post"], S extends IRoutes["post"][P] = IRoutes["post"][P]>(
+export async function apiPostRaw<P extends keyof IRoutes["post"], S extends IRoutes["post"][P] = IRoutes["post"][P]>(
   path: P,
   options: IRequest<S>
-): Promise<IResponse<S>> {
+): Promise<Response> {
   // TODO: Use a better cast
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const o: any = options;
@@ -215,6 +215,14 @@ export async function apiPost<P extends keyof IRoutes["post"], S extends IRoutes
     throw await ApiError.build(path, headers, o, res);
   }
 
+  return res;
+}
+
+export async function apiPost<P extends keyof IRoutes["post"], S extends IRoutes["post"][P] = IRoutes["post"][P]>(
+  path: P,
+  options: IRequest<S>
+): Promise<IResponse<S>> {
+  const res = await apiPostRaw(path, options);
   return res.json();
 }
 

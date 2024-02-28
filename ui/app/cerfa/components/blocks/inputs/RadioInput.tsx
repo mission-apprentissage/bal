@@ -1,7 +1,7 @@
 import { RadioButtons, RadioButtonsProps } from "@codegouvfr/react-dsfr/RadioButtons";
 import { FC } from "react";
+import { RadioOption } from "shared/helpers/cerfa/types/cerfa.types";
 
-import { RadioOption } from "../../../utils/cerfaSchema";
 import { InputFieldProps } from "./InputField";
 
 const RadioInput: FC<InputFieldProps> = ({
