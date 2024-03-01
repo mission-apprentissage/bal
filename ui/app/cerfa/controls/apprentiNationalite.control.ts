@@ -31,6 +31,7 @@ export const apprentiNationaliteControl: CerfaControl[] = [
         cascade: {
           "apprenti.nationalite": {
             informationMessages,
+            cascade: false,
           },
         },
       };

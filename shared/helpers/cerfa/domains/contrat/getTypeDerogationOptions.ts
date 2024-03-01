@@ -4,32 +4,32 @@ import { caclAgeAtDate } from "../../utils/dates";
 
 const TYPE_DEROGATIONS_OPTIONS = [
   {
-    label: "11 Age de l'apprenti inférieur à 16 ans",
+    label: "11 - Age de l'apprenti inférieur à 16 ans",
     value: "11",
     locked: false,
   },
   {
-    label: "12 Age supérieur à 29 ans : cas spécifiques prévus dans le code du travail",
+    label: "12 - Age supérieur à 29 ans : cas spécifiques prévus dans le code du travail",
     value: "12",
     locked: false,
   },
   {
-    label: "21 Réduction de la durée du contrat ou de la période d'apprentissage",
+    label: "21 - Réduction de la durée du contrat ou de la période d'apprentissage",
     value: "21",
     locked: false,
   },
   {
-    label: "22 Allongement de la durée du contrat ou de la période d'apprentissage",
+    label: "22 - Allongement de la durée du contrat ou de la période d'apprentissage",
     value: "22",
     locked: false,
   },
   {
-    label: "50 Cumul de dérogations",
+    label: "50 - Cumul de dérogations",
     value: "50",
     locked: false,
   },
   {
-    label: "60 Autre dérogation",
+    label: "60 - Autre dérogation",
     value: "60",
     locked: false,
   },

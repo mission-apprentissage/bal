@@ -4,7 +4,7 @@ import { FieldError, FieldErrorsImpl, FieldValues, FormState, Merge, UseFormRetu
 import { SetterOrUpdater } from "recoil";
 import { CerfaField, CerfaForm, InformationMessage } from "shared/helpers/cerfa/types/cerfa.types";
 
-import { indexedRules } from "./cerfaSchema";
+import cerfaSchema, { indexedRules } from "./cerfaSchema";
 
 export interface FieldState {
   state?: InputProps["state"];

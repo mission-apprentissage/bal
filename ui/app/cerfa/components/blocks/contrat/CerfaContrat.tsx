@@ -7,6 +7,7 @@ import CollapseController from "../../CollapseController";
 import InputController from "../inputs/InputController";
 import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
 import { AvantagesNatures } from "./AvantagesNatures";
+import DateDebutContratField from "./DateDebutContratField";
 import NumeroContratPrecedentField from "./NumeroContratPrecedentField";
 import { Remunerations } from "./Remunerations";
 import TypeDerogationField from "./TypeDerogationField";
@@ -16,7 +17,7 @@ const CerfaContrat: FC = () => {
     <Box>
       <InputController name="contrat.typeContratApp" />
 
-      <InputController name="contrat.dateDebutContrat" />
+      <DateDebutContratField />
       <InputController name="contrat.dateDebutFormationPratique" />
       <InputController name="contrat.dateFinContrat" />
       <InputController name="contrat.dateSignature" />

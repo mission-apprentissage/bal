@@ -149,14 +149,15 @@ export const employeurSchema: CerfaFields = {
     requiredMessage: "Le type d'employeur est obligatoire",
     options: [
       {
-        label: "11 Entreprise inscrite au répertoire des métiers ou au registre des entreprises pour l’Alsace-Moselle",
+        label:
+          "11 - Entreprise inscrite au répertoire des métiers ou au registre des entreprises pour l’Alsace-Moselle",
         value: "11",
       },
-      { label: "12 Entreprise inscrite uniquement au registre du commerce et des sociétés", value: "12" },
-      { label: "13 Entreprises dont les salariés relèvent de la mutualité sociale agricole", value: "13" },
-      { label: "14 Profession libérale", value: "14" },
-      { label: "15 Association", value: "15" },
-      { label: "16 Autre employeur privé", value: "16" },
+      { label: "12 - Entreprise inscrite uniquement au registre du commerce et des sociétés", value: "12" },
+      { label: "13 - Entreprises dont les salariés relèvent de la mutualité sociale agricole", value: "13" },
+      { label: "14 - Profession libérale", value: "14" },
+      { label: "15 - Association", value: "15" },
+      { label: "16 - Autre employeur privé", value: "16" },
     ],
     messages: [
       { type: "assistive", content: "Le type d'employeur doit être en adéquation avec son statut juridique." },
@@ -168,23 +169,23 @@ export const employeurSchema: CerfaFields = {
     completion: false,
     options: [
       {
-        label: "0 Aucun des cas ci-dessous",
+        label: "0 - Aucun des cas ci-dessous",
         value: "0",
       },
       {
-        label: "1 Entreprise de travail temporaire",
+        label: "1 - Entreprise de travail temporaire",
         value: "1",
       },
       {
-        label: "2 Groupement d'employeurs",
+        label: "2 - Groupement d'employeurs",
         value: "2",
       },
       {
-        label: "3 Employeur saisonnier",
+        label: "3 - Employeur saisonnier",
         value: "3",
       },
       {
-        label: "4 Apprentissage familial : l'employeur est un ascendant de l'apprenti",
+        label: "4 - Apprentissage familial : l'employeur est un ascendant de l'apprenti",
         value: "4",
       },
     ],

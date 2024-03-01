@@ -186,15 +186,15 @@ Il est officiellement appelé NIR - "Numéro d'Inscription au Répertoire des pe
     showInfo: true,
     options: [
       {
-        label: "1. Française",
+        label: "1 - Française",
         value: "1",
       },
       {
-        label: "2. Union Européenne",
+        label: "2 - Union Européenne",
         value: "2",
       },
       {
-        label: "3. Etranger hors Union Européenne",
+        label: "3 - Etranger hors Union Européenne",
         value: "3",
       },
     ],
@@ -206,11 +206,11 @@ Il est officiellement appelé NIR - "Numéro d'Inscription au Répertoire des pe
     requiredMessage: "Le régime social est manquant",
     options: [
       {
-        label: "1 MSA",
+        label: "1 - MSA",
         value: 1,
       },
       {
-        label: "2 URSSAF",
+        label: "2 - URSSAF",
         value: 2,
       },
     ],
@@ -435,48 +435,49 @@ Exemple 2 : si l'entrée en apprentissage concerne la 1ère année de BTS, le de
     showInfo: true,
     options: [
       {
-        label: "01: l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre",
+        label: "01 - l'apprenti a suivi la dernière année du cycle de formation et a obtenu le diplôme ou titre",
         value: "01",
       },
       {
         label:
-          "11: l'apprenti a suivi la 1ère année du cycle et l'a validée (examens réussis mais année non diplômante)",
+          "11 - l'apprenti a suivi la 1ère année du cycle et l'a validée (examens réussis mais année non diplômante)",
         value: "11",
       },
       {
         label:
-          "12: l'apprenti a suivi la 1ère année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
+          "12 - l'apprenti a suivi la 1ère année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
         value: "12",
       },
       {
-        label: "21: l'apprenti a suivi la 2è année du cycle et l'a validée (examens réussis mais année non diplômante)",
+        label:
+          "21 - l'apprenti a suivi la 2è année du cycle et l'a validée (examens réussis mais année non diplômante)",
         value: "21",
       },
       {
         label:
-          "22: l'apprenti a suivi la 2è année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
+          "22 - l'apprenti a suivi la 2è année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
         value: "22",
       },
       {
         label:
-          "31: l'apprenti a suivi la 3è année du cycle et l'a validée (examens réussis mais année non diplômante, cycle adaptés)",
+          "31 - l'apprenti a suivi la 3è année du cycle et l'a validée (examens réussis mais année non diplômante, cycle adaptés)",
         value: "31",
       },
       {
         label:
-          "32: l'apprenti a suivi la 3è année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
+          "32 - l'apprenti a suivi la 3è année du cycle mais ne l'a pas validée (échec aux examens, interruption ou abandon de formation)",
         value: "32",
       },
       {
-        label: "40: l'apprenti a achevé le 1er cycle de l'enseignement secondaire (collège)",
+        label: "40 - l'apprenti a achevé le 1er cycle de l'enseignement secondaire (collège)",
         value: "40",
       },
       {
-        label: "41: l'apprenti a interrompu ses études en classe de 3è",
+        label: "41 - l'apprenti a interrompu ses études en classe de 3è",
         value: "41",
       },
       {
-        label: "42: l'apprenti a interrompu ses études en classe de 4è",
+        label: "42 - l'apprenti a interrompu ses études en classe de 4è",
         value: "42",
       },
     ],

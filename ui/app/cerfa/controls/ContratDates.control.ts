@@ -1,4 +1,5 @@
 import { addMonths, differenceInMonths, isAfter, isBefore, parseISO, startOfDay } from "date-fns";
+import { InformationMessage } from "shared/helpers/cerfa/types/cerfa.types";
 import { caclAgeAtDate } from "shared/helpers/cerfa/utils/dates";
 
 import { CerfaControl } from ".";
@@ -94,7 +95,8 @@ export const ContratDatesControl: CerfaControl[] = [
     deps: ["contrat.dateFinContrat"],
     process: ({ values }) => {
       const {
-        contrat: { dateFinContrat },
+        apprenti: { dateNaissance, nationalite },
+        contrat: { dateDebutContrat, dateFinContrat },
       } = values;
       if (!dateFinContrat) return;
       const dateFinContratDate = parseISO(dateFinContrat);
@@ -104,6 +106,32 @@ export const ContratDatesControl: CerfaControl[] = [
           error: "La date de conclusion du formulaire doit être antérieure ou égale à la date courante",
         };
       }
+
+      // control apprenti ASE
+      if (!dateNaissance || !dateDebutContrat || !nationalite) return;
+
+      const { exactAge: ageApprentiDebutContrat } = caclAgeAtDate(dateNaissance, dateDebutContrat);
+      const { exactAge: ageApprentiFinContrat } = caclAgeAtDate(dateNaissance, dateFinContrat);
+
+      let informationMessages: InformationMessage[] = [];
+
+      if (nationalite === "3" && ageApprentiDebutContrat < 18 && ageApprentiFinContrat >= 18) {
+        informationMessages = [
+          {
+            type: "regulatory",
+            content: `Votre apprenti(e) est né(e) hors Union européenne : s’il ou elle est suivi(e) par l'ASE, il ou elle dispose d'un droit au séjour, à la formation et l'emploi jusqu'à  sa majorité. Comme il ou elle aura 18 ans en cours de contrat, il faudra donc penser au renouvellement de son titre.`,
+          },
+        ];
+      }
+
+      return {
+        cascade: {
+          "contrat.dateFinContrat": {
+            informationMessages,
+            cascade: false,
+          },
+        },
+      };
     },
   },
   {
