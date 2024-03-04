@@ -118,7 +118,7 @@ export const createCerfaPdf = async (rawData: Record<string, any>) => {
 export const createCerfaErrorsPdf = async (errors: Record<string, any>) => {
   const pdfDoc = await PDFDocument.create();
 
-  drawCerfaErrors(pdfDoc, errors);
+  await drawCerfaErrors(pdfDoc, errors);
 
   return pdfDoc.save({ updateFieldAppearances: false });
 };
