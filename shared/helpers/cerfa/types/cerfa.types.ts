@@ -39,8 +39,7 @@ export interface InformationMessage {
 }
 
 export interface CerfaField {
-  // @ts-expect-error
-  _init?: ({ values }) => CerfaField;
+  _init?: ({ values }: { values: any }) => CerfaField;
   required?: boolean;
   showInfo?: boolean;
   fieldType?: FieldType;

@@ -1,4 +1,4 @@
-export const omitDeep = (obj: object, propertyToRemove: string): object => {
+export const omitDeep = (obj: Record<string, any>, propertyToRemove: string): object => {
   if (!obj || typeof obj !== "object") {
     return obj;
   }
@@ -6,10 +6,9 @@ export const omitDeep = (obj: object, propertyToRemove: string): object => {
   if (Array.isArray(obj)) {
     return obj.map((item) => omitDeep(item, propertyToRemove));
   } else {
-    const newObj = {};
+    const newObj: Record<string, any> = {};
     for (const key in obj) {
       if (key !== propertyToRemove) {
-        // @ts-expect-error
         newObj[key] = omitDeep(obj[key], propertyToRemove);
       }
     }

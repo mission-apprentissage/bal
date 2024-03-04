@@ -1,4 +1,5 @@
-import { CerfaForm } from "../../components/CerfaForm";
+import { CerfaForm } from "shared/helpers/cerfa/types/cerfa.types";
+
 import { CerfaControl } from "..";
 
 interface CreateCopyOrRestoreRuleParams {

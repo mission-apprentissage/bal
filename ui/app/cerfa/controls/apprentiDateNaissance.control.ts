@@ -1,6 +1,6 @@
 import { isEmpty } from "lodash";
+import { CerfaForm } from "shared/helpers/cerfa/types/cerfa.types";
 
-import { CerfaForm } from "../components/CerfaForm";
 import { CerfaControl } from ".";
 
 export const apprentiDateNaissanceControl: CerfaControl[] = [
