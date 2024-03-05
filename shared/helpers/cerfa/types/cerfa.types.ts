@@ -31,6 +31,8 @@ export type SelectOptions = SelectOption[] | SelectNestedOption[] | RadioOption[
 
 export interface InformationMessage {
   type: "assistive" | "regulatory" | "bonus";
+  title?: string;
+  icon?: string;
   content: string;
   collapse?: {
     label: string;

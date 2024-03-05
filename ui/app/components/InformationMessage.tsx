@@ -1,5 +1,6 @@
 import { fr } from "@codegouvfr/react-dsfr";
 import { Box, Grow, Typography } from "@mui/material";
+import Image from "next/image";
 import { FC, PropsWithChildren, ReactNode } from "react";
 
 import { BonusAvatar } from "../../icons/BonusAvatar";
@@ -10,6 +11,8 @@ import CollapseWithLabel from "./CollapseWithLabel";
 interface Props {
   type: "assistive" | "regulatory" | "bonus";
   collapse?: { label: string; content: ReactNode };
+  title?: string;
+  icon?: ReactNode;
 }
 
 const SETTINGS = {
@@ -31,15 +34,27 @@ const SETTINGS = {
   },
 };
 
-const InformationMessage: FC<PropsWithChildren<Props>> = ({ type, collapse, children }) => {
-  const { backgroundColor, title, icon } = SETTINGS[type];
+const InformationMessage: FC<PropsWithChildren<Props>> = ({ type, collapse, title, icon, children }) => {
+  const { backgroundColor, title: defaultTitle, icon: defaultIcon } = SETTINGS[type];
+
+  let image: ReactNode = defaultIcon;
+
+  if (icon) {
+    if (typeof icon === "string") {
+      image = (
+        <Image width={50} height={50} src={icon} alt={title ?? defaultTitle.content} style={{ borderRadius: "50%" }} />
+      );
+    } else {
+      image = icon;
+    }
+  }
   return (
     <Grow in>
       <Box bgcolor={backgroundColor} borderRadius="4px" p={2} mb={2}>
         <Box display="flex" alignItems="center" mb={1}>
-          <Box mr={2}>{icon}</Box>
-          <Typography variant="h6" gutterBottom color={title.color}>
-            {title.content}
+          <Box mr={2}>{image}</Box>
+          <Typography variant="h6" gutterBottom color={defaultTitle.color}>
+            {title ?? defaultTitle.content}
           </Typography>
         </Box>
         {children}

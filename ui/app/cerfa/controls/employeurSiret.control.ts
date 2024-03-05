@@ -1,3 +1,5 @@
+import { idccOpcos, Opco, opcos } from "shared/constants/opcos";
+
 import { CerfaControl } from ".";
 import { fetchSiret } from "./utils/api.utils";
 
@@ -60,6 +62,13 @@ export const employerSiretLogic: CerfaControl = {
         warning: `Votre siret est valide. En revanche, en raison de sa nature, nous ne pouvons pas récupérer les informations reliées.`,
         cascade: unlockAllCascade,
       };
+    }
+
+    let opco: Opco | undefined;
+
+    if (result.conventionCollective?.idcc) {
+      const opcoIdcc = idccOpcos.find((o) => o.idcc.padStart(4, "0") === result.conventionCollective?.idcc);
+      opco = opcoIdcc ? opcos[opcoIdcc.opco] : undefined;
     }
 
     return {
@@ -147,9 +156,37 @@ export const employerSiretLogic: CerfaControl = {
           locked: true,
           ...(result.num_region && SUCCESS),
         },
+        ...(opco && {
+          "contrat.opco": {
+            informationMessages: [
+              {
+                type: "bonus",
+                title: "Votre Opco",
+                icon: `/images/cerfa/opco/${opco.logo}`,
+                content: getOpcoMessage(opco),
+                collapse: {
+                  label: "En savoir plus",
+                  content:
+                    "Chaque entreprise est rattachée à un OPCO. C’est votre acteur de référence pour vous accompagner dans vos démarches liées à l’alternance (financement des contrats, formation, ...).",
+                },
+              },
+            ],
+          },
+        }),
       },
     };
   },
+};
+
+const getOpcoMessage = (opco: Opco) => {
+  let message = "";
+  if (opco.simulatorUrl) {
+    message = `Vous souhaitez des informations sur la rémunération ? Rendez-vous sur le [simulateur de votre OPCO](${opco.simulatorUrl})`;
+  } else if (opco.url) {
+    message = `Besoin d’accompagnement ? Votre OPCO peut vous aider : [${opco.url}](${opco.url})`;
+  }
+
+  return message;
 };
 
 export const employeurSiretControl: CerfaControl[] = [employerSiretLogic];

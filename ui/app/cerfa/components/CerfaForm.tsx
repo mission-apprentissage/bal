@@ -17,8 +17,8 @@ import { CERFA_STEPS, CerfaStep } from "../utils/cerfa.utils";
 import { downloadFile } from "../utils/form.utils";
 import InputController from "./blocks/inputs/InputController";
 import CerfaAccordionItem from "./CerfaAccordionItem";
+import InformationMessages from "./CerfaInformationMessages";
 import DownloadModal, { modal } from "./DownloadModal";
-import InformationMessages from "./InformationMessages";
 import LoadingOverlay from "./LoadingOverlay";
 import Stepper from "./stepper/Stepper";
 

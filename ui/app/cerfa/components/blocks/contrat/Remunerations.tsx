@@ -4,11 +4,14 @@ import { Box, Typography } from "@mui/material";
 import { format, getDate, parseISO, setDate, subMonths } from "date-fns";
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { useRecoilState } from "recoil";
 import { shouldShowRemunerationsAnnuelles } from "shared/helpers/cerfa/domains/contrat/shouldShowRemunerationsAnnuelles";
 
 import { formatDate } from "../../../../../utils/date.utils";
 import InformationMessage from "../../../../components/InformationMessage";
+import InformationMessages from "../../../../components/InformationMessages";
 import Markdown from "../../../../components/Markdown";
+import { fieldsState } from "../../../atoms/fields.atom";
 import CollapseController from "../../CollapseController";
 import InputController from "../inputs/InputController";
 import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
@@ -28,6 +31,7 @@ const getAnneeLabel = (ordre: 1.1 | 2.1 | 3.1 | 4.1) => {
 export const Remunerations = () => {
   const { getValues } = useFormContext(); // retrieve those props
   const values = getValues();
+  const [fields] = useRecoilState(fieldsState);
 
   const dateDebutContrat = values.contrat.dateDebutContrat;
   const dateFinContrat = values.contrat.dateFinContrat;
@@ -48,6 +52,7 @@ export const Remunerations = () => {
         Rémunération
       </Typography>
       <Box mb={2}>
+        <InformationMessages messages={fields["contrat.opco"]?.informationMessages ?? []} />
         <InformationMessage
           type="assistive"
           collapse={{
