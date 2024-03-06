@@ -281,8 +281,7 @@ En cas d'allongement ou de réduction de la durée du contrat, le CFA vous enver
         type: "assistive",
         content: `Le contrat ne peut pas se terminer avant la fin de la formation dans l'organisme de formation, examens compris.
 
-La période de contrat doit donc englober la date du dernier examen qui sanctionne l'obtention du diplôme. 
-Si celle-ci n'est pas connue au moment de la conclusion du contrat, vous pouvez renseigner une date située maximum 2 mois au-delà de la date de fin prévisionnelle des examens.`,
+Si la date d'examen n'est pas connue au moment de la conclusion du contrat, vous pouvez renseigner une date située maximum 2 mois au-delà de la date de fin prévisionnelle des examens.`,
         collapse: {
           label: "Détails",
           content: `La date de fin de contrat intervient donc : 

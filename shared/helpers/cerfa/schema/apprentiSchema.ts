@@ -25,7 +25,7 @@ export const apprentiSchema: CerfaFields = {
       {
         type: "assistive",
         content:
-          "Le nom d'usage est le nom choisi par une personne pour être utilisé dans la vie courante : par exemple, une personne mariée peut  utiliser le nom de son époux(se). Plus d'information sur le [site du Service public](https://www.service-public.fr/particuliers/vosdroits/F868).",
+          "Le nom doit strictement correspondre à l'identité officielle de l'apprenti(e) (attention aux inversions). Le nom de naissance ou nom de famille est celui qui figure sur l’acte de naissance.",
       },
     ],
   },
@@ -45,7 +45,7 @@ export const apprentiSchema: CerfaFields = {
       {
         type: "assistive",
         content:
-          "Le nom d'usage est le nom choisi par une personne pour être utilisé dans la vie courante : par exemple, une personne mariée peut  utiliser le nom de son époux(se). Plus d'information sur le site du Service public [https://www.service-public.fr/particuliers/vosdroits/F868](https://www.service-public.fr/particuliers/vosdroits/F868).",
+          "Le nom d'usage est le nom choisi par une personne pour être utilisé dans la vie courante : par exemple, une personne mariée peut  utiliser le nom de son époux(se). Plus d'information sur le [site du Service public](https://www.service-public.fr/particuliers/vosdroits/F868).",
       },
     ],
   },
@@ -484,9 +484,7 @@ Exemple 2 : si l'entrée en apprentissage concerne la 1ère année de BTS, le de
     messages: [
       {
         type: "assistive",
-        content: `Dernière classe /année suivie par l'apprenti(e) avant son embauche.
-
-Sélectionnez la situation qui précède l'entrée en contrat d'apprentissage.`,
+        content: `Sélectionnez la dernière classe/année suivie par l'apprenti(e) avant son embauche en contrat d'apprentissage.`,
         collapse: {
           label: "Exemple",
           content: `Par exemple, si le diplôme préparé avant était une 1ère année de BTS et que cette dernière a été validée, il faut sélectionner "11 - l'apprenti a suivi la première année du cycle et l'a validée (examens réussis mais année non diplômante)".`,
@@ -512,7 +510,7 @@ Sélectionnez la situation qui précède l'entrée en contrat d'apprentissage.`,
         type: "assistive",
         content: `Sélectionnez le titre ou diplôme le plus élevé obtenu par l'apprenti.`,
         collapse: {
-          label: "Exemple",
+          label: "Exemples",
           content: `Par exemple, pour une entrée en apprentissage en vue de préparer une 2ème année de BTS, le  diplôme le plus élevé obtenu est le Baccalauréat (même si la première année de BTS a été validée, elle ne donne pas lieu à délivrance d'un titre ou diplôme).
 
 Par exemple, pour une entrée en apprentissage en vue de préparer un CAP suite à une reconversion, il est possible que le diplôme le plus élevé obtenu soit un Master 2 dans une autre spécialité de formation que celle du CAP.`,

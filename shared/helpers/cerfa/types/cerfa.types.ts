@@ -1,4 +1,4 @@
-import { CerfaControl } from "../../../../ui/app/cerfa/controls";
+import { CerfaControl } from "../../../../ui/app/(application)/cerfa/controls";
 
 export type FieldType =
   | "text"
