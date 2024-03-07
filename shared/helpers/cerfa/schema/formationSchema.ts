@@ -363,7 +363,7 @@ au plus tard dans les deux mois après la dernière épreuve sanctionnant le cyc
     messages: [
       {
         type: "regulatory",
-        content: `La quotité de formation théorique du contrat d’apprentissage ne peut pas être inférieure à 25% de la durée globale du contrat`,
+        content: `Vous devez renseigner le total d'heures de formation pour la durée du contrat. La quotité de formation théorique doit représenter au moins 25% de la durée totale du contrat (ou de la période) d’apprentissage.`,
         collapse: {
           label: "Calcul de quotité",
           content: `Cette quotité de formation est calculée sur la base de la durée légale annuelle de travail, soit 1 607 heures, sauf aménagements spécifiques en cas de pratique du sport à haut niveau ou reconnaissance de handicap.`,

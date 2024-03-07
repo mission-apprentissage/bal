@@ -1,3 +1,4 @@
+import { formesJuridiques } from "shared/constants/formesJuridiques";
 import { idccOpcos, Opco, opcos } from "shared/constants/opcos";
 
 import { CerfaControl } from ".";
@@ -91,6 +92,13 @@ export const employerSiretLogic: CerfaControl = {
         "employeur.denomination": {
           value: result.enseigne || result.entreprise_raison_sociale,
           ...((result.enseigne || result.entreprise_raison_sociale) && SUCCESS),
+        },
+        "employeur.typeEmployeur": {
+          value: result.entreprise_forme_juridique_code
+            ? formesJuridiques[result.entreprise_forme_juridique_code]?.typeEmployeur
+            : undefined,
+          cascade: false,
+          ...(result.entreprise_forme_juridique_code && SUCCESS),
         },
         "employeur.naf": {
           value: result.naf_code,

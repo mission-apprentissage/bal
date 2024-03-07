@@ -1,6 +1,7 @@
 "use client";
 
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
+import MobileNotice from "components/mobileNotice/MobileNotice";
 
 import Advantages from "./advantages/Advantages";
 import Attributes from "./attributes/Attributes";
@@ -12,6 +13,7 @@ const HomePage = () => {
   return (
     <MuiDsfrThemeProvider>
       <main>
+        <MobileNotice />
         <Header />
         <StyledSectionsContainer maxWidth="xl">
           <Attributes />

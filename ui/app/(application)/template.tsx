@@ -3,6 +3,7 @@
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
 import { Box } from "@mui/material";
 import { QueryClientProvider } from "@tanstack/react-query";
+import MobileNotice from "components/mobileNotice/MobileNotice";
 import { publicConfig } from "config.public";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
@@ -24,6 +25,7 @@ const RootTemplate: FC<Props> = ({ children }) => {
     <PlausibleProvider trackLocalhost={false} enabled={tracking.current} domain={publicConfig.host}>
       <QueryClientProvider client={queryClient}>
         <MuiDsfrThemeProvider>
+          <MobileNotice />
           <Header />
           <Box minHeight="60vh">{children}</Box>
           <Footer />
