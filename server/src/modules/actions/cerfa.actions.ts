@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 
 import Zip from "adm-zip";
 import { get } from "lodash-es";
-import { PDFDocument } from "pdf-lib";
+import { PDFBool, PDFDocument, PDFName } from "pdf-lib";
 
 import { PdfField, pdfFields } from "../../common/utils/cerfaUtils";
 import { getStaticFilePath } from "../../common/utils/getStaticFilePath";
@@ -112,7 +112,9 @@ export const createCerfaPdf = async (rawData: Record<string, any>) => {
       }
     });
 
-  return pdfDoc.save({ updateFieldAppearances: false });
+  form.acroForm.dict.set(PDFName.of("NeedAppearances"), PDFBool.False);
+
+  return pdfDoc.save();
 };
 
 export const createCerfaErrorsPdf = async (errors: Record<string, any>) => {
@@ -120,7 +122,7 @@ export const createCerfaErrorsPdf = async (errors: Record<string, any>) => {
 
   await drawCerfaErrors(pdfDoc, errors);
 
-  return pdfDoc.save({ updateFieldAppearances: false });
+  return pdfDoc.save();
 };
 
 export const createCerfaGuidePdf = async () => {
