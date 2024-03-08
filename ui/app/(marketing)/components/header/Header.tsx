@@ -16,7 +16,7 @@ const Header: FC = () => {
       </Badge>
       <StyledHeaderTitleContainer>
         <Typography variant="h1">
-          Optimisez la création de vos contrats d’apprentissage :<br /> simple, rapide et gratuit !
+          Optimisez la création de vos contrats d’apprentissage :<br /> simple, rapide et sans erreur !
         </Typography>
       </StyledHeaderTitleContainer>
       <Button

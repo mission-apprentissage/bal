@@ -58,9 +58,7 @@ const Advantages: FC = () => {
               <Typography variant="h6" gutterBottom>
                 Pas de stockage de données
               </Typography>
-              <Typography>
-                Pas de fuite possible : les informations ne seront pas stockées après votre départ de la plateforme.
-              </Typography>
+              <Typography>Aucune donnée n’est conservée après votre départ de la plateforme.</Typography>
             </Box>
           </StyledAdvantageContainer>
         </Grid>
