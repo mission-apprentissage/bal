@@ -2,25 +2,27 @@ import { fr } from "@codegouvfr/react-dsfr";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Box, Typography } from "@mui/material";
+import { get } from "lodash";
 import { FC, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { FieldError, useFormContext } from "react-hook-form";
 
 import cerfaSchema from "../utils/cerfaSchema";
-import { countBlockErrors } from "../utils/form.utils";
-import ListErrors from "./ListErrors";
+import ListError from "./ListError";
 
 interface Props {
   blockName: string | string[];
+  ignoreBlocks?: string[];
 }
 
-const CheckEmptyFields: FC<Props> = ({ blockName }) => {
+const CheckEmptyFields: FC<Props> = ({ blockName, ignoreBlocks }) => {
   const isArray = Array.isArray(blockName);
   const [showErrors, setShowErrors] = useState(false);
 
   const fields = Object.entries(cerfaSchema.fields)
     .filter(([key]) => {
-      if (isArray) return blockName.some((name) => key.startsWith(name));
-      return key.startsWith(blockName);
+      if (isArray)
+        return blockName.some((name) => key.startsWith(name) && !ignoreBlocks?.some((name) => key.startsWith(name)));
+      return key.startsWith(blockName) && !ignoreBlocks?.some((name) => key.startsWith(name));
     })
     .map(([key]) => key);
 
@@ -34,17 +36,17 @@ const CheckEmptyFields: FC<Props> = ({ blockName }) => {
     trigger(fields);
   };
 
-  let blockErrors = {};
+  const displayErrors: { name: string; error: FieldError }[] = [];
 
-  if (isArray) {
-    blockName.forEach((name) => {
-      blockErrors = { ...blockErrors, ...errors?.[name] };
-    });
-  } else {
-    blockErrors = { ...blockErrors, ...errors?.[blockName] };
-  }
+  fields.forEach((field) => {
+    const error = get(errors, field) as FieldError | undefined;
 
-  const numberOfErrors = countBlockErrors(blockErrors);
+    if (error) {
+      displayErrors.push({ name: field, error: get(errors, field) as FieldError });
+    }
+  });
+
+  const numberOfErrors = displayErrors.length;
 
   return (
     <Box>
@@ -73,11 +75,9 @@ const CheckEmptyFields: FC<Props> = ({ blockName }) => {
                 color={fr.colors.decisions.text.default.error.default}
               >{`Il y a ${numberOfErrors} champs non remplis :`}</Typography>
               <Box component="ul" ml={1}>
-                {isArray ? (
-                  blockName.map((name) => <ListErrors key={name} name={name} errors={blockErrors} />)
-                ) : (
-                  <ListErrors name={blockName} errors={blockErrors} />
-                )}
+                {displayErrors.map(({ name, error }) => (
+                  <ListError key={name} name={name} error={error} />
+                ))}
               </Box>
             </Box>
           }

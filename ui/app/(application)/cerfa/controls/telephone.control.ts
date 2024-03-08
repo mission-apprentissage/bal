@@ -1,7 +1,17 @@
 import { CerfaControl } from ".";
 
-const control = (phone: string) => {
+const control = (phone: string, emptyError?: string) => {
   if (!phone) {
+    return {};
+  }
+
+  if (phone === "+33") {
+    if (emptyError) {
+      return {
+        error: emptyError,
+      };
+    }
+
     return {};
   }
 
@@ -23,7 +33,7 @@ export const telephoneControl: CerfaControl[] = [
         employeur: { telephone },
       } = values;
 
-      return control(telephone.value);
+      return control(telephone, "Le téléphone de l'employeur est manquant");
     },
   },
   {
@@ -33,7 +43,7 @@ export const telephoneControl: CerfaControl[] = [
         apprenti: { telephone },
       } = values;
 
-      return control(telephone.value);
+      return control(telephone);
     },
   },
 ];

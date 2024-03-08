@@ -275,6 +275,8 @@ Il est officiellement appelé NIR - "Numéro d'Inscription au Répertoire des pe
     label: "Téléphone de l'apprenti(e)",
     placeholder: "Exemple : 6 23 45 67 89",
     fieldType: "phone",
+    required: true,
+    requiredMessage: "Le téléphone de l'apprenti(e) est manquant",
     messages: [
       {
         type: "assistive",
@@ -286,13 +288,14 @@ Il est officiellement appelé NIR - "Numéro d'Inscription au Répertoire des pe
     label: "Courriel de l'apprenti(e)",
     placeholder: "Exemple : jf.martin@email.fr",
     fieldType: "email",
-    requiredMessage: "Le courriel de l'apprenti(e) est obligatoire",
+    required: true,
+    requiredMessage: "Le courriel de l'apprenti(e) est manquant",
   },
 
   "apprenti.projetCreationRepriseEntreprise": {
     label: "Déclare avoir un projet de création ou de reprise d'entreprise",
-    required: true,
     fieldType: "radio",
+    required: true,
     requiredMessage: "Cette déclaration est obligatoire",
     options: [
       {
@@ -316,6 +319,8 @@ Vous devrez fournir une attestation sur l'honneur de l'apprenti de + de 29 ans e
   "apprenti.inscriptionSportifDeHautNiveau": {
     label: "Déclare être inscrit(e) sur la liste des sportifs de haut niveau",
     fieldType: "radio",
+    required: true,
+    requiredMessage: "Cette déclaration est obligatoire",
     options: [
       {
         label: "Oui",
@@ -342,6 +347,8 @@ Vous devrez fournir une attestation sur l'honneur de l'apprenti de + de 29 ans e
   "apprenti.handicap": {
     label: "Déclare bénéficier de la reconnaissance travailleur handicapé",
     fieldType: "radio",
+    required: true,
+    requiredMessage: "Cette déclaration est obligatoire",
     options: [
       {
         label: "Oui",
@@ -582,7 +589,6 @@ Plus d'informations à propos de l'émancipation sur le [site du Service public]
     label: "Courriel du responsable légal",
     placeholder: "Exemple : jf.martin@email.fr",
     fieldType: "email",
-    required: true,
     requiredMessage: "Le courriel du représentant légal est manquant",
   },
   "apprenti.responsableLegal.memeAdresse": {

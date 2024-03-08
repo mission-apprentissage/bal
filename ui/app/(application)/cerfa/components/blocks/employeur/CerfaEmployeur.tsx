@@ -7,6 +7,8 @@ import InputGroupContainer from "../inputs/inputGroup/InputGroupContainer";
 import InputGroupItem from "../inputs/inputGroup/InputGroupItem";
 import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
 import EmployeurType from "./EmployeurType";
+import IdccFields from "./IdccFields";
+import TypeEmployeurField from "./TypeEmployeurField";
 
 const CerfaEmployeur: FC = () => {
   return (
@@ -37,14 +39,12 @@ const CerfaEmployeur: FC = () => {
 
       <InputGroupTitle>Établissement d’exécution du contrat</InputGroupTitle>
 
-      <InputController name="employeur.typeEmployeur" />
+      <TypeEmployeurField />
       <InputController name="employeur.employeurSpecifique" />
       <InputController name="employeur.naf" />
       <InputController name="employeur.nombreDeSalaries" />
 
-      <InputController name="employeur.codeIdcc_special" />
-      <InputController name="employeur.codeIdcc" />
-      <InputController name="employeur.libelleIdcc" />
+      <IdccFields />
 
       <CheckEmptyFields blockName="employeur" />
     </Box>

@@ -67,10 +67,12 @@ export const employerSiretLogic: CerfaControl = {
 
     let opco: Opco | undefined;
 
-    if (result.conventionCollective?.idcc) {
-      const opcoIdcc = idccOpcos.find((o) => o.idcc.padStart(4, "0") === result.conventionCollective?.idcc);
+    if (result.conventionCollective?.idcc?.length >= 1) {
+      const opcoIdcc = idccOpcos.find((o) => o.idcc.padStart(4, "0") === result.conventionCollective?.idcc?.[0]);
       opco = opcoIdcc ? opcos[opcoIdcc.opco] : undefined;
     }
+
+    const typeEmployeur = formesJuridiques[result?.entreprise_forme_juridique_code]?.typeEmployeur;
 
     return {
       cascade: {
@@ -94,11 +96,10 @@ export const employerSiretLogic: CerfaControl = {
           ...((result.enseigne || result.entreprise_raison_sociale) && SUCCESS),
         },
         "employeur.typeEmployeur": {
-          value: result.entreprise_forme_juridique_code
-            ? formesJuridiques[result.entreprise_forme_juridique_code]?.typeEmployeur
-            : undefined,
+          value: typeEmployeur,
           cascade: false,
-          ...(result.entreprise_forme_juridique_code && SUCCESS),
+          ...(typeEmployeur && { isAutocompleted: true }),
+          ...(typeEmployeur && SUCCESS),
         },
         "employeur.naf": {
           value: result.naf_code,
@@ -106,7 +107,12 @@ export const employerSiretLogic: CerfaControl = {
           ...(result.naf_code && SUCCESS),
         },
         "employeur.codeIdcc": {
-          value: result.conventionCollective?.idcc ? `${result.conventionCollective?.idcc}` : undefined,
+          value: result.conventionCollective?.idcc?.[0] ? `${result.conventionCollective.idcc[0]}` : undefined,
+          ...(result.conventionCollective?.idcc && SUCCESS),
+        },
+        // used to store array of idccs
+        "employeur.codeIdccs": {
+          value: result.conventionCollective?.idcc ?? undefined,
           ...(result.conventionCollective?.idcc && SUCCESS),
         },
         "employeur.codeIdcc_special": {
@@ -133,7 +139,7 @@ export const employerSiretLogic: CerfaControl = {
         "employeur.adresse.voie": {
           value:
             result.type_voie || result.nom_voie
-              ? `${result.type_voie ? `${result.type_voie} ` : undefined}${result.nom_voie}`
+              ? `${result.type_voie ? `${result.type_voie} ` : ""}${result.nom_voie}`
               : undefined,
           locked: false,
           ...((result.type_voie || result.nom_voie) && SUCCESS),

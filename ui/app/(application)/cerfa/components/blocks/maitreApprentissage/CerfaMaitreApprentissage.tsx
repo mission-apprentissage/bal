@@ -1,11 +1,14 @@
 import { Box } from "@mui/material";
 import { FC } from "react";
+import { useFormContext } from "react-hook-form";
 
 import CheckEmptyFields from "../../CheckEmptyFields";
 import InputController from "../inputs/InputController";
 import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
 
 const CerfaMaitreApprentissage: FC = () => {
+  const values = useFormContext().getValues();
+  const ignoreMaitre2 = values?.maitre2?.nom === "";
   return (
     <Box>
       <InputGroupTitle fontWeight={700}>Maître d&apos;apprentissage n°1 </InputGroupTitle>
@@ -30,7 +33,7 @@ const CerfaMaitreApprentissage: FC = () => {
 
       <InputController name="maitre1.attestationEligibilite" />
 
-      <CheckEmptyFields blockName={["maitre1", "maitre2"]} />
+      <CheckEmptyFields blockName={["maitre1", "maitre2"]} ignoreBlocks={ignoreMaitre2 ? ["maitre2"] : []} />
     </Box>
   );
 };

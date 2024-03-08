@@ -10,6 +10,7 @@ export interface FieldState {
   state?: InputProps["state"];
   stateRelatedMessage?: string;
   informationMessages?: InformationMessage[];
+  isAutocompleted?: boolean;
 }
 
 export const getFieldStateFromFormState = (
@@ -53,16 +54,16 @@ export const validateField = async (
 
     if (validation?.cascade) {
       Object.entries(validation.cascade).forEach(([fieldName, cascade]) => {
-        if (cascade?.success) {
+        if (cascade?.informationMessages || cascade?.isAutocompleted || cascade?.success) {
           setFields((fields) => ({
             ...fields,
-            [fieldName]: { state: "success", stateRelatedMessage: cascade.stateRelatedMessage },
-          }));
-        }
-        if (cascade?.informationMessages) {
-          setFields((fields) => ({
-            ...fields,
-            [fieldName]: { ...fields[fieldName], informationMessages: cascade.informationMessages },
+            ...(cascade.success
+              ? { [fieldName]: { state: "success", stateRelatedMessage: cascade.stateRelatedMessage } }
+              : {}),
+            ...(cascade.informationMessages
+              ? { [fieldName]: { informationMessages: cascade.informationMessages } }
+              : {}),
+            ...(cascade.isAutocompleted ? { [fieldName]: { isAutocompleted: cascade.isAutocompleted } } : {}),
           }));
         }
         if (cascade?.value) {

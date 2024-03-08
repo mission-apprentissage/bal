@@ -42,6 +42,7 @@ interface ControlResult {
       locked?: boolean;
       cascade?: boolean;
       success?: boolean;
+      isAutocompleted?: boolean;
       stateRelatedMessage?: string;
       informationMessages?: InformationMessage[];
     }

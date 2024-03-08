@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { FC } from "react";
+import { useFormContext } from "react-hook-form";
 import { shouldAskRepresentantLegal } from "shared/helpers/cerfa/domains/apprenti/shouldAskRepresentantLegal";
 import { shouldAskResponsableLegalAdresse } from "shared/helpers/cerfa/domains/apprenti/shouldAskResponsableLegalAdresse";
 
@@ -12,6 +13,18 @@ import InputGroupTitle from "../inputs/inputGroup/InputGroupTitle";
 import DateNaissanceField from "./DateNaissanceField";
 
 const CerfaApprenti: FC = () => {
+  const values = useFormContext().getValues();
+
+  const ignoreBlocks: string[] = [];
+
+  if (!shouldAskRepresentantLegal({ values })) {
+    ignoreBlocks.push("apprenti.responsableLegal");
+  }
+
+  if (!shouldAskResponsableLegalAdresse({ values })) {
+    ignoreBlocks.push("apprenti.responsableLegal.adresse");
+  }
+
   return (
     <Box>
       <InputController name="apprenti.nom" />
@@ -79,7 +92,7 @@ const CerfaApprenti: FC = () => {
         </CollapseController>
       </CollapseController>
 
-      <CheckEmptyFields blockName="apprenti" />
+      <CheckEmptyFields blockName="apprenti" ignoreBlocks={ignoreBlocks} />
     </Box>
   );
 };
