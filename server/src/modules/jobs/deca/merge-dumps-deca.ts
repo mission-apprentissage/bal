@@ -15,31 +15,31 @@ import { getDbCollection } from "../../../common/utils/mongodbUtils";
 // Run merge "yarn cli deca:merge"
 export const mergeDecaDumps = async () => {
   // PREPARE COLLECTIONS
-  // await stageLBA();
-  // await stageTDB();
+  await stageLBA();
+  await stageTDB();
   // CREATE INDEXES
-  // // @ts-expect-error
-  // await getDbCollection("deca_tmp").createIndex(
-  //   { no_contrat: 1, type_contrat: 1, "alternant.nom": 1 },
-  //   { unique: true, name: "no_contrat_1_type_contrat_1_alternant.nom_1" }
-  // );
-  // // @ts-expect-error
-  // await getDbCollection("deca_lba").createIndex(
-  //   { no_contrat: 1, type_contrat: 1, "alternant.nom": 1 },
-  //   { unique: true, name: "no_contrat_1_type_contrat_1_alternant.nom_1" }
-  // );
-  // // @ts-expect-error
-  // await getDbCollection("deca_tdb").createIndex(
-  //   { no_contrat: 1, type_contrat: 1, "alternant.nom": 1 },
-  //   { unique: true, name: "no_contrat_1_type_contrat_1_alternant.nom_1" }
-  // );
+  // @ts-expect-error
+  await getDbCollection("deca_tmp").createIndex(
+    { no_contrat: 1, type_contrat: 1, "alternant.nom": 1 },
+    { unique: true, name: "no_contrat_1_type_contrat_1_alternant.nom_1" }
+  );
+  // @ts-expect-error
+  await getDbCollection("deca_lba").createIndex(
+    { no_contrat: 1, type_contrat: 1, "alternant.nom": 1 },
+    { unique: true, name: "no_contrat_1_type_contrat_1_alternant.nom_1" }
+  );
+  // @ts-expect-error
+  await getDbCollection("deca_tdb").createIndex(
+    { no_contrat: 1, type_contrat: 1, "alternant.nom": 1 },
+    { unique: true, name: "no_contrat_1_type_contrat_1_alternant.nom_1" }
+  );
   // MERGE INTO
   // await mergeCollections({ from: "deca_lba", to: "deca_tmp" });
   // await mergeCollections({ from: "deca_tdb", to: "deca_tmp" });
   // await mergeCollections({ from: "deca_tmp", to: "deca" });
 };
 
-// @ts-expect-error
+// // @ts-expect-error
 // eslint-disable-next-line unused-imports/no-unused-vars
 const stageLBA = async () => {
   await reKeyField("deca_lba", "nocontrat", "no_contrat");
@@ -77,7 +77,7 @@ const stageLBA = async () => {
   await fixAfterRawImport("deca_lba");
 };
 
-// @ts-expect-error
+// // @ts-expect-error
 // eslint-disable-next-line unused-imports/no-unused-vars
 const stageTDB = async () => {
   await reKeyField("deca_tdb", "nom", "alternant.nom");
@@ -169,6 +169,15 @@ const fixAfterRawImport = async (dbname: string) => {
     {
       $set: {
         "alternant.derniere_classe": { $toInt: "$alternant.derniere_classe" },
+      },
+    },
+  ]);
+
+  // @ts-expect-error
+  await getDbCollection(dbname).updateMany({ "formation.type_diplome": { $exists: true } }, [
+    {
+      $set: {
+        "formation.type_diplome": { $toString: "$formation.type_diplome" },
       },
     },
   ]);

@@ -68,7 +68,7 @@ function getNext(asyncIte: any) {
 
 async function createHistory() {
   logger.warn("***************DO NOT FORGET TO CLEAN excludedFieldsFromHistory");
-  const lastHistory = await getDbCollection("decaHistory").findOne({}, { sort: { $natural: -1 } });
+  const lastHistory = null; //await getDbCollection("decaHistory").findOne({}, { sort: { $natural: -1 } });
 
   const collection = await getDbCollection("deca");
 
@@ -102,7 +102,7 @@ async function createHistory() {
         batchSize: 10,
         fullDocumentBeforeChange: "required",
         fullDocument: "required",
-        resumeAfter: lastHistory ? lastHistory.resumeToken : null,
+        // resumeAfter: lastHistory ? lastHistory.resumeToken : null,
       }
     );
 
