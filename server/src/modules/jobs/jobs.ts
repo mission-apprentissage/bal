@@ -16,6 +16,7 @@ import {
 } from "../actions/documents.actions";
 import { handleMailingListJob, onMailingListJobExited } from "../actions/mailingLists.actions";
 import { createUser } from "../actions/users.actions";
+import { runCatalogueImporter } from "./catalogueSiretEmailImport";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
 import { mergeDecaDumps } from "./deca/merge-dumps-deca";
@@ -99,6 +100,9 @@ export async function setupJobProcessor() {
       },
       "deca:history": {
         handler: async () => createHistory(),
+      },
+      "import:catalogue": {
+        handler: async () => runCatalogueImporter(),
       },
     },
   });
