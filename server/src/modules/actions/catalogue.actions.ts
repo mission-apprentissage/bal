@@ -10,10 +10,10 @@ export const getCatalogueEmailVerification = async (
 ): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
   const siren = getSirenFromSiret(siret);
   if (
-    (await getDbCollection("catalogueEmailSirets").findOne({
+    await getDbCollection("catalogueEmailSirets").findOne({
       email,
       siret: { $regex: `^${siren}` },
-    }))
+    })
   ) {
     return {
       is_valid: true,
