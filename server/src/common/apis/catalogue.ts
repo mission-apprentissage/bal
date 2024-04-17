@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import config from "@/config";
 
+import logger from "../logger";
 import getApiClient from "./client";
 
 const catalogueClient = getApiClient(
@@ -15,11 +16,13 @@ const catalogueClient = getApiClient(
 export async function fetchCatalogueData(): Promise<CatalogueData[]> {
   const projectKeys: (keyof CatalogueData)[] = Object.keys(ZCatalogueData.shape) as (keyof CatalogueData)[];
   const projectObject = Object.fromEntries(projectKeys.map((key) => [key, 1]));
-  const query = JSON.stringify({ catalogue_published: true });
+  const now = new Date();
+  const tags: number[] = [now.getFullYear(), now.getFullYear() + 1, now.getFullYear() + (now.getMonth() < 8 ? -1 : 2)];
+  const query = JSON.stringify({ published: true, catalogue_published: true, tags: { $in: tags.map(String) } });
 
   const countResponse = await catalogueClient.get<number>("/api/v1/entity/formations/count", { params: { query } });
   const formationCount = countResponse.data;
-  console.info(`${formationCount} formation(s) à importer du catalogue`);
+  logger.info(`${formationCount} formation(s) à importer du catalogue`);
 
   if (!formationCount) {
     return [];
@@ -36,7 +39,7 @@ export async function fetchCatalogueData(): Promise<CatalogueData[]> {
   const data = (response.data as object[]).flatMap((obj) => {
     const parseResult = ZCatalogueData.strip().safeParse(obj);
     if (!parseResult.success) {
-      console.warn(`objet ${JSON.stringify(obj)} non valide`);
+      logger.warn(`objet ${JSON.stringify(obj)} non valide`);
       return [];
     }
     return [parseResult.data];
