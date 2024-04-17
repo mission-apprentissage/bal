@@ -12,10 +12,6 @@ export const getCatalogueEmailVerification = async (
   if (
     (await getDbCollection("catalogueEmailSirets").findOne({
       email,
-      siret,
-    })) ||
-    (await getDbCollection("catalogueEmailSirets").findOne({
-      email,
       siret: { $regex: `^${siren}` },
     }))
   ) {
