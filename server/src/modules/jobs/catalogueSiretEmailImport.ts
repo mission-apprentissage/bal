@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { ICatalogueEmailSiret } from "shared/models/catalogueEmailSiret.model";
 import { z } from "zod";
 
-import { fetchCatalogueData, ZCatalogueData } from "../../common/apis/catalogue";
+import { fetchCatalogueData } from "../../common/apis/catalogue";
 import { getDbCollection } from "../../common/utils/mongodbUtils";
 
 const zodEmail = z.string().email();
@@ -10,40 +10,20 @@ const zodEmail = z.string().email();
 async function importCatalogueFormations(importDate: Date): Promise<number> {
   const collectionName = "catalogueEmailSirets";
 
-  const objects: object[] = await fetchCatalogueData();
+  const objects = await fetchCatalogueData();
   console.info(`got ${objects.length} objects from catalogue`);
+  if (!objects.length) {
+    throw new Error("aucune donnée. Abandon de l'import");
+  }
 
   const couplesSiretEmails = objects.flatMap((obj) => {
-    const parseResult = ZCatalogueData.passthrough().safeParse(obj);
-    if (!parseResult.success) {
-      const {
-        email,
-        etablissement_formateur_courriel,
-        etablissement_formateur_siret,
-        etablissement_gestionnaire_courriel,
-        etablissement_gestionnaire_siret,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } = obj as any;
-
-      console.warn(
-        `objet ${JSON.stringify({
-          email,
-          etablissement_formateur_courriel,
-          etablissement_formateur_siret,
-          etablissement_gestionnaire_courriel,
-          etablissement_gestionnaire_siret,
-        })} non valide`
-      );
-      return [];
-    }
-
     const {
       email,
       etablissement_formateur_courriel,
       etablissement_formateur_siret,
       etablissement_gestionnaire_courriel,
       etablissement_gestionnaire_siret,
-    } = parseResult.data;
+    } = obj;
 
     const emailOpts = [email, etablissement_formateur_courriel, etablissement_gestionnaire_courriel].flatMap(
       (email) => {
