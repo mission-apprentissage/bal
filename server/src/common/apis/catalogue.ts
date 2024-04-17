@@ -34,7 +34,7 @@ export async function fetchCatalogueData(): Promise<CatalogueData[]> {
     },
   });
   const data = (response.data as object[]).flatMap((obj) => {
-    const parseResult = ZCatalogueData.passthrough().safeParse(obj);
+    const parseResult = ZCatalogueData.strip().safeParse(obj);
     if (!parseResult.success) {
       console.warn(`objet ${JSON.stringify(obj)} non valide`);
       return [];
