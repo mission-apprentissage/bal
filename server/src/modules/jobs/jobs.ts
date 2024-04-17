@@ -37,6 +37,10 @@ export async function setupJobProcessor() {
                 return Promise.resolve(1);
               },
             },
+            "Mise à jour des couples siret/email provenant du catalogue de formations": {
+              cron_string: "30 2 * * *",
+              handler: () => runCatalogueImporter(),
+            },
           },
     jobs: {
       "users:create": {
@@ -102,7 +106,7 @@ export async function setupJobProcessor() {
         handler: async () => createHistory(),
       },
       "import:catalogue": {
-        handler: async () => runCatalogueImporter(),
+        handler: () => runCatalogueImporter(),
       },
     },
   });

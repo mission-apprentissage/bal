@@ -2,8 +2,9 @@ import { ObjectId } from "mongodb";
 import { ICatalogueEmailSiret } from "shared/models/catalogueEmailSiret.model";
 import { z } from "zod";
 
-import { fetchCatalogueData } from "../../common/apis/catalogue";
-import { getDbCollection } from "../../common/utils/mongodbUtils";
+import { fetchCatalogueData } from "@/common/apis/catalogue";
+import logger from "@/common/logger";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 const zodEmail = z.string().email();
 
@@ -11,7 +12,7 @@ async function importCatalogueFormations(importDate: Date): Promise<number> {
   const collectionName = "catalogueEmailSirets";
 
   const objects = await fetchCatalogueData();
-  console.info(`got ${objects.length} objects from catalogue`);
+  logger.info(`got ${objects.length} objects from catalogue`);
   if (!objects.length) {
     throw new Error("aucune donnée. Abandon de l'import");
   }
@@ -32,7 +33,7 @@ async function importCatalogueFormations(importDate: Date): Promise<number> {
         }
         const parsedEmails = parseEmail(email);
         if (!parsedEmails.length) {
-          console.warn(`email ${email} non valide`);
+          logger.warn(`email ${email} non valide`);
         }
         return parsedEmails;
       }
@@ -45,7 +46,7 @@ async function importCatalogueFormations(importDate: Date): Promise<number> {
   });
 
   const deduplicatedCouples = deduplicateBy(couplesSiretEmails, ({ siret, email }) => `${siret}|${email}`);
-  console.info(`${deduplicatedCouples.length} deduplicated couples siret/email`);
+  logger.info(`${deduplicatedCouples.length} deduplicated couples siret/email`);
 
   const entities = deduplicatedCouples.map(({ email, siret }) => {
     const entity: ICatalogueEmailSiret = {
@@ -57,9 +58,9 @@ async function importCatalogueFormations(importDate: Date): Promise<number> {
     };
     return entity;
   });
-  console.info(`inserting ${entities.length} documents into ${collectionName}...`);
+  logger.info(`inserting ${entities.length} documents into ${collectionName}...`);
   await getDbCollection(collectionName).insertMany(entities);
-  console.info(`deleting old data`);
+  logger.info(`deleting old data`);
   await getDbCollection(collectionName).deleteMany({
     created_at: { $ne: importDate },
   });
@@ -70,11 +71,11 @@ export async function runCatalogueImporter() {
   const importDate = new Date();
 
   try {
-    console.info("Geting Catalogue ...");
+    logger.info("Geting Catalogue ...");
     const importedCount = await importCatalogueFormations(importDate);
     return importedCount;
   } catch (error) {
-    console.error("erreur lors de l'import du catalogue");
+    logger.error("erreur lors de l'import du catalogue");
     throw error;
   }
 }
