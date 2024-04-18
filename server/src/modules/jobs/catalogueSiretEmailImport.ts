@@ -6,6 +6,8 @@ import { fetchCatalogueData } from "@/common/apis/catalogue";
 import logger from "@/common/logger";
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
+import { asyncGrouped } from "../../common/utils/asyncUtils";
+
 const zodEmail = z.string().email();
 
 async function importCatalogueFormations(importDate: Date): Promise<number> {
@@ -59,7 +61,10 @@ async function importCatalogueFormations(importDate: Date): Promise<number> {
     return entity;
   });
   logger.info(`inserting ${entities.length} documents into ${collectionName}...`);
-  await getDbCollection(collectionName).insertMany(entities);
+  await asyncGrouped(entities, 1000, async (entityGroup, index) => {
+    logger.info(`index ${index}`);
+    await getDbCollection(collectionName).insertMany(entityGroup);
+  });
   logger.info(`deleting old data`);
   await getDbCollection(collectionName).deleteMany({
     created_at: { $ne: importDate },
