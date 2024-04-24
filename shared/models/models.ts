@@ -1,3 +1,4 @@
+import catalogueEmailSiretDescriptor, { ICatalogueEmailSiret } from "./catalogueEmailSiret.model";
 import { IModelDescriptor } from "./common";
 import decaModelDescriptor, { IDeca } from "./deca.model/deca.model";
 import decaHistoryModelDescriptor, { IDecaHistory } from "./deca.model/decaHistory.model";
@@ -23,6 +24,7 @@ export const modelDescriptors: IModelDescriptor[] = [
   decaModelDescriptor,
   decaHistoryModelDescriptor,
   mailingListModelDescriptor,
+  catalogueEmailSiretDescriptor,
 ];
 
 export type IDocumentMap = {
@@ -37,4 +39,5 @@ export type IDocumentMap = {
   emailDenied: IEmailDenied;
   deca: IDeca;
   decaHistory: IDecaHistory;
+  catalogueEmailSirets: ICatalogueEmailSiret;
 };
