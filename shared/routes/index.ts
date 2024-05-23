@@ -12,6 +12,7 @@ import { zPersonRoutes } from "./person.routes";
 import { zUploadRoutes } from "./upload.routes";
 import { zUploadSupportRoutes } from "./upload.support.routes";
 import { zUserAdminRoutes, zUserRoutes } from "./user.routes";
+import { zDecaV1Routes } from "./v1/deca.routes";
 import { zOrganisationV1Routes } from "./v1/organisation.routes";
 
 const zRoutesGet = {
@@ -34,6 +35,7 @@ const zRoutesPost = {
   ...zEmailRoutes.post,
   ...zUploadRoutes.post,
   ...zOrganisationV1Routes.post,
+  ...zDecaV1Routes.post,
   ...zMailingListRoutes.post,
   ...zUploadSupportRoutes.post,
 } as const;

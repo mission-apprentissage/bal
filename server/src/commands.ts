@@ -256,6 +256,12 @@ program
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("deca:history"));
 
+program
+  .command("import:catalogue")
+  .description("Importe les paires email/siret depuis le catalogue de formations pour la validation des emails")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("import:catalogue"));
+
 program.hook("preAction", (_, actionCommand) => {
   const command = actionCommand.name();
   // on définit le module du logger en global pour distinguer les logs des jobs

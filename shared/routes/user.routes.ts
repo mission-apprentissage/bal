@@ -67,7 +67,7 @@ export const zUserRoutes = {
       },
       securityScheme: {
         auth: "cookie-session",
-        access: "admin",
+        access: null,
         ressources: {},
       },
     },

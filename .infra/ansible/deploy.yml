@@ -7,16 +7,22 @@
   tasks:
     - include_tasks: ./tasks/files_copy.yml
 
+    ### START temp reviert following issues
     - name: Création du docker-compose.yml {{env_type}}
       shell:
         chdir: /opt/app
         cmd: 'sudo docker compose $(for file in $(ls docker-compose.*.yml); do echo -n "-f $file "; done) config -o  docker-compose.yml'
       register: docker_deploy_output
 
+    - name: Fix cpus number in quote
+      shell:
+        chdir: /opt/app
+        cmd: "sed -i -E 's/cpus: ([0-9]+(\\.[0-9]+)?)/cpus: '\\''\\1'\\''/g'  docker-compose.yml"
+    ### END
     - name: Récupération des images docker
       shell:
         chdir: /opt/app
-        cmd: "sudo docker compose pull"
+        cmd: "/opt/app/tools/docker-compose.sh pull"
 
     - name: Récupération du status de la stack
       shell:

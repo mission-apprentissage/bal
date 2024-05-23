@@ -19,7 +19,8 @@ import {
   OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE,
   OPCO_EP_CODE_RETOUR_EMAIL_TROUVE,
 } from "../../common/apis/opcoEp";
-import { getDbVerification } from "./deca.actions";
+import { getCatalogueEmailVerification } from "./catalogue.actions";
+import { getDecaVerification } from "./deca.actions";
 
 export const validation = async ({
   email,
@@ -28,10 +29,14 @@ export const validation = async ({
   email: string;
   siret: string;
 }): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
-  const testDeca = await getDbVerification(siret, email);
-
+  const testDeca = await getDecaVerification(siret, email);
   if (testDeca.is_valid) {
     return testDeca;
+  }
+
+  const testCatalogue = await getCatalogueEmailVerification(siret, email);
+  if (testCatalogue.is_valid) {
+    return testCatalogue;
   }
 
   const siren = getSirenFromSiret(siret);

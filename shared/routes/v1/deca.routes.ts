@@ -1,0 +1,59 @@
+import { extensions } from "../../helpers/zodHelpers/zodPrimitives";
+import { z } from "../../helpers/zodWithOpenApi";
+import { IRoutesDef, ZReqHeadersAuthorization } from "../common.routes";
+
+const validationSchema = {
+  body: z
+    .object({
+      siret: extensions.siret,
+    })
+    .describe("Organisation deca Request body")
+    .strict(),
+  headers: ZReqHeadersAuthorization,
+  response: {
+    "200": z
+      .object({
+        contrats: z
+          .object({
+            total: z.number(),
+            appr: z.number(),
+            prof: z.number(),
+          })
+          .strict(),
+        premier_contrat: z
+          .object({
+            date_debut_contrat: z.date().optional(),
+            date_fin_contrat: z.date().optional(),
+          })
+          .strict()
+          .nullish(),
+        dernier_contrat: z
+          .object({
+            date_debut_contrat: z.date().optional(),
+            date_fin_contrat: z.date().optional(),
+          })
+          .strict()
+          .nullish(),
+      })
+      .strict()
+      .describe("Organisation deca Response body"),
+  },
+} as const;
+
+export const zDecaV1Routes = {
+  post: {
+    "/v1/deca/search/organisme": {
+      method: "post",
+      path: "/v1/deca/search/organisme",
+      securityScheme: {
+        auth: "api-key",
+        ressources: {},
+        access: null,
+      },
+      openapi: {
+        tags: ["v1"] as string[],
+      },
+      ...validationSchema,
+    },
+  },
+} as const satisfies IRoutesDef;

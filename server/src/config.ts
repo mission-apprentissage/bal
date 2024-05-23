@@ -116,6 +116,9 @@ const config = {
     uri: env.get("MNA_BAL_OVH_STORAGE_URI_MNA").required().asString(),
   },
   disable_processors: env.get("MNA_BAL_DISABLE_PROCESSORS").default("false").asBool(),
+  catalogue: {
+    baseUrl: "https://catalogue-apprentissage.intercariforef.org",
+  },
 };
 
 export default config;

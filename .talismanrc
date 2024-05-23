@@ -80,7 +80,7 @@ fileignoreconfig:
 - filename: .infra/vault/setup-local-env.sh
   checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: 7e3385396572e362b25dbe7cd4b3646ed4410a1774983b66d5730d620ac3bc10
+  checksum: cb7b43e1c31e4578c26f6aeb35779d93d83be7350208107eb122e78dca9ae73a
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:
@@ -111,7 +111,7 @@ fileignoreconfig:
 - filename: server/src/modules/data/seed/seed-preview.ts
   checksum: c63289b52d6565490c1fd8176b68af4268602c9a0d5f31126647caf4ba354534
 - filename: server/src/modules/jobs/deca/merge-dumps-deca.ts
-  checksum: abd05f0591b30ab3cd6ad408e6757f9e7f5765aa4fe321233d041c1b44fddd83
+  checksum: a1fda02642c8309e5d689ec67b69235bb2c842dcd33719f12b517011c3e16bb0
 - filename: server/src/modules/jobs/deca/watcher.ts
   checksum: 2e242c6633ddbc53d748c49a49c60a204d85994abd6e4a95a11aaccea4c5ec4d
 - filename: server/src/modules/server/admin/upload.routes.ts

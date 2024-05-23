@@ -16,6 +16,7 @@ import {
 } from "../actions/documents.actions";
 import { handleMailingListJob, onMailingListJobExited } from "../actions/mailingLists.actions";
 import { createUser } from "../actions/users.actions";
+import { runCatalogueImporter } from "./catalogueSiretEmailImport";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
 import { mergeDecaDumps } from "./deca/merge-dumps-deca";
@@ -41,6 +42,10 @@ export async function setupJobProcessor() {
                 await run_organisations_sanitize_domains();
                 return Promise.resolve(1);
               },
+            },
+            "Mise à jour des couples siret/email provenant du catalogue de formations": {
+              cron_string: "30 2 * * *",
+              handler: () => runCatalogueImporter(),
             },
           },
     jobs: {
@@ -105,6 +110,9 @@ export async function setupJobProcessor() {
       },
       "deca:history": {
         handler: async () => createHistory(),
+      },
+      "import:catalogue": {
+        handler: () => runCatalogueImporter(),
       },
       "job:validation:hydrate_from_deca": {
         handler: async () => run_hydrate_from_deca(),

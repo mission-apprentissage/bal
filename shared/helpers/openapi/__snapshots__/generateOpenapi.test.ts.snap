@@ -159,21 +159,61 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                   "anyOf": [
                     {
                       "additionalProperties": false,
-                      "description": "Organisation validation Response body",
+                      "description": "Organisation deca Response body",
                       "properties": {
-                        "is_valid": {
-                          "type": "boolean",
-                        },
-                        "on": {
-                          "enum": [
-                            "email",
-                            "domain",
+                        "contrats": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "appr": {
+                              "type": "number",
+                            },
+                            "prof": {
+                              "type": "number",
+                            },
+                            "total": {
+                              "type": "number",
+                            },
+                          },
+                          "required": [
+                            "total",
+                            "appr",
+                            "prof",
                           ],
-                          "type": "string",
+                          "type": "object",
+                        },
+                        "dernier_contrat": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "date_debut_contrat": {
+                              "type": "string",
+                            },
+                            "date_fin_contrat": {
+                              "type": "string",
+                            },
+                          },
+                          "type": [
+                            "object",
+                            "null",
+                          ],
+                        },
+                        "premier_contrat": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "date_debut_contrat": {
+                              "type": "string",
+                            },
+                            "date_fin_contrat": {
+                              "type": "string",
+                            },
+                          },
+                          "type": [
+                            "object",
+                            "null",
+                          ],
                         },
                       },
                       "required": [
-                        "is_valid",
+                        "contrats",
                       ],
                       "type": "object",
                     },
@@ -232,11 +272,11 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                       "type": "object",
                     },
                   ],
-                  "description": "Organisation validation Response body",
+                  "description": "Organisation deca Response body",
                 },
               },
             },
-            "description": "Organisation validation Response body",
+            "description": "Organisation deca Response body",
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -263,6 +303,202 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         "security": [],
         "tags": [
           "système",
+        ],
+      },
+    },
+    "/v1/deca/search/organisme": {
+      "post": {
+        "parameters": [
+          {
+            "description": "Bearer token",
+            "in": "header",
+            "name": "Authorization",
+            "required": false,
+            "schema": {
+              "description": "Bearer token",
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "description": "Organisation deca Request body",
+                "properties": {
+                  "siret": {
+                    "description": "Le numéro de SIRET de l'établissement",
+                    "example": "78424186100011",
+                    "pattern": "^[0-9]{14}$",
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "siret",
+                ],
+                "type": "object",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "description": "Organisation deca Response body",
+                      "properties": {
+                        "contrats": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "appr": {
+                              "type": "number",
+                            },
+                            "prof": {
+                              "type": "number",
+                            },
+                            "total": {
+                              "type": "number",
+                            },
+                          },
+                          "required": [
+                            "total",
+                            "appr",
+                            "prof",
+                          ],
+                          "type": "object",
+                        },
+                        "dernier_contrat": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "date_debut_contrat": {
+                              "type": "string",
+                            },
+                            "date_fin_contrat": {
+                              "type": "string",
+                            },
+                          },
+                          "type": [
+                            "object",
+                            "null",
+                          ],
+                        },
+                        "premier_contrat": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "date_debut_contrat": {
+                              "type": "string",
+                            },
+                            "date_fin_contrat": {
+                              "type": "string",
+                            },
+                          },
+                          "type": [
+                            "object",
+                            "null",
+                          ],
+                        },
+                      },
+                      "required": [
+                        "contrats",
+                      ],
+                      "type": "object",
+                    },
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": [
+                            "string",
+                            "null",
+                          ],
+                        },
+                        "data": {
+                          "description": "Données contextuelles liées à l'erreur",
+                          "example": {
+                            "validationError": {
+                              "code": "FST_ERR_VALIDATION",
+                              "issues": [
+                                {
+                                  "code": "invalid_type",
+                                  "expected": "number",
+                                  "message": "Number attendu",
+                                  "path": [
+                                    "longitude",
+                                  ],
+                                  "received": "nan",
+                                },
+                              ],
+                              "name": "ZodError",
+                              "statusCode": 400,
+                              "validationContext": "querystring",
+                            },
+                          },
+                        },
+                        "message": {
+                          "description": "Un message explicatif de l'erreur",
+                          "example": "querystring.longitude: Number attendu",
+                          "type": "string",
+                        },
+                        "name": {
+                          "description": "Le type générique de l'erreur",
+                          "example": "Bad Request",
+                          "type": "string",
+                        },
+                        "statusCode": {
+                          "description": "Le status code retourné",
+                          "example": 400,
+                          "type": "number",
+                        },
+                      },
+                      "required": [
+                        "message",
+                        "name",
+                        "statusCode",
+                      ],
+                      "type": "object",
+                    },
+                  ],
+                  "description": "Organisation deca Response body",
+                },
+              },
+            },
+            "description": "Organisation deca Response body",
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest",
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized",
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden",
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound",
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests",
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError",
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable",
+          },
+        },
+        "security": [
+          {
+            "api-key": [],
+          },
+        ],
+        "tags": [
+          "v1",
         ],
       },
     },
@@ -316,21 +552,61 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                   "anyOf": [
                     {
                       "additionalProperties": false,
-                      "description": "Organisation validation Response body",
+                      "description": "Organisation deca Response body",
                       "properties": {
-                        "is_valid": {
-                          "type": "boolean",
-                        },
-                        "on": {
-                          "enum": [
-                            "email",
-                            "domain",
+                        "contrats": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "appr": {
+                              "type": "number",
+                            },
+                            "prof": {
+                              "type": "number",
+                            },
+                            "total": {
+                              "type": "number",
+                            },
+                          },
+                          "required": [
+                            "total",
+                            "appr",
+                            "prof",
                           ],
-                          "type": "string",
+                          "type": "object",
+                        },
+                        "dernier_contrat": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "date_debut_contrat": {
+                              "type": "string",
+                            },
+                            "date_fin_contrat": {
+                              "type": "string",
+                            },
+                          },
+                          "type": [
+                            "object",
+                            "null",
+                          ],
+                        },
+                        "premier_contrat": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "date_debut_contrat": {
+                              "type": "string",
+                            },
+                            "date_fin_contrat": {
+                              "type": "string",
+                            },
+                          },
+                          "type": [
+                            "object",
+                            "null",
+                          ],
                         },
                       },
                       "required": [
-                        "is_valid",
+                        "contrats",
                       ],
                       "type": "object",
                     },
@@ -389,11 +665,11 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                       "type": "object",
                     },
                   ],
-                  "description": "Organisation validation Response body",
+                  "description": "Organisation deca Response body",
                 },
               },
             },
-            "description": "Organisation validation Response body",
+            "description": "Organisation deca Response body",
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
