@@ -80,7 +80,7 @@ fileignoreconfig:
 - filename: .infra/vault/setup-local-env.sh
   checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: 216ddc9e6448777faf00c25fbfe5c5c419a873d87968acc0727d73e92fe4dbbd
+  checksum: ce571928a5ef6b04427fbbefe8e63b181cc93a97b8d639948d1cced673bcc50e
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:
