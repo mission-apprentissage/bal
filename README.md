@@ -115,6 +115,11 @@ Le script vous demandera plusieurs fois la phrase secrète de votre clé GPG pou
 
 ```bash
 yarn dev
+```
+
+Exécuter préalablement rs.initiate() en ligne de commande mongo pour définir le replicaSet
+
+```bash
 yarn seed
 ```
 
