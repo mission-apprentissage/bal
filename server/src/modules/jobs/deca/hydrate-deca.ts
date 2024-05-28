@@ -25,11 +25,11 @@ const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
  *    - from : depuis yyyy-MM-dd
  *    - to : jusqu'a yyyy-MM-dd
  */
-export const hydrateDeca = async ({ from, to, chunk = 1 }: { from: string; to: string; chunk: number }) => {
+export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?: string; chunk: number }) => {
   // Récupération de la date début / fin
   const dateDebutToFetch: Date = from
     ? new Date(`${from}T00:00:00.000Z`)
-    : (await getLastDecaCreatedDateInDb()) ?? new Date(`2023-10-01T00:00:00.000Z`);
+    : (await getLastDecaCreatedDateInDb()) ?? new Date(`2024-05-21T00:00:00.000Z`);
   const dateFinToFetch = to ? new Date(`${to}T00:00:00.000Z`) : addDays(new Date(), -1);
 
   if (isAfter(dateDebutToFetch, dateFinToFetch)) {

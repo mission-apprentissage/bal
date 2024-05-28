@@ -221,7 +221,7 @@ program
   .option("-t, --to <string>", "Récupère les données disponibles via l'API Deca jusuqu'a une date yyyy-MM-dd")
   .option("-c, --chunk <number>", "Chunk days default 1")
   .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("hydrate:deca"));
+  .action(createJobAction("deca:hydrate"));
 
 program
   .command("deca:merge")

@@ -19,6 +19,7 @@ import { createUser } from "../actions/users.actions";
 import { runCatalogueImporter } from "./catalogueSiretEmailImport";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
+import { hydrateDeca } from "./deca/hydrate-deca";
 import { mergeDecaDumps } from "./deca/merge-dumps-deca";
 import { createHistory } from "./deca/watcher";
 import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
@@ -97,7 +98,23 @@ export async function setupJobProcessor() {
       },
 
       "deca:merge": {
-        handler: async () => mergeDecaDumps(),
+        handler: async () => mergeDecaDumps(), // ALAN : peut être balancé à la poubelle
+      },
+      "deca:hydrate": {
+        handler: async () => hydrateDeca(),
+        /*
+          ALAN: 
+          faire tourner une fenêtre glissante de 1 jour tous les jours
+          en cas d'échec récupérer la last update et partir de là sur une fenêtre élargie pour se repositionner
+          supprimer le watcher sur la collection deca et mesurer / enregistrer les diff de manière séquentielle (findOne -> buildDiff -> createHistory)
+          les documents dans decaHistory concernent un seul champ (ex:  update de 3 champs --> 3 documents enregistrés )
+          decaHistory contient les modifs lorsque modif sur numéro de contrat + nom + type contrat identique
+          une modif sur contrat + nom identiques mais type différent implique un nouveau document dans deca (et pas dans history en première entrée)
+
+          !!!! L'api n'est fonctionnelle qu'après 20h00.
+          L'api est fragile et ne doit pas être sur sollicitée
+
+        */
       },
       "deca:history": {
         handler: async () => createHistory(),
