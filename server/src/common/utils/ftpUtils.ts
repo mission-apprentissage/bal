@@ -54,8 +54,6 @@ class FTPClient {
   }
 }
 
-export { FTPClient };
-
 export const initFtpConnection = async (destination: Writable, ftp: { user: string; password: string }) => {
   const opt = {
     host: config.ftp.host,
