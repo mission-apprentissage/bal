@@ -34,15 +34,6 @@ export async function setupJobProcessor() {
       config.env === "preview" || config.env === "local"
         ? {}
         : {
-            "Mise à jour des organisations et des persons": {
-              cron_string: "0 1 * * 6",
-              handler: async () => {
-                await run_hydrate_from_constructys();
-                await run_hydrate_from_ocapiat();
-                await run_organisations_sanitize_domains();
-                return Promise.resolve(1);
-              },
-            },
             "Mise à jour des couples siret/email provenant du catalogue de formations": {
               cron_string: "30 2 * * *",
               handler: () => runCatalogueImporter(),
