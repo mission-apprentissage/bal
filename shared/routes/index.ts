@@ -105,7 +105,7 @@ type IRequestRaw<S extends IRouteSchema> = {
 
 export type IRequest<S extends IRouteSchema> = ConditionalExcept<
   IRequestRaw<S>,
-  never | EmptyObject
+  never
 > extends EmptyObject
   ? EmptyObject
-  : ConditionalExcept<IRequestRaw<S>, never | EmptyObject>;
+  : ConditionalExcept<IRequestRaw<S>, never>;

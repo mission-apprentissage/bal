@@ -1,6 +1,6 @@
 import { OpenApiGeneratorV31, OpenAPIRegistry, ResponseConfig, RouteConfig } from "@asteasolutions/zod-to-openapi";
 import { formatParamUrl } from "@fastify/swagger";
-import type { SecurityRequirementObject } from "openapi3-ts/oas30";
+import type { oas30 } from "openapi3-ts";
 import { ZodType } from "zod";
 
 import { zRoutes } from "../../index";
@@ -59,7 +59,7 @@ function generateOpenApiResponsesObject<R extends IRouteSchema["response"]>(
   const codes = Object.keys(response) as Array<keyof R>;
 
   return codes.reduce((acc, code: keyof R) => {
-    const schema: ZodType = response[code];
+    const schema: ZodType = response[code] as any;
     acc[code as string] = generateOpenApiResponseObject(code in acc ? schema.or(ZResError) : schema);
 
     return acc;
@@ -90,7 +90,7 @@ function generateOpenApiRequest(route: IRouteSchema): RouteConfig["request"] {
   return requestParams;
 }
 
-function getSecurityRequirementObject(route: IRouteSchema): SecurityRequirementObject[] {
+function getSecurityRequirementObject(route: IRouteSchema): oas30.SecurityRequirementObject[] {
   if (route.securityScheme === null) {
     return [];
   }
