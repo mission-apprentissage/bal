@@ -1,3 +1,4 @@
 .yarn
 .talismanrc
 .infra/files/configs/mongodb/seed.gpg
+.infra/files/configs/mongodb/mongo_keyfile.txt

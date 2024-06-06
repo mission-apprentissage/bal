@@ -209,7 +209,6 @@ export const createIndexes = async () => {
   }
 };
 
-
 export const dropIndexes = async () => {
   const collections = (await getCollectionList()).map((collection) => collection.name);
   for (const descriptor of modelDescriptors) {
