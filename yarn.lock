@@ -2980,7 +2980,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/integrations@npm:7.116.0, @sentry/integrations@npm:^7.114.0":
+"@sentry/integrations@npm:7.116.0":
   version: 7.116.0
   resolution: "@sentry/integrations@npm:7.116.0"
   dependencies:
@@ -3021,7 +3021,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/node@npm:8.7.0":
+"@sentry/node@npm:8.7.0, @sentry/node@npm:^8.7.0":
   version: 8.7.0
   resolution: "@sentry/node@npm:8.7.0"
   dependencies:
@@ -3059,7 +3059,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/node@npm:^7.105.0, @sentry/node@npm:^7.116.0, @sentry/node@npm:^7.80.0":
+"@sentry/node@npm:^7.105.0, @sentry/node@npm:^7.80.0":
   version: 7.116.0
   resolution: "@sentry/node@npm:7.116.0"
   dependencies:
@@ -3104,7 +3104,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/tracing@npm:^7.105.0, @sentry/tracing@npm:^7.114.0":
+"@sentry/tracing@npm:^7.105.0":
   version: 7.116.0
   resolution: "@sentry/tracing@npm:7.116.0"
   dependencies:
@@ -15523,9 +15523,7 @@ __metadata:
     "@fastify/swagger-ui": ^1.10.2
     "@hapi/boom": ^10.0.1
     "@immobiliarelabs/fastify-sentry": ^8.0.1
-    "@sentry/integrations": ^7.114.0
-    "@sentry/node": ^7.116.0
-    "@sentry/tracing": ^7.114.0
+    "@sentry/node": ^8.7.0
     "@supercharge/promise-pool": ^3.2.0
     "@types/bunyan": ^1.8.11
     "@types/bunyan-prettystream": ^0.1.35

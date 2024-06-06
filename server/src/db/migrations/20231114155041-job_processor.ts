@@ -15,6 +15,7 @@ export const up = async (db: Db, _client: MongoClient) => {
   ]);
 
   for await (const uploadDocumentWitJob of uploadDocumentWitJobCursor) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const job = uploadDocumentWitJob.jobs.filter((j: any) => j.name === "import:document")[0] ?? null;
     const update: Partial<IUploadDocument> = {
       kind: "upload",
@@ -84,6 +85,7 @@ export const up = async (db: Db, _client: MongoClient) => {
   ]);
 
   for await (const doc of mailingListDocumentWittJobAndMailingListCursor) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const job = doc.jobs.filter((j: any) => j.name === "generate:mailing-list")[0] ?? null;
     const update: Partial<IMailingListDocument> = {
       kind: "mailingList",

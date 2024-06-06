@@ -55,8 +55,8 @@ export async function setupJobProcessor() {
           });
         },
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       "indexes:recreate": {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async (job) => recreateIndexes(job.payload as any),
       },
       "db:validate": {
@@ -77,13 +77,13 @@ export async function setupJobProcessor() {
           return;
         },
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       "migrations:create": {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async (job) => createMigration(job.payload as any),
       },
       // BELOW SPECIFIC TO PRODUCT
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       "import:document": {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async (job, signal) => handleDocumentFileContent(job, job.payload as any, signal),
         onJobExited: onImportDocumentJobExited,
         resumable: true,
@@ -92,8 +92,8 @@ export async function setupJobProcessor() {
       "documents:save-columns": {
         handler: async () => saveDocumentsColumns(),
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       "generate:mailing-list": {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async (job, signal) => handleMailingListJob(job, job.payload as any, signal),
         onJobExited: onMailingListJobExited,
         resumable: true,
