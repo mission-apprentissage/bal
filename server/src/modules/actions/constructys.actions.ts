@@ -1,68 +1,59 @@
 import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { SIRET_REGEX } from "shared/constants/regex";
-import { getSirenFromSiret } from "shared/helpers/common";
 
-import { getDbCollection } from "../../common/utils/mongodbUtils";
-import { updateOrganisationData } from "./organisations.actions";
-
-interface ContentLine {
-  Siret: string;
-  Mails?: string;
-}
-
+import { updateOrganisationAndPerson } from "./organisations.actions";
 export interface IConstructysParsedContentLine {
-  siret: string;
-  emails: string[];
+  "Région INSEE"?: string;
+  "GUH Etablissement"?: string;
+  "Code OPSI"?: string;
+  Siret?: string;
+  "Raison sociale"?: string;
+  Département?: string;
+  "Etablissement Sous Contrat"?: string;
+  "Nom du groupe"?: string;
+  "Effectif Etab moyen annuel"?: string;
+  "Effectif Etab"?: string;
+  "Taille Collecte"?: string;
+  Branche?: string;
+  "Branche Secteur"?: string;
+  "Type Branche"?: string;
+  Conseiller?: string;
+  Civilite?: string;
+  "Nom du contact"?: string;
+  "Prénom du contact"?: string;
+  "Titre du contact"?: string;
+  "Fonction du contact"?: string;
+  "Tél contact"?: string;
+  "Mobile contact"?: string;
+  "Email du contact"?: string;
 }
 
-export const parseConstructysContentLine = (line: ContentLine): IConstructysParsedContentLine | undefined => {
-  if (!line.Mails) return;
-  if (!SIRET_REGEX.test(line.Siret)) return;
+export const parseConstructysContentLine = (
+  line: IConstructysParsedContentLine
+): IConstructysParsedContentLine | undefined => {
+  if (!line["Email du contact"]) return;
+  if (!SIRET_REGEX.test(line.Siret || "")) return;
 
-  const { Siret: siret } = line;
+  // remove attributes where value is "-" considered empty
+  const content = Object.entries(line).reduce<IConstructysParsedContentLine>(
+    (acc, [key, value]) => ({
+      ...acc,
+      ...(value === "-" ? {} : { [key]: value }),
+    }),
+    {}
+  );
 
-  // split emails and remove non valid emails
-  let emails = line.Mails.split(",").filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
-  // remove duplicates
-  emails = [...new Set(emails)];
-
-  if (!emails.length) return;
-
-  return { siret, emails };
+  return content;
 };
 
 export const importConstructysContent = async (content: IConstructysParsedContentLine) => {
-  const { siret, emails } = content;
-  const uniqueEmails = [...new Set(emails)];
-  const siren = getSirenFromSiret(siret);
-  const domains = [...new Set(uniqueEmails.map((e) => e.split("@")[1]))];
+  const siret = content?.Siret ?? "";
+  const email = content?.["Email du contact"] ?? "";
 
-  const organisation = await updateOrganisationData({
-    siren,
-    sirets: [siret],
-    email_domains: domains,
-    source: DOCUMENT_TYPES.CONSTRUCTYS,
+  if (!email) return;
+
+  await updateOrganisationAndPerson(siret, email, DOCUMENT_TYPES.CONSTRUCTYS, false, {
+    nom: content?.["Nom du contact"] ?? "",
+    prenom: content?.["Prénom du contact"] ?? "",
   });
-
-  await Promise.all(
-    uniqueEmails.map((email) =>
-      getDbCollection("persons").updateOne(
-        {
-          email,
-        },
-        {
-          $addToSet: {
-            ...(organisation && { organisations: organisation._id.toString() }),
-            sirets: siret,
-          },
-          $setOnInsert: {
-            email,
-          },
-        },
-        {
-          upsert: true,
-        }
-      )
-    )
-  );
 };

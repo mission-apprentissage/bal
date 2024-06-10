@@ -1,9 +1,6 @@
-import companyEmailValidator from "company-email-validator";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
-import { getSirenFromSiret } from "shared/helpers/common";
 
-import { getDbCollection } from "../../common/utils/mongodbUtils";
-import { updateOrganisationData } from "./organisations.actions";
+import { updateOrganisationAndPerson } from "./organisations.actions";
 
 export interface IOcapiatParsedContentLine {
   "Région INSEE"?: string;
@@ -46,51 +43,12 @@ export const parseOcapiatContentLine = (line: IOcapiatParsedContentLine): IOcapi
 
 export const importOcapiatContent = async (content: IOcapiatParsedContentLine) => {
   const siret = content?.Siret ?? "";
-  const siren = getSirenFromSiret(siret);
   const email = content?.["Email du contact"];
-  let domains: string[] = [];
-
-  if (email && companyEmailValidator.isCompanyEmail(email)) {
-    domains = [email.split("@")[1]];
-  }
-
-  const organisation = await updateOrganisationData({
-    siren,
-    sirets: [siret],
-    email_domains: domains,
-    source: DOCUMENT_TYPES.OCAPIAT,
-  });
 
   if (!email) return;
 
-  const date = new Date();
-
-  getDbCollection("persons").updateOne(
-    {
-      email,
-    },
-    {
-      $set: {
-        updated_at: date,
-      },
-      $addToSet: {
-        ...(organisation && { organisations: organisation._id.toString() }),
-        sirets: siret,
-        "_meta.sources": DOCUMENT_TYPES.OCAPIAT,
-      },
-      $setOnInsert: {
-        email,
-        ...(content?.["Nom du contact"] && {
-          nom: content?.["Nom du contact"],
-        }),
-        ...(content?.["Prénom du contact"] && {
-          prenom: content?.["Prénom du contact"],
-        }),
-        created_at: date,
-      },
-    },
-    {
-      upsert: true,
-    }
-  );
+  await updateOrganisationAndPerson(siret, email, DOCUMENT_TYPES.OCAPIAT, false, {
+    nom: content?.["Nom du contact"] ?? "",
+    prenom: content?.["Prénom du contact"] ?? "",
+  });
 };

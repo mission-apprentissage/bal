@@ -1,9 +1,15 @@
+import dns from "node:dns";
+
 import { internal } from "@hapi/boom";
 import companyEmailValidator from "company-email-validator";
 import { Filter, FindOptions, ObjectId } from "mongodb";
 import { IPostRoutes, IResponse } from "shared";
 import { getSirenFromSiret } from "shared/helpers/common";
 import { IOrganisation } from "shared/models/organisation.model";
+import util from "util";
+import { z } from "zod";
+
+const dnsLookup = util.promisify(dns.lookup);
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -14,7 +20,7 @@ import {
   OPCO_EP_CODE_RETOUR_EMAIL_TROUVE,
 } from "../../common/apis/opcoEp";
 import { getCatalogueEmailVerification } from "./catalogue.actions";
-import { getDecaVerification } from "./deca.actions";
+import { getDbVerification } from "./deca.actions";
 
 export const validation = async ({
   email,
@@ -23,7 +29,7 @@ export const validation = async ({
   email: string;
   siret: string;
 }): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
-  const testDeca = await getDecaVerification(siret, email);
+  const testDeca = await getDbVerification(siret, email);
   if (testDeca.is_valid) {
     return testDeca;
   }
@@ -36,6 +42,7 @@ export const validation = async ({
   const siren = getSirenFromSiret(siret);
   const testAkto = await getAktoVerification(siren, email);
   if (testAkto) {
+    await updateOrganisationAndPerson(siret, email, "AKTO");
     return {
       is_valid: true,
       on: "email",
@@ -44,6 +51,7 @@ export const validation = async ({
 
   const testOpcoEp = await getOpcoEpVerification(siret, email);
   if (testOpcoEp.codeRetour === OPCO_EP_CODE_RETOUR_EMAIL_TROUVE) {
+    await updateOrganisationAndPerson(siret, email, "OPCO_EP");
     return {
       is_valid: true,
       on: "email",
@@ -51,6 +59,7 @@ export const validation = async ({
   }
 
   if (testOpcoEp.codeRetour === OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE) {
+    await updateOrganisationAndPerson(siret, email, "OPCO_EP");
     return {
       is_valid: true,
       on: "domain",
@@ -138,6 +147,67 @@ export const updateOrganisation = async (organisation: IOrganisation, data: Part
   );
 };
 
+export const updateOrganisationAndPerson = async (
+  siret: string,
+  argCourriel: string,
+  source: string,
+  dns_lookup = false,
+  content?: { nom: string; prenom: string }
+) => {
+  const siren = getSirenFromSiret(siret);
+
+  const courrielParsed = z.string().email().safeParse(argCourriel);
+  if (!courrielParsed.success) return;
+
+  const courriel = courrielParsed.data;
+
+  if (!courriel.split("@")[1]) return;
+
+  let domain = courriel.split("@")[1].toLowerCase();
+
+  if (dns_lookup) {
+    try {
+      await dnsLookup(domain);
+    } catch (error) {
+      domain = "";
+    }
+  }
+  const organisation = await updateOrganisationData({
+    siren,
+    sirets: [siret],
+    email_domains: [domain],
+    source,
+  });
+
+  await getDbCollection("persons").updateOne(
+    {
+      email: courriel,
+    },
+    {
+      $set: {
+        updated_at: new Date(),
+      },
+      $addToSet: {
+        ...(organisation && { organisations: organisation._id.toString() }),
+        sirets: siret,
+      },
+      $setOnInsert: {
+        email: courriel,
+        ...(content?.nom && {
+          nom: content?.nom,
+        }),
+        ...(content?.prenom && {
+          prenom: content?.prenom,
+        }),
+        created_at: new Date(),
+      },
+    },
+    {
+      upsert: true,
+    }
+  );
+};
+
 interface IUpdateOrganisationData {
   siren: string;
   sirets: string[];
@@ -151,7 +221,6 @@ export const updateOrganisationData = async ({ siren, sirets, email_domains, sou
     {
       siren,
       etablissements: sirets.map((siret) => ({ siret })),
-      email_domains: email_domains,
     }
   );
 
@@ -173,7 +242,8 @@ export const updateOrganisationData = async ({ siren, sirets, email_domains, sou
   }
 
   const newDomains = email_domains.filter(
-    (domain) => !organisation.email_domains?.includes(domain) && companyEmailValidator.isCompanyDomain(domain)
+    (domain) =>
+      !organisation.email_domains?.includes(domain) && companyEmailValidator.isCompanyDomain(domain) && domain !== ""
   );
 
   if (newDomains.length) {
