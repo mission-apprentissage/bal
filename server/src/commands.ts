@@ -232,6 +232,7 @@ program
 program
   .command("job:validation:hydrate_from_deca")
   .description("Hydrate organisation and persons from deca")
+  .option("--offset <number>", "ignore les X premières lignes DECA")
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("job:validation:hydrate_from_deca"));
 program
