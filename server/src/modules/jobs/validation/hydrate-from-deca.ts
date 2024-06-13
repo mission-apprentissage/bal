@@ -26,12 +26,12 @@ async function runDoc(docDeca: IDeca) {
   }
 }
 
-export async function run_hydrate_from_deca() {
+export async function run_hydrate_from_deca(offset = 0) {
   const totalCount = await getDbCollection("deca").countDocuments();
 
   const progress = {
-    total: totalCount,
     done: 0,
+    total: totalCount,
     start: Date.now(),
   };
 
@@ -39,14 +39,14 @@ export async function run_hydrate_from_deca() {
     const now = Date.now();
     const elapsed = now - progress.start;
     const speed = elapsed === 0 ? 0 : progress.done / elapsed;
-    const todo = progress.total - progress.done;
+    const todo = progress.total - progress.done - offset;
     const eta = speed === 0 ? "n/a" : new Date(now + todo / speed).toISOString();
-    logger.info(`${String(progress.done).padStart(7)} / ${progress.total}: ETA ${eta}`);
+    logger.info(`${String(progress.done + offset).padStart(7)} / ${progress.total}: ETA ${eta}`);
   };
 
   printProgress();
 
-  const cursor = getDbCollection("deca").find({});
+  const cursor = getDbCollection("deca").find({}).skip(offset);
 
   for await (const _r of pMapIterable(cursor, runDoc, { concurrency: 3000 })) {
     if (progress.done % 1_000 === 0) {

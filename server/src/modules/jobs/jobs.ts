@@ -106,7 +106,10 @@ export async function setupJobProcessor() {
         handler: () => runCatalogueImporter(),
       },
       "job:validation:hydrate_from_deca": {
-        handler: async () => run_hydrate_from_deca(),
+        handler: async (job) => {
+          const { offset } = job.payload ?? {};
+          return run_hydrate_from_deca(offset ? parseInt(offset.toString(), 10) : 0);
+        },
       },
       "job:validation:hydrate_from_constructys": {
         handler: async () => run_hydrate_from_constructys(),
