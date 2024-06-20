@@ -6,7 +6,7 @@ import { getAllContrats } from "@/common/apis/deca";
 import parentLogger from "@/common/logger";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
-import { createHistory } from "./watcher";
+import { saveHistory } from "./watcher";
 
 const logger = parentLogger.child({ module: "job:hydrate:deca" });
 const DATE_DEBUT_CONTRATS_DISPONIBLES = new Date("2022-06-07T00:00:00.000Z"); // Date de début de disponibilité des données dans l'API Deca
@@ -26,11 +26,22 @@ const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
  *    - to : jusqu'a yyyy-MM-dd
  */
 export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?: string; chunk: number }) => {
+  console.log("ici ", from, to, chunk);
+
+  const now = new Date();
+  const yesterday = addDays(now, -1);
+  yesterday.setHours(23);
+  yesterday.setMinutes(59);
+  yesterday.setSeconds(59);
+  yesterday.setMilliseconds(0);
+
   // Récupération de la date début / fin
   const dateDebutToFetch: Date = from
     ? new Date(`${from}T00:00:00.000Z`)
     : (await getLastDecaCreatedDateInDb()) ?? new Date(`2024-05-21T00:00:00.000Z`);
-  const dateFinToFetch = to ? new Date(`${to}T00:00:00.000Z`) : addDays(new Date(), -1);
+  const dateFinToFetch = to ? new Date(`${to}T00:00:00.000Z`) : yesterday;
+
+  console.log("là ", dateDebutToFetch, dateFinToFetch);
 
   if (isAfter(dateDebutToFetch, dateFinToFetch)) {
     logger.error("La date de debut de peut pas être après la date de fin");
@@ -41,7 +52,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
   } else if (isBefore(dateDebutToFetch, DATE_DEBUT_CONTRATS_DISPONIBLES)) {
     logger.error("Limite deca date de debut au 2022-06-07");
     return;
-  } else if (isAfter(dateFinToFetch, addDays(new Date(), -1))) {
+  } else if (isAfter(dateFinToFetch, yesterday)) {
     logger.error("Limite deca date de fin à Hier");
     return;
   } else if (chunk > NB_JOURS_MAX_PERIODE_FETCH) {
@@ -166,21 +177,19 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
           throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
         })
         .process(async (currentContrat: any) => {
-          await getDbCollection("deca").updateOne(
+          const newContrat = await getDbCollection("deca").findOneAndUpdate(
             {
               no_contrat: currentContrat.no_contrat,
               "alternant.date_naissance": currentContrat.alternant.date_naissance,
             },
             {
-              ...currentContrat,
-              created_at: new Date(),
-              updated_at: new Date(),
+              $set: { ...currentContrat, created_at: new Date(), updated_at: new Date() },
             },
-            { upsert: true }
+            { upsert: true, returnDocument: "after" }
           );
-        });
 
-      await createHistory();
+          await saveHistory(currentContrat, newContrat);
+        });
     } catch (err: any) {
       throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
     }

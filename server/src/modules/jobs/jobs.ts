@@ -39,6 +39,10 @@ export async function setupJobProcessor() {
               cron_string: "30 2 * * *",
               handler: () => runCatalogueImporter(),
             },
+            "Mise à jour des données DECA": {
+              cron_string: "30 4 * * *",
+              handler: () => hydrateDeca({ from: null, to: null, chunk: 1 }),
+            },
           },
     jobs: {
       "users:create": {
@@ -101,7 +105,10 @@ export async function setupJobProcessor() {
         handler: async () => mergeDecaDumps(), // ALAN : peut être balancé à la poubelle
       },
       "deca:hydrate": {
-        handler: async () => hydrateDeca(),
+        handler: async (job) => {
+          const { from, to, chunk } = job.payload as any;
+          hydrateDeca({ from, to, chunk });
+        },
         /*
           ALAN: 
           faire tourner une fenêtre glissante de 1 jour tous les jours
