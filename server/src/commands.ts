@@ -224,12 +224,6 @@ program
   .action(createJobAction("deca:hydrate"));
 
 program
-  .command("deca:merge")
-  .description("Deca merge")
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("deca:merge"));
-
-program
   .command("job:validation:hydrate_from_deca")
   .description("Hydrate organisation and persons from deca")
   .option("--offset <number>", "ignore les X premières lignes DECA")
@@ -250,12 +244,6 @@ program
   .description("Sanitize organisationdomain")
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("organisation:sanitize:domains"));
-
-program
-  .command("deca:history")
-  .description("Deca history")
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("deca:history"));
 
 program
   .command("import:catalogue")

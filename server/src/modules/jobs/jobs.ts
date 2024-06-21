@@ -20,8 +20,6 @@ import { runCatalogueImporter } from "./catalogueSiretEmailImport";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
 import { hydrateDeca } from "./deca/hydrate-deca";
-import { mergeDecaDumps } from "./deca/merge-dumps-deca";
-import { createHistory } from "./deca/watcher";
 import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
 import { run_hydrate_from_ocapiat } from "./validation/hydrate_from_ocapiat";
 import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
@@ -41,7 +39,7 @@ export async function setupJobProcessor() {
             },
             "Mise à jour des données DECA": {
               cron_string: "30 4 * * *",
-              handler: () => hydrateDeca({ from: null, to: null, chunk: 1 }),
+              handler: () => hydrateDeca({ from: "", to: "", chunk: 1 }),
             },
           },
     jobs: {
@@ -100,10 +98,6 @@ export async function setupJobProcessor() {
         onJobExited: onMailingListJobExited,
         resumable: true,
       },
-
-      "deca:merge": {
-        handler: async () => mergeDecaDumps(), // ALAN : peut être balancé à la poubelle
-      },
       "deca:hydrate": {
         handler: async (job) => {
           const { from, to, chunk } = job.payload as any;
@@ -122,9 +116,6 @@ export async function setupJobProcessor() {
           L'api est fragile et ne doit pas être sur sollicitée
 
         */
-      },
-      "deca:history": {
-        handler: async () => createHistory(),
       },
       "import:catalogue": {
         handler: () => runCatalogueImporter(),
