@@ -24,7 +24,7 @@ function deepFlattenToObject(obj: any, prefix = "") {
   }, {});
 }
 
-const excludedFieldsFromHistory: string[] = [];
+const excludedFieldsFromHistory: string[] = ["_id", "created_at", "updated_at"];
 // const excludedFieldsFromHistory = ["type_employeur", "employeur_specifique", "type_derogation", "employeur.code_idcc"];
 
 async function saveHistory(originalDocument, newDocument) {
@@ -49,6 +49,8 @@ async function saveHistory(originalDocument, newDocument) {
         //   op: event.operationType,
         time: newDocument.updated_at,
       };
+
+      console.log("saving diff", log);
       await getDbCollection("decaHistory").insertOne(log);
     }
   }

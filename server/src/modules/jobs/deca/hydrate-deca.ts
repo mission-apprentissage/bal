@@ -1,10 +1,10 @@
-import { PromisePool } from "@supercharge/promise-pool";
 import { addDays, differenceInDays, format, isAfter, isBefore } from "date-fns";
 import deepmerge from "deepmerge";
 
 import { getAllContrats } from "@/common/apis/deca";
 import parentLogger from "@/common/logger";
 
+import { asyncForEach } from "../../../common/utils/asyncUtils";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 import { saveHistory } from "./watcher";
 
@@ -66,7 +66,10 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
 
   // Récupération des périodes (liste dateDebut/fin) à fetch dans l'API
   const periods = buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch, chunk);
-  await PromisePool.for(periods).process(async ({ dateDebut, dateFin }: { dateDebut: string; dateFin: string }) => {
+
+  console.log("PERDIODS : ", periods);
+
+  await asyncForEach(periods, async ({ dateDebut, dateFin }: { dateDebut: string; dateFin: string }) => {
     try {
       logger.info(`> Fetch des données Deca du ${dateDebut} au ${dateFin}`);
 
@@ -74,6 +77,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
         getAllContrats(dateDebut, dateFin, "TDB"),
         getAllContrats(dateDebut, dateFin, "LBA"),
       ]);
+
       logger.info(
         `Insertion des ${decaContrats_TDB.length} contrats dans la collection deca TDB du ${dateDebut} au ${dateFin} `
       );
@@ -172,24 +176,32 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
         return acc;
       }, [] as any[]);
 
-      await PromisePool.for(decaContratsForPeriod)
-        .handleError(async (err: any) => {
-          throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
-        })
-        .process(async (currentContrat: any) => {
-          const newContrat = await getDbCollection("deca").findOneAndUpdate(
-            {
-              no_contrat: currentContrat.no_contrat,
-              "alternant.date_naissance": currentContrat.alternant.date_naissance,
-            },
-            {
-              $set: { ...currentContrat, created_at: new Date(), updated_at: new Date() },
-            },
-            { upsert: true, returnDocument: "after" }
-          );
+      await asyncForEach(decaContratsForPeriod, async (currentContrat: any) => {
+        console.log("AAAAA ", currentContrat);
 
-          await saveHistory(currentContrat, newContrat);
+        const oldContrat = await getDbCollection("deca").findOne({
+          no_contrat: currentContrat.no_contrat,
+          "alternant.date_naissance": currentContrat.alternant.date_naissance,
         });
+
+        console.log("ICI : ", oldContrat);
+        const now = new Date();
+        const newContrat = await getDbCollection("deca").findOneAndUpdate(
+          {
+            no_contrat: currentContrat.no_contrat,
+            "alternant.date_naissance": currentContrat.alternant.date_naissance,
+          },
+          {
+            $set: { ...currentContrat, created_at: oldContrat ? oldContrat.created_at : now, updated_at: now },
+          },
+          { upsert: true, returnDocument: "after" }
+        );
+        console.log("LA ", newContrat);
+
+        if (oldContrat) {
+          await saveHistory(oldContrat, newContrat);
+        }
+      });
     } catch (err: any) {
       throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
     }
@@ -237,7 +249,6 @@ export const buildPeriodsToFetch = (
  */
 export const getLastDecaCreatedDateInDb = async (): Promise<Date | null> => {
   const lastDecaItem = await getDbCollection("deca").find().sort({ created_at: -1 }).limit(1).toArray();
-
   let lastCreatedAt = lastDecaItem[0]?.created_at ?? null;
   // Si la dernière date est plus tard qu'hier, on prend d'avant hier en date de debut de référence
   if (lastCreatedAt && isAfter(lastCreatedAt, addDays(new Date(), -1))) lastCreatedAt = addDays(new Date(), -2);
