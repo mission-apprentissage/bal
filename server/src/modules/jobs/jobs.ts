@@ -101,7 +101,7 @@ export async function setupJobProcessor() {
       "deca:hydrate": {
         handler: async (job) => {
           const { from, to, chunk } = job.payload as any;
-          hydrateDeca({ from, to, chunk });
+          await hydrateDeca({ from, to, chunk });
         },
         /*
           ALAN: 
