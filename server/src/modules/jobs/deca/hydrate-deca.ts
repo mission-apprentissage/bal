@@ -16,6 +16,10 @@ const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
   return value ? { [key]: transform(value) } : {};
 };
 
+const parseDate = (v) => {
+  return v ? new Date(v) : null;
+};
+
 /**
  * Ce job peuple la collection contratsDeca via l'API Deca
  * L'API Deca ne permets de récupérer des données que sur une période maximum NB_JOURS_MAX_PERIODE_FETCH
@@ -67,7 +71,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
   // Récupération des périodes (liste dateDebut/fin) à fetch dans l'API
   const periods = buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch, chunk);
 
-  console.log("PERDIODS : ", periods);
+  //console.log("PERDIODS : ", periods);
 
   await asyncForEach(periods, async ({ dateDebut, dateFin }: { dateDebut: string; dateFin: string }) => {
     try {
@@ -110,7 +114,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
         try {
           const result = {
             alternant: {
-              date_naissance: contrat.alternant.dateNaissance, // TDB, LBA
+              ...ifDefined("date_naissance", contrat.alternant.dateNaissance, parseDate), // TDB, LBA
               ...ifDefined("nom", contrat.alternant.nom), // TDB, LBA
               ...ifDefined("prenom", contrat.alternant.prenom), // TDB, LBA
               ...ifDefined("sexe", contrat.alternant.sexe), // TDB
@@ -127,8 +131,8 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
               ...ifDefined("derniere_classe", contrat.alternant.derniereClasse), // TDB
             },
             formation: {
-              ...ifDefined("date_debut_formation", contrat.formation.dateDebutFormation), // TDB
-              ...ifDefined("date_fin_formation", contrat.formation.dateFinFormation), // TDB
+              ...ifDefined("date_debut_formation", contrat.formation.dateDebutFormation, parseDate), // TDB
+              ...ifDefined("date_fin_formation", contrat.formation.dateFinFormation, parseDate), // TDB
               ...ifDefined("code_diplome", contrat.formation.codeDiplome), // TDB, LBA
               ...ifDefined("intitule_ou_qualification", contrat.formation.intituleOuQualification), // TDB, LBA
               ...ifDefined("rncp", contrat.formation.rncp), // TDB, LBA
@@ -154,12 +158,12 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
               ...ifDefined("denomination", contrat.employeur.denomination), // LBA
             },
             no_contrat: contrat.detailsContrat.noContrat, // TDB, LBA
-            ...ifDefined("type_contrat", contrat.detailsContrat.typeContrat), // TDB, LBA
+            ...ifDefined("type_contrat", "" + contrat.detailsContrat.typeContrat), // TDB, LBA
             ...ifDefined("date_effet_rupture", contrat.rupture?.dateEffetRupture), // TDB, LBA
             ...ifDefined("dispositif", contrat.detailsContrat.dispositif), // LBA
-            ...ifDefined("date_debut_contrat", contrat.detailsContrat.dateDebutContrat), // TDB, LBA
-            ...ifDefined("date_fin_contrat", contrat.detailsContrat.dateFinContrat), // TDB, LBA
-            ...ifDefined("date_effet_avenant", contrat.detailsContrat.dateEffetAvenant), // TDB, LBA
+            ...ifDefined("date_debut_contrat", contrat.detailsContrat.dateDebutContrat, parseDate), // TDB, LBA
+            ...ifDefined("date_fin_contrat", contrat.detailsContrat.dateFinContrat, parseDate), // TDB, LBA
+            ...ifDefined("date_effet_avenant", contrat.detailsContrat.dateEffetAvenant, parseDate), // TDB, LBA
             ...ifDefined("no_avenant", contrat.detailsContrat.noAvenant), // TDB, LBA
             ...ifDefined("statut", contrat.detailsContrat.statut), // TDB, LBA
             // flag_correction: contrat.detailsContrat.flagcorrection === "true" ? true : false,
