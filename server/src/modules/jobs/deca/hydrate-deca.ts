@@ -185,7 +185,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
           }
         );
 
-        const now = new Date();
+        const now = new Date(dateDebut);
 
         /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
         if (
