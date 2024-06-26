@@ -51,7 +51,7 @@ export const ZDeca = z
     etablissement_formation: ZDecaEtablissementFormation.optional(),
     organisme_formation: ZDecaOrganismeFormation.optional(),
     employeur: ZDecaEmployeur,
-    updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
+    updated_at: z.date().describe("Date de mise à jour en base de données"),
     created_at: z.date().optional().describe("Date d'ajout en base de données"),
   })
   .strict();

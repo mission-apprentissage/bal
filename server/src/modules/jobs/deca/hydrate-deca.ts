@@ -17,7 +17,7 @@ const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
   return value ? { [key]: transform(value) } : {};
 };
 
-const parseDate = (v) => {
+const parseDate = (v: string) => {
   return v ? new Date(v) : null;
 };
 
@@ -107,7 +107,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
         }
 
         try {
-          const result: IDeca = {
+          const result = {
             alternant: {
               ...ifDefined("date_naissance", contrat.alternant.dateNaissance, parseDate), // TDB, LBA
               ...ifDefined("nom", contrat.alternant.nom), // TDB, LBA
@@ -175,8 +175,8 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
         return acc;
       }, [] as any[]);
 
-      await asyncForEach(decaContratsForPeriod, async (currentContrat: any) => {
-        const oldContrat: IDeca = await getDbCollection("deca").findOne(
+      await asyncForEach(decaContratsForPeriod, async (currentContrat: IDeca) => {
+        const oldContrat: IDeca | null = await getDbCollection("deca").findOne(
           {
             no_contrat: currentContrat.no_contrat,
           },
@@ -187,7 +187,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
 
         const now = new Date();
 
-        /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom +  type contrat identique */
+        /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
         if (
           oldContrat &&
           (oldContrat.type_contrat !== currentContrat.type_contrat ||
@@ -205,7 +205,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
             { sort: { created_at: -1 }, upsert: true, returnDocument: "after" }
           );
 
-          if (oldContrat) {
+          if (oldContrat && newContrat.value) {
             await saveHistory(oldContrat, newContrat.value);
           }
         }
