@@ -20,7 +20,7 @@ export const ZDecaApprenant = z
       })
       .strict()
       .optional(),
-    derniere_classe: z.number().optional().describe("La dernière classe de l'apprenant"),
+    derniere_classe: z.string().optional().describe("La dernière classe de l'apprenant"),
   })
   .strict();
 

@@ -6,7 +6,7 @@ import parentLogger from "@/common/logger";
 
 import { asyncForEach } from "../../../common/utils/asyncUtils";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
-import { saveHistory } from "./watcher";
+import { saveHistory } from "./hydrate-deca-history";
 
 const logger = parentLogger.child({ module: "job:hydrate:deca" });
 const DATE_DEBUT_CONTRATS_DISPONIBLES = new Date("2022-06-07T00:00:00.000Z"); // Date de début de disponibilité des données dans l'API Deca
@@ -71,7 +71,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
   // Récupération des périodes (liste dateDebut/fin) à fetch dans l'API
   const periods = buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch, chunk);
 
-  //console.log("PERDIODS : ", periods);
+  console.log("PERDIODS : ", periods);
 
   await asyncForEach(periods, async ({ dateDebut, dateFin }: { dateDebut: string; dateFin: string }) => {
     try {
@@ -159,7 +159,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
             },
             no_contrat: contrat.detailsContrat.noContrat, // TDB, LBA
             ...ifDefined("type_contrat", "" + contrat.detailsContrat.typeContrat), // TDB, LBA
-            ...ifDefined("date_effet_rupture", contrat.rupture?.dateEffetRupture), // TDB, LBA
+            ...ifDefined("date_effet_rupture", contrat.rupture?.dateEffetRupture, parseDate), // TDB, LBA
             ...ifDefined("dispositif", contrat.detailsContrat.dispositif), // LBA
             ...ifDefined("date_debut_contrat", contrat.detailsContrat.dateDebutContrat, parseDate), // TDB, LBA
             ...ifDefined("date_fin_contrat", contrat.detailsContrat.dateFinContrat, parseDate), // TDB, LBA
@@ -180,30 +180,37 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
         return acc;
       }, [] as any[]);
 
-      await asyncForEach(decaContratsForPeriod, async (currentContrat: any) => {
-        console.log("AAAAA ", currentContrat);
+      console.log("nb_contrat_après_merge ", decaContratsForPeriod.length);
 
+      await asyncForEach(decaContratsForPeriod, async (currentContrat: any) => {
         const oldContrat = await getDbCollection("deca").findOne({
           no_contrat: currentContrat.no_contrat,
           "alternant.date_naissance": currentContrat.alternant.date_naissance,
         });
 
-        console.log("ICI : ", oldContrat);
         const now = new Date();
-        const newContrat = await getDbCollection("deca").findOneAndUpdate(
-          {
-            no_contrat: currentContrat.no_contrat,
-            "alternant.date_naissance": currentContrat.alternant.date_naissance,
-          },
-          {
-            $set: { ...currentContrat, created_at: oldContrat ? oldContrat.created_at : now, updated_at: now },
-          },
-          { upsert: true, returnDocument: "after" }
-        );
-        console.log("LA ", newContrat);
 
-        if (oldContrat) {
-          await saveHistory(oldContrat, newContrat);
+        /*
+          decaHistory contient les modifs lorsque modif sur numéro de contrat + nom + type contrat identique
+          
+        */
+        if (oldContrat && oldContrat.type_contrat !== currentContrat.type_contrat) {
+          await getDbCollection("deca").insertOne({ ...currentContrat, created_at: now, updated_at: now });
+        } else {
+          const newContrat = await getDbCollection("deca").findOneAndUpdate(
+            {
+              no_contrat: currentContrat.no_contrat,
+              "alternant.date_naissance": currentContrat.alternant.date_naissance,
+            },
+            {
+              $set: { ...currentContrat, created_at: oldContrat ? oldContrat.created_at : now, updated_at: now },
+            },
+            { upsert: true, returnDocument: "after" }
+          );
+
+          if (oldContrat) {
+            await saveHistory(oldContrat, newContrat.value);
+          }
         }
       });
     } catch (err: any) {

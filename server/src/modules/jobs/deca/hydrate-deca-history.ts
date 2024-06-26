@@ -33,6 +33,8 @@ async function saveHistory(originalDocument, newDocument) {
   const oDiff = diff(originalDocument, newDocument);
   updatedFields = deepFlattenToObject(oDiff);
 
+  console.log("updatedFields : ", updatedFields);
+
   if (!updatedFields) return;
 
   for (const key of Object.keys(updatedFields)) {

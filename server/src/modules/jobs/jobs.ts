@@ -103,19 +103,6 @@ export async function setupJobProcessor() {
           const { from, to, chunk } = job.payload as any;
           await hydrateDeca({ from, to, chunk });
         },
-        /*
-          ALAN: 
-          faire tourner une fenêtre glissante de 1 jour tous les jours
-          en cas d'échec récupérer la last update et partir de là sur une fenêtre élargie pour se repositionner
-          supprimer le watcher sur la collection deca et mesurer / enregistrer les diff de manière séquentielle (findOne -> buildDiff -> createHistory)
-          les documents dans decaHistory concernent un seul champ (ex:  update de 3 champs --> 3 documents enregistrés )
-          decaHistory contient les modifs lorsque modif sur numéro de contrat + nom + type contrat identique
-          une modif sur contrat + nom identiques mais type différent implique un nouveau document dans deca (et pas dans history en première entrée)
-
-          !!!! L'api n'est fonctionnelle qu'après 20h00.
-          L'api est fragile et ne doit pas être sur sollicitée
-
-        */
       },
       "import:catalogue": {
         handler: () => runCatalogueImporter(),
