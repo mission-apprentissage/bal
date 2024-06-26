@@ -2,6 +2,7 @@ import { diff } from "deep-object-diff";
 import { get } from "lodash-es";
 import { ObjectId } from "mongodb";
 import { IDeca } from "shared/models/deca.model/deca.model";
+import { IDecaHistory } from "shared/models/deca.model/decaHistory.model";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
@@ -39,7 +40,7 @@ async function saveHistory(originalDocument: IDeca, newDocument: IDeca) {
   for (const key of Object.keys(updatedFields)) {
     if (!excludedFieldsFromHistory.includes(key)) {
       const previousValue = get(originalDocument, key);
-      const log = {
+      const log: IDecaHistory = {
         _id: new ObjectId(),
         key,
         from: previousValue,

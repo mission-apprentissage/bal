@@ -7,7 +7,8 @@ const collectionName = "decaHistory" as const;
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ key: 1, from: 1, to: 1, deca_id: 1 }, {}],
-  [{ "organisme_formation.siret": 1 }, {}],
+  [{ deca_id: 1 }, {}],
+  [{ key: 1 }, {}],
 ];
 
 export const ZDecaHistory = z

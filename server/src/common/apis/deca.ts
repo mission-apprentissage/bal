@@ -48,8 +48,6 @@ export const getDeca = async (
   product: "LBA" | "TDB" = "LBA"
 ): Promise<ApiDeca> => {
   return executeWithRateLimiting(async (client: any) => {
-    // axiosRetry(client, { retries: 3 });
-
     try {
       console.log(dateDebut, dateFin, page);
       const startDate = new Date();

@@ -1,5 +1,6 @@
 import { addDays, differenceInDays, format, isAfter, isBefore } from "date-fns";
 import deepmerge from "deepmerge";
+import { IDeca } from "shared/models/deca.model/deca.model";
 
 import { getAllContrats } from "@/common/apis/deca";
 import parentLogger from "@/common/logger";
@@ -106,7 +107,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
         }
 
         try {
-          const result = {
+          const result: IDeca = {
             alternant: {
               ...ifDefined("date_naissance", contrat.alternant.dateNaissance, parseDate), // TDB, LBA
               ...ifDefined("nom", contrat.alternant.nom), // TDB, LBA
@@ -175,7 +176,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
       }, [] as any[]);
 
       await asyncForEach(decaContratsForPeriod, async (currentContrat: any) => {
-        const oldContrat = await getDbCollection("deca").findOne(
+        const oldContrat: IDeca = await getDbCollection("deca").findOne(
           {
             no_contrat: currentContrat.no_contrat,
           },
