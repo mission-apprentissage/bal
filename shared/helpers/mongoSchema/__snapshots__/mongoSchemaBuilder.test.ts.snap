@@ -54,7 +54,7 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
               "description": "Le code postal de l'adresse",
             },
             "numero": {
-              "bsonType": "string",
+              "bsonType": "number",
               "description": "Le numéro de l'adresse",
             },
             "voie": {
@@ -76,7 +76,7 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
           "description": "Le département de naissance de l'alternant",
         },
         "derniere_classe": {
-          "bsonType": "number",
+          "bsonType": "string",
           "description": "La dernière classe de l'apprenant",
         },
         "handicap": {
@@ -96,7 +96,7 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
           "description": "Le prenom de l'alternant",
         },
         "sexe": {
-          "bsonType": "number",
+          "bsonType": "string",
           "description": "Le sexe de l'alternant",
         },
         "telephone": {
@@ -287,6 +287,7 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
     "alternant",
     "formation",
     "employeur",
+    "updated_at",
   ],
 }
 `;
@@ -313,19 +314,6 @@ exports[`zodToMongoSchema > should convert decaHistory schema 1`] = `
       "bsonType": "string",
       "description": "Modified key",
     },
-    "resumeToken": {
-      "additionalProperties": false,
-      "bsonType": "object",
-      "properties": {
-        "_data": {
-          "bsonType": "string",
-          "description": "Resume token",
-        },
-      },
-      "required": [
-        "_data",
-      ],
-    },
     "time": {
       "bsonType": "date",
       "description": "Modified time",
@@ -337,7 +325,6 @@ exports[`zodToMongoSchema > should convert decaHistory schema 1`] = `
   "required": [
     "_id",
     "key",
-    "resumeToken",
     "deca_id",
     "time",
   ],
