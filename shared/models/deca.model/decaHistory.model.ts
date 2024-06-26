@@ -5,7 +5,10 @@ import { IModelDescriptor, zObjectId } from "../common";
 
 const collectionName = "decaHistory" as const;
 
-const indexes: IModelDescriptor["indexes"] = [];
+const indexes: IModelDescriptor["indexes"] = [
+  [{ key: 1, from: 1, to: 1, deca_id: 1 }, {}],
+  [{ "organisme_formation.siret": 1 }, {}],
+];
 
 export const ZDecaHistory = z
   .object({
@@ -13,11 +16,6 @@ export const ZDecaHistory = z
     key: z.string().describe("Modified key"),
     from: z.any().describe("Value from"),
     to: z.any().describe("Value to"),
-    resumeToken: z
-      .object({
-        _data: z.string().describe("Resume token"),
-      })
-      .strict(),
     deca_id: zObjectId,
     time: z.date().describe("Modified time"),
     created_at: z.date().optional().describe("Date d'ajout en base de données"),

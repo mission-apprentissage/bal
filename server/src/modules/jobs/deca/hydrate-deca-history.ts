@@ -1,6 +1,7 @@
 import { diff } from "deep-object-diff";
 import { get } from "lodash-es";
 import { ObjectId } from "mongodb";
+import { IDeca } from "shared/models/deca.model/deca.model";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
@@ -27,13 +28,11 @@ function deepFlattenToObject(obj: any, prefix = "") {
 const excludedFieldsFromHistory: string[] = ["_id", "created_at", "updated_at"];
 // const excludedFieldsFromHistory = ["type_employeur", "employeur_specifique", "type_derogation", "employeur.code_idcc"];
 
-async function saveHistory(originalDocument, newDocument) {
+async function saveHistory(originalDocument: IDeca, newDocument: IDeca) {
   let updatedFields = null;
 
   const oDiff = diff(originalDocument, newDocument);
   updatedFields = deepFlattenToObject(oDiff);
-
-  console.log("updatedFields : ", updatedFields);
 
   if (!updatedFields) return;
 
@@ -50,17 +49,20 @@ async function saveHistory(originalDocument, newDocument) {
         deca_id: newDocument._id,
         //   op: event.operationType,
         time: newDocument.updated_at,
+        created_at: new Date(),
       };
 
-      console.log("saving diff", log);
-      await getDbCollection("decaHistory").insertOne(log);
+      const exists = await getDbCollection("decaHistory").findOne({
+        key,
+        from: log.from,
+        to: log.to,
+        deca_id: log.deca_id,
+      });
+      if (!exists) {
+        await getDbCollection("decaHistory").insertOne(log);
+      }
     }
   }
-  /**
-   * TODO réflexion pour éviter de réinsérer des données déjà traitées
-   * Virer les promise all pool
-   * renommer watcher
-   */
 }
 
 export { saveHistory };

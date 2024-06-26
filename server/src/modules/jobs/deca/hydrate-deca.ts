@@ -30,8 +30,6 @@ const parseDate = (v) => {
  *    - to : jusqu'a yyyy-MM-dd
  */
 export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?: string; chunk: number }) => {
-  console.log("ici ", from, to, chunk);
-
   const now = new Date();
   const yesterday = addDays(now, -1);
   yesterday.setHours(23);
@@ -44,8 +42,6 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
     ? new Date(`${from}T00:00:00.000Z`)
     : (await getLastDecaCreatedDateInDb()) ?? new Date(`2024-05-21T00:00:00.000Z`);
   const dateFinToFetch = to ? new Date(`${to}T00:00:00.000Z`) : yesterday;
-
-  console.log("là ", dateDebutToFetch, dateFinToFetch);
 
   if (isAfter(dateDebutToFetch, dateFinToFetch)) {
     logger.error("La date de debut de peut pas être après la date de fin");
@@ -70,8 +66,6 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
 
   // Récupération des périodes (liste dateDebut/fin) à fetch dans l'API
   const periods = buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch, chunk);
-
-  console.log("PERDIODS : ", periods);
 
   await asyncForEach(periods, async ({ dateDebut, dateFin }: { dateDebut: string; dateFin: string }) => {
     try {
@@ -180,32 +174,34 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
         return acc;
       }, [] as any[]);
 
-      console.log("nb_contrat_après_merge ", decaContratsForPeriod.length);
-
       await asyncForEach(decaContratsForPeriod, async (currentContrat: any) => {
-        const oldContrat = await getDbCollection("deca").findOne({
-          no_contrat: currentContrat.no_contrat,
-          "alternant.date_naissance": currentContrat.alternant.date_naissance,
-        });
+        const oldContrat = await getDbCollection("deca").findOne(
+          {
+            no_contrat: currentContrat.no_contrat,
+          },
+          {
+            sort: { created_at: -1 },
+          }
+        );
 
         const now = new Date();
 
-        /*
-          decaHistory contient les modifs lorsque modif sur numéro de contrat + nom + type contrat identique
-          
-        */
-        if (oldContrat && oldContrat.type_contrat !== currentContrat.type_contrat) {
+        /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom +  type contrat identique */
+        if (
+          oldContrat &&
+          (oldContrat.type_contrat !== currentContrat.type_contrat ||
+            oldContrat.alternant.nom !== currentContrat.alternant.nom)
+        ) {
           await getDbCollection("deca").insertOne({ ...currentContrat, created_at: now, updated_at: now });
         } else {
           const newContrat = await getDbCollection("deca").findOneAndUpdate(
             {
               no_contrat: currentContrat.no_contrat,
-              "alternant.date_naissance": currentContrat.alternant.date_naissance,
             },
             {
               $set: { ...currentContrat, created_at: oldContrat ? oldContrat.created_at : now, updated_at: now },
             },
-            { upsert: true, returnDocument: "after" }
+            { sort: { created_at: -1 }, upsert: true, returnDocument: "after" }
           );
 
           if (oldContrat) {
