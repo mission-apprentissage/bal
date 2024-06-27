@@ -13,14 +13,8 @@ export const ZDecaHistory = z
     key: z.string().describe("Modified key"),
     from: z.any().describe("Value from"),
     to: z.any().describe("Value to"),
-    resumeToken: z
-      .object({
-        _data: z.string().describe("Resume token"),
-      })
-      .strict(),
     deca_id: zObjectId,
     time: z.date().describe("Modified time"),
-    created_at: z.date().optional().describe("Date d'ajout en base de données"),
   })
   .strict();
 
