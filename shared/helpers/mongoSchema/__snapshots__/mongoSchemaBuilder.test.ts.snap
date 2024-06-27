@@ -300,10 +300,6 @@ exports[`zodToMongoSchema > should convert decaHistory schema 1`] = `
     "_id": {
       "bsonType": "objectId",
     },
-    "created_at": {
-      "bsonType": "date",
-      "description": "Date d'ajout en base de données",
-    },
     "deca_id": {
       "bsonType": "objectId",
     },
