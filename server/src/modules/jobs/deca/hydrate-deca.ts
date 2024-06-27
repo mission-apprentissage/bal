@@ -1,3 +1,4 @@
+import { internal } from "@hapi/boom";
 import { addDays, differenceInDays, format, isAfter, isBefore } from "date-fns";
 import deepmerge from "deepmerge";
 import { IDeca } from "shared/models/deca.model/deca.model";
@@ -176,38 +177,32 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
       }, [] as any[]);
 
       await asyncForEach(decaContratsForPeriod, async (currentContrat: IDeca) => {
-        const oldContrat: IDeca | null = await getDbCollection("deca").findOne(
-          {
-            no_contrat: currentContrat.no_contrat,
-          },
-          {
-            sort: { created_at: -1 },
-          }
-        );
+        const newContratFilter = {
+          no_contrat: currentContrat.no_contrat,
+          type_contrat: currentContrat.type_contrat,
+          "alternant.nom": currentContrat.alternant.nom,
+        };
+
+        const oldContrat: IDeca | null = await getDbCollection("deca").findOne(newContratFilter);
 
         const now = new Date(dateDebut);
 
-        /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
-        if (
-          oldContrat &&
-          (oldContrat.type_contrat !== currentContrat.type_contrat ||
-            oldContrat.alternant.nom !== currentContrat.alternant.nom)
-        ) {
-          await getDbCollection("deca").insertOne({ ...currentContrat, created_at: now, updated_at: now });
-        } else {
-          const newContrat = await getDbCollection("deca").findOneAndUpdate(
-            {
-              no_contrat: currentContrat.no_contrat,
-            },
-            {
-              $set: { ...currentContrat, created_at: oldContrat ? oldContrat.created_at : now, updated_at: now },
-            },
-            { sort: { created_at: -1 }, upsert: true, returnDocument: "after" }
-          );
+        if (oldContrat && oldContrat.updated_at.getTime() > now.getTime()) {
+          throw internal("contracts not imported in chronological order", { oldContrat, currentContrat, now });
+        }
 
-          if (oldContrat && newContrat.value) {
-            await saveHistory(oldContrat, newContrat.value);
-          }
+        /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
+        const newContrat = await getDbCollection("deca").findOneAndUpdate(
+          newContratFilter,
+          {
+            $set: { ...currentContrat, updated_at: now },
+            $setOnInsert: { created_at: now },
+          },
+          { upsert: true, returnDocument: "after" }
+        );
+
+        if (oldContrat && newContrat.value) {
+          await saveHistory(oldContrat, newContrat.value);
         }
       });
     } catch (err: any) {
