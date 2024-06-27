@@ -14,7 +14,6 @@ function getOptions(): Sentry.NodeOptions {
     enabled: config.env !== "local",
     integrations: [
       Sentry.httpIntegration({}),
-      Sentry.mongoIntegration(),
       Sentry.captureConsoleIntegration({ levels: ["error"] }),
       Sentry.extraErrorDataIntegration({ depth: 16 }),
     ],
