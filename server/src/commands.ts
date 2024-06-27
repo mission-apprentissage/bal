@@ -230,6 +230,28 @@ program
   .action(createJobAction("deca:merge"));
 
 program
+  .command("job:validation:hydrate_from_deca")
+  .description("Hydrate organisation and persons from deca")
+  .option("--offset <number>", "ignore les X premières lignes DECA")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("job:validation:hydrate_from_deca"));
+program
+  .command("job:validation:hydrate_from_constructys")
+  .description("Hydrate organisation and persons from constructys")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("job:validation:hydrate_from_constructys"));
+program
+  .command("job:validation:hydrate_from_ocapiat")
+  .description("Hydrate organisation and persons from ocapiat")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("job:validation:hydrate_from_ocapiat"));
+program
+  .command("organisation:sanitize:domains")
+  .description("Sanitize organisationdomain")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("organisation:sanitize:domains"));
+
+program
   .command("deca:history")
   .description("Deca history")
   .option("-q, --queued", "Run job asynchronously", false)

@@ -1333,16 +1333,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@immobiliarelabs/fastify-sentry@npm:^8.0.1":
-  version: 8.0.1
-  resolution: "@immobiliarelabs/fastify-sentry@npm:8.0.1"
+"@immobiliarelabs/fastify-sentry@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "@immobiliarelabs/fastify-sentry@npm:7.1.1"
   dependencies:
-    "@sentry/node": ^7.105.0
-    "@sentry/tracing": ^7.105.0
-    "@sentry/utils": ^7.105.0
-    cookie: ^0.6.0
+    "@sentry/node": ^7.60.0
+    "@sentry/tracing": ^7.60.0
+    "@sentry/utils": ^7.60.0
+    cookie: ^0.5.0
     fastify-plugin: ^4.3.0
-  checksum: aa74bde26e3c7ca02f568f681ed33bf885477b10d0ddebb86fcd27c9cfa93f966e3d7d56be6d9cc8ae13b8cb3de1d7255632dc05ba19ef8b225b1b0b7b536df6
+  checksum: f9b90ae777b80fcced76ca79818781795280875cfb54bafc7942c0db92b936f12d8eba5044c5b1a30dfa422d03bf2eb578ad509693a420b7f70a37198cc36e30
   languageName: node
   linkType: hard
 
@@ -2836,6 +2836,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry-internal/tracing@npm:7.118.0":
+  version: 7.118.0
+  resolution: "@sentry-internal/tracing@npm:7.118.0"
+  dependencies:
+    "@sentry/core": 7.118.0
+    "@sentry/types": 7.118.0
+    "@sentry/utils": 7.118.0
+  checksum: 068fc688ce16bfc78e032c3e3aad7ad50e50d832144aaefcff4326c9b33be23845cbca162a49f6f33e167de3ca42cf95797bc346c193cc28bfc00f8663792e13
+  languageName: node
+  linkType: hard
+
 "@sentry/babel-plugin-component-annotate@npm:2.16.0":
   version: 2.16.0
   resolution: "@sentry/babel-plugin-component-annotate@npm:2.16.0"
@@ -2970,6 +2981,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/core@npm:7.118.0":
+  version: 7.118.0
+  resolution: "@sentry/core@npm:7.118.0"
+  dependencies:
+    "@sentry/types": 7.118.0
+    "@sentry/utils": 7.118.0
+  checksum: c92d4fe25787877ed3907d279b2fb786a1142997582036b07593d92b23873037475a696dc3213749e9ab95742c82621002322a88f6f73ed7ce6c553d82684b69
+  languageName: node
+  linkType: hard
+
 "@sentry/core@npm:8.7.0":
   version: 8.7.0
   resolution: "@sentry/core@npm:8.7.0"
@@ -2989,6 +3010,18 @@ __metadata:
     "@sentry/utils": 7.116.0
     localforage: ^1.8.1
   checksum: 6868594a78dfd689ab4a9f9c7f765ec7869c7f3395a619d3fba02d8dcb3da46ee04f26f847f59fcbad20ff01d035eb60e1f133a4be207590399e6fd74202b051
+  languageName: node
+  linkType: hard
+
+"@sentry/integrations@npm:7.118.0, @sentry/integrations@npm:^7.77.0":
+  version: 7.118.0
+  resolution: "@sentry/integrations@npm:7.118.0"
+  dependencies:
+    "@sentry/core": 7.118.0
+    "@sentry/types": 7.118.0
+    "@sentry/utils": 7.118.0
+    localforage: ^1.8.1
+  checksum: 21b3a045c4c97425695b94d08c9423cb88f716ee05182ed82c1bf6804b281c89e7f2dcf854723ac18fdeeb1fa7c6f4eec29ee89c51a92a93122666d7138850c2
   languageName: node
   linkType: hard
 
@@ -3021,7 +3054,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/node@npm:8.7.0, @sentry/node@npm:^8.7.0":
+"@sentry/node@npm:8.7.0":
   version: 8.7.0
   resolution: "@sentry/node@npm:8.7.0"
   dependencies:
@@ -3059,7 +3092,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/node@npm:^7.105.0, @sentry/node@npm:^7.80.0":
+"@sentry/node@npm:^7.60.0, @sentry/node@npm:^7.77.0":
+  version: 7.118.0
+  resolution: "@sentry/node@npm:7.118.0"
+  dependencies:
+    "@sentry-internal/tracing": 7.118.0
+    "@sentry/core": 7.118.0
+    "@sentry/integrations": 7.118.0
+    "@sentry/types": 7.118.0
+    "@sentry/utils": 7.118.0
+  checksum: 5521250d28ab3edcace86909b884d9a10ea3703857e314e633129a8c4eb30f769b97ea49bfd978593c43b03c8720739201a33a87492cc8e35deca54dd39e3e9f
+  languageName: node
+  linkType: hard
+
+"@sentry/node@npm:^7.80.0":
   version: 7.116.0
   resolution: "@sentry/node@npm:7.116.0"
   dependencies:
@@ -3104,12 +3150,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/tracing@npm:^7.105.0":
-  version: 7.116.0
-  resolution: "@sentry/tracing@npm:7.116.0"
+"@sentry/tracing@npm:^7.60.0, @sentry/tracing@npm:^7.77.0":
+  version: 7.118.0
+  resolution: "@sentry/tracing@npm:7.118.0"
   dependencies:
-    "@sentry-internal/tracing": 7.116.0
-  checksum: 565c3d2355d079c95bcc490e2a4a8ad0b76a0772f91132330a1a72133407f7f820da045baae1e3c225a8596e7e1a71ff6b1bf953585fdd315a41d3b0b8692af9
+    "@sentry-internal/tracing": 7.118.0
+  checksum: a3c1a6b426b460912f67682e18ab7a3e88091b58fe42dce3803a5c12b4888031112464b7e23b064f3c3e4e9d3c03eee2635dc908f9dc873551c06627b7e142fa
   languageName: node
   linkType: hard
 
@@ -3120,6 +3166,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/types@npm:7.118.0":
+  version: 7.118.0
+  resolution: "@sentry/types@npm:7.118.0"
+  checksum: 6ba32b729a0fc6f3c99d79adb1052784cee50ee28d2e45faf75c27e9833c8208fdce1e913d835b717b97903570ed08518045017c1a81610298766c295f4d3546
+  languageName: node
+  linkType: hard
+
 "@sentry/types@npm:8.7.0":
   version: 8.7.0
   resolution: "@sentry/types@npm:8.7.0"
@@ -3127,12 +3180,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/utils@npm:7.116.0, @sentry/utils@npm:^7.105.0":
+"@sentry/utils@npm:7.116.0":
   version: 7.116.0
   resolution: "@sentry/utils@npm:7.116.0"
   dependencies:
     "@sentry/types": 7.116.0
   checksum: f8d2f7fd61409fd52376665f6e87fe7b74706c4a9eb6f05b4d85c2c2fa3dc4cb1c31a4cadddc248a3798a6f01906b16ff8317356a0ab4767cb13e38b0f3f90f0
+  languageName: node
+  linkType: hard
+
+"@sentry/utils@npm:7.118.0, @sentry/utils@npm:^7.60.0":
+  version: 7.118.0
+  resolution: "@sentry/utils@npm:7.118.0"
+  dependencies:
+    "@sentry/types": 7.118.0
+  checksum: 3f05a8de3486e57378f3ba40286dd2e4a883f0dee35ac4d4479840b4b0c8135aa42848a5e6196c98d6415114ccfc11ddcda565fb0a84f44c7ce9eda51837aa9d
   languageName: node
   linkType: hard
 
@@ -3255,7 +3317,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supercharge/promise-pool@npm:^3.2.0":
+"@supercharge/promise-pool@npm:^3.1.0":
   version: 3.2.0
   resolution: "@supercharge/promise-pool@npm:3.2.0"
   checksum: 2a53c08669017a16baf540970923af7736e78cb07dda6f268608ed7f9b952b6b94010ad43b8b61c70c8ad6725625ad8314821e003a836bab277ff5171bd65ffb
@@ -4787,7 +4849,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios-cache-interceptor@npm:^1.5.3":
+"axios-cache-interceptor@npm:^1.2.0":
   version: 1.5.3
   resolution: "axios-cache-interceptor@npm:1.5.3"
   dependencies:
@@ -4800,7 +4862,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios-retry@npm:^3.9.1":
+"axios-retry@npm:^3.8.0":
   version: 3.9.1
   resolution: "axios-retry@npm:3.9.1"
   dependencies:
@@ -4810,14 +4872,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.28.1":
-  version: 0.28.1
-  resolution: "axios@npm:0.28.1"
+"axios@npm:^0.24.0":
+  version: 0.24.0
+  resolution: "axios@npm:0.24.0"
   dependencies:
-    follow-redirects: ^1.15.0
-    form-data: ^4.0.0
-    proxy-from-env: ^1.1.0
-  checksum: 5115a38d79064d07437c5a28f15841e3607634040e3120ec06a2c4367a7d07cf213b16496eab53b6f58ebc5fb377a440ba9ed4782529b14449a1e285734bfb54
+    follow-redirects: ^1.14.4
+  checksum: 468cf496c08a6aadfb7e699bebdac02851e3043d4e7d282350804ea8900e30d368daa6e3cd4ab83b8ddb5a3b1e17a5a21ada13fc9cebd27b74828f47a4236316
   languageName: node
   linkType: hard
 
@@ -4859,6 +4919,13 @@ __metadata:
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
   checksum: 669632eb3745404c2f822a18fc3a0122d2f9a7a13f7fb8b5823ee19d1d2ff9ee5b52c53367176ea4ad093c332fd5ab4bd0ebae5a8e27917a4105a4cfc86b1005
+  languageName: node
+  linkType: hard
+
+"basic-ftp@npm:^5.0.4":
+  version: 5.0.4
+  resolution: "basic-ftp@npm:5.0.4"
+  checksum: 57725f24debd8c1b36f9bad1bfee39c5d9f5997f32a23e5c957389dcc64373a13b41711e5723b4a3b616a93530b345686119f480c27a115b2fde944c1652ceb1
   languageName: node
   linkType: hard
 
@@ -5708,7 +5775,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"combined-stream@npm:^1.0.6, combined-stream@npm:^1.0.8, combined-stream@npm:~1.0.6":
+"combined-stream@npm:^1.0.6, combined-stream@npm:~1.0.6":
   version: 1.0.8
   resolution: "combined-stream@npm:1.0.8"
   dependencies:
@@ -5945,6 +6012,13 @@ __metadata:
   version: 1.2.1
   resolution: "cookie-signature@npm:1.2.1"
   checksum: bb464aacac390b5d7d8ead2d6fff7c1c3b7378c7d0250921f48923fe889688e081ab33950448929db5f24d4f9f1506589a7ee1c685de8f12a3fdb30c49667ec5
+  languageName: node
+  linkType: hard
+
+"cookie@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "cookie@npm:0.5.0"
+  checksum: 1f4bd2ca5765f8c9689a7e8954183f5332139eb72b6ff783d8947032ec1fdf43109852c178e21a953a30c0dd42257828185be01b49d1eb1a67fd054ca588a180
   languageName: node
   linkType: hard
 
@@ -8186,7 +8260,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.15.0":
+"follow-redirects@npm:^1.14.4":
   version: 1.15.6
   resolution: "follow-redirects@npm:1.15.6"
   peerDependenciesMeta:
@@ -8219,17 +8293,6 @@ __metadata:
   version: 0.6.1
   resolution: "forever-agent@npm:0.6.1"
   checksum: 766ae6e220f5fe23676bb4c6a99387cec5b7b62ceb99e10923376e27bfea72f3c3aeec2ba5f45f3f7ba65d6616965aa7c20b15002b6860833bb6e394dea546a8
-  languageName: node
-  linkType: hard
-
-"form-data@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "form-data@npm:4.0.0"
-  dependencies:
-    asynckit: ^0.4.0
-    combined-stream: ^1.0.8
-    mime-types: ^2.1.12
-  checksum: 01135bf8675f9d5c61ff18e2e2932f719ca4de964e3be90ef4c36aacfc7b9cb2fceb5eca0b7e0190e3383fe51c5b37f4cb80b62ca06a99aaabfcfd6ac7c9328c
   languageName: node
   linkType: hard
 
@@ -13536,9 +13599,9 @@ __metadata:
   linkType: hard
 
 "p-map@npm:^7.0.1":
-  version: 7.0.2
-  resolution: "p-map@npm:7.0.2"
-  checksum: bc128c2b244ef5d4619392b2247d718a3fe471d5fa4a73834fd96182a237f460ec7e0ad0f95139ef7103a6b50ed164228c62e2f8e41ba2b15360fe1c20d13563
+  version: 7.0.1
+  resolution: "p-map@npm:7.0.1"
+  checksum: 553c218f582b9c7f96159dd55d082fc6df386ea86a78a3798b768f87f761d6f01ea52dd76225e69199720fa0684901d38353cd0978a39ef4f7f4fd287c4e9262
   languageName: node
   linkType: hard
 
@@ -13952,7 +14015,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-pretty@npm:^10.3.1":
+"pino-pretty@npm:^10.2.3":
   version: 10.3.1
   resolution: "pino-pretty@npm:10.3.1"
   dependencies:
@@ -15522,9 +15585,11 @@ __metadata:
     "@fastify/swagger": ^8.14.0
     "@fastify/swagger-ui": ^1.10.2
     "@hapi/boom": ^10.0.1
-    "@immobiliarelabs/fastify-sentry": ^8.0.1
-    "@sentry/node": ^8.7.0
-    "@supercharge/promise-pool": ^3.2.0
+    "@immobiliarelabs/fastify-sentry": ^7.1.1
+    "@sentry/integrations": ^7.77.0
+    "@sentry/node": ^7.77.0
+    "@sentry/tracing": ^7.77.0
+    "@supercharge/promise-pool": ^3.1.0
     "@types/bunyan": ^1.8.11
     "@types/bunyan-prettystream": ^0.1.35
     "@types/clamscan": ^2.0.8
@@ -15538,9 +15603,10 @@ __metadata:
     "@types/omit-deep": ^0.3.2
     "@types/tcp-port-used": ^1.0.4
     "@types/uuid": ^9.0.8
-    axios: ^0.28.1
-    axios-cache-interceptor: ^1.5.3
-    axios-retry: ^3.9.1
+    axios: ^0.24.0
+    axios-cache-interceptor: ^1.2.0
+    axios-retry: ^3.8.0
+    basic-ftp: ^5.0.4
     bunyan: ^1.8.15
     bunyan-prettystream: ^0.1.3
     chardet: ^1.6.1
@@ -15574,7 +15640,8 @@ __metadata:
     nodemailer-html-to-text: ^3.2.0
     oleoduc: ^0.8.0
     omit-deep: ^0.3.0
-    pino-pretty: ^10.3.1
+    p-map: ^7.0.1
+    pino-pretty: ^10.2.3
     rate-limiter-flexible: ^2.4.2
     shared: "workspace:*"
     tcp-port-used: ^1.0.2

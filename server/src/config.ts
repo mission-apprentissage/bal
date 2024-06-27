@@ -60,6 +60,17 @@ const config = {
       .default("https://labonnealternance-recette.apprentissage.beta.gouv.fr")
       .asString(),
   },
+  ftp: {
+    host: env.get("FTP_HOST").required().asString(),
+    constructys: {
+      user: env.get("FTP_CONSTRUCTYS_USER").required().asString(),
+      password: env.get("FTP_CONSTRUCTYS_PASSWORD").required().asString(),
+    },
+    ocapiat: {
+      user: env.get("FTP_OCAPIAT_USER").required().asString(),
+      password: env.get("FTP_OCAPIAT_PASSWORD").required().asString(),
+    },
+  },
   akto: {
     grantType: env.get("MNA_BAL_AKTO_GRANT_TYPE").default("").asString(),
     clientId: env.get("MNA_BAL_AKTO_CLIENT_ID").default("").asString(),

@@ -492,7 +492,6 @@ export const importDocumentContent = async <TFileLine = unknown, TContentLine = 
 
   for (const [_lineNumber, line] of content.entries()) {
     const contentLine = formatter(line);
-
     if (!contentLine) {
       continue;
     }

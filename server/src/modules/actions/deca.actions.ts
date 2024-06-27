@@ -71,7 +71,7 @@ export const importDecaContent = async (emails: string[], siret: string) => {
   );
 };
 
-export const getDecaVerification = async (
+export const getDbVerification = async (
   siret: string,
   email: string
 ): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {

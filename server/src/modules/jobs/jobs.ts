@@ -21,6 +21,10 @@ import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
 import { mergeDecaDumps } from "./deca/merge-dumps-deca";
 import { createHistory } from "./deca/watcher";
+import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
+import { run_hydrate_from_ocapiat } from "./validation/hydrate_from_ocapiat";
+import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
+import { run_organisations_sanitize_domains } from "./validation/organisations_sanitize_domains";
 
 export async function setupJobProcessor() {
   return initJobProcessor({
@@ -30,13 +34,6 @@ export async function setupJobProcessor() {
       config.env === "preview" || config.env === "local"
         ? {}
         : {
-            "Mise à jour des contrats deca": {
-              cron_string: "30 1 * * *",
-              // handler: async (job) => hydrateDeca(job.payload as any)
-              handler: () => {
-                return Promise.resolve(1);
-              },
-            },
             "Mise à jour des couples siret/email provenant du catalogue de formations": {
               cron_string: "30 2 * * *",
               handler: () => runCatalogueImporter(),
@@ -107,6 +104,21 @@ export async function setupJobProcessor() {
       },
       "import:catalogue": {
         handler: () => runCatalogueImporter(),
+      },
+      "job:validation:hydrate_from_deca": {
+        handler: async (job) => {
+          const { offset } = job.payload ?? {};
+          return run_hydrate_from_deca(offset ? parseInt(offset.toString(), 10) : 0);
+        },
+      },
+      "job:validation:hydrate_from_constructys": {
+        handler: async () => run_hydrate_from_constructys(),
+      },
+      "job:validation:hydrate_from_ocapiat": {
+        handler: async () => run_hydrate_from_ocapiat(),
+      },
+      "organisation:sanitize:domains": {
+        handler: async () => run_organisations_sanitize_domains(),
       },
     },
   });
