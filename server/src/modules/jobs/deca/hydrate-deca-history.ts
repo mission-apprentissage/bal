@@ -50,18 +50,9 @@ async function saveHistory(originalDocument: IDeca, newDocument: IDeca) {
         deca_id: newDocument._id,
         //   op: event.operationType,
         time: newDocument.updated_at,
-        created_at: new Date(),
       };
 
-      const exists = await getDbCollection("decaHistory").findOne({
-        key,
-        from: log.from,
-        to: log.to,
-        deca_id: log.deca_id,
-      });
-      if (!exists) {
-        await getDbCollection("decaHistory").insertOne(log);
-      }
+      await getDbCollection("decaHistory").insertOne(log);
     }
   }
 }
