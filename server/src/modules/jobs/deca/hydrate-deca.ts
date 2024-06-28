@@ -12,6 +12,7 @@ const logger = parentLogger.child({ module: "job:hydrate:deca" });
 const DATE_DEBUT_CONTRATS_DISPONIBLES = new Date("2022-06-07T00:00:00.000Z"); // Date de début de disponibilité des données dans l'API Deca
 const NB_JOURS_MAX_PERIODE_FETCH = 60;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
   return value ? { [key]: transform(value) } : {};
 };
@@ -78,6 +79,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from: string; to: s
       ); // Type contrat type_contrat
 
       const decaContratsForPeriod = decaContrats_LBA.reduce((acc, item) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let contrat = item as any;
         const tdbContrat = tdbMap.get(
           JSON.stringify({
@@ -159,12 +161,15 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from: string; to: s
         }
 
         return acc;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       }, [] as any[]);
 
       await PromisePool.for(decaContratsForPeriod)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .handleError(async (err: any) => {
           throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
         })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .process(async (currentContrat: any) => {
           await getDbCollection("deca").updateOne(
             {
@@ -181,6 +186,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from: string; to: s
         });
 
       await createHistory();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
     }

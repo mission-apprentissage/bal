@@ -95,7 +95,7 @@ fileignoreconfig:
 - filename: server/.env.local.example
   checksum: b760092fca0bbc8ba8c1d1d162b0461b992de867cbfde3dc4556226a1129e484
 - filename: server/.env.test
-  checksum: 39ceb0a4f3d9cffe8d980a69205a2b800a875cbe994842f97ff1f9282b2a6e1f
+  checksum: ce67d0410bfd71366b84b5d22708befe0643e3756e2474d55552caad24fafe3c
 - filename: server/config/config.ts
   checksum: dee90e5b9ea1162aaffc204bd46a7801f8abba89fddd3f7077990321299ff3bf
 - filename: server/dev/load-env.mjs

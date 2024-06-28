@@ -5,6 +5,7 @@ import { ObjectId } from "mongodb";
 import logger from "../../../common/logger";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function deepFlattenToObject(obj: any, prefix = "") {
   return Object.keys(obj).reduce((acc, k) => {
     const pre = prefix.length ? prefix + "." : "";
@@ -27,6 +28,7 @@ function deepFlattenToObject(obj: any, prefix = "") {
 
 const excludedFieldsFromHistory: string[] = [];
 // const excludedFieldsFromHistory = ["type_employeur", "employeur_specifique", "type_derogation", "employeur.code_idcc"];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function processChangeEvent(event: any): Promise<void> {
   let updatedFields = null;
   // if (event.operationType === "update") {
@@ -58,8 +60,10 @@ async function processChangeEvent(event: any): Promise<void> {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getNext(asyncIte: any) {
   let timeoutID: undefined | NodeJS.Timeout;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const timeout: Promise<any> = new Promise((resolve) => {
     timeoutID = setTimeout(() => resolve(null), 1500);
   });
@@ -119,6 +123,7 @@ async function createHistory() {
     } else {
       const asyncIte = changeStream[Symbol.asyncIterator]();
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const processNext: any = async (asyncIte: any) => {
         const next = await getNext(asyncIte);
         if (!next) return null;

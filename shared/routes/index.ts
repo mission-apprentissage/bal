@@ -77,8 +77,8 @@ export const zRoutes: IRoutes = {
 export type IResponse<S extends IRouteSchema> = S["response"][`200`] extends ZodType
   ? Jsonify<z.output<S["response"][`200`]>>
   : S["response"][`2${string}`] extends ZodType
-  ? Jsonify<z.output<S["response"][`2${string}`]>>
-  : never;
+    ? Jsonify<z.output<S["response"][`2${string}`]>>
+    : never;
 
 export type IBody<S extends IRouteSchemaWrite> = S["body"] extends ZodType ? z.input<S["body"]> : never;
 
@@ -103,9 +103,5 @@ type IRequestRaw<S extends IRouteSchema> = {
   body: S extends IRouteSchemaWrite ? IBody<S> : never;
 };
 
-export type IRequest<S extends IRouteSchema> = ConditionalExcept<
-  IRequestRaw<S>,
-  never | EmptyObject
-> extends EmptyObject
-  ? EmptyObject
-  : ConditionalExcept<IRequestRaw<S>, never | EmptyObject>;
+export type IRequest<S extends IRouteSchema> =
+  ConditionalExcept<IRequestRaw<S>, never> extends EmptyObject ? EmptyObject : ConditionalExcept<IRequestRaw<S>, never>;

@@ -33,6 +33,7 @@ const createStreams = () => {
   return streams;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function errorSerialiser(err: any) {
   return {
     ...bunyan.stdSerializers.err(err),

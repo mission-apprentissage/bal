@@ -10,7 +10,6 @@ export default function Home() {
         <title>Sentry Onboarding</title>
         <meta name="description" content="Test Sentry for your Next.js app!" />
       </Head>
-
       <main
         style={{
           minHeight: "100vh",
@@ -49,22 +48,17 @@ export default function Home() {
             margin: "18px",
           }}
           onClick={async () => {
-            const transaction = Sentry.startTransaction({
-              name: "Example Frontend Transaction",
-            });
-
-            Sentry.configureScope((scope) => {
-              scope.setSpan(transaction);
-            });
-
-            try {
-              const res = await fetch("/sentry/sentry-example-api");
-              if (!res.ok) {
-                throw new Error("Sentry Example Frontend Error");
+            Sentry.startSpan(
+              {
+                name: "Example Frontend Transaction",
+              },
+              async () => {
+                const res = await fetch("/sentry/sentry-example-api");
+                if (!res.ok) {
+                  throw new Error("Sentry Example Frontend Error");
+                }
               }
-            } finally {
-              transaction.finish();
-            }
+            );
           }}
         >
           Throw error!
