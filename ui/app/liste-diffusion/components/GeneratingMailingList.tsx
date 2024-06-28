@@ -1,20 +1,26 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import { Box, Typography } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { FC, useState } from "react";
-import { IMailingListJson } from "shared/models/mailingList.model";
+import { IDocument } from "shared/models/document.model";
+import { IMailingListWithDocumentJson } from "shared/models/mailingList.model";
 
 import { apiGet } from "../../../utils/api.utils";
 
 interface Props {
-  mailingList?: IMailingListJson;
+  mailingList?: IMailingListWithDocumentJson;
   onDone: () => void;
 }
 
+function shouldRefetch(status: IDocument["job_status"] | null): boolean {
+  return status !== "done" && status !== "error";
+}
+
 const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
-  const [allowRefetch, setAllowRefetch] = useState(true);
+  const [allowRefetch, setAllowRefetch] = useState(shouldRefetch(mailingList?.document?.job_status ?? null));
+  const queryClient = useQueryClient();
 
   const { data: progress } = useQuery({
     queryKey: ["generatingMailingListProgress"],
@@ -28,8 +34,9 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
         params: { id: mailingList._id },
       });
 
-      if (data.status !== "pending" && data.status !== "processing") {
+      if (!shouldRefetch(data.status)) {
         setAllowRefetch(false);
+        queryClient.invalidateQueries({ queryKey: ["mailingLists"] });
       }
 
       if (data.status === "done") {
@@ -38,7 +45,7 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
 
       return data;
     },
-    refetchInterval: 1000,
+    refetchInterval: 10_000,
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

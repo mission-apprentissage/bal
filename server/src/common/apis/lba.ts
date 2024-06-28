@@ -40,7 +40,7 @@ export interface TrainingLink {
   lien_lba: string;
 }
 
-export const getTrainingLinks = async (data: TrainingLinkData[]) => {
+export const getTrainingLinks = async (data: TrainingLinkData[]): Promise<TrainingLink[]> => {
   return executeWithRateLimiting(async (client: AxiosInstance) => {
     console.log(`Request fired with ${data.length} items`);
     try {
