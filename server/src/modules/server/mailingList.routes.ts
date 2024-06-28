@@ -117,8 +117,8 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       const status = document
         ? document.job_status
         : mailingList.created_at.getTime() + 2 * 3600 * 1000 < Date.now()
-        ? "error"
-        : "pending";
+          ? "error"
+          : "pending";
 
       return response.status(200).send({
         status,
