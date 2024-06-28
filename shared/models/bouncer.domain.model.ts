@@ -1,0 +1,29 @@
+import { z } from "zod";
+
+import { zBouncerPingResult } from "./bouncer.email.model";
+import { IModelDescriptor, zObjectId } from "./common";
+
+export const MAILING_LIST_MAX_ITERATION = 10;
+
+const collectionName = "bouncer.domain" as const;
+
+const indexes: IModelDescriptor["indexes"] = [[{ domain: 1, email: 1 }, { unique: true }]];
+
+export const zBouncerDomain = z
+  .object({
+    _id: zObjectId,
+    domain: z.string(),
+    smtp: z.string(),
+    ping: zBouncerPingResult.nullable(),
+    updated_at: z.date(),
+    created_at: z.date(),
+  })
+  .strict();
+
+export type BouncerDomain = z.output<typeof zBouncerDomain>;
+
+export const bouncerDomailModelDescriptor = {
+  zod: zBouncerDomain,
+  indexes,
+  collectionName,
+};

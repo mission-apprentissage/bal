@@ -1,8 +1,9 @@
 import { Typography } from "@mui/material";
 import { FC } from "react";
+import { isComputedColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
 
-import { getDataFromSample, WEBHOOK_LBA } from "../mailingLists.utils";
+import { getDataFromSample } from "../mailingLists.utils";
 
 interface Props {
   sample: IDocumentContentJson[];
@@ -15,8 +16,8 @@ const Sample: FC<Props> = ({ sample, column, size = 3 }) => {
     return <Typography variant="caption">Ici apparaitra un aperçu des données sur votre fichier</Typography>;
   }
 
-  if (column === WEBHOOK_LBA) {
-    return <Typography variant="caption">Données récupérées depuis LBA</Typography>;
+  if (isComputedColumns(column)) {
+    return <Typography variant="caption">{MAILING_LIST_COMPUTED_COLUMNS[column].sample}</Typography>;
   }
 
   const data = getDataFromSample(sample, column);

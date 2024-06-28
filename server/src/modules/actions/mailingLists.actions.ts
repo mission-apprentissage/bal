@@ -5,9 +5,11 @@ import { internal } from "@hapi/boom";
 import { stringify } from "csv-stringify";
 import { addJob, IJobsSimple } from "job-processor";
 import { Filter, FindCursor, FindOptions, ObjectId, Sort } from "mongodb";
+import { getMailingOutputColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList";
 import { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
 import { IMailingList, IMailingListWithDocument, MAILING_LIST_MAX_ITERATION } from "shared/models/mailingList.model";
+import { z } from "zod";
 
 import logger from "@/common/logger";
 import * as crypto from "@/common/utils/cryptoUtils";
@@ -19,6 +21,7 @@ import {
   TrainingLink,
   TrainingLinkData,
 } from "../../common/apis/lba";
+import { verifyEmails } from "../../common/services/mailer/mailBouncer";
 import { sleep } from "../../common/utils/asyncUtils";
 import { uploadToStorage } from "../../common/utils/ovhUtils";
 import { DEFAULT_DELIMITER } from "../../common/utils/parserUtils";
@@ -37,9 +40,8 @@ import {
  */
 
 export const MAILING_LIST_DOCUMENT_PREFIX = "mailing-list";
-export const MAILING_LIST_WEBHOOK_LBA = "WEBHOOK_LBA";
 
-export const createMailingList = async (data: Omit<IMailingList, "_id" | "status">) => {
+export const createMailingList = async (data: Omit<IMailingList, "_id" | "status" | "created_at" | "updated_at">) => {
   const now = new Date();
   const mailingList: IMailingList = {
     ...data,
@@ -257,50 +259,87 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
   }
 };
 
-const formatOutput = async (mailingList: IMailingList, documentContents: IDocumentContent[]) => {
-  const toDuplicate: unknown[] = [];
-  let data = documentContents;
-  let outputColumns = mailingList.output_columns;
-  const needsLbaData = outputColumns.map((c) => c.column).includes(MAILING_LIST_WEBHOOK_LBA);
+const zCsvDatum = z.record(z.string().optional());
 
-  if (needsLbaData) {
-    data = await mergeLbaData(mailingList, data);
-  }
+type ICsvDatum = z.infer<typeof zCsvDatum>;
 
-  outputColumns = getOutputColumnsWithLba(mailingList);
+const formatOutput = async (mailingList: IMailingList, documentContents: IDocumentContent[]): Promise<ICsvDatum[]> => {
+  const computedData = await getComputeColumnsData(mailingList, documentContents);
 
-  const rows = data.map((documentContent) => {
+  const outputColumns = getMailingOutputColumns(mailingList);
+
+  const rows: ICsvDatum[] = documentContents.flatMap((documentContent) => {
     const { email, secondary_email } = mailingList;
 
-    const primaryEmail = documentContent?.content?.[email] as string;
-    const secondaryEmail = secondary_email && (documentContent?.content?.[secondary_email] as string);
-    // filtrer les emails invalides et doublons
-    const emails = [...new Set([primaryEmail, secondaryEmail])].filter((e) => EMAIL_REGEX.test(e ?? ""));
+    const content = zCsvDatum.parse(documentContent.content);
+    const primaryEmail = content[email] ?? null;
+    const secondaryEmail = secondary_email ? content[secondary_email] ?? null : null;
 
-    const outputRow: Record<string, string> = {
-      email: emails?.[0] ?? "",
-    };
-
-    for (const outputColumn of outputColumns) {
-      // avoid overriding email column
-      if (outputColumn.output === "email") continue;
-
-      const outputColumnName = outputColumn.output;
-      const outputColumnValue = documentContent?.content?.[outputColumn.column] ?? "";
-      outputRow[outputColumnName] = outputColumnValue as string;
+    const emails: Set<string> = new Set();
+    for (const email of [primaryEmail, secondaryEmail]) {
+      if (email && EMAIL_REGEX.test(email)) {
+        emails.add(email.toLocaleLowerCase());
+      }
     }
 
-    if (emails.length === 2) {
-      toDuplicate.push({ ...outputRow, email: emails[1] });
-    }
+    return Array.from(emails).map((email: string) => {
+      const docComputedData = computedData.get(documentContent._id.toString()) ?? {};
 
-    return outputRow;
+      const outputRow: Record<string, string> = {
+        email,
+      };
+
+      for (const { output: outputColumnName } of outputColumns) {
+        // avoid overriding email column
+        // Priority: email > computedData > content
+        outputRow[outputColumnName] =
+          outputRow[outputColumnName] ?? docComputedData[outputColumnName] ?? content[outputColumnName] ?? "";
+      }
+
+      return outputRow;
+    });
   });
 
-  return [...rows, ...toDuplicate];
+  return rows;
 };
 
-const mergeLbaData = async (mailingList: IMailingList, documentContents: IDocumentContent[]) => {
+async function getComputeColumnsData(
+  mailingList: IMailingList,
+  documentContents: IDocumentContent[]
+): Promise<Map<string, ICsvDatum>> {
+  const names = new Set(mailingList.output_columns.map((c) => c.column));
+
+  const computedData = await Promise.all([
+    names.has(MAILING_LIST_COMPUTED_COLUMNS.WEBHOOK_LBA.key)
+      ? getLbaComputeData(mailingList, documentContents)
+      : new Map(),
+    names.has(MAILING_LIST_COMPUTED_COLUMNS.BOUNCER.key)
+      ? getBouncerComputeData(mailingList, documentContents)
+      : new Map(),
+  ]);
+
+  const result: Map<string, ICsvDatum> = new Map();
+
+  documentContents.forEach((doc) => {
+    const id = doc._id.toString();
+    const d = computedData.reduce<ICsvDatum>((acc, extraData) => {
+      if (extraData.has(doc._id.toString())) {
+        Object.assign(acc, extraData.get(doc._id.toString()));
+      }
+
+      return acc;
+    }, {});
+
+    result.set(id, d);
+  });
+
+  return result;
+}
+
+const getLbaComputeData = async (
+  mailingList: IMailingList,
+  documentContents: IDocumentContent[]
+): Promise<Map<string, ICsvDatum>> => {
   const {
     training_columns: {
       cle_ministere_educatif,
@@ -314,6 +353,7 @@ const mergeLbaData = async (mailingList: IMailingList, documentContents: IDocume
       code_insee,
     },
   } = mailingList;
+
   const payload: TrainingLinkData[] = documentContents.map((documentContent) => {
     const content = documentContent.content as Record<string, string>;
 
@@ -331,21 +371,44 @@ const mergeLbaData = async (mailingList: IMailingList, documentContents: IDocume
     };
   });
 
-  let trainingLinks: TrainingLink[] = [];
-
-  try {
-    trainingLinks = await getTrainingLinks(payload);
-  } catch (error) {
+  const trainingLinks: TrainingLink[] = await getTrainingLinks(payload).catch((error) => {
     logger.error(error);
+    return [];
+  });
+
+  return trainingLinks.reduce<Map<string, ICsvDatum>>((acc, trainingLink) => {
+    acc.set(trainingLink.id, { ...trainingLink });
+
+    return acc;
+  }, new Map());
+};
+
+const getBouncerComputeData = async (
+  mailingList: IMailingList,
+  documentContents: IDocumentContent[]
+): Promise<Map<string, ICsvDatum>> => {
+  const emailColumn = mailingList.output_columns.find((c) => c.output === "email")?.column;
+
+  if (!emailColumn) {
+    return new Map();
   }
 
-  return documentContents.map((dc) => {
-    const trainingLink = trainingLinks.find((tl) => tl.id === dc._id.toString());
+  const pingResults = await verifyEmails(
+    documentContents.map((documentContent): string => documentContent.content?.[emailColumn]?.toString() ?? "")
+  );
 
-    const content = { ...dc.content, ...trainingLink };
+  const result = new Map<string, ICsvDatum>();
+  for (let i = 0; i < pingResults.length; i++) {
+    const id = documentContents[i]._id.toString();
+    result.set(id, {
+      bounce_status: pingResults[i].status,
+      bounce_message: pingResults[i].message,
+      bounce_response_code: pingResults[i].responseCode ?? "",
+      bounce_response_message: pingResults[i].responseMessage ?? "",
+    });
+  }
 
-    return { ...dc, content };
-  });
+  return result;
 };
 
 async function* getLine(mailingList: IMailingList, cursor: FindCursor<IDocumentContent>) {
@@ -376,7 +439,7 @@ async function* getLine(mailingList: IMailingList, cursor: FindCursor<IDocumentC
       }
     }
 
-    const notIdentifiers = getOutputColumnsWithLba(mailingList)
+    const notIdentifiers = getMailingOutputColumns(mailingList)
       .filter((c) => !identifiers.includes(c.output))
       .map((c) => c.output);
 
@@ -394,21 +457,6 @@ async function* getLine(mailingList: IMailingList, cursor: FindCursor<IDocumentC
   if (currentLine !== null) yield currentLine;
 }
 
-const getOutputColumnsWithLba = (mailingList: IMailingList) => {
-  const outputColumns = mailingList.output_columns;
-  const needsLbaData = outputColumns.find((c) => c.column === MAILING_LIST_WEBHOOK_LBA);
-
-  if (!needsLbaData) return outputColumns;
-
-  return [
-    ...outputColumns,
-    // LBA columns
-    { column: "lien_lba", output: "lien_lba", grouped: true },
-    { column: "lien_prdv", output: "lien_prdv", grouped: true },
-    // remove WEBHOOK_LBA column
-  ].filter((c) => c.column !== MAILING_LIST_WEBHOOK_LBA);
-};
-
 export const createMailingListFile = async (mailingList: IMailingList, document: IDocument) => {
   const identifierColumns = mailingList.output_columns
     .filter((c) => mailingList.identifier_columns.includes(c.column))
@@ -422,7 +470,7 @@ export const createMailingListFile = async (mailingList: IMailingList, document:
     sort[`content.${column}`] = 1;
   }
 
-  const documentContents = await getDbCollection("documentContents").find(
+  const documentContentsCursor = getDbCollection("documentContents").find(
     {
       document_id: document._id.toString(),
       "content.email": {
@@ -445,28 +493,28 @@ export const createMailingListFile = async (mailingList: IMailingList, document:
   let progress = 0;
 
   await pipeline(
-    getLine(mailingList, documentContents),
+    getLine(mailingList, documentContentsCursor),
     new Transform({
       readableObjectMode: true,
       writableObjectMode: true,
       transform(line, _encoding, callback) {
         if (progress % 100 === 0) console.log(progress);
         progress++;
-        const outputColumns = getOutputColumnsWithLba(mailingList);
-        const keys = outputColumns.filter((c) => c.grouped).map((c) => c.output);
+        const outputColumns = getMailingOutputColumns(mailingList);
+        const arrayKeys = outputColumns.filter((c) => !c.simple).map((c) => c.output);
 
         const flat: Record<string, string> = {
           email: line.email,
         };
 
-        const ungrouped = outputColumns.filter((c) => !c.grouped).map((c) => c.output);
+        const simpleKeys = outputColumns.filter((c) => c.simple).map((c) => c.output);
 
-        for (const key of ungrouped) {
+        for (const key of simpleKeys) {
           flat[key] = line?.[key] ?? line.wishes[0]?.[key] ?? "";
         }
 
         for (let i = 0; i < MAILING_LIST_MAX_ITERATION; i++) {
-          for (const key of keys) {
+          for (const key of arrayKeys) {
             flat[`${key}_${i + 1}`] = line.wishes[i]?.[key] ?? "";
           }
         }

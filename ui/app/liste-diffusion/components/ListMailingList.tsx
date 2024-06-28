@@ -2,6 +2,7 @@ import { fr } from "@codegouvfr/react-dsfr";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { FC, useState } from "react";
+import { IDocument } from "shared/models/document.model";
 import { IMailingListWithDocumentJson } from "shared/models/mailingList.model";
 import { IResErrorJson } from "shared/routes/common.routes";
 
@@ -20,6 +21,18 @@ const modal = createModal({
   id: "delete-mailing-list-modal",
   isOpenedByDefault: false,
 });
+
+export function getMailingListStatus(mailing: IMailingListWithDocumentJson): IDocument["job_status"] {
+  if (mailing.document) return mailing.document.job_status;
+
+  const createdTime = new Date(mailing.created_at).getTime();
+
+  if (createdTime + 2 * 3600 * 1000 < Date.now()) {
+    return "error";
+  }
+
+  return "pending";
+}
 
 const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
   const [toDelete, setToDelete] = useState<string | null>(null);
@@ -67,17 +80,17 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             field: "document",
             headerName: "Statut",
             width: 200,
+            valueGetter: ({ row }) => row,
             valueFormatter: ({ value }) => {
-              const status: string = value?.job_status ?? "";
-              return (
-                {
-                  processing: "En cours de génération",
-                  done: "Terminé",
-                  error: "Erreur",
-                  pending: "En attente",
-                  paused: "En pause",
-                }[status] ?? "En attente"
-              );
+              const status = getMailingListStatus(value);
+              return {
+                processing: "En cours de génération",
+                importing: "En cours d'import",
+                done: "Terminé",
+                error: "Erreur",
+                pending: "En attente",
+                paused: "En pause",
+              }[status];
             },
           },
           {
@@ -95,7 +108,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             width: 150,
             getActions: ({ row }) => {
               const actions = [];
-              const status = row.document?.job_status ?? "processing";
+              const status = getMailingListStatus(row);
 
               if (status === "done") {
                 actions.push(
