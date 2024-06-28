@@ -7,7 +7,7 @@ export const MAILING_LIST_MAX_ITERATION = 10;
 
 const collectionName = "bouncer.domain" as const;
 
-const indexes: IModelDescriptor["indexes"] = [[{ domain: 1, email: 1 }, { unique: true }]];
+const indexes: IModelDescriptor["indexes"] = [[{ domain: 1, smtp: 1 }, { unique: true }]];
 
 export const zBouncerDomain = z
   .object({

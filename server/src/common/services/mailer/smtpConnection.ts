@@ -136,7 +136,6 @@ export async function* createSmtpConnection(config: SMTPConfig): SMTPConnection 
   });
 
   connection.once("error", (err) => {
-    console.error(`Error connecting to SMTP server: ${err}`, config, buffer);
     error = new Error("connection error", { cause: err });
     state = "error";
     event.emit("update");

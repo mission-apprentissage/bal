@@ -165,13 +165,17 @@ async function verifyDomain(
   return null;
 }
 
-async function persistPingResultCache(email: string, ping: BouncerPingResult): Promise<BouncerPingResult> {
+async function persistPingResultCache(
+  email: string,
+  smtp: string | null,
+  ping: BouncerPingResult
+): Promise<BouncerPingResult> {
   if (ping.status !== "error") {
     await getDbCollection("bouncer.email").insertOne({
       _id: new ObjectId(),
       email,
       domain: email.split("@")[1],
-      smtp: null,
+      smtp,
       ping,
       created_at: new Date(),
     });
@@ -191,7 +195,7 @@ export async function verifyEmail(email: string, domainMap: SmtpSupportMap): Pro
     const smtp = await getSmtpServer(email);
 
     if (!smtp) {
-      return persistPingResultCache(email, {
+      return persistPingResultCache(email, null, {
         status: "invalid",
         message: "No SMTP server found for domain",
         responseCode: null,
@@ -205,7 +209,7 @@ export async function verifyEmail(email: string, domainMap: SmtpSupportMap): Pro
       return domainResult;
     }
 
-    return persistPingResultCache(email, await tryVerifyEmail(email));
+    return persistPingResultCache(email, smtp, await tryVerifyEmail(email));
   } catch (err) {
     captureException(err);
     logger.error(err, { email });
