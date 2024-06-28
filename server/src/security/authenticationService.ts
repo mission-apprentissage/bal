@@ -27,8 +27,8 @@ type AuthenticatedUser<AuthScheme extends WithSecurityScheme["securityScheme"]["
   AuthScheme extends "access-token"
     ? UserWithType<"token", IAccessToken>
     : AuthScheme extends "api-key" | "cookie-session"
-    ? UserWithType<"user", IUserWithPerson>
-    : never;
+      ? UserWithType<"user", IUserWithPerson>
+      : never;
 
 export const getUserFromRequest = <S extends WithSecurityScheme>(
   req: Pick<FastifyRequest, "user">,
