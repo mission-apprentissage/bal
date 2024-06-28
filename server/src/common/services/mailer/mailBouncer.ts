@@ -162,7 +162,7 @@ async function verifyDomain(
     smtpSupportMap.set(smtp, randomResult);
   }
 
-  return null;
+  return smtpSupportMap.get(smtp)!;
 }
 
 async function persistPingResultCache(
