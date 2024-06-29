@@ -7,15 +7,35 @@ export const up = async (db: Db, _client: MongoClient) => {
     { bypassDocumentValidation: true }
   );
 
-  db.collection("deca").updateMany({}, [
-    {
-      $set: {
-        "alternant.adresse.numero": { $toString: "$alternant.adresse.numero" },
-        "alternant.derniere_classe": { $toString: "$alternant.derniere_classe" },
-        "alternant.sexe": { $toString: "$alternant.sexe" },
+  const command = {
+    aggregate: "deca",
+    pipeline: [
+      {
+        $addFields: {
+          "alternant.adresse.numero": {
+            $toString: "$alternant.adresse.numero",
+          },
+          "alternant.derniere_classe": {
+            $toString: "$alternant.derniere_classe",
+          },
+          "alternant.sexe": {
+            $toString: "$alternant.sexe",
+          },
+        },
       },
-    },
-  ]);
+      {
+        $merge: {
+          into: "deca",
+          whenMatched: "merge",
+          whenNotMatched: "fail",
+        },
+      },
+    ],
+    cursor: {},
+    bypassDocumentValidation: true,
+  };
+
+  await _client.db("mna-bal").command(command);
 };
 
 export const down = async (_db: Db, _client: MongoClient) => {};
