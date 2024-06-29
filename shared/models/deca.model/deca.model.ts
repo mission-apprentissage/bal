@@ -34,12 +34,12 @@ export const ZDeca = z
     no_avenant: z.string().optional().describe("Le numéro de l'avenant du contrat"),
     dispositif: z.string().optional().describe("dispositif"), // PROF/APPR
     type_contrat: z.string().optional(),
-    // type_contrat: z
-    //   .enum(["11", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "38"]) // 24
-    //   .optional()
-    //   .describe(
-    //     "Le type de contrat ou avenant doit correspondre à la situation du contrat (premier contrat, succession de contrats, avenants)."
-    //   ),
+    // // type_contrat: z
+    // //   .enum(["11", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "38"]) // 24
+    // //   .optional()
+    // //   .describe(
+    // //     "Le type de contrat ou avenant doit correspondre à la situation du contrat (premier contrat, succession de contrats, avenants)."
+    // //   ),
     rupture_avant_debut: z.boolean().optional().describe("rupture_avant_debut"),
 
     type_employeur: z.number().optional().describe("Type employeur"),
@@ -51,7 +51,7 @@ export const ZDeca = z
     etablissement_formation: ZDecaEtablissementFormation.optional(),
     organisme_formation: ZDecaOrganismeFormation.optional(),
     employeur: ZDecaEmployeur,
-    updated_at: z.date().describe("Date de mise à jour en base de données"),
+    updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
     created_at: z.date().optional().describe("Date d'ajout en base de données"),
   })
   .strict();
