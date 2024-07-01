@@ -103,7 +103,7 @@ fileignoreconfig:
 - filename: server/src/app.ts
   checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
 - filename: server/src/common/services/mailer/mailBouncer.ts
-  checksum: 225f29cbe645984b20352314b0664ee9c4924167a893844b2c53f88379b05dba
+  checksum: de7e4ec8b4844803ffff44be61c98a30cfddc581882800c1aa27b62ddd983d34
 - filename: server/src/config.ts
   checksum: df9536cab06a9da8e128d093d87af4c4c4ebfe4c069261a2c668b9e064c07cf8
 - filename: server/src/modules/actions/organisation.actions.ts

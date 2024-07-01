@@ -35,7 +35,7 @@ async function tryVerifyEmail(email: string, retryCount = 0): Promise<BouncerPin
 
   const smtpConnection = createSmtpConnection({
     port: 25, // Default SMTP port
-    fqdn: "apprentissage.beta.gouv.fr", // Fully Qualified Domain Name of your SMTP server
+    fqdn: "bal-mail@apprentissage.beta.gouv.fr", // Fully Qualified Domain Name of your SMTP server
     sender: "nepasrepondre@apprentissage.beta.gouv.fr", // Email address to use as the sender in SMTP checks,
     email,
     smtp,
@@ -223,14 +223,18 @@ export async function verifyEmail(email: string, domainMap: SmtpSupportMap): Pro
   }
 }
 
-export async function verifyEmails(emails: string[]): Promise<BouncerPingResult[]> {
+export async function getDomainMap(): Promise<SmtpSupportMap> {
   const knownDomains = await getDbCollection("bouncer.domain")
     .find({
       "ping.status": { $ne: "error" },
     })
     .toArray();
 
-  const domainMap: Map<string, BouncerPingResult | null> = new Map(knownDomains.map((d) => [d.smtp, d.ping]));
+  return new Map(knownDomains.map((d) => [d.smtp, d.ping]));
+}
+
+export async function verifyEmails(emails: string[]): Promise<BouncerPingResult[]> {
+  const domainMap: Map<string, BouncerPingResult | null> = await getDomainMap();
 
   const result = [];
 
