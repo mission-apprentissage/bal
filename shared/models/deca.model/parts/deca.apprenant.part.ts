@@ -14,7 +14,7 @@ export const ZDecaApprenant = z
     telephone: z.string().optional().describe("Le numéro de téléphone de l'alternant"),
     adresse: z
       .object({
-        numero: z.string().nullish().describe("Le numéro de l'adresse"),
+        numero: z.number().nullish().describe("Le numéro de l'adresse"),
         voie: z.string().optional().describe("La voie de l'adresse"),
         code_postal: z.string().optional().describe("Le code postal de l'adresse"),
       })
