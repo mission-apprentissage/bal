@@ -1,4 +1,5 @@
 import { addJob, initJobProcessor } from "job-processor";
+import { z } from "zod";
 
 import {
   create as createMigration,
@@ -7,6 +8,7 @@ import {
 } from "@/modules/jobs/migrations/migrations";
 
 import logger from "../../common/logger";
+import { getDomainMap, verifyEmail } from "../../common/services/mailer/mailBouncer";
 import { getDatabase } from "../../common/utils/mongodbUtils";
 import config from "../../config";
 import {
@@ -109,6 +111,13 @@ export async function setupJobProcessor() {
         handler: async (job) => {
           const { offset } = job.payload ?? {};
           return run_hydrate_from_deca(offset ? parseInt(offset.toString(), 10) : 0);
+        },
+      },
+      "email:verify": {
+        handler: async (job) => {
+          const { email } = z.object({ email: z.string() }).parse(job.payload);
+          const result = await verifyEmail(email, await getDomainMap());
+          logger.info("Email verification result", { email, result });
         },
       },
       "job:validation:hydrate_from_constructys": {
