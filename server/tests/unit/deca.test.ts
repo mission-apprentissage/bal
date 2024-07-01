@@ -5,6 +5,8 @@ import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 import { getDbVerification, importDecaContent, parseContentLine } from "../../src/modules/actions/deca.actions";
 import { findOrganisations } from "../../src/modules/actions/organisations.actions";
 import { findPersons } from "../../src/modules/actions/persons.actions";
+import { buildPeriodsToFetch, NB_JOURS_MAX_PERIODE_FETCH } from "../../src/modules/jobs/deca/hydrate-deca";
+import { deepFlattenToObject } from "../../src/modules/jobs/deca/hydrate-deca-history";
 import { useMongo } from "../utils/mongo.utils";
 
 describe("DECA file", () => {
@@ -223,5 +225,64 @@ describe("DECA verification", () => {
     assert.deepEqual(await getDbVerification("12345678999999", "test3@gmail.com"), {
       is_valid: false,
     });
+  });
+});
+
+describe("IMPORT DECA from API", () => {
+  const mongo = useMongo();
+
+  beforeAll(async () => {
+    await mongo.beforeAll();
+  });
+
+  beforeEach(async () => {
+    await mongo.beforeEach();
+  });
+
+  afterAll(async () => {
+    await mongo.afterAll();
+  });
+
+  it("periods to fetch OK", () => {
+    const periods1 = buildPeriodsToFetch(new Date("2024-01-01"), new Date("2024-01-04"));
+    assert.deepEqual(periods1, [
+      { dateDebut: "2024-01-01", dateFin: "2024-01-02" },
+      { dateDebut: "2024-01-02", dateFin: "2024-01-03" },
+      { dateDebut: "2024-01-03", dateFin: "2024-01-04" },
+    ]);
+
+    const periods2 = buildPeriodsToFetch(new Date("2024-01-01"), new Date("2024-03-01"));
+    assert.deepEqual(periods2.length, NB_JOURS_MAX_PERIODE_FETCH);
+    assert.deepEqual(periods2[0], { dateDebut: "2024-01-01", dateFin: "2024-01-02" });
+    assert.deepEqual(periods2[NB_JOURS_MAX_PERIODE_FETCH], { dateDebut: "2024-01-30", dateFin: "2024-01-31" });
+  });
+
+  // buildDecaContrat
+
+  it("deepFlattenToObject works as expected", async () => {
+    const nestedObj = {
+      a: 1,
+      b: {
+        c: 2,
+        d: {
+          e: 3,
+          f: 4,
+        },
+      },
+      g: 5,
+    };
+
+    const expectedOutput = {
+      a: 1,
+      "b.c": 2,
+      "b.d.e": 3,
+      "b.d.f": 4,
+      g: 5,
+    };
+
+    assert.deepEqual(deepFlattenToObject(nestedObj), expectedOutput);
+    assert.deepEqual(deepFlattenToObject({}), {});
+    assert.deepEqual(deepFlattenToObject({ a: 1, b: 2 }), { a: 1, b: 2 });
+    assert.deepEqual(deepFlattenToObject({ a: 1, b: { c: 2, d: null } }), { a: 1, "b.c": 2, "b.d": null });
   });
 });

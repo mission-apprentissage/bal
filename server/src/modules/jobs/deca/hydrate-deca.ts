@@ -1,5 +1,5 @@
 import { internal } from "@hapi/boom";
-import { addDays, differenceInDays, format, isAfter, isBefore } from "date-fns";
+import { addDays, format, isAfter, isBefore } from "date-fns";
 import deepmerge from "deepmerge";
 import { IDeca } from "shared/models/deca.model/deca.model";
 
@@ -12,7 +12,14 @@ import { saveHistory } from "./hydrate-deca-history";
 
 const logger = parentLogger.child({ module: "job:hydrate:deca" });
 const DATE_DEBUT_CONTRATS_DISPONIBLES = new Date("2022-06-07T00:00:00.000Z"); // Date de début de disponibilité des données dans l'API Deca
-const NB_JOURS_MAX_PERIODE_FETCH = 60;
+export const NB_JOURS_MAX_PERIODE_FETCH = 30;
+
+function getMaxOldestDateForFetching() {
+  const date = new Date();
+  date.setDate(date.getDate() - NB_JOURS_MAX_PERIODE_FETCH);
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
 
 const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
   return value ? { [key]: transform(value) } : {};
@@ -20,6 +27,71 @@ const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
 
 const parseDate = (v: string) => {
   return v ? new Date(v) : null;
+};
+
+const maxOldestDateForFetching = getMaxOldestDateForFetching();
+
+export const buildDecaContract = (contrat: any): IDeca => {
+  return {
+    alternant: {
+      ...ifDefined("date_naissance", contrat.alternant.dateNaissance, parseDate), // TDB, LBA
+      ...ifDefined("nom", contrat.alternant.nom), // TDB, LBA
+      ...ifDefined("prenom", contrat.alternant.prenom), // TDB, LBA
+      ...ifDefined("sexe", contrat.alternant.sexe), // TDB
+      ...ifDefined("departement_naissance", contrat.alternant.departementNaissance), // TDB
+      ...ifDefined("nationalite", contrat.alternant.nationalite, parseInt), // TDB
+      handicap: contrat.alternant.handicap === "true" ? true : false, // TDB, LBA
+      ...ifDefined("courriel", contrat.alternant.courriel), // TDB, LBA
+      ...ifDefined("telephone", contrat.alternant.telephone), // TDB
+      adresse: {
+        ...ifDefined("numero", contrat.alternant.adresse?.numero, parseInt), // TDB
+        ...ifDefined("voie", contrat.alternant.adresse?.voie), // TDB
+        ...ifDefined("code_postal", contrat.alternant.adresse?.codePostal), // TDB
+      },
+      ...ifDefined("derniere_classe", contrat.alternant.derniereClasse), // TDB
+    },
+    formation: {
+      ...ifDefined("date_debut_formation", contrat.formation.dateDebutFormation, parseDate), // TDB
+      ...ifDefined("date_fin_formation", contrat.formation.dateFinFormation, parseDate), // TDB
+      ...ifDefined("code_diplome", contrat.formation.codeDiplome), // TDB, LBA
+      ...ifDefined("intitule_ou_qualification", contrat.formation.intituleOuQualification), // TDB, LBA
+      ...ifDefined("rncp", contrat.formation.rncp), // TDB, LBA
+      ...ifDefined("type_diplome", contrat.formation.typeDiplome), // LBA
+    },
+    etablissement_formation: {
+      ...ifDefined("siret", contrat.etablissementFormation?.siret), // TDB
+    },
+    organisme_formation: {
+      ...ifDefined("uai_cfa", contrat.organismeFormationResponsable.uaiCfa), // TDB, LBA
+      ...ifDefined("siret", contrat.organismeFormationResponsable.siret), // TDB, LBA
+    },
+    employeur: {
+      ...ifDefined("code_idcc", contrat.employeur.codeIdcc), // TDB, LBA
+      ...ifDefined("siret", contrat.employeur.siret), // LBA
+      adresse: {
+        ...ifDefined("code_postal", contrat.employeur.adresse.codePostal), // LBA
+      },
+      ...ifDefined("naf", contrat.employeur.naf), // LBA
+      ...ifDefined("nombre_de_salaries", contrat.employeur.nombreDeSalaries), // LBA
+      ...ifDefined("courriel", contrat.employeur.courriel), // LBA
+      ...ifDefined("telephone", contrat.employeur.telephone), // LBA
+      ...ifDefined("denomination", contrat.employeur.denomination), // LBA
+    },
+    no_contrat: contrat.detailsContrat.noContrat, // TDB, LBA
+    ...ifDefined("type_contrat", "" + contrat.detailsContrat.typeContrat), // TDB, LBA
+    ...ifDefined("date_effet_rupture", contrat.rupture?.dateEffetRupture, parseDate), // TDB, LBA
+    ...ifDefined("dispositif", contrat.detailsContrat.dispositif), // LBA
+    ...ifDefined("date_debut_contrat", contrat.detailsContrat.dateDebutContrat, parseDate), // TDB, LBA
+    ...ifDefined("date_fin_contrat", contrat.detailsContrat.dateFinContrat, parseDate), // TDB, LBA
+    ...ifDefined("date_effet_avenant", contrat.detailsContrat.dateEffetAvenant, parseDate), // TDB, LBA
+    ...ifDefined("no_avenant", contrat.detailsContrat.noAvenant), // TDB, LBA
+    ...ifDefined("statut", contrat.detailsContrat.statut), // TDB, LBA
+    // flag_correction: contrat.detailsContrat.flagcorrection === "true" ? true : false,
+    // ...(contrat.detailsContrat.datesuppression ? { date_suppression: contrat.detailsContrat.datesuppression } : {}),
+    // ...(contrat.detailsContrat.rupture_avant_debut
+    //   ? { rupture_avant_debut: contrat.detailsContrat.rupture_avant_debut === "true" ? true : false }
+    //   : {}),
+  };
 };
 
 /**
@@ -31,7 +103,7 @@ const parseDate = (v: string) => {
  *    - from : depuis yyyy-MM-dd
  *    - to : jusqu'a yyyy-MM-dd
  */
-export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?: string; chunk: number }) => {
+export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) => {
   const now = new Date();
   const yesterday = addDays(now, -1);
   yesterday.setHours(23);
@@ -42,7 +114,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
   // Récupération de la date début / fin
   const dateDebutToFetch: Date = from
     ? new Date(`${from}T00:00:00.000Z`)
-    : (await getLastDecaCreatedDateInDb()) ?? new Date(`2024-05-21T00:00:00.000Z`);
+    : (await getLastDecaCreatedDateInDb()) ?? maxOldestDateForFetching;
   const dateFinToFetch = to ? new Date(`${to}T00:00:00.000Z`) : yesterday;
 
   if (isAfter(dateDebutToFetch, dateFinToFetch)) {
@@ -57,9 +129,6 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
   } else if (isAfter(dateFinToFetch, yesterday)) {
     logger.error("Limite deca date de fin à Hier");
     return;
-  } else if (chunk > NB_JOURS_MAX_PERIODE_FETCH) {
-    logger.error("Limite deca de plage 60 jours");
-    return;
   }
 
   logger.info(
@@ -67,7 +136,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
   );
 
   // Récupération des périodes (liste dateDebut/fin) à fetch dans l'API
-  const periods = buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch, chunk);
+  const periods = buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch);
 
   await asyncForEach(periods, async ({ dateDebut, dateFin }: { dateDebut: string; dateFin: string }) => {
     try {
@@ -108,67 +177,8 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
         }
 
         try {
-          const result = {
-            alternant: {
-              ...ifDefined("date_naissance", contrat.alternant.dateNaissance, parseDate), // TDB, LBA
-              ...ifDefined("nom", contrat.alternant.nom), // TDB, LBA
-              ...ifDefined("prenom", contrat.alternant.prenom), // TDB, LBA
-              ...ifDefined("sexe", contrat.alternant.sexe), // TDB
-              ...ifDefined("departement_naissance", contrat.alternant.departementNaissance), // TDB
-              ...ifDefined("nationalite", contrat.alternant.nationalite, parseInt), // TDB
-              handicap: contrat.alternant.handicap === "true" ? true : false, // TDB, LBA
-              ...ifDefined("courriel", contrat.alternant.courriel), // TDB, LBA
-              ...ifDefined("telephone", contrat.alternant.telephone), // TDB
-              adresse: {
-                ...ifDefined("numero", contrat.alternant.adresse?.numero, parseInt), // TDB
-                ...ifDefined("voie", contrat.alternant.adresse?.voie), // TDB
-                ...ifDefined("code_postal", contrat.alternant.adresse?.codePostal), // TDB
-              },
-              ...ifDefined("derniere_classe", contrat.alternant.derniereClasse), // TDB
-            },
-            formation: {
-              ...ifDefined("date_debut_formation", contrat.formation.dateDebutFormation, parseDate), // TDB
-              ...ifDefined("date_fin_formation", contrat.formation.dateFinFormation, parseDate), // TDB
-              ...ifDefined("code_diplome", contrat.formation.codeDiplome), // TDB, LBA
-              ...ifDefined("intitule_ou_qualification", contrat.formation.intituleOuQualification), // TDB, LBA
-              ...ifDefined("rncp", contrat.formation.rncp), // TDB, LBA
-              ...ifDefined("type_diplome", contrat.formation.typeDiplome), // LBA
-            },
-            etablissement_formation: {
-              ...ifDefined("siret", contrat.etablissementFormation?.siret), // TDB
-            },
-            organisme_formation: {
-              ...ifDefined("uai_cfa", contrat.organismeFormationResponsable.uaiCfa), // TDB, LBA
-              ...ifDefined("siret", contrat.organismeFormationResponsable.siret), // TDB, LBA
-            },
-            employeur: {
-              ...ifDefined("code_idcc", contrat.employeur.codeIdcc), // TDB, LBA
-              ...ifDefined("siret", contrat.employeur.siret), // LBA
-              adresse: {
-                ...ifDefined("code_postal", contrat.employeur.adresse.codePostal), // LBA
-              },
-              ...ifDefined("naf", contrat.employeur.naf), // LBA
-              ...ifDefined("nombre_de_salaries", contrat.employeur.nombreDeSalaries), // LBA
-              ...ifDefined("courriel", contrat.employeur.courriel), // LBA
-              ...ifDefined("telephone", contrat.employeur.telephone), // LBA
-              ...ifDefined("denomination", contrat.employeur.denomination), // LBA
-            },
-            no_contrat: contrat.detailsContrat.noContrat, // TDB, LBA
-            ...ifDefined("type_contrat", "" + contrat.detailsContrat.typeContrat), // TDB, LBA
-            ...ifDefined("date_effet_rupture", contrat.rupture?.dateEffetRupture, parseDate), // TDB, LBA
-            ...ifDefined("dispositif", contrat.detailsContrat.dispositif), // LBA
-            ...ifDefined("date_debut_contrat", contrat.detailsContrat.dateDebutContrat, parseDate), // TDB, LBA
-            ...ifDefined("date_fin_contrat", contrat.detailsContrat.dateFinContrat, parseDate), // TDB, LBA
-            ...ifDefined("date_effet_avenant", contrat.detailsContrat.dateEffetAvenant, parseDate), // TDB, LBA
-            ...ifDefined("no_avenant", contrat.detailsContrat.noAvenant), // TDB, LBA
-            ...ifDefined("statut", contrat.detailsContrat.statut), // TDB, LBA
-            // flag_correction: contrat.detailsContrat.flagcorrection === "true" ? true : false,
-            // ...(contrat.detailsContrat.datesuppression ? { date_suppression: contrat.detailsContrat.datesuppression } : {}),
-            // ...(contrat.detailsContrat.rupture_avant_debut
-            //   ? { rupture_avant_debut: contrat.detailsContrat.rupture_avant_debut === "true" ? true : false }
-            //   : {}),
-          };
-          acc.push(result);
+          const formattedContract = buildDecaContract(contrat);
+          acc.push(formattedContract);
         } catch (error) {
           console.log(error);
         }
@@ -187,7 +197,7 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
 
         const now = new Date(dateDebut);
 
-        if (oldContrat && oldContrat.updated_at.getTime() > now.getTime()) {
+        if (oldContrat && oldContrat.updated_at && oldContrat.updated_at.getTime() > now.getTime()) {
           throw internal("contracts not imported in chronological order", { oldContrat, currentContrat, now });
         }
 
@@ -217,30 +227,20 @@ export const hydrateDeca = async ({ from, to, chunk = 1 }: { from?: string; to?:
  * Récupération de la liste des périodes (dateDébut - dateFin) par chunk de NB_DAYS_CHUNK
  * on devra l'appeler plusieurs fois si la durée que l'on souhaite est > NB_DAYS_CHUNK
  */
-export const buildPeriodsToFetch = (
-  dateDebut: Date,
-  dateFin: Date,
-  chunkNbDays = 1
-): Array<{ dateDebut: string; dateFin: string }> => {
+export const buildPeriodsToFetch = (dateDebut: Date, dateFin: Date): Array<{ dateDebut: string; dateFin: string }> => {
   const periods: Array<{ dateDebut: string; dateFin: string }> = [];
 
-  const nbDaysBetweenDebutFin = differenceInDays(dateFin, dateDebut);
+  let currentDate = dateDebut;
 
-  if (nbDaysBetweenDebutFin < chunkNbDays) {
-    periods.push({ dateDebut: format(dateDebut, "yyyy-MM-dd"), dateFin: format(dateFin, "yyyy-MM-dd") });
-  } else {
-    let currentDate = dateDebut;
-
-    while (isBefore(currentDate, dateFin)) {
-      const dateFinPeriod = addDays(currentDate, chunkNbDays);
-      if (isAfter(dateFinPeriod, dateFin)) {
-        if (format(currentDate, "yyyy-MM-dd") !== format(dateFin, "yyyy-MM-dd"))
-          periods.push({ dateDebut: format(currentDate, "yyyy-MM-dd"), dateFin: format(dateFin, "yyyy-MM-dd") });
-      } else {
-        periods.push({ dateDebut: format(currentDate, "yyyy-MM-dd"), dateFin: format(dateFinPeriod, "yyyy-MM-dd") });
-      }
-      currentDate = addDays(currentDate, chunkNbDays);
+  while (periods.length < NB_JOURS_MAX_PERIODE_FETCH && isBefore(currentDate, dateFin)) {
+    const dateFinPeriod = addDays(currentDate, 1);
+    if (isAfter(dateFinPeriod, dateFin)) {
+      if (format(currentDate, "yyyy-MM-dd") !== format(dateFin, "yyyy-MM-dd"))
+        periods.push({ dateDebut: format(currentDate, "yyyy-MM-dd"), dateFin: format(dateFin, "yyyy-MM-dd") });
+    } else {
+      periods.push({ dateDebut: format(currentDate, "yyyy-MM-dd"), dateFin: format(dateFinPeriod, "yyyy-MM-dd") });
     }
+    currentDate = addDays(currentDate, 1);
   }
 
   return periods;
@@ -251,7 +251,11 @@ export const buildPeriodsToFetch = (
  * @returns
  */
 export const getLastDecaCreatedDateInDb = async (): Promise<Date | null> => {
-  const lastDecaItem = await getDbCollection("deca").find().sort({ created_at: -1 }).limit(1).toArray();
+  const lastDecaItem = await getDbCollection("deca")
+    .find({ created_at: { $exists: true } })
+    .sort({ created_at: -1 })
+    .limit(1)
+    .toArray();
   let lastCreatedAt = lastDecaItem[0]?.created_at ?? null;
   // Si la dernière date est plus tard qu'hier, on prend d'avant hier en date de debut de référence
   if (lastCreatedAt && isAfter(lastCreatedAt, addDays(new Date(), -1))) lastCreatedAt = addDays(new Date(), -2);

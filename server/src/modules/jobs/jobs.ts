@@ -39,7 +39,7 @@ export async function setupJobProcessor() {
             },
             "Mise à jour des données DECA": {
               cron_string: "30 4 * * *",
-              handler: () => hydrateDeca({ from: "", to: "", chunk: 1 }),
+              handler: () => hydrateDeca({ from: "", to: "" }),
             },
           },
     jobs: {
