@@ -34,33 +34,41 @@ export const up = async (db: Db, _client: MongoClient) => {
 
   await _client.db("mna-bal").command(command);
 
-  await db.collection("deca").updateMany({ "alternant.sexe": { $in: ["1", "2"] } }, [
-    {
-      $set: {
-        "alternant.sexe": {
-          $cond: {
-            if: { $eq: ["$alternant.sexe", "1"] },
-            then: "H",
-            else: {
-              $cond: {
-                if: { $eq: ["$alternant.sexe", "2"] },
-                then: "F",
-                else: "$alternant.sexe",
+  await db.collection("deca").updateMany(
+    { "alternant.sexe": { $in: ["1", "2"] } },
+    [
+      {
+        $set: {
+          "alternant.sexe": {
+            $cond: {
+              if: { $eq: ["$alternant.sexe", "1"] },
+              then: "H",
+              else: {
+                $cond: {
+                  if: { $eq: ["$alternant.sexe", "2"] },
+                  then: "F",
+                  else: "$alternant.sexe",
+                },
               },
             },
           },
         },
       },
-    },
-  ]);
+    ],
+    { bypassDocumentValidation: true }
+  );
 
-  await db.collection("deca").updateMany({ "alternant.derniere_classe": "1" }, [
-    {
-      $set: {
-        "alternant.derniere_classe": "01",
+  await db.collection("deca").updateMany(
+    { "alternant.derniere_classe": "1" },
+    [
+      {
+        $set: {
+          "alternant.derniere_classe": "01",
+        },
       },
-    },
-  ]);
+    ],
+    { bypassDocumentValidation: true }
+  );
 };
 
 export const down = async (_db: Db, _client: MongoClient) => {};
