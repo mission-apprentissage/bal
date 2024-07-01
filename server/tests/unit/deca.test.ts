@@ -254,7 +254,7 @@ describe("IMPORT DECA from API", () => {
     const periods2 = buildPeriodsToFetch(new Date("2024-01-01"), new Date("2024-03-01"));
     assert.deepEqual(periods2.length, NB_JOURS_MAX_PERIODE_FETCH);
     assert.deepEqual(periods2[0], { dateDebut: "2024-01-01", dateFin: "2024-01-02" });
-    assert.deepEqual(periods2[NB_JOURS_MAX_PERIODE_FETCH], { dateDebut: "2024-01-30", dateFin: "2024-01-31" });
+    assert.deepEqual(periods2[NB_JOURS_MAX_PERIODE_FETCH - 1], { dateDebut: "2024-01-30", dateFin: "2024-01-31" });
   });
 
   // buildDecaContrat
