@@ -35,7 +35,7 @@ async function tryVerifyEmail(email: string, retryCount = 0): Promise<BouncerPin
 
   const smtpConnection = createSmtpConnection({
     port: 25, // Default SMTP port
-    fqdn: "bal-mail@apprentissage.beta.gouv.fr", // Fully Qualified Domain Name of your SMTP server
+    fqdn: "bal-mail.apprentissage.beta.gouv.fr", // Fully Qualified Domain Name of your SMTP server
     sender: "nepasrepondre@apprentissage.beta.gouv.fr", // Email address to use as the sender in SMTP checks,
     email,
     smtp,
