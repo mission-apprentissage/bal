@@ -69,6 +69,18 @@ export const up = async (db: Db, _client: MongoClient) => {
     ],
     { bypassDocumentValidation: true }
   );
+
+  await db.collection("deca").updateMany(
+    { rupture_avant_debut: null },
+    [
+      {
+        $set: {
+          rupture_avant_debut: false,
+        },
+      },
+    ],
+    { bypassDocumentValidation: true }
+  );
 };
 
 export const down = async (_db: Db, _client: MongoClient) => {};
