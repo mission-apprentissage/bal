@@ -98,10 +98,12 @@ export const buildDecaContract = (contrat: any): IDeca => {
  * Ce job peuple la collection contratsDeca via l'API Deca
  * L'API Deca ne permets de récupérer des données que sur une période maximum NB_JOURS_MAX_PERIODE_FETCH
  * L'API Deca ne permets de récupérer des données que jusqu'a "hier" au plus tard.
- * Le job va récupérer les données en découpant par chunks de NB_JOURS_MAX_PERIODE_FETCH jours si besoin via 2 modes :
+ * Le job va récupérer les données en découpant par chunks de 1 jour si besoin via 2 modes :
  *    - incrémental (si aucune option spécifiée) : depuis la date la plus récente des contratsDecaDb en base jusqu'à "hier"
  *    - from : depuis yyyy-MM-dd
  *    - to : jusqu'a yyyy-MM-dd
+ * Le job récupérera NB_JOURS_MAX_PERIODE_FETCH jours max par appel
+ * Le fonctionnement nominal est un appel quotidien de récupération des données de la veille
  */
 export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) => {
   const now = new Date();
