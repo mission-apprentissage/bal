@@ -53,6 +53,14 @@ export const up = async (db: Db, _client: MongoClient) => {
       },
     },
   ]);
+
+  await db.collection("deca").updateMany({ "alternant.derniere_classe": "1" }, [
+    {
+      $set: {
+        "alternant.derniere_classe": "01",
+      },
+    },
+  ]);
 };
 
 export const down = async (_db: Db, _client: MongoClient) => {};
