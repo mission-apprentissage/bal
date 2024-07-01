@@ -5,7 +5,11 @@ import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 import { getDbVerification, importDecaContent, parseContentLine } from "../../src/modules/actions/deca.actions";
 import { findOrganisations } from "../../src/modules/actions/organisations.actions";
 import { findPersons } from "../../src/modules/actions/persons.actions";
-import { buildPeriodsToFetch, NB_JOURS_MAX_PERIODE_FETCH } from "../../src/modules/jobs/deca/hydrate-deca";
+import {
+  buildDecaContract,
+  buildPeriodsToFetch,
+  NB_JOURS_MAX_PERIODE_FETCH,
+} from "../../src/modules/jobs/deca/hydrate-deca";
 import { deepFlattenToObject } from "../../src/modules/jobs/deca/hydrate-deca-history";
 import { useMongo } from "../utils/mongo.utils";
 
@@ -257,7 +261,109 @@ describe("IMPORT DECA from API", () => {
     assert.deepEqual(periods2[NB_JOURS_MAX_PERIODE_FETCH - 1], { dateDebut: "2024-01-30", dateFin: "2024-01-31" });
   });
 
-  // buildDecaContrat
+  it("building deca contract OK", () => {
+    const rawContractFromApi = {
+      alternant: {
+        dateNaissance: "1999-11-07",
+        nom: "NOM",
+        prenom: "PRENOM",
+        sexe: "H",
+        departementNaissance: "031",
+        nationalite: 1,
+        handicap: true,
+        courriel: "alternant@alternant.fr",
+        telephone: "",
+        adresse: {
+          numero: 5,
+          voie: "2 RUE DE LA RUE",
+          codePostal: "31000",
+        },
+        derniereClasse: "01",
+      },
+      formation: {
+        rncp: "RNCP35400",
+        codeDiplome: "32031102",
+        intituleOuQualification: "TRANSPORT ET PRESTATION LOGISTIQUES (BTS)",
+        typeDiplome: "54",
+        dateDebutFormation: "2023-09-11",
+        dateFinFormation: "2025-06-27",
+      },
+      etablissementFormation: { siret: "12345678912345" },
+      organismeFormationResponsable: { siret: "12345678912345", uaiCfa: "01234567" },
+      employeur: {
+        siret: "12345678912345",
+        adresse: { codePostal: "91920" },
+        naf: "5210B",
+        codeIdcc: "0016",
+        nombreDeSalaries: 74,
+        courriel: "test@test.com",
+        telephone: "0102030405",
+        denomination: "BIDULE LOGISTIQUES",
+        typeEmployeur: 11,
+        employeurSpecifique: 0,
+      },
+      detailsContrat: {
+        dispositif: "APPR",
+        noContrat: "031202310001351",
+        dateEffetAvenant: "2023-09-18",
+        noAvenant: "031202310001351",
+        statut: "Rompu",
+        dateDebutContrat: "2023-09-18",
+        dateFinContrat: "2025-06-27",
+        typeContrat: 11,
+        typeDerogation: 99,
+      },
+      rupture: { dateEffetRupture: "2023-12-21" },
+    };
+
+    const expectedRefinedContractForBal = {
+      alternant: {
+        date_naissance: new Date("1999-11-07T00:00:00.000Z"),
+        nom: "NOM",
+        prenom: "PRENOM",
+        sexe: "H",
+        departement_naissance: "031",
+        nationalite: 1,
+        handicap: false,
+        courriel: "alternant@alternant.fr",
+        adresse: { numero: 5, voie: "2 RUE DE LA RUE", code_postal: "31000" },
+        derniere_classe: "01",
+      },
+      formation: {
+        date_debut_formation: new Date("2023-09-11T00:00:00.000Z"),
+        date_fin_formation: new Date("2025-06-27T00:00:00.000Z"),
+        code_diplome: "32031102",
+        intitule_ou_qualification: "TRANSPORT ET PRESTATION LOGISTIQUES (BTS)",
+        rncp: "RNCP35400",
+        type_diplome: "54",
+      },
+      etablissement_formation: { siret: "12345678912345" },
+      organisme_formation: { uai_cfa: "01234567", siret: "12345678912345" },
+      employeur: {
+        code_idcc: "0016",
+        siret: "12345678912345",
+        adresse: { code_postal: "91920" },
+        naf: "5210B",
+        nombre_de_salaries: 74,
+        courriel: "test@test.com",
+        telephone: "0102030405",
+        denomination: "BIDULE LOGISTIQUES",
+      },
+      no_contrat: "031202310001351",
+      type_contrat: "11",
+      date_effet_rupture: new Date("2023-12-21T00:00:00.000Z"),
+      dispositif: "APPR",
+      date_debut_contrat: new Date("2023-09-18T00:00:00.000Z"),
+      date_fin_contrat: new Date("2025-06-27T00:00:00.000Z"),
+      date_effet_avenant: new Date("2023-09-18T00:00:00.000Z"),
+      no_avenant: "031202310001351",
+      statut: "Rompu",
+    };
+
+    const refinedContractForBal = buildDecaContract(rawContractFromApi);
+
+    assert.deepEqual(refinedContractForBal, expectedRefinedContractForBal);
+  });
 
   it("deepFlattenToObject works as expected", async () => {
     const nestedObj = {

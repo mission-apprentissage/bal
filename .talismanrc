@@ -135,7 +135,7 @@ fileignoreconfig:
 - filename: server/tests/data/opcoEp.ts
   checksum: 8d1f421390c62fce249bf9efa7bb0688c6c9aa97375dd83d45f28c7d2246bf42
 - filename: server/tests/unit/deca.test.ts
-  checksum: e3f6b8fe70f0793ee367971538658938ddfc0ba62e281e1e3bbde6f7aaac2347
+  checksum: 68fee7569d3e29f16dff15f449fe9326efbff4d463a038516229579669f0f536
 - filename: ui/.env
   checksum: 36cfa5591cf1dcf75cc7fb3be6980cc26a393786f0afffdcca92573c448b3148
 - filename: ui/.env.local.example
