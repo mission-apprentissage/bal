@@ -18,6 +18,9 @@ export const up = async (db: Db, _client: MongoClient) => {
           "alternant.sexe": {
             $toString: "$alternant.sexe",
           },
+          "alternant.adresse.numero": {
+            $toInt: "$alternant.adresse.numero",
+          },
         },
       },
       {
@@ -76,6 +79,30 @@ export const up = async (db: Db, _client: MongoClient) => {
       {
         $set: {
           rupture_avant_debut: false,
+        },
+      },
+    ],
+    { bypassDocumentValidation: true }
+  );
+
+  await db.collection("deca").updateMany(
+    { "employeur.nombre_de_salaries": 0 },
+    [
+      {
+        $set: {
+          "employeur.nombre_de_salaries": null,
+        },
+      },
+    ],
+    { bypassDocumentValidation: true }
+  );
+
+  await db.collection("deca").updateMany(
+    { "alternant.adresse.numero": 0 },
+    [
+      {
+        $set: {
+          "alternant.adresse.numero": null,
         },
       },
     ],
