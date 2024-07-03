@@ -6,7 +6,7 @@ import { IDecaHistory } from "shared/models/deca.model/decaHistory.model";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
-function deepFlattenToObject(obj: any, prefix = "") {
+export function deepFlattenToObject(obj: any, prefix = "") {
   return Object.keys(obj).reduce((acc, k) => {
     const pre = prefix.length ? prefix + "." : "";
     if (typeof obj[k] === "object" && obj[k] !== null) {
@@ -29,32 +29,46 @@ function deepFlattenToObject(obj: any, prefix = "") {
 const excludedFieldsFromHistory: string[] = ["_id", "created_at", "updated_at"];
 // const excludedFieldsFromHistory = ["type_employeur", "employeur_specifique", "type_derogation", "employeur.code_idcc"];
 
-async function saveHistory(originalDocument: IDeca, newDocument: IDeca) {
-  let updatedFields = null;
-
+async function saveHistory(
+  originalDocument: IDeca,
+  newDocument: IDeca
+): Promise<"no_history_to_save" | "history_saved"> {
   const oDiff = diff(originalDocument, newDocument);
-  updatedFields = deepFlattenToObject(oDiff);
+  const updatedFields = deepFlattenToObject(oDiff);
 
-  if (!updatedFields) return;
+  if (!updatedFields || Object.keys(updatedFields).length === 0) {
+    return "no_history_to_save";
+  }
 
+  let diffCount = 0;
   for (const key of Object.keys(updatedFields)) {
     if (!excludedFieldsFromHistory.includes(key)) {
       const previousValue = get(originalDocument, key);
-      const log: IDecaHistory = {
-        _id: new ObjectId(),
-        key,
-        from: previousValue,
-        // @ts-expect-error
-        to: updatedFields[key],
-        // eslint-disable-next-line no-underscore-dangle
-        deca_id: newDocument._id,
-        //   op: event.operationType,
-        time: newDocument.updated_at,
-      };
 
-      await getDbCollection("decaHistory").insertOne(log);
+      // détection et exclusion cas particulier faux positif si un élément est undefined et l'autre null
+      const from = previousValue !== undefined ? previousValue : null;
+      const to = updatedFields[key] !== undefined ? updatedFields[key] : null;
+
+      if (from !== to) {
+        const log: IDecaHistory = {
+          _id: new ObjectId(),
+          key,
+          from: previousValue,
+          // @ts-expect-error
+          to: updatedFields[key],
+          // eslint-disable-next-line no-underscore-dangle
+          deca_id: newDocument._id,
+          //   op: event.operationType,
+          time: newDocument.updated_at,
+        };
+
+        await getDbCollection("decaHistory").insertOne(log);
+        diffCount++;
+      }
     }
   }
+
+  return diffCount ? "history_saved" : "no_history_to_save";
 }
 
 export { saveHistory };
