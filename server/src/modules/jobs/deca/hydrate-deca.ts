@@ -197,6 +197,9 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
 
         const oldContrat: IDeca | null = await getDbCollection("deca").findOne(newContratFilter);
 
+        // if(oldContrat?.alternant?.adresse?.numero)
+        //   console.log("NUMERO : ",oldContrat?.alternant?.adresse?.numero, currentContrat?.alternant?.adresse?.numero, oldContrat.no_contrat)
+
         const now = new Date(dateDebut);
 
         if (oldContrat && oldContrat.updated_at && oldContrat.updated_at.getTime() > now.getTime()) {
