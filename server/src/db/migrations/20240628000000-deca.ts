@@ -7,7 +7,7 @@ export const up = async (db: Db, _client: MongoClient) => {
     { bypassDocumentValidation: true }
   );
 
-  const command = {
+  const command_1 = {
     aggregate: "deca",
     pipeline: [
       {
@@ -18,6 +18,28 @@ export const up = async (db: Db, _client: MongoClient) => {
           "alternant.sexe": {
             $toString: "$alternant.sexe",
           },
+        },
+      },
+      {
+        $merge: {
+          into: "deca",
+          whenMatched: "merge",
+          whenNotMatched: "fail",
+        },
+      },
+    ],
+    cursor: {},
+    bypassDocumentValidation: true,
+  };
+
+  await _client.db("mna-bal").command(command_1);
+
+  const command_2 = {
+    aggregate: "deca",
+    pipeline: [
+      { $match: { "alternant.adresse.numero": { $ne: null } } },
+      {
+        $addFields: {
           "alternant.adresse.numero": {
             $toInt: "$alternant.adresse.numero",
           },
@@ -35,7 +57,7 @@ export const up = async (db: Db, _client: MongoClient) => {
     bypassDocumentValidation: true,
   };
 
-  await _client.db("mna-bal").command(command);
+  await _client.db("mna-bal").command(command_2);
 
   await db.collection("deca").updateMany(
     { "alternant.sexe": { $in: ["1", "2"] } },
