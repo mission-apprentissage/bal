@@ -94,6 +94,14 @@ export const buildDecaContract = (contrat: any): IDeca => {
   };
 };
 
+export const shouldStopCallingDeca = (_startHour?: number) => {
+  // l'api DECA est accessible exclusivement entre 19h00 et 7h00 du matin
+  const SAFE_STOP_HOUR = 6;
+  const SAFE_START_HOUR = 20;
+  const startHour = _startHour ?? new Date().getHours();
+  return startHour < SAFE_START_HOUR && startHour >= SAFE_STOP_HOUR ? true : false;
+};
+
 /**
  * Ce job peuple la collection contratsDeca via l'API Deca
  * L'API Deca ne permets de récupérer des données que sur une période maximum NB_JOURS_MAX_PERIODE_FETCH
@@ -141,6 +149,11 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
   const periods = buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch);
 
   await asyncForEach(periods, async ({ dateDebut, dateFin }: { dateDebut: string; dateFin: string }) => {
+    if (shouldStopCallingDeca()) {
+      return;
+    }
+
+    return;
     try {
       logger.info(`> Fetch des données Deca du ${dateDebut} au ${dateFin}`);
 

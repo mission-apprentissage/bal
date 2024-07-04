@@ -9,6 +9,7 @@ import {
   buildDecaContract,
   buildPeriodsToFetch,
   NB_JOURS_MAX_PERIODE_FETCH,
+  shouldStopCallingDeca,
 } from "../../src/modules/jobs/deca/hydrate-deca";
 import { deepFlattenToObject } from "../../src/modules/jobs/deca/hydrate-deca-history";
 import { useMongo } from "../utils/mongo.utils";
@@ -363,6 +364,14 @@ describe("IMPORT DECA from API", () => {
     const refinedContractForBal = buildDecaContract(rawContractFromApi);
 
     assert.deepEqual(refinedContractForBal, expectedRefinedContractForBal);
+  });
+
+  it("should not start when time is over", async () => {
+    assert.equal(shouldStopCallingDeca(6), true);
+    assert.equal(shouldStopCallingDeca(19), true);
+    assert.equal(shouldStopCallingDeca(12), true);
+    assert.equal(shouldStopCallingDeca(5), false);
+    assert.equal(shouldStopCallingDeca(20), false);
   });
 
   it("deepFlattenToObject works as expected", async () => {
