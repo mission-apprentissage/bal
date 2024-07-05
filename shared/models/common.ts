@@ -13,6 +13,7 @@ export type CollectionName =
   | "emailDenied"
   | "deca"
   | "decaHistory"
+  | "decaimportjobresult"
   | "catalogueEmailSirets";
 
 export interface IModelDescriptor {

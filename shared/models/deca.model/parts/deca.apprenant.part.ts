@@ -14,13 +14,13 @@ export const ZDecaApprenant = z
     telephone: z.string().optional().describe("Le numéro de téléphone de l'alternant"),
     adresse: z
       .object({
-        numero: z.number().nullish().describe("Le numéro de l'adresse"),
+        numero: z.coerce.string().nullish().describe("Le numéro de l'adresse"),
         voie: z.string().optional().describe("La voie de l'adresse"),
         code_postal: z.string().optional().describe("Le code postal de l'adresse"),
       })
       .strict()
       .optional(),
-    derniere_classe: z.string().nullish().describe("La dernière classe de l'apprenant"),
+    derniere_classe: z.coerce.number().nullish().describe("La dernière classe de l'apprenant"),
   })
   .strict();
 

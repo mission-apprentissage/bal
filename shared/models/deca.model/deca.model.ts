@@ -52,9 +52,13 @@ export const ZDeca = z
     organisme_formation: ZDecaOrganismeFormation.optional(),
     employeur: ZDecaEmployeur,
     updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
-    created_at: z.date().optional().describe("Date d'ajout en base de données"),
+    created_at: z.date().nullish().describe("Date d'ajout en base de données"),
   })
   .strict();
+
+export const ZDecaNew = ZDeca.omit({
+  _id: true,
+});
 
 export type IDeca = z.output<typeof ZDeca>;
 export type IDecaJson = Jsonify<z.input<typeof ZDeca>>;
