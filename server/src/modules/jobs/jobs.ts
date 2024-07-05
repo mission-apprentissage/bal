@@ -38,7 +38,7 @@ export async function setupJobProcessor() {
               handler: () => runCatalogueImporter(),
             },
             "Mise à jour des données DECA": {
-              cron_string: "30 4 * * *",
+              cron_string: "30 21 * * *",
               handler: () => hydrateDeca({ from: "", to: "" }),
             },
           },
