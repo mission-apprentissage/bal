@@ -14,7 +14,9 @@ export type CollectionName =
   | "deca"
   | "decaHistory"
   | "decaimportjobresult"
-  | "catalogueEmailSirets";
+  | "catalogueEmailSirets"
+  | "bouncer.email"
+  | "bouncer.domain";
 
 export interface IModelDescriptor {
   zod: ZodType;

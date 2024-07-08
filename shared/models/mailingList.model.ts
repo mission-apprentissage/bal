@@ -27,7 +27,7 @@ export const ZMailingList = z
           .object({
             column: z.string(),
             output: z.string(),
-            grouped: z.boolean(),
+            simple: z.boolean(),
           })
           .strict()
       )
@@ -48,8 +48,8 @@ export const ZMailingList = z
       .describe("Liste des colonnes lié à la formation"),
     document_id: z.string().optional().describe("Identifiant du document généré"),
     added_by: z.string().describe("L'utilisateur ayant crée la liste"),
-    updated_at: z.date().describe("Date de mise à jour en base de données").optional(),
-    created_at: z.date().describe("Date d'ajout en base de données").optional(),
+    updated_at: z.date().describe("Date de mise à jour en base de données"),
+    created_at: z.date().describe("Date d'ajout en base de données"),
   })
   .strict();
 

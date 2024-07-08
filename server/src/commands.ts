@@ -251,6 +251,13 @@ program
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("import:catalogue"));
 
+program
+  .command("email:verify")
+  .description("Check if an email is valid")
+  .requiredOption("-e, --email <string>", "Email to validate")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("email:verify"));
+
 program.hook("preAction", (_, actionCommand) => {
   const command = actionCommand.name();
   // on définit le module du logger en global pour distinguer les logs des jobs

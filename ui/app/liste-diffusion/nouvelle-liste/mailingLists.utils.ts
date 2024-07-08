@@ -1,5 +1,5 @@
+import { isComputedColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
-export const WEBHOOK_LBA = "WEBHOOK_LBA";
 
 export const getDataFromSample = (sample: IDocumentContentJson[], key: string) => {
   return (
@@ -11,8 +11,8 @@ export const getDataFromSample = (sample: IDocumentContentJson[], key: string) =
 };
 
 export const getFormattedSample = (sample: IDocumentContentJson[], key: string, size = 3) => {
-  if (key === WEBHOOK_LBA) {
-    return "Données récupérées depuis LBA";
+  if (isComputedColumns(key)) {
+    return MAILING_LIST_COMPUTED_COLUMNS[key].sample;
   }
   const data = getDataFromSample(sample, key);
 

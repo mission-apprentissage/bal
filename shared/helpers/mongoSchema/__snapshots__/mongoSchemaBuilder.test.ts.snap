@@ -1,5 +1,154 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`zodToMongoSchema > should convert bouncer.domain schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "created_at": {
+      "bsonType": "date",
+    },
+    "domain": {
+      "bsonType": "string",
+    },
+    "ping": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "bsonType": "object",
+          "properties": {
+            "message": {
+              "bsonType": "string",
+            },
+            "responseCode": {
+              "bsonType": [
+                "string",
+                "null",
+              ],
+            },
+            "responseMessage": {
+              "bsonType": [
+                "string",
+                "null",
+              ],
+            },
+            "status": {
+              "bsonType": "string",
+              "enum": [
+                "valid",
+                "invalid",
+                "not_supported",
+                "error",
+              ],
+            },
+          },
+          "required": [
+            "status",
+            "message",
+            "responseCode",
+            "responseMessage",
+          ],
+        },
+        {
+          "bsonType": "null",
+        },
+      ],
+    },
+    "smtp": {
+      "bsonType": "string",
+    },
+    "updated_at": {
+      "bsonType": "date",
+    },
+  },
+  "required": [
+    "_id",
+    "domain",
+    "smtp",
+    "ping",
+    "updated_at",
+    "created_at",
+  ],
+}
+`;
+
+exports[`zodToMongoSchema > should convert bouncer.email schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "created_at": {
+      "bsonType": "date",
+    },
+    "domain": {
+      "bsonType": [
+        "string",
+        "null",
+      ],
+    },
+    "email": {
+      "bsonType": "string",
+    },
+    "ping": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "message": {
+          "bsonType": "string",
+        },
+        "responseCode": {
+          "bsonType": [
+            "string",
+            "null",
+          ],
+        },
+        "responseMessage": {
+          "bsonType": [
+            "string",
+            "null",
+          ],
+        },
+        "status": {
+          "bsonType": "string",
+          "enum": [
+            "valid",
+            "invalid",
+            "not_supported",
+            "error",
+          ],
+        },
+      },
+      "required": [
+        "status",
+        "message",
+        "responseCode",
+        "responseMessage",
+      ],
+    },
+    "smtp": {
+      "bsonType": [
+        "string",
+        "null",
+      ],
+    },
+  },
+  "required": [
+    "_id",
+    "email",
+    "domain",
+    "smtp",
+    "ping",
+    "created_at",
+  ],
+}
+`;
+
 exports[`zodToMongoSchema > should convert catalogueEmailSirets schema 1`] = `
 {
   "additionalProperties": false,
@@ -845,17 +994,17 @@ exports[`zodToMongoSchema > should convert mailingLists schema 1`] = `
           "column": {
             "bsonType": "string",
           },
-          "grouped": {
-            "bsonType": "bool",
-          },
           "output": {
             "bsonType": "string",
+          },
+          "simple": {
+            "bsonType": "bool",
           },
         },
         "required": [
           "column",
           "output",
-          "grouped",
+          "simple",
         ],
       },
     },
@@ -915,6 +1064,8 @@ exports[`zodToMongoSchema > should convert mailingLists schema 1`] = `
     "output_columns",
     "training_columns",
     "added_by",
+    "updated_at",
+    "created_at",
   ],
 }
 `;

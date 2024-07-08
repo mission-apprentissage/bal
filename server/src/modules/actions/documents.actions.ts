@@ -68,12 +68,14 @@ export const updateDocument = async (
   filter: Filter<IDocument>,
   update: UpdateFilter<IDocument>,
   options?: FindOneAndUpdateOptions
-) => {
-  const updated = await getDbCollection("documents").findOneAndUpdate(filter, update, {
+): Promise<void> => {
+  const updated = await getDbCollection("documents").updateOne(filter, update, {
     ...options,
-    returnDocument: "after",
   });
-  return updated.value;
+
+  if (!updated) {
+    throw Boom.internal("Document not found");
+  }
 };
 
 export const getDocumentTypes = async (): Promise<string[]> => {

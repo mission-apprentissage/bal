@@ -22,6 +22,7 @@ function getMaxOldestDateForFetching() {
   return date;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
   return value ? { [key]: transform(value) } : {};
 };
@@ -32,6 +33,7 @@ const parseDate = (v: string) => {
 
 const maxOldestDateForFetching = getMaxOldestDateForFetching();
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const buildDecaContract = (contrat: any): IDeca => {
   return {
     alternant: {
@@ -172,6 +174,7 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
       ); // Type contrat type_contrat
 
       const decaContratsForPeriod = decaContrats_LBA.reduce((acc, item) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let contrat = item as any;
         const tdbContrat = tdbMap.get(
           JSON.stringify({
@@ -194,6 +197,7 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
         }
 
         return acc;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       }, [] as any[]);
 
       await asyncForEach(decaContratsForPeriod, async (currentContrat: IDeca) => {
@@ -226,6 +230,7 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
           await saveHistory(oldContrat, newContrat.value);
         }
       });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
     }

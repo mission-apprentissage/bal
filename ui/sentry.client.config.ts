@@ -1,8 +1,3 @@
-// This file configures the initialization of Sentry on the client.
-// The config you add here will be used whenever a users loads a page in their browser.
-// https://docs.sentry.io/platforms/javascript/guides/nextjs/
-
-import { ExtraErrorData, HttpClient, ReportingObserver } from "@sentry/integrations";
 import * as Sentry from "@sentry/nextjs";
 
 import { publicConfig } from "./config.public";
@@ -23,16 +18,8 @@ Sentry.init({
   // replaysOnErrorSampleRate: 1.0,
   // replaysSessionSampleRate: 0.1,
   integrations: [
-    // new Sentry.Replay({
-    //   maskAllText: true,
-    //   blockAllMedia: true,
-    // }),
-    // new Sentry.BrowserTracing(),
-    // @ts-ignore
-    new ExtraErrorData({ depth: 8 }),
-    // @ts-ignore
-    new HttpClient({}),
-    // @ts-ignore
-    new ReportingObserver({ types: ["crash", "deprecation", "intervention"] }),
+    Sentry.extraErrorDataIntegration({ depth: 8 }),
+    Sentry.httpClientIntegration({}),
+    Sentry.reportingObserverIntegration({ types: ["crash", "deprecation", "intervention"] }),
   ],
 });

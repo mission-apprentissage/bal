@@ -1,4 +1,5 @@
 import { addJob, initJobProcessor } from "job-processor";
+import { z } from "zod";
 
 import {
   create as createMigration,
@@ -7,6 +8,7 @@ import {
 } from "@/modules/jobs/migrations/migrations";
 
 import logger from "../../common/logger";
+import { getDomainMap, verifyEmail } from "../../common/services/mailer/mailBouncer";
 import { getDatabase } from "../../common/utils/mongodbUtils";
 import config from "../../config";
 import {
@@ -55,8 +57,8 @@ export async function setupJobProcessor() {
           });
         },
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       "indexes:recreate": {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async (job) => recreateIndexes(job.payload as any),
       },
       "db:validate": {
@@ -77,13 +79,13 @@ export async function setupJobProcessor() {
           return;
         },
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       "migrations:create": {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async (job) => createMigration(job.payload as any),
       },
       // BELOW SPECIFIC TO PRODUCT
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       "import:document": {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async (job, signal) => handleDocumentFileContent(job, job.payload as any, signal),
         onJobExited: onImportDocumentJobExited,
         resumable: true,
@@ -92,14 +94,15 @@ export async function setupJobProcessor() {
       "documents:save-columns": {
         handler: async () => saveDocumentsColumns(),
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       "generate:mailing-list": {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async (job, signal) => handleMailingListJob(job, job.payload as any, signal),
         onJobExited: onMailingListJobExited,
         resumable: true,
       },
       "deca:hydrate": {
         handler: async (job) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const { from, to } = job.payload as any;
           await hydrateDeca({ from, to });
         },
@@ -111,6 +114,13 @@ export async function setupJobProcessor() {
         handler: async (job) => {
           const { offset } = job.payload ?? {};
           return run_hydrate_from_deca(offset ? parseInt(offset.toString(), 10) : 0);
+        },
+      },
+      "email:verify": {
+        handler: async (job) => {
+          const { email } = z.object({ email: z.string() }).parse(job.payload);
+          const result = await verifyEmail(email, await getDomainMap());
+          logger.info("Email verification result", { email, result });
         },
       },
       "job:validation:hydrate_from_constructys": {

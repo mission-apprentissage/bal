@@ -47,6 +47,7 @@ export const getDeca = async (
   page: number,
   product: "LBA" | "TDB" = "LBA"
 ): Promise<ApiDeca> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return executeWithRateLimiting(async (client: any) => {
     try {
       console.log(dateDebut, dateFin, page);
@@ -70,13 +71,15 @@ export const getDeca = async (
       const duration = formatDuration(intervalToDuration({ start: startDate, end: endDate })) || `${ts}ms`;
       console.log(duration);
       logger.debug(
-        `[API Deca] Récupération contrats du ${dateDebut} au ${dateFin} - page ${page} sur ${response?.data?.metadonnees
-          ?.totalPages} ${response.cached ? "(depuis le cache)" : ""}`
+        `[API Deca] Récupération contrats du ${dateDebut} au ${dateFin} - page ${page} sur ${
+          response?.data?.metadonnees?.totalPages
+        } ${response.cached ? "(depuis le cache)" : ""}`
       );
       if (!response?.data) {
         throw new ApiError("Api Deca", "No data received");
       }
       return response.data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       logger.info(e.response);
       if (!e.response) logger.info(e);

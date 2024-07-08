@@ -5,12 +5,16 @@ import { Box, Tooltip, Typography } from "@mui/material";
 import { FC } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { IBody, IPostRoutes } from "shared";
+import {
+  isComputedColumns,
+  MAILING_LIST_COMPUTED_COLUMNS,
+  MAILING_LIST_COMPUTED_COLUMNS_KEYS,
+} from "shared/constants/mailingList";
 import { IDocumentContentJson } from "shared/models/documentContent.model";
 import { IMailingListJson } from "shared/models/mailingList.model";
 
 import ToggleSwitchInput from "../../../../components/form/ToggleSwitchInput";
 import { apiPost } from "../../../../utils/api.utils";
-import { WEBHOOK_LBA } from "../mailingLists.utils";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
 import PreviewColonnesSortie from "./PreviewColonnesSortie";
@@ -47,26 +51,25 @@ const ChoixColonnesSortie: FC<Props> = ({
   sample,
   mailingList,
 }) => {
-  const outputColumnDefaultValues = [{ output: "email", column: email, grouped: true }];
+  const outputColumnDefaultValues = [{ output: "email", column: email, simple: true }];
 
   for (const identifierColumn of identifierColumns) {
     outputColumnDefaultValues.push({
       output: identifierColumn,
       column: identifierColumn,
-      grouped: true,
+      simple: true,
     });
   }
 
   if (mailingList) {
     const outputColumns = mailingList?.output_columns
       //filter already selected columns
-      .filter((c) => !outputColumnDefaultValues.find((oc) => oc.column === c.column))
-      .map((c) => ({ ...c, grouped: !c.grouped }));
+      .filter((c) => !outputColumnDefaultValues.find((oc) => oc.column === c.column));
 
     outputColumnDefaultValues.push(...outputColumns);
   }
 
-  outputColumnDefaultValues.push({ output: "", column: "", grouped: false });
+  outputColumnDefaultValues.push({ output: "", column: "", simple: true });
 
   const {
     handleSubmit,
@@ -100,20 +103,9 @@ const ChoixColonnesSortie: FC<Props> = ({
   });
 
   const onSubmit = async (data: IBody<IPostRoutes["/mailing-list"]>) => {
-    // invert grouped columns
-    const outputColumns = data.output_columns.map((column) => ({
-      ...column,
-      grouped: !column.grouped,
-    }));
+    await apiPost("/mailing-list", { body: data });
 
-    const formattedData = {
-      ...data,
-      output_columns: outputColumns,
-    };
-
-    await apiPost("/mailing-list", { body: formattedData });
-
-    onSuccess(formattedData);
+    onSuccess(data);
   };
 
   const outputColumns = watch("output_columns");
@@ -135,14 +127,14 @@ const ChoixColonnesSortie: FC<Props> = ({
           const { onChange, ...columnField } = register(`output_columns.${index}.column`, {
             required: "Obligatoire",
             validate: (value) => {
-              return value && [...columns, WEBHOOK_LBA].includes(value);
+              return value && [...columns, ...MAILING_LIST_COMPUTED_COLUMNS_KEYS].includes(value);
             },
           });
           const selectColumnDisabled = index === 0 || isSubmitting;
-          const outputDisabled = index === 0 || outputColumns[index].column === WEBHOOK_LBA || isSubmitting;
+          const outputDisabled = index === 0 || isComputedColumns(outputColumns[index].column) || isSubmitting;
 
           const groupedDisabled =
-            outputColumns[index].column === WEBHOOK_LBA ||
+            isComputedColumns(outputColumns[index].column) ||
             identifierColumns.includes(outputColumns[index].column) ||
             isSubmitting;
 
@@ -158,9 +150,10 @@ const ChoixColonnesSortie: FC<Props> = ({
                     onChange: (e) => {
                       const { value } = e.target;
 
-                      if (value === WEBHOOK_LBA) {
-                        setValue(`output_columns.${index}.output`, "lien_lba, lien_prdv");
-                        setValue(`output_columns.${index}.grouped`, false);
+                      if (isComputedColumns(value)) {
+                        const columns = MAILING_LIST_COMPUTED_COLUMNS[value].columns;
+                        setValue(`output_columns.${index}.output`, columns.map((c) => c.output).join(", "));
+                        setValue(`output_columns.${index}.simple`, true);
                       } else {
                         setValue(`output_columns.${index}.output`, value);
                       }
@@ -174,9 +167,11 @@ const ChoixColonnesSortie: FC<Props> = ({
                     Colonne
                   </option>
                   <optgroup label="BAL">
-                    <option value={WEBHOOK_LBA} disabled={!!outputColumns.find((c) => c.column === WEBHOOK_LBA)}>
-                      {WEBHOOK_LBA}
-                    </option>
+                    {MAILING_LIST_COMPUTED_COLUMNS_KEYS.map((key) => (
+                      <option key={key} value={key} disabled={!!outputColumns.find((c) => c.column === key)}>
+                        {key}
+                      </option>
+                    ))}
                   </optgroup>
                   <optgroup label={source}>
                     {columns.map((column) => (
@@ -207,7 +202,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                   <>
                     <ToggleSwitchInput
                       control={control}
-                      {...register(`output_columns.${index}.grouped` as const)}
+                      {...register(`output_columns.${index}.simple` as const)}
                       toggleSwitchProps={{
                         showCheckedHint: false,
                         disabled: groupedDisabled,
@@ -245,7 +240,7 @@ const ChoixColonnesSortie: FC<Props> = ({
         })}
 
         <Box display="flex" justifyContent="center">
-          <Button priority="secondary" type="button" onClick={() => append({ output: "", column: "", grouped: false })}>
+          <Button priority="secondary" type="button" onClick={() => append({ output: "", column: "", simple: true })}>
             + Ajouter un champ
           </Button>
         </Box>

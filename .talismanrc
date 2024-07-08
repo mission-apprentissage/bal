@@ -95,13 +95,15 @@ fileignoreconfig:
 - filename: server/.env.local.example
   checksum: b760092fca0bbc8ba8c1d1d162b0461b992de867cbfde3dc4556226a1129e484
 - filename: server/.env.test
-  checksum: 39ceb0a4f3d9cffe8d980a69205a2b800a875cbe994842f97ff1f9282b2a6e1f
+  checksum: ce67d0410bfd71366b84b5d22708befe0643e3756e2474d55552caad24fafe3c
 - filename: server/config/config.ts
   checksum: dee90e5b9ea1162aaffc204bd46a7801f8abba89fddd3f7077990321299ff3bf
 - filename: server/dev/load-env.mjs
   checksum: 9b24e1858aceefd0aa80a557e94f340a3f07308443be5dccebcb224ad31a7de0
 - filename: server/src/app.ts
   checksum: 87ab06269a50c3cbca6370691e77fcf30b4863b2ad66a6a50d74e10e1ee95271
+- filename: server/src/common/services/mailer/mailBouncer.ts
+  checksum: 9cb03dce1dfe57f0f2139f04a9f93e9dc2380510eea93c63986e73c49090038d
 - filename: server/src/config.ts
   checksum: df9536cab06a9da8e128d093d87af4c4c4ebfe4c069261a2c668b9e064c07cf8
 - filename: server/src/modules/actions/organisation.actions.ts
@@ -135,7 +137,9 @@ fileignoreconfig:
 - filename: server/tests/data/opcoEp.ts
   checksum: 8d1f421390c62fce249bf9efa7bb0688c6c9aa97375dd83d45f28c7d2246bf42
 - filename: server/tests/unit/deca.test.ts
-  checksum: 68fee7569d3e29f16dff15f449fe9326efbff4d463a038516229579669f0f536
+  checksum: e3f6b8fe70f0793ee367971538658938ddfc0ba62e281e1e3bbde6f7aaac2347
+- filename: shared/constants/mailingList.ts
+  checksum: dd3387d7684cbdfc8c0edec52e460eef081ce84cb4cd18ff21399cc3c6885756
 - filename: ui/.env
   checksum: 36cfa5591cf1dcf75cc7fb3be6980cc26a393786f0afffdcca92573c448b3148
 - filename: ui/.env.local.example
