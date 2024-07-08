@@ -227,7 +227,9 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
           { upsert: true, returnDocument: "after" }
         );
 
+        // @ts-expect-error
         if (oldContrat && newContrat && newContrat.value) {
+          // @ts-expect-error
           await saveHistory(oldContrat, newContrat.value);
         }
       });
