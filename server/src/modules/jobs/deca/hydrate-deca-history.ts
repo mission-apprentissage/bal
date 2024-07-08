@@ -60,7 +60,7 @@ async function saveHistory(
           to: updatedFields[key],
           // eslint-disable-next-line no-underscore-dangle
           deca_id: newDocument._id,
-          time: newDocument.updated_at,
+          time: newDocument.updated_at ?? new Date(), // new Date() ne se produira pas, pour typage uniquement car le stock deca contient des updated_at undefined
         };
 
         await getDbCollection("decaHistory").insertOne(log);
