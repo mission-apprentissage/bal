@@ -100,8 +100,8 @@ export async function setupJobProcessor() {
       },
       "deca:hydrate": {
         handler: async (job) => {
-          const { from, to, chunk } = job.payload as any;
-          await hydrateDeca({ from, to, chunk });
+          const { from, to } = job.payload as any;
+          await hydrateDeca({ from, to });
         },
       },
       "import:catalogue": {
