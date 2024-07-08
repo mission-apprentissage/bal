@@ -10,6 +10,7 @@ import parentLogger from "@/common/logger";
 
 import { asyncForEach } from "../../../common/utils/asyncUtils";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
+import config from "../../../config";
 import { saveHistory } from "./hydrate-deca-history";
 
 const logger = parentLogger.child({ module: "job:hydrate:deca" });
@@ -95,8 +96,8 @@ export const buildDecaContract = (contrat: any) => {
 
 export const shouldStopCallingDeca = (_startHour?: number) => {
   // l'api DECA est accessible exclusivement entre 19h00 et 7h00 du matin
-  const SAFE_STOP_HOUR = 6;
-  const SAFE_START_HOUR = 20;
+  const SAFE_STOP_HOUR = config.env === "production" ? 6 : 18;
+  const SAFE_START_HOUR = config.env === "production" ? 20 : 9;
   const startHour = _startHour ?? new Date().getHours();
   return startHour < SAFE_START_HOUR && startHour >= SAFE_STOP_HOUR ? true : false;
 };
