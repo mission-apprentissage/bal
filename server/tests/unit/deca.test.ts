@@ -8,7 +8,6 @@ import { findPersons } from "../../src/modules/actions/persons.actions";
 import {
   buildDecaContract,
   buildPeriodsToFetch,
-  NB_JOURS_MAX_PERIODE_FETCH,
   shouldStopCallingDeca,
 } from "../../src/modules/jobs/deca/hydrate-deca";
 import { deepFlattenToObject } from "../../src/modules/jobs/deca/hydrate-deca-history";
@@ -248,18 +247,13 @@ describe("IMPORT DECA from API", () => {
     await mongo.afterAll();
   });
 
-  it("periods to fetch OK", () => {
-    const periods1 = buildPeriodsToFetch(new Date("2024-01-01"), new Date("2024-01-04"));
+  it("periods to fetch OK", async () => {
+    const periods1 = await buildPeriodsToFetch(new Date("2024-01-01"), new Date("2024-01-04"));
     assert.deepEqual(periods1, [
       { dateDebut: "2024-01-01", dateFin: "2024-01-02" },
       { dateDebut: "2024-01-02", dateFin: "2024-01-03" },
       { dateDebut: "2024-01-03", dateFin: "2024-01-04" },
     ]);
-
-    const periods2 = buildPeriodsToFetch(new Date("2024-01-01"), new Date("2024-03-01"));
-    assert.deepEqual(periods2.length, NB_JOURS_MAX_PERIODE_FETCH);
-    assert.deepEqual(periods2[0], { dateDebut: "2024-01-01", dateFin: "2024-01-02" });
-    assert.deepEqual(periods2[NB_JOURS_MAX_PERIODE_FETCH - 1], { dateDebut: "2024-01-30", dateFin: "2024-01-31" });
   });
 
   it("building deca contract OK", () => {
