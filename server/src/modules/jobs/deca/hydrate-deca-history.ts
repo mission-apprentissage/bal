@@ -3,36 +3,37 @@ import { get } from "lodash-es";
 import { ObjectId } from "mongodb";
 import { IDeca } from "shared/models/deca.model/deca.model";
 import { IDecaHistory } from "shared/models/deca.model/decaHistory.model";
+import { Primitive } from "type-fest";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function deepFlattenToObject(obj: any, prefix = "") {
-  return Object.keys(obj).reduce((acc, k) => {
+export function deepFlattenToObject(obj: object, prefix = ""): Record<string, Primitive> {
+  return Object.entries(obj).reduce<Record<string, Primitive>>((acc, [k, value]) => {
     const pre = prefix.length ? prefix + "." : "";
-    if (typeof obj[k] === "object" && obj[k] !== null) {
-      Object.assign(acc, deepFlattenToObject(obj[k], pre + k));
+    if (typeof value === "object" && value !== null) {
+      Object.assign(acc, deepFlattenToObject(value, pre + k));
     } else {
-      if (Array.isArray(obj[k]) && obj[k].length > 0) {
-        for (let index = 0; index < obj[k].length; index++) {
-          // @ts-expect-error
-          acc[pre + k + "." + index] = obj[k][index];
+      if (Array.isArray(value) && value.length > 0) {
+        for (let index = 0; index < value.length; index++) {
+          acc[pre + k + "." + index] = value[index];
         }
       } else {
-        // @ts-expect-error
-        acc[pre + k] = obj[k];
+        acc[pre + k] = value;
       }
     }
     return acc;
   }, {});
 }
 
-const excludedFieldsFromHistory: string[] = ["_id", "created_at", "updated_at"];
+type EXCLUDED_FIELDS = "_id" | "created_at" | "updated_at";
+const excludedFieldsFromHistory: EXCLUDED_FIELDS[] = ["_id", "created_at", "updated_at"];
 // const excludedFieldsFromHistory = ["type_employeur", "employeur_specifique", "type_derogation", "employeur.code_idcc"];
 
 async function saveHistory(
   originalDocument: IDeca,
-  newDocument: IDeca
+  newDocument: Omit<IDeca, EXCLUDED_FIELDS>,
+  updateTime: Date
 ): Promise<"no_history_to_save" | "history_saved"> {
   const oDiff = diff(originalDocument, newDocument);
   const updatedFields = deepFlattenToObject(oDiff);
@@ -42,25 +43,23 @@ async function saveHistory(
   }
 
   let diffCount = 0;
-  for (const key of Object.keys(updatedFields)) {
-    if (!excludedFieldsFromHistory.includes(key)) {
+  for (const [key, updatedFieldValue] of Object.entries(updatedFields)) {
+    if (!excludedFieldsFromHistory.includes(key as EXCLUDED_FIELDS)) {
       const previousValue = get(originalDocument, key);
 
       // détection et exclusion cas particulier faux positif si un élément est undefined et l'autre null
-      const from = previousValue !== undefined ? previousValue : null;
-      // @ts-expect-error
-      const to = updatedFields[key] !== undefined ? updatedFields[key] : null;
+      const from = previousValue ?? null;
+      const to = updatedFieldValue ?? null;
 
       if (from !== to) {
         const log: IDecaHistory = {
           _id: new ObjectId(),
           key,
           from: previousValue,
-          // @ts-expect-error
-          to: updatedFields[key],
+          to: updatedFieldValue,
           // eslint-disable-next-line no-underscore-dangle
-          deca_id: newDocument._id,
-          time: newDocument.updated_at ?? new Date(), // new Date() ne se produira pas, pour typage uniquement car le stock deca contient des updated_at undefined
+          deca_id: originalDocument._id,
+          time: updateTime,
         };
 
         await getDbCollection("decaHistory").insertOne(log);

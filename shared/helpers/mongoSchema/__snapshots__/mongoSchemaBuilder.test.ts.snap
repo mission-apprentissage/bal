@@ -456,6 +456,36 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
 }
 `;
 
+exports[`zodToMongoSchema > should convert deca.import.job.result schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "created_at": {
+      "bsonType": "date",
+      "description": "Date d'ajout en base de données",
+    },
+    "has_completed": {
+      "bsonType": "bool",
+      "description": "true marque que l'import pour ce jour précis est complet. informatif uniquement. false ne sera jamais enregistré",
+    },
+    "import_date": {
+      "bsonType": "string",
+      "description": "La date d'un import deca au format yyyy-MM-dd",
+    },
+  },
+  "required": [
+    "_id",
+    "import_date",
+    "has_completed",
+    "created_at",
+  ],
+}
+`;
+
 exports[`zodToMongoSchema > should convert decaHistory schema 1`] = `
 {
   "additionalProperties": false,
@@ -487,36 +517,6 @@ exports[`zodToMongoSchema > should convert decaHistory schema 1`] = `
     "key",
     "deca_id",
     "time",
-  ],
-}
-`;
-
-exports[`zodToMongoSchema > should convert decaimportjobresult schema 1`] = `
-{
-  "additionalProperties": false,
-  "bsonType": "object",
-  "properties": {
-    "_id": {
-      "bsonType": "objectId",
-    },
-    "created_at": {
-      "bsonType": "date",
-      "description": "Date d'ajout en base de données",
-    },
-    "has_completed": {
-      "bsonType": "bool",
-      "description": "true marque que l'import pour ce jour précis est complet. informatif uniquement. false ne sera jamais enregistré",
-    },
-    "import_date": {
-      "bsonType": "string",
-      "description": "La date d'un import deca au format yyyy-MM-dd",
-    },
-  },
-  "required": [
-    "_id",
-    "import_date",
-    "has_completed",
-    "created_at",
   ],
 }
 `;

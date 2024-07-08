@@ -45,7 +45,7 @@ export type IDocumentMap = {
   emailDenied: IEmailDenied;
   deca: IDeca;
   decaHistory: IDecaHistory;
-  decaImportJobResult: IDecaImportJobResult;
+  ["deca.import.job.result"]: IDecaImportJobResult;
   catalogueEmailSirets: ICatalogueEmailSiret;
   ["bouncer.email"]: BouncerEmail;
   ["bouncer.domain"]: BouncerDomain;

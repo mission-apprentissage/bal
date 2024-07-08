@@ -218,19 +218,17 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
         /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
         const preparedContrat = ZDecaNew.parse({ ...currentContrat, updated_at: now });
 
-        const newContrat = await getDbCollection("deca").findOneAndUpdate(
+        await getDbCollection("deca").updateOne(
           newContratFilter,
           {
             $set: preparedContrat,
             $setOnInsert: { created_at: now },
           },
-          { upsert: true, returnDocument: "after" }
+          { upsert: true }
         );
 
-        // @ts-expect-error
-        if (oldContrat && newContrat && newContrat.value) {
-          // @ts-expect-error
-          await saveHistory(oldContrat, newContrat.value);
+        if (oldContrat) {
+          await saveHistory(oldContrat, preparedContrat, now);
         }
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -238,7 +236,7 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
       throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
     }
 
-    getDbCollection("decaimportjobresult").insertOne({
+    getDbCollection("deca.import.job.result").insertOne({
       _id: new ObjectId(),
       has_completed: true,
       import_date: dateDebut,
@@ -276,7 +274,7 @@ export const buildPeriodsToFetch = async (
 };
 
 const pushPeriod = async (periods: Array<{ dateDebut: string; dateFin: string }>, dateDebut: Date, dateFin: Date) => {
-  if (!(await getDbCollection("decaimportjobresult").findOne({ import_date: format(dateDebut, "yyyy-MM-dd") }))) {
+  if (!(await getDbCollection("deca.import.job.result").findOne({ import_date: format(dateDebut, "yyyy-MM-dd") }))) {
     periods.push({ dateDebut: format(dateDebut, "yyyy-MM-dd"), dateFin: format(dateFin, "yyyy-MM-dd") });
   }
 };

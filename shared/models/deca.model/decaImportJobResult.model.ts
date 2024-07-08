@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { IModelDescriptor, zObjectId } from "../common";
 
-const collectionName = "decaimportjobresult" as const;
+const collectionName = "deca.import.job.result" as const;
 
 const indexes: IModelDescriptor["indexes"] = [[{ import_date: 1 }, {}]];
 
