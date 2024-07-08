@@ -6,7 +6,7 @@ import { IDecaHistory } from "shared/models/deca.model/decaHistory.model";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
-export function deepFlattenToObject(obj: any, prefix = "") {
+export function deepFlattenToObject(obj: object, prefix = "") {
   return Object.keys(obj).reduce((acc, k) => {
     const pre = prefix.length ? prefix + "." : "";
     if (typeof obj[k] === "object" && obj[k] !== null) {
