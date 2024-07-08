@@ -6,7 +6,8 @@ import { IDecaHistory } from "shared/models/deca.model/decaHistory.model";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
-export function deepFlattenToObject(obj: object, prefix = "") {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function deepFlattenToObject(obj: any, prefix = "") {
   return Object.keys(obj).reduce((acc, k) => {
     const pre = prefix.length ? prefix + "." : "";
     if (typeof obj[k] === "object" && obj[k] !== null) {
@@ -47,6 +48,7 @@ async function saveHistory(
 
       // détection et exclusion cas particulier faux positif si un élément est undefined et l'autre null
       const from = previousValue !== undefined ? previousValue : null;
+      // @ts-expect-error
       const to = updatedFields[key] !== undefined ? updatedFields[key] : null;
 
       if (from !== to) {
@@ -58,7 +60,6 @@ async function saveHistory(
           to: updatedFields[key],
           // eslint-disable-next-line no-underscore-dangle
           deca_id: newDocument._id,
-          //   op: event.operationType,
           time: newDocument.updated_at,
         };
 

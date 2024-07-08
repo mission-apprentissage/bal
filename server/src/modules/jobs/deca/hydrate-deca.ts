@@ -3,6 +3,7 @@ import { addDays, format, isAfter, isBefore } from "date-fns";
 import deepmerge from "deepmerge";
 import { ObjectId } from "mongodb";
 import { IDeca, ZDecaNew } from "shared/models/deca.model/deca.model";
+import { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model";
 
 import { getAllContrats } from "@/common/apis/deca";
 import parentLogger from "@/common/logger";
@@ -34,7 +35,7 @@ const parseDate = (v: string) => {
 const maxOldestDateForFetching = getMaxOldestDateForFetching();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const buildDecaContract = (contrat: any): IDeca => {
+export const buildDecaContract = (contrat: any) => {
   return {
     alternant: {
       ...ifDefined("date_naissance", contrat.alternant.dateNaissance, parseDate), // TDB, LBA
@@ -226,7 +227,7 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
           { upsert: true, returnDocument: "after" }
         );
 
-        if (oldContrat && newContrat.value) {
+        if (oldContrat && newContrat && newContrat.value) {
           await saveHistory(oldContrat, newContrat.value);
         }
       });
@@ -240,7 +241,7 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
       has_completed: true,
       import_date: dateDebut,
       created_at: new Date(),
-    });
+    } as IDecaImportJobResult);
   });
 
   logger.info("Collection deca mise à jour avec succès !");
