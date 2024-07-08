@@ -94,11 +94,18 @@ export const buildDecaContract = (contrat: any) => {
   };
 };
 
-export const shouldStopCallingDeca = (_startHour?: number) => {
+export const shouldStopCallingDeca = ({
+  forceStartHour,
+  forceProductionEnvironment,
+}: {
+  forceStartHour?: number;
+  forceProductionEnvironment?: "forceProduction";
+}) => {
   // l'api DECA est accessible exclusivement entre 19h00 et 7h00 du matin
-  const SAFE_STOP_HOUR = config.env === "production" ? 6 : 18;
-  const SAFE_START_HOUR = config.env === "production" ? 20 : 9;
-  const startHour = _startHour ?? new Date().getHours();
+  const SAFE_STOP_HOUR = config.env === "production" || forceProductionEnvironment ? 6 : 18;
+  const SAFE_START_HOUR = config.env === "production" || forceProductionEnvironment ? 20 : 9;
+  const startHour = forceStartHour ?? new Date().getHours();
+
   return startHour < SAFE_START_HOUR && startHour >= SAFE_STOP_HOUR ? true : false;
 };
 
@@ -149,7 +156,7 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
   const periods = await buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch);
 
   await asyncForEach(periods, async ({ dateDebut, dateFin }: { dateDebut: string; dateFin: string }) => {
-    if (shouldStopCallingDeca()) {
+    if (shouldStopCallingDeca({})) {
       return;
     }
 

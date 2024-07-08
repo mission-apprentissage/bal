@@ -361,11 +361,11 @@ describe("IMPORT DECA from API", () => {
   });
 
   it("should not start when time is over", async () => {
-    assert.equal(shouldStopCallingDeca(6), true);
-    assert.equal(shouldStopCallingDeca(19), true);
-    assert.equal(shouldStopCallingDeca(12), true);
-    assert.equal(shouldStopCallingDeca(5), false);
-    assert.equal(shouldStopCallingDeca(20), false);
+    assert.equal(shouldStopCallingDeca({ forceStartHour: 6, forceProductionEnvironment: "forceProduction" }), true);
+    assert.equal(shouldStopCallingDeca({ forceStartHour: 19, forceProductionEnvironment: "forceProduction" }), true);
+    assert.equal(shouldStopCallingDeca({ forceStartHour: 12, forceProductionEnvironment: "forceProduction" }), true);
+    assert.equal(shouldStopCallingDeca({ forceStartHour: 5, forceProductionEnvironment: "forceProduction" }), false);
+    assert.equal(shouldStopCallingDeca({ forceStartHour: 20, forceProductionEnvironment: "forceProduction" }), false);
   });
 
   it("deepFlattenToObject works as expected", async () => {
