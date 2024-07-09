@@ -7,42 +7,18 @@ export const up = async (db: Db, _client: MongoClient) => {
     { bypassDocumentValidation: true }
   );
 
-  const command_1 = {
-    aggregate: "deca",
-    pipeline: [
-      {
-        $addFields: {
-          "alternant.sexe": {
-            $toString: "$alternant.sexe",
-          },
-        },
-      },
-      {
-        $merge: {
-          into: "deca",
-          whenMatched: "merge",
-          whenNotMatched: "fail",
-        },
-      },
-    ],
-    cursor: {},
-    bypassDocumentValidation: true,
-  };
-
-  await _client.db("mna-bal").command(command_1);
-
   await db.collection("deca").updateMany(
-    { "alternant.sexe": { $in: ["1", "2"] } },
+    { "alternant.sexe": { $in: ["1", 1, "2", 2] } },
     [
       {
         $set: {
           "alternant.sexe": {
             $cond: {
-              if: { $eq: ["$alternant.sexe", "1"] },
+              if: { $or: [{ $eq: ["$alternant.sexe", "1"] }, { $eq: ["$alternant.sexe", 1] }] },
               then: "H",
               else: {
                 $cond: {
-                  if: { $eq: ["$alternant.sexe", "2"] },
+                  if: { $or: [{ $eq: ["$alternant.sexe", "2"] }, { $eq: ["$alternant.sexe", 2] }] },
                   then: "F",
                   else: "$alternant.sexe",
                 },
