@@ -25,7 +25,9 @@ function getMaxOldestDateForFetching() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
+type ITransform<T, V> = (v: NonNullable<T>) => V
+const identity:  ITransform<T, T> = v => v
+const ifDefined = <T, V>(key: string, value: T, transform: ITransform<T, V> = identity): NonNullable<T> => v) => {
   return value ? { [key]: transform(value) } : {};
 };
 
