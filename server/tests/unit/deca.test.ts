@@ -5,11 +5,7 @@ import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 import { getDbVerification, importDecaContent, parseContentLine } from "../../src/modules/actions/deca.actions";
 import { findOrganisations } from "../../src/modules/actions/organisations.actions";
 import { findPersons } from "../../src/modules/actions/persons.actions";
-import {
-  buildDecaContract,
-  buildPeriodsToFetch,
-  shouldStopCallingDeca,
-} from "../../src/modules/jobs/deca/hydrate-deca";
+import { buildDecaContract, buildPeriodsToFetch, isDecaApiAvailable } from "../../src/modules/jobs/deca/hydrate-deca";
 import { deepFlattenToObject } from "../../src/modules/jobs/deca/hydrate-deca-history";
 import { useMongo } from "../utils/mongo.utils";
 
@@ -361,11 +357,11 @@ describe("IMPORT DECA from API", () => {
   });
 
   it("should not start when time is over", async () => {
-    assert.equal(shouldStopCallingDeca({ forceStartHour: 6, forceProductionEnvironment: "forceProduction" }), true);
-    assert.equal(shouldStopCallingDeca({ forceStartHour: 19, forceProductionEnvironment: "forceProduction" }), true);
-    assert.equal(shouldStopCallingDeca({ forceStartHour: 12, forceProductionEnvironment: "forceProduction" }), true);
-    assert.equal(shouldStopCallingDeca({ forceStartHour: 5, forceProductionEnvironment: "forceProduction" }), false);
-    assert.equal(shouldStopCallingDeca({ forceStartHour: 20, forceProductionEnvironment: "forceProduction" }), false);
+    assert.equal(isDecaApiAvailable({ forceStartHour: 6, forceProductionEnvironment: "forceProduction" }), true);
+    assert.equal(isDecaApiAvailable({ forceStartHour: 19, forceProductionEnvironment: "forceProduction" }), true);
+    assert.equal(isDecaApiAvailable({ forceStartHour: 12, forceProductionEnvironment: "forceProduction" }), true);
+    assert.equal(isDecaApiAvailable({ forceStartHour: 5, forceProductionEnvironment: "forceProduction" }), false);
+    assert.equal(isDecaApiAvailable({ forceStartHour: 20, forceProductionEnvironment: "forceProduction" }), false);
   });
 
   it("deepFlattenToObject works as expected", async () => {

@@ -94,7 +94,7 @@ export const buildDecaContract = (contrat: any) => {
   };
 };
 
-export const shouldStopCallingDeca = ({
+export const isDecaApiAvailable = ({
   forceStartHour,
   forceProductionEnvironment,
 }: {
@@ -156,7 +156,7 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
   const periods = await buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch);
 
   await asyncForEach(periods, async ({ dateDebut, dateFin }: { dateDebut: string; dateFin: string }) => {
-    if (shouldStopCallingDeca({})) {
+    if (isDecaApiAvailable({})) {
       return;
     }
 
