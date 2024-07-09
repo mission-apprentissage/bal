@@ -7,7 +7,6 @@ import { Primitive } from "type-fest";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function deepFlattenToObject(obj: object, prefix = ""): Record<string, Primitive> {
   return Object.entries(obj).reduce<Record<string, Primitive>>((acc, [k, value]) => {
     const pre = prefix.length ? prefix + "." : "";
