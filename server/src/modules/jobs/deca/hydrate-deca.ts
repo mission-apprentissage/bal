@@ -33,8 +33,6 @@ const parseDate = (v: string) => {
   return v ? new Date(v) : null;
 };
 
-const maxOldestDateForFetching = getMaxOldestDateForFetching();
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const buildDecaContract = (contrat: any) => {
   return {
@@ -129,9 +127,7 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
   yesterday.setMilliseconds(0);
 
   // Récupération de la date début / fin
-  const dateDebutToFetch: Date = from
-    ? new Date(`${from}T00:00:00.000Z`)
-    : (await getLastDecaCreatedDateInDb()) ?? maxOldestDateForFetching;
+  const dateDebutToFetch: Date = from ? new Date(`${from}T00:00:00.000Z`) : await getLastDecaCreatedDateInDb();
   const dateFinToFetch = to ? new Date(`${to}T00:00:00.000Z`) : yesterday;
 
   if (isAfter(dateDebutToFetch, dateFinToFetch)) {
@@ -291,7 +287,7 @@ const pushPeriod = async (periods: Array<{ dateDebut: string; dateFin: string }>
  * Fonction de récupération de la dernière date de contrat Deca ajouté en base
  * @returns
  */
-export const getLastDecaCreatedDateInDb = async (): Promise<Date | null> => {
+export const getLastDecaCreatedDateInDb = async () => {
   const lastDecaItem = await getDbCollection("deca")
     .find({ created_at: { $exists: true } })
     .sort({ created_at: -1 })
@@ -299,6 +295,13 @@ export const getLastDecaCreatedDateInDb = async (): Promise<Date | null> => {
     .toArray();
   let lastCreatedAt = lastDecaItem[0]?.created_at ?? null;
   // Si la dernière date est plus tard qu'hier, on prend d'avant hier en date de debut de référence
-  if (lastCreatedAt && isAfter(lastCreatedAt, addDays(new Date(), -1))) lastCreatedAt = addDays(new Date(), -2);
-  return lastCreatedAt;
+  if (lastCreatedAt) {
+    if (isAfter(lastCreatedAt, addDays(new Date(), -1))) {
+      lastCreatedAt = addDays(new Date(), -2);
+    }
+
+    return lastCreatedAt;
+  } else {
+    return getMaxOldestDateForFetching();
+  }
 };
