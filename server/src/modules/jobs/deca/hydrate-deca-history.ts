@@ -28,7 +28,6 @@ export function deepFlattenToObject(obj: object, prefix = ""): Record<string, Pr
 
 type EXCLUDED_FIELDS = "_id" | "created_at" | "updated_at";
 const excludedFieldsFromHistory: EXCLUDED_FIELDS[] = ["_id", "created_at", "updated_at"];
-// const excludedFieldsFromHistory = ["type_employeur", "employeur_specifique", "type_derogation", "employeur.code_idcc"];
 
 async function saveHistory(
   originalDocument: IDeca,
