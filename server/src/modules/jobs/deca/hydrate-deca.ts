@@ -209,26 +209,29 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
         };
 
         const oldContrat: IDeca | null = await getDbCollection("deca").findOne(newContratFilter);
-        const now = new Date(dateDebut);
 
-        if (oldContrat && oldContrat.updated_at && oldContrat.updated_at.getTime() > now.getTime()) {
-          throw internal("contracts not imported in chronological order", { oldContrat, currentContrat, now });
+        if (
+          oldContrat &&
+          oldContrat.updated_at &&
+          new Date(oldContrat.updated_at).getTime() > new Date(dateDebut).getTime()
+        ) {
+          throw internal("contracts not imported in chronological order", { oldContrat, currentContrat, dateDebut });
         }
 
         /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
-        const preparedContrat = ZDecaNew.parse({ ...currentContrat, updated_at: now });
+        const preparedContrat = ZDecaNew.parse({ ...currentContrat, updated_at: dateDebut });
 
         await getDbCollection("deca").updateOne(
           newContratFilter,
           {
             $set: preparedContrat,
-            $setOnInsert: { created_at: now },
+            $setOnInsert: { created_at: dateDebut },
           },
           { upsert: true }
         );
 
         if (oldContrat) {
-          await saveHistory(oldContrat, preparedContrat, now);
+          await saveHistory(oldContrat, preparedContrat, dateDebut);
         }
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

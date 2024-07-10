@@ -14,7 +14,7 @@ export const ZDecaHistory = z
     from: z.any().describe("Value from"),
     to: z.any().describe("Value to"),
     deca_id: zObjectId,
-    time: z.date().describe("Modified time"),
+    updated_date: z.string().describe("Modified time YYYY-MM-DD"),
   })
   .strict();
 
