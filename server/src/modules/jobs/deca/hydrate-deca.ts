@@ -284,12 +284,12 @@ const pushPeriod = async (periods: Array<{ dateDebut: string; dateFin: string }>
  * @returns
  */
 export const getLastDecaCreatedDateInDb = async () => {
-  const lastDecaItem = await getDbCollection("deca")
-    .find({ created_at: { $exists: true } })
-    .sort({ created_at: -1 })
-    .limit(1)
-    .toArray();
-  let lastCreatedAt = lastDecaItem[0]?.created_at ?? null;
+  const lastDecaItem = await getDbCollection("deca").findOne(
+    { created_at: { $exists: true } },
+    { sort: { created_at: -1 } }
+  );
+
+  let lastCreatedAt = lastDecaItem?.created_at ?? null;
   // Si la dernière date est plus tard qu'hier, on prend d'avant hier en date de debut de référence
   if (lastCreatedAt) {
     if (isAfter(lastCreatedAt, addDays(new Date(), -1))) {
