@@ -31,7 +31,7 @@ const excludedFieldsFromHistory: EXCLUDED_FIELDS[] = ["_id", "created_at", "upda
 async function saveHistory(
   originalDocument: IDeca,
   newDocument: Omit<IDeca, EXCLUDED_FIELDS>,
-  updatedDate: string
+  updateTime: Date
 ): Promise<"no_history_to_save" | "history_saved"> {
   const oDiff = diff(originalDocument, newDocument);
   const updatedFields = deepFlattenToObject(oDiff);
@@ -57,7 +57,7 @@ async function saveHistory(
           to: updatedFieldValue,
           // eslint-disable-next-line no-underscore-dangle
           deca_id: originalDocument._id,
-          updated_date: updatedDate,
+          time: updateTime,
         };
 
         await getDbCollection("decaHistory").insertOne(log);
