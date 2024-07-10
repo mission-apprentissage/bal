@@ -194,12 +194,8 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
           );
         }
 
-        try {
-          const formattedContract = buildDecaContract(contrat);
-          acc.push(formattedContract);
-        } catch (error) {
-          console.log(error);
-        }
+        const formattedContract = buildDecaContract(contrat);
+        acc.push(formattedContract);
 
         return acc;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
