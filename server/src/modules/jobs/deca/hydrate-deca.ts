@@ -14,7 +14,7 @@ import config from "../../../config";
 import { saveHistory } from "./hydrate-deca-history";
 
 const logger = parentLogger.child({ module: "job:hydrate:deca" });
-const DATE_DEBUT_CONTRATS_DISPONIBLES = new Date("2022-06-07T00:00:00.000Z"); // Date de début de disponibilité des données dans l'API Deca
+const DATE_DEBUT_CONTRATS_DISPONIBLES = new Date("2022-06-07T00:00:00.000+02:00"); // Date de début de disponibilité des données dans l'API Deca
 const NB_JOURS_MAX_PERIODE_FETCH = 60;
 
 function getMaxOldestDateForFetching() {
@@ -30,7 +30,7 @@ const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
 };
 
 const parseDate = (v: string) => {
-  return v ? new Date(v) : null;
+  return v ? new Date(`${v}T00:00:00.000+02:00`) : null;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -127,8 +127,8 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
   yesterday.setMilliseconds(0);
 
   // Récupération de la date début / fin
-  const dateDebutToFetch: Date = from ? new Date(`${from}T00:00:00.000Z`) : await getLastDecaCreatedDateInDb();
-  const dateFinToFetch = to ? new Date(`${to}T00:00:00.000Z`) : yesterday;
+  const dateDebutToFetch: Date = from ? (parseDate(from) as Date) : await getLastDecaCreatedDateInDb();
+  const dateFinToFetch: Date = to ? (parseDate(to) as Date) : yesterday;
 
   if (isAfter(dateDebutToFetch, dateFinToFetch)) {
     logger.error("La date de debut de peut pas être après la date de fin");
@@ -209,7 +209,7 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
         };
 
         const oldContrat: IDeca | null = await getDbCollection("deca").findOne(newContratFilter);
-        const now = new Date(dateDebut);
+        const now = parseDate(dateDebut) as Date;
 
         if (oldContrat && oldContrat.updated_at && oldContrat.updated_at.getTime() > now.getTime()) {
           throw internal("contracts not imported in chronological order", { oldContrat, currentContrat, now });
