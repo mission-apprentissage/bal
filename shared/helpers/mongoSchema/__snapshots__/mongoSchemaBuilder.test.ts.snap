@@ -473,12 +473,17 @@ exports[`zodToMongoSchema > should convert deca.import.job.result schema 1`] = `
       "description": "true marque que l'import pour ce jour précis est complet. informatif uniquement. false ne sera jamais enregistré",
     },
     "import_date": {
+      "bsonType": "date",
+      "description": "La date d'un import deca au format date tz Paris",
+    },
+    "import_date_string": {
       "bsonType": "string",
       "description": "La date d'un import deca au format yyyy-MM-dd",
     },
   },
   "required": [
     "_id",
+    "import_date_string",
     "import_date",
     "has_completed",
     "created_at",

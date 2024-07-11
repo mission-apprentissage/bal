@@ -268,7 +268,9 @@ export const buildPeriodsToFetch = async (
 };
 
 const pushPeriod = async (periods: Array<{ dateDebut: string; dateFin: string }>, dateDebut: Date, dateFin: Date) => {
-  if (!(await getDbCollection("deca.import.job.result").findOne({ import_date: format(dateDebut, "yyyy-MM-dd") }))) {
+  if (
+    !(await getDbCollection("deca.import.job.result").findOne({ import_date_string: format(dateDebut, "yyyy-MM-dd") }))
+  ) {
     periods.push({ dateDebut: format(dateDebut, "yyyy-MM-dd"), dateFin: format(dateFin, "yyyy-MM-dd") });
   }
 };
