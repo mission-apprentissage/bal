@@ -127,7 +127,7 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
   yesterday.setMilliseconds(0);
 
   // Récupération de la date début / fin
-  const dateDebutToFetch: Date = from ? (parseDate(from) as Date) : await getLastDecaCreatedDateInDb();
+  const dateDebutToFetch: Date = parseDate(from) ?? await getLastDecaCreatedDateInDb();
   const dateFinToFetch: Date = parseDate(to) ?? yesterday;
 
   if (isAfter(dateDebutToFetch, dateFinToFetch)) {
