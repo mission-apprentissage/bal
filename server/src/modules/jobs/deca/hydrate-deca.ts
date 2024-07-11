@@ -202,7 +202,7 @@ export const hydrateDeca = async () => {
         };
 
         const oldContrat: IDeca | null = await getDbCollection("deca").findOne(newContratFilter);
-        const now = parseDate(dateDebut) as Date;
+        const now = parseDate(dateDebut)!;
 
         if (oldContrat && oldContrat.updated_at && oldContrat.updated_at.getTime() > now.getTime()) {
           throw internal("contracts not imported in chronological order", { oldContrat, currentContrat, now });
