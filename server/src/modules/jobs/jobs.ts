@@ -41,7 +41,7 @@ export async function setupJobProcessor() {
             },
             "Mise à jour des données DECA": {
               cron_string: "30 21 * * *",
-              handler: () => hydrateDeca({ from: "", to: "" }),
+              handler: () => hydrateDeca(),
             },
           },
     jobs: {
@@ -101,10 +101,8 @@ export async function setupJobProcessor() {
         resumable: true,
       },
       "deca:hydrate": {
-        handler: async (job) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { from, to } = job.payload as any;
-          await hydrateDeca({ from, to });
+        handler: async () => {
+          await hydrateDeca();
         },
       },
       "import:catalogue": {

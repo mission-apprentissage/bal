@@ -5,12 +5,16 @@ import { IModelDescriptor, zObjectId } from "../common";
 
 const collectionName = "deca.import.job.result" as const;
 
-const indexes: IModelDescriptor["indexes"] = [[{ import_date: 1 }, {}]];
+const indexes: IModelDescriptor["indexes"] = [
+  [{ import_date_string: 1 }, {}],
+  [{ import_date: -1 }, {}],
+];
 
 export const ZDecaImportJobResult = z
   .object({
     _id: zObjectId,
-    import_date: z.string().describe("La date d'un import deca au format yyyy-MM-dd"),
+    import_date_string: z.string().describe("La date d'un import deca au format yyyy-MM-dd"),
+    import_date: z.date().describe("La date d'un import deca au format date tz Paris"),
     has_completed: z
       .boolean()
       .describe(

@@ -111,14 +111,10 @@ export const isDecaApiAvailable = ({
  * Ce job peuple la collection contratsDeca via l'API Deca
  * L'API Deca ne permets de récupérer des données que sur une période maximum NB_JOURS_MAX_PERIODE_FETCH
  * L'API Deca ne permets de récupérer des données que jusqu'a "hier" au plus tard.
- * Le job va récupérer les données en découpant par chunks de 1 jour si besoin via 2 modes :
- *    - incrémental (si aucune option spécifiée) : depuis la date la plus récente des contratsDecaDb en base jusqu'à "hier"
- *    - from : depuis yyyy-MM-dd
- *    - to : jusqu'a yyyy-MM-dd
- * Le job récupérera NB_JOURS_MAX_PERIODE_FETCH jours max par appel
+ * Le job va récupérer les données en découpant par chunks de 1 jour depuis la date la plus récente des contratsDecaDb en base jusqu'à "hier"
  * Le fonctionnement nominal est un appel quotidien de récupération des données de la veille
  */
-export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) => {
+export const hydrateDeca = async () => {
   const now = new Date();
   const yesterday = addDays(now, -1);
   yesterday.setHours(23);
@@ -127,8 +123,8 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
   yesterday.setMilliseconds(0);
 
   // Récupération de la date début / fin
-  const dateDebutToFetch: Date = from ? (parseDate(from) as Date) : await getLastDecaCreatedDateInDb();
-  const dateFinToFetch: Date = to ? (parseDate(to) as Date) : yesterday;
+  const dateDebutToFetch: Date = await getLastDecaCreatedDateInDb();
+  const dateFinToFetch: Date = yesterday;
 
   if (isAfter(dateDebutToFetch, dateFinToFetch)) {
     logger.error("La date de debut de peut pas être après la date de fin");
@@ -138,9 +134,6 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
     return;
   } else if (isBefore(dateDebutToFetch, DATE_DEBUT_CONTRATS_DISPONIBLES)) {
     logger.error("Limite deca date de debut au 2022-06-07");
-    return;
-  } else if (isAfter(dateFinToFetch, yesterday)) {
-    logger.error("Limite deca date de fin à Hier");
     return;
   }
 
@@ -239,7 +232,8 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
     getDbCollection("deca.import.job.result").insertOne({
       _id: new ObjectId(),
       has_completed: true,
-      import_date: dateDebut,
+      import_date_string: dateDebut,
+      import_date: parseDate(dateDebut)!,
       created_at: new Date(),
     } as IDecaImportJobResult);
   });
@@ -284,12 +278,22 @@ const pushPeriod = async (periods: Array<{ dateDebut: string; dateFin: string }>
  * @returns
  */
 export const getLastDecaCreatedDateInDb = async () => {
-  const lastDecaItem = await getDbCollection("deca").findOne(
-    { created_at: { $exists: true } },
-    { sort: { created_at: -1 } }
-  );
+  const lastDecaLogEntry = await getDbCollection("deca.import.job.result").findOne({}, { sort: { import_date: -1 } });
 
-  let lastCreatedAt = lastDecaItem?.created_at ?? null;
+  console.log(" lastDecaLogEntry ", lastDecaLogEntry);
+
+  let lastCreatedAt = lastDecaLogEntry?.import_date ?? null;
+  if (!lastCreatedAt) {
+    const lastDecaItem = await getDbCollection("deca").findOne(
+      { created_at: { $exists: true } },
+      { sort: { created_at: -1 } }
+    );
+
+    lastCreatedAt = lastDecaItem?.created_at ?? null;
+
+    console.log(" lastCreatedAt ", lastDecaItem);
+  }
+
   // Si la dernière date est plus tard qu'hier, on prend d'avant hier en date de debut de référence
   if (lastCreatedAt) {
     if (isAfter(lastCreatedAt, addDays(new Date(), -1))) {
@@ -298,6 +302,8 @@ export const getLastDecaCreatedDateInDb = async () => {
 
     return lastCreatedAt;
   } else {
+    console.log("retour max dans le past");
+
     return getMaxOldestDateForFetching();
   }
 };
