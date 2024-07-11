@@ -128,7 +128,7 @@ export const hydrateDeca = async ({ from, to }: { from?: string; to?: string }) 
 
   // Récupération de la date début / fin
   const dateDebutToFetch: Date = from ? (parseDate(from) as Date) : await getLastDecaCreatedDateInDb();
-  const dateFinToFetch: Date = to ? (parseDate(to) as Date) : yesterday;
+  const dateFinToFetch: Date = parseDate(to) ?? yesterday;
 
   if (isAfter(dateDebutToFetch, dateFinToFetch)) {
     logger.error("La date de debut de peut pas être après la date de fin");
