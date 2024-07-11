@@ -250,6 +250,10 @@ describe("IMPORT DECA from API", () => {
       { dateDebut: "2024-01-02", dateFin: "2024-01-03" },
       { dateDebut: "2024-01-03", dateFin: "2024-01-04" },
     ]);
+
+    // TODO: ajouter des tests sur ces éléments
+    // { start: new Date("2024-01-01T00:00:00.00Z"), end: new Date("2024-01-04T23:00:00.00Z") }
+    // { start: new Date("2024-07-01T00:00:00.00+02:00"), end: new Date("2024-07-04T23:00:00.00+02:00") }
   });
 
   it("building deca contract OK", () => {
