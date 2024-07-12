@@ -282,8 +282,6 @@ const pushPeriod = async (periods: Array<{ dateDebut: string; dateFin: string }>
 export const getLastDecaCreatedDateInDb = async () => {
   const lastDecaLogEntry = await getDbCollection("deca.import.job.result").findOne({}, { sort: { import_date: -1 } });
 
-  console.log(" lastDecaLogEntry ", lastDecaLogEntry);
-
   let lastCreatedAt = lastDecaLogEntry?.import_date ?? null;
   if (!lastCreatedAt) {
     const lastDecaItem = await getDbCollection("deca").findOne(
@@ -292,8 +290,6 @@ export const getLastDecaCreatedDateInDb = async () => {
     );
 
     lastCreatedAt = lastDecaItem?.created_at ?? null;
-
-    console.log(" lastCreatedAt ", lastDecaItem);
   }
 
   // Si la dernière date est plus tard qu'hier, on prend d'avant hier en date de debut de référence
@@ -304,8 +300,6 @@ export const getLastDecaCreatedDateInDb = async () => {
 
     return lastCreatedAt;
   } else {
-    console.log("retour max dans le past");
-
     return getMaxOldestDateForFetching();
   }
 };
