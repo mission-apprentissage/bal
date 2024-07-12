@@ -1,7 +1,12 @@
 import { Db, MongoClient } from "mongodb";
 
 export const up = async (db: Db, _client: MongoClient) => {
-  db.collection("decaHistory").updateMany(
+  console.log(db);
+  /*
+  // Mise en commentaire des migrations et conservation pour info.
+  ces migrations seront jouées à la main.
+
+  await db.collection("decaHistory").updateMany(
     {},
     { $unset: { resumeToken: 1, created_at: 1 } },
     { bypassDocumentValidation: true }
@@ -78,6 +83,8 @@ export const up = async (db: Db, _client: MongoClient) => {
     ],
     { bypassDocumentValidation: true }
   );
+
+  */
 };
 
 export const down = async (_db: Db, _client: MongoClient) => {};
