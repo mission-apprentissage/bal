@@ -4,6 +4,7 @@ import catalogueEmailSiretDescriptor, { ICatalogueEmailSiret } from "./catalogue
 import { IModelDescriptor } from "./common";
 import decaModelDescriptor, { IDeca } from "./deca.model/deca.model";
 import decaHistoryModelDescriptor, { IDecaHistory } from "./deca.model/decaHistory.model";
+import decaImportJobResultModelDescriptor, { IDecaImportJobResult } from "./deca.model/decaImportJobResult.model";
 import documentsModelDescriptor, { IDocument } from "./document.model";
 import documentContentsModelDescriptor, { IDocumentContent } from "./documentContent.model";
 import emailDeniedModelDescriptor, { IEmailDenied } from "./emailDenied.model";
@@ -25,6 +26,7 @@ export const modelDescriptors: IModelDescriptor[] = [
   emailDeniedModelDescriptor,
   decaModelDescriptor,
   decaHistoryModelDescriptor,
+  decaImportJobResultModelDescriptor,
   mailingListModelDescriptor,
   catalogueEmailSiretDescriptor,
   bouncerEmailModelDescriptor,
@@ -43,6 +45,7 @@ export type IDocumentMap = {
   emailDenied: IEmailDenied;
   deca: IDeca;
   decaHistory: IDecaHistory;
+  ["deca.import.job.result"]: IDecaImportJobResult;
   catalogueEmailSirets: ICatalogueEmailSiret;
   ["bouncer.email"]: BouncerEmail;
   ["bouncer.domain"]: BouncerDomain;

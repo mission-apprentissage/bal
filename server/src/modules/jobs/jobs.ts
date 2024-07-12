@@ -21,8 +21,7 @@ import { createUser } from "../actions/users.actions";
 import { runCatalogueImporter } from "./catalogueSiretEmailImport";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
-import { mergeDecaDumps } from "./deca/merge-dumps-deca";
-import { createHistory } from "./deca/watcher";
+import { hydrateDeca } from "./deca/hydrate-deca";
 import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
 import { run_hydrate_from_ocapiat } from "./validation/hydrate_from_ocapiat";
 import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
@@ -39,6 +38,10 @@ export async function setupJobProcessor() {
             "Mise à jour des couples siret/email provenant du catalogue de formations": {
               cron_string: "30 2 * * *",
               handler: () => runCatalogueImporter(),
+            },
+            "Mise à jour des données DECA": {
+              cron_string: "30 21 * * *",
+              handler: () => hydrateDeca(),
             },
           },
     jobs: {
@@ -97,12 +100,10 @@ export async function setupJobProcessor() {
         onJobExited: onMailingListJobExited,
         resumable: true,
       },
-
-      "deca:merge": {
-        handler: async () => mergeDecaDumps(),
-      },
-      "deca:history": {
-        handler: async () => createHistory(),
+      "deca:hydrate": {
+        handler: async () => {
+          await hydrateDeca();
+        },
       },
       "import:catalogue": {
         handler: () => runCatalogueImporter(),

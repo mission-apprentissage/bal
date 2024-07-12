@@ -217,17 +217,8 @@ program
 program
   .command("deca:hydrate")
   .description("Remplissage des contrats Deca")
-  .option("-f, --from <string>", "Récupère les données disponibles via l'API Deca depuis une date yyyy-MM-dd")
-  .option("-t, --to <string>", "Récupère les données disponibles via l'API Deca jusuqu'a une date yyyy-MM-dd")
-  .option("-c, --chunk <number>", "Chunk days default 1")
   .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("hydrate:deca"));
-
-program
-  .command("deca:merge")
-  .description("Deca merge")
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("deca:merge"));
+  .action(createJobAction("deca:hydrate"));
 
 program
   .command("job:validation:hydrate_from_deca")
@@ -250,12 +241,6 @@ program
   .description("Sanitize organisationdomain")
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("organisation:sanitize:domains"));
-
-program
-  .command("deca:history")
-  .description("Deca history")
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("deca:history"));
 
 program
   .command("import:catalogue")

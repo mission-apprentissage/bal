@@ -49,8 +49,6 @@ export const getDeca = async (
 ): Promise<ApiDeca> => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return executeWithRateLimiting(async (client: any) => {
-    // axiosRetry(client, { retries: 3 });
-
     try {
       console.log(dateDebut, dateFin, page);
       const startDate = new Date();

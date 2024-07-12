@@ -13,6 +13,7 @@ export type CollectionName =
   | "emailDenied"
   | "deca"
   | "decaHistory"
+  | "deca.import.job.result"
   | "catalogueEmailSirets"
   | "bouncer.email"
   | "bouncer.domain";
