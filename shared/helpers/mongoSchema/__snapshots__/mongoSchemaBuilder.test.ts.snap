@@ -336,7 +336,10 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
           "description": "Code NAF de l’entreprise",
         },
         "nombre_de_salaries": {
-          "bsonType": "number",
+          "bsonType": [
+            "number",
+            "null",
+          ],
           "description": "Effectif salarié de l'entreprise",
         },
         "siret": {

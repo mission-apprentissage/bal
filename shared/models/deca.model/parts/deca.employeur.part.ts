@@ -13,7 +13,7 @@ export const ZDecaEmployeur = z
       .optional(),
     naf: z.string().optional().describe("Code NAF de l’entreprise"),
     code_idcc: z.string().optional().describe("Le code IDCC de l'employeur"),
-    nombre_de_salaries: z.number().optional().describe("Effectif salarié de l'entreprise"),
+    nombre_de_salaries: z.number().nullish().describe("Effectif salarié de l'entreprise"),
     courriel: z.string().optional().describe("Email de l’employeur"),
     telephone: z.string().optional().describe("Téléphone de l'employeur"),
   })
