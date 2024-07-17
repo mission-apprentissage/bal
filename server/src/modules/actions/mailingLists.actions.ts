@@ -376,6 +376,8 @@ const getLbaComputeData = async (
     return [];
   });
 
+  logger.info(trainingLinks);
+
   return trainingLinks.reduce<Map<string, ICsvDatum>>((acc, trainingLink) => {
     acc.set(trainingLink.id, { ...trainingLink });
 
