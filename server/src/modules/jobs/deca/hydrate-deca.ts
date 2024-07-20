@@ -170,7 +170,7 @@ export const hydrateDeca = async () => {
           JSON.stringify({ noContrat: item.detailsContrat.noContrat, dateNaissance: item.alternant.dateNaissance }),
           item,
         ])
-      ); // Type contrat type_contrat
+      );
 
       const decaContratsForPeriod = decaContrats_LBA.reduce((acc, item) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
