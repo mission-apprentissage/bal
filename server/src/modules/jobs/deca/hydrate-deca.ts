@@ -30,7 +30,7 @@ const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
 };
 
 const parseDate = (v: string) => {
-  return v ? new Date(`${v}T00:00:00.000+02:00`) : null;
+  return v ? new Date(`${v}T00:00:00.000Z`) : null;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
