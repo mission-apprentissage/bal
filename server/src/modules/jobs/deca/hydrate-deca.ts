@@ -80,6 +80,7 @@ export const buildDecaContract = (contrat: any) => {
       ...ifDefined("telephone", contrat.employeur.telephone), // LBA
       ...ifDefined("denomination", contrat.employeur.denomination), // LBA
     },
+    ...ifDefined("type_employeur", contrat.employeur.typeEmployeur),
     no_contrat: contrat.detailsContrat.noContrat, // TDB, LBA
     ...ifDefined("type_contrat", "" + contrat.detailsContrat.typeContrat), // TDB, LBA
     ...ifDefined("date_effet_rupture", contrat.rupture?.dateEffetRupture, parseDate), // TDB, LBA

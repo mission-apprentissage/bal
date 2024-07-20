@@ -344,6 +344,7 @@ describe("IMPORT DECA from API", () => {
         telephone: "0102030405",
         denomination: "BIDULE LOGISTIQUES",
       },
+      type_employeur: 11,
       no_contrat: "031202310001351",
       type_contrat: "11",
       date_effet_rupture: new Date("2023-12-21T00:00:00.000+02:00"),
