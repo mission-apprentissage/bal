@@ -24,9 +24,9 @@ const AdminImportPage = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const { data: documentLists, refetch } = useQuery<IUploadDocumentJson[]>({
-    queryKey: ["documentLists"],
+    queryKey: ["/admin/documents"],
     queryFn: async () => apiGet("/admin/documents", {}),
-    refetchInterval: 1000,
+    refetchInterval: 15_000,
   });
 
   const onDeleteDocument = async () => {

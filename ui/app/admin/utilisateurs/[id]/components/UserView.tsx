@@ -60,6 +60,17 @@ const UserView: FC<Props> = ({ user }) => {
           },
         }}
       />
+
+      <Button
+        iconId="fr-icon-arrow-right-line"
+        iconPosition="right"
+        linkProps={{
+          href: PAGES.adminListeDiffusion(user._id).path,
+        }}
+        priority="tertiary"
+      >
+        Listes de diffusion
+      </Button>
     </>
   );
 };

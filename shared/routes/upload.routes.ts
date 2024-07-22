@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { zObjectId } from "../models/common";
 import { ZUploadDocumentPublic } from "../models/document.model";
+import { ZMailingListWithDocument } from "../models/mailingList.model";
 import { IRoutesDef } from "./common.routes";
 
 export const zUploadRoutes = {
@@ -11,6 +12,19 @@ export const zUploadRoutes = {
       path: "/admin/documents",
       response: {
         "200": z.array(ZUploadDocumentPublic),
+      },
+      securityScheme: {
+        auth: "cookie-session",
+        access: "admin",
+        ressources: {},
+      },
+    },
+    "/admin/mailing-list/:user_id": {
+      method: "get",
+      path: "/admin/mailing-list/:user_id",
+      params: z.object({ user_id: zObjectId }),
+      response: {
+        "200": z.array(ZMailingListWithDocument),
       },
       securityScheme: {
         auth: "cookie-session",
@@ -35,13 +49,10 @@ export const zUploadRoutes = {
     "/admin/upload": {
       method: "post",
       path: "/admin/upload",
-      querystring: z
-        .object({
-          type_document: z.string(),
-          import_content: z.string().optional(),
-          delimiter: z.string(),
-        })
-        ,
+      querystring: z.object({
+        type_document: z.string(),
+        delimiter: z.string(),
+      }),
       body: z.unknown(),
       response: {
         "200": ZUploadDocumentPublic,
