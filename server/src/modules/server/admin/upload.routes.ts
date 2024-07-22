@@ -14,6 +14,7 @@ import {
   deleteDocumentById,
   findDocuments,
   getDocumentTypes,
+  updateDocument,
   uploadFile,
 } from "../../actions/documents.actions";
 import { Server } from "../server";
@@ -81,18 +82,22 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           mimetype: data.mimetype,
         });
 
-        if (request.query?.import_content === "true") {
-          await addJob({
-            name: "import:document",
-            payload: {
-              document_id: document._id,
-            },
-            queued: true,
-          });
-        }
+        await addJob({
+          name: "import:document",
+          payload: {
+            document_id: document._id,
+          },
+          queued: true,
+        });
 
         return response.status(200).send(toPublicDocument(document));
       } catch (error) {
+        await updateDocument(document._id, {
+          $set: {
+            job_status: "error",
+          },
+        });
+
         if (error.isBoom) {
           throw error;
         }
