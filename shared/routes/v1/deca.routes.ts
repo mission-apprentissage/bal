@@ -7,35 +7,32 @@ const validationSchema = {
     .object({
       siret: extensions.siret,
     })
-    .describe("Organisation deca Request body")
-    .strict(),
+    .describe("Organisation deca Request body"),
   headers: ZReqHeadersAuthorization,
   response: {
     "200": z
       .object({
-        contrats: z
-          .object({
-            total: z.number(),
-            appr: z.number(),
-            prof: z.number(),
-          })
-          .strict(),
+        contrats: z.object({
+          total: z.number(),
+          appr: z.number(),
+          prof: z.number(),
+        }),
         premier_contrat: z
           .object({
             date_debut_contrat: z.date().optional(),
             date_fin_contrat: z.date().optional(),
           })
-          .strict()
+
           .nullish(),
         dernier_contrat: z
           .object({
             date_debut_contrat: z.date().optional(),
             date_fin_contrat: z.date().optional(),
           })
-          .strict()
+
           .nullish(),
       })
-      .strict()
+
       .describe("Organisation deca Response body"),
   },
 } as const;

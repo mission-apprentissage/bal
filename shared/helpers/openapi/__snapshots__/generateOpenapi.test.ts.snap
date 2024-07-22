@@ -78,7 +78,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
     },
     "schemas": {
       "Error": {
-        "additionalProperties": false,
         "properties": {
           "code": {
             "type": [
@@ -158,11 +157,9 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                 "schema": {
                   "anyOf": [
                     {
-                      "additionalProperties": false,
                       "description": "Organisation deca Response body",
                       "properties": {
                         "contrats": {
-                          "additionalProperties": false,
                           "properties": {
                             "appr": {
                               "type": "number",
@@ -182,7 +179,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                           "type": "object",
                         },
                         "dernier_contrat": {
-                          "additionalProperties": false,
                           "properties": {
                             "date_debut_contrat": {
                               "type": "string",
@@ -197,7 +193,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                           ],
                         },
                         "premier_contrat": {
-                          "additionalProperties": false,
                           "properties": {
                             "date_debut_contrat": {
                               "type": "string",
@@ -218,7 +213,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                       "type": "object",
                     },
                     {
-                      "additionalProperties": false,
                       "properties": {
                         "code": {
                           "type": [
@@ -324,7 +318,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "content": {
             "application/json": {
               "schema": {
-                "additionalProperties": false,
                 "description": "Organisation deca Request body",
                 "properties": {
                   "siret": {
@@ -350,11 +343,9 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                 "schema": {
                   "anyOf": [
                     {
-                      "additionalProperties": false,
                       "description": "Organisation deca Response body",
                       "properties": {
                         "contrats": {
-                          "additionalProperties": false,
                           "properties": {
                             "appr": {
                               "type": "number",
@@ -374,7 +365,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                           "type": "object",
                         },
                         "dernier_contrat": {
-                          "additionalProperties": false,
                           "properties": {
                             "date_debut_contrat": {
                               "type": "string",
@@ -389,7 +379,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                           ],
                         },
                         "premier_contrat": {
-                          "additionalProperties": false,
                           "properties": {
                             "date_debut_contrat": {
                               "type": "string",
@@ -410,7 +399,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                       "type": "object",
                     },
                     {
-                      "additionalProperties": false,
                       "properties": {
                         "code": {
                           "type": [
@@ -520,7 +508,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "content": {
             "application/json": {
               "schema": {
-                "additionalProperties": false,
                 "description": "Organisation validation Request body",
                 "properties": {
                   "email": {
@@ -551,11 +538,9 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                 "schema": {
                   "anyOf": [
                     {
-                      "additionalProperties": false,
                       "description": "Organisation deca Response body",
                       "properties": {
                         "contrats": {
-                          "additionalProperties": false,
                           "properties": {
                             "appr": {
                               "type": "number",
@@ -575,7 +560,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                           "type": "object",
                         },
                         "dernier_contrat": {
-                          "additionalProperties": false,
                           "properties": {
                             "date_debut_contrat": {
                               "type": "string",
@@ -590,7 +574,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                           ],
                         },
                         "premier_contrat": {
-                          "additionalProperties": false,
                           "properties": {
                             "date_debut_contrat": {
                               "type": "string",
@@ -611,7 +594,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                       "type": "object",
                     },
                     {
-                      "additionalProperties": false,
                       "properties": {
                         "code": {
                           "type": [

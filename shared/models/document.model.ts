@@ -10,50 +10,46 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ kind: 1, created_at: 1 }, {}],
 ];
 
-export const ZUploadDocument = z
-  .object({
-    _id: zObjectId,
-    kind: z.literal("upload"),
-    type_document: z.string().describe("Le type de document (exemple: DECA, etc..)"),
-    ext_fichier: z.enum(["xlsx", "xls", "csv"]).describe("Le type de fichier extension"),
-    nom_fichier: z.string().describe("Le nom de fichier"),
-    chemin_fichier: z.string().describe("Chemin du fichier binaire"),
-    taille_fichier: z.number().int().finite().describe("Taille du fichier en bytes"),
-    hash_secret: z.string().describe("Hash fichier"),
-    hash_fichier: z.string().describe("Checksum fichier"),
-    columns: z.array(z.string()).nullish().describe("Liste des colonnes"),
-    delimiter: z.string().nullish().describe("Délimiteur"),
-    import_progress: z.number().finite().nullish().describe("Progress percentage (-1 not started)"),
-    lines_count: z.number().int().finite().nullish().describe("Number of lines"),
-    added_by: z.string().describe("Qui a ajouté le fichier"),
-    updated_at: z.date().nullish().describe("Date de mise à jour en base de données"),
-    created_at: z.date().describe("Date d'ajout en base de données"),
-    job_id: z.string().nullish().describe("Identifiant du job de génération"),
-    job_status: z.enum(["pending", "paused", "importing", "done", "error"]).describe("Status du job de génération"),
-    job_error: z.string().nullish().describe("Erreur du job de génération"),
-  })
-  .strict();
+export const ZUploadDocument = z.object({
+  _id: zObjectId,
+  kind: z.literal("upload"),
+  type_document: z.string().describe("Le type de document (exemple: DECA, etc..)"),
+  ext_fichier: z.enum(["xlsx", "xls", "csv"]).describe("Le type de fichier extension"),
+  nom_fichier: z.string().describe("Le nom de fichier"),
+  chemin_fichier: z.string().describe("Chemin du fichier binaire"),
+  taille_fichier: z.number().int().finite().describe("Taille du fichier en bytes"),
+  hash_secret: z.string().describe("Hash fichier"),
+  hash_fichier: z.string().describe("Checksum fichier"),
+  columns: z.array(z.string()).nullish().describe("Liste des colonnes"),
+  delimiter: z.string().nullish().describe("Délimiteur"),
+  import_progress: z.number().finite().nullish().describe("Progress percentage (-1 not started)"),
+  lines_count: z.number().int().finite().nullish().describe("Number of lines"),
+  added_by: z.string().describe("Qui a ajouté le fichier"),
+  updated_at: z.date().nullish().describe("Date de mise à jour en base de données"),
+  created_at: z.date().describe("Date d'ajout en base de données"),
+  job_id: z.string().nullish().describe("Identifiant du job de génération"),
+  job_status: z.enum(["pending", "paused", "importing", "done", "error"]).describe("Status du job de génération"),
+  job_error: z.string().nullish().describe("Erreur du job de génération"),
+});
 
-export const ZMailingListDocument = z
-  .object({
-    _id: zObjectId,
-    kind: z.literal("mailingList"),
-    type_document: z.string().describe("Le type de document (exemple: DECA, etc..)"),
-    ext_fichier: z.enum(["xlsx", "xls", "csv"]).describe("Le type de fichier extension"),
-    nom_fichier: z.string().describe("Le nom de fichier"),
-    chemin_fichier: z.string().describe("Chemin du fichier binaire"),
-    taille_fichier: z.number().int().finite().describe("Taille du fichier en bytes"),
-    hash_secret: z.string().describe("Hash fichier"),
-    hash_fichier: z.string().describe("Checksum fichier"),
-    process_progress: z.number().finite().optional().describe("Number of lines processed"),
-    lines_count: z.number().int().finite().optional().describe("Number of lines"),
-    added_by: z.string().describe("Qui a ajouté le fichier"),
-    updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
-    created_at: z.date().describe("Date d'ajout en base de données"),
-    job_id: z.string().nullish().describe("Identifiant du job de génération"),
-    job_status: z.enum(["pending", "paused", "processing", "done", "error"]).describe("Status du job de génération"),
-  })
-  .strict();
+export const ZMailingListDocument = z.object({
+  _id: zObjectId,
+  kind: z.literal("mailingList"),
+  type_document: z.string().describe("Le type de document (exemple: DECA, etc..)"),
+  ext_fichier: z.enum(["xlsx", "xls", "csv"]).describe("Le type de fichier extension"),
+  nom_fichier: z.string().describe("Le nom de fichier"),
+  chemin_fichier: z.string().describe("Chemin du fichier binaire"),
+  taille_fichier: z.number().int().finite().describe("Taille du fichier en bytes"),
+  hash_secret: z.string().describe("Hash fichier"),
+  hash_fichier: z.string().describe("Checksum fichier"),
+  process_progress: z.number().finite().optional().describe("Number of lines processed"),
+  lines_count: z.number().int().finite().optional().describe("Number of lines"),
+  added_by: z.string().describe("Qui a ajouté le fichier"),
+  updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
+  created_at: z.date().describe("Date d'ajout en base de données"),
+  job_id: z.string().nullish().describe("Identifiant du job de génération"),
+  job_status: z.enum(["pending", "paused", "processing", "done", "error"]).describe("Status du job de génération"),
+});
 
 export const ZDocument = z.discriminatedUnion("kind", [ZUploadDocument, ZMailingListDocument]);
 

@@ -14,8 +14,10 @@ import {
   deleteDocumentById,
   findDocuments,
   getDocumentTypes,
+  updateDocument,
   uploadFile,
 } from "../../actions/documents.actions";
+import { findMailingListWithDocument } from "../../actions/mailingLists.actions";
 import { Server } from "../server";
 
 const validateFile = (file: MultipartFile) => {
@@ -81,18 +83,22 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           mimetype: data.mimetype,
         });
 
-        if (request.query?.import_content === "true") {
-          await addJob({
-            name: "import:document",
-            payload: {
-              document_id: document._id,
-            },
-            queued: true,
-          });
-        }
+        await addJob({
+          name: "import:document",
+          payload: {
+            document_id: document._id,
+          },
+          queued: true,
+        });
 
         return response.status(200).send(toPublicDocument(document));
       } catch (error) {
+        await updateDocument(document._id, {
+          $set: {
+            job_status: "error",
+          },
+        });
+
         if (error.isBoom) {
           throw error;
         }
@@ -123,6 +129,20 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       );
 
       return response.status(200).send(documents.map(toPublicDocument));
+    }
+  );
+  server.get(
+    "/admin/mailing-list/:user_id",
+    {
+      schema: zRoutes.get["/admin/mailing-list/:user_id"],
+      onRequest: [server.auth(zRoutes.get["/admin/mailing-list/:user_id"])],
+    },
+    async (request, response) => {
+      const mailingLists = await findMailingListWithDocument({
+        added_by: request.params.user_id.toString(),
+      });
+
+      return response.status(200).send(mailingLists);
     }
   );
 

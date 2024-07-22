@@ -27,36 +27,32 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ "etablissements.siret": 1 }, { name: "siret" }],
 ];
 
-export const ZOrganisation = z
-  .object({
-    _id: zObjectId,
-    nom: z.string().optional().describe("Nom de l'organisation"),
-    siren: z.string().optional().describe("Siren de l'organisation"),
-    email_domains: z.array(z.string()).optional().describe("Liste des domaines email"),
-    etablissements: z
-      .array(
-        z
-          .object({
-            nom: z.string().optional().describe("Nom de l'établissement"),
-            siret: z.string().optional().describe("Siret actif de l'établissement"),
-            is_hq: z.boolean().optional().describe("Siège social"),
-            is_close: z.boolean().optional().describe("Est fermé"),
-          })
-          .strict()
-      )
-      .optional()
-      .describe("Liste des établissements"),
-    _meta: z
-      .object({
-        sources: z.array(z.string()).optional(),
+export const ZOrganisation = z.object({
+  _id: zObjectId,
+  nom: z.string().optional().describe("Nom de l'organisation"),
+  siren: z.string().optional().describe("Siren de l'organisation"),
+  email_domains: z.array(z.string()).optional().describe("Liste des domaines email"),
+  etablissements: z
+    .array(
+      z.object({
+        nom: z.string().optional().describe("Nom de l'établissement"),
+        siret: z.string().optional().describe("Siret actif de l'établissement"),
+        is_hq: z.boolean().optional().describe("Siège social"),
+        is_close: z.boolean().optional().describe("Est fermé"),
       })
-      .passthrough()
-      .optional()
-      .describe("Métadonnées"),
-    updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
-    created_at: z.date().optional().describe("Date d'ajout en base de données"),
-  })
-  .strict();
+    )
+    .optional()
+    .describe("Liste des établissements"),
+  _meta: z
+    .object({
+      sources: z.array(z.string()).optional(),
+    })
+    .passthrough()
+    .optional()
+    .describe("Métadonnées"),
+  updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
+  created_at: z.date().optional().describe("Date d'ajout en base de données"),
+});
 
 export type IOrganisation = z.output<typeof ZOrganisation>;
 export type IOrganisationJson = Jsonify<z.input<typeof ZOrganisation>>;

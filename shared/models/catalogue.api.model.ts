@@ -1,79 +1,70 @@
 import { z } from "zod";
 
-const etablissementFormateurSchema = z
-  .object({
-    etablissement_formateur_id: z.string().nullish(),
-    etablissement_formateur_siret: z.string().nullish(),
-    etablissement_formateur_enseigne: z.string().nullish(),
-    etablissement_formateur_uai: z.string().nullish(),
-    etablissement_formateur_type: z.string().nullish(),
-    etablissement_formateur_conventionne: z.string().nullish(),
-    etablissement_formateur_declare_prefecture: z.string().nullish(),
-    etablissement_formateur_datadock: z.string().nullish(),
-    etablissement_formateur_adresse: z.string().nullish(),
-    etablissement_formateur_code_postal: z.string().nullish(),
-    etablissement_formateur_code_commune_insee: z.string().nullish(),
-    etablissement_formateur_localite: z.string().nullish(),
-    etablissement_formateur_complement_adresse: z.string().nullish(),
-    etablissement_formateur_cedex: z.string().nullish(),
-    etablissement_formateur_entreprise_raison_sociale: z.string().nullish(),
-    geo_coordonnees_etablissement_formateur: z.string().nullish(),
-    etablissement_formateur_region: z.string().nullish(),
-    etablissement_formateur_num_departement: z.string().nullish(),
-    etablissement_formateur_nom_departement: z.string().nullish(),
-    etablissement_formateur_nom_academie: z.string().nullish(),
-    etablissement_formateur_num_academie: z.string().nullish(),
-    etablissement_formateur_siren: z.string().nullish(),
-    etablissement_formateur_courriel: z.string().nullish(),
-    etablissement_formateur_published: z.boolean().nullish(),
-    etablissement_formateur_catalogue_published: z.boolean().nullish(),
-    rncp_etablissement_formateur_habilite: z.boolean().nullish(),
-    etablissement_formateur_date_creation: z.string().nullish(),
-  })
-  .strict();
-
-const etablissementGestionnaireSchema = z
-  .object({
-    etablissement_gestionnaire_id: z.string().nullish(),
-    etablissement_gestionnaire_siret: z.string().nullish(),
-    etablissement_gestionnaire_enseigne: z.string().nullish(),
-    etablissement_gestionnaire_uai: z.string().nullish(),
-    etablissement_gestionnaire_type: z.string().nullish(),
-    etablissement_gestionnaire_conventionne: z.string().nullish(),
-    etablissement_gestionnaire_declare_prefecture: z.string().nullish(),
-    etablissement_gestionnaire_datadock: z.string().nullish(),
-    etablissement_gestionnaire_adresse: z.string().nullish(),
-    etablissement_gestionnaire_code_postal: z.string().nullish(),
-    etablissement_gestionnaire_code_commune_insee: z.string().nullish(),
-    etablissement_gestionnaire_localite: z.string().nullish(),
-    etablissement_gestionnaire_complement_adresse: z.string().nullish(),
-    etablissement_gestionnaire_cedex: z.string().nullish(),
-    etablissement_gestionnaire_entreprise_raison_sociale: z.string().nullish(),
-    geo_coordonnees_etablissement_gestionnaire: z.string().nullish(),
-    etablissement_gestionnaire_region: z.string().nullish(),
-    etablissement_gestionnaire_num_departement: z.string().nullish(),
-    etablissement_gestionnaire_nom_departement: z.string().nullish(),
-    etablissement_gestionnaire_nom_academie: z.string().nullish(),
-    etablissement_gestionnaire_num_academie: z.string().nullish(),
-    etablissement_gestionnaire_siren: z.string().nullish(),
-    etablissement_gestionnaire_courriel: z.string().nullish(),
-    etablissement_gestionnaire_published: z.boolean().nullish(),
-    etablissement_gestionnaire_catalogue_published: z.boolean().nullish(),
-    rncp_etablissement_gestionnaire_habilite: z.boolean().nullish(),
-    etablissement_gestionnaire_date_creation: z.string().nullish(),
-  })
-  .strict();
-
-const etablissementReferenceSchema = z
-  .object({
-    etablissement_reference: z.string().nullish(),
-    etablissement_reference_published: z.boolean().nullish(),
-    etablissement_reference_habilite_rncp: z.boolean().nullish(),
-    etablissement_reference_certifie_qualite: z.boolean().nullish(),
-    etablissement_reference_date_creation: z.string().nullish(),
-  })
-  .strict();
-
+const etablissementFormateurSchema = z.object({
+  etablissement_formateur_id: z.string().nullish(),
+  etablissement_formateur_siret: z.string().nullish(),
+  etablissement_formateur_enseigne: z.string().nullish(),
+  etablissement_formateur_uai: z.string().nullish(),
+  etablissement_formateur_type: z.string().nullish(),
+  etablissement_formateur_conventionne: z.string().nullish(),
+  etablissement_formateur_declare_prefecture: z.string().nullish(),
+  etablissement_formateur_datadock: z.string().nullish(),
+  etablissement_formateur_adresse: z.string().nullish(),
+  etablissement_formateur_code_postal: z.string().nullish(),
+  etablissement_formateur_code_commune_insee: z.string().nullish(),
+  etablissement_formateur_localite: z.string().nullish(),
+  etablissement_formateur_complement_adresse: z.string().nullish(),
+  etablissement_formateur_cedex: z.string().nullish(),
+  etablissement_formateur_entreprise_raison_sociale: z.string().nullish(),
+  geo_coordonnees_etablissement_formateur: z.string().nullish(),
+  etablissement_formateur_region: z.string().nullish(),
+  etablissement_formateur_num_departement: z.string().nullish(),
+  etablissement_formateur_nom_departement: z.string().nullish(),
+  etablissement_formateur_nom_academie: z.string().nullish(),
+  etablissement_formateur_num_academie: z.string().nullish(),
+  etablissement_formateur_siren: z.string().nullish(),
+  etablissement_formateur_courriel: z.string().nullish(),
+  etablissement_formateur_published: z.boolean().nullish(),
+  etablissement_formateur_catalogue_published: z.boolean().nullish(),
+  rncp_etablissement_formateur_habilite: z.boolean().nullish(),
+  etablissement_formateur_date_creation: z.string().nullish(),
+});
+const etablissementGestionnaireSchema = z.object({
+  etablissement_gestionnaire_id: z.string().nullish(),
+  etablissement_gestionnaire_siret: z.string().nullish(),
+  etablissement_gestionnaire_enseigne: z.string().nullish(),
+  etablissement_gestionnaire_uai: z.string().nullish(),
+  etablissement_gestionnaire_type: z.string().nullish(),
+  etablissement_gestionnaire_conventionne: z.string().nullish(),
+  etablissement_gestionnaire_declare_prefecture: z.string().nullish(),
+  etablissement_gestionnaire_datadock: z.string().nullish(),
+  etablissement_gestionnaire_adresse: z.string().nullish(),
+  etablissement_gestionnaire_code_postal: z.string().nullish(),
+  etablissement_gestionnaire_code_commune_insee: z.string().nullish(),
+  etablissement_gestionnaire_localite: z.string().nullish(),
+  etablissement_gestionnaire_complement_adresse: z.string().nullish(),
+  etablissement_gestionnaire_cedex: z.string().nullish(),
+  etablissement_gestionnaire_entreprise_raison_sociale: z.string().nullish(),
+  geo_coordonnees_etablissement_gestionnaire: z.string().nullish(),
+  etablissement_gestionnaire_region: z.string().nullish(),
+  etablissement_gestionnaire_num_departement: z.string().nullish(),
+  etablissement_gestionnaire_nom_departement: z.string().nullish(),
+  etablissement_gestionnaire_nom_academie: z.string().nullish(),
+  etablissement_gestionnaire_num_academie: z.string().nullish(),
+  etablissement_gestionnaire_siren: z.string().nullish(),
+  etablissement_gestionnaire_courriel: z.string().nullish(),
+  etablissement_gestionnaire_published: z.boolean().nullish(),
+  etablissement_gestionnaire_catalogue_published: z.boolean().nullish(),
+  rncp_etablissement_gestionnaire_habilite: z.boolean().nullish(),
+  etablissement_gestionnaire_date_creation: z.string().nullish(),
+});
+const etablissementReferenceSchema = z.object({
+  etablissement_reference: z.string().nullish(),
+  etablissement_reference_published: z.boolean().nullish(),
+  etablissement_reference_habilite_rncp: z.boolean().nullish(),
+  etablissement_reference_certifie_qualite: z.boolean().nullish(),
+  etablissement_reference_date_creation: z.string().nullish(),
+});
 const stringOrArraySchema = z.union([z.string(), z.array(z.string())]);
 
 export const zFormationCatalogue = z
@@ -172,7 +163,7 @@ export const zFormationCatalogue = z
     num_tel: z.string().nullish().describe("Numéro de téléphone de contact"),
     distance: z.number().nullish(),
   })
-  .strict()
+
   .merge(etablissementFormateurSchema)
   .merge(etablissementGestionnaireSchema)
   .merge(etablissementReferenceSchema);
