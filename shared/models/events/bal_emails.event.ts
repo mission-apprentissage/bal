@@ -8,7 +8,7 @@ const zEmailError = z
     type: z.enum(["fatal", "soft_bounce", "hard_bounce", "complaint", "invalid_email", "blocked", "error"]).optional(),
     message: z.string().optional(),
   })
-  .strict();
+  ;
 
 export type IEmailError = z.output<typeof zEmailError>;
 
@@ -25,6 +25,6 @@ export const ZEventBalEmail = z
     messageId: z.string().nullable(),
     errors: z.array(zEmailError),
   })
-  .strict();
+  ;
 
 export type IEventBalEmail = z.output<typeof ZEventBalEmail>;

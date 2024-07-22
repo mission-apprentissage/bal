@@ -18,7 +18,6 @@ export const zBouncerDomain = z
     updated_at: z.date(),
     created_at: z.date(),
   })
-  .strict();
 
 export type BouncerDomain = z.output<typeof zBouncerDomain>;
 

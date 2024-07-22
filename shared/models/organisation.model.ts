@@ -42,7 +42,7 @@ export const ZOrganisation = z
             is_hq: z.boolean().optional().describe("Siège social"),
             is_close: z.boolean().optional().describe("Est fermé"),
           })
-          .strict()
+          
       )
       .optional()
       .describe("Liste des établissements"),
@@ -56,7 +56,7 @@ export const ZOrganisation = z
     updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
     created_at: z.date().optional().describe("Date d'ajout en base de données"),
   })
-  .strict();
+  ;
 
 export type IOrganisation = z.output<typeof ZOrganisation>;
 export type IOrganisationJson = Jsonify<z.input<typeof ZOrganisation>>;

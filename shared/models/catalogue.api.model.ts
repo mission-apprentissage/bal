@@ -30,7 +30,7 @@ const etablissementFormateurSchema = z
     rncp_etablissement_formateur_habilite: z.boolean().nullish(),
     etablissement_formateur_date_creation: z.string().nullish(),
   })
-  .strict();
+  ;
 
 const etablissementGestionnaireSchema = z
   .object({
@@ -62,7 +62,7 @@ const etablissementGestionnaireSchema = z
     rncp_etablissement_gestionnaire_habilite: z.boolean().nullish(),
     etablissement_gestionnaire_date_creation: z.string().nullish(),
   })
-  .strict();
+  ;
 
 const etablissementReferenceSchema = z
   .object({
@@ -72,7 +72,7 @@ const etablissementReferenceSchema = z
     etablissement_reference_certifie_qualite: z.boolean().nullish(),
     etablissement_reference_date_creation: z.string().nullish(),
   })
-  .strict();
+  ;
 
 const stringOrArraySchema = z.union([z.string(), z.array(z.string())]);
 
@@ -172,7 +172,7 @@ export const zFormationCatalogue = z
     num_tel: z.string().nullish().describe("Numéro de téléphone de contact"),
     distance: z.number().nullish(),
   })
-  .strict()
+  
   .merge(etablissementFormateurSchema)
   .merge(etablissementGestionnaireSchema)
   .merge(etablissementReferenceSchema);

@@ -19,7 +19,7 @@ export const ZDocumentContent = z
     updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
     created_at: z.date().optional().describe("Date d'ajout en base de données"),
   })
-  .strict();
+  ;
 
 export type IDocumentContent = z.output<typeof ZDocumentContent>;
 export type IDocumentContentJson = Jsonify<z.input<typeof ZDocumentContent>>;

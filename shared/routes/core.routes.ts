@@ -18,7 +18,7 @@ export const zCoreRoutes = {
             env: z.enum(["local", "recette", "production", "preview", "test"]),
           })
           .describe("API Health")
-          .strict(),
+          ,
       },
       securityScheme: null,
       openapi: {

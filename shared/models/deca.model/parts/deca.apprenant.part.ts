@@ -18,11 +18,11 @@ export const ZDecaApprenant = z
         voie: z.string().optional().describe("La voie de l'adresse"),
         code_postal: z.string().optional().describe("Le code postal de l'adresse"),
       })
-      .strict()
+      
       .optional(),
     derniere_classe: z.coerce.number().nullish().describe("La dernière classe de l'apprenant"),
   })
-  .strict();
+  ;
 
 export type IDecaApprenant = z.output<typeof ZDecaApprenant>;
 export type IDecaApprenantJson = Jsonify<z.input<typeof ZDecaApprenant>>;

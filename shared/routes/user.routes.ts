@@ -1,13 +1,9 @@
 import { z } from "zod";
 
 import { zObjectId } from "../models/common";
-import { ZPerson } from "../models/person.model";
-import { ZUser, ZUserPublic, zUserWithPersonPublic } from "../models/user.model";
+import { ZUser, zUserWithPersonPublic } from "../models/user.model";
 import { IRoutesDef, ZReqParamsSearchPagination } from "./common.routes";
 
-const zUserWithPerson = ZUserPublic.extend({
-  person: ZPerson.nullish(),
-});
 
 export const zUserAdminRoutes = {
   get: {
@@ -15,7 +11,7 @@ export const zUserAdminRoutes = {
       method: "get",
       path: "/admin/users",
       querystring: ZReqParamsSearchPagination,
-      response: { "200": z.array(zUserWithPerson) },
+      response: { "200": z.array(zUserWithPersonPublic) },
       securityScheme: {
         auth: "cookie-session",
         access: "admin",
@@ -25,8 +21,8 @@ export const zUserAdminRoutes = {
     "/admin/users/:id": {
       method: "get",
       path: "/admin/users/:id",
-      params: z.object({ id: zObjectId }).strict(),
-      response: { "200": zUserWithPerson },
+      params: z.object({ id: zObjectId }),
+      response: { "200": zUserWithPersonPublic },
       securityScheme: {
         auth: "cookie-session",
         access: "admin",
@@ -44,7 +40,7 @@ export const zUserAdminRoutes = {
           password: ZUser.shape.password,
           organisation_id: z.string(),
         })
-        .strict(),
+        ,
       response: {
         "200": zUserWithPersonPublic,
       },
@@ -63,7 +59,7 @@ export const zUserRoutes = {
       method: "get",
       path: "/user/generate-api-key",
       response: {
-        "200": z.object({ api_key: z.string() }).strict(),
+        "200": z.object({ api_key: z.string() }),
       },
       securityScheme: {
         auth: "cookie-session",

@@ -41,7 +41,7 @@ export const zUploadRoutes = {
           import_content: z.string().optional(),
           delimiter: z.string(),
         })
-        .strict(),
+        ,
       body: z.unknown(),
       response: {
         "200": ZUploadDocumentPublic,
@@ -57,9 +57,9 @@ export const zUploadRoutes = {
     "/admin/document/:id": {
       method: "delete",
       path: "/admin/document/:id",
-      params: z.object({ id: zObjectId }).strict(),
+      params: z.object({ id: zObjectId }),
       response: {
-        "200": z.object({ success: z.boolean() }).strict(),
+        "200": z.object({ success: z.boolean() }),
       },
       securityScheme: {
         auth: "cookie-session",

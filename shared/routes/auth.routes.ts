@@ -8,7 +8,7 @@ export const zAuthRoutes = {
     "/auth/reset-password": {
       method: "get",
       path: "/auth/reset-password",
-      querystring: z.object({ email: z.string().email() }).strict(),
+      querystring: z.object({ email: z.string().email() }),
       response: {
         "200": ZResOk,
       },
@@ -44,7 +44,7 @@ export const zAuthRoutes = {
         .object({
           password: ZUser.shape.password,
         })
-        .strict(),
+        ,
       response: {
         "200": ZResOk,
       },
@@ -62,7 +62,7 @@ export const zAuthRoutes = {
           email: ZUser.shape.email,
           password: ZUser.shape.password,
         })
-        .strict(),
+        ,
       response: {
         "200": zUserWithPersonPublic,
       },

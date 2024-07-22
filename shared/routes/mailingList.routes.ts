@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { zObjectId } from "../models/common";
 import { ZMailingListDocument } from "../models/document.model";
-import { ZMailingList } from "../models/mailingList.model";
+import { ZMailingList, ZMailingListWithDocument } from "../models/mailingList.model";
 import { IRoutesDef } from "./common.routes";
 
 export const zMailingListRoutes = {
@@ -11,7 +11,7 @@ export const zMailingListRoutes = {
       method: "get",
       path: "/mailing-lists",
       response: {
-        "200": z.array(z.any()), // TODO to fix @moroine  ZMailingListWithDocument  "message": "Unrecognized key(s) in object: 'import_progress'"
+        "200": z.array(ZMailingListWithDocument),
       },
       securityScheme: {
         auth: "cookie-session",
@@ -22,7 +22,7 @@ export const zMailingListRoutes = {
     "/mailing-lists/:id": {
       method: "get",
       path: "/mailing-lists/:id",
-      params: z.object({ id: zObjectId }).strict(),
+      params: z.object({ id: zObjectId }),
       response: {
         "200": ZMailingList,
       },
@@ -35,7 +35,7 @@ export const zMailingListRoutes = {
     "/mailing-lists/:id/download": {
       method: "get",
       path: "/mailing-lists/:id/download",
-      params: z.object({ id: zObjectId }).strict(),
+      params: z.object({ id: zObjectId }),
       response: {
         "200": z.unknown(),
       },
@@ -48,7 +48,7 @@ export const zMailingListRoutes = {
     "/mailing-lists/:id/progress": {
       method: "get",
       path: "/mailing-lists/:id/progress",
-      params: z.object({ id: zObjectId }).strict(),
+      params: z.object({ id: zObjectId }),
       response: {
         "200": z
           .object({
@@ -56,7 +56,7 @@ export const zMailingListRoutes = {
             process_progress: z.number(),
             lines_count: z.number(),
           })
-          .strict(),
+          ,
       },
       securityScheme: {
         auth: "cookie-session",
@@ -77,9 +77,9 @@ export const zMailingListRoutes = {
         identifier_columns: true,
         output_columns: true,
         training_columns: true,
-      }).strict(),
+      }),
       response: {
-        "200": z.object({ success: z.literal(true) }).strict(),
+        "200": z.object({ success: z.literal(true) }),
       },
       securityScheme: {
         auth: "cookie-session",
@@ -92,9 +92,9 @@ export const zMailingListRoutes = {
     "/mailing-list/:id": {
       method: "delete",
       path: "/mailing-list/:id",
-      params: z.object({ id: zObjectId }).strict(),
+      params: z.object({ id: zObjectId }),
       response: {
-        "200": z.object({ success: z.literal(true) }).strict(),
+        "200": z.object({ success: z.literal(true) }),
       },
       securityScheme: {
         auth: "cookie-session",

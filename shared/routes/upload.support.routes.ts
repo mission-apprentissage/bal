@@ -13,7 +13,7 @@ export const zUploadSupportRoutes = {
             .object({
               id: z.string(),
             })
-            .strict()
+            
         ),
       },
       securityScheme: {
@@ -29,7 +29,7 @@ export const zUploadSupportRoutes = {
         .object({
           id: z.string(),
         })
-        .strict(),
+        ,
       response: {
         "200": z.unknown(),
       },
@@ -49,7 +49,7 @@ export const zUploadSupportRoutes = {
           verified_key: z.string(),
           email: z.string().email(),
         })
-        .strict(),
+        ,
       body: z.unknown(),
       response: {
         "200": ZResOk,
@@ -65,9 +65,9 @@ export const zUploadSupportRoutes = {
         .object({
           id: z.string(),
         })
-        .strict(),
+        ,
       response: {
-        "200": z.object({ success: z.literal(true) }).strict(),
+        "200": z.object({ success: z.literal(true) }),
       },
       securityScheme: {
         auth: "cookie-session",

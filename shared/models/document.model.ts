@@ -31,8 +31,7 @@ export const ZUploadDocument = z
     job_id: z.string().nullish().describe("Identifiant du job de génération"),
     job_status: z.enum(["pending", "paused", "importing", "done", "error"]).describe("Status du job de génération"),
     job_error: z.string().nullish().describe("Erreur du job de génération"),
-  })
-  .strict();
+  });
 
 export const ZMailingListDocument = z
   .object({
@@ -52,8 +51,7 @@ export const ZMailingListDocument = z
     created_at: z.date().describe("Date d'ajout en base de données"),
     job_id: z.string().nullish().describe("Identifiant du job de génération"),
     job_status: z.enum(["pending", "paused", "processing", "done", "error"]).describe("Status du job de génération"),
-  })
-  .strict();
+  });
 
 export const ZDocument = z.discriminatedUnion("kind", [ZUploadDocument, ZMailingListDocument]);
 

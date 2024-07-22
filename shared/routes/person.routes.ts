@@ -22,7 +22,7 @@ export const zPersonRoutes = {
     "/admin/persons/:id": {
       method: "get",
       path: "/admin/persons/:id",
-      params: z.object({ id: zObjectId }).strict(),
+      params: z.object({ id: zObjectId }),
       response: {
         "200": ZPersonWithOrganisation,
       },

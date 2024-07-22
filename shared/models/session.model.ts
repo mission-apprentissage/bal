@@ -15,7 +15,7 @@ export const ZSession = z
     created_at: z.date().describe("Date d'ajout en base de données"),
     expires_at: z.date().describe("Date d'expiration"),
   })
-  .strict();
+  ;
 
 export type ISession = z.output<typeof ZSession>;
 export type ISessionJson = Jsonify<z.input<typeof ZSession>>;

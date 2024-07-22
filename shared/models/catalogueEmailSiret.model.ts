@@ -17,7 +17,7 @@ export const ZCatalogueEmailSiret = z
     updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
     created_at: z.date().optional().describe("Date d'ajout en base de données"),
   })
-  .strict();
+  ;
 
 export type ICatalogueEmailSiret = z.output<typeof ZCatalogueEmailSiret>;
 

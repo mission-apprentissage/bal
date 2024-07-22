@@ -10,7 +10,7 @@ export const ZDecaFormation = z
     rncp: z.string().optional().describe("Le code RNCP de la formation"),
     type_diplome: z.string().optional().describe("Catégorie par niveau du Diplôme ou titre visé par l'Alternant"),
   })
-  .strict();
+  ;
 
 export type IDecaFormation = z.output<typeof ZDecaFormation>;
 export type IDecaFormationJson = Jsonify<z.input<typeof ZDecaFormation>>;

@@ -44,9 +44,9 @@ export const ZResError = z
       example: 400,
     }),
   })
-  .strict();
+  ;
 
-export const ZResOk = z.object({}).strict();
+export const ZResOk = z.object({});
 
 export type IResError = z.input<typeof ZResError>;
 export type IResErrorJson = Jsonify<z.output<typeof ZResError>>;
@@ -57,7 +57,7 @@ export const ZReqParamsSearchPagination = z
     limit: z.preprocess((v) => parseInt(v as string, 10), z.number().positive().optional()),
     q: z.string().optional(),
   })
-  .strict();
+  ;
 export type IReqParamsSearchPagination = z.input<typeof ZReqParamsSearchPagination>;
 
 export const ZReqHeadersAuthorization = z

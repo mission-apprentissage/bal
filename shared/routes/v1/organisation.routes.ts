@@ -9,7 +9,7 @@ const validationSchema = {
       siret: extensions.siret,
     })
     .describe("Organisation validation Request body")
-    .strict(),
+    ,
   headers: ZReqHeadersAuthorization,
   response: {
     "200": z
@@ -17,7 +17,7 @@ const validationSchema = {
         is_valid: z.boolean(),
         on: z.enum(["email", "domain"]).optional(),
       })
-      .strict()
+      
       .describe("Organisation validation Response body"),
   },
 } as const;

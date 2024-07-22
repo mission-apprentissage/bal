@@ -16,7 +16,7 @@ export const ZDecaHistory = z
     deca_id: zObjectId,
     time: z.date().describe("Modified time"),
   })
-  .strict();
+  ;
 
 export type IDecaHistory = z.output<typeof ZDecaHistory>;
 export type IDecaHistoryJson = Jsonify<z.input<typeof ZDecaHistory>>;

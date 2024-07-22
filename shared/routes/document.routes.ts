@@ -12,7 +12,7 @@ export const zDocumentRoutes = {
         .object({
           type: z.string(),
         })
-        .strict(),
+        ,
       response: {
         "200": z.array(z.string()),
       },
@@ -41,7 +41,7 @@ export const zDocumentRoutes = {
         .object({
           type: z.string(),
         })
-        .strict(),
+        ,
       response: {
         "200": z.array(ZDocumentContent),
       },

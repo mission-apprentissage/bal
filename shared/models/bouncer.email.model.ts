@@ -19,7 +19,7 @@ export const zBouncerPingResult = z
     responseCode: z.string().nullable(),
     responseMessage: z.string().nullable(),
   })
-  .strict();
+  ;
 
 export type BouncerPingResult = z.output<typeof zBouncerPingResult>;
 
@@ -32,7 +32,7 @@ export const zBouncerEmail = z
     ping: zBouncerPingResult,
     created_at: z.date(),
   })
-  .strict();
+  ;
 
 export type BouncerEmail = z.output<typeof zBouncerEmail>;
 

@@ -9,7 +9,7 @@ export const ZDecaEmployeur = z
       .object({
         code_postal: z.string().describe("Le code postal de l'adresse"),
       })
-      .strict()
+      
       .optional(),
     naf: z.string().optional().describe("Code NAF de l’entreprise"),
     code_idcc: z.string().optional().describe("Le code IDCC de l'employeur"),
@@ -17,7 +17,7 @@ export const ZDecaEmployeur = z
     courriel: z.string().optional().describe("Email de l’employeur"),
     telephone: z.string().optional().describe("Téléphone de l'employeur"),
   })
-  .strict();
+  ;
 
 export type IDecaEmployeur = z.output<typeof ZDecaEmployeur>;
 export type IDecaEmployeurJson = Jsonify<z.input<typeof ZDecaEmployeur>>;

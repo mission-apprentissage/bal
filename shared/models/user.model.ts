@@ -36,7 +36,7 @@ export const ZUser = z
     updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
     created_at: z.date().optional().describe("Date d'ajout en base de données"),
   })
-  .strict();
+  ;
 
 export const ZUserPublic = z
   .object({
@@ -49,7 +49,7 @@ export const ZUserPublic = z
     updated_at: ZUser.shape.updated_at,
     created_at: ZUser.shape.created_at,
   })
-  .strict();
+  ;
 
 export type IUser = z.output<typeof ZUser>;
 export type IUserPublic = Jsonify<z.output<typeof ZUserPublic>>;

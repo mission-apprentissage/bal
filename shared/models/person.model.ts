@@ -40,11 +40,11 @@ export const ZPerson = z
     updated_at: z.date().describe("Date de mise à jour en base de données").optional(),
     created_at: z.date().describe("Date d'ajout en base de données").optional(),
   })
-  .strict();
+  ;
 
 export const ZPersonWithOrganisation = ZPerson.extend({
   organisation: ZOrganisation.nullish(),
-}).strict();
+});
 
 export type IPerson = z.output<typeof ZPerson>;
 export type IPersonJson = Jsonify<z.input<typeof ZPerson>>;

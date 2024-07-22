@@ -12,7 +12,7 @@ export const zEmailRoutes = {
         .object({
           data: z.string(),
         })
-        .strict(),
+        ,
       response: {
         "200": z.unknown(),
       },
@@ -21,7 +21,7 @@ export const zEmailRoutes = {
     "/emails/:id/markAsOpened": {
       method: "get",
       path: "/emails/:id/markAsOpened",
-      params: z.object({ id: zObjectId }).strict(),
+      params: z.object({ id: zObjectId }),
       response: {
         "200": z.unknown(),
       },
@@ -40,7 +40,7 @@ export const zEmailRoutes = {
         .object({
           data: z.string(),
         })
-        .strict(),
+        ,
       response: {
         "200": z.unknown(),
       },
@@ -61,7 +61,7 @@ export const zEmailRoutes = {
           event: z.string(), //https://developers.sendinblue.com/docs/transactional-webhooks
           "message-id": z.string(),
         })
-        .strict(),
+        ,
       response: {
         "200": z.unknown(),
       },

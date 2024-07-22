@@ -22,7 +22,7 @@ export const zAdminOrganisationRoutes = {
     "/admin/organisations/:id": {
       method: "get",
       path: "/admin/organisations/:id",
-      params: z.object({ id: zObjectId }).strict(),
+      params: z.object({ id: zObjectId }),
       response: {
         "200": ZOrganisation,
       },

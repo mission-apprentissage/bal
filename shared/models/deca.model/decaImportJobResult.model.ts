@@ -22,7 +22,7 @@ export const ZDecaImportJobResult = z
       ),
     created_at: z.date().describe("Date d'ajout en base de données"),
   })
-  .strict();
+  ;
 
 export type IDecaImportJobResult = z.output<typeof ZDecaImportJobResult>;
 export type IDecaImportJobResultJson = Jsonify<z.input<typeof ZDecaImportJobResult>>;
