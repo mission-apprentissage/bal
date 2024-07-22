@@ -313,7 +313,7 @@ describe("IMPORT DECA from API", () => {
 
     const expectedRefinedContractForBal = {
       alternant: {
-        date_naissance: new Date("1999-11-07T00:00:00.000+02:00"),
+        date_naissance: new Date("1999-11-07T00:00:00.000Z"),
         nom: "NOM",
         prenom: "PRENOM",
         sexe: "H",
@@ -325,8 +325,8 @@ describe("IMPORT DECA from API", () => {
         derniere_classe: "01",
       },
       formation: {
-        date_debut_formation: new Date("2023-09-11T00:00:00.000+02:00"),
-        date_fin_formation: new Date("2025-06-27T00:00:00.000+02:00"),
+        date_debut_formation: new Date("2023-09-11T00:00:00.000Z"),
+        date_fin_formation: new Date("2025-06-27T00:00:00.000Z"),
         code_diplome: "32031102",
         intitule_ou_qualification: "TRANSPORT ET PRESTATION LOGISTIQUES (BTS)",
         rncp: "RNCP35400",
@@ -344,13 +344,14 @@ describe("IMPORT DECA from API", () => {
         telephone: "0102030405",
         denomination: "BIDULE LOGISTIQUES",
       },
+      type_employeur: 11,
       no_contrat: "031202310001351",
       type_contrat: "11",
-      date_effet_rupture: new Date("2023-12-21T00:00:00.000+02:00"),
+      date_effet_rupture: new Date("2023-12-21T00:00:00.000Z"),
       dispositif: "APPR",
-      date_debut_contrat: new Date("2023-09-18T00:00:00.000+02:00"),
-      date_fin_contrat: new Date("2025-06-27T00:00:00.000+02:00"),
-      date_effet_avenant: new Date("2023-09-18T00:00:00.000+02:00"),
+      date_debut_contrat: new Date("2023-09-18T00:00:00.000Z"),
+      date_fin_contrat: new Date("2025-06-27T00:00:00.000Z"),
+      date_effet_avenant: new Date("2023-09-18T00:00:00.000Z"),
       no_avenant: "031202310001351",
       statut: "Rompu",
     };

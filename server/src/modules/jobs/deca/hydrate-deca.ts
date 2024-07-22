@@ -30,7 +30,7 @@ const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
 };
 
 const parseDate = (v: string) => {
-  return v ? new Date(`${v}T00:00:00.000+02:00`) : null;
+  return v ? new Date(`${v}T00:00:00.000Z`) : null;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,6 +80,7 @@ export const buildDecaContract = (contrat: any) => {
       ...ifDefined("telephone", contrat.employeur.telephone), // LBA
       ...ifDefined("denomination", contrat.employeur.denomination), // LBA
     },
+    ...ifDefined("type_employeur", contrat.employeur.typeEmployeur),
     no_contrat: contrat.detailsContrat.noContrat, // TDB, LBA
     ...ifDefined("type_contrat", "" + contrat.detailsContrat.typeContrat), // TDB, LBA
     ...ifDefined("date_effet_rupture", contrat.rupture?.dateEffetRupture, parseDate), // TDB, LBA
@@ -169,7 +170,7 @@ export const hydrateDeca = async () => {
           JSON.stringify({ noContrat: item.detailsContrat.noContrat, dateNaissance: item.alternant.dateNaissance }),
           item,
         ])
-      ); // Type contrat type_contrat
+      );
 
       const decaContratsForPeriod = decaContrats_LBA.reduce((acc, item) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
