@@ -9,11 +9,9 @@ export const zUploadSupportRoutes = {
       path: "/support/files-list",
       response: {
         "200": z.array(
-          z
-            .object({
-              id: z.string(),
-            })
-            
+          z.object({
+            id: z.string(),
+          })
         ),
       },
       securityScheme: {
@@ -25,11 +23,9 @@ export const zUploadSupportRoutes = {
     "/support/file/download": {
       method: "get",
       path: "/support/file/download",
-      querystring: z
-        .object({
-          id: z.string(),
-        })
-        ,
+      querystring: z.object({
+        id: z.string(),
+      }),
       response: {
         "200": z.unknown(),
       },
@@ -44,12 +40,10 @@ export const zUploadSupportRoutes = {
     "/support/upload": {
       method: "post",
       path: "/support/upload",
-      querystring: z
-        .object({
-          verified_key: z.string(),
-          email: z.string().email(),
-        })
-        ,
+      querystring: z.object({
+        verified_key: z.string(),
+        email: z.string().email(),
+      }),
       body: z.unknown(),
       response: {
         "200": ZResOk,
@@ -61,11 +55,9 @@ export const zUploadSupportRoutes = {
     "/support/file/delete": {
       method: "delete",
       path: "/support/file/delete",
-      querystring: z
-        .object({
-          id: z.string(),
-        })
-        ,
+      querystring: z.object({
+        id: z.string(),
+      }),
       response: {
         "200": z.object({ success: z.literal(true) }),
       },

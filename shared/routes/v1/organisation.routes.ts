@@ -8,8 +8,7 @@ const validationSchema = {
       email: z.string().trim().email("Email non valide"),
       siret: extensions.siret,
     })
-    .describe("Organisation validation Request body")
-    ,
+    .describe("Organisation validation Request body"),
   headers: ZReqHeadersAuthorization,
   response: {
     "200": z
@@ -17,7 +16,7 @@ const validationSchema = {
         is_valid: z.boolean(),
         on: z.enum(["email", "domain"]).optional(),
       })
-      
+
       .describe("Organisation validation Response body"),
   },
 } as const;

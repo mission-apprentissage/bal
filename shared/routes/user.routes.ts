@@ -4,7 +4,6 @@ import { zObjectId } from "../models/common";
 import { ZUser, zUserWithPersonPublic } from "../models/user.model";
 import { IRoutesDef, ZReqParamsSearchPagination } from "./common.routes";
 
-
 export const zUserAdminRoutes = {
   get: {
     "/admin/users": {
@@ -34,13 +33,11 @@ export const zUserAdminRoutes = {
     "/admin/user": {
       method: "post",
       path: "/admin/user",
-      body: z
-        .object({
-          email: ZUser.shape.email,
-          password: ZUser.shape.password,
-          organisation_id: z.string(),
-        })
-        ,
+      body: z.object({
+        email: ZUser.shape.email,
+        password: ZUser.shape.password,
+        organisation_id: z.string(),
+      }),
       response: {
         "200": zUserWithPersonPublic,
       },

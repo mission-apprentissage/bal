@@ -50,13 +50,11 @@ export const zMailingListRoutes = {
       path: "/mailing-lists/:id/progress",
       params: z.object({ id: zObjectId }),
       response: {
-        "200": z
-          .object({
-            status: ZMailingListDocument.shape.job_status,
-            process_progress: z.number(),
-            lines_count: z.number(),
-          })
-          ,
+        "200": z.object({
+          status: ZMailingListDocument.shape.job_status,
+          process_progress: z.number(),
+          lines_count: z.number(),
+        }),
       },
       securityScheme: {
         auth: "cookie-session",

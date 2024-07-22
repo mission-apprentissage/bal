@@ -8,11 +8,9 @@ export const zDocumentRoutes = {
     "/documents/columns": {
       method: "get",
       path: "/documents/columns",
-      querystring: z
-        .object({
-          type: z.string(),
-        })
-        ,
+      querystring: z.object({
+        type: z.string(),
+      }),
       response: {
         "200": z.array(z.string()),
       },
@@ -37,11 +35,9 @@ export const zDocumentRoutes = {
     "/documents/sample": {
       method: "get",
       path: "/documents/sample",
-      querystring: z
-        .object({
-          type: z.string(),
-        })
-        ,
+      querystring: z.object({
+        type: z.string(),
+      }),
       response: {
         "200": z.array(ZDocumentContent),
       },

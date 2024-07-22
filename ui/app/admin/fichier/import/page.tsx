@@ -14,11 +14,11 @@ import { IGetRoutes, IPostRoutes, IResponse } from "shared";
 import ToggleSwitchInput from "../../../../components/form/ToggleSwitchInput";
 import Toast, { useToast } from "../../../../components/toast/Toast";
 import { apiGet, apiPost } from "../../../../utils/api.utils";
+import { queryClient } from "../../../../utils/query.utils";
 import Breadcrumb, { PAGES } from "../../../components/breadcrumb/Breadcrumb";
 
 interface FormValues extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
   file: FileList;
-  should_import_content: boolean;
   has_new_type_document: boolean;
   new_type_document: string;
   delimiter_other: string;
@@ -54,7 +54,6 @@ const AdminImportPage = () => {
   } = useForm<FormValues>({
     defaultValues: {
       type_document: "",
-      should_import_content: true,
       has_new_type_document: false,
     },
   });
@@ -68,7 +67,6 @@ const AdminImportPage = () => {
     type_document,
     has_new_type_document,
     new_type_document,
-    should_import_content,
     delimiter,
     delimiter_other,
   }) => {
@@ -81,7 +79,6 @@ const AdminImportPage = () => {
         querystring: {
           type_document: has_new_type_document ? new_type_document : type_document,
           delimiter: askDelimiterOther ? delimiter_other : delimiter,
-          ...(should_import_content && { import_content: "true" }),
         },
         body: formData,
       });
@@ -101,6 +98,7 @@ const AdminImportPage = () => {
       console.error(error);
     } finally {
       setIsSubmitting(false);
+      queryClient.invalidateQueries({ queryKey: ["/admin/documents"] });
     }
   };
 
@@ -152,16 +150,6 @@ const AdminImportPage = () => {
               }}
             />
           )}
-          <ToggleSwitchInput
-            control={control}
-            {...register("should_import_content")}
-            toggleSwitchProps={{
-              showCheckedHint: false,
-              disabled: isSubmitting,
-              label: "Importer le contenu",
-              inputTitle: "Importer le contenu",
-            }}
-          />
 
           <Box mb={2}>
             <DSFRUpload

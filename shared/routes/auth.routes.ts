@@ -40,11 +40,9 @@ export const zAuthRoutes = {
     "/auth/reset-password": {
       method: "post",
       path: "/auth/reset-password",
-      body: z
-        .object({
-          password: ZUser.shape.password,
-        })
-        ,
+      body: z.object({
+        password: ZUser.shape.password,
+      }),
       response: {
         "200": ZResOk,
       },
@@ -57,12 +55,10 @@ export const zAuthRoutes = {
     "/auth/login": {
       method: "post",
       path: "/auth/login",
-      body: z
-        .object({
-          email: ZUser.shape.email,
-          password: ZUser.shape.password,
-        })
-        ,
+      body: z.object({
+        email: ZUser.shape.email,
+        password: ZUser.shape.password,
+      }),
       response: {
         "200": zUserWithPersonPublic,
       },

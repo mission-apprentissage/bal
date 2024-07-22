@@ -46,6 +46,10 @@ export const PAGES = {
     title: "Gestion des fichiers",
     path: "/admin/fichier",
   }),
+  adminListeDiffusion: (id: string) => ({
+    title: "Gestion des listes de diffusion",
+    path: `/admin/utilisateurs/${id}/liste-diffusion`,
+  }),
   adminImport: () => ({
     title: "Import de fichier",
     path: "/admin/fichier/import",
