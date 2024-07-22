@@ -4,8 +4,8 @@ export const MAILING_LIST_COMPUTED_COLUMNS = {
   WEBHOOK_LBA: {
     key: "WEBHOOK_LBA",
     columns: [
-      { column: "lien_lba", output: "lien_lba", simple: true },
-      { column: "lien_prdv", output: "lien_prdv", simple: true },
+      { column: "lien_lba", output: "lien_lba", simple: false },
+      { column: "lien_prdv", output: "lien_prdv", simple: false },
     ] as IMailingList["output_columns"],
     sample: "Données récupérées depuis LBA",
   },
