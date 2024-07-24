@@ -12,7 +12,6 @@ function Help() {
    echo "  deploy <env> --user <your_username>                                           Deploy application to <env>"
    echo "  preview:build                                                                Build preview"
    echo "  preview:cleanup --user <your_username>                                        Remove preview from close pull-requests"
-   echo "  vault:init                                                                    Fetch initial vault-password from template-apprentissage"
    echo "  vault:edit                                                                    Edit vault file"
    echo "  vault:password                                                                Show vault password"
    echo "  seed:update                                Update seed using a database"
@@ -24,10 +23,10 @@ function Help() {
 }
 
 function bin:setup() {
-  sudo ln -fs "${ROOT_DIR}/.bin/mna" "/usr/local/bin/mna-${PRODUCT_NAME}"
+  sudo ln -fs "${ROOT_DIR}/.bin/mna" "/usr/local/bin/mna-bal"
 
   sudo mkdir -p /usr/local/share/zsh/site-functions
-  sudo ln -fs "${ROOT_DIR}/.bin/zsh-completion" "/usr/local/share/zsh/site-functions/_${PRODUCT_NAME}"
+  sudo ln -fs "${ROOT_DIR}/.bin/zsh-completion" "/usr/local/share/zsh/site-functions/_mna-bal"
   sudo rm -f ~/.zcompdump*
 }
 
@@ -53,12 +52,6 @@ function preview:build() {
 
 function preview:cleanup() {
   "${SCRIPT_DIR}/run-playbook.sh" "preview_cleanup.yml" "preview"
-}
-
-function vault:init() {
-  # Ensure Op is connected
-  op account get > /dev/null
-  op document get ".vault-password-tmpl" --vault "mna-vault-passwords-common" > "${ROOT_DIR}/.infra/vault/.vault-password.gpg"
 }
 
 function vault:edit() {
