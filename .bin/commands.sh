@@ -5,13 +5,14 @@ set -euo pipefail
 function Help() {
    # Display Help
    echo "Commands"
-   echo "  bin:setup                                               Installs mna-bal binary with zsh completion on system"
+   echo "  bin:setup                                               Installs ${PRODUCT_NAME} binary with zsh completion on system"
    echo "  init:env                                                Update local env files using values from vault file"
    echo "  release:interactive                                                                Build & Push Docker image releases"
    echo "  release:app                                                                Build & Push Docker image releases"
    echo "  deploy <env> --user <your_username>                                           Deploy application to <env>"
    echo "  preview:build                                                                Build preview"
    echo "  preview:cleanup --user <your_username>                                        Remove preview from close pull-requests"
+   echo "  vault:init                                                                    Fetch initial vault-password from template-apprentissage"
    echo "  vault:edit                                                                    Edit vault file"
    echo "  vault:password                                                                Show vault password"
    echo "  seed:update                                Update seed using a database"
@@ -23,10 +24,10 @@ function Help() {
 }
 
 function bin:setup() {
-  sudo ln -fs "${ROOT_DIR}/.bin/mna-bal" /usr/local/bin/mna-bal
+  sudo ln -fs "${ROOT_DIR}/.bin/mna" "/usr/local/bin/mna-${PRODUCT_NAME}"
 
   sudo mkdir -p /usr/local/share/zsh/site-functions
-  sudo ln -fs "${ROOT_DIR}/.bin/zsh-completion" /usr/local/share/zsh/site-functions/_mna-bal
+  sudo ln -fs "${ROOT_DIR}/.bin/zsh-completion" "/usr/local/share/zsh/site-functions/_${PRODUCT_NAME}"
   sudo rm -f ~/.zcompdump*
 }
 
@@ -54,6 +55,12 @@ function preview:cleanup() {
   "${SCRIPT_DIR}/run-playbook.sh" "preview_cleanup.yml" "preview"
 }
 
+function vault:init() {
+  # Ensure Op is connected
+  op account get > /dev/null
+  op document get ".vault-password-tmpl" --vault "mna-vault-passwords-common" > "${ROOT_DIR}/.infra/vault/.vault-password.gpg"
+}
+
 function vault:edit() {
   editor=${EDITOR:-'code -w'}
   EDITOR=$editor "${SCRIPT_DIR}/edit-vault.sh" "$@"
@@ -72,10 +79,9 @@ function seed:apply() {
 }
 
 function deploy:log:encrypt() {
-  "${SCRIPT_DIR}/deploy-log-encrypt.sh" "$@"
+  (cd "$ROOT_DIR" && "${SCRIPT_DIR}/deploy-log-encrypt.sh" "$@")
 }
 
 function deploy:log:decrypt() {
-  "${SCRIPT_DIR}/deploy-log-decrypt.sh" "$@"
+  (cd "$ROOT_DIR" && "${SCRIPT_DIR}/deploy-log-decrypt.sh" "$@")
 }
-

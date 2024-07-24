@@ -71,24 +71,28 @@ jobs:
         run: echo ${{ secrets.VAULT_PWD }} > .infra/.vault_pwd.txt
 
       - name: Run playbook
-        run: .bin/mna-bal deploy ${{ inputs.environment }} --extra-vars "app_version=${{ inputs.app_version }}"
+        run: .bin/mna deploy ${{ inputs.environment }} --extra-vars "app_version=${{ inputs.app_version }}"
         env:
           ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
           ANSIBLE_REMOTE_USER: deploy
           ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
 
-      - name: Encrypt Error log on failure
-        run: .bin/mna-bal deploy:log:encrypt
-        if: failure()
+      - name: Encrypt logs
+        run: .bin/mna deploy:log:encrypt
+        if: always()
         env:
           ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
 
-      - name: Upload failure artifacts on failure
-        if: failure()
-        uses: actions/upload-artifact@v3
+      - name: Upload logs artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: error-logs
-          path: /tmp/deploy_error.log.gpg
+          name: logs-${{ inputs.environment }}
+          path: /tmp/deploy.log.gpg
+
+      - name: Add Job summary
+        if: always()
+        run: echo 'You can get logs using `.bin/mna deploy:log:decrypt ${{ github.run_id }} ${{ inputs.environment }}`' >> $GITHUB_STEP_SUMMARY
 
       - name: Notify failure on Slack
         uses: ravsamhq/notify-slack-action@v2
@@ -96,7 +100,7 @@ jobs:
         with:
           status: ${{ job.status }}
           notification_title: "Le déploiement ${{ inputs.app_version }} en ${{ inputs.environment }} a échoué"
-          message_format: "{emoji} *[${{ inputs.environment }}]* *{workflow}* {status_message} in <{repo_url}|{branch}> on <{commit_url}|{commit_sha}>. You can get error logs using `.bin/mna-bal deploy:log:decrypt ${{ github.run_id }}`"
+          message_format: "{emoji} *[${{ inputs.environment }}]* *{workflow}* {status_message} in <{repo_url}|{branch}> on <{commit_url}|{commit_sha}>. You can get error logs using `.bin/mna deploy:log:decrypt ${{ github.run_id }} ${{ inputs.environment }}`"
           notify_when: "failure"
           mention_groups: "!channel"
         env:
