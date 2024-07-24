@@ -5,7 +5,7 @@ set -euo pipefail
 function Help() {
    # Display Help
    echo "Commands"
-   echo "  bin:setup                                               Installs ${PRODUCT_NAME} binary with zsh completion on system"
+   echo "  bin:setup                                               Installs mna-bal binary with zsh completion on system"
    echo "  init:env                                                Update local env files using values from vault file"
    echo "  release:interactive                                                                Build & Push Docker image releases"
    echo "  release:app                                                                Build & Push Docker image releases"
