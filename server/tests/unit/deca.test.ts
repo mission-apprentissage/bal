@@ -273,17 +273,14 @@ describe("IMPORT DECA from API", () => {
 
   beforeAll(async () => {
     await mongo.beforeAll();
-    vi.useFakeTimers();
   });
 
   beforeEach(async () => {
     await mongo.beforeEach();
-    vi.setSystemTime(new Date("2024-01-01T20:00:00.00Z"));
   });
 
   afterAll(async () => {
     await mongo.afterAll();
-    vi.useRealTimers();
   });
 
   it("periods to fetch OK", async () => {
