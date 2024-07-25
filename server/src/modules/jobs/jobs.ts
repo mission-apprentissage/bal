@@ -103,8 +103,8 @@ export async function setupJobProcessor() {
         resumable: true,
       },
       "deca:hydrate": {
-        handler: async () => {
-          await hydrateDeca();
+        handler: async (_job, signal) => {
+          await hydrateDeca(signal);
         },
       },
       "import:catalogue": {
