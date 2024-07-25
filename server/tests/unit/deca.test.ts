@@ -1,6 +1,6 @@
 import assert from "node:assert";
 
-import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, it, vi } from "vitest";
 
 import { getDbVerification, importDecaContent, parseContentLine } from "../../src/modules/actions/deca.actions";
 import { findOrganisations } from "../../src/modules/actions/organisations.actions";
@@ -228,19 +228,62 @@ describe("DECA verification", () => {
   });
 });
 
+describe("isDecaApiAvailable", () => {
+  beforeAll(async () => {
+    vi.useFakeTimers();
+  });
+
+  afterAll(async () => {
+    vi.useRealTimers();
+  });
+
+  it("should not start when time is over", async () => {
+    vi.setSystemTime(new Date("2024-01-01T06:49:00.00+01:00"));
+    assert.equal(isDecaApiAvailable(), true);
+    vi.setSystemTime(new Date("2024-01-01T06:50:00.00+01:00"));
+    assert.equal(isDecaApiAvailable(), false);
+    vi.setSystemTime(new Date("2024-01-01T07:00:00.00+01:00"));
+    assert.equal(isDecaApiAvailable(), false);
+
+    vi.setSystemTime(new Date("2024-01-01T19:09:00.00+01:00"));
+    assert.equal(isDecaApiAvailable(), false);
+    vi.setSystemTime(new Date("2024-01-01T19:10:00.00+01:00"));
+    assert.equal(isDecaApiAvailable(), true);
+    vi.setSystemTime(new Date("2024-01-01T20:00:00.00+01:00"));
+    assert.equal(isDecaApiAvailable(), true);
+
+    vi.setSystemTime(new Date("2024-07-01T06:49:00.00+02:00"));
+    assert.equal(isDecaApiAvailable(), true);
+    vi.setSystemTime(new Date("2024-07-01T06:50:00.00+02:00"));
+    assert.equal(isDecaApiAvailable(), false);
+    vi.setSystemTime(new Date("2024-07-01T07:00:00.00+02:00"));
+    assert.equal(isDecaApiAvailable(), false);
+
+    vi.setSystemTime(new Date("2024-07-01T19:09:00.00+02:00"));
+    assert.equal(isDecaApiAvailable(), false);
+    vi.setSystemTime(new Date("2024-07-01T19:10:00.00+02:00"));
+    assert.equal(isDecaApiAvailable(), true);
+    vi.setSystemTime(new Date("2024-07-01T20:00:00.00+02:00"));
+    assert.equal(isDecaApiAvailable(), true);
+  });
+});
+
 describe("IMPORT DECA from API", () => {
   const mongo = useMongo();
 
   beforeAll(async () => {
     await mongo.beforeAll();
+    vi.useFakeTimers();
   });
 
   beforeEach(async () => {
     await mongo.beforeEach();
+    vi.setSystemTime(new Date("2024-01-01T20:00:00.00Z"));
   });
 
   afterAll(async () => {
     await mongo.afterAll();
+    vi.useRealTimers();
   });
 
   it("periods to fetch OK", async () => {
@@ -359,14 +402,6 @@ describe("IMPORT DECA from API", () => {
     const refinedContractForBal = buildDecaContract(rawContractFromApi);
 
     assert.deepEqual(refinedContractForBal, expectedRefinedContractForBal);
-  });
-
-  it("should not start when time is over", async () => {
-    assert.equal(isDecaApiAvailable({ forceStartHour: 6, forceProductionEnvironment: "forceProduction" }), true);
-    assert.equal(isDecaApiAvailable({ forceStartHour: 19, forceProductionEnvironment: "forceProduction" }), true);
-    assert.equal(isDecaApiAvailable({ forceStartHour: 12, forceProductionEnvironment: "forceProduction" }), true);
-    assert.equal(isDecaApiAvailable({ forceStartHour: 5, forceProductionEnvironment: "forceProduction" }), false);
-    assert.equal(isDecaApiAvailable({ forceStartHour: 20, forceProductionEnvironment: "forceProduction" }), false);
   });
 
   it("deepFlattenToObject works as expected", async () => {

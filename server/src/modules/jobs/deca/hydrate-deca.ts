@@ -1,6 +1,7 @@
 import { internal } from "@hapi/boom";
 import { addDays, format, isAfter, isBefore } from "date-fns";
 import deepmerge from "deepmerge";
+import { DateTime } from "luxon";
 import { ObjectId } from "mongodb";
 import { IDeca, ZDecaNew } from "shared/models/deca.model/deca.model";
 import { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model";
@@ -93,19 +94,26 @@ export const buildDecaContract = (contrat: any) => {
   };
 };
 
-export const isDecaApiAvailable = ({
-  forceStartHour,
-  forceProductionEnvironment,
-}: {
-  forceStartHour?: number;
-  forceProductionEnvironment?: "forceProduction";
-}) => {
-  // l'api DECA est accessible exclusivement entre 19h00 et 7h00 du matin
-  const SAFE_STOP_HOUR = config.env === "production" || forceProductionEnvironment ? 6 : 18;
-  const SAFE_START_HOUR = config.env === "production" || forceProductionEnvironment ? 20 : 9;
-  const startHour = forceStartHour ?? new Date().getHours();
+export const isDecaApiAvailable = () => {
+  if (config.env !== "production" && config.env !== "test") {
+    return true;
+  }
 
-  return startHour < SAFE_START_HOUR && startHour >= SAFE_STOP_HOUR ? true : false;
+  const now = DateTime.now().setZone("Europe/Paris");
+  const currentHour = now.hour;
+  const currentMinute = now.minute;
+
+  // l'api DECA est accessible exclusivement entre 19h00 et 7h00 du matin
+
+  if (currentHour === 19) {
+    return currentMinute >= 10;
+  }
+
+  if (currentHour === 6) {
+    return currentMinute < 50;
+  }
+
+  return currentHour > 19 || currentHour < 7;
 };
 
 /**
@@ -115,7 +123,7 @@ export const isDecaApiAvailable = ({
  * Le job va récupérer les données en découpant par chunks de 1 jour depuis la date la plus récente des contratsDecaDb en base jusqu'à "hier"
  * Le fonctionnement nominal est un appel quotidien de récupération des données de la veille
  */
-export const hydrateDeca = async () => {
+export const hydrateDeca = async (signal: AbortSignal) => {
   const now = new Date();
   const yesterday = addDays(now, -1);
   yesterday.setHours(23);
@@ -146,7 +154,12 @@ export const hydrateDeca = async () => {
   const periods = await buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch);
 
   await asyncForEach(periods, async ({ dateDebut, dateFin }: { dateDebut: string; dateFin: string }) => {
-    if (isDecaApiAvailable({})) {
+    if (signal.aborted) {
+      throw signal.reason;
+    }
+
+    if (!isDecaApiAvailable()) {
+      logger.warn("L'API Deca n'est pas accessible actuellement");
       return;
     }
 
