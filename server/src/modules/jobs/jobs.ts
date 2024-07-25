@@ -38,10 +38,12 @@ export async function setupJobProcessor() {
             "Mise à jour des couples siret/email provenant du catalogue de formations": {
               cron_string: "30 2 * * *",
               handler: () => runCatalogueImporter(),
+              resumable: true,
             },
             "Mise à jour des données DECA": {
               cron_string: "30 21 * * *",
-              handler: () => hydrateDeca(),
+              handler: (signal) => hydrateDeca(signal),
+              resumable: true,
             },
           },
     jobs: {
@@ -101,8 +103,8 @@ export async function setupJobProcessor() {
         resumable: true,
       },
       "deca:hydrate": {
-        handler: async () => {
-          await hydrateDeca();
+        handler: async (_job, signal) => {
+          await hydrateDeca(signal);
         },
       },
       "import:catalogue": {
