@@ -73,7 +73,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       });
 
       if (!document) {
-        throw Boom.badImplementation("Impossible de stocker de le fichier");
+        throw Boom.badImplementation("Impossible de stocker le fichier");
       }
 
       try {
@@ -93,11 +93,14 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
 
         return response.status(200).send(toPublicDocument(document));
       } catch (error) {
-        await updateDocument(document._id, {
-          $set: {
-            job_status: "error",
-          },
-        });
+        await updateDocument(
+          { _id: document._id },
+          {
+            $set: {
+              job_status: "error",
+            },
+          }
+        );
 
         if (error.isBoom) {
           throw error;
