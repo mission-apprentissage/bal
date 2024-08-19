@@ -6,7 +6,6 @@ readonly PLAYBOOK_NAME=${1:?"Merci de le nom du playbook"}
 shift
 readonly ENV_FILTER=${1:?"Merci de préciser un ou plusieurs environnements (ex. recette ou production)"}
 shift
-readonly PRODUCT_NAME=bal
 
 function runPlaybook() {
   echo "Lancement du playbook ${PLAYBOOK_NAME} pour l'environnement ${ENV_FILTER}..."
@@ -62,5 +61,5 @@ function runPlaybook() {
 if [[ -z "${CI:-}" ]]; then
   runPlaybook "$@"
 else
-  runPlaybook "$@" 2> /tmp/deploy_error.log
+  runPlaybook "$@" &> /tmp/deploy.log
 fi;
