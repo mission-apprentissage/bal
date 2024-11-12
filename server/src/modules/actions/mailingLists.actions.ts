@@ -273,7 +273,7 @@ const formatOutput = async (mailingList: IMailingList, documentContents: IDocume
 
     const content = zCsvDatum.parse(documentContent.content);
     const primaryEmail = content[email] ?? null;
-    const secondaryEmail = secondary_email ? content[secondary_email] ?? null : null;
+    const secondaryEmail = secondary_email ? (content[secondary_email] ?? null) : null;
 
     const emails: Set<string> = new Set();
     for (const email of [primaryEmail, secondaryEmail]) {
