@@ -78,7 +78,7 @@ jobs:
           ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
 
       - name: Encrypt logs
-        run: .bin/mna deploy:log:encrypt
+        run: .bin/mna-bal deploy:log:encrypt
         if: always()
         env:
           ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
@@ -92,7 +92,7 @@ jobs:
 
       - name: Add Job summary
         if: always()
-        run: echo 'You can get logs using `.bin/mna deploy:log:decrypt ${{ github.run_id }} ${{ inputs.environment }}`' >> $GITHUB_STEP_SUMMARY
+        run: echo 'You can get logs using `.bin/mna-bal deploy:log:decrypt ${{ github.run_id }} ${{ inputs.environment }}`' >> $GITHUB_STEP_SUMMARY
 
       - name: Notify failure on Slack
         uses: ravsamhq/notify-slack-action@v2
