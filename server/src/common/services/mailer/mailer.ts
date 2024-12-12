@@ -35,7 +35,7 @@ export function initMailer() {
   const needsAuthentication = !!settings.auth.user;
   // @ts-expect-error
   transporter = nodemailer.createTransport(needsAuthentication ? settings : omit(settings, ["auth"]));
-  transporter.use("compile", htmlToText());
+  transporter?.use("compile", htmlToText());
 }
 
 async function sendEmailMessage(template: ITemplate, emailEvent: IEventBalEmail | null): Promise<string | null> {

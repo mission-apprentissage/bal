@@ -1,7 +1,8 @@
 name: Clean Previews
-on:
-  schedule:
-    - cron: "0 0 * * *"
+on: []
+# on:
+#   schedule:
+#     - cron: "0 0 * * *"
 
 concurrency:
   group: ${{ github.workflow }}
