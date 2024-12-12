@@ -8,7 +8,7 @@ fileignoreconfig:
 - filename: .bin/scripts/get-vault-password-client.sh
   checksum: 51d7feb20247935b41b622a3c4221231719ca2bb8b178dffa03d44b993087c9c
 - filename: .bin/scripts/setup-local-env.sh
-  checksum: 54fd4e752443d273eefcc0cd03e8e19e373607a1d2d7d3b3e1b52114ebe86f5f
+  checksum: 72cf1ee4c73d59010fe1faf035aa4c775064c88e67a3d9c11639ac2ba3be527b
 - filename: .github/workflows/_deploy.yml
   checksum: bfbfdbf9032949561988a0961dce57f2e786716de5fa5b7e937d5d3a6e5a7aad
 - filename: .github/workflows/deploy_preview.yml
