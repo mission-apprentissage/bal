@@ -51,6 +51,7 @@ const AdminImportPage = () => {
     setError,
     watch,
     control,
+    clearErrors,
   } = useForm<FormValues>({
     defaultValues: {
       type_document: "",
@@ -98,6 +99,7 @@ const AdminImportPage = () => {
       console.error(error);
     } finally {
       setIsSubmitting(false);
+      clearErrors();
       queryClient.invalidateQueries({ queryKey: ["/admin/documents"] });
     }
   };
@@ -146,6 +148,13 @@ const AdminImportPage = () => {
                 placeholder: "Source de données",
                 ...register("new_type_document", {
                   required: "Veuillez saisir le nom de votre type de document",
+                  validate: {
+                    regex: (value) => {
+                      if (!/^[A-Za-z0-9 _-]*$/.test(value)) {
+                        return "Le nom doit contenir uniquement lettres, chiffres, tirets (-) et underscores (_), sans espaces.";
+                      }
+                    },
+                  },
                 }),
               }}
             />
@@ -153,7 +162,7 @@ const AdminImportPage = () => {
 
           <Box mb={2}>
             <DSFRUpload
-              hint="(.csv, maximum 100mb)"
+              hint="(.csv, maximum 100MB, nom du fichier sans accent ni espace (séparateurs - ou _ admis))"
               disabled={isSubmitting}
               state={errors.file ? "error" : "default"}
               stateRelatedMessage={errors.file?.message}
@@ -162,6 +171,12 @@ const AdminImportPage = () => {
                 ...register("file", {
                   required: "Obligatoire: Vous devez ajouter un fichier à importer",
                   validate: {
+                    regex: (value) => {
+                      const fileName = value[0].name;
+                      if (!/^[A-Za-z0-9 _-]+\.csv$/.test(fileName)) {
+                        return "Le nom du fichier doit contenir uniquement lettres, chiffres, tirets (-) et underscores (_), sans espaces.";
+                      }
+                    },
                     notEmpty: (value) => {
                       return (value && value.length > 0) || "Obligatoire: Vous devez ajouter un fichier à importer";
                     },

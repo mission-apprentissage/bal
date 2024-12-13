@@ -99,9 +99,16 @@ const ChoixSource: FC<Props> = ({ mailingList, onSuccess }) => {
               state={errors.campaign_name ? "error" : "default"}
               stateRelatedMessage={errors.campaign_name?.message}
               nativeInputProps={{
-                placeholder: "Campagne voeux 2023",
+                placeholder: "Campagne_voeux",
                 ...register("campaign_name", {
                   required: "Veuillez saisir le nom de la campagne",
+                  validate: {
+                    regex: (value) => {
+                      if (!/^[A-Za-z0-9 _-]*$/.test(value)) {
+                        return "Le nom doit contenir uniquement lettres, chiffres, tirets (-) et underscores (_), sans espaces.";
+                      }
+                    },
+                  },
                 }),
               }}
             />
