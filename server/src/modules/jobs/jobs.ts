@@ -42,7 +42,10 @@ export async function setupJobProcessor() {
             },
             "Mise à jour des données DECA": {
               cron_string: "30 21 * * *",
-              handler: (signal) => hydrateDeca(signal),
+              handler: async (signal) => {
+                await hydrateDeca(signal);
+                await run_hydrate_from_deca(0, signal);
+              },
               resumable: true,
             },
           },
@@ -111,9 +114,9 @@ export async function setupJobProcessor() {
         handler: () => runCatalogueImporter(),
       },
       "job:validation:hydrate_from_deca": {
-        handler: async (job) => {
+        handler: async (job, signal) => {
           const { offset } = job.payload ?? {};
-          return run_hydrate_from_deca(offset ? parseInt(offset.toString(), 10) : 0);
+          return run_hydrate_from_deca(offset ? parseInt(offset.toString(), 10) : 0, signal);
         },
       },
       "email:verify": {

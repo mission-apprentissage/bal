@@ -26,7 +26,7 @@ async function runDoc(docDeca: IDeca) {
   }
 }
 
-export async function run_hydrate_from_deca(offset = 0) {
+export async function run_hydrate_from_deca(offset = 0, signal: AbortSignal) {
   const totalCount = await getDbCollection("deca").countDocuments();
 
   const progress = {
@@ -49,6 +49,10 @@ export async function run_hydrate_from_deca(offset = 0) {
   const cursor = getDbCollection("deca").find({}).skip(offset);
 
   for await (const _r of pMapIterable(cursor, runDoc, { concurrency: 3000 })) {
+    if (signal.aborted) {
+      throw signal.reason;
+    }
+
     if (progress.done % 1_000 === 0) {
       printProgress();
     }
