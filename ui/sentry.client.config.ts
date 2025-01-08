@@ -4,7 +4,7 @@ import { publicConfig } from "./config.public";
 
 Sentry.init({
   dsn: publicConfig.sentry.dsn,
-  tracesSampleRate: publicConfig.env === "production" ? 0.1 : 1.0,
+  tracesSampleRate: publicConfig.env === "production" ? 0.01 : 1.0,
   tracePropagationTargets: [
     /^https:\/\/[^/]*\.apprentissage\.beta\.gouv\.fr/,
     publicConfig.baseUrl,

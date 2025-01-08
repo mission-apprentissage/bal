@@ -7,7 +7,21 @@ import { Server } from "../../../modules/server/server";
 
 function getOptions(): Sentry.NodeOptions {
   return {
-    tracesSampleRate: config.env === "production" ? 0.1 : 1.0,
+    tracesSampler: (samplingContext) => {
+      // Continue trace decision, if there is any parentSampled information
+      if (samplingContext.parentSampled != null) {
+        return samplingContext.parentSampled;
+      }
+
+      if (samplingContext.attributes?.["sentry.op"] === "processor.job") {
+        // Sample 100% of processor jobs
+        return 1.0;
+      }
+
+      return config.env === "production" ? 0.01 : 1.0;
+    },
+    // profilesSampleRate is relative to tracesSampleRate
+    profilesSampleRate: 0.001,
     tracePropagationTargets: [/^https:\/\/[^/]*\.apprentissage\.beta\.gouv\.fr/],
     environment: config.env,
     release: config.version,
