@@ -53,7 +53,7 @@
     "fastify": "^4.28.1",
     "fastify-type-provider-zod": "^1.2.0",
     "iconv-lite": "^0.6.3",
-    "job-processor": "^1.6.5",
+    "job-processor": "^1.8.0",
     "jsonwebtoken": "^9.0.2",
     "lil-http-terminator": "^1.2.3",
     "lodash-es": "^4.17.21",

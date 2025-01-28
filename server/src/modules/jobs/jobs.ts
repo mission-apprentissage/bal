@@ -39,6 +39,7 @@ export async function setupJobProcessor() {
               cron_string: "30 2 * * *",
               handler: () => runCatalogueImporter(),
               resumable: true,
+              maxRuntimeInMinutes: 60,
             },
             "Mise à jour des données DECA": {
               cron_string: "30 21 * * *",
@@ -47,6 +48,7 @@ export async function setupJobProcessor() {
                 await run_hydrate_from_deca(0, signal);
               },
               resumable: true,
+              maxRuntimeInMinutes: 12 * 60,
             },
           },
     jobs: {
