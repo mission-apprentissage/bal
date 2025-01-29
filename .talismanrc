@@ -1,7 +1,8 @@
 fileignoreconfig:
-- filename: .infra/.env_server
-  checksum: f752046085be0556b7577429807ab9e144d4b6eb922a6c7baf1f82b723787689
-- filename: .infra/vault/vault.yml
+- filename: server/.env.test
+  checksum: a6feb98ccd322c46d7839b763ffee15a87c342e6510b49f29968fffe3f6b8295
+version: ""
+: .infra/vault/vault.yml
   checksum: b8c2c1fdc27ffa9b18b45d4893307238b842875e6e8fe98cd78255682f3430a5
 version: ""
 name: .bin/scripts/deploy-log-encrypt.sh
