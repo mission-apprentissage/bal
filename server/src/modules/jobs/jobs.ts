@@ -47,7 +47,9 @@ export async function setupJobProcessor() {
               handler: async (signal) => {
                 await hydrateDeca(signal);
                 await run_hydrate_from_deca(0, signal);
-                await streamDataToParquetAndS3();
+                if (config.env === "production") {
+                  await streamDataToParquetAndS3();
+                }
               },
               resumable: true,
               maxRuntimeInMinutes: 12 * 60,
