@@ -1,9 +1,10 @@
 fileignoreconfig:
-- filename: '*.mjml.ejs'
-  checksum: 9e0290e41389acecddebce27c63d2af3687ece2b8ea5ce61ab33617c74728536
-- filename: .bin/scripts/deploy-log-decrypt.sh
-  checksum: b9c969e31cc620084c9a3d97637d509a821c542dba236f96dc799beff4b66648
-- filename: .bin/scripts/deploy-log-encrypt.sh
+- filename: .infra/.env_server
+  checksum: f752046085be0556b7577429807ab9e144d4b6eb922a6c7baf1f82b723787689
+- filename: .infra/vault/vault.yml
+  checksum: b8c2c1fdc27ffa9b18b45d4893307238b842875e6e8fe98cd78255682f3430a5
+version: ""
+name: .bin/scripts/deploy-log-encrypt.sh
   checksum: 8ebe245e2a3719defc295d0de3d02c42e2cb82cb2ecc9507ce0dd4273a428e5e
 - filename: .bin/scripts/get-vault-password-client.sh
   checksum: 51d7feb20247935b41b622a3c4221231719ca2bb8b178dffa03d44b993087c9c
@@ -26,9 +27,7 @@ fileignoreconfig:
 - filename: .github/workflows/remove-preview.yml
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/.env_server
-  checksum: 3f0984f8c8480c303edaebffd63aa100b502ab221f530a4e6c8a0cb9a94335ad
-  ignore_detectors:
-  - filename
+  checksum: f752046085be0556b7577429807ab9e144d4b6eb922a6c7baf1f82b723787689
 - filename: .infra/.env_ui
   checksum: 0dd94c954d75fd19bbe669eef8238c703d9fb8bea4025358071f9fae6140ac85
   ignore_detectors:
@@ -82,7 +81,7 @@ fileignoreconfig:
 - filename: .infra/vault/setup-local-env.sh
   checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: 5bb9d1ee778deee6de5322ce9b52fd16ffd6145fc8e4fdbb8d368f36c64eb80b
+  checksum: b8c2c1fdc27ffa9b18b45d4893307238b842875e6e8fe98cd78255682f3430a5
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:
@@ -186,5 +185,8 @@ allowed_patterns:
 - pass
 - apiKey
 - ApiKey
+- api_key
+version: "1.0"
+ ApiKey
 - api_key
 version: "1.0"
