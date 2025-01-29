@@ -221,6 +221,12 @@ program
   .action(createJobAction("deca:hydrate"));
 
 program
+  .command("deca:s3:upload")
+  .description("DECA to ovh S3")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("deca:s3:upload"));
+
+program
   .command("job:validation:hydrate_from_deca")
   .description("Hydrate organisation and persons from deca")
   .option("--offset <number>", "ignore les X premières lignes DECA")

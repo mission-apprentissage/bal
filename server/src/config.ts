@@ -119,6 +119,16 @@ const config = {
   catalogue: {
     baseUrl: "https://catalogue-apprentissage.intercariforef.org",
   },
+  s3: {
+    accessKeyId: env.get("LBA_S3_ACCESSKEYID").required().asString(),
+    secretAccessKey: env.get("LBA_S3_SECRETACCESSKEY").required().asString(),
+    endpoint: env.get("LBA_S3_ENDPOINT").required().asString(),
+    region: env.get("LBA_S3_REGION").required().asString(),
+    bucket: {
+      storage: env.get("LBA_S3_BUCKET").required().asString(),
+      application: env.get("LBA_S3_APPLICATIONS_BUCKET").required().asString(),
+    },
+  },
 };
 
 export default config;

@@ -21,6 +21,7 @@ import { createUser } from "../actions/users.actions";
 import { runCatalogueImporter } from "./catalogueSiretEmailImport";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
+import { streamDataToParquetAndS3 } from "./deca/decaToS3";
 import { hydrateDeca } from "./deca/hydrate-deca";
 import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
 import { run_hydrate_from_ocapiat } from "./validation/hydrate_from_ocapiat";
@@ -46,6 +47,7 @@ export async function setupJobProcessor() {
               handler: async (signal) => {
                 await hydrateDeca(signal);
                 await run_hydrate_from_deca(0, signal);
+                await streamDataToParquetAndS3();
               },
               resumable: true,
               maxRuntimeInMinutes: 12 * 60,
@@ -110,6 +112,11 @@ export async function setupJobProcessor() {
       "deca:hydrate": {
         handler: async (_job, signal) => {
           await hydrateDeca(signal);
+        },
+      },
+      "deca:s3:upload": {
+        handler: async (_job) => {
+          await streamDataToParquetAndS3();
         },
       },
       "import:catalogue": {

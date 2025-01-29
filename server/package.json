@@ -19,6 +19,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.651.1",
+    "@aws-sdk/lib-storage": "^3.735.0",
+    "@aws-sdk/s3-request-presigner": "^3.651.1",
+    "@aws-sdk/types": "^3.649.0",
     "@fastify/auth": "^4.6.1",
     "@fastify/cookie": "^9.4.0",
     "@fastify/cors": "^8.5.0",
@@ -30,7 +34,9 @@
     "@sentry/integrations": "^7.114.0",
     "@sentry/node": "^7.119.2",
     "@sentry/tracing": "^7.114.0",
+    "@smithy/types": "^3.4.2",
     "@supercharge/promise-pool": "^3.2.0",
+    "@types/stream-json": "^1.7.8",
     "axios": "^1.7.7",
     "axios-cache-interceptor": "^1.6.2",
     "axios-retry": "^4.5.0",
@@ -69,6 +75,7 @@
     "pino-pretty": "^10.3.1",
     "rate-limiter-flexible": "^2.4.2",
     "shared": "workspace:*",
+    "stream-json": "^1.9.1",
     "tcp-port-used": "^1.0.2",
     "uuid": "^9.0.1",
     "xlsx": "^0.18.5",
