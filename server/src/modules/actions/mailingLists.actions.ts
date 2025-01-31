@@ -220,7 +220,7 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
       ? 0
       : await getDbCollection("documentContents").countDocuments({ document_id: mailingList.document_id });
   let hasMore = true;
-  let processed = 0;
+  let processed = skip;
 
   const updateProgress = setInterval(async () => {
     await updateDocument({ _id: outputDocument._id }, { $set: { process_progress: processed } });
