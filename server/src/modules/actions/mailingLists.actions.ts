@@ -2,6 +2,7 @@ import { Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 
 import { internal } from "@hapi/boom";
+import * as Sentry from "@sentry/node";
 import { stringify } from "csv-stringify";
 import { addJob, IJobsSimple } from "job-processor";
 import { Filter, FindCursor, FindOptions, ObjectId, Sort } from "mongodb";
@@ -214,12 +215,15 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
   await updateDocument({ _id: outputDocument._id }, { $set: { job_id: job._id.toString(), job_status: "processing" } });
 
   const batchSize = LIMIT_TRAINING_LINKS_PER_REQUEST;
-  let skip = outputDocument.process_progress ?? 0;
+  let skip =
+    mailingList.document_id == null
+      ? 0
+      : await getDbCollection("documentContents").countDocuments({ document_id: mailingList.document_id });
   let hasMore = true;
   let processed = 0;
 
   const updateProgress = setInterval(async () => {
-    await updateDocument({ _id: outputDocument._id }, { $set: { process_progress: processed + skip } });
+    await updateDocument({ _id: outputDocument._id }, { $set: { process_progress: processed } });
   }, 5_000);
 
   while (hasMore) {
@@ -240,7 +244,17 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
 
     const output = await formatOutput(mailingList, wishes);
 
-    await importDocumentContent(outputDocument, output, (line) => line);
+    await Sentry.startSpan(
+      {
+        name: "Process mailing list batch",
+        op: "queue:task",
+        forceTransaction: true,
+      },
+      async () => {
+        Sentry.getCurrentScope().setExtras({ mailingList, skip });
+        await importDocumentContent(outputDocument, output, (line) => line);
+      }
+    );
 
     processed += wishes.length;
 

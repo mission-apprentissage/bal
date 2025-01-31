@@ -429,7 +429,7 @@ export const extractDocumentContent = async (
     },
   ]);
 
-  let skip = document.lines_count ?? 0;
+  let skip = await getDbCollection("documentContents").countDocuments({ document_id: document._id.toString() });
   let importedLines = 0;
   let importedSize = 0;
 
