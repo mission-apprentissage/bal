@@ -2,7 +2,7 @@ import { Jsonify } from "type-fest";
 import { z } from "zod";
 
 import { IModelDescriptor, zObjectId } from "./common";
-import { ZDocument } from "./document.model";
+import { ZMailingListDocument } from "./document.model";
 
 export const MAILING_LIST_MAX_ITERATION = 10;
 
@@ -50,7 +50,7 @@ export const ZMailingList = z.object({
 });
 
 export const ZMailingListWithDocument = ZMailingList.extend({
-  document: ZDocument.nullish(),
+  document: ZMailingListDocument.nullish(),
 });
 
 export type IMailingList = z.output<typeof ZMailingList>;

@@ -22,6 +22,29 @@ const modal = createModal({
   isOpenedByDefault: false,
 });
 
+function getMailingListProgress(mailingList: IMailingListWithDocumentJson): {
+  status: IDocument["job_status"];
+
+  progression: string;
+} {
+  const status = mailingList.document
+    ? mailingList.document.job_status
+    : new Date(mailingList.created_at).getTime() + 2 * 3600 * 1000 < Date.now()
+      ? "error"
+      : "pending";
+
+  const lineCount = mailingList.document?.lines_count ?? 0;
+  const importCount = mailingList.document?.process_progress ?? 0;
+  const progression = lineCount === 0 ? 0 : Math.ceil((importCount / lineCount) * 100);
+
+  return {
+    status,
+    progression: `${progression}% (${formater.format(importCount)}/${formater.format(lineCount)})`,
+  };
+}
+
+const formater = new Intl.NumberFormat("fr-FR", { notation: "compact" });
+
 export function getMailingListStatus(mailing: IMailingListWithDocumentJson): IDocument["job_status"] {
   if (mailing.document) return mailing.document.job_status;
 
@@ -82,15 +105,16 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             width: 200,
             valueGetter: ({ row }) => row,
             valueFormatter: ({ value }) => {
-              const status = getMailingListStatus(value);
+              const progress = getMailingListProgress(value);
+
               return {
-                processing: "En cours de génération",
+                processing: `En cours de génération ${progress.progression}`,
                 importing: "En cours d'import",
                 done: "Terminé",
                 error: "Erreur",
                 pending: "En attente",
                 paused: "En pause",
-              }[status];
+              }[progress.status];
             },
           },
           {
@@ -108,7 +132,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             width: 150,
             getActions: ({ row }) => {
               const actions = [];
-              const status = getMailingListStatus(row);
+              const { status } = getMailingListProgress(row);
 
               if (status === "done") {
                 actions.push(
