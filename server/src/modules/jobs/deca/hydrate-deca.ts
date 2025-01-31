@@ -1,4 +1,5 @@
 import { internal } from "@hapi/boom";
+import * as Sentry from "@sentry/node";
 import { addDays, format, isAfter, isBefore } from "date-fns";
 import deepmerge from "deepmerge";
 import { DateTime } from "luxon";
@@ -153,106 +154,123 @@ export const hydrateDeca = async (signal: AbortSignal) => {
   // Récupération des périodes (liste dateDebut/fin) à fetch dans l'API
   const periods = await buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch);
 
-  await asyncForEach(periods, async ({ dateDebut, dateFin }: { dateDebut: string; dateFin: string }) => {
-    if (signal.aborted) {
-      throw signal.reason;
-    }
-
-    if (!isDecaApiAvailable()) {
-      logger.warn("L'API Deca n'est pas accessible actuellement");
-      return;
-    }
-
-    try {
-      logger.info(`> Fetch des données Deca du ${dateDebut} au ${dateFin}`);
-
-      const [decaContrats_TDB, decaContrats_LBA] = await Promise.all([
-        getAllContrats(dateDebut, dateFin, "TDB"),
-        getAllContrats(dateDebut, dateFin, "LBA"),
-      ]);
-
-      logger.info(
-        `Insertion des ${decaContrats_TDB.length} contrats dans la collection deca TDB du ${dateDebut} au ${dateFin} `
-      );
-      logger.info(
-        `Insertion des ${decaContrats_LBA.length} contrats dans la collection deca LBA du ${dateDebut} au ${dateFin} `
-      );
-
-      const tdbMap = new Map(
-        decaContrats_TDB.map((item) => [
-          JSON.stringify({ noContrat: item.detailsContrat.noContrat, dateNaissance: item.alternant.dateNaissance }),
-          item,
-        ])
-      );
-
-      const decaContratsForPeriod = decaContrats_LBA.reduce((acc, item) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let contrat = item as any;
-        const tdbContrat = tdbMap.get(
-          JSON.stringify({
-            noContrat: item.detailsContrat.noContrat,
-            dateNaissance: item.alternant.dateNaissance,
-          })
-        );
-        if (tdbContrat) {
-          contrat = deepmerge(item, tdbContrat);
-          tdbMap.delete(
-            JSON.stringify({ noContrat: item.detailsContrat.noContrat, dateNaissance: item.alternant.dateNaissance })
-          );
-        }
-
-        const formattedContract = buildDecaContract(contrat);
-        acc.push(formattedContract);
-
-        return acc;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      }, [] as any[]);
-
-      await asyncForEach(decaContratsForPeriod, async (currentContrat: IDeca) => {
-        const newContratFilter = {
-          no_contrat: currentContrat.no_contrat,
-          type_contrat: currentContrat.type_contrat,
-          "alternant.nom": currentContrat.alternant.nom,
-        };
-
-        const oldContrat: IDeca | null = await getDbCollection("deca").findOne(newContratFilter);
-        const now = parseDate(dateDebut)!;
-
-        if (oldContrat && oldContrat.updated_at && oldContrat.updated_at.getTime() > now.getTime()) {
-          throw internal("contracts not imported in chronological order", { oldContrat, currentContrat, now });
-        }
-
-        /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
-        const preparedContrat = ZDecaNew.parse({ ...currentContrat, updated_at: now });
-
-        await getDbCollection("deca").updateOne(
-          newContratFilter,
-          {
-            $set: preparedContrat,
-            $setOnInsert: { created_at: now },
-          },
-          { upsert: true }
-        );
-
-        if (oldContrat) {
-          await saveHistory(oldContrat, preparedContrat, now);
-        }
-      });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
-    }
-
-    getDbCollection("deca.import.job.result").insertOne({
-      _id: new ObjectId(),
-      has_completed: true,
-      import_date_string: dateDebut,
-      import_date: parseDate(dateDebut)!,
-      created_at: new Date(),
-    } as IDecaImportJobResult);
-  });
+  await asyncForEach(periods, async (period: { dateDebut: string; dateFin: string }) =>
+    hydrateDecaPeriod(period, signal)
+  );
 
   logger.info("Collection deca mise à jour avec succès !");
+};
+
+const hydrateDecaPeriod = async (
+  { dateDebut, dateFin }: { dateDebut: string; dateFin: string },
+  signal: AbortSignal
+) => {
+  return Sentry.startSpan(
+    {
+      name: "Hydrate DECA period",
+      op: "queue:task",
+      forceTransaction: true,
+    },
+    async () => {
+      Sentry.getCurrentScope().setExtras({ dateDebut, dateFin });
+      if (signal.aborted) {
+        throw signal.reason;
+      }
+
+      if (!isDecaApiAvailable()) {
+        logger.warn("L'API Deca n'est pas accessible actuellement");
+        return;
+      }
+
+      try {
+        logger.info(`> Fetch des données Deca du ${dateDebut} au ${dateFin}`);
+
+        const [decaContrats_TDB, decaContrats_LBA] = await Promise.all([
+          getAllContrats(dateDebut, dateFin, "TDB"),
+          getAllContrats(dateDebut, dateFin, "LBA"),
+        ]);
+
+        logger.info(
+          `Insertion des ${decaContrats_TDB.length} contrats dans la collection deca TDB du ${dateDebut} au ${dateFin} `
+        );
+        logger.info(
+          `Insertion des ${decaContrats_LBA.length} contrats dans la collection deca LBA du ${dateDebut} au ${dateFin} `
+        );
+
+        const tdbMap = new Map(
+          decaContrats_TDB.map((item) => [
+            JSON.stringify({ noContrat: item.detailsContrat.noContrat, dateNaissance: item.alternant.dateNaissance }),
+            item,
+          ])
+        );
+
+        const decaContratsForPeriod = decaContrats_LBA.reduce((acc, item) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          let contrat = item as any;
+          const tdbContrat = tdbMap.get(
+            JSON.stringify({
+              noContrat: item.detailsContrat.noContrat,
+              dateNaissance: item.alternant.dateNaissance,
+            })
+          );
+          if (tdbContrat) {
+            contrat = deepmerge(item, tdbContrat);
+            tdbMap.delete(
+              JSON.stringify({ noContrat: item.detailsContrat.noContrat, dateNaissance: item.alternant.dateNaissance })
+            );
+          }
+
+          const formattedContract = buildDecaContract(contrat);
+          acc.push(formattedContract);
+
+          return acc;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        }, [] as any[]);
+
+        await asyncForEach(decaContratsForPeriod, async (currentContrat: IDeca) => {
+          const newContratFilter = {
+            no_contrat: currentContrat.no_contrat,
+            type_contrat: currentContrat.type_contrat,
+            "alternant.nom": currentContrat.alternant.nom,
+          };
+
+          const oldContrat: IDeca | null = await getDbCollection("deca").findOne(newContratFilter);
+          const now = parseDate(dateDebut)!;
+
+          if (oldContrat && oldContrat.updated_at && oldContrat.updated_at.getTime() > now.getTime()) {
+            throw internal("contracts not imported in chronological order", { oldContrat, currentContrat, now });
+          }
+
+          /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
+          const preparedContrat = ZDecaNew.parse({ ...currentContrat, updated_at: now });
+
+          await getDbCollection("deca").updateOne(
+            newContratFilter,
+            {
+              $set: preparedContrat,
+              $setOnInsert: { created_at: now },
+            },
+            { upsert: true }
+          );
+
+          if (oldContrat) {
+            await saveHistory(oldContrat, preparedContrat, now);
+          }
+        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (err: any) {
+        throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
+      }
+
+      getDbCollection("deca.import.job.result").insertOne({
+        _id: new ObjectId(),
+        has_completed: true,
+        import_date_string: dateDebut,
+        import_date: parseDate(dateDebut)!,
+        created_at: new Date(),
+      } as IDecaImportJobResult);
+    }
+  );
 };
 
 /**

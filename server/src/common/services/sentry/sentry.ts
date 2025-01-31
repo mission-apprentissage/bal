@@ -13,12 +13,16 @@ function getOptions(): Sentry.NodeOptions {
         return samplingContext.parentSampled;
       }
 
+      if (samplingContext.attributes?.["sentry.op"] === "queue.task") {
+        return 1 / 10_000;
+      }
+
       if (samplingContext.attributes?.["sentry.op"] === "processor.job") {
         // Sample 100% of processor jobs
         return 1.0;
       }
 
-      return config.env === "production" ? 0.01 : 1.0;
+      return 0.01;
     },
     // profilesSampleRate is relative to tracesSampleRate
     profilesSampleRate: 0.001,

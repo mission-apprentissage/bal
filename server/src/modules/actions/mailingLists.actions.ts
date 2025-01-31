@@ -2,6 +2,7 @@ import { Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 
 import { internal } from "@hapi/boom";
+import * as Sentry from "@sentry/node";
 import { stringify } from "csv-stringify";
 import { addJob, IJobsSimple } from "job-processor";
 import { Filter, FindCursor, FindOptions, ObjectId, Sort } from "mongodb";
@@ -243,7 +244,17 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
 
     const output = await formatOutput(mailingList, wishes);
 
-    await importDocumentContent(outputDocument, output, (line) => line);
+    await Sentry.startSpan(
+      {
+        name: "Process mailing list batch",
+        op: "queue:task",
+        forceTransaction: true,
+      },
+      async () => {
+        Sentry.getCurrentScope().setExtras({ mailingList, skip });
+        await importDocumentContent(outputDocument, output, (line) => line);
+      }
+    );
 
     processed += wishes.length;
 
