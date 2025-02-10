@@ -268,14 +268,7 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
       ],
     },
     "created_at": {
-      "anyOf": [
-        {
-          "bsonType": "date",
-        },
-        {
-          "bsonType": "null",
-        },
-      ],
+      "bsonType": "date",
       "description": "Date d'ajout en base de données",
     },
     "date_debut_contrat": {
@@ -455,6 +448,8 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
     "alternant",
     "formation",
     "employeur",
+    "updated_at",
+    "created_at",
   ],
 }
 `;
