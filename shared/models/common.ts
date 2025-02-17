@@ -16,7 +16,8 @@ export type CollectionName =
   | "deca.import.job.result"
   | "catalogueEmailSirets"
   | "bouncer.email"
-  | "bouncer.domain";
+  | "bouncer.domain"
+  | "lba.emailblacklists";
 
 export interface IModelDescriptor {
   zod: ZodType;

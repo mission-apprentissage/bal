@@ -2,6 +2,7 @@ import { bouncerDomailModelDescriptor, BouncerDomain } from "./bouncer.domain.mo
 import { BouncerEmail, bouncerEmailModelDescriptor } from "./bouncer.email.model";
 import catalogueEmailSiretDescriptor, { ICatalogueEmailSiret } from "./catalogueEmailSiret.model";
 import { IModelDescriptor } from "./common";
+import lbaEmailBlackListedModelDescriptor, { ILbaEmailBlacklist } from "./data/lba.emailBlacklist.model";
 import decaModelDescriptor, { IDeca } from "./deca.model/deca.model";
 import decaHistoryModelDescriptor, { IDecaHistory } from "./deca.model/decaHistory.model";
 import decaImportJobResultModelDescriptor, { IDecaImportJobResult } from "./deca.model/decaImportJobResult.model";
@@ -31,6 +32,7 @@ export const modelDescriptors: IModelDescriptor[] = [
   catalogueEmailSiretDescriptor,
   bouncerEmailModelDescriptor,
   bouncerDomailModelDescriptor,
+  lbaEmailBlackListedModelDescriptor,
 ];
 
 export type IDocumentMap = {
@@ -49,4 +51,5 @@ export type IDocumentMap = {
   catalogueEmailSirets: ICatalogueEmailSiret;
   ["bouncer.email"]: BouncerEmail;
   ["bouncer.domain"]: BouncerDomain;
+  ["lba.emailblacklists"]: ILbaEmailBlacklist;
 };
