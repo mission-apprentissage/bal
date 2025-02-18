@@ -23,6 +23,7 @@ import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
 import { streamDataToParquetAndS3 } from "./deca/decaToS3";
 import { hydrateDeca } from "./deca/hydrate-deca";
+import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
 import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
 import { run_hydrate_from_ocapiat } from "./validation/hydrate_from_ocapiat";
 import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
@@ -36,6 +37,12 @@ export async function setupJobProcessor() {
       config.env === "preview" || config.env === "local"
         ? {}
         : {
+            "Mise à jour des emails blacklisted provenant de la bonne alternance": {
+              cron_string: "0 3 * * *",
+              handler: () => hydrateLbaBlackListed(),
+              resumable: true,
+              maxRuntimeInMinutes: 60,
+            },
             "Mise à jour des couples siret/email provenant du catalogue de formations": {
               cron_string: "30 2 * * *",
               handler: () => runCatalogueImporter(),
@@ -145,6 +152,9 @@ export async function setupJobProcessor() {
       },
       "organisation:sanitize:domains": {
         handler: async () => run_organisations_sanitize_domains(),
+      },
+      "job:lba:hydrate:email-balcklisted": {
+        handler: async () => hydrateLbaBlackListed(),
       },
     },
   });

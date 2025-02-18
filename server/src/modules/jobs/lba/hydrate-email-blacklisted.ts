@@ -10,19 +10,19 @@ import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
 const logger = parentLogger.child({ module: "job:lba:hydrate:email-balcklisted" });
 
-const client = new MongoClient(`${config.lba.mongodb.uri}`);
+const client = new MongoClient(config.lba.mongodb.uri);
 
 export async function hydrateLbaBlackListed() {
   const count = { created: 0, updated: 0 };
   let totalCount = 0;
-  let organismeIds = new Set<string>();
+  // let organismeIds = new Set<string>();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const processBuffer = async (buffer: any) => {
     const results = await Promise.allSettled(buffer);
     results.forEach((result) => {
       if (result.status === "fulfilled") {
-        organismeIds = new Set([...organismeIds, ...result.value.organismesId]);
+        // organismeIds = new Set([...organismeIds, ...result.value.organismesId]);
       }
     });
     totalCount += buffer.length;
@@ -84,7 +84,6 @@ async function updateLbaBlacklistedEmail({ _id, ...document }: ILbaEmailBlacklis
             ...document,
             updated_at: new Date(),
           },
-          $setOnInsert: { created_at: new Date() },
         },
         { upsert: true }
       );
