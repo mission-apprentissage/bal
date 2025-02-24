@@ -59,6 +59,10 @@ const config = {
       .get("MNA_BAL_LBA_BASE_URL")
       .default("https://labonnealternance-recette.apprentissage.beta.gouv.fr")
       .asString(),
+    mongodb: {
+      uri: env.get("LBA_MONGODB_URI").required().asString(),
+      blacklistedDbCollection: env.get("LBA_EMAIL_BLACKLISTED_COLLECTION_NAME").required().asString(),
+    },
   },
   ftp: {
     host: env.get("FTP_HOST").required().asString(),

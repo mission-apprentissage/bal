@@ -255,6 +255,12 @@ program
   .action(createJobAction("import:catalogue"));
 
 program
+  .command("job:lba:hydrate:email-balcklisted")
+  .description("Importe liste emails blacklisté lba")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("job:lba:hydrate:email-balcklisted"));
+
+program
   .command("email:verify")
   .description("Check if an email is valid")
   .requiredOption("-e, --email <string>", "Email to validate")

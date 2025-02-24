@@ -49,4 +49,8 @@ export const extensions = {
     })
   ),
   codeCommuneInsee: z.string().regex(/^([0-9]{2}|2A|2B)[0-9]{3}$/, "Format invalide"),
+  email: z
+    .string()
+    .transform((value) => (value.trim() === "" ? null : value.trim().toLocaleLowerCase()))
+    .pipe(z.string().email()),
 };

@@ -7,6 +7,7 @@ import { stringify } from "csv-stringify";
 import { addJob, IJobsSimple } from "job-processor";
 import { Filter, FindCursor, FindOptions, ObjectId, Sort } from "mongodb";
 import { getMailingOutputColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList";
+import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
 import { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
 import { IMailingList, IMailingListWithDocument, MAILING_LIST_MAX_ITERATION } from "shared/models/mailingList.model";
@@ -282,39 +283,53 @@ const formatOutput = async (mailingList: IMailingList, documentContents: IDocume
 
   const outputColumns = getMailingOutputColumns(mailingList);
 
-  const rows: ICsvDatum[] = documentContents.flatMap((documentContent) => {
-    const { email, secondary_email } = mailingList;
+  const rowsArrays = await Promise.all(
+    documentContents.map(async (documentContent) => {
+      const { email, secondary_email } = mailingList;
+      const content = zCsvDatum.parse(documentContent.content);
+      const primaryEmail = content[email] ?? null;
+      const secondaryEmail = secondary_email ? (content[secondary_email] ?? null) : null;
 
-    const content = zCsvDatum.parse(documentContent.content);
-    const primaryEmail = content[email] ?? null;
-    const secondaryEmail = secondary_email ? (content[secondary_email] ?? null) : null;
+      const emails: Set<string> = new Set();
 
-    const emails: Set<string> = new Set();
-    for (const email of [primaryEmail, secondaryEmail]) {
-      if (email && EMAIL_REGEX.test(email)) {
-        emails.add(email.toLocaleLowerCase());
+      for (const email of [primaryEmail, secondaryEmail]) {
+        if (email) {
+          try {
+            const emailNormalized = extensions.email.parse(email);
+
+            const blacklisted = await getDbCollection("lba.emailblacklists").findOne({
+              email: emailNormalized,
+            });
+
+            // Only add if the email passes validation and isn't blacklisted
+            if (!blacklisted) {
+              emails.add(emailNormalized);
+            }
+          } catch (error) {
+            logger.error(`Failed to normalize email ${email}`, error);
+          }
+        }
       }
-    }
 
-    return Array.from(emails).map((email: string) => {
-      const docComputedData = computedData.get(documentContent._id.toString()) ?? {};
+      return Array.from(emails).map((email: string) => {
+        const docComputedData = computedData.get(documentContent._id.toString()) ?? {};
+        const outputRow: Record<string, string> = {
+          email,
+        };
 
-      const outputRow: Record<string, string> = {
-        email,
-      };
+        for (const { output: outputColumnName } of outputColumns) {
+          // avoid overriding email column
+          // Priority: email > computedData > content
+          outputRow[outputColumnName] =
+            outputRow[outputColumnName] ?? docComputedData[outputColumnName] ?? content[outputColumnName] ?? "";
+        }
 
-      for (const { output: outputColumnName } of outputColumns) {
-        // avoid overriding email column
-        // Priority: email > computedData > content
-        outputRow[outputColumnName] =
-          outputRow[outputColumnName] ?? docComputedData[outputColumnName] ?? content[outputColumnName] ?? "";
-      }
+        return outputRow;
+      });
+    })
+  );
 
-      return outputRow;
-    });
-  });
-
-  return rows;
+  return rowsArrays.flat();
 };
 
 async function getComputeColumnsData(
