@@ -47,11 +47,15 @@ type IResponseCode = `${keyof typeof RESPONSE_CODES}`;
 const resolveMxPromise = promisify(resolveMx);
 
 function getEmailDomain(email: string) {
-  return email.split("@")[1].toLocaleLowerCase();
+  return email.split("@")[1]?.toLocaleLowerCase();
 }
 
 export async function getSmtpServer(email: string): Promise<string | null> {
-  const domain: string = getEmailDomain(email);
+  const domain = getEmailDomain(email);
+
+  if (!domain) {
+    return null;
+  }
 
   try {
     const addresses = await resolveMxPromise(domain);
