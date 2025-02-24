@@ -242,7 +242,12 @@ export async function sayEhlo(connection: SMTPConnection): Promise<ELHO_RESULT |
     };
   }
 
-  const { value: elhoResponse } = await connection.next("EHLO");
+  let { value: elhoResponse } = await connection.next("EHLO");
+
+  // Sometimes the server sends the greeting message again
+  if (elhoResponse.message.join("\r\n") === greetingMessage.message.join("\r\n")) {
+    elhoResponse = await connection.next("EHLO").then((v) => v.value);
+  }
 
   if (elhoResponse.code !== "250") {
     return {
@@ -306,6 +311,35 @@ function isVrfySupported(
     return {
       success: true,
       status: "not_supported",
+      code,
+      message,
+      cmd,
+    };
+  }
+
+  if (/user unknown/i.test(message)) {
+    return {
+      success: true,
+      status: "invalid",
+      code,
+      message,
+      cmd,
+    };
+  }
+
+  if (
+    [
+      "550 5.5.0 Requested actions not taken as the mailbox is unavailable",
+      "550-Requested action not taken: mailbox unavailable",
+      "550 Invalid Recipient",
+      // Outlook mail protection sends the following message when it's not possible to send an email to a recipient
+      "550 5.4.1 Recipient address rejected: Access denied.",
+      "550 User not found",
+    ].some((m) => message.startsWith(m))
+  ) {
+    return {
+      success: true,
+      status: "invalid",
       code,
       message,
       cmd,
