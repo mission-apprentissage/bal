@@ -63,6 +63,9 @@ const config = {
       uri: env.get("LBA_MONGODB_URI").required().asString(),
       blacklistedDbCollection: env.get("LBA_EMAIL_BLACKLISTED_COLLECTION_NAME").required().asString(),
     },
+    algoRecuteurs: {
+      s3File: env.get("LBA_ALGO_RECRUTEURS_LBA_S3FILE").required().asString(),
+    },
   },
   ftp: {
     host: env.get("FTP_HOST").required().asString(),

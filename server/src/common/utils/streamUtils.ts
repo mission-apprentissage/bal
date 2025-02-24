@@ -2,8 +2,10 @@
 import { Readable, Transform, Writable } from "node:stream";
 
 import type { AbstractCursor } from "mongodb";
-import { compose as _compose } from "oleoduc";
+import { compose as _compose, transformData } from "oleoduc";
 import streamJson from "stream-json";
+// eslint-disable-next-line import/extensions
+import jsonFilters from "stream-json/filters/Pick.js";
 import streamers from "stream-json/streamers/StreamArray.js";
 import type { z, ZodArray, ZodType, ZodTypeAny } from "zod";
 
@@ -138,3 +140,45 @@ export function createResponseStream<Z extends ZodType>(
       .pipe(createToJsonTransformStream({ schema })) as any
   );
 }
+
+// @ts-expect-error
+export function streamNestedJsonArray(arrayPropertyName) {
+  return _compose(
+    streamJson.parser(),
+    jsonFilters.pick({ filter: arrayPropertyName }),
+    streamers.streamArray(),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    transformData((data: any) => data.value)
+  );
+}
+
+export function streamJsonArray() {
+  return _compose(
+    streamJson.parser(),
+    streamers.streamArray(),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    transformData((data: any) => data.value)
+  );
+}
+
+export const streamGroupByCount = (count: number) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let group: any[] = [];
+  return new Transform({
+    objectMode: true,
+    transform(chunk, _encoding, callback) {
+      group.push(chunk);
+      if (group.length === count) {
+        this.push(group);
+        group = [];
+      }
+      callback();
+    },
+    flush(callback) {
+      if (group.length > 0) {
+        this.push(group);
+      }
+      callback();
+    },
+  });
+};

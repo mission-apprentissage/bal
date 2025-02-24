@@ -24,6 +24,7 @@ import { validateModels } from "./db/schemaValidation";
 import { streamDataToParquetAndS3 } from "./deca/decaToS3";
 import { hydrateDeca } from "./deca/hydrate-deca";
 import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
+import { hydrateLbaSiretList } from "./lba/hydrate-siretlist";
 import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
 import { run_hydrate_from_ocapiat } from "./validation/hydrate_from_ocapiat";
 import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
@@ -155,6 +156,9 @@ export async function setupJobProcessor() {
       },
       "job:lba:hydrate:email-balcklisted": {
         handler: async () => hydrateLbaBlackListed(),
+      },
+      "job:lba:hydrate:siret-list": {
+        handler: async () => hydrateLbaSiretList(),
       },
     },
   });

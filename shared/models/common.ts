@@ -17,7 +17,8 @@ export type CollectionName =
   | "catalogueEmailSirets"
   | "bouncer.email"
   | "bouncer.domain"
-  | "lba.emailblacklists";
+  | "lba.emailblacklists"
+  | "lba.recruteurs.siret.email";
 
 export interface IModelDescriptor {
   zod: ZodType;
