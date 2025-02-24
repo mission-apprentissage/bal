@@ -5,12 +5,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { FC, useState } from "react";
 import { IDocument } from "shared/models/document.model";
-import { IMailingListWithDocumentJson } from "shared/models/mailingList.model";
+import { IMailingListWithDocumentAndOwnerJson } from "shared/models/mailingList.model";
 
 import { apiGet } from "../../../utils/api.utils";
 
 interface Props {
-  mailingList?: IMailingListWithDocumentJson;
+  mailingList?: IMailingListWithDocumentAndOwnerJson;
   onDone: () => void;
 }
 

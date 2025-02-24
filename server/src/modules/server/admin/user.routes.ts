@@ -3,7 +3,7 @@ import { RootFilterOperators } from "mongodb";
 import { IUser, toPublicUser } from "shared/models/user.model";
 import { zUserAdminRoutes } from "shared/routes/user.routes";
 
-import { createUser, findUser, findUsers } from "../../actions/users.actions";
+import { createUser, deleteUser, findUser, findUsers } from "../../actions/users.actions";
 import { Server } from "../server";
 
 export const userAdminRoutes = ({ server }: { server: Server }) => {
@@ -60,6 +60,25 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
 
       // Fixme: maybe we return too much data!!
       return response.status(200).send(user);
+    }
+  );
+
+  server.delete(
+    "/admin/users/:id",
+    {
+      schema: zUserAdminRoutes.delete["/admin/users/:id"],
+      onRequest: [server.auth(zUserAdminRoutes.delete["/admin/users/:id"])],
+    },
+    async (request, response) => {
+      const user = await findUser({ _id: request.params.id });
+
+      if (!user) {
+        throw Boom.notFound();
+      }
+
+      await deleteUser(request.params.id);
+
+      return response.status(200).send({ success: true });
     }
   );
 };

@@ -61,6 +61,16 @@ const ChoixColonnesSortie: FC<Props> = ({
     });
   }
 
+  for (const column of columns) {
+    if (column !== email && !identifierColumns.includes(column)) {
+      outputColumnDefaultValues.push({
+        output: column,
+        column,
+        simple: true,
+      });
+    }
+  }
+
   if (mailingList) {
     const outputColumns = mailingList?.output_columns
       //filter already selected columns
@@ -68,8 +78,6 @@ const ChoixColonnesSortie: FC<Props> = ({
 
     outputColumnDefaultValues.push(...outputColumns);
   }
-
-  outputColumnDefaultValues.push({ output: "", column: "", simple: true });
 
   const {
     handleSubmit,

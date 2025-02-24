@@ -10,7 +10,11 @@ import { getMailingOutputColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/c
 import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
 import { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
-import { IMailingList, IMailingListWithDocument, MAILING_LIST_MAX_ITERATION } from "shared/models/mailingList.model";
+import {
+  IMailingList,
+  IMailingListWithDocumentAndOwner,
+  MAILING_LIST_MAX_ITERATION,
+} from "shared/models/mailingList.model";
 import { z } from "zod";
 
 import logger from "@/common/logger";
@@ -71,44 +75,73 @@ export const findMailingLists = async (filter: Filter<IMailingList>, options?: F
   return getDbCollection("mailingLists").find(filter, options).toArray();
 };
 
-export const findMailingListWithDocument = async (filter: Filter<IMailingList>) => {
-  return getDbCollection("mailingLists")
-    .aggregate<IMailingListWithDocument>([
-      { $match: filter },
-
-      {
-        $sort: { created_at: -1 },
-      },
-      {
-        $lookup: {
-          from: "documents",
-          as: "document",
-          let: {
-            document_id: "$document_id",
-          },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $eq: [
-                    {
-                      $toString: "$$ROOT._id",
-                    },
-                    "$$document_id",
-                  ],
-                },
+export const findMailingListWithDocument = async (filter: Filter<IMailingList> | null) => {
+  const pipeline = [
+    {
+      $sort: { created_at: -1 },
+    },
+    {
+      $lookup: {
+        from: "users",
+        as: "owner",
+        let: {
+          added_by: "$added_by",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: [
+                  {
+                    $toString: "$$ROOT._id",
+                  },
+                  "$$added_by",
+                ],
               },
             },
-          ],
-        },
+          },
+        ],
       },
-      {
-        $unwind: {
-          path: "$document",
-          preserveNullAndEmptyArrays: true,
-        },
+    },
+    {
+      $unwind: {
+        path: "$owner",
+        preserveNullAndEmptyArrays: true,
       },
-    ])
+    },
+    {
+      $lookup: {
+        from: "documents",
+        as: "document",
+        let: {
+          document_id: "$document_id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: [
+                  {
+                    $toString: "$$ROOT._id",
+                  },
+                  "$$document_id",
+                ],
+              },
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: {
+        path: "$document",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ];
+
+  return getDbCollection("mailingLists")
+    .aggregate<IMailingListWithDocumentAndOwner>(filter === null ? pipeline : [{ $match: filter }, ...pipeline])
     .toArray();
 };
 
@@ -317,11 +350,12 @@ const formatOutput = async (mailingList: IMailingList, documentContents: IDocume
           email,
         };
 
-        for (const { output: outputColumnName } of outputColumns) {
-          // avoid overriding email column
-          // Priority: email > computedData > content
-          outputRow[outputColumnName] =
-            outputRow[outputColumnName] ?? docComputedData[outputColumnName] ?? content[outputColumnName] ?? "";
+        for (const { column, output: outputColumnName } of outputColumns) {
+          if (outputColumnName !== "email") {
+            // avoid overriding email column
+            // Priority: email > computedData > content
+            outputRow[outputColumnName] = outputRow[column] ?? docComputedData[column] ?? content[column] ?? "";
+          }
         }
 
         return outputRow;

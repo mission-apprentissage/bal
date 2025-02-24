@@ -114,7 +114,8 @@ interface Props {
 }
 
 const Breadcrumb: FC<Props> = ({ pages }) => {
-  const currentPage = pages.pop();
+  const currentPage = pages.at(-1);
+  const parentPages = pages.slice(0, -1);
 
   return (
     <DSFRBreadcrumb
@@ -122,7 +123,7 @@ const Breadcrumb: FC<Props> = ({ pages }) => {
       homeLinkProps={{
         href: PAGES.homepage().path,
       }}
-      segments={pages.map((page) => ({
+      segments={parentPages.map((page) => ({
         label: page.title,
         linkProps: {
           href: page.path,

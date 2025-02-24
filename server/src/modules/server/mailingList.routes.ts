@@ -52,11 +52,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/mailing-lists"])],
     },
     async (request, response) => {
-      const user = getUserFromRequest(request, zRoutes.get["/mailing-lists"]);
-
-      const mailingLists = await findMailingListWithDocument({
-        added_by: user._id.toString(),
-      });
+      const mailingLists = await findMailingListWithDocument({});
 
       return response.status(200).send(mailingLists);
     }
@@ -69,7 +65,6 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/mailing-lists/:id"])],
     },
     async (request, response) => {
-      const user = getUserFromRequest(request, zRoutes.get["/mailing-lists/:id"]);
       const { id } = request.params;
 
       const mailingList = await findMailingList({
@@ -78,10 +73,6 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
 
       if (!mailingList) {
         throw notFound();
-      }
-
-      if (mailingList?.added_by !== user?._id.toString()) {
-        throw Boom.forbidden("Forbidden");
       }
 
       return response.status(200).send(mailingList);
@@ -135,20 +126,13 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/mailing-lists/:id/download"])],
     },
     async (request, response) => {
-      const user = getUserFromRequest(request, zRoutes.get["/mailing-lists/:id/download"]);
       const { id } = request.params;
 
       const mailingList = await findMailingList({
         _id: new ObjectId(id),
-        added_by: user._id.toString(),
       });
 
-      /**
-       * Téléchargement disponible uniquement pour l'utilisateur qui a demandé la création de la liste
-       * et si celle-ci est générée
-       */
-
-      if (!mailingList?.document_id || user?._id.toString() !== mailingList?.added_by) {
+      if (!mailingList?.document_id) {
         throw Boom.forbidden("Forbidden");
       }
 
@@ -202,14 +186,13 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.delete["/mailing-list/:id"])],
     },
     async (request, response) => {
-      const user = getUserFromRequest(request, zRoutes.delete["/mailing-list/:id"]);
       const { id } = request.params;
 
       const mailingList = await findMailingList({
         _id: new ObjectId(id),
       });
 
-      if (!mailingList || user._id.toString() !== mailingList?.added_by) {
+      if (!mailingList) {
         throw Boom.forbidden("Forbidden");
       }
 

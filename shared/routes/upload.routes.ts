@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { zObjectId } from "../models/common";
 import { ZUploadDocumentPublic } from "../models/document.model";
-import { ZMailingListWithDocument } from "../models/mailingList.model";
+import { ZMailingListWithDocumenAndOwner } from "../models/mailingList.model";
 import { IRoutesDef } from "./common.routes";
 
 export const zUploadRoutes = {
@@ -24,7 +24,7 @@ export const zUploadRoutes = {
       path: "/admin/mailing-list/:user_id",
       params: z.object({ user_id: zObjectId }),
       response: {
-        "200": z.array(ZMailingListWithDocument),
+        "200": z.array(ZMailingListWithDocumenAndOwner),
       },
       securityScheme: {
         auth: "cookie-session",
