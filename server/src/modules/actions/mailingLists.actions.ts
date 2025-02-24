@@ -293,7 +293,7 @@ const formatOutput = async (mailingList: IMailingList, documentContents: IDocume
       const emails: Set<string> = new Set();
 
       for (const email of [primaryEmail, secondaryEmail]) {
-        if (email && EMAIL_REGEX.test(email)) {
+        if (email) {
           try {
             const emailNormalized = extensions.email.parse(email);
 
