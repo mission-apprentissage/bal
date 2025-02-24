@@ -989,6 +989,37 @@ exports[`zodToMongoSchema > should convert events schema 1`] = `
 }
 `;
 
+exports[`zodToMongoSchema > should convert lba.emailblacklists schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "blacklisting_origin": {
+      "bsonType": "string",
+    },
+    "created_at": {
+      "bsonType": "date",
+    },
+    "email": {
+      "bsonType": "string",
+    },
+    "updated_at": {
+      "bsonType": "date",
+    },
+  },
+  "required": [
+    "_id",
+    "email",
+    "blacklisting_origin",
+    "created_at",
+    "updated_at",
+  ],
+}
+`;
+
 exports[`zodToMongoSchema > should convert mailingLists schema 1`] = `
 {
   "additionalProperties": false,

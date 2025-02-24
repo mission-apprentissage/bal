@@ -1,12 +1,10 @@
 fileignoreconfig:
 - filename: server/.env.test
-  checksum: a6feb98ccd322c46d7839b763ffee15a87c342e6510b49f29968fffe3f6b8295
-version: ""
-: .infra/vault/vault.yml
+  checksum: 9914cd6332d74656efc0431778baf81cb6094a3c29fd54ae61efb5bc95176885
+  version: ""
+- filename: .infra/vault/vault.yml
   checksum: b8c2c1fdc27ffa9b18b45d4893307238b842875e6e8fe98cd78255682f3430a5
-version: ""
-name: .bin/scripts/deploy-log-encrypt.sh
-  checksum: 8ebe245e2a3719defc295d0de3d02c42e2cb82cb2ecc9507ce0dd4273a428e5e
+  version: ""
 - filename: .bin/scripts/get-vault-password-client.sh
   checksum: 51d7feb20247935b41b622a3c4221231719ca2bb8b178dffa03d44b993087c9c
 - filename: .bin/scripts/setup-local-env.sh
@@ -186,8 +184,5 @@ allowed_patterns:
 - pass
 - apiKey
 - ApiKey
-- api_key
-version: "1.0"
- ApiKey
 - api_key
 version: "1.0"
