@@ -261,6 +261,12 @@ program
   .action(createJobAction("job:lba:hydrate:email-balcklisted"));
 
 program
+  .command("job:lba:hydrate:siret-list")
+  .description("Importe liste emails blacklisté lba")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("job:lba:hydrate:siret-list"));
+
+program
   .command("email:verify")
   .description("Check if an email is valid")
   .requiredOption("-e, --email <string>", "Email to validate")

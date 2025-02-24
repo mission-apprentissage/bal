@@ -24,6 +24,7 @@ import { validateModels } from "./db/schemaValidation";
 import { streamDataToParquetAndS3 } from "./deca/decaToS3";
 import { hydrateDeca } from "./deca/hydrate-deca";
 import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
+import { hydrateLbaSiretList } from "./lba/hydrate-siretlist";
 import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
 import { run_hydrate_from_ocapiat } from "./validation/hydrate_from_ocapiat";
 import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
@@ -46,6 +47,12 @@ export async function setupJobProcessor() {
             "Mise à jour des couples siret/email provenant du catalogue de formations": {
               cron_string: "30 2 * * *",
               handler: () => runCatalogueImporter(),
+              resumable: true,
+              maxRuntimeInMinutes: 60,
+            },
+            "Mise à jour des couples siret/email provenant de l'algo LBA": {
+              cron_string: "30 5 10 * *",
+              handler: () => hydrateLbaSiretList(),
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
@@ -155,6 +162,9 @@ export async function setupJobProcessor() {
       },
       "job:lba:hydrate:email-balcklisted": {
         handler: async () => hydrateLbaBlackListed(),
+      },
+      "job:lba:hydrate:siret-list": {
+        handler: async () => hydrateLbaSiretList(),
       },
     },
   });

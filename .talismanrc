@@ -1,9 +1,9 @@
 fileignoreconfig:
 - filename: server/.env.test
-  checksum: 9914cd6332d74656efc0431778baf81cb6094a3c29fd54ae61efb5bc95176885
+  checksum: 1a8edfd3797fb0ec91b63b9f30bfc42c51d73253f89a21640d098badf4b86679
   version: ""
 - filename: .infra/vault/vault.yml
-  checksum: b8c2c1fdc27ffa9b18b45d4893307238b842875e6e8fe98cd78255682f3430a5
+  checksum: 3e8431aaed36ac08d3feef5c1d335f97637541d16087eb72f00dd6595390b1ce
   version: ""
 - filename: .bin/scripts/get-vault-password-client.sh
   checksum: 51d7feb20247935b41b622a3c4221231719ca2bb8b178dffa03d44b993087c9c
@@ -26,7 +26,7 @@ fileignoreconfig:
 - filename: .github/workflows/remove-preview.yml
   checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/.env_server
-  checksum: f752046085be0556b7577429807ab9e144d4b6eb922a6c7baf1f82b723787689
+  checksum: a8a485cdfdd80b7b85130637e381e540daa4d7d0f0c1e0870fac9f572babd886
 - filename: .infra/.env_ui
   checksum: 0dd94c954d75fd19bbe669eef8238c703d9fb8bea4025358071f9fae6140ac85
   ignore_detectors:

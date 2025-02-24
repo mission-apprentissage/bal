@@ -21,6 +21,7 @@ import {
 } from "../../common/apis/opcoEp";
 import { getCatalogueEmailVerification } from "./catalogue.actions";
 import { getDbVerification } from "./deca.actions";
+import { getLbaAlgoEmailVerification } from "./lba.algo.siret.email.actions";
 
 export const validation = async ({
   email,
@@ -37,6 +38,11 @@ export const validation = async ({
   const testCatalogue = await getCatalogueEmailVerification(siret, email);
   if (testCatalogue.is_valid) {
     return testCatalogue;
+  }
+
+  const testLbaAlgo = await getLbaAlgoEmailVerification(siret, email);
+  if (testLbaAlgo.is_valid) {
+    return testLbaAlgo;
   }
 
   const siren = getSirenFromSiret(siret);

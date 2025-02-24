@@ -126,8 +126,9 @@ export const s3SignedUrl = async (bucket: Bucket, key: string, options: RequestP
 };
 
 export const getS3FileLastUpdate = async (bucket: Bucket, key: string): Promise<Date | null> => {
+  const bucketName = getBucketName(bucket);
   try {
-    const headResponse = await s3Client.send(new HeadObjectCommand({ Bucket: bucket, Key: key }));
+    const headResponse = await s3Client.send(new HeadObjectCommand({ Bucket: bucketName, Key: key }));
     return headResponse.LastModified ? new Date(headResponse.LastModified) : null;
   } catch (error: any) {
     const newError = internal(`error getting s3 head object`, { key, bucket });

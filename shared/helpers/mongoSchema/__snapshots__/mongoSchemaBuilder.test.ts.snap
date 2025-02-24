@@ -1020,6 +1020,41 @@ exports[`zodToMongoSchema > should convert lba.emailblacklists schema 1`] = `
 }
 `;
 
+exports[`zodToMongoSchema > should convert lba.recruteurs.siret.email schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "created_at": {
+      "bsonType": "date",
+      "description": "La date création de la demande",
+    },
+    "email": {
+      "bsonType": "string",
+      "description": "Adresse email de contact",
+    },
+    "siret": {
+      "bsonType": "string",
+      "description": "Le Siret de la société",
+    },
+    "updated_at": {
+      "bsonType": "date",
+      "description": "Date de dernières mise à jour",
+    },
+  },
+  "required": [
+    "_id",
+    "siret",
+    "email",
+    "created_at",
+    "updated_at",
+  ],
+}
+`;
+
 exports[`zodToMongoSchema > should convert mailingLists schema 1`] = `
 {
   "additionalProperties": false,
