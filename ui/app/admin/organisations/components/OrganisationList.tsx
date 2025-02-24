@@ -22,6 +22,7 @@ const OrganisationList = () => {
       apiGet("/admin/organisations", {
         querystring: { q: searchValue, page, limit },
       }),
+    throwOnError: true,
   });
 
   const onSearch = (q: string) => {

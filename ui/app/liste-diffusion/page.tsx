@@ -6,13 +6,19 @@ import { IMailingListWithDocumentAndOwnerJson } from "shared/models/mailingList.
 
 import { apiGet } from "../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
+import Loading from "../loading";
 import GeneratingMailingList from "./components/GeneratingMailingList";
 import ListMailingList from "./components/ListMailingList";
 
 const ListeDiffusionPage = () => {
-  const { data: mailingLists = [], refetch } = useQuery<IMailingListWithDocumentAndOwnerJson[]>({
+  const {
+    isLoading,
+    data: mailingLists = [],
+    refetch,
+  } = useQuery<IMailingListWithDocumentAndOwnerJson[]>({
     queryKey: ["mailingLists"],
     queryFn: async () => apiGet("/mailing-lists", {}),
+    throwOnError: true,
   });
 
   const generatingMailingList = mailingLists?.find((ml) => {
@@ -40,6 +46,7 @@ const ListeDiffusionPage = () => {
 
       <GeneratingMailingList mailingList={generatingMailingList} onDone={refetch} />
       <ListMailingList mailingLists={mailingLists} onDelete={refetch} />
+      {isLoading && <Loading />}
     </>
   );
 };

@@ -23,6 +23,7 @@ const PersonList = () => {
       apiGet("/admin/persons", {
         querystring: { q: searchValue, page, limit },
       }),
+    throwOnError: true,
   });
 
   const onSearch = (q: string) => {

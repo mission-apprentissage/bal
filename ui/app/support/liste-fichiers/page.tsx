@@ -17,6 +17,7 @@ const ListeDiffusionPage = () => {
   const { data: list = [], refetch } = useQuery<fichier[]>({
     queryKey: ["supportFilesList"],
     queryFn: async () => apiGet("/support/files-list", {}),
+    throwOnError: true,
   });
 
   const { Link } = getLink();

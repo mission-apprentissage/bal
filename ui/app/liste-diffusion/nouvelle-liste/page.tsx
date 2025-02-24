@@ -71,6 +71,7 @@ const NouvelleListePage = () => {
       return data;
     },
     enabled: !!params.get("mailing_list_id"),
+    throwOnError: true,
   });
 
   const goToStep = (stepName: keyof typeof STEPS) => {

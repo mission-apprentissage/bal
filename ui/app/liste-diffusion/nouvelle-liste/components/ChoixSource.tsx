@@ -47,6 +47,7 @@ const ChoixSource: FC<Props> = ({ mailingList, onSuccess }) => {
 
       return data;
     },
+    throwOnError: true,
   });
 
   const { data: columns = [] } = useQuery<string[]>({
@@ -59,6 +60,7 @@ const ChoixSource: FC<Props> = ({ mailingList, onSuccess }) => {
 
       return data;
     },
+    throwOnError: true,
   });
 
   const { data: sample = [], isFetching } = useQuery<IDocumentContentJson[]>({
@@ -72,6 +74,7 @@ const ChoixSource: FC<Props> = ({ mailingList, onSuccess }) => {
 
       return data;
     },
+    throwOnError: true,
   });
 
   const onSubmit = async (data: IChoseSourceForm) => {
