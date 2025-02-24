@@ -1,6 +1,7 @@
 import { captureException } from "@sentry/node";
 import * as Sentry from "@sentry/node";
 import { MongoClient } from "mongodb";
+import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
 import { ILbaEmailBlacklist } from "shared/models/data/lba.emailBlacklist.model";
 
 import parentLogger from "@/common/logger";
@@ -72,16 +73,21 @@ async function updateLbaBlacklistedEmail({ _id, ...document }: ILbaEmailBlacklis
       forceTransaction: true,
     },
     async () => {
-      await getDbCollection("lba.emailblacklists").updateOne(
-        { email: document.email },
-        {
-          $set: {
-            ...document,
-            updated_at: new Date(),
+      try {
+        const emailNormalized = extensions.email.parse(document.email);
+        await getDbCollection("lba.emailblacklists").updateOne(
+          { email: emailNormalized },
+          {
+            $set: {
+              ...document,
+              updated_at: new Date(),
+            },
           },
-        },
-        { upsert: true }
-      );
+          { upsert: true }
+        );
+      } catch (error) {
+        logger.error(`Échec de la mise à jour du document ${_id}: ${error}`);
+      }
     }
   );
 }

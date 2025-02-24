@@ -7,6 +7,7 @@ import { stringify } from "csv-stringify";
 import { addJob, IJobsSimple } from "job-processor";
 import { Filter, FindCursor, FindOptions, ObjectId, Sort } from "mongodb";
 import { getMailingOutputColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList";
+import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
 import { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
 import { IMailingList, IMailingListWithDocument, MAILING_LIST_MAX_ITERATION } from "shared/models/mailingList.model";
@@ -293,11 +294,19 @@ const formatOutput = async (mailingList: IMailingList, documentContents: IDocume
 
       for (const email of [primaryEmail, secondaryEmail]) {
         if (email && EMAIL_REGEX.test(email)) {
-          const blacklisted = await getDbCollection("lba.emailblacklists").findOne({ email });
+          try {
+            const emailNormalized = extensions.email.parse(email);
 
-          // Only add if the email passes validation and isn't blacklisted
-          if (!blacklisted) {
-            emails.add(email.toLocaleLowerCase());
+            const blacklisted = await getDbCollection("lba.emailblacklists").findOne({
+              email: emailNormalized,
+            });
+
+            // Only add if the email passes validation and isn't blacklisted
+            if (!blacklisted) {
+              emails.add(emailNormalized);
+            }
+          } catch (error) {
+            logger.error(`Failed to normalize email ${email}`, error);
           }
         }
       }
@@ -320,7 +329,7 @@ const formatOutput = async (mailingList: IMailingList, documentContents: IDocume
     })
   );
 
-  return rowsArrays.flat() as ICsvDatum[];
+  return rowsArrays.flat();
 };
 
 async function getComputeColumnsData(
