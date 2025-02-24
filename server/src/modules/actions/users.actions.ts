@@ -114,6 +114,12 @@ export const updateUser = async (
   );
 };
 
+export const deleteUser = async (id: ObjectId): Promise<void> => {
+  await getDbCollection("users").deleteOne({
+    _id: id,
+  });
+};
+
 export const generateApiKey = async (user: IUser) => {
   const generatedKey = generateKey();
   const secretHash = generateSecretHash(generatedKey);

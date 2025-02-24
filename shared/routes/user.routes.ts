@@ -48,6 +48,19 @@ export const zUserAdminRoutes = {
       },
     },
   },
+  delete: {
+    "/admin/users/:id": {
+      method: "delete",
+      path: "/admin/users/:id",
+      params: z.object({ id: zObjectId }),
+      response: { "200": z.object({ success: z.literal(true) }) },
+      securityScheme: {
+        auth: "cookie-session",
+        access: "admin",
+        ressources: {},
+      },
+    },
+  },
 } as const satisfies IRoutesDef;
 
 export const zUserRoutes = {

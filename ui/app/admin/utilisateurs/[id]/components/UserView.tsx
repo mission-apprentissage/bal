@@ -1,10 +1,18 @@
+"use client";
+import { fr } from "@codegouvfr/react-dsfr";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { Typography } from "@mui/material";
-import { FC } from "react";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { Box, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { FC, useState } from "react";
 import { IUserWithPersonPublic } from "shared/models/user.model";
+import type { IResErrorJson } from "shared/routes/common.routes";
 
 import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
+import Toast, { useToast } from "../../../../../components/toast/Toast";
+import { apiDelete } from "../../../../../utils/api.utils";
 import { formatDate } from "../../../../../utils/date.utils";
+import { queryClient } from "../../../../../utils/query.utils";
 import Breadcrumb, { PAGES } from "../../../../components/breadcrumb/Breadcrumb";
 import { getPersonDisplayName } from "../../../personnes/persons.format";
 
@@ -12,7 +20,37 @@ interface Props {
   user: IUserWithPersonPublic;
 }
 
+const modal = createModal({
+  id: "delete-user-modal",
+  isOpenedByDefault: false,
+});
+
 const UserView: FC<Props> = ({ user }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { toast, setToast, handleClose } = useToast();
+  const { push } = useRouter();
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await apiDelete("/admin/users/:id", { params: { id: user._id } });
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      push(PAGES.adminUsers().path);
+    } catch (error) {
+      console.error(error);
+      const serverError = error as IResErrorJson;
+      setToast({
+        severity: "error",
+        message: `Une erreur est survenue lors de la suppression du fichier${
+          serverError?.message ? ` : ${serverError.message}` : ""
+        }`,
+      });
+    } finally {
+      setIsDeleting(false);
+      modal.close();
+    }
+  };
+
   return (
     <>
       <Breadcrumb pages={[PAGES.adminUsers(), PAGES.adminUserView(user._id)]} />
@@ -61,16 +99,60 @@ const UserView: FC<Props> = ({ user }) => {
         }}
       />
 
-      <Button
-        iconId="fr-icon-arrow-right-line"
-        iconPosition="right"
-        linkProps={{
-          href: PAGES.adminListeDiffusion(user._id).path,
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
         }}
-        priority="tertiary"
       >
-        Listes de diffusion
-      </Button>
+        <Button
+          iconId="fr-icon-arrow-right-line"
+          iconPosition="right"
+          linkProps={{
+            href: PAGES.adminListeDiffusion(user._id).path,
+          }}
+          priority="tertiary"
+        >
+          Listes de diffusion
+        </Button>
+
+        <Button
+          key="delete"
+          iconId="ri-delete-bin-line"
+          onClick={() => {
+            modal.open();
+          }}
+          priority="tertiary"
+          title="Supprimer"
+          style={{
+            color: fr.colors.decisions.text.actionHigh.redMarianne.default,
+          }}
+        >
+          Supprimer
+        </Button>
+      </Box>
+      <modal.Component
+        title="Supprimer l'utilisateur"
+        buttons={[
+          {
+            children: "Annuler",
+            disabled: isDeleting,
+          },
+          {
+            iconId: "ri-delete-bin-line",
+            onClick: handleDelete,
+            children: "Supprimer l'utilisateur",
+            disabled: isDeleting,
+            doClosesModal: false,
+            style: {
+              backgroundColor: fr.colors.decisions.text.actionHigh.redMarianne.default,
+            },
+          },
+        ]}
+      >
+        Vous allez supprimer l'utilisateur {user.email}. Cette action est irréversible.
+      </modal.Component>
+      <Toast severity={toast?.severity} message={toast?.message} handleClose={handleClose} />
     </>
   );
 };
