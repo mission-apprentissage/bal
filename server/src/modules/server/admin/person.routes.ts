@@ -1,7 +1,6 @@
 import { forbidden } from "@hapi/boom";
-import { ObjectId, RootFilterOperators } from "mongodb";
+import { ObjectId } from "mongodb";
 import { zRoutes } from "shared";
-import { IPerson } from "shared/models/person.model";
 
 import { findPerson, findPersons } from "../../actions/persons.actions";
 import { Server } from "../server";
@@ -14,15 +13,9 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/admin/persons"])],
     },
     async (request, response) => {
-      const filter: RootFilterOperators<IPerson> = {};
-
       const { q = "" } = request.query;
 
-      if (q) {
-        filter.$text = { $search: q };
-      }
-
-      const persons = await findPersons(filter);
+      const persons = await findPersons(q ? { $text: { $search: q } } : null);
 
       return response.status(200).send(persons);
     }

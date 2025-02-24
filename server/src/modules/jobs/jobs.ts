@@ -28,7 +28,7 @@ import { hydrateLbaSiretList } from "./lba/hydrate-siretlist";
 import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
 import { run_hydrate_from_ocapiat } from "./validation/hydrate_from_ocapiat";
 import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
-import { run_organisations_sanitize_domains } from "./validation/organisations_sanitize_domains";
+import { sanitizeOrganisationDomains } from "./validation/organisations_sanitize_domains";
 
 export async function setupJobProcessor() {
   return initJobProcessor({
@@ -41,6 +41,12 @@ export async function setupJobProcessor() {
             "Mise à jour des emails blacklisted provenant de la bonne alternance": {
               cron_string: "0 3 * * *",
               handler: () => hydrateLbaBlackListed(),
+              resumable: true,
+              maxRuntimeInMinutes: 60,
+            },
+            "Cleanup company email": {
+              cron_string: "0 3 2 * *",
+              handler: () => sanitizeOrganisationDomains(),
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
@@ -158,7 +164,7 @@ export async function setupJobProcessor() {
         handler: async () => run_hydrate_from_ocapiat(),
       },
       "organisation:sanitize:domains": {
-        handler: async () => run_organisations_sanitize_domains(),
+        handler: async () => sanitizeOrganisationDomains(),
       },
       "job:lba:hydrate:email-balcklisted": {
         handler: async () => hydrateLbaBlackListed(),

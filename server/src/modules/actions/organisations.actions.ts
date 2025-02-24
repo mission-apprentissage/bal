@@ -92,8 +92,10 @@ export const createOrganisation = async (data: ICreateOrganisation): Promise<IOr
   return organisation;
 };
 
-export const findOrganisations = async (filter: Filter<IOrganisation> = {}) => {
-  const organisations = await getDbCollection("organisations").find(filter).toArray();
+export const findOrganisations = async (filter: Filter<IOrganisation> | null) => {
+  const organisations = await getDbCollection("organisations")
+    .find(filter ?? {})
+    .toArray();
 
   return organisations;
 };

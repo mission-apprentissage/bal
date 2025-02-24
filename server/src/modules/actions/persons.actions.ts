@@ -62,19 +62,26 @@ export const findPerson = async (filter: Filter<IPerson>): Promise<PersonWithOrg
   return person;
 };
 
-export const findPersons = async (filter: Filter<IPerson>): Promise<PersonWithOrganisation[]> => {
+export const findPersons = async (filter: Filter<IPerson> | null): Promise<PersonWithOrganisation[]> => {
+  const pipeline = [
+    {
+      $lookup: DEFAULT_LOOKUP,
+    },
+    {
+      $unwind: DEFAULT_UNWIND,
+    },
+  ];
   const persons = await getDbCollection("persons")
-    .aggregate<PersonWithOrganisation>([
-      {
-        $match: filter,
-      },
-      {
-        $lookup: DEFAULT_LOOKUP,
-      },
-      {
-        $unwind: DEFAULT_UNWIND,
-      },
-    ])
+    .aggregate<PersonWithOrganisation>(
+      filter
+        ? [
+            {
+              $match: filter,
+            },
+            ...pipeline,
+          ]
+        : pipeline
+    )
     .toArray();
 
   return persons;

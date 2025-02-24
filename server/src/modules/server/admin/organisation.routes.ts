@@ -1,7 +1,5 @@
 import { notFound } from "@hapi/boom";
-import { RootFilterOperators } from "mongodb";
 import { zRoutes } from "shared";
-import { IOrganisation } from "shared/models/organisation.model";
 
 import { findOrganisation, findOrganisations } from "../../actions/organisations.actions";
 import { Server } from "../server";
@@ -14,15 +12,9 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/admin/organisations"])],
     },
     async (request, response) => {
-      const filter: RootFilterOperators<IOrganisation> = {};
+      const { q = "" } = request.query;
 
-      const { q } = request.query;
-
-      if (q) {
-        filter.$text = { $search: q };
-      }
-
-      const organisations = await findOrganisations(filter);
+      const organisations = await findOrganisations(q ? { $text: { $search: q } } : null);
 
       return response.status(200).send(organisations);
     }

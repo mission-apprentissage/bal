@@ -273,6 +273,15 @@ program
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("email:verify"));
 
+program
+  .command("job:run")
+  .description("Run a job")
+  .requiredOption("-n, --name <string>", "Job name")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(async ({ name, ...options }) => {
+    return createJobAction(name)(options);
+  });
+
 program.hook("preAction", (_, actionCommand) => {
   const command = actionCommand.name();
   // on définit le module du logger en global pour distinguer les logs des jobs
