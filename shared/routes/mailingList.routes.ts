@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { zObjectId } from "../models/common";
 import { ZMailingListDocument } from "../models/document.model";
-import { ZMailingList, ZMailingListWithDocument } from "../models/mailingList.model";
+import { ZMailingList, ZMailingListWithDocumenAndOwner } from "../models/mailingList.model";
 import { IRoutesDef } from "./common.routes";
 
 export const zMailingListRoutes = {
@@ -11,7 +11,7 @@ export const zMailingListRoutes = {
       method: "get",
       path: "/mailing-lists",
       response: {
-        "200": z.array(ZMailingListWithDocument),
+        "200": z.array(ZMailingListWithDocumenAndOwner),
       },
       securityScheme: {
         auth: "cookie-session",

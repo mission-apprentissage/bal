@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { IModelDescriptor, zObjectId } from "./common";
 import { ZMailingListDocument } from "./document.model";
+import { ZUserPublic } from "./user.model";
 
 export const MAILING_LIST_MAX_ITERATION = 10;
 
@@ -49,15 +50,16 @@ export const ZMailingList = z.object({
   created_at: z.date().describe("Date d'ajout en base de données"),
 });
 
-export const ZMailingListWithDocument = ZMailingList.extend({
+export const ZMailingListWithDocumenAndOwner = ZMailingList.extend({
   document: ZMailingListDocument.nullish(),
+  owner: ZUserPublic.nullable(),
 });
 
 export type IMailingList = z.output<typeof ZMailingList>;
 export type IMailingListJson = Jsonify<z.input<typeof ZMailingList>>;
 
-export type IMailingListWithDocument = z.output<typeof ZMailingListWithDocument>;
-export type IMailingListWithDocumentJson = Jsonify<z.input<typeof ZMailingListWithDocument>>;
+export type IMailingListWithDocumentAndOwner = z.output<typeof ZMailingListWithDocumenAndOwner>;
+export type IMailingListWithDocumentAndOwnerJson = Jsonify<z.input<typeof ZMailingListWithDocumenAndOwner>>;
 
 export default {
   zod: ZMailingList,

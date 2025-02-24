@@ -2,7 +2,7 @@
 
 import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { IMailingListWithDocumentJson } from "shared/models/mailingList.model";
+import { IMailingListWithDocumentAndOwnerJson } from "shared/models/mailingList.model";
 
 import { apiGet } from "../../../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../../../components/breadcrumb/Breadcrumb";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const AdminImportPage = ({ params }: Props) => {
-  const { data: mailingLists, refetch } = useQuery<IMailingListWithDocumentJson[]>({
+  const { data: mailingLists, refetch } = useQuery<IMailingListWithDocumentAndOwnerJson[]>({
     queryKey: ["/admin/mailing-list/:user_id", { user_id: params.id }],
     queryFn: async () => apiGet("/admin/mailing-list/:user_id", { params: { user_id: params.id } }),
   });

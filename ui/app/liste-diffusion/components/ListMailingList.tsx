@@ -3,7 +3,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { FC, useState } from "react";
 import { IDocument } from "shared/models/document.model";
-import { IMailingListWithDocumentJson } from "shared/models/mailingList.model";
+import { IMailingListWithDocumentAndOwnerJson } from "shared/models/mailingList.model";
 import { IResErrorJson } from "shared/routes/common.routes";
 
 import Table from "../../../components/table/Table";
@@ -13,7 +13,7 @@ import { formatDate } from "../../../utils/date.utils";
 import { PAGES } from "../../components/breadcrumb/Breadcrumb";
 
 interface Props {
-  mailingLists?: IMailingListWithDocumentJson[];
+  mailingLists?: IMailingListWithDocumentAndOwnerJson[];
   onDelete?: () => void;
 }
 
@@ -22,7 +22,7 @@ const modal = createModal({
   isOpenedByDefault: false,
 });
 
-function getMailingListProgress(mailingList: IMailingListWithDocumentJson): {
+function getMailingListProgress(mailingList: IMailingListWithDocumentAndOwnerJson): {
   status: IDocument["job_status"];
 
   progression: string;
@@ -45,7 +45,7 @@ function getMailingListProgress(mailingList: IMailingListWithDocumentJson): {
 
 const formater = new Intl.NumberFormat("fr-FR", { notation: "compact" });
 
-export function getMailingListStatus(mailing: IMailingListWithDocumentJson): IDocument["job_status"] {
+export function getMailingListStatus(mailing: IMailingListWithDocumentAndOwnerJson): IDocument["job_status"] {
   if (mailing.document) return mailing.document.job_status;
 
   const createdTime = new Date(mailing.created_at).getTime();
@@ -102,10 +102,9 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
           {
             field: "document",
             headerName: "Statut",
-            width: 200,
-            valueGetter: ({ row }) => row,
-            valueFormatter: ({ value }) => {
-              const progress = getMailingListProgress(value);
+            width: 120,
+            valueGetter: ({ row }) => {
+              const progress = getMailingListProgress(row);
 
               return {
                 processing: `En cours de génération ${progress.progression}`,
@@ -115,6 +114,15 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
                 pending: "En attente",
                 paused: "En pause",
               }[progress.status];
+            },
+          },
+          {
+            field: "owner",
+            headerName: "Créé par",
+            width: 200,
+            valueGetter: ({ row }) => row.owner?.email ?? null,
+            valueFormatter: ({ value }) => {
+              return value || "Inconnu";
             },
           },
           {
