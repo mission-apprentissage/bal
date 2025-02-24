@@ -15,16 +15,11 @@ const client = new MongoClient(config.lba.mongodb.uri);
 export async function hydrateLbaBlackListed() {
   const count = { created: 0, updated: 0 };
   let totalCount = 0;
-  // let organismeIds = new Set<string>();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const processBuffer = async (buffer: any) => {
-    const results = await Promise.allSettled(buffer);
-    results.forEach((result) => {
-      if (result.status === "fulfilled") {
-        // organismeIds = new Set([...organismeIds, ...result.value.organismesId]);
-      }
-    });
+    await Promise.allSettled(buffer);
+
     totalCount += buffer.length;
   };
 

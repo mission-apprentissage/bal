@@ -282,39 +282,45 @@ const formatOutput = async (mailingList: IMailingList, documentContents: IDocume
 
   const outputColumns = getMailingOutputColumns(mailingList);
 
-  const rows: ICsvDatum[] = documentContents.flatMap((documentContent) => {
-    const { email, secondary_email } = mailingList;
+  const rowsArrays = await Promise.all(
+    documentContents.map(async (documentContent) => {
+      const { email, secondary_email } = mailingList;
+      const content = zCsvDatum.parse(documentContent.content);
+      const primaryEmail = content[email] ?? null;
+      const secondaryEmail = secondary_email ? (content[secondary_email] ?? null) : null;
 
-    const content = zCsvDatum.parse(documentContent.content);
-    const primaryEmail = content[email] ?? null;
-    const secondaryEmail = secondary_email ? (content[secondary_email] ?? null) : null;
+      const emails: Set<string> = new Set();
 
-    const emails: Set<string> = new Set();
-    for (const email of [primaryEmail, secondaryEmail]) {
-      if (email && EMAIL_REGEX.test(email)) {
-        emails.add(email.toLocaleLowerCase());
-      }
-    }
+      for (const email of [primaryEmail, secondaryEmail]) {
+        if (email && EMAIL_REGEX.test(email)) {
+          const blacklisted = await getDbCollection("lba.emailblacklists").findOne({ email });
 
-    return Array.from(emails).map((email: string) => {
-      const docComputedData = computedData.get(documentContent._id.toString()) ?? {};
-
-      const outputRow: Record<string, string> = {
-        email,
-      };
-
-      for (const { output: outputColumnName } of outputColumns) {
-        // avoid overriding email column
-        // Priority: email > computedData > content
-        outputRow[outputColumnName] =
-          outputRow[outputColumnName] ?? docComputedData[outputColumnName] ?? content[outputColumnName] ?? "";
+          // Only add if the email passes validation and isn't blacklisted
+          if (!blacklisted) {
+            emails.add(email.toLocaleLowerCase());
+          }
+        }
       }
 
-      return outputRow;
-    });
-  });
+      return Array.from(emails).map((email: string) => {
+        const docComputedData = computedData.get(documentContent._id.toString()) ?? {};
+        const outputRow: Record<string, string> = {
+          email,
+        };
 
-  return rows;
+        for (const { output: outputColumnName } of outputColumns) {
+          // avoid overriding email column
+          // Priority: email > computedData > content
+          outputRow[outputColumnName] =
+            outputRow[outputColumnName] ?? docComputedData[outputColumnName] ?? content[outputColumnName] ?? "";
+        }
+
+        return outputRow;
+      });
+    })
+  );
+
+  return rowsArrays.flat() as ICsvDatum[];
 };
 
 async function getComputeColumnsData(
