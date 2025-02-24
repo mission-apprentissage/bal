@@ -50,6 +50,12 @@ export async function setupJobProcessor() {
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
+            "Mise à jour des couples siret/email provenant de l'algo LBA": {
+              cron_string: "30 5 * * *",
+              handler: () => hydrateLbaSiretList(),
+              resumable: true,
+              maxRuntimeInMinutes: 60,
+            },
             "Mise à jour des données DECA": {
               cron_string: "30 21 * * *",
               handler: async (signal) => {
