@@ -10,6 +10,7 @@ import { apiGet } from "../../../../utils/api.utils";
 import { formatDate } from "../../../../utils/date.utils";
 import { formatUrlWithNewParams, getSearchParamsForQuery } from "../../../../utils/query.utils";
 import { PAGES } from "../../../components/breadcrumb/Breadcrumb";
+import Loading from "../../../loading";
 import { getPersonDisplayName } from "../../personnes/persons.format";
 
 const UserList = () => {
@@ -18,7 +19,7 @@ const UserList = () => {
 
   const { page: page, limit: limit, q: searchValue } = getSearchParamsForQuery(searchParams);
 
-  const { data: users } = useQuery<IUserWithPersonPublic[]>({
+  const { data: users, isLoading } = useQuery<IUserWithPersonPublic[]>({
     queryKey: ["users", { searchValue, page, limit }],
     queryFn: async () => {
       const data = await apiGet("/admin/users", {
@@ -27,6 +28,7 @@ const UserList = () => {
 
       return data;
     },
+    throwOnError: true,
   });
 
   const onSearch = (q: string) => {
@@ -93,6 +95,7 @@ const UserList = () => {
           },
         ]}
       />
+      {isLoading && <Loading />}
     </>
   );
 };

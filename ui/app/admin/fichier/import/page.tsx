@@ -42,6 +42,7 @@ const AdminImportPage = () => {
   const { data: types = [] } = useQuery<IResponse<IGetRoutes["/admin/documents/types"]>>({
     queryKey: ["documentTypes"],
     queryFn: async () => apiGet("/admin/documents/types", {}),
+    throwOnError: true,
   });
 
   const {

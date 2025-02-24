@@ -52,7 +52,7 @@ export const ZMailingList = z.object({
 
 export const ZMailingListWithDocumenAndOwner = ZMailingList.extend({
   document: ZMailingListDocument.nullish(),
-  owner: ZUserPublic.nullable(),
+  owner: ZUserPublic.nullish(),
 });
 
 export type IMailingList = z.output<typeof ZMailingList>;

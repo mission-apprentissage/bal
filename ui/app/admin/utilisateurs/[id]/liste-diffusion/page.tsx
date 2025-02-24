@@ -16,6 +16,7 @@ const AdminImportPage = ({ params }: Props) => {
   const { data: mailingLists, refetch } = useQuery<IMailingListWithDocumentAndOwnerJson[]>({
     queryKey: ["/admin/mailing-list/:user_id", { user_id: params.id }],
     queryFn: async () => apiGet("/admin/mailing-list/:user_id", { params: { user_id: params.id } }),
+    throwOnError: true,
   });
 
   return (

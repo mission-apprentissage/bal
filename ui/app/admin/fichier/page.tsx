@@ -13,6 +13,7 @@ import { apiDelete, apiGet } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 import { formatBytes } from "../../../utils/file.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
+import Loading from "../../loading";
 
 const modal = createModal({
   id: "delete-document-modal",
@@ -23,7 +24,11 @@ const AdminImportPage = () => {
   const [toDelete, setToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { data: documentLists, refetch } = useQuery<IUploadDocumentJson[]>({
+  const {
+    isLoading,
+    data: documentLists,
+    refetch,
+  } = useQuery<IUploadDocumentJson[]>({
     queryKey: ["/admin/documents"],
     queryFn: async () => apiGet("/admin/documents", {}),
     refetchInterval: 15_000,
@@ -148,6 +153,8 @@ const AdminImportPage = () => {
           },
         ]}
       />
+
+      {isLoading && <Loading />}
 
       <modal.Component
         title="Supprimer le document"
