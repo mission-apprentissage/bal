@@ -53,8 +53,8 @@ services:
       <<: *deploy-default
       resources:
         limits:
-          memory: 2g
-      replicas: 2
+          memory: 1g
+      replicas: 4
     command: ["yarn", "cli", "processor"]
     env_file: .env_server
     stop_grace_period: 2h
