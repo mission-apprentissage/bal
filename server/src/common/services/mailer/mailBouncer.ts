@@ -233,14 +233,33 @@ export async function getDomainMap(): Promise<SmtpSupportMap> {
   return new Map(knownDomains.map((d) => [d.smtp, d.ping]));
 }
 
-export async function verifyEmails(emails: string[]): Promise<BouncerPingResult[]> {
-  const domainMap: Map<string, BouncerPingResult | null> = await getDomainMap();
-
-  const result = [];
+async function verifyEmailsSequentially(emails: string[], domainMap: SmtpSupportMap): Promise<BouncerPingResult[]> {
+  const result: BouncerPingResult[] = [];
 
   for (const email of emails) {
     result.push(await verifyEmail(email, domainMap));
   }
 
   return result;
+}
+
+export async function verifyEmails(emails: string[]): Promise<BouncerPingResult[]> {
+  const domainMap: Map<string, BouncerPingResult | null> = await getDomainMap();
+
+  const perDomain = emails.reduce((acc, email) => {
+    const domain = email.split("@")[1];
+    if (!acc.has(domain)) {
+      acc.set(domain, []);
+    }
+
+    acc.get(domain)!.push(email);
+
+    return acc;
+  }, new Map<string, string[]>());
+
+  const data = await Promise.all(
+    Array.from(perDomain.entries()).map(([_, emails]) => verifyEmailsSequentially(emails, domainMap))
+  );
+
+  return data.flat();
 }

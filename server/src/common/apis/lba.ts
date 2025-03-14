@@ -5,7 +5,7 @@ import config from "@/config";
 import { ApiError, apiRateLimiter } from "../utils/apiUtils";
 import getApiClient from "./client";
 
-export const LIMIT_TRAINING_LINKS_PER_REQUEST = 30;
+export const LIMIT_TRAINING_LINKS_PER_REQUEST = 1_000;
 
 const executeWithRateLimiting = apiRateLimiter("mailingList", {
   //3 requests per second
