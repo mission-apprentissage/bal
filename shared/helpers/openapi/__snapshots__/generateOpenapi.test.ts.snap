@@ -157,60 +157,29 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                 "schema": {
                   "anyOf": [
                     {
-                      "description": "Organisation deca Response body",
-                      "properties": {
-                        "contrats": {
-                          "properties": {
-                            "appr": {
-                              "type": "number",
-                            },
-                            "prof": {
-                              "type": "number",
-                            },
-                            "total": {
-                              "type": "number",
-                            },
+                      "items": {
+                        "properties": {
+                          "email": {
+                            "format": "email",
+                            "type": "string",
                           },
-                          "required": [
-                            "total",
-                            "appr",
-                            "prof",
-                          ],
-                          "type": "object",
-                        },
-                        "dernier_contrat": {
-                          "properties": {
-                            "date_debut_contrat": {
-                              "type": "string",
-                            },
-                            "date_fin_contrat": {
-                              "type": "string",
-                            },
+                          "status": {
+                            "enum": [
+                              "valid",
+                              "invalid",
+                              "unknown",
+                              "queued",
+                            ],
+                            "type": "string",
                           },
-                          "type": [
-                            "object",
-                            "null",
-                          ],
                         },
-                        "premier_contrat": {
-                          "properties": {
-                            "date_debut_contrat": {
-                              "type": "string",
-                            },
-                            "date_fin_contrat": {
-                              "type": "string",
-                            },
-                          },
-                          "type": [
-                            "object",
-                            "null",
-                          ],
-                        },
+                        "required": [
+                          "email",
+                          "status",
+                        ],
+                        "type": "object",
                       },
-                      "required": [
-                        "contrats",
-                      ],
-                      "type": "object",
+                      "type": "array",
                     },
                     {
                       "properties": {
@@ -266,11 +235,10 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                       "type": "object",
                     },
                   ],
-                  "description": "Organisation deca Response body",
                 },
               },
             },
-            "description": "Organisation deca Response body",
+            "description": "",
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -297,6 +265,164 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         "security": [],
         "tags": [
           "système",
+        ],
+      },
+    },
+    "/v1/bouncer/check": {
+      "post": {
+        "parameters": [
+          {
+            "description": "Bearer token",
+            "in": "header",
+            "name": "Authorization",
+            "required": false,
+            "schema": {
+              "description": "Bearer token",
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "properties": {
+                    "email": {
+                      "format": "email",
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "email",
+                  ],
+                  "type": "object",
+                },
+                "type": "array",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "properties": {
+                          "email": {
+                            "format": "email",
+                            "type": "string",
+                          },
+                          "status": {
+                            "enum": [
+                              "valid",
+                              "invalid",
+                              "unknown",
+                              "queued",
+                            ],
+                            "type": "string",
+                          },
+                        },
+                        "required": [
+                          "email",
+                          "status",
+                        ],
+                        "type": "object",
+                      },
+                      "type": "array",
+                    },
+                    {
+                      "properties": {
+                        "code": {
+                          "type": [
+                            "string",
+                            "null",
+                          ],
+                        },
+                        "data": {
+                          "description": "Données contextuelles liées à l'erreur",
+                          "example": {
+                            "validationError": {
+                              "code": "FST_ERR_VALIDATION",
+                              "issues": [
+                                {
+                                  "code": "invalid_type",
+                                  "expected": "number",
+                                  "message": "Number attendu",
+                                  "path": [
+                                    "longitude",
+                                  ],
+                                  "received": "nan",
+                                },
+                              ],
+                              "name": "ZodError",
+                              "statusCode": 400,
+                              "validationContext": "querystring",
+                            },
+                          },
+                        },
+                        "message": {
+                          "description": "Un message explicatif de l'erreur",
+                          "example": "querystring.longitude: Number attendu",
+                          "type": "string",
+                        },
+                        "name": {
+                          "description": "Le type générique de l'erreur",
+                          "example": "Bad Request",
+                          "type": "string",
+                        },
+                        "statusCode": {
+                          "description": "Le status code retourné",
+                          "example": 400,
+                          "type": "number",
+                        },
+                      },
+                      "required": [
+                        "message",
+                        "name",
+                        "statusCode",
+                      ],
+                      "type": "object",
+                    },
+                  ],
+                },
+              },
+            },
+            "description": "",
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest",
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized",
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden",
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound",
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests",
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError",
+          },
+          "503": {
+            "$ref": "#/components/responses/ServiceUnavailable",
+          },
+        },
+        "security": [
+          {
+            "api-key": [],
+          },
+        ],
+        "tags": [
+          "v1",
         ],
       },
     },
@@ -343,60 +469,29 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                 "schema": {
                   "anyOf": [
                     {
-                      "description": "Organisation deca Response body",
-                      "properties": {
-                        "contrats": {
-                          "properties": {
-                            "appr": {
-                              "type": "number",
-                            },
-                            "prof": {
-                              "type": "number",
-                            },
-                            "total": {
-                              "type": "number",
-                            },
+                      "items": {
+                        "properties": {
+                          "email": {
+                            "format": "email",
+                            "type": "string",
                           },
-                          "required": [
-                            "total",
-                            "appr",
-                            "prof",
-                          ],
-                          "type": "object",
-                        },
-                        "dernier_contrat": {
-                          "properties": {
-                            "date_debut_contrat": {
-                              "type": "string",
-                            },
-                            "date_fin_contrat": {
-                              "type": "string",
-                            },
+                          "status": {
+                            "enum": [
+                              "valid",
+                              "invalid",
+                              "unknown",
+                              "queued",
+                            ],
+                            "type": "string",
                           },
-                          "type": [
-                            "object",
-                            "null",
-                          ],
                         },
-                        "premier_contrat": {
-                          "properties": {
-                            "date_debut_contrat": {
-                              "type": "string",
-                            },
-                            "date_fin_contrat": {
-                              "type": "string",
-                            },
-                          },
-                          "type": [
-                            "object",
-                            "null",
-                          ],
-                        },
+                        "required": [
+                          "email",
+                          "status",
+                        ],
+                        "type": "object",
                       },
-                      "required": [
-                        "contrats",
-                      ],
-                      "type": "object",
+                      "type": "array",
                     },
                     {
                       "properties": {
@@ -452,11 +547,10 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                       "type": "object",
                     },
                   ],
-                  "description": "Organisation deca Response body",
                 },
               },
             },
-            "description": "Organisation deca Response body",
+            "description": "",
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
@@ -538,60 +632,29 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                 "schema": {
                   "anyOf": [
                     {
-                      "description": "Organisation deca Response body",
-                      "properties": {
-                        "contrats": {
-                          "properties": {
-                            "appr": {
-                              "type": "number",
-                            },
-                            "prof": {
-                              "type": "number",
-                            },
-                            "total": {
-                              "type": "number",
-                            },
+                      "items": {
+                        "properties": {
+                          "email": {
+                            "format": "email",
+                            "type": "string",
                           },
-                          "required": [
-                            "total",
-                            "appr",
-                            "prof",
-                          ],
-                          "type": "object",
-                        },
-                        "dernier_contrat": {
-                          "properties": {
-                            "date_debut_contrat": {
-                              "type": "string",
-                            },
-                            "date_fin_contrat": {
-                              "type": "string",
-                            },
+                          "status": {
+                            "enum": [
+                              "valid",
+                              "invalid",
+                              "unknown",
+                              "queued",
+                            ],
+                            "type": "string",
                           },
-                          "type": [
-                            "object",
-                            "null",
-                          ],
                         },
-                        "premier_contrat": {
-                          "properties": {
-                            "date_debut_contrat": {
-                              "type": "string",
-                            },
-                            "date_fin_contrat": {
-                              "type": "string",
-                            },
-                          },
-                          "type": [
-                            "object",
-                            "null",
-                          ],
-                        },
+                        "required": [
+                          "email",
+                          "status",
+                        ],
+                        "type": "object",
                       },
-                      "required": [
-                        "contrats",
-                      ],
-                      "type": "object",
+                      "type": "array",
                     },
                     {
                       "properties": {
@@ -647,11 +710,10 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                       "type": "object",
                     },
                   ],
-                  "description": "Organisation deca Response body",
                 },
               },
             },
-            "description": "Organisation deca Response body",
+            "description": "",
           },
           "400": {
             "$ref": "#/components/responses/BadRequest",
