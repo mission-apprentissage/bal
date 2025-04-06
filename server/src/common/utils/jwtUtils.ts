@@ -9,7 +9,7 @@ import { generateAccessToken } from "../../security/accessTokenService";
 
 interface ICreateTokenOptions {
   secret?: string;
-  expiresIn?: string;
+  expiresIn?: SignOptions["expiresIn"];
   payload?: string | Buffer | object;
 }
 

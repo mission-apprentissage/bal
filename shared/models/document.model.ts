@@ -75,10 +75,13 @@ export const toPublicDocument = <T extends IDocument>(
   document: T
 ): T extends IUploadDocument ? z.output<typeof ZUploadDocumentPublic> : z.output<typeof ZMailingListDocumentPublic> => {
   const { hash_fichier: _hash_fichier, hash_secret: _hash_secret, ...publicDocument } = document;
+  if (document.kind === "upload") {
+    // @ts-expect-error invalid union support
+    return ZUploadDocumentPublic.parse(publicDocument);
+  }
+
   // @ts-expect-error invalid union support
-  return document.kind === "upload"
-    ? ZUploadDocumentPublic.parse(publicDocument)
-    : ZMailingListDocumentPublic.parse(publicDocument);
+  return ZMailingListDocumentPublic.parse(publicDocument);
 };
 
 export default {

@@ -113,15 +113,23 @@ function addOpenApiOperation(
     return;
   }
 
-  registry.registerPath({
+  const config: RouteConfig = {
     ...route.openapi,
     method,
     path: formatParamUrl(path),
-    request: generateOpenApiRequest(route),
-    // @ts-expect-error
     responses: generateOpenApiResponsesObject(route.response),
-    security: getSecurityRequirementObject(route),
-  });
+  };
+
+  const request = generateOpenApiRequest(route);
+  if (request) {
+    config.request = request;
+  }
+  const security = getSecurityRequirementObject(route);
+  if (security) {
+    config.security = security;
+  }
+
+  registry.registerPath(config);
 }
 
 export function generateOpenApiSchema(version: string, env: string, publicUrl: string) {

@@ -32,15 +32,15 @@ const config = {
   auth: {
     user: {
       jwtSecret: env.get("MNA_BAL_AUTH_USER_JWT_SECRET").required().asString(),
-      expiresIn: "7d",
+      expiresIn: "7d" as const,
     },
     activation: {
       jwtSecret: env.get("MNA_BAL_AUTH_ACTIVATION_JWT_SECRET").required().asString(),
-      expiresIn: "96h",
+      expiresIn: "96h" as const,
     },
     resetPasswordToken: {
       jwtSecret: env.get("MNA_BAL_AUTH_PASSWORD_JWT_SECRET").required().asString(),
-      expiresIn: "1h",
+      expiresIn: "1h" as const,
     },
     hashRounds: env.get("MNA_BAL_AUTH_HASH_ROUNDS").default(1000).asIntPositive(),
   },
