@@ -21,6 +21,7 @@
     "declaration": true,
     "noEmit": true,
     "forceConsistentCasingInFileNames": true,
+    "noErrorTruncation": true,
     "allowJs": false,
     "jsx": "react"
   }

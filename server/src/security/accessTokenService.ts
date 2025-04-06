@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 import { IUser } from "shared/models/user.model";
 import { IRouteSchema, ISecuredRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
 
@@ -33,7 +33,7 @@ type RouteResources<S extends ISecuredRouteSchema> = {
 export function generateAccessToken<S extends ISecuredRouteSchema>(
   user: IUser | IAccessToken["identity"],
   routes: ReadonlyArray<{ route: S; resources: RouteResources<S> }>,
-  options: { expiresIn?: string } = {}
+  options: { expiresIn?: SignOptions["expiresIn"] } = {}
 ): string {
   const audience = getAudience(routes.map((r) => r.route));
 
@@ -50,11 +50,12 @@ export function generateAccessToken<S extends ISecuredRouteSchema>(
     }),
   };
 
-  return jwt.sign(data, config.auth.user.jwtSecret, {
+  const signOptions: SignOptions = {
     audience,
     expiresIn: options.expiresIn ?? config.auth.user.expiresIn,
     issuer: config.publicUrl,
-  });
+  };
+  return jwt.sign(data, config.auth.user.jwtSecret, signOptions);
 }
 
 export function getAccessTokenScope<S extends Pick<IRouteSchema, "method" | "path"> & WithSecurityScheme>(

@@ -8,7 +8,7 @@ import {
 } from "@/modules/jobs/migrations/migrations";
 
 import logger from "../../common/logger";
-import { getDomainMap, verifyEmail } from "../../common/services/mailer/mailBouncer";
+import { verifyEmails } from "../../common/services/mailer/mailBouncer";
 import { getDatabase } from "../../common/utils/mongodbUtils";
 import config from "../../config";
 import {
@@ -152,9 +152,9 @@ export async function setupJobProcessor() {
       },
       "email:verify": {
         handler: async (job) => {
-          const { email } = z.object({ email: z.string() }).parse(job.payload);
-          const result = await verifyEmail(email, await getDomainMap());
-          logger.info("Email verification result", { email, result });
+          const { emails } = z.object({ emails: z.string().array() }).parse(job.payload);
+          const result = await verifyEmails(emails);
+          logger.info("Email verification result", { result });
         },
       },
       "job:validation:hydrate_from_constructys": {

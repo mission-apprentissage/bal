@@ -269,7 +269,7 @@ program
 program
   .command("email:verify")
   .description("Check if an email is valid")
-  .requiredOption("-e, --email <string>", "Email to validate")
+  .requiredOption("-e, --emails <string...>", "Emails to validate")
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("email:verify"));
 

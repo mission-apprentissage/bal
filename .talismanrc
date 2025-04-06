@@ -1,10 +1,4 @@
 fileignoreconfig:
-- filename: server/.env.test
-  checksum: 1a8edfd3797fb0ec91b63b9f30bfc42c51d73253f89a21640d098badf4b86679
-  version: ""
-- filename: .infra/vault/vault.yml
-  checksum: 3e8431aaed36ac08d3feef5c1d335f97637541d16087eb72f00dd6595390b1ce
-  version: ""
 - filename: .bin/scripts/get-vault-password-client.sh
   checksum: 51d7feb20247935b41b622a3c4221231719ca2bb8b178dffa03d44b993087c9c
 - filename: .bin/scripts/setup-local-env.sh
@@ -124,6 +118,8 @@ fileignoreconfig:
   checksum: 715b30a88f7ad0bf0029f8cc98165935f54dcdb103caa17e3b3ac58171969765
 - filename: server/src/modules/server/utils/password.utils.ts
   checksum: 0a93a4c08d4af16e4cad3696eb091f87e493ba739015338c7b1646e1d77c987e
+- filename: server/src/security/accessTokenService.ts
+  checksum: 6328dd3afeae25048b7d15623f0d813fd747949b7ce949fc2101a019231d602c
 - filename: server/src/utils/cryptoUtils.ts
   checksum: e3e123d712465ed963965b5fa36f8d7a15364bbc7107d9d15bef2cc670483d42
 - filename: server/src/utils/jwtUtils.ts
