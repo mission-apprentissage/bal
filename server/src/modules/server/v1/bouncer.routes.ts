@@ -43,13 +43,16 @@ export const bouncerRoutes = ({ server }: { server: Server }) => {
         }
       }
 
-      await addJob({
-        name: "email:verify",
-        payload: {
-          emails: result.filter((r) => r.status === "queued").map((r) => r.email),
-        },
-        queued: true,
-      });
+      const emails = result.filter((r) => r.status === "queued").map((r) => r.email);
+      if (emails.length > 0) {
+        await addJob({
+          name: "email:verify",
+          payload: {
+            emails,
+          },
+          queued: true,
+        });
+      }
 
       return response.status(200).send(result);
     }

@@ -2,10 +2,12 @@ import { internal } from "@hapi/boom";
 import * as Sentry from "@sentry/node";
 import { addDays, format, isAfter, isBefore } from "date-fns";
 import deepmerge from "deepmerge";
+import { addJob } from "job-processor";
 import { DateTime } from "luxon";
 import { ObjectId } from "mongodb";
 import { IDeca, ZDecaNew } from "shared/models/deca.model/deca.model";
 import { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model";
+import { z } from "zod";
 
 import { getAllContrats } from "@/common/apis/deca";
 import parentLogger from "@/common/logger";
@@ -117,6 +119,8 @@ export const isDecaApiAvailable = () => {
   return currentHour > 19 || currentHour < 7;
 };
 
+const zEmail = z.string().email();
+
 /**
  * Ce job peuple la collection contratsDeca via l'API Deca
  * L'API Deca ne permets de récupérer des données que sur une période maximum NB_JOURS_MAX_PERIODE_FETCH
@@ -182,6 +186,8 @@ const hydrateDecaPeriod = async (
         return;
       }
 
+      const emails = new Set<string>();
+
       try {
         logger.info(`> Fetch des données Deca du ${dateDebut} au ${dateFin}`);
 
@@ -244,6 +250,11 @@ const hydrateDecaPeriod = async (
           /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
           const preparedContrat = ZDecaNew.parse({ ...currentContrat, updated_at: now });
 
+          const validationResult = zEmail.safeParse(preparedContrat.alternant.courriel);
+          if (validationResult.success) {
+            emails.add(validationResult.data);
+          }
+
           await getDbCollection("deca").updateOne(
             newContratFilter,
             {
@@ -257,6 +268,15 @@ const hydrateDecaPeriod = async (
             await saveHistory(oldContrat, preparedContrat, now);
           }
         });
+
+        await addJob({
+          name: "email:verify",
+          payload: {
+            emails: Array.from(emails.values()),
+          },
+          queued: true,
+        });
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
