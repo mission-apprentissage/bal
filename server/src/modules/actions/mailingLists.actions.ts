@@ -420,18 +420,55 @@ const getLbaComputeData = async (
   const payload: TrainingLinkData[] = documentContents.map((documentContent) => {
     const content = documentContent.content as Record<string, string>;
 
-    return {
+    const query: TrainingLinkData = {
       id: documentContent._id.toString(),
-      cle_ministere_educatif: cle_ministere_educatif ? content?.[cle_ministere_educatif] : "",
-      cfd: cfd ? content?.[cfd] : "",
-      rncp: rncp ? content?.[rncp] : "",
-      mef: mef ? content?.[mef]?.substring(0, 10) : "",
-      uai_lieu_formation: uai_lieu_formation ? content?.[uai_lieu_formation] : "",
-      uai_formateur: uai_formateur ? content?.[uai_formateur] : "",
-      uai_formateur_responsable: uai_formateur_responsable ? content?.[uai_formateur_responsable] : "",
-      code_postal: code_postal ? content?.[code_postal] : "",
-      code_insee: code_insee ? content?.[code_insee] : "",
+      cle_ministere_educatif: null,
+      mef: null,
+      cfd: null,
+      rncp: null,
+      code_postal: null,
+      uai_lieu_formation: null,
+      uai_formateur: null,
+      uai_formateur_responsable: null,
+      code_insee: null,
+      siret_lieu_formation: null,
+      siret_formateur: null,
+      siret_formateur_responsable: null,
     };
+
+    if (!content) {
+      return query;
+    }
+
+    if (cle_ministere_educatif) {
+      query.cle_ministere_educatif = content[cle_ministere_educatif] ?? null;
+    }
+    if (mef) {
+      query.mef = content[mef]?.substring(0, 10) ?? null;
+    }
+    if (cfd) {
+      query.cfd = content[cfd] ?? null;
+    }
+    if (rncp) {
+      query.rncp = content[rncp] ?? null;
+    }
+    if (code_postal) {
+      query.code_postal = content[code_postal] ?? null;
+    }
+    if (uai_lieu_formation) {
+      query.uai_lieu_formation = content[uai_lieu_formation] ?? null;
+    }
+    if (uai_formateur) {
+      query.uai_formateur = content[uai_formateur] ?? null;
+    }
+    if (uai_formateur_responsable) {
+      query.uai_formateur_responsable = content[uai_formateur_responsable] ?? null;
+    }
+    if (code_insee) {
+      query.code_insee = content[code_insee] ?? null;
+    }
+
+    return query;
   });
 
   const trainingLinks: TrainingLink[] = await getTrainingLinks(payload).catch((error) => {

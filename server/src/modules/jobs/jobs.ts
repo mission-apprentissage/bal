@@ -156,6 +156,7 @@ export async function setupJobProcessor() {
           const result = await verifyEmails(emails);
           logger.info("Email verification result", { result });
         },
+        resumable: true,
       },
       "job:validation:hydrate_from_constructys": {
         handler: async () => run_hydrate_from_constructys(),
