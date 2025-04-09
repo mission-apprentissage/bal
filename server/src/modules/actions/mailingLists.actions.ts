@@ -473,6 +473,7 @@ const getLbaComputeData = async (
 
   const trainingLinks: TrainingLink[] = await getTrainingLinks(payload).catch((error) => {
     logger.error(error);
+    Sentry.captureException(error, { extra: { payload } });
     return [];
   });
 
