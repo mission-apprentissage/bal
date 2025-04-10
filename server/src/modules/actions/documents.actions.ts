@@ -278,12 +278,7 @@ interface IUploadDocumentOptions {
   mimetype: string;
 }
 
-export const uploadFile = async (
-  added_by: string,
-  stream: Readable,
-  doc: IUploadDocument,
-  options: IUploadDocumentOptions
-) => {
+export const uploadFile = async (stream: Readable, doc: IUploadDocument, options: IUploadDocumentOptions) => {
   const documentHash = doc.hash_secret || crypto.generateKey();
   const path = doc.chemin_fichier;
 
