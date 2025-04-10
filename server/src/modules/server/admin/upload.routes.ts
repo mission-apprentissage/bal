@@ -1,17 +1,25 @@
+import { IncomingMessage } from "node:http";
+
 import { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
 import { addJob } from "job-processor";
 import { ObjectId } from "mongodb";
+import { oleoduc } from "oleoduc";
 import { zRoutes } from "shared";
 import { FILE_SIZE_LIMIT } from "shared/constants/index";
 import { IDocument, IUploadDocument, toPublicDocument } from "shared/models/document.model";
+import { Readable } from "stream";
 
 import logger from "@/common/logger";
+import * as crypto from "@/common/utils/cryptoUtils";
 
+import { getDbCollection } from "../../../common/utils/mongodbUtils";
+import { getFromStorage } from "../../../common/utils/ovhUtils";
 import { getUserFromRequest } from "../../../security/authenticationService";
 import {
   createUploadDocument,
   deleteDocumentById,
+  findDocument,
   findDocuments,
   getDocumentTypes,
   updateDocument,
@@ -19,6 +27,7 @@ import {
 } from "../../actions/documents.actions";
 import { findMailingListWithDocument } from "../../actions/mailingLists.actions";
 import { Server } from "../server";
+import { noop } from "../utils/upload.utils";
 
 const validateFile = (file: MultipartFile) => {
   if (file.mimetype !== "text/csv") {
@@ -77,30 +86,11 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       }
 
       try {
-        const added_by = getUserFromRequest(request, zRoutes.post["/admin/upload"])._id.toString();
-
-        await uploadFile(added_by, data.file, document, {
+        await uploadFile(data.file, document, {
           mimetype: data.mimetype,
         });
-
-        await addJob({
-          name: "import:document",
-          payload: {
-            document_id: document._id,
-          },
-          queued: true,
-        });
-
-        return response.status(200).send(toPublicDocument(document));
       } catch (error) {
-        await updateDocument(
-          { _id: document._id },
-          {
-            $set: {
-              job_status: "error",
-            },
-          }
-        );
+        await deleteDocumentById(document._id);
 
         if (error.isBoom) {
           throw error;
@@ -110,6 +100,16 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         logger.debug(err);
         throw Boom.badImplementation(error as Error);
       }
+
+      await addJob({
+        name: "import:document",
+        payload: {
+          document_id: document._id,
+        },
+        queued: true,
+      });
+
+      return response.status(200).send(toPublicDocument(document));
     }
   );
 
@@ -172,6 +172,77 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
       const types = await getDocumentTypes();
 
       return response.status(200).send(types);
+    }
+  );
+
+  server.put(
+    "/admin/document/:id/resume",
+    {
+      schema: zRoutes.put["/admin/document/:id/resume"],
+      onRequest: [server.auth(zRoutes.put["/admin/document/:id/resume"])],
+    },
+    async (request, response) => {
+      const { id } = request.params;
+
+      const document = await getDbCollection("documents").findOne<IUploadDocument>({ _id: id });
+
+      if (!document) {
+        throw Boom.notFound("Document introuvable");
+      }
+      await updateDocument({ _id: id }, { $set: { job_status: "pending" } });
+
+      await addJob({
+        name: "import:document",
+        payload: {
+          document_id: document._id,
+        },
+        queued: true,
+      });
+
+      return response.status(200).send(toPublicDocument(document));
+    }
+  );
+
+  server.get(
+    "/admin/document/:id/download",
+    {
+      schema: zRoutes.get["/admin/document/:id/download"],
+      onRequest: [server.auth(zRoutes.get["/admin/document/:id/download"])],
+    },
+    async (request, response) => {
+      const { id } = request.params;
+
+      const document = await findDocument({
+        _id: new ObjectId(id),
+      });
+
+      if (!document) {
+        throw Boom.badData("Impossible de télécharger le fichier");
+      }
+
+      let stream: IncomingMessage | Readable;
+      try {
+        stream = await getFromStorage(document.chemin_fichier);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        if (error.message.includes("Status code 404")) {
+          throw Boom.notFound("Fichier introuvable");
+        } else {
+          throw Boom.badData("Impossible de télécharger le fichier");
+        }
+      }
+
+      response.raw.writeHead(200, {
+        "Content-Type": "application/octet-stream",
+        "Content-Disposition": `attachment; filename="${document.nom_fichier}"`,
+      });
+
+      await oleoduc(
+        // @ts-ignore
+        stream,
+        crypto.isCipherAvailable() ? crypto.decipher(document.hash_secret) : noop(),
+        response.raw
+      );
     }
   );
 };

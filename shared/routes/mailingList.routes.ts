@@ -101,4 +101,19 @@ export const zMailingListRoutes = {
       },
     },
   },
+  put: {
+    "/mailing-list/:id/resume": {
+      method: "put",
+      path: "/mailing-list/:id/resume",
+      params: z.object({ id: zObjectId }),
+      response: {
+        "200": z.object({ success: z.literal(true) }),
+      },
+      securityScheme: {
+        auth: "cookie-session",
+        access: null,
+        ressources: {},
+      },
+    },
+  },
 } as const satisfies IRoutesDef;

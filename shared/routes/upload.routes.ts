@@ -44,6 +44,19 @@ export const zUploadRoutes = {
         ressources: {},
       },
     },
+    "/admin/document/:id/download": {
+      method: "get",
+      path: "/admin/document/:id/download",
+      params: z.object({ id: zObjectId }),
+      response: {
+        "200": z.unknown(),
+      },
+      securityScheme: {
+        auth: "cookie-session",
+        access: "admin",
+        ressources: {},
+      },
+    },
   },
   post: {
     "/admin/upload": {
@@ -54,6 +67,21 @@ export const zUploadRoutes = {
         delimiter: z.string(),
       }),
       body: z.unknown(),
+      response: {
+        "200": ZUploadDocumentPublic,
+      },
+      securityScheme: {
+        auth: "cookie-session",
+        access: "admin",
+        ressources: {},
+      },
+    },
+  },
+  put: {
+    "/admin/document/:id/resume": {
+      method: "put",
+      path: "/admin/document/:id/resume",
+      params: z.object({ id: zObjectId }),
       response: {
         "200": ZUploadDocumentPublic,
       },

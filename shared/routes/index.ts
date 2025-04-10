@@ -42,7 +42,10 @@ const zRoutesPost = {
   ...zBouncerV1Routes.post,
 } as const;
 
-const zRoutesPut = {} as const;
+const zRoutesPut = {
+  ...zUploadRoutes.put,
+  ...zMailingListRoutes.put,
+} as const;
 
 const zRoutesDelete = {
   ...zUploadRoutes.delete,

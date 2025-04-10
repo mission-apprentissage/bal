@@ -8,7 +8,7 @@ import { IResErrorJson } from "shared/routes/common.routes";
 
 import Table from "../../../components/table/Table";
 import Toast, { useToast } from "../../../components/toast/Toast";
-import { apiDelete, generateUrl } from "../../../utils/api.utils";
+import { apiDelete, apiPut, generateUrl } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 import { PAGES } from "../../components/breadcrumb/Breadcrumb";
 
@@ -187,6 +187,22 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
                     style={{
                       color: fr.colors.decisions.text.actionHigh.redMarianne.default,
                     }}
+                  />
+                );
+              }
+
+              if (status === "error") {
+                actions.push(
+                  <Button
+                    key="retry"
+                    iconId="ri-refresh-line"
+                    onClick={async () =>
+                      apiPut("/mailing-list/:id/resume", {
+                        params: { id: row._id },
+                      }).then(() => onDelete?.())
+                    }
+                    priority="tertiary no outline"
+                    title="Réessayer"
                   />
                 );
               }

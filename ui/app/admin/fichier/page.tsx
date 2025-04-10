@@ -9,7 +9,7 @@ import { useState } from "react";
 import { IUploadDocumentJson } from "shared/models/document.model";
 
 import Table from "../../../components/table/Table";
-import { apiDelete, apiGet } from "../../../utils/api.utils";
+import { apiDelete, apiGet, apiPut, generateUrl } from "../../../utils/api.utils";
 import { formatDate } from "../../../utils/date.utils";
 import { formatBytes } from "../../../utils/file.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
@@ -19,6 +19,40 @@ const modal = createModal({
   id: "delete-document-modal",
   isOpenedByDefault: false,
 });
+
+function DownloadAction(props: { id: string }) {
+  return (
+    <Button
+      iconId="fr-icon-download-line"
+      linkProps={{
+        href: generateUrl(`/admin/document/:id/download`, {
+          params: {
+            id: props.id,
+          },
+        }),
+        target: undefined,
+        rel: undefined,
+      }}
+      priority="tertiary no outline"
+      title="Télécharger"
+    />
+  );
+}
+
+function RetryAction(props: { id: string; onRetry: () => Promise<unknown> }) {
+  return (
+    <Button
+      iconId="fr-icon-refresh-line"
+      priority="tertiary no outline"
+      title="Réessayer"
+      onClick={async () =>
+        apiPut("/admin/document/:id/resume", {
+          params: { id: props.id },
+        }).then(() => props.onRetry())
+      }
+    />
+  );
+}
 
 const AdminImportPage = () => {
   const [toDelete, setToDelete] = useState<string | null>(null);
@@ -132,9 +166,14 @@ const AdminImportPage = () => {
                 row.job_status !== "done" &&
                 row.job_status !== "error" // TODO This is a quick cleaning method but if delete and job running nned to send a kill sig to job
               )
-                return [];
+                return [<DownloadAction key="download" id={row._id.toString()} />];
 
               return [
+                row.job_status === "error" ? (
+                  <RetryAction key="retry" id={row._id.toString()} onRetry={refetch} />
+                ) : (
+                  <DownloadAction key="download" id={row._id.toString()} />
+                ),
                 <Button
                   key="delete"
                   iconId="ri-delete-bin-line"

@@ -24,7 +24,7 @@
   },
   "scripts": {
     "setup": ".bin/mna-bal init:env",
-    "setup:mongodb": "docker compose exec -it mongodb mongosh --eval \"try { rs.status().ok } catch (e) { if (e.code === 94) {rs.initiate();} else {throw e} }\" --quiet",
+    "setup:mongodb": "docker compose exec -it mongodb mongosh \"mongodb://__system:password@localhost:27017/mna-bal?authSource=local&directConnection=true\" --eval \"try { rs.status().ok } catch (e) { if (e.code === 94) {rs.initiate();} else {throw e} }\" --quiet",
     "dev": "yarn services:start; yarn foreach:parallel run dev",
     "cli": "yarn workspace server cli",
     "seed": "./.bin/mna-bal seed:apply",
