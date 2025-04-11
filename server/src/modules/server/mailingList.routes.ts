@@ -1,6 +1,7 @@
 import { IncomingMessage } from "node:http";
 
 import Boom, { notFound } from "@hapi/boom";
+import { addJob } from "job-processor";
 import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
 import { zRoutes } from "shared";
@@ -197,6 +198,35 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       }
 
       await deleteMailingList(mailingList);
+
+      return response.status(200).send({ success: true });
+    }
+  );
+
+  server.put(
+    "/mailing-list/:id/resume",
+    {
+      schema: zRoutes.put["/mailing-list/:id/resume"],
+      onRequest: [server.auth(zRoutes.put["/mailing-list/:id/resume"])],
+    },
+    async (request, response) => {
+      const { id } = request.params;
+
+      const mailingList = await findMailingList({
+        _id: id,
+      });
+
+      if (!mailingList) {
+        throw Boom.notFound();
+      }
+
+      await addJob({
+        name: "generate:mailing-list",
+        payload: {
+          mailing_list_id: mailingList._id.toString(),
+        },
+        queued: true,
+      });
 
       return response.status(200).send({ success: true });
     }

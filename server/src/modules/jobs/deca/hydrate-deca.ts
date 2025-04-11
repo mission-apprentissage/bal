@@ -5,13 +5,14 @@ import deepmerge from "deepmerge";
 import { addJob } from "job-processor";
 import { DateTime } from "luxon";
 import { ObjectId } from "mongodb";
-import { IDeca, ZDecaNew } from "shared/models/deca.model/deca.model";
+import { IDeca, ZDeca } from "shared/models/deca.model/deca.model";
 import { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model";
 import { z } from "zod";
 
 import { getAllContrats } from "@/common/apis/deca";
 import parentLogger from "@/common/logger";
 
+import { withCause } from "../../../common/services/errors/withCause";
 import { asyncForEach } from "../../../common/utils/asyncUtils";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 import config from "../../../config";
@@ -211,8 +212,7 @@ const hydrateDecaPeriod = async (
         );
 
         const decaContratsForPeriod = decaContrats_LBA.reduce((acc, item) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          let contrat = item as any;
+          let contrat = structuredClone(item);
           const tdbContrat = tdbMap.get(
             JSON.stringify({
               noContrat: item.detailsContrat.noContrat,
@@ -234,38 +234,57 @@ const hydrateDecaPeriod = async (
         }, [] as any[]);
 
         await asyncForEach(decaContratsForPeriod, async (currentContrat: IDeca) => {
-          const newContratFilter = {
-            no_contrat: currentContrat.no_contrat,
-            type_contrat: currentContrat.type_contrat,
-            "alternant.nom": currentContrat.alternant.nom,
-          };
+          try {
+            const newContratFilter = {
+              no_contrat: currentContrat.no_contrat,
+              type_contrat: currentContrat.type_contrat,
+              "alternant.nom": currentContrat.alternant.nom,
+            };
 
-          const oldContrat: IDeca | null = await getDbCollection("deca").findOne(newContratFilter);
-          const now = parseDate(dateDebut)!;
+            const oldContrat: IDeca | null = await getDbCollection("deca").findOne(newContratFilter);
+            const now = parseDate(dateDebut)!;
 
-          if (oldContrat && oldContrat.updated_at && oldContrat.updated_at.getTime() > now.getTime()) {
-            throw internal("contracts not imported in chronological order", { oldContrat, currentContrat, now });
-          }
+            if (oldContrat && oldContrat.updated_at && oldContrat.updated_at.getTime() > now.getTime()) {
+              throw internal("contracts not imported in chronological order", { oldContrat, currentContrat, now });
+            }
 
-          /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
-          const preparedContrat = ZDecaNew.parse({ ...currentContrat, updated_at: now });
+            /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
+            const preparedContrat = ZDeca.parse({
+              ...currentContrat,
+              updated_at: now,
+              _id: new ObjectId(),
+              created_at: now,
+            });
 
-          const validationResult = zEmail.safeParse(preparedContrat.alternant.courriel);
-          if (validationResult.success) {
-            emails.add(validationResult.data);
-          }
+            const validationResult = zEmail.safeParse(preparedContrat.alternant.courriel);
+            if (validationResult.success) {
+              emails.add(validationResult.data);
+            }
 
-          await getDbCollection("deca").updateOne(
-            newContratFilter,
-            {
-              $set: preparedContrat,
-              $setOnInsert: { created_at: now },
-            },
-            { upsert: true }
-          );
+            const { _id, created_at, ...updatedFields } = preparedContrat;
 
-          if (oldContrat) {
-            await saveHistory(oldContrat, preparedContrat, now);
+            await getDbCollection("deca").updateOne(
+              newContratFilter,
+              {
+                $set: updatedFields,
+                $setOnInsert: { _id, created_at },
+              },
+              { upsert: true }
+            );
+
+            if (oldContrat) {
+              await saveHistory(oldContrat, preparedContrat, now);
+            }
+          } catch (err) {
+            throw withCause(
+              internal("Error while processing deca contract", {
+                error: err,
+                currentContrat,
+                dateDebut,
+                dateFin,
+              }),
+              err
+            );
           }
         });
 
@@ -279,7 +298,14 @@ const hydrateDecaPeriod = async (
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
-        throw new Error(`Erreur lors de la récupération des données Deca : ${JSON.stringify(err)}`);
+        throw withCause(
+          internal("Erreur lors de la récupération des données Deca", {
+            error: err,
+            dateDebut,
+            dateFin,
+          }),
+          err
+        );
       }
 
       getDbCollection("deca.import.job.result").insertOne({
