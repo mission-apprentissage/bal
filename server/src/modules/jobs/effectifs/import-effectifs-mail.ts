@@ -1,5 +1,5 @@
 import { getTdbRupturant } from "../../../common/apis/tdb";
-import { insertPendingEmail } from "../../actions/tdb.actions";
+import { insertPendingEmail, processPendingEmail } from "../../actions/tdb.actions";
 
 export async function hydrateEffectifsEmail() {
   const data = await getTdbRupturant();
@@ -7,4 +7,8 @@ export async function hydrateEffectifsEmail() {
   for (const item of data) {
     await insertPendingEmail(item);
   }
+}
+
+export async function processEffectifsPendingMail() {
+  return processPendingEmail();
 }

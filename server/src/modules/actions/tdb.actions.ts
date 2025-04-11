@@ -35,6 +35,10 @@ export async function processPendingEmail() {
         emailsArr = [];
       }
     }
+    if (emailsArr.length > 0) {
+      const emailsResult = await verifyEmails(emailsArr);
+      yield emailsResult;
+    }
   }
 
   const cursor = getDbCollection("bouncer.email.pending").find({ treated: false });

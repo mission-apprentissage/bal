@@ -39,9 +39,16 @@ export const getTdbRupturant = async (): Promise<string[]> => {
   }
 };
 
-export const updateTdbRupturant = async (items: ApiTdbUpdateRupturant[]) => {
+export const updateTdbRupturant = async (
+  items: Array<{
+    email: string;
+    ping: BouncerPingResult;
+  }>
+) => {
   try {
-    await client.put("/bal/rupturants", { rupturants: items });
+    await client.put("/bal/rupturants", {
+      rupturants: items.map(({ email, ping }) => ({ email, status: ping.status })),
+    });
   } catch (error) {
     if (isAxiosError(error)) {
       throw new ApiError(
