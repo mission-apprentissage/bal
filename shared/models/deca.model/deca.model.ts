@@ -55,10 +55,6 @@ export const ZDeca = z.object({
   created_at: z.date().describe("Date d'ajout en base de données"),
 });
 
-export const ZDecaNew = ZDeca.omit({
-  _id: true,
-});
-
 export type IDeca = z.output<typeof ZDeca>;
 export type IDecaJson = Jsonify<z.input<typeof ZDeca>>;
 

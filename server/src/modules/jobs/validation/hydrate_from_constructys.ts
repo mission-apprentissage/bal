@@ -39,7 +39,7 @@ export const run_hydrate_from_constructys = async () => {
 
   client.downloadFile(remoteFileName, myTransform);
 
-  await uploadFile("job:validation:hydrate_from_constructys", myTransform, document, {
+  await uploadFile(myTransform, document, {
     mimetype: "text/csv",
   });
 
