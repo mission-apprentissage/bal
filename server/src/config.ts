@@ -67,6 +67,10 @@ const config = {
       s3File: env.get("LBA_ALGO_RECRUTEURS_LBA_S3FILE").required().asString(),
     },
   },
+  tdb: {
+    baseURL: env.get("MNA_BAL_TDB_BASE_URL").required().asString(),
+    apiKey: env.get("MNA_BAL_TDB_API_KEY").required().asString(),
+  },
   ftp: {
     host: env.get("FTP_HOST").required().asString(),
     constructys: {

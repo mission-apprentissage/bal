@@ -502,11 +502,12 @@ const getBouncerComputeData = async (
   const result = new Map<string, ICsvDatum>();
   for (let i = 0; i < pingResults.length; i++) {
     const id = documentContents[i]._id.toString();
+    const { ping } = pingResults[i];
     result.set(id, {
-      bounce_status: pingResults[i].status,
-      bounce_message: pingResults[i].message,
-      bounce_response_code: pingResults[i].responseCode ?? "",
-      bounce_response_message: pingResults[i].responseMessage ?? "",
+      bounce_status: ping.status,
+      bounce_message: ping.message,
+      bounce_response_code: ping.responseCode ?? "",
+      bounce_response_message: ping.responseMessage ?? "",
     });
   }
 

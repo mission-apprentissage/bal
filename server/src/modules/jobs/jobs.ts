@@ -23,6 +23,7 @@ import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
 import { streamDataToParquetAndS3 } from "./deca/decaToS3";
 import { hydrateDeca } from "./deca/hydrate-deca";
+import { hydrateEffectifsEmail } from "./effectifs/import-effectifs-mail";
 import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
 import { hydrateLbaSiretList } from "./lba/hydrate-siretlist";
 import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
@@ -172,6 +173,9 @@ export async function setupJobProcessor() {
       },
       "job:lba:hydrate:siret-list": {
         handler: async () => hydrateLbaSiretList(),
+      },
+      "job:tdb:insert-pending-email": {
+        handler: async () => hydrateEffectifsEmail(),
       },
     },
   });

@@ -16,6 +16,7 @@ export type CollectionName =
   | "deca.import.job.result"
   | "catalogueEmailSirets"
   | "bouncer.email"
+  | "bouncer.email.pending"
   | "bouncer.domain"
   | "lba.emailblacklists"
   | "lba.recruteurs.siret.email";
