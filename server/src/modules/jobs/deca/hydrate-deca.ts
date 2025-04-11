@@ -5,7 +5,7 @@ import deepmerge from "deepmerge";
 import { addJob } from "job-processor";
 import { DateTime } from "luxon";
 import { ObjectId } from "mongodb";
-import { IDeca, ZDecaNew } from "shared/models/deca.model/deca.model";
+import { IDeca, ZDeca } from "shared/models/deca.model/deca.model";
 import { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model";
 import { z } from "zod";
 
@@ -212,8 +212,7 @@ const hydrateDecaPeriod = async (
         );
 
         const decaContratsForPeriod = decaContrats_LBA.reduce((acc, item) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          let contrat = item as any;
+          let contrat = structuredClone(item);
           const tdbContrat = tdbMap.get(
             JSON.stringify({
               noContrat: item.detailsContrat.noContrat,
@@ -250,18 +249,25 @@ const hydrateDecaPeriod = async (
             }
 
             /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
-            const preparedContrat = ZDecaNew.parse({ ...currentContrat, updated_at: now });
+            const preparedContrat = ZDeca.parse({
+              ...currentContrat,
+              updated_at: now,
+              _id: new ObjectId(),
+              created_at: now,
+            });
 
             const validationResult = zEmail.safeParse(preparedContrat.alternant.courriel);
             if (validationResult.success) {
               emails.add(validationResult.data);
             }
 
+            const { _id, created_at, ...updatedFields } = preparedContrat;
+
             await getDbCollection("deca").updateOne(
               newContratFilter,
               {
-                $set: preparedContrat,
-                $setOnInsert: { created_at: now },
+                $set: updatedFields,
+                $setOnInsert: { _id, created_at },
               },
               { upsert: true }
             );
