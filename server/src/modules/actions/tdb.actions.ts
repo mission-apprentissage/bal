@@ -63,7 +63,7 @@ export async function processBrevoContact() {
       email: item.email,
       nom: chunk.emailsMap.get(item.email)?.nom,
       prenom: chunk.emailsMap.get(item.email)?.prenom,
-      url: chunk.emailsMap.get(item.email)?.url,
+      ...chunk.emailsMap.get(item.email)?.urls,
       telephone: chunk.emailsMap.get(item.email)?.telephone,
       nomOrganisme: chunk.emailsMap.get(item.email)?.nomOrganisme,
     }));

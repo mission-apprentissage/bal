@@ -14,7 +14,7 @@ export const zBrevoContacts = z.object({
   treated: z.boolean(),
   nom: z.string().optional(),
   prenom: z.string().optional(),
-  url: z.string().optional(),
+  urls: z.record(z.string(), z.string()).optional(),
   telephone: z.string().optional(),
   nomOrganisme: z.string().optional(),
 });
