@@ -149,6 +149,108 @@ exports[`zodToMongoSchema > should convert bouncer.email schema 1`] = `
 }
 `;
 
+exports[`zodToMongoSchema > should convert brevo.contacts schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "created_at": {
+      "bsonType": "date",
+    },
+    "email": {
+      "bsonType": "string",
+    },
+    "nom": {
+      "bsonType": "string",
+    },
+    "nomOrganisme": {
+      "bsonType": "string",
+    },
+    "prenom": {
+      "bsonType": "string",
+    },
+    "telephone": {
+      "bsonType": "string",
+    },
+    "treated": {
+      "bsonType": "bool",
+    },
+    "updated_at": {
+      "anyOf": [
+        {
+          "bsonType": "date",
+        },
+        {
+          "bsonType": "null",
+        },
+      ],
+    },
+    "url": {
+      "bsonType": "string",
+    },
+  },
+  "required": [
+    "_id",
+    "email",
+    "created_at",
+    "updated_at",
+    "treated",
+  ],
+}
+`;
+
+exports[`zodToMongoSchema > should convert brevo.listes schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "created_at": {
+      "bsonType": "date",
+    },
+    "env": {
+      "bsonType": "string",
+      "enum": [
+        "local",
+        "recette",
+        "production",
+        "preview",
+        "test",
+      ],
+    },
+    "listId": {
+      "bsonType": "number",
+    },
+    "nom": {
+      "bsonType": "string",
+    },
+    "product": {
+      "bsonType": "string",
+      "enum": [
+        "tdb",
+        "lba",
+      ],
+    },
+    "updated_at": {
+      "bsonType": "date",
+    },
+  },
+  "required": [
+    "_id",
+    "listId",
+    "env",
+    "product",
+    "nom",
+    "created_at",
+  ],
+}
+`;
+
 exports[`zodToMongoSchema > should convert catalogueEmailSirets schema 1`] = `
 {
   "additionalProperties": false,
