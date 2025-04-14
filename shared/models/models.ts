@@ -1,6 +1,7 @@
 import { bouncerDomailModelDescriptor, BouncerDomain } from "./bouncer.domain.model";
 import { BouncerEmail, bouncerEmailModelDescriptor } from "./bouncer.email.model";
-import { BouncerEmailPending, bouncerEmailPendingModelDescriptor } from "./bouncer.email.pending.model";
+import { BrevoContacts, brevoContactsModelDescriptor } from "./brevo.contacts.model";
+import { BrevoListes, brevoListesModelDescriptor } from "./brevo.listes.model";
 import catalogueEmailSiretDescriptor, { ICatalogueEmailSiret } from "./catalogueEmailSiret.model";
 import { IModelDescriptor } from "./common";
 import lbaEmailBlackListedModelDescriptor, { ILbaEmailBlacklist } from "./data/lba.emailBlacklist.model";
@@ -35,10 +36,11 @@ export const modelDescriptors: IModelDescriptor[] = [
   mailingListModelDescriptor,
   catalogueEmailSiretDescriptor,
   bouncerEmailModelDescriptor,
-  bouncerEmailPendingModelDescriptor,
   bouncerDomailModelDescriptor,
   lbaEmailBlackListedModelDescriptor,
   lbaRecruteursSiretEmailModelDescriptor,
+  brevoContactsModelDescriptor,
+  brevoListesModelDescriptor,
 ];
 
 export type IDocumentMap = {
@@ -56,8 +58,9 @@ export type IDocumentMap = {
   ["deca.import.job.result"]: IDecaImportJobResult;
   catalogueEmailSirets: ICatalogueEmailSiret;
   ["bouncer.email"]: BouncerEmail;
-  ["bouncer.email.pending"]: BouncerEmailPending;
   ["bouncer.domain"]: BouncerDomain;
   ["lba.emailblacklists"]: ILbaEmailBlacklist;
   ["lba.recruteurs.siret.email"]: ILbaRecruteursSiretEmail;
+  ["brevo.contacts"]: BrevoContacts;
+  ["brevo.listes"]: BrevoListes;
 };

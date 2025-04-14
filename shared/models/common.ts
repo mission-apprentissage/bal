@@ -16,10 +16,11 @@ export type CollectionName =
   | "deca.import.job.result"
   | "catalogueEmailSirets"
   | "bouncer.email"
-  | "bouncer.email.pending"
   | "bouncer.domain"
   | "lba.emailblacklists"
-  | "lba.recruteurs.siret.email";
+  | "lba.recruteurs.siret.email"
+  | "brevo.contacts"
+  | "brevo.listes";
 
 export interface IModelDescriptor {
   zod: ZodType;

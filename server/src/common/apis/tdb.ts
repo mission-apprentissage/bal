@@ -1,5 +1,6 @@
 import { isAxiosError } from "axios";
 import { BouncerPingResult } from "shared/models/bouncer.email.model";
+import { IBrevoContactsAPI } from "shared/models/brevo.contacts.model";
 
 import config from "@/config";
 
@@ -22,9 +23,9 @@ const client = getApiClient(
   { cache: false }
 );
 
-export const getTdbRupturant = async (): Promise<string[]> => {
+export const getTdbRupturant = async (): Promise<IBrevoContactsAPI[]> => {
   try {
-    const { data } = await client.get<string[]>("/bal/rupturants");
+    const { data } = await client.get<IBrevoContactsAPI[]>("/bal/rupturants");
     return data;
   } catch (error) {
     if (isAxiosError(error)) {
@@ -35,7 +36,7 @@ export const getTdbRupturant = async (): Promise<string[]> => {
       );
     }
 
-    throw new ApiError("Api TDB - getTdbRupturan", `${error.message}`, error.code || error.response?.status);
+    throw new ApiError("Api TDB - getTdbRupturant", `${error.message}`, error.code || error.response?.status);
   }
 };
 
