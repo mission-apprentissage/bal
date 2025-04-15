@@ -5,7 +5,7 @@ import config from "@/config";
 import { ApiError } from "../utils/apiUtils";
 import getApiClient from "./client";
 
-export const LIMIT_TRAINING_LINKS_PER_REQUEST = 1_000;
+export const LIMIT_TRAINING_LINKS_PER_REQUEST = 750;
 
 const client = getApiClient(
   {
