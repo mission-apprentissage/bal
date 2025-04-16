@@ -8,6 +8,7 @@ const collectionName = "documentContents" as const;
 const indexes: IModelDescriptor["indexes"] = [
   [{ document_id: 1 }, { name: "document_id" }],
   [{ type_document: 1, _id: 1 }, {}],
+  [{ document_id: 1, "content.email": 1 }, { partialFilterExpression: { "content.email": { $exists: true } } }],
 ];
 
 export const ZDocumentContent = z.object({

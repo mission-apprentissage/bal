@@ -10,23 +10,14 @@ import { getMailingOutputColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/c
 import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
 import { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
-import {
-  IMailingList,
-  IMailingListWithDocumentAndOwner,
-  MAILING_LIST_MAX_ITERATION,
-} from "shared/models/mailingList.model";
+import { IMailingList, IMailingListWithDocumentAndOwner } from "shared/models/mailingList.model";
 import { z } from "zod";
 
 import logger from "@/common/logger";
 import * as crypto from "@/common/utils/cryptoUtils";
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-import {
-  getTrainingLinks,
-  LIMIT_TRAINING_LINKS_PER_REQUEST,
-  TrainingLink,
-  TrainingLinkData,
-} from "../../common/apis/lba";
+import { getTrainingLinks, TrainingLink, TrainingLinkData } from "../../common/apis/lba";
 import { verifyEmails } from "../../common/services/mailer/mailBouncer";
 import { sleep } from "../../common/utils/asyncUtils";
 import { uploadToStorage } from "../../common/utils/ovhUtils";
@@ -41,9 +32,7 @@ import {
   updateDocument,
 } from "./documents.actions";
 
-/**
- * CRUD
- */
+const MAILING_LIST_BATCH_SIZE = 1_000;
 
 export const MAILING_LIST_DOCUMENT_PREFIX = "mailing-list";
 
@@ -248,7 +237,6 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
 
   await updateDocument({ _id: outputDocument._id }, { $set: { job_id: job._id.toString(), job_status: "processing" } });
 
-  const batchSize = LIMIT_TRAINING_LINKS_PER_REQUEST;
   let skip =
     mailingList.document_id == null
       ? 0
@@ -272,7 +260,7 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
 
     const wishes = await getDbCollection("documentContents")
       .find({ type_document: mailingList.source }, { sort: { _id: 1 } })
-      .limit(batchSize)
+      .limit(MAILING_LIST_BATCH_SIZE)
       .skip(skip)
       .toArray();
 
@@ -293,8 +281,8 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
     processed += wishes.length;
 
     // Check if there are more documents to retrieve
-    if (wishes.length === batchSize) {
-      skip += batchSize;
+    if (wishes.length === MAILING_LIST_BATCH_SIZE) {
+      skip += MAILING_LIST_BATCH_SIZE;
     } else {
       hasMore = false;
       // wait 5 seconds to make sure ovh has time to process the file before download
@@ -574,6 +562,25 @@ export const createMailingListFile = async (mailingList: IMailingList, document:
     sort[`content.${column}`] = 1;
   }
 
+  // For perfomance reason, we don't use additional identifierColumns
+  // Hence, this will be a upper bound
+  const wishesPerEmail = await getDbCollection("documentContents")
+    .aggregate([
+      {
+        $match: {
+          document_id: document._id.toString(),
+          "content.email": { $exists: true },
+        },
+      },
+      {
+        $group: { _id: "$content.email", count: { $sum: 1 } },
+      },
+      { $group: { _id: null, count: { $max: "$count" } } },
+    ])
+    .toArray();
+
+  const maxWishArraySize = wishesPerEmail[0]?.count ?? 1;
+
   const documentContentsCursor = getDbCollection("documentContents").find(
     {
       document_id: document._id.toString(),
@@ -617,7 +624,7 @@ export const createMailingListFile = async (mailingList: IMailingList, document:
           flat[key] = line?.[key] ?? line.wishes[0]?.[key] ?? "";
         }
 
-        for (let i = 0; i < MAILING_LIST_MAX_ITERATION; i++) {
+        for (let i = 0; i < maxWishArraySize; i++) {
           for (const key of arrayKeys) {
             flat[`${key}_${i + 1}`] = line.wishes[i]?.[key] ?? "";
           }
