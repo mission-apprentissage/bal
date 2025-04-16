@@ -142,6 +142,7 @@ const config = {
   },
   brevo: {
     apiKey: env.get("MNA_BAL_BREVO_API_KEY").required().asString(),
+    webhookApiKey: env.get("MNA_BAL_BREVO_WEBHOOK_API_KEY").required().asString(),
   },
 };
 

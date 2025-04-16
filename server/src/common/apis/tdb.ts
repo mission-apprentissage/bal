@@ -43,12 +43,12 @@ export const getTdbRupturant = async (): Promise<IBrevoContactsAPI[]> => {
 export const updateTdbRupturant = async (
   items: Array<{
     email: string;
-    ping: BouncerPingResult;
+    status: BouncerPingResult["status"] | "hardbounced";
   }>
 ) => {
   try {
     await client.put("/bal/rupturants", {
-      rupturants: items.map(({ email, ping }) => ({ email, status: ping.status })),
+      rupturants: items,
     });
   } catch (error) {
     if (isAxiosError(error)) {

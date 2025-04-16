@@ -2,7 +2,7 @@ import { FindCursor } from "mongodb";
 
 import { BrevoContacts, IBrevoContactsAPI } from "../../../../shared/models/brevo.contacts.model";
 import { updateTdbRupturant } from "../../common/apis/tdb";
-import { importContacts } from "../../common/services/brevo/brevo";
+import { BrevoEventStatus, IBrevoWebhookEvent, importContacts } from "../../common/services/brevo/brevo";
 import { verifyEmails } from "../../common/services/mailer/mailBouncer";
 import { getDbCollection } from "../../common/utils/mongodbUtils";
 import config from "../../config";
@@ -79,6 +79,19 @@ export async function processBrevoContact() {
 
     await importContacts(brevoListe?.listId, mappedResult);
 
-    await updateTdbRupturant(chunk.emailsResult);
+    await updateTdbRupturant(
+      chunk.emailsResult.map((item) => ({
+        email: item.email,
+        status: item.ping.status,
+      }))
+    );
+  }
+}
+
+export async function processHardbounce(payload: IBrevoWebhookEvent) {
+  const { event, email } = payload;
+
+  if (event === BrevoEventStatus.HARD_BOUNCE) {
+    updateTdbRupturant([{ email, status: "hardbounced" }]);
   }
 }
