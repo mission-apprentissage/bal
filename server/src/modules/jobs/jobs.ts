@@ -75,6 +75,13 @@ export async function setupJobProcessor() {
               resumable: true,
               maxRuntimeInMinutes: 12 * 60,
             },
+            "Vérfication des emails des rupturants du TDB": {
+              cron_string: "0 2 * * 6",
+              handler: async () => {
+                await addJob({ name: "job:tdb:insert-process-pending-email", queued: true });
+                return 0;
+              },
+            },
           },
     jobs: {
       "users:create": {
@@ -174,11 +181,11 @@ export async function setupJobProcessor() {
       "job:lba:hydrate:siret-list": {
         handler: async () => hydrateLbaSiretList(),
       },
-      "job:tdb:insert-pending-email": {
-        handler: async () => hydrateEffectifsEmail(),
-      },
-      "job:tdb:process-pending-email": {
-        handler: async () => processEffectifsPendingMail(),
+      "job:tdb:insert-process-pending-email": {
+        handler: async () => {
+          await hydrateEffectifsEmail();
+          await processEffectifsPendingMail();
+        },
       },
     },
   });

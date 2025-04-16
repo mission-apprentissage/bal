@@ -44,6 +44,15 @@ export async function processBrevoContact() {
     }
   }
 
+  const brevoListe = await getDbCollection("brevo.listes").findOne({
+    product: "tdb",
+    env: config.env,
+  });
+
+  if (!brevoListe) {
+    throw new Error("Brevo liste not found");
+  }
+
   const cursor = getDbCollection("brevo.contacts").find({ treated: false });
 
   for await (const chunk of generator(cursor, 100)) {
@@ -63,19 +72,11 @@ export async function processBrevoContact() {
       email: item.email,
       nom: chunk.emailsMap.get(item.email)?.nom,
       prenom: chunk.emailsMap.get(item.email)?.prenom,
-      ...chunk.emailsMap.get(item.email)?.urls,
+      urls: chunk.emailsMap.get(item.email)?.urls,
       telephone: chunk.emailsMap.get(item.email)?.telephone,
       nomOrganisme: chunk.emailsMap.get(item.email)?.nomOrganisme,
     }));
 
-    const brevoListe = await getDbCollection("brevo.listes").findOne({
-      product: "tdb",
-      env: config.env,
-    });
-
-    if (!brevoListe) {
-      throw new Error("Brevo liste not found");
-    }
     await importContacts(brevoListe?.listId, mappedResult);
 
     await updateTdbRupturant(chunk.emailsResult);

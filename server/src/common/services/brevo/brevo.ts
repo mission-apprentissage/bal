@@ -62,7 +62,7 @@ export const importContacts = async (
     email: string;
     prenom?: string | undefined;
     nom?: string | undefined;
-    url?: string | undefined;
+    urls?: Record<string, string> | undefined;
     telephone?: string | undefined;
     nomOrganisme?: string | undefined;
   }>
@@ -80,7 +80,7 @@ export const importContacts = async (
     contactData.attributes = {
       PRENOM: contact.prenom,
       NOM: contact.nom,
-      URL_TBA_ML: contact.url,
+      ...contact.urls,
       TELEPHONE: contact.telephone,
       NOM_ORGANISME: contact.nomOrganisme,
     };
