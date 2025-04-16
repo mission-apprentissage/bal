@@ -188,8 +188,11 @@ exports[`zodToMongoSchema > should convert brevo.contacts schema 1`] = `
         },
       ],
     },
-    "url": {
-      "bsonType": "string",
+    "urls": {
+      "additionalProperties": {
+        "bsonType": "string",
+      },
+      "bsonType": "object",
     },
   },
   "required": [
