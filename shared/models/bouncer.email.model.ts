@@ -2,8 +2,6 @@ import { z } from "zod";
 
 import { IModelDescriptor, zObjectId } from "./common";
 
-export const MAILING_LIST_MAX_ITERATION = 10;
-
 const collectionName = "bouncer.email" as const;
 
 const indexes: IModelDescriptor["indexes"] = [[{ email: 1 }, { unique: true }]];

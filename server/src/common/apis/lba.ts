@@ -5,7 +5,7 @@ import config from "@/config";
 import { ApiError } from "../utils/apiUtils";
 import getApiClient from "./client";
 
-export const LIMIT_TRAINING_LINKS_PER_REQUEST = 750;
+export const LIMIT_TRAINING_LINKS_PER_REQUEST = 100;
 
 const client = getApiClient(
   {
@@ -38,12 +38,17 @@ export interface TrainingLink {
 }
 
 export const getTrainingLinks = async (data: TrainingLinkData[]): Promise<TrainingLink[]> => {
-  console.log(`Request fired with ${data.length} items`);
   try {
-    const { data: links } = await client.post<TrainingLink[]>(`/api/traininglinks`, data);
-    console.log(`Request success with ${links.length} items`);
+    const tasks = [];
 
-    return links;
+    for (let i = 0; i < data.length; i += LIMIT_TRAINING_LINKS_PER_REQUEST) {
+      const chunk = data.slice(i, i + LIMIT_TRAINING_LINKS_PER_REQUEST);
+      tasks.push(client.post<TrainingLink[]>(`/api/traininglinks`, chunk));
+    }
+
+    const responses = await Promise.all(tasks);
+
+    return responses.flatMap((response) => response.data);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (isAxiosError(error)) {

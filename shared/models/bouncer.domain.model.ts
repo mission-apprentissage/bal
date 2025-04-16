@@ -3,8 +3,6 @@ import { z } from "zod";
 import { zBouncerPingResult } from "./bouncer.email.model";
 import { IModelDescriptor, zObjectId } from "./common";
 
-export const MAILING_LIST_MAX_ITERATION = 10;
-
 const collectionName = "bouncer.domain" as const;
 
 const indexes: IModelDescriptor["indexes"] = [[{ domain: 1, smtp: 1 }, { unique: true }]];
