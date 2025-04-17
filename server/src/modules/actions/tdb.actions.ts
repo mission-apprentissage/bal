@@ -82,7 +82,8 @@ export async function processBrevoContact() {
           prenom: contact.prenom,
           urls: contact?.urls,
           telephone: contact?.telephone,
-          nomOrganisme: contact?.nomOrganisme,
+          nom_organisme: contact?.nom_organisme,
+          mission_locale_id: contact.mission_locale_id,
         },
       ];
     }, [] as Array<IBrevoContactsAPI>);

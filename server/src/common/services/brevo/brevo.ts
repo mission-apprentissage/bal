@@ -53,7 +53,8 @@ export const importContacts = async (
     nom: string;
     urls?: Record<string, string> | null;
     telephone?: string | null;
-    nomOrganisme?: string | null;
+    nom_organisme?: string | null;
+    mission_locale_id: string;
   }>
 ) => {
   if (!ContactInstance) {
@@ -71,7 +72,8 @@ export const importContacts = async (
       NOM: contact.nom,
       ...contact.urls,
       TELEPHONE: contact.telephone,
-      NOM_ORGANISME: contact.nomOrganisme,
+      NOM_ORGANISME: contact.nom_organisme,
+      MISSION_LOCALE_ID: contact.mission_locale_id,
     };
     return contactData;
   });

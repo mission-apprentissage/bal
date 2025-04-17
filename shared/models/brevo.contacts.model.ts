@@ -16,7 +16,8 @@ export const zBrevoContacts = z.object({
   prenom: z.string(),
   urls: z.record(z.string(), z.string()).nullable(),
   telephone: z.string().nullable(),
-  nomOrganisme: z.string().nullable(),
+  nom_organisme: z.string().nullable(),
+  mission_locale_id: z.string(),
 });
 
 export type BrevoContacts = z.output<typeof zBrevoContacts>;

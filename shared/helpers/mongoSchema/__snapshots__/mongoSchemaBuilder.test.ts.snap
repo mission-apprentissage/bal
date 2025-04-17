@@ -163,10 +163,13 @@ exports[`zodToMongoSchema > should convert brevo.contacts schema 1`] = `
     "email": {
       "bsonType": "string",
     },
+    "mission_locale_id": {
+      "bsonType": "string",
+    },
     "nom": {
       "bsonType": "string",
     },
-    "nomOrganisme": {
+    "nom_organisme": {
       "bsonType": [
         "string",
         "null",
@@ -211,7 +214,8 @@ exports[`zodToMongoSchema > should convert brevo.contacts schema 1`] = `
     "prenom",
     "urls",
     "telephone",
-    "nomOrganisme",
+    "nom_organisme",
+    "mission_locale_id",
   ],
 }
 `;
