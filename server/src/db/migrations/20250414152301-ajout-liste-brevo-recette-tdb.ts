@@ -1,23 +1,25 @@
-import { Db, MongoClient, ObjectId } from "mongodb";
+import { Db, ObjectId } from "mongodb";
 
-export const up = async (_db: Db, _client: MongoClient) => {
-  const db = _db.collection("brevo.listes");
-
-  await db.insertOne({
+export const up = async (db: Db) => {
+  const brevoListeCollection = db.collection("brevo.listes");
+  const currentDate = new Date();
+  await brevoListeCollection.insertOne({
     _id: new ObjectId(),
     listId: 522,
     product: "tdb",
     env: "recette",
     nom: "2703 - RECETTE Rupturant - Contact ML",
-    created_at: new Date(),
+    created_at: currentDate,
+    updated_at: currentDate,
   });
 
-  await db.insertOne({
+  await brevoListeCollection.insertOne({
     _id: new ObjectId(),
     listId: 521,
     product: "tdb",
     env: "production",
     nom: "2703 - PRODUCTION Rupturant - Contact ML",
-    created_at: new Date(),
+    created_at: currentDate,
+    updated_at: currentDate,
   });
 };

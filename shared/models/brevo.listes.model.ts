@@ -13,7 +13,7 @@ export const zBrevoListes = z.object({
   product: z.enum(["tdb", "lba"]),
   nom: z.string(),
   created_at: z.date(),
-  updated_at: z.date().optional(),
+  updated_at: z.date(),
 });
 
 export type BrevoListes = z.output<typeof zBrevoListes>;

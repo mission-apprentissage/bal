@@ -167,32 +167,38 @@ exports[`zodToMongoSchema > should convert brevo.contacts schema 1`] = `
       "bsonType": "string",
     },
     "nomOrganisme": {
-      "bsonType": "string",
+      "bsonType": [
+        "string",
+        "null",
+      ],
     },
     "prenom": {
       "bsonType": "string",
     },
     "telephone": {
-      "bsonType": "string",
+      "bsonType": [
+        "string",
+        "null",
+      ],
     },
     "treated": {
       "bsonType": "bool",
     },
     "updated_at": {
+      "bsonType": "date",
+    },
+    "urls": {
       "anyOf": [
         {
-          "bsonType": "date",
+          "additionalProperties": {
+            "bsonType": "string",
+          },
+          "bsonType": "object",
         },
         {
           "bsonType": "null",
         },
       ],
-    },
-    "urls": {
-      "additionalProperties": {
-        "bsonType": "string",
-      },
-      "bsonType": "object",
     },
   },
   "required": [
@@ -201,6 +207,11 @@ exports[`zodToMongoSchema > should convert brevo.contacts schema 1`] = `
     "created_at",
     "updated_at",
     "treated",
+    "nom",
+    "prenom",
+    "urls",
+    "telephone",
+    "nomOrganisme",
   ],
 }
 `;
@@ -250,6 +261,7 @@ exports[`zodToMongoSchema > should convert brevo.listes schema 1`] = `
     "product",
     "nom",
     "created_at",
+    "updated_at",
   ],
 }
 `;

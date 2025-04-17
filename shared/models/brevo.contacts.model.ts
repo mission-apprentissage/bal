@@ -10,13 +10,13 @@ export const zBrevoContacts = z.object({
   _id: zObjectId,
   email: z.string(),
   created_at: z.date(),
-  updated_at: z.date().nullable(),
+  updated_at: z.date(),
   treated: z.boolean(),
-  nom: z.string().optional(),
-  prenom: z.string().optional(),
-  urls: z.record(z.string(), z.string()).optional(),
-  telephone: z.string().optional(),
-  nomOrganisme: z.string().optional(),
+  nom: z.string(),
+  prenom: z.string(),
+  urls: z.record(z.string(), z.string()).nullable(),
+  telephone: z.string().nullable(),
+  nomOrganisme: z.string().nullable(),
 });
 
 export type BrevoContacts = z.output<typeof zBrevoContacts>;

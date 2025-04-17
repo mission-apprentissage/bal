@@ -8,7 +8,7 @@ import { Server } from "../server";
 
 export const brevoWebhookRoutes = ({ server }: { server: Server }) => {
   server.post(
-    "/brevo/hardbounce",
+    "/v1/webhooks/brevo/hardbounce",
     {
       schema: zRoutes.post["/v1/webhooks/brevo/hardbounce"],
     },

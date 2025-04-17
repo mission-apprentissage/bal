@@ -1,4 +1,5 @@
 import brevo, { ContactsApiApiKeys } from "@getbrevo/brevo";
+import Boom from "@hapi/boom";
 import { captureException } from "@sentry/node";
 
 import config from "@/config";
@@ -35,8 +36,7 @@ const initContactApi = () => {
   const apiKey = config.brevo.apiKey;
 
   if (!apiKey) {
-    captureException(new Error(`Init Brevo: no api key provided`));
-    return null;
+    throw Boom.internal("Brevo API key not set");
   }
 
   apiInstance.setApiKey(ContactsApiApiKeys.apiKey, apiKey);
@@ -45,58 +45,21 @@ const initContactApi = () => {
 
 const ContactInstance: brevo.ContactsApi | null = initContactApi();
 
-export const createContact = (
-  listeId: number,
-  email?: string | null,
-  prenom?: string | null,
-  nom?: string | null,
-  token?: string | null,
-  url?: string | null,
-  telephone?: string | null,
-  nomOrganisme?: string | null
-) => {
-  if (!ContactInstance) {
-    captureException(new Error(`Create contact Brevo: no instance initialized`));
-    return;
-  }
-
-  const contact = new brevo.CreateContact();
-
-  if (!email) {
-    captureException(
-      new Error(`Create contact Brevo: no email provided initialized`, { cause: { prenom, nom, telephone } })
-    );
-    return;
-  }
-
-  contact.email = email;
-  contact.attributes = {
-    PRENOM: prenom,
-    NOM: nom,
-    TOKEN: token,
-    URL_TBA_ML: url,
-    TELEPHONE: telephone,
-    NOM_ORGANISME: nomOrganisme,
-  };
-  contact.listIds = [listeId];
-  return ContactInstance.createContact(contact);
-};
-
 export const importContacts = async (
   listeId: number,
   contacts: Array<{
     email: string;
-    prenom?: string | undefined;
-    nom?: string | undefined;
-    urls?: Record<string, string> | undefined;
-    telephone?: string | undefined;
-    nomOrganisme?: string | undefined;
+    prenom: string;
+    nom: string;
+    urls?: Record<string, string> | null;
+    telephone?: string | null;
+    nomOrganisme?: string | null;
   }>
 ) => {
   if (!ContactInstance) {
-    captureException(new Error(`Create contact Brevo: no instance initialized`));
-    return;
+    throw Boom.internal("Brevo instance not initialized");
   }
+
   const contactImport = new brevo.RequestContactImport();
   contactImport.listIds = [listeId];
 
@@ -113,6 +76,7 @@ export const importContacts = async (
     return contactData;
   });
   contactImport.jsonBody = contactList;
+
   try {
     return await ContactInstance.importContacts(contactImport);
   } catch (e) {
