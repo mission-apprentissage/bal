@@ -33,6 +33,7 @@ import { uploadSupportRoutes } from "./upload.support.routes";
 import { userRoutes } from "./user.routes";
 import { decaRoutes } from "./v1/deca.routes";
 import { organisationRoutes } from "./v1/organisation.routes";
+import { webhookRoutes } from "./webhooks.routes";
 
 export interface Server
   extends FastifyInstance<
@@ -138,4 +139,5 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
 export const registerV1Routes: RegisterRoutes = ({ server }) => {
   organisationRoutes({ server });
   decaRoutes({ server });
+  webhookRoutes({ server });
 };

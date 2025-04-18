@@ -15,6 +15,7 @@ import { zUserAdminRoutes, zUserRoutes } from "./user.routes";
 import { zBouncerV1Routes } from "./v1/bouncer.routes";
 import { zDecaV1Routes } from "./v1/deca.routes";
 import { zOrganisationV1Routes } from "./v1/organisation.routes";
+import { zBrevoWebhooks } from "./webhooks/brevo.routes";
 
 const zRoutesGet = {
   ...zUserAdminRoutes.get,
@@ -40,6 +41,7 @@ const zRoutesPost = {
   ...zMailingListRoutes.post,
   ...zUploadSupportRoutes.post,
   ...zBouncerV1Routes.post,
+  ...zBrevoWebhooks.post,
 } as const;
 
 const zRoutesPut = {

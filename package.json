@@ -17,6 +17,7 @@
     "shared"
   ],
   "dependencies": {
+    "@getbrevo/brevo": "^2.2.0",
     "dotenv": "^16.4.7",
     "eslint-plugin-react": "^7.37.5",
     "global": "4.4.0",
