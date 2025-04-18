@@ -78,7 +78,8 @@ export async function setupJobProcessor() {
             "Vérfication des emails des rupturants du TDB": {
               cron_string: "0 2 * * 6",
               handler: async () => {
-                await addJob({ name: "job:tdb:insert-process-pending-email", queued: true });
+                await hydrateEffectifsEmail();
+                await processEffectifsPendingMail();
                 return 0;
               },
             },

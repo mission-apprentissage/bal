@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import { FindCursor } from "mongodb";
 
 import { BrevoContacts, IBrevoContactsAPI } from "../../../../shared/models/brevo.contacts.model";
@@ -7,23 +8,27 @@ import { verifyEmails } from "../../common/services/mailer/mailBouncer";
 import { getDbCollection } from "../../common/utils/mongodbUtils";
 import config from "../../config";
 
-export async function insertBrevoContact(contact: IBrevoContactsAPI) {
+export async function insertBrevoContactList(contacts: Array<IBrevoContactsAPI>) {
+  if (contacts.length === 0) {
+    return;
+  }
   const currentDate = new Date();
-  await getDbCollection("brevo.contacts").updateOne(
-    {
-      email: contact.email,
-    },
-    {
-      $setOnInsert: {
-        created_at: currentDate,
-        updated_at: currentDate,
-        treated: false,
-        ...contact,
+  await getDbCollection("brevo.contacts").bulkWrite(
+    contacts.map((contact) => ({
+      updateOne: {
+        filter: { email: contact.email },
+        update: {
+          $setOnInsert: {
+            created_at: currentDate,
+            updated_at: currentDate,
+            treated: false,
+            ...contact,
+          },
+        },
+        upsert: true,
       },
-    },
-    {
-      upsert: true,
-    }
+    })),
+    { ordered: false }
   );
 }
 
@@ -51,7 +56,7 @@ export async function processBrevoContact() {
   });
 
   if (!brevoListe) {
-    throw new Error("Brevo liste not found");
+    throw Boom.internal("Brevo liste not found");
   }
 
   const cursor = getDbCollection("brevo.contacts").find({ treated: false });
@@ -68,7 +73,7 @@ export async function processBrevoContact() {
         },
       },
     }));
-    await getDbCollection("brevo.contacts").bulkWrite(bulkOps);
+
     const mappedResult: Array<IBrevoContactsAPI> = chunk.emailsResult.reduce((acc, item) => {
       const contact = chunk.emailsMap.get(item.email);
       if (!contact) {
@@ -88,7 +93,7 @@ export async function processBrevoContact() {
       ];
     }, [] as Array<IBrevoContactsAPI>);
 
-    await importContacts(brevoListe?.listId, mappedResult);
+    await importContacts(brevoListe.listId, mappedResult);
 
     await updateTdbRupturant(
       chunk.emailsResult.map((item) => ({
@@ -96,6 +101,8 @@ export async function processBrevoContact() {
         status: item.ping.status,
       }))
     );
+
+    await getDbCollection("brevo.contacts").bulkWrite(bulkOps);
   }
 }
 
@@ -103,6 +110,6 @@ export async function processHardbounce(payload: IBrevoWebhookEvent) {
   const { event, email } = payload;
 
   if (event === BrevoEventStatus.HARD_BOUNCE) {
-    updateTdbRupturant([{ email, status: "hardbounced" }]);
+    await updateTdbRupturant([{ email, status: "hardbounced" }]);
   }
 }

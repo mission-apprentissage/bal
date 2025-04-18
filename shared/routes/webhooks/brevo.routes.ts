@@ -43,7 +43,11 @@ export const zBrevoWebhooks = {
       response: {
         "204": z.unknown(),
       },
-      securityScheme: null,
+      securityScheme: {
+        auth: "brevo-api-key",
+        ressources: {},
+        access: null,
+      },
     },
   },
 } as const satisfies IRoutesDef;
