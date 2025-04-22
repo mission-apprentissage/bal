@@ -43,7 +43,7 @@ export const getTdbRupturant = async (): Promise<IBrevoContactsAPI[]> => {
 export const updateTdbRupturant = async (
   items: Array<{
     email: string;
-    status: BouncerPingResult["status"] | "hardbounced";
+    status: BouncerPingResult["status"];
   }>
 ) => {
   try {

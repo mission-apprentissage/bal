@@ -272,3 +272,46 @@ export async function verifyEmails(emails: string[]): Promise<{ email: string; p
 
   return data.flat();
 }
+
+export async function processHardbounceBouncer(email: string) {
+  const now = new Date();
+
+  const bouncer = await getDbCollection("bouncer.email").findOne({ email });
+
+  if (bouncer && bouncer.ping.status === "valid") {
+    captureException(new Error(`Hardbounce detected for email ${email} but it was previously marked as valid`));
+  }
+
+  await getDbCollection("bouncer.email").updateOne(
+    { email },
+    {
+      $set: {
+        ping: {
+          status: "invalid",
+          message: "Hardbounce",
+          responseCode: null,
+          responseMessage: null,
+        },
+      },
+      $setOnInsert: {
+        _id: new ObjectId(),
+        domain: email.split("@")[1],
+        smtp: null,
+        created_at: now,
+        email,
+        ping: {
+          status: "invalid",
+          message: "Hardbounce",
+          responseCode: null,
+          responseMessage: null,
+        },
+      },
+    },
+    { upsert: true }
+  );
+}
+
+export async function getCachedBouncerEmail(email: string): Promise<BouncerPingResult | null> {
+  const document = await getDbCollection("bouncer.email").findOne({ email });
+  return document?.ping ?? null;
+}

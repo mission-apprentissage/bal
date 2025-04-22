@@ -1,5 +1,5 @@
 import { getTdbRupturant } from "../../../common/apis/tdb";
-import { insertBrevoContactList, processBrevoContact } from "../../actions/tdb.actions";
+import { insertBrevoContactList, processNewBrevoContact, processQueuedBrevoContact } from "../../actions/tdb.actions";
 
 export async function hydrateEffectifsEmail() {
   const data = await getTdbRupturant();
@@ -7,5 +7,6 @@ export async function hydrateEffectifsEmail() {
 }
 
 export async function processEffectifsPendingMail() {
-  return processBrevoContact();
+  await processNewBrevoContact();
+  await processQueuedBrevoContact();
 }

@@ -1,10 +1,18 @@
 import Boom from "@hapi/boom";
-import { FindCursor } from "mongodb";
+import { FindCursor, ObjectId } from "mongodb";
 
-import { BrevoContacts, IBrevoContactsAPI } from "../../../../shared/models/brevo.contacts.model";
+import {
+  BrevoContacts,
+  BrevoContactStatusEnum,
+  IBrevoContactsAPI,
+} from "../../../../shared/models/brevo.contacts.model";
 import { updateTdbRupturant } from "../../common/apis/tdb";
 import { BrevoEventStatus, IBrevoWebhookEvent, importContacts } from "../../common/services/brevo/brevo";
-import { verifyEmails } from "../../common/services/mailer/mailBouncer";
+import {
+  getCachedBouncerEmail,
+  processHardbounceBouncer,
+  verifyEmails,
+} from "../../common/services/mailer/mailBouncer";
 import { getDbCollection } from "../../common/utils/mongodbUtils";
 import config from "../../config";
 
@@ -19,10 +27,11 @@ export async function insertBrevoContactList(contacts: Array<IBrevoContactsAPI>)
         filter: { email: contact.email },
         update: {
           $setOnInsert: {
+            _id: new ObjectId(),
             created_at: currentDate,
             updated_at: currentDate,
-            treated: false,
             ...contact,
+            status: null,
           },
         },
         upsert: true,
@@ -31,8 +40,80 @@ export async function insertBrevoContactList(contacts: Array<IBrevoContactsAPI>)
     { ordered: false }
   );
 }
+export async function processNewBrevoContact() {
+  const cursor = getDbCollection("brevo.contacts").find({ status: null });
+  const bulkOps = [];
+  const contactsValid = [];
+  const tdbContacts = [];
 
-export async function processBrevoContact() {
+  const brevoListe = await getDbCollection("brevo.listes").findOne({
+    product: "tdb",
+    env: config.env,
+  });
+
+  if (!brevoListe) {
+    throw Boom.internal("Brevo liste not found");
+  }
+
+  for await (const document of cursor) {
+    const bouncerEmail = await getCachedBouncerEmail(document.email);
+    if (bouncerEmail) {
+      tdbContacts.push({
+        email: document.email,
+        status: bouncerEmail.status,
+      });
+
+      if (bouncerEmail.status === "valid") {
+        contactsValid.push({
+          email: document.email,
+          nom: document.nom,
+          prenom: document.prenom,
+          urls: document?.urls,
+          telephone: document?.telephone,
+          nom_organisme: document?.nom_organisme,
+          mission_locale_id: document.mission_locale_id,
+        });
+      }
+    }
+
+    bulkOps.push(
+      bouncerEmail
+        ? {
+            updateOne: {
+              filter: { email: document.email },
+              update: {
+                $set: {
+                  status: BrevoContactStatusEnum.done,
+                  updated_at: new Date(),
+                },
+              },
+            },
+          }
+        : {
+            updateOne: {
+              filter: { email: document.email },
+              update: {
+                $set: {
+                  status: BrevoContactStatusEnum.queued,
+                  updated_at: new Date(),
+                },
+              },
+            },
+          }
+    );
+  }
+
+  await importContacts(brevoListe.listId, contactsValid);
+  await updateTdbRupturant(tdbContacts);
+
+  if (bulkOps.length === 0) {
+    return;
+  }
+
+  await getDbCollection("brevo.contacts").bulkWrite(bulkOps);
+}
+
+export async function processQueuedBrevoContact() {
   async function* generator(cursor: FindCursor<BrevoContacts>, chunkSize: number = 100) {
     const emailsMap = new Map<string, BrevoContacts>();
     for await (const document of cursor) {
@@ -59,15 +140,19 @@ export async function processBrevoContact() {
     throw Boom.internal("Brevo liste not found");
   }
 
-  const cursor = getDbCollection("brevo.contacts").find({ treated: false });
+  const cursor = getDbCollection("brevo.contacts").find({ status: BrevoContactStatusEnum.queued });
 
   for await (const chunk of generator(cursor, 100)) {
+    if (chunk.emailsResult.length === 0) {
+      continue;
+    }
+
     const bulkOps = chunk.emailsResult.map((item) => ({
       updateOne: {
         filter: { email: item.email },
         update: {
           $set: {
-            treated: true,
+            status: BrevoContactStatusEnum.done,
             updated_at: new Date(),
           },
         },
@@ -76,7 +161,7 @@ export async function processBrevoContact() {
 
     const mappedResult: Array<IBrevoContactsAPI> = chunk.emailsResult.reduce((acc, item) => {
       const contact = chunk.emailsMap.get(item.email);
-      if (!contact) {
+      if (!contact || item.ping.status !== "valid") {
         return acc;
       }
       return [
@@ -110,6 +195,7 @@ export async function processHardbounce(payload: IBrevoWebhookEvent) {
   const { event, email } = payload;
 
   if (event === BrevoEventStatus.HARD_BOUNCE) {
-    await updateTdbRupturant([{ email, status: "hardbounced" }]);
+    await processHardbounceBouncer(email);
+    await updateTdbRupturant([{ email, status: "invalid" }]);
   }
 }

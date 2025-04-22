@@ -13,7 +13,7 @@ export const brevoWebhookRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       await processHardbounce(request.body as IBrevoWebhookEvent);
-      response.code(204);
+      response.code(204).send();
     }
   );
 };

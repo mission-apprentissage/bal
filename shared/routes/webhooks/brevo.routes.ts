@@ -6,11 +6,9 @@ export const zBrevoWebhooks = {
     "/v1/webhooks/brevo/hardbounce": {
       method: "post",
       path: "/v1/webhooks/brevo/hardbounce",
-      querystring: z
-        .object({
-          apiKey: z.string(),
-        })
-        .strict(),
+      querystring: z.object({
+        apiKey: z.string(),
+      }),
       body: z.object({
         event: z.string(),
         email: z.string(),
