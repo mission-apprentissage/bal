@@ -178,14 +178,25 @@ exports[`zodToMongoSchema > should convert brevo.contacts schema 1`] = `
     "prenom": {
       "bsonType": "string",
     },
+    "status": {
+      "anyOf": [
+        {
+          "bsonType": "string",
+          "enum": [
+            "queued",
+            "done",
+          ],
+        },
+        {
+          "bsonType": "null",
+        },
+      ],
+    },
     "telephone": {
       "bsonType": [
         "string",
         "null",
       ],
-    },
-    "treated": {
-      "bsonType": "bool",
     },
     "updated_at": {
       "bsonType": "date",
@@ -209,7 +220,7 @@ exports[`zodToMongoSchema > should convert brevo.contacts schema 1`] = `
     "email",
     "created_at",
     "updated_at",
-    "treated",
+    "status",
     "nom",
     "prenom",
     "urls",
