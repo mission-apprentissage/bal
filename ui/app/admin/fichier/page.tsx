@@ -162,32 +162,27 @@ const AdminImportPage = () => {
             type: "actions",
             headerName: "Actions",
             getActions: ({ row }) => {
-              if (
-                row.job_status !== "done" &&
-                row.job_status !== "error" // TODO This is a quick cleaning method but if delete and job running nned to send a kill sig to job
-              )
-                return [<DownloadAction key="download" id={row._id.toString()} />];
-
               return [
-                row.job_status === "error" ? (
+                <DownloadAction key="download" id={row._id.toString()} />,
+                row.job_status === "error" || row.job_id == null ? (
                   <RetryAction key="retry" id={row._id.toString()} onRetry={refetch} />
-                ) : (
-                  <DownloadAction key="download" id={row._id.toString()} />
-                ),
-                <Button
-                  key="delete"
-                  iconId="ri-delete-bin-line"
-                  onClick={() => {
-                    setToDelete(row._id.toString());
-                    modal.open();
-                  }}
-                  priority="tertiary no outline"
-                  title="Supprimer"
-                  style={{
-                    color: fr.colors.decisions.text.actionHigh.redMarianne.default,
-                  }}
-                />,
-              ];
+                ) : null,
+                row.job_status === "pending" && row.job_id != null ? (
+                  <Button
+                    key="delete"
+                    iconId="ri-delete-bin-line"
+                    onClick={() => {
+                      setToDelete(row._id.toString());
+                      modal.open();
+                    }}
+                    priority="tertiary no outline"
+                    title="Supprimer"
+                    style={{
+                      color: fr.colors.decisions.text.actionHigh.redMarianne.default,
+                    }}
+                  />
+                ) : null,
+              ].filter((n) => n != null);
             },
           },
         ]}
