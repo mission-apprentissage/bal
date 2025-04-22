@@ -11,6 +11,7 @@ const config = {
   mongodb: {
     uri: env.get("MNA_BAL_MONGODB_URI").required().asString(),
   },
+  worker: env.get("INSTANCE_ID").asString(),
   log: {
     type: env.get("MNA_BAL_LOG_TYPE").default("console").asString(),
     level: env.get("MNA_BAL_LOG_LEVEL").default("info").asString(),

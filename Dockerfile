@@ -36,7 +36,7 @@ RUN --mount=type=cache,target=/var/cache/apk apk add --update \
   curl \
   && rm -rf /var/cache/apk/*
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 ARG PUBLIC_VERSION
 ENV PUBLIC_VERSION=$PUBLIC_VERSION
 
@@ -47,7 +47,6 @@ COPY ./server/static /app/server/static
 
 EXPOSE 5000
 WORKDIR /app/server
-ENV NODE_OPTIONS=--max_old_space_size=2048
 CMD ["node", "dist/index.js", "start"]
 
 
@@ -64,7 +63,7 @@ COPY ./shared ./shared
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 ARG PUBLIC_VERSION
 ENV NEXT_PUBLIC_VERSION=$PUBLIC_VERSION
@@ -79,9 +78,9 @@ RUN yarn --cwd ui build
 FROM node:20-alpine AS ui
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 ARG PUBLIC_VERSION
 ENV NEXT_PUBLIC_VERSION=$PUBLIC_VERSION
