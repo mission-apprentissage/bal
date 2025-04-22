@@ -34,6 +34,7 @@ import { sanitizeOrganisationDomains } from "./validation/organisations_sanitize
 export async function setupJobProcessor() {
   return initJobProcessor({
     db: getDatabase(),
+    workerTags: config.worker === "runner-1" ? ["main"] : ["bouncer"],
     logger,
     crons:
       config.env === "preview" || config.env === "local"
@@ -74,6 +75,8 @@ export async function setupJobProcessor() {
               },
               resumable: true,
               maxRuntimeInMinutes: 12 * 60,
+              // Keep long jobs in the main queue
+              tag: "main",
             },
             "Vérfication des emails des rupturants du TDB": {
               cron_string: "0 2 * * 6",
@@ -166,6 +169,8 @@ export async function setupJobProcessor() {
           logger.info("Email verification result", { result });
         },
         resumable: true,
+        // Keep long jobs in the main queue
+        tag: "main",
       },
       "job:validation:hydrate_from_constructys": {
         handler: async () => run_hydrate_from_constructys(),

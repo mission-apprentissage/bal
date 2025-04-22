@@ -39,6 +39,9 @@ services:
         fluentd-address: localhost:24224
         tag: docker.json.bal.{{env_type}}.server
         fluentd-async: "true"
+    environment:
+      INSTANCE_ID: "server-{% raw %}{{.Task.Slot}}{% endraw %}"
+      NODE_OPTIONS: "--max_old_space_size=2048"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:5000/api/healthcheck"]
       interval: 10s
@@ -60,6 +63,9 @@ services:
     stop_grace_period: 2h
     volumes:
       - /opt/app/data/server:/data
+    environment:
+      INSTANCE_ID: "runner-{% raw %}{{.Task.Slot}}{% endraw %}"
+      NODE_OPTIONS: "--max_old_space_size=1024"
     logging:
       driver: "fluentd"
       options:

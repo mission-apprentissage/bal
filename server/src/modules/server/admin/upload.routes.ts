@@ -2,7 +2,7 @@ import { IncomingMessage } from "node:http";
 
 import { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
-import { addJob } from "job-processor";
+import { addJob, scheduleJob } from "job-processor";
 import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
 import { zRoutes } from "shared";
@@ -101,13 +101,14 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         throw Boom.badImplementation(error as Error);
       }
 
-      await addJob({
+      const job = await scheduleJob({
         name: "import:document",
         payload: {
           document_id: document._id,
         },
-        queued: true,
       });
+
+      await getDbCollection("documents").updateOne({ _id: document._id }, { $set: { job_id: job._id.toString() } });
 
       return response.status(200).send(toPublicDocument(document));
     }
