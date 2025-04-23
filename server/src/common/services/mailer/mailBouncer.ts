@@ -169,7 +169,7 @@ async function persistPingResultCache(
   email: string,
   smtp: string | null,
   ping: BouncerPingResult
-): Promise<BouncerPingResult> {
+): Promise<{ email: string; ping: BouncerPingResult }> {
   if (ping.status !== "error") {
     await getDbCollection("bouncer.email").insertOne({
       _id: new ObjectId(),
@@ -181,15 +181,18 @@ async function persistPingResultCache(
     });
   }
 
-  return ping;
+  return { email, ping };
 }
 
-export async function verifyEmail(email: string, domainMap: SmtpSupportMap): Promise<BouncerPingResult> {
+export async function verifyEmail(
+  email: string,
+  domainMap: SmtpSupportMap
+): Promise<{ email: string; ping: BouncerPingResult }> {
   try {
     const cached = await getDbCollection("bouncer.email").findOne({ email });
 
     if (cached) {
-      return cached.ping;
+      return { email, ping: cached.ping };
     }
 
     const smtp = await getSmtpServer(email);
@@ -206,7 +209,7 @@ export async function verifyEmail(email: string, domainMap: SmtpSupportMap): Pro
     const domainResult = await verifyDomain(smtp, email, domainMap);
 
     if (domainResult) {
-      return domainResult;
+      return { email, ping: domainResult };
     }
 
     return persistPingResultCache(email, smtp, await tryVerifyEmail(email));
@@ -215,10 +218,13 @@ export async function verifyEmail(email: string, domainMap: SmtpSupportMap): Pro
     logger.error(err, { email });
 
     return {
-      status: "error",
-      message: "Unknown error occurred",
-      responseCode: null,
-      responseMessage: null,
+      email,
+      ping: {
+        status: "error",
+        message: "Unknown error occurred",
+        responseCode: null,
+        responseMessage: null,
+      },
     };
   }
 }
@@ -233,8 +239,11 @@ export async function getDomainMap(): Promise<SmtpSupportMap> {
   return new Map(knownDomains.map((d) => [d.smtp, d.ping]));
 }
 
-async function verifyEmailsSequentially(emails: string[], domainMap: SmtpSupportMap): Promise<BouncerPingResult[]> {
-  const result: BouncerPingResult[] = [];
+async function verifyEmailsSequentially(
+  emails: string[],
+  domainMap: SmtpSupportMap
+): Promise<{ email: string; ping: BouncerPingResult }[]> {
+  const result: { email: string; ping: BouncerPingResult }[] = [];
 
   for (const email of emails) {
     result.push(await verifyEmail(email, domainMap));
@@ -243,7 +252,7 @@ async function verifyEmailsSequentially(emails: string[], domainMap: SmtpSupport
   return result;
 }
 
-export async function verifyEmails(emails: string[]): Promise<BouncerPingResult[]> {
+export async function verifyEmails(emails: string[]): Promise<{ email: string; ping: BouncerPingResult }[]> {
   const domainMap: Map<string, BouncerPingResult | null> = await getDomainMap();
 
   const perDomain = emails.reduce((acc, email) => {
@@ -262,4 +271,47 @@ export async function verifyEmails(emails: string[]): Promise<BouncerPingResult[
   );
 
   return data.flat();
+}
+
+export async function processHardbounceBouncer(email: string) {
+  const now = new Date();
+
+  const bouncer = await getDbCollection("bouncer.email").findOne({ email });
+
+  if (bouncer && bouncer.ping.status === "valid") {
+    captureException(new Error(`Hardbounce detected for email ${email} but it was previously marked as valid`));
+  }
+
+  await getDbCollection("bouncer.email").updateOne(
+    { email },
+    {
+      $set: {
+        ping: {
+          status: "invalid",
+          message: "Hardbounce",
+          responseCode: null,
+          responseMessage: null,
+        },
+      },
+      $setOnInsert: {
+        _id: new ObjectId(),
+        domain: email.split("@")[1],
+        smtp: null,
+        created_at: now,
+        email,
+        ping: {
+          status: "invalid",
+          message: "Hardbounce",
+          responseCode: null,
+          responseMessage: null,
+        },
+      },
+    },
+    { upsert: true }
+  );
+}
+
+export async function getCachedBouncerEmail(email: string): Promise<BouncerPingResult | null> {
+  const document = await getDbCollection("bouncer.email").findOne({ email });
+  return document?.ping ?? null;
 }
