@@ -28,21 +28,21 @@ export function deepFlattenToObject(obj: object, prefix = ""): Record<string, Pr
 type EXCLUDED_FIELDS = "_id" | "created_at" | "updated_at" | "flag_correction";
 const excludedFieldsFromHistory: EXCLUDED_FIELDS[] = ["_id", "created_at", "updated_at", "flag_correction"];
 
-async function saveHistory(
-  originalDocument: IDeca,
-  newDocument: Omit<IDeca, EXCLUDED_FIELDS>,
-  updateTime: Date
-): Promise<"no_history_to_save" | "history_saved"> {
-  const oDiff = diff(originalDocument, newDocument);
+function pickComparedFields(originalDocument: IDeca): Omit<IDeca, EXCLUDED_FIELDS> {
+  const { _id, created_at: _c, updated_at: _u, flag_correction: _f, ...rest } = originalDocument;
+  return rest;
+}
+
+async function saveHistory(originalDocument: IDeca, newDocument: IDeca, updateTime: Date): Promise<void> {
+  const oDiff = diff(pickComparedFields(originalDocument), pickComparedFields(newDocument));
   const updatedFields = deepFlattenToObject(oDiff);
 
   if (!updatedFields) {
-    return "no_history_to_save";
+    return;
   }
 
-  let diffCount = 0;
   for (const [key, updatedFieldValue] of Object.entries(updatedFields)) {
-    if (!excludedFieldsFromHistory.includes(key as EXCLUDED_FIELDS)) {
+    if (!excludedFieldsFromHistory.some((f) => key === f || key.startsWith(`${f}.`))) {
       const previousValue = get(originalDocument, key);
 
       // détection et exclusion cas particulier faux positif si un élément est undefined et l'autre null
@@ -61,12 +61,9 @@ async function saveHistory(
         };
 
         await getDbCollection("decaHistory").insertOne(log);
-        diffCount++;
       }
     }
   }
-
-  return diffCount ? "history_saved" : "no_history_to_save";
 }
 
 export { saveHistory };

@@ -5,7 +5,7 @@ import { IModelDescriptor, zObjectId } from "../common";
 
 const collectionName = "decaHistory" as const;
 
-const indexes: IModelDescriptor["indexes"] = [];
+const indexes: IModelDescriptor["indexes"] = [[{ deca_id: 1, time: -1 }, {}]];
 
 export const ZDecaHistory = z.object({
   _id: zObjectId,
