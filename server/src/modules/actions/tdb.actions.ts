@@ -7,7 +7,7 @@ import {
   IBrevoContactsAPI,
 } from "../../../../shared/models/brevo.contacts.model";
 import { updateTdbRupturant } from "../../common/apis/tdb";
-import { BrevoEventStatus, IBrevoWebhookEvent, importContacts } from "../../common/services/brevo/brevo";
+import { BrevoEventStatus, IBrevoWebhookEvent } from "../../common/services/brevo/brevo";
 import {
   getCachedBouncerEmail,
   processHardbounceBouncer,
@@ -103,7 +103,6 @@ export async function processNewBrevoContact() {
     );
   }
 
-  await importContacts(brevoListe.listId, contactsValid);
   await updateTdbRupturant(tdbContacts);
 
   if (bulkOps.length === 0) {
@@ -158,27 +157,6 @@ export async function processQueuedBrevoContact() {
         },
       },
     }));
-
-    const mappedResult: Array<IBrevoContactsAPI> = chunk.emailsResult.reduce((acc, item) => {
-      const contact = chunk.emailsMap.get(item.email);
-      if (!contact || item.ping.status !== "valid") {
-        return acc;
-      }
-      return [
-        ...acc,
-        {
-          email: item.email,
-          nom: contact.nom,
-          prenom: contact.prenom,
-          urls: contact?.urls,
-          telephone: contact?.telephone,
-          nom_organisme: contact?.nom_organisme,
-          mission_locale_id: contact.mission_locale_id,
-        },
-      ];
-    }, [] as Array<IBrevoContactsAPI>);
-
-    await importContacts(brevoListe.listId, mappedResult);
 
     await updateTdbRupturant(
       chunk.emailsResult.map((item) => ({
