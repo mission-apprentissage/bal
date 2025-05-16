@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom";
 import { FindCursor, ObjectId } from "mongodb";
 
 import {
@@ -7,14 +6,13 @@ import {
   IBrevoContactsAPI,
 } from "../../../../shared/models/brevo.contacts.model";
 import { updateTdbRupturant } from "../../common/apis/tdb";
-import { BrevoEventStatus, IBrevoWebhookEvent, importContacts } from "../../common/services/brevo/brevo";
+import { BrevoEventStatus, IBrevoWebhookEvent } from "../../common/services/brevo/brevo";
 import {
   getCachedBouncerEmail,
   processHardbounceBouncer,
   verifyEmails,
 } from "../../common/services/mailer/mailBouncer";
 import { getDbCollection } from "../../common/utils/mongodbUtils";
-import config from "../../config";
 
 export async function insertBrevoContactList(contacts: Array<IBrevoContactsAPI>) {
   if (contacts.length === 0) {
@@ -30,7 +28,7 @@ export async function insertBrevoContactList(contacts: Array<IBrevoContactsAPI>)
             _id: new ObjectId(),
             created_at: currentDate,
             updated_at: currentDate,
-            ...contact,
+            email: contact.email,
             status: null,
           },
         },
@@ -43,17 +41,7 @@ export async function insertBrevoContactList(contacts: Array<IBrevoContactsAPI>)
 export async function processNewBrevoContact() {
   const cursor = getDbCollection("brevo.contacts").find({ status: null });
   const bulkOps = [];
-  const contactsValid = [];
   const tdbContacts = [];
-
-  const brevoListe = await getDbCollection("brevo.listes").findOne({
-    product: "tdb",
-    env: config.env,
-  });
-
-  if (!brevoListe) {
-    throw Boom.internal("Brevo liste not found");
-  }
 
   for await (const document of cursor) {
     const bouncerEmail = await getCachedBouncerEmail(document.email);
@@ -62,18 +50,6 @@ export async function processNewBrevoContact() {
         email: document.email,
         status: bouncerEmail.status,
       });
-
-      if (bouncerEmail.status === "valid") {
-        contactsValid.push({
-          email: document.email,
-          nom: document.nom,
-          prenom: document.prenom,
-          urls: document?.urls,
-          telephone: document?.telephone,
-          nom_organisme: document?.nom_organisme,
-          mission_locale_id: document.mission_locale_id,
-        });
-      }
     }
 
     bulkOps.push(
@@ -103,7 +79,6 @@ export async function processNewBrevoContact() {
     );
   }
 
-  await importContacts(brevoListe.listId, contactsValid);
   await updateTdbRupturant(tdbContacts);
 
   if (bulkOps.length === 0) {
@@ -131,15 +106,6 @@ export async function processQueuedBrevoContact() {
     }
   }
 
-  const brevoListe = await getDbCollection("brevo.listes").findOne({
-    product: "tdb",
-    env: config.env,
-  });
-
-  if (!brevoListe) {
-    throw Boom.internal("Brevo liste not found");
-  }
-
   const cursor = getDbCollection("brevo.contacts").find({ status: BrevoContactStatusEnum.queued });
 
   for await (const chunk of generator(cursor, 100)) {
@@ -158,27 +124,6 @@ export async function processQueuedBrevoContact() {
         },
       },
     }));
-
-    const mappedResult: Array<IBrevoContactsAPI> = chunk.emailsResult.reduce((acc, item) => {
-      const contact = chunk.emailsMap.get(item.email);
-      if (!contact || item.ping.status !== "valid") {
-        return acc;
-      }
-      return [
-        ...acc,
-        {
-          email: item.email,
-          nom: contact.nom,
-          prenom: contact.prenom,
-          urls: contact?.urls,
-          telephone: contact?.telephone,
-          nom_organisme: contact?.nom_organisme,
-          mission_locale_id: contact.mission_locale_id,
-        },
-      ];
-    }, [] as Array<IBrevoContactsAPI>);
-
-    await importContacts(brevoListe.listId, mappedResult);
 
     await updateTdbRupturant(
       chunk.emailsResult.map((item) => ({

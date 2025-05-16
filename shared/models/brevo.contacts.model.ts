@@ -16,12 +16,6 @@ export const zBrevoContacts = z.object({
   created_at: z.date(),
   updated_at: z.date(),
   status: z.nativeEnum(BrevoContactStatusEnum).nullable(),
-  nom: z.string(),
-  prenom: z.string(),
-  urls: z.record(z.string(), z.string()).nullable(),
-  telephone: z.string().nullable(),
-  nom_organisme: z.string().nullable(),
-  mission_locale_id: z.string(),
 });
 
 export type BrevoContacts = z.output<typeof zBrevoContacts>;
