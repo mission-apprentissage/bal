@@ -122,16 +122,6 @@ async function authAccessToken<S extends ISecuredRouteSchema>(
   return token ? { type: "token", value: token } : null;
 }
 
-function authBrevoApiKey(req: FastifyRequest): UserWithType<"brevo", IBrevo> | null {
-  const { apiKey } = req.query as { apiKey: string };
-
-  if (config.brevo.webhookApiKey !== apiKey) {
-    throw Boom.forbidden("Invalid API key");
-  }
-
-  return { type: "brevo", value: {} };
-}
-
 function assertUnreachable(_x: never): never {
   throw new Error("Didn't expect to get here");
 }
@@ -152,9 +142,6 @@ export async function authenticationMiddleware<S extends ISecuredRouteSchema>(sc
       break;
     case "access-token":
       req.user = await authAccessToken(req, schema);
-      break;
-    case "brevo-api-key":
-      req.user = authBrevoApiKey(req);
       break;
     default:
       assertUnreachable(securityScheme.auth);

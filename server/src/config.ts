@@ -68,10 +68,6 @@ const config = {
       s3File: env.get("LBA_ALGO_RECRUTEURS_LBA_S3FILE").required().asString(),
     },
   },
-  tdb: {
-    baseURL: env.get("MNA_BAL_TDB_BASE_URL").required().asString(),
-    apiKey: env.get("MNA_BAL_TDB_API_KEY").required().asString(),
-  },
   ftp: {
     host: env.get("FTP_HOST").required().asString(),
     constructys: {
@@ -140,10 +136,6 @@ const config = {
       storage: env.get("LBA_S3_BUCKET").required().asString(),
       application: env.get("LBA_S3_APPLICATIONS_BUCKET").required().asString(),
     },
-  },
-  brevo: {
-    apiKey: env.get("MNA_BAL_BREVO_API_KEY").required().asString(),
-    webhookApiKey: env.get("MNA_BAL_BREVO_WEBHOOK_API_KEY").required().asString(),
   },
 };
 
