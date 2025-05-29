@@ -9530,9 +9530,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^4.29.0":
-  version: 4.29.0
-  resolution: "fastify@npm:4.29.0"
+"fastify@npm:^4.29.1":
+  version: 4.29.1
+  resolution: "fastify@npm:4.29.1"
   dependencies:
     "@fastify/ajv-compiler": ^3.5.0
     "@fastify/error": ^3.4.0
@@ -9550,7 +9550,7 @@ __metadata:
     secure-json-parse: ^2.7.0
     semver: ^7.5.4
     toad-cache: ^3.3.0
-  checksum: d4f6fa4216b4671d8b6c2e39abdfaa073fc16e1f00220ddcee874cdde0149b44a82acc786444e9d5b248fa4eadcff9179c01d92d3a52003df7d246b01f39ffc2
+  checksum: d0a4f4e47393bdddf7e183c260aa7fe489e61436558ee2e4b95b8289e694757a722c3a969cd0495e35d04a46aaf8a9947c40e450c32c96e903220895f8637c4b
   languageName: node
   linkType: hard
 
@@ -17212,7 +17212,7 @@ __metadata:
     dotenv: ^16.4.7
     ejs: ^3.1.10
     env-var: ^7.5.0
-    fastify: ^4.29.0
+    fastify: ^4.29.1
     fastify-type-provider-zod: ^1.2.0
     iconv-lite: ^0.6.3
     job-processor: ^1.10.3
