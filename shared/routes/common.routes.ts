@@ -62,7 +62,7 @@ export const ZReqHeadersAuthorization = z
   })
   .passthrough();
 
-export type AuthStrategy = "api-key" | "cookie-session" | "access-token";
+export type AuthStrategy = "api-key" | "cookie-session" | "access-token" | "brevo-api-key";
 
 export type SecurityScheme = {
   auth: AuthStrategy;

@@ -137,6 +137,10 @@ const config = {
       application: env.get("LBA_S3_APPLICATIONS_BUCKET").required().asString(),
     },
   },
+  brevo: {
+    apiKey: env.get("MNA_BAL_BREVO_API_KEY").required().asString(),
+    webhookApiKey: env.get("MNA_BAL_BREVO_WEBHOOK_API_KEY").required().asString(),
+  },
 };
 
 export default config;

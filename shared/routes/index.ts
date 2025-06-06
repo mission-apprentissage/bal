@@ -13,6 +13,7 @@ import { zUploadRoutes } from "./upload.routes";
 import { zUploadSupportRoutes } from "./upload.support.routes";
 import { zUserAdminRoutes, zUserRoutes } from "./user.routes";
 import { zBouncerV1Routes } from "./v1/bouncer.routes";
+import { zBrevoWebhooks } from "./v1/brevo.routes";
 import { zDecaV1Routes } from "./v1/deca.routes";
 import { zOrganisationV1Routes } from "./v1/organisation.routes";
 
@@ -40,6 +41,7 @@ const zRoutesPost = {
   ...zMailingListRoutes.post,
   ...zUploadSupportRoutes.post,
   ...zBouncerV1Routes.post,
+  ...zBrevoWebhooks.post,
 } as const;
 
 const zRoutesPut = {
