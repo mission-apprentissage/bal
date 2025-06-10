@@ -137,6 +137,16 @@ exports[`zodToMongoSchema > should convert bouncer.email schema 1`] = `
         "null",
       ],
     },
+    "ttl": {
+      "anyOf": [
+        {
+          "bsonType": "date",
+        },
+        {
+          "bsonType": "null",
+        },
+      ],
+    },
   },
   "required": [
     "_id",
@@ -145,6 +155,7 @@ exports[`zodToMongoSchema > should convert bouncer.email schema 1`] = `
     "smtp",
     "ping",
     "created_at",
+    "ttl",
   ],
 }
 `;

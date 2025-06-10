@@ -5,8 +5,7 @@ import { getDbCollection } from "../../common/utils/mongodbUtils";
 export const up = async (_db: Db, _client: MongoClient) => {
   await getDbCollection("bouncer.email").updateMany(
     {
-      "ping.status": { $ne: "invalid" },
-      ttl: { $exists: false },
+      "ping.status": "invalid",
     },
     {
       $set: {
@@ -18,7 +17,7 @@ export const up = async (_db: Db, _client: MongoClient) => {
 
   await getDbCollection("bouncer.email").updateMany(
     {
-      "ping.status": "invalid",
+      "ping.status": { $ne: "invalid" },
     },
     {
       $set: {
