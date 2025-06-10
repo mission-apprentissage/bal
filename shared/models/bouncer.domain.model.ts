@@ -5,7 +5,10 @@ import { IModelDescriptor, zObjectId } from "./common";
 
 const collectionName = "bouncer.domain" as const;
 
-const indexes: IModelDescriptor["indexes"] = [[{ domain: 1, smtp: 1 }, { unique: true }]];
+const indexes: IModelDescriptor["indexes"] = [
+  [{ domain: 1, smtp: 1 }, { unique: true }],
+  [{ updated_at: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 30 }], // 30 days TTL
+];
 
 export const zBouncerDomain = z.object({
   _id: zObjectId,

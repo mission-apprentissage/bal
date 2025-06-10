@@ -4,7 +4,10 @@ import { IModelDescriptor, zObjectId } from "./common";
 
 const collectionName = "bouncer.email" as const;
 
-const indexes: IModelDescriptor["indexes"] = [[{ email: 1 }, { unique: true }]];
+const indexes: IModelDescriptor["indexes"] = [
+  [{ email: 1 }, { unique: true }],
+  [{ ttl: 1 }, { expireAfterSeconds: 0 }],
+];
 
 const zEmailStatus = z.enum(["valid", "invalid", "not_supported", "error"]);
 
@@ -26,6 +29,7 @@ export const zBouncerEmail = z.object({
   smtp: z.string().nullable(),
   ping: zBouncerPingResult,
   created_at: z.date(),
+  ttl: z.date().nullable(),
 });
 
 export type BouncerEmail = z.output<typeof zBouncerEmail>;

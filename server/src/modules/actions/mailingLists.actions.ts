@@ -484,20 +484,36 @@ const getBouncerComputeData = async (
     return new Map();
   }
 
-  const pingResults = await verifyEmails(
-    documentContents.map((documentContent): string => documentContent.content?.[emailColumn]?.toString() ?? "")
-  );
+  const documentIdToEmail = new Map<string, string>();
+  for (const documentContent of documentContents) {
+    const email = documentContent.content?.[emailColumn]?.toString() ?? "";
+    documentIdToEmail.set(documentContent._id.toString(), email);
+  }
 
-  const result = new Map<string, ICsvDatum>();
+  const pingResults = await verifyEmails(Array.from(documentIdToEmail.values()));
+
+  const pingResultsMap = new Map<string, ICsvDatum>();
   for (let i = 0; i < pingResults.length; i++) {
-    const id = documentContents[i]._id.toString();
-    const { ping } = pingResults[i];
-    result.set(id, {
+    const { email, ping } = pingResults[i];
+    pingResultsMap.set(email, {
       bounce_status: ping.status,
       bounce_message: ping.message,
       bounce_response_code: ping.responseCode ?? "",
       bounce_response_message: ping.responseMessage ?? "",
     });
+  }
+
+  const result = new Map<string, ICsvDatum>();
+  for (const documentContent of documentContents) {
+    const id = documentContent._id.toString();
+    const email = documentIdToEmail.get(id)!;
+    const pingResult = pingResultsMap.get(email) ?? {
+      bounce_status: "unknown",
+      bounce_message: "Email not found in bouncer",
+      bounce_response_code: "",
+      bounce_response_message: "",
+    };
+    result.set(id, pingResult);
   }
 
   return result;

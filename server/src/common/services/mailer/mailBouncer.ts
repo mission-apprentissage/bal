@@ -9,6 +9,9 @@ import { sleep } from "../../utils/asyncUtils";
 import { getDbCollection } from "../../utils/mongodbUtils";
 import { createSmtpConnection, getSmtpServer, quit, sayEhlo, vrfy, vrfyWorkaround } from "./smtpConnection";
 
+const ONE_HOUR = 60 * 60 * 1000;
+const ONE_DAY = 24 * ONE_HOUR;
+
 type SmtpSupportMap = Map<string, BouncerPingResult | null>;
 
 async function tryVerifyEmail(email: string, retryCount = 0): Promise<BouncerPingResult> {
@@ -178,6 +181,7 @@ async function persistPingResultCache(
       smtp,
       ping,
       created_at: new Date(),
+      ttl: ping.status === "invalid" ? null : new Date(Date.now() + 90 * ONE_DAY),
     });
   }
 
