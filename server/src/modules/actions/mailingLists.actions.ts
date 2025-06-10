@@ -490,9 +490,8 @@ const getBouncerComputeData = async (
 
   const result = new Map<string, ICsvDatum>();
   for (let i = 0; i < pingResults.length; i++) {
-    const id = documentContents[i]._id.toString();
-    const { ping } = pingResults[i];
-    result.set(id, {
+    const { email, ping } = pingResults[i];
+    result.set(email, {
       bounce_status: ping.status,
       bounce_message: ping.message,
       bounce_response_code: ping.responseCode ?? "",
