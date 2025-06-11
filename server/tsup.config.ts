@@ -13,7 +13,7 @@ export default defineConfig((options) => {
   };
 
   for (const file of migrationFiles) {
-    entry[`db/migrations/${basename(file, ".ts")}`] = `src/db/migrations/${file}`;
+    entry[`migrations/${basename(file, ".ts")}`] = `src/migrations/${file}`;
   }
 
   return {
