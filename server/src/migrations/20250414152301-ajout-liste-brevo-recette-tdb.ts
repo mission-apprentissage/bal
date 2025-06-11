@@ -1,6 +1,6 @@
 import { Db, ObjectId } from "mongodb";
 
-import config from "../../config";
+import config from "../config";
 
 export const up = async (db: Db) => {
   const brevoListeCollection = db.collection("brevo.listes");

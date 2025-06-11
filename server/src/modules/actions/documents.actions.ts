@@ -325,7 +325,8 @@ export const uploadFile = async (stream: Readable, doc: IUploadDocument, options
 };
 
 export const checkCsvFile = async (document: IUploadDocument) => {
-  await sleep(3000);
+  // wait 5 seconds to make sure ovh has time to process the file
+  await sleep(5000);
   await readDocumentContent(
     document,
     {

@@ -1,7 +1,7 @@
 import { Db, MongoClient } from "mongodb";
 import { DOCUMENT_TYPES } from "shared/constants/documents";
 
-import { importDecaContent } from "../../modules/actions/deca.actions";
+import { importDecaContent } from "../modules/actions/deca.actions";
 
 export const up = async (db: Db, _client: MongoClient) => {
   // transform organisation_id to organisations
