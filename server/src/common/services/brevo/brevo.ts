@@ -36,7 +36,7 @@ const initContactApi = () => {
   const apiKey = config.brevo.apiKey;
 
   if (!apiKey) {
-    throw Boom.internal("Brevo API key not set");
+    captureException(new Error("Brevo API key is not set"));
   }
 
   apiInstance.setApiKey(ContactsApiApiKeys.apiKey, apiKey);
@@ -51,10 +51,6 @@ export const importContacts = async (
     email: string;
     prenom: string;
     nom: string;
-    urls?: Record<string, string> | null;
-    telephone?: string | null;
-    nom_organisme?: string | null;
-    mission_locale_id: string;
   }>
 ) => {
   if (!ContactInstance) {
@@ -70,10 +66,6 @@ export const importContacts = async (
     contactData.attributes = {
       PRENOM: contact.prenom,
       NOM: contact.nom,
-      ...contact.urls,
-      TELEPHONE: contact.telephone,
-      NOM_ORGANISME: contact.nom_organisme,
-      MISSION_LOCALE_ID: contact.mission_locale_id,
     };
     return contactData;
   });
