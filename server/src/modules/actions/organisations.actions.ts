@@ -174,6 +174,7 @@ export const updateOrganisationAndPerson = async (
   let domain = courriel.split("@")[1].toLowerCase();
 
   if (dns_lookup) {
+    // TODO: Check company domain validity
     try {
       await dnsLookup(domain);
     } catch (error) {

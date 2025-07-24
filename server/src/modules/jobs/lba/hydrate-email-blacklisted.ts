@@ -74,6 +74,7 @@ async function updateLbaBlacklistedEmail({ _id, ...document }: ILbaEmailBlacklis
     },
     async () => {
       try {
+        // TODO: connect directly to LBA database with Read-Only client
         const emailNormalized = extensions.email.parse(document.email);
         await getDbCollection("lba.emailblacklists").updateOne(
           { email: emailNormalized },

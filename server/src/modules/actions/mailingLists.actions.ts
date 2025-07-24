@@ -240,7 +240,8 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
   let skip =
     mailingList.document_id == null
       ? 0
-      : await getDbCollection("documentContents").countDocuments({ document_id: mailingList.document_id });
+      : // TODO: issue count input != count output
+        await getDbCollection("documentContents").countDocuments({ document_id: mailingList.document_id });
   let hasMore = true;
   let processed = skip;
 
@@ -274,7 +275,7 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
       },
       async () => {
         Sentry.getCurrentScope().setExtras({ mailingList, skip });
-        await importDocumentContent(outputDocument, output, (line) => line);
+        await importDocumentContent(outputDocument, output);
       }
     );
 

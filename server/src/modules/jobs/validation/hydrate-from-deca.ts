@@ -1,6 +1,5 @@
 import { internal } from "@hapi/boom";
 import { pMapIterable } from "p-map";
-import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { IDeca } from "shared/models/deca.model/deca.model";
 
 import parentLogger from "@/common/logger";
@@ -20,7 +19,7 @@ async function runDoc(docDeca: IDeca) {
   if (countA > 1) return; // bad data multiple email
 
   try {
-    await updateOrganisationAndPerson(siret, courriel, DOCUMENT_TYPES.DECA, false);
+    await updateOrganisationAndPerson(siret, courriel, "DECA", false);
   } catch (error) {
     internal(error);
   }

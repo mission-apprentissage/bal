@@ -31,6 +31,7 @@ import { errorMiddleware } from "./middlewares/errorMiddleware";
 import { logMiddleware } from "./middlewares/logMiddleware";
 import { uploadSupportRoutes } from "./upload.support.routes";
 import { userRoutes } from "./user.routes";
+import { bouncerRoutes } from "./v1/bouncer.routes";
 import { decaRoutes } from "./v1/deca.routes";
 import { organisationRoutes } from "./v1/organisation.routes";
 import { webhookRoutes } from "./webhooks.routes";
@@ -140,4 +141,5 @@ export const registerV1Routes: RegisterRoutes = ({ server }) => {
   organisationRoutes({ server });
   decaRoutes({ server });
   webhookRoutes({ server });
+  bouncerRoutes({ server });
 };

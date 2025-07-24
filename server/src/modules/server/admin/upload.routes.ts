@@ -81,10 +81,6 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
         added_by: user._id,
       });
 
-      if (!document) {
-        throw Boom.badImplementation("Impossible de stocker le fichier");
-      }
-
       try {
         await uploadFile(data.file, document, {
           mimetype: data.mimetype,
