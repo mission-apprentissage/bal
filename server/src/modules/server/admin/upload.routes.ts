@@ -90,7 +90,10 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
           mimetype: data.mimetype,
         });
       } catch (error) {
-        await deleteDocumentById(document._id);
+        // CSV files are deleted through the checkCsvFile function, to get the proper error message
+        if (data.mimetype !== "text/csv") {
+          await deleteDocumentById(document._id);
+        }
 
         if (error.isBoom) {
           throw error;
