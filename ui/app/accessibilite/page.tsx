@@ -1,5 +1,5 @@
-import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
 import Accessibilite from "./components/Accessibilite";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 const AccessibilitePage = () => {
   return (

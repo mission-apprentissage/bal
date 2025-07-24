@@ -2,10 +2,12 @@
 
 !/server/src
 !/server/static
+!/server/types
 !/server/package.json
 !/server/tsconfig.json
-!/server/tsoa.json
 !/server/tsup.config.ts
+!/server/sentry-deploy-server.sh
+!/server/sentry-release-server.sh
 
 !/shared
 
@@ -31,3 +33,5 @@
 **/node_modules
 */tests
 **/logs
+**/*.test.ts
+!**/tsconfig.json

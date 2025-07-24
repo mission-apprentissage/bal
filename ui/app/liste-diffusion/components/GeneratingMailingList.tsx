@@ -1,13 +1,14 @@
-import Alert from "@codegouvfr/react-dsfr/Alert";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import { Box, Typography } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { FC, useState } from "react";
-import { IDocument } from "shared/models/document.model";
-import { IMailingListWithDocumentAndOwnerJson } from "shared/models/mailingList.model";
+import type { FC } from "react";
+import { useState } from "react";
+import type { IDocument } from "shared/models/document.model";
+import type { IMailingListWithDocumentAndOwnerJson } from "shared/models/mailingList.model";
 
-import { apiGet } from "../../../utils/api.utils";
+import { apiGet } from "@/utils/api.utils";
 
 interface Props {
   mailingList?: IMailingListWithDocumentAndOwnerJson;
@@ -36,7 +37,7 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
 
       if (!shouldRefetch(data.status)) {
         setAllowRefetch(false);
-        queryClient.invalidateQueries({ queryKey: ["mailingLists"] });
+        await queryClient.invalidateQueries({ queryKey: ["mailingLists"] });
       }
 
       if (data.status === "done") {
@@ -48,7 +49,6 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
     refetchInterval: 10_000,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const lineCount = progress?.lines_count ?? 0;
   const importCount = progress?.process_progress ?? 0;
   const progression = lineCount === 0 ? 0 : Math.ceil((importCount / lineCount) * 100);

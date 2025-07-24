@@ -1,10 +1,11 @@
 import Boom from "@hapi/boom";
-import { RootFilterOperators } from "mongodb";
-import { IUser, toPublicUser } from "shared/models/user.model";
+import type { RootFilterOperators } from "mongodb";
+import type { IUser } from "shared/models/user.model";
+import { toPublicUser } from "shared/models/user.model";
 import { zUserAdminRoutes } from "shared/routes/user.routes";
 
 import { createUser, deleteUser, findUser, findUsers } from "../../actions/users.actions";
-import { Server } from "../server";
+import type { Server } from "../server";
 
 export const userAdminRoutes = ({ server }: { server: Server }) => {
   server.post(

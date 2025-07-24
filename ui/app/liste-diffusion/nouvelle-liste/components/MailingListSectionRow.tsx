@@ -1,6 +1,7 @@
 import { fr } from "@codegouvfr/react-dsfr";
-import { Grid, GridProps } from "@mui/material";
-import { FC, PropsWithChildren } from "react";
+import type { GridProps } from "@mui/material";
+import { Grid } from "@mui/material";
+import type { FC, PropsWithChildren } from "react";
 
 const MailingListSectionRow: FC<PropsWithChildren<GridProps>> = ({ children, ...props }) => {
   return (

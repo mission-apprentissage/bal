@@ -1,14 +1,14 @@
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { IOrganisationJson } from "shared/models/organisation.model";
+import type { IOrganisationJson } from "shared/models/organisation.model";
 
-import SearchBar from "../../../../components/SearchBar";
-import Table from "../../../../components/table/Table";
-import { apiGet } from "../../../../utils/api.utils";
-import { formatUrlWithNewParams, getSearchParamsForQuery } from "../../../../utils/query.utils";
-import { PAGES } from "../../../components/breadcrumb/Breadcrumb";
-import Loading from "../../../loading";
+import SearchBar from "@/components/SearchBar";
+import Table from "@/components/table/Table";
+import { apiGet } from "@/utils/api.utils";
+import { formatUrlWithNewParams, getSearchParamsForQuery } from "@/utils/query.utils";
+import { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import Loading from "@/app/loading";
 
 const OrganisationList = () => {
   const searchParams = useSearchParams();

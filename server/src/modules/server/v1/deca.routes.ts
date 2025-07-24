@@ -2,7 +2,7 @@ import Boom from "@hapi/boom";
 import { zRoutes } from "shared";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
-import { Server } from "../server";
+import type { Server } from "../server";
 
 export const decaRoutes = ({ server }: { server: Server }) => {
   server.post(

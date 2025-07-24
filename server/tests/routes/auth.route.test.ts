@@ -2,12 +2,12 @@ import assert from "node:assert";
 
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
+import { useMongo } from "../utils/mongo.utils";
 import config from "@/config";
 import { getSession } from "@/modules/actions/sessions.actions";
 import { createUser } from "@/modules/actions/users.actions";
-import createServer, { Server } from "@/modules/server/server";
-
-import { useMongo } from "../utils/mongo.utils";
+import type { Server } from "@/modules/server/server";
+import createServer from "@/modules/server/server";
 
 type Cookie = {
   name: string;

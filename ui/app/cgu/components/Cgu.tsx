@@ -1,9 +1,10 @@
 import { getLink } from "@codegouvfr/react-dsfr/link";
 import { Summary } from "@codegouvfr/react-dsfr/Summary";
 import { Grid, Typography } from "@mui/material";
-import React, { FC, useEffect } from "react";
+import type { FC } from "react";
+import React, { useEffect } from "react";
 
-import Section from "../../components/section/Section";
+import Section from "@/app/components/section/Section";
 
 export const cguVersion = "v0.1";
 

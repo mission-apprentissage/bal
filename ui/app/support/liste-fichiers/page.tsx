@@ -4,10 +4,10 @@ import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import cryptoRandomString from "crypto-random-string";
 
-import { publicConfig } from "../../../config.public";
-import { apiGet } from "../../../utils/api.utils";
-import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import SupportFileList from "./components/supportFileList";
+import { publicConfig } from "@/config.public";
+import { apiGet } from "@/utils/api.utils";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 type fichier = {
   id: string;

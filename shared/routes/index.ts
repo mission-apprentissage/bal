@@ -1,8 +1,8 @@
-import { ConditionalExcept, EmptyObject, Jsonify } from "type-fest";
-import z, { ZodType } from "zod";
+import type { ConditionalExcept, EmptyObject, Jsonify } from "type-fest";
+import type { ZodType, z } from "zod";
 
 import { zAuthRoutes } from "./auth.routes";
-import { IRouteSchema, IRouteSchemaWrite } from "./common.routes";
+import type { IRouteSchema, IRouteSchemaWrite } from "./common.routes";
 import { zCoreRoutes } from "./core.routes";
 import { zDocumentRoutes } from "./document.routes";
 import { zEmailRoutes } from "./emails.routes";

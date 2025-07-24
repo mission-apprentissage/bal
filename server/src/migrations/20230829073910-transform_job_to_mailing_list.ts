@@ -1,11 +1,11 @@
-import { Db, MongoClient } from "mongodb";
+import type { Db, MongoClient } from "mongodb";
 
 export const up = async (db: Db, _client: MongoClient) => {
   const jobs = await db.collection("jobs").find({ name: "generate:mailing-list" }).toArray();
 
   await Promise.all(
     jobs.map(async (job) => {
-      db.collection("mailingLists").insertOne({
+      await db.collection("mailingLists").insertOne({
         source: job.payload.source,
         document_id: job.payload.document_id,
         added_by: job.payload.user_id,

@@ -2,7 +2,8 @@ import { z } from "zod";
 
 import { zObjectId } from "../models/common";
 import { ZOrganisation } from "../models/organisation.model";
-import { IRoutesDef, ZReqParamsSearchPagination } from "./common.routes";
+import type { IRoutesDef } from "./common.routes";
+import { ZReqParamsSearchPagination } from "./common.routes";
 
 export const zAdminOrganisationRoutes = {
   get: {

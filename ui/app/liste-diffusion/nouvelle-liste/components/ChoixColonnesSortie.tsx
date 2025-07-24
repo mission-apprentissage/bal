@@ -1,25 +1,25 @@
-import Button from "@codegouvfr/react-dsfr/Button";
-import Input from "@codegouvfr/react-dsfr/Input";
-import Select from "@codegouvfr/react-dsfr/Select";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { Select } from "@codegouvfr/react-dsfr/Select";
 import { Box, Tooltip, Typography } from "@mui/material";
-import { FC } from "react";
+import type { FC } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { IBody, IPostRoutes } from "shared";
+import type { IBody, IPostRoutes } from "shared";
 import {
   isComputedColumns,
   MAILING_LIST_COMPUTED_COLUMNS,
   MAILING_LIST_COMPUTED_COLUMNS_KEYS,
 } from "shared/constants/mailingList";
-import { IDocumentContentJson } from "shared/models/documentContent.model";
-import { IMailingListJson } from "shared/models/mailingList.model";
+import type { IDocumentContentJson } from "shared/models/documentContent.model";
+import type { IMailingListJson } from "shared/models/mailingList.model";
 
-import ToggleSwitchInput from "../../../../components/form/ToggleSwitchInput";
-import { apiPost } from "../../../../utils/api.utils";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
 import PreviewColonnesSortie from "./PreviewColonnesSortie";
 import Sample from "./Sample";
 import WarningEmail from "./WarningEmail";
+import { apiPost } from "@/utils/api.utils";
+import ToggleSwitchInput from "@/components/form/ToggleSwitchInput";
 
 interface Props {
   onSuccess: (data: IBody<IPostRoutes["/mailing-list"]>) => void;
@@ -155,7 +155,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                   state={errors.output_columns?.[index]?.column?.message ? "error" : "default"}
                   stateRelatedMessage={errors.output_columns?.[index]?.column?.message}
                   nativeSelectProps={{
-                    onChange: (e) => {
+                    onChange: async (e) => {
                       const { value } = e.target;
 
                       if (isComputedColumns(value)) {
@@ -166,7 +166,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                         setValue(`output_columns.${index}.output`, value);
                       }
 
-                      onChange(e);
+                      await onChange(e);
                     },
                     ...columnField,
                   }}

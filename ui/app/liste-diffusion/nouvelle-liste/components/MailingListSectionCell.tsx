@@ -1,5 +1,6 @@
-import { Grid, GridProps } from "@mui/material";
-import { FC, PropsWithChildren } from "react";
+import type { GridProps } from "@mui/material";
+import { Grid } from "@mui/material";
+import type { FC, PropsWithChildren } from "react";
 
 const MailingListSectionCell: FC<PropsWithChildren<GridProps>> = ({ children, ...props }) => {
   return (

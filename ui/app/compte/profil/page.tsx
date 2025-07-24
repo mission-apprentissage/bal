@@ -1,17 +1,17 @@
 "use client";
 
-import Button from "@codegouvfr/react-dsfr/Button";
-import Input from "@codegouvfr/react-dsfr/Input";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 
-import InfoDetails from "../../../components/infoDetails/InfoDetails";
-import Toast, { useToast } from "../../../components/toast/Toast";
-import { useAuth } from "../../../context/AuthContext";
-import { apiGet } from "../../../utils/api.utils";
-import { formatDate } from "../../../utils/date.utils";
-import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
+import InfoDetails from "@/components/infoDetails/InfoDetails";
+import Toast, { useToast } from "@/components/toast/Toast";
+import { useAuth } from "@/context/AuthContext";
+import { apiGet } from "@/utils/api.utils";
+import { formatDate } from "@/utils/date.utils";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 const modal = createModal({
   id: "generate-api-key",
@@ -23,9 +23,10 @@ const ProfilPage = () => {
   const [apiKey, setApiKey] = useState<string | undefined>();
   const { toast, setToast, handleClose } = useToast();
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (apiKey) {
-      navigator.clipboard.writeText(apiKey);
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins
+      await navigator.clipboard.writeText(apiKey);
       setToast({
         severity: "success",
         message: "Jeton API copié dans le presse-papier.",
@@ -107,8 +108,8 @@ const ProfilPage = () => {
             children: "Annuler",
           },
           {
-            onClick: () => {
-              generateApiKey();
+            onClick: async () => {
+              await generateApiKey();
             },
             children: "Générer",
           },

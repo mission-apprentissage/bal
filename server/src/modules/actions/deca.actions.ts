@@ -1,5 +1,5 @@
 import companyEmailValidator from "company-email-validator";
-import { IPostRoutes, IResponse } from "shared";
+import type { IPostRoutes, IResponse } from "shared";
 import { SIRET_REGEX } from "shared/constants/regex";
 import { getSirenFromSiret } from "shared/helpers/common";
 
@@ -48,7 +48,7 @@ export const importDecaContent = async (emails: string[], siret: string) => {
   });
 
   await Promise.all(
-    uniqueEmails.map((email) =>
+    uniqueEmails.map(async (email) =>
       getDbCollection("persons").updateOne(
         {
           email,

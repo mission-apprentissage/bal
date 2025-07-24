@@ -1,14 +1,15 @@
 import { fr } from "@codegouvfr/react-dsfr";
-import Select from "@codegouvfr/react-dsfr/Select";
+import { Select } from "@codegouvfr/react-dsfr/Select";
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
-import { FC } from "react";
+import type { TooltipProps } from "@mui/material/Tooltip";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import type { FC } from "react";
 import { useFormContext } from "react-hook-form";
-import { IDocumentContentJson } from "shared/models/documentContent.model";
-import { IMailingListJson } from "shared/models/mailingList.model";
+import type { IDocumentContentJson } from "shared/models/documentContent.model";
+import type { IMailingListJson } from "shared/models/mailingList.model";
 
-import { ITrainingField } from "./ChoixColonnesFormation";
+import type { ITrainingField } from "./ChoixColonnesFormation";
 import MailingListSectionCell from "./MailingListSectionCell";
 import MailingListSectionRow from "./MailingListSectionRow";
 import Sample from "./Sample";

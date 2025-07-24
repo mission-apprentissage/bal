@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { zRoutes } from "shared";
 
 import { findPerson, findPersons } from "../../actions/persons.actions";
-import { Server } from "../server";
+import type { Server } from "../server";
 
 export const personAdminRoutes = ({ server }: { server: Server }) => {
   server.get(

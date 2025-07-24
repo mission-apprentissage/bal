@@ -1,4 +1,4 @@
-import { Stream } from "stream";
+import type { Stream } from "stream";
 
 declare module "checksum-stream" {
   interface Options {

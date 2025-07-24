@@ -1,5 +1,6 @@
 import { Breadcrumb as DSFRBreadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
-import React, { FC } from "react";
+import type { FC } from "react";
+import React from "react";
 
 export const PAGES = {
   homepage: () => ({

@@ -1,16 +1,17 @@
 "use client";
 
-import Button from "@codegouvfr/react-dsfr/Button";
-import Input from "@codegouvfr/react-dsfr/Input";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Upload as DSFRUpload } from "@codegouvfr/react-dsfr/Upload";
 import { Box, styled, Typography } from "@mui/material";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { IPostRoutes } from "shared";
-import { z } from "zod";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import type { IPostRoutes } from "shared";
 
-import Toast, { useToast } from "../../../components/toast/Toast";
-import { apiPost } from "../../../utils/api.utils";
+import Toast, { useToast } from "@/components/toast/Toast";
+import { apiPost } from "@/utils/api.utils";
+import { z } from "zod";
 
 interface FormValues extends z.input<IPostRoutes["/admin/upload"]["querystring"]> {
   file: FileList;

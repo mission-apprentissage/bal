@@ -1,7 +1,8 @@
-import { Jsonify } from "type-fest";
+import type { Jsonify } from "type-fest";
 import { z } from "zod";
 
-import { IModelDescriptor, zObjectId } from "../common";
+import type { IModelDescriptor } from "../common";
+import { zObjectId } from "../common";
 import { ZDecaApprenant } from "./parts/deca.apprenant.part";
 import { ZDecaEmployeur } from "./parts/deca.employeur.part";
 import { ZDecaEtablissementFormation } from "./parts/deca.etablissementFormation.part";

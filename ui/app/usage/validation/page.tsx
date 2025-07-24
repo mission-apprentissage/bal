@@ -5,10 +5,10 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { IBody, IPostRoutes, IResponse } from "shared";
+import type { IBody, IPostRoutes, IResponse } from "shared";
 
-import { apiPost } from "../../../utils/api.utils";
-import ViewData from "../components/ViewData";
+import { apiPost } from "@/utils/api.utils";
+import ViewData from "@/app/usage/components/ViewData";
 
 type Route = IPostRoutes["/v1/organisation/validation"];
 type Req = IBody<Route>;

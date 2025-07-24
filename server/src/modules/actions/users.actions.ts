@@ -1,12 +1,12 @@
-import { Filter, ObjectId, UpdateFilter } from "mongodb";
-import { IUser, IUserWithPerson } from "shared/models/user.model";
-
-import { getDbCollection } from "@/common/utils/mongodbUtils";
+import type { Filter, UpdateFilter } from "mongodb";
+import { ObjectId } from "mongodb";
+import type { IUser, IUserWithPerson } from "shared/models/user.model";
 
 import { generateKey, generateSecretHash } from "../../common/utils/cryptoUtils";
 import { createUserTokenSimple } from "../../common/utils/jwtUtils";
 import { hashPassword } from "../server/utils/password.utils";
 import { createPerson } from "./persons.actions";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 type ICreateUser = {
   email: string;

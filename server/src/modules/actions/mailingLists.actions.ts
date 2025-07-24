@@ -4,20 +4,18 @@ import { pipeline } from "node:stream/promises";
 import { internal } from "@hapi/boom";
 import * as Sentry from "@sentry/node";
 import { stringify } from "csv-stringify";
-import { addJob, IJobsSimple } from "job-processor";
-import { Filter, FindCursor, FindOptions, ObjectId } from "mongodb";
+import type { IJobsSimple } from "job-processor";
+import { addJob } from "job-processor";
+import type { Filter, FindCursor, FindOptions } from "mongodb";
+import { ObjectId } from "mongodb";
 import { getMailingOutputColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList";
 import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
-import { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
-import { IDocumentContent } from "shared/models/documentContent.model";
-import { IMailingList, IMailingListWithDocumentAndOwner } from "shared/models/mailingList.model";
+import type { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
+import type { IDocumentContent } from "shared/models/documentContent.model";
+import type { IMailingList, IMailingListWithDocumentAndOwner } from "shared/models/mailingList.model";
 import { z } from "zod";
-
-import logger from "@/common/logger";
-import * as crypto from "@/common/utils/cryptoUtils";
-import { getDbCollection } from "@/common/utils/mongodbUtils";
-
-import { getTrainingLinks, TrainingLink, TrainingLinkData } from "../../common/apis/lba";
+import type { TrainingLink, TrainingLinkData } from "../../common/apis/lba";
+import { getTrainingLinks } from "../../common/apis/lba";
 import { verifyEmails } from "../../common/services/mailer/mailBouncer";
 import { sleep } from "../../common/utils/asyncUtils";
 import { uploadToStorage } from "../../common/utils/ovhUtils";
@@ -31,10 +29,11 @@ import {
   importDocumentContent,
   updateDocument,
 } from "./documents.actions";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
+import * as crypto from "@/common/utils/cryptoUtils";
+import logger from "@/common/logger";
 
 const MAILING_LIST_BATCH_SIZE = 1_000;
-
-export const MAILING_LIST_DOCUMENT_PREFIX = "mailing-list";
 
 export const createMailingList = async (data: Omit<IMailingList, "_id" | "status" | "created_at" | "updated_at">) => {
   const now = new Date();

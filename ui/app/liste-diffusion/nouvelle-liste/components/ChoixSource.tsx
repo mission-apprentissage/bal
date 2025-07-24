@@ -1,16 +1,17 @@
-import Button from "@codegouvfr/react-dsfr/Button";
-import Input from "@codegouvfr/react-dsfr/Input";
-import Select from "@codegouvfr/react-dsfr/Select";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { Select } from "@codegouvfr/react-dsfr/Select";
 import { Box, Typography } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
+import type { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
-import { FC, useEffect } from "react";
+import type { FC } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { IDocumentContentJson } from "shared/models/documentContent.model";
-import { IMailingListJson } from "shared/models/mailingList.model";
+import type { IDocumentContentJson } from "shared/models/documentContent.model";
+import type { IMailingListJson } from "shared/models/mailingList.model";
 
-import Table from "../../../../components/table/Table";
-import { apiGet } from "../../../../utils/api.utils";
+import Table from "@/components/table/Table";
+import { apiGet } from "@/utils/api.utils";
 
 export interface IChoseSourceForm {
   campaign_name: string;
@@ -36,7 +37,7 @@ const ChoixSource: FC<Props> = ({ mailingList, onSuccess }) => {
   useEffect(() => {
     setValue("campaign_name", mailingList?.campaign_name ?? "");
     setValue("source", mailingList?.source ?? "");
-  }, [mailingList]);
+  }, [setValue, mailingList]);
 
   const watchSource = watch("source");
 

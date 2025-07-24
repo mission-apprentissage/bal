@@ -1,6 +1,6 @@
+import crypto from "crypto";
 import { internal } from "@hapi/boom";
 import checksumStream from "checksum-stream";
-import crypto from "crypto";
 
 import config from "@/config";
 
@@ -35,7 +35,7 @@ export function checksum() {
 
   return {
     hashStream: stream,
-    getHash: () => promise,
+    getHash: async () => promise,
   };
 }
 

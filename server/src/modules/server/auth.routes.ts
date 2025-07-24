@@ -1,11 +1,12 @@
 import Boom from "@hapi/boom";
 import { zRoutes } from "shared";
-import { IUserWithPerson, toPublicUser } from "shared/models/user.model";
+import type { IUserWithPerson } from "shared/models/user.model";
+import { toPublicUser } from "shared/models/user.model";
 
 import { getUserFromRequest } from "../../security/authenticationService";
 import { resetPassword, sendResetPasswordEmail, verifyEmailPassword } from "../actions/auth.actions";
 import { startSession, stopSession } from "../actions/sessions.actions";
-import { Server } from "./server";
+import type { Server } from "./server";
 
 export const authRoutes = ({ server }: { server: Server }) => {
   /**
@@ -83,7 +84,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
         await resetPassword(user, password);
 
         return response.status(200).send({});
-      } catch (error) {
+      } catch (_error) {
         throw Boom.badData("Jeton invalide");
       }
     }

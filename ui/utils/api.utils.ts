@@ -1,9 +1,9 @@
-import { IDeleteRoutes, IGetRoutes, IPostRoutes, IPutRoutes, IRequest, IResponse } from "shared";
-import { IResErrorJson, IRouteSchema, IRouteSchemaWrite } from "shared/routes/common.routes";
-import { EmptyObject } from "type-fest";
-import z, { ZodType } from "zod";
+import type { IDeleteRoutes, IGetRoutes, IPostRoutes, IPutRoutes, IRequest, IResponse } from "shared";
+import type { IResErrorJson, IRouteSchema, IRouteSchemaWrite } from "shared/routes/common.routes";
+import type { EmptyObject } from "type-fest";
+import type { ZodType, z } from "zod";
 
-import { publicConfig } from "../config.public";
+import { publicConfig } from "@/config.public";
 
 type PathParam = Record<string, string>;
 type QueryString = Record<string, string | string[]>;
@@ -73,7 +73,7 @@ async function getHeaders(options: IRequestOptions) {
         headers.append("cookie", cookie);
       }
     }
-  } catch (error) {
+  } catch (_error) {
     // We're in client, cookies will be includes
   }
 
@@ -205,7 +205,7 @@ export class ApiError extends Error {
           message = data.message;
           errorData = data.data;
         }
-      } catch (error) {
+      } catch (_error) {
         // ignore
       }
     }

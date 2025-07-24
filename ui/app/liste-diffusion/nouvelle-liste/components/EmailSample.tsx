@@ -1,10 +1,10 @@
-import Alert from "@codegouvfr/react-dsfr/Alert";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Box } from "@mui/material";
-import { FC } from "react";
-import { IDocumentContentJson } from "shared/models/documentContent.model";
+import type { FC } from "react";
+import type { IDocumentContentJson } from "shared/models/documentContent.model";
 
-import { getDataFromSample } from "../mailingLists.utils";
 import Sample from "./Sample";
+import { getDataFromSample } from "@/app/liste-diffusion/nouvelle-liste/mailingLists.utils";
 
 interface Props {
   sample: IDocumentContentJson[];

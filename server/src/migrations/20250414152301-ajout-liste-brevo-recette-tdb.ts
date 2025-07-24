@@ -1,4 +1,5 @@
-import { Db, ObjectId } from "mongodb";
+import type { Db } from "mongodb";
+import { ObjectId } from "mongodb";
 
 import config from "../config";
 

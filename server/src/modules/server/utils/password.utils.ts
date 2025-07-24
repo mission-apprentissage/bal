@@ -1,5 +1,5 @@
-import Boom from "@hapi/boom";
 import crypto from "crypto";
+import Boom from "@hapi/boom";
 
 import config from "@/config";
 

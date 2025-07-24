@@ -1,9 +1,9 @@
 import { diff } from "deep-object-diff";
 import { get } from "lodash-es";
 import { ObjectId } from "mongodb";
-import { IDeca } from "shared/models/deca.model/deca.model";
-import { IDecaHistory } from "shared/models/deca.model/decaHistory.model";
-import { Primitive } from "type-fest";
+import type { IDeca } from "shared/models/deca.model/deca.model";
+import type { IDecaHistory } from "shared/models/deca.model/decaHistory.model";
+import type { Primitive } from "type-fest";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
@@ -55,7 +55,7 @@ async function saveHistory(originalDocument: IDeca, newDocument: IDeca, updateTi
           key,
           from: previousValue,
           to: updatedFieldValue,
-          // eslint-disable-next-line no-underscore-dangle
+
           deca_id: originalDocument._id,
           time: updateTime,
         };

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { zObjectId } from "../models/common";
-import { IRoutesDef } from "./common.routes";
+import type { IRoutesDef } from "./common.routes";
 
 export const zEmailRoutes = {
   get: {

@@ -1,19 +1,23 @@
-import fastifyCookie from "@fastify/cookie";
-import fastifyCors from "@fastify/cors";
-import fastifyMultipart from "@fastify/multipart";
-import fastifySwagger, { FastifyStaticSwaggerOptions, StaticDocumentSpec } from "@fastify/swagger";
-import fastifySwaggerUi, { FastifySwaggerUiOptions } from "@fastify/swagger-ui";
+import { fastifyCookie } from "@fastify/cookie";
+import { fastifyCors } from "@fastify/cors";
+import { fastifyMultipart } from "@fastify/multipart";
+import type { FastifyStaticSwaggerOptions, StaticDocumentSpec } from "@fastify/swagger";
+import { fastifySwagger } from "@fastify/swagger";
+import type { FastifySwaggerUiOptions } from "@fastify/swagger-ui";
+import { fastifySwaggerUi } from "@fastify/swagger-ui";
 import Boom from "@hapi/boom";
-import fastify, {
+import type {
   FastifyBaseLogger,
   FastifyInstance,
   RawReplyDefaultExpression,
   RawRequestDefaultExpression,
   RawServerDefault,
 } from "fastify";
-import { serializerCompiler, validatorCompiler, ZodTypeProvider } from "fastify-type-provider-zod";
+import { fastify } from "fastify";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
+import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 import { generateOpenApiSchema } from "shared/helpers/openapi/generateOpenapi";
-import { IRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
+import type { IRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
 
 import { initSentryFastify } from "../../common/services/sentry/sentry";
 import config from "../../config";
@@ -36,14 +40,13 @@ import { decaRoutes } from "./v1/deca.routes";
 import { organisationRoutes } from "./v1/organisation.routes";
 import { webhookRoutes } from "./webhooks.routes";
 
-export interface Server
-  extends FastifyInstance<
-    RawServerDefault,
-    RawRequestDefaultExpression<RawServerDefault>,
-    RawReplyDefaultExpression<RawServerDefault>,
-    FastifyBaseLogger,
-    ZodTypeProvider
-  > {}
+export type Server = FastifyInstance<
+  RawServerDefault,
+  RawRequestDefaultExpression<RawServerDefault>,
+  RawReplyDefaultExpression<RawServerDefault>,
+  FastifyBaseLogger,
+  ZodTypeProvider
+>;
 
 export async function bind(app: Server) {
   initSentryFastify(app);
@@ -102,7 +105,7 @@ export async function bind(app: Server) {
     { prefix: "/api" }
   );
 
-  app.setNotFoundHandler((req, res) => {
+  app.setNotFoundHandler((_req, res) => {
     res.status(404).send(Boom.notFound().output);
   });
 

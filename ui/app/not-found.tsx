@@ -1,10 +1,10 @@
 "use client";
 import { Box, Typography } from "@mui/material";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 
-import { NotFound } from "../icons/NotFound";
 import { PAGES } from "./components/breadcrumb/Breadcrumb";
+import { NotFound } from "@/icons/NotFound";
 
 export const metadata: Metadata = {
   title: "404",

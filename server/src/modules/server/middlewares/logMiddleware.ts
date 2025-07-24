@@ -1,5 +1,5 @@
-import { FastifyError, FastifyLoggerOptions, FastifyReply, FastifyRequest, RawServerDefault } from "fastify";
-import { PinoLoggerOptions, ResSerializerReply } from "fastify/types/logger";
+import type { FastifyError, FastifyLoggerOptions, FastifyReply, FastifyRequest, RawServerDefault } from "fastify";
+import type { PinoLoggerOptions, ResSerializerReply } from "fastify/types/logger";
 
 import config from "@/config";
 

@@ -1,4 +1,4 @@
-import {
+import type {
   ContextConfigDefault,
   FastifyBaseLogger,
   FastifyRequest,
@@ -11,7 +11,7 @@ import {
   RawServerDefault,
   RouteGenericInterface,
 } from "fastify";
-import { IRouteSchema, SecurityScheme, WithSecurityScheme } from "shared/routes/common.routes";
+import type { IRouteSchema, SecurityScheme, WithSecurityScheme } from "shared/routes/common.routes";
 
 import { authenticationMiddleware } from "@/security/authenticationService";
 import { authorizationnMiddleware } from "@/security/authorisationService";

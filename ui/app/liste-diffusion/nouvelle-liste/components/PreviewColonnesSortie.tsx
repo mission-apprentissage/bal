@@ -1,8 +1,8 @@
-import Table from "@codegouvfr/react-dsfr/Table";
+import { Table } from "@codegouvfr/react-dsfr/Select";
 import { Box, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { getMailingOutputColumns } from "shared/constants/mailingList";
-import { IMailingListJson } from "shared/models/mailingList.model";
+import type { IMailingListJson } from "shared/models/mailingList.model";
 
 interface Props {
   columns: IMailingListJson["output_columns"];

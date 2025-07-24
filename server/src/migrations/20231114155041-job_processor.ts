@@ -1,5 +1,5 @@
-import { Db, MongoClient } from "mongodb";
-import { IMailingListDocument, IUploadDocument } from "shared/models/document.model";
+import type { Db, MongoClient } from "mongodb";
+import type { IMailingListDocument, IUploadDocument } from "shared/models/document.model";
 
 export const up = async (db: Db, _client: MongoClient) => {
   const uploadDocumentWitJobCursor = db.collection("documents").aggregate([

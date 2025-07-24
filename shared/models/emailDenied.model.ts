@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-import { IModelDescriptor, zObjectId } from "./common";
+import type { IModelDescriptor } from "./common";
+import { zObjectId } from "./common";
 
 const collectionName = "emailDenied" as const;
 

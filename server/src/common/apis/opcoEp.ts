@@ -1,10 +1,9 @@
-import axios from "axios";
 import querystring from "querystring";
-
-import config from "@/config";
+import axios from "axios";
 
 import { ApiError } from "../utils/apiUtils";
 import getApiClient from "./client";
+import config from "@/config";
 
 export const OPCO_EP_BASE_URL = `https://${config.opcoEp.baseUrl}`;
 export const OPCO_EP_AUTH_BASE_URL = `https://${config.opcoEp.baseAuthUrl}`;

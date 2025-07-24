@@ -1,8 +1,9 @@
 import assert from "assert";
-import fastify, { RouteOptions } from "fastify";
-import { ZodTypeProvider } from "fastify-type-provider-zod";
+import type { RouteOptions } from "fastify";
+import { fastify } from "fastify";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { zRoutes } from "shared/index";
-import { IRouteSchemaGet, IRouteSchemaWrite, SecurityScheme } from "shared/routes/common.routes";
+import type { IRouteSchemaGet, IRouteSchemaWrite, SecurityScheme } from "shared/routes/common.routes";
 import { describe, it } from "vitest";
 
 import { describeAuthMiddleware } from "../../src/modules/server/middlewares/authMiddleware";

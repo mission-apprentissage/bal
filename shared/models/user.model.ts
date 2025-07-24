@@ -1,8 +1,10 @@
-import { Jsonify } from "type-fest";
+import type { Jsonify } from "type-fest";
 import { z } from "zod";
 
-import { IModelDescriptor, zObjectId } from "./common";
-import { IPerson, ZPerson } from "./person.model";
+import type { IModelDescriptor } from "./common";
+import { zObjectId } from "./common";
+import type { IPerson } from "./person.model";
+import { ZPerson } from "./person.model";
 
 const collectionName = "users" as const;
 

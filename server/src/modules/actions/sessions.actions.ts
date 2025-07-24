@@ -1,11 +1,11 @@
-import { FastifyReply, FastifyRequest } from "fastify";
+import type { FastifyReply, FastifyRequest } from "fastify";
 import jwt from "jsonwebtoken";
-import { Filter, FindOptions, ObjectId } from "mongodb";
-import { ISession } from "shared/models/session.model";
-
-import { getDbCollection } from "@/common/utils/mongodbUtils";
+import type { Filter, FindOptions } from "mongodb";
+import { ObjectId } from "mongodb";
+import type { ISession } from "shared/models/session.model";
 
 import config from "../../config";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 type TCreateSession = Pick<ISession, "token">;
 

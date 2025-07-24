@@ -1,8 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { FC, PropsWithChildren } from "react";
+import type { FC, PropsWithChildren } from "react";
 
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 
 const ProfilLayout: FC<PropsWithChildren> = ({ children }) => {
   const { user } = useAuth();

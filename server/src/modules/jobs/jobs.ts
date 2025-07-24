@@ -1,12 +1,6 @@
 import { addJob, initJobProcessor } from "job-processor";
 import { z } from "zod";
 
-import {
-  create as createMigration,
-  status as statusMigration,
-  up as upMigration,
-} from "@/modules/jobs/migrations/migrations";
-
 import logger from "../../common/logger";
 import { verifyEmails } from "../../common/services/mailer/mailBouncer";
 import { getDatabase } from "../../common/utils/mongodbUtils";
@@ -27,6 +21,11 @@ import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
 import { hydrateLbaSiretList } from "./lba/hydrate-siretlist";
 import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
 import { sanitizeOrganisationDomains } from "./validation/organisations_sanitize_domains";
+import {
+  create as createMigration,
+  status as statusMigration,
+  up as upMigration,
+} from "@/modules/jobs/migrations/migrations";
 
 export async function setupJobProcessor() {
   return initJobProcessor({
@@ -39,25 +38,25 @@ export async function setupJobProcessor() {
         : {
             "Mise à jour des emails blacklisted provenant de la bonne alternance": {
               cron_string: "0 3 * * *",
-              handler: () => hydrateLbaBlackListed(),
+              handler: async () => hydrateLbaBlackListed(),
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
             "Cleanup company email": {
               cron_string: "0 3 2 * *",
-              handler: () => sanitizeOrganisationDomains(),
+              handler: async () => sanitizeOrganisationDomains(),
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
             "Mise à jour des couples siret/email provenant du catalogue de formations": {
               cron_string: "30 2 * * *",
-              handler: () => runCatalogueImporter(),
+              handler: async () => runCatalogueImporter(),
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
             "Mise à jour des couples siret/email provenant de l'algo LBA": {
               cron_string: "30 5 10 * *",
-              handler: () => hydrateLbaSiretList(),
+              handler: async () => hydrateLbaSiretList(),
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
@@ -126,7 +125,7 @@ export async function setupJobProcessor() {
         onJobExited: onImportDocumentJobExited,
         resumable: true,
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       "documents:save-columns": {
         handler: async () => saveDocumentsColumns(),
       },
@@ -147,7 +146,7 @@ export async function setupJobProcessor() {
         },
       },
       "import:catalogue": {
-        handler: () => runCatalogueImporter(),
+        handler: async () => runCatalogueImporter(),
       },
       "job:validation:hydrate_from_deca": {
         handler: async (job, signal) => {

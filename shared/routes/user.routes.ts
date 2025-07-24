@@ -2,7 +2,8 @@ import { z } from "zod";
 
 import { zObjectId } from "../models/common";
 import { ZUser, zUserWithPersonPublic } from "../models/user.model";
-import { IRoutesDef, ZReqParamsSearchPagination } from "./common.routes";
+import type { IRoutesDef } from "./common.routes";
+import { ZReqParamsSearchPagination } from "./common.routes";
 
 export const zUserAdminRoutes = {
   get: {

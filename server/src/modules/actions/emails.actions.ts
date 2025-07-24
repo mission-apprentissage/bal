@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { IEmailError, IEventBalEmail } from "shared/models/events/bal_emails.event";
+import type { IEmailError, IEventBalEmail } from "shared/models/events/bal_emails.event";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
@@ -23,7 +23,7 @@ export async function createBalEmailEvent(person_id: string, template: IEventBal
   return event;
 }
 
-export function setEmailMessageId(emailEvent: IEventBalEmail, messageId: string) {
+export async function setEmailMessageId(emailEvent: IEventBalEmail, messageId: string) {
   return getDbCollection("events").findOneAndUpdate(
     { _id: emailEvent._id },
     {
@@ -36,7 +36,7 @@ export function setEmailMessageId(emailEvent: IEventBalEmail, messageId: string)
   );
 }
 
-export function addEmailError(
+export async function addEmailError(
   filter: Pick<IEventBalEmail, "_id"> | Pick<IEventBalEmail, "messageId">,
   err: IEmailError
 ) {

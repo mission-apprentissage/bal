@@ -48,7 +48,7 @@ export default function Home() {
             margin: "18px",
           }}
           onClick={async () => {
-            Sentry.startSpan(
+            await Sentry.startSpan(
               {
                 name: "Example Frontend Transaction",
               },

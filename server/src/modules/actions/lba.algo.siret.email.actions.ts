@@ -1,5 +1,5 @@
 import companyEmailValidator from "company-email-validator";
-import { IPostRoutes, IResponse } from "shared";
+import type { IPostRoutes, IResponse } from "shared";
 import { getSirenFromSiret } from "shared/helpers/common";
 
 import { getDbCollection } from "../../common/utils/mongodbUtils";

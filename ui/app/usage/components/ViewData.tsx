@@ -1,6 +1,6 @@
 import { fr } from "@codegouvfr/react-dsfr";
 import { Box, Typography } from "@mui/material";
-import { FC } from "react";
+import type { FC } from "react";
 
 interface Props {
   title: string;

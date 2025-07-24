@@ -1,13 +1,14 @@
 import { fr } from "@codegouvfr/react-dsfr";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import Button from "@codegouvfr/react-dsfr/Button";
-import Select from "@codegouvfr/react-dsfr/Select";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Select } from "@codegouvfr/react-dsfr/Select";
 import { Box, Tooltip, Typography } from "@mui/material";
-import { FC, useEffect } from "react";
+import type { FC } from "react";
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { IBody, IPostRoutes } from "shared";
-import { IDocumentContentJson } from "shared/models/documentContent.model";
-import { IMailingListJson } from "shared/models/mailingList.model";
+import type { IBody, IPostRoutes } from "shared";
+import type { IDocumentContentJson } from "shared/models/documentContent.model";
+import type { IMailingListJson } from "shared/models/mailingList.model";
 
 import EmailSample from "./EmailSample";
 import MailingListSectionCell from "./MailingListSectionCell";
@@ -54,7 +55,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
       const identifierColumns = mailingList?.identifier_columns?.map((ic) => ({ name: ic }));
       setValue("identifier_columns", identifierColumns);
     }
-  }, [mailingList, columns]);
+  }, [mailingList, columns, setValue]);
 
   const watchEmail = watch("email");
   const watchSecondaryEmail = watch("secondary_email");

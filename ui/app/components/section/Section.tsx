@@ -1,5 +1,6 @@
-import { Box, BoxProps } from "@mui/material";
-import { FC } from "react";
+import type { BoxProps } from "@mui/material";
+import { Box } from "@mui/material";
+import type { FC } from "react";
 
 interface Props extends BoxProps {
   children: React.ReactNode;

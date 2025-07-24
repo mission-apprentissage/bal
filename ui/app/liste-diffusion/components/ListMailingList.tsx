@@ -1,16 +1,17 @@
 import { fr } from "@codegouvfr/react-dsfr";
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { FC, useState } from "react";
-import { IDocument } from "shared/models/document.model";
-import { IMailingListWithDocumentAndOwnerJson } from "shared/models/mailingList.model";
-import { IResErrorJson } from "shared/routes/common.routes";
+import type { FC } from "react";
+import { useState } from "react";
+import type { IDocument } from "shared/models/document.model";
+import type { IMailingListWithDocumentAndOwnerJson } from "shared/models/mailingList.model";
+import type { IResErrorJson } from "shared/routes/common.routes";
 
-import Table from "../../../components/table/Table";
-import Toast, { useToast } from "../../../components/toast/Toast";
-import { apiDelete, apiPut, generateUrl } from "../../../utils/api.utils";
-import { formatDate } from "../../../utils/date.utils";
-import { PAGES } from "../../components/breadcrumb/Breadcrumb";
+import Table from "@/components/table/Table";
+import Toast, { useToast } from "@/components/toast/Toast";
+import { apiDelete, apiPut, generateUrl } from "@/utils/api.utils";
+import { formatDate } from "@/utils/date.utils";
+import { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 interface Props {
   mailingLists?: IMailingListWithDocumentAndOwnerJson[];

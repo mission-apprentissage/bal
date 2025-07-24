@@ -5,7 +5,8 @@ import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 import { createUserTokenSimple } from "../../src/common/utils/jwtUtils";
 import { createSession, createSessionToken } from "../../src/modules/actions/sessions.actions";
 import { createUser, findUser } from "../../src/modules/actions/users.actions";
-import createServer, { Server } from "../../src/modules/server/server";
+import type { Server } from "../../src/modules/server/server";
+import createServer from "../../src/modules/server/server";
 import { useMongo } from "../utils/mongo.utils";
 
 describe("Users routes", () => {

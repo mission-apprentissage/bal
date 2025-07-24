@@ -1,6 +1,7 @@
-import jwt, { SignOptions } from "jsonwebtoken";
-import { IUser } from "shared/models/user.model";
-import { IRouteSchema, ISecuredRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
+import type { SignOptions } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import type { IUser } from "shared/models/user.model";
+import type { IRouteSchema, ISecuredRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
 
 import config from "@/config";
 

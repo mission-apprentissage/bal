@@ -1,5 +1,7 @@
-import { ToggleSwitch, ToggleSwitchProps } from "@codegouvfr/react-dsfr/ToggleSwitch";
-import { Controller, ControllerProps, FieldValues } from "react-hook-form";
+import type { ToggleSwitchProps } from "@codegouvfr/react-dsfr/ToggleSwitch";
+import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
+import type { ControllerProps, FieldValues } from "react-hook-form";
+import { Controller } from "react-hook-form";
 
 interface Props<T extends FieldValues> extends Omit<ControllerProps<T>, "render"> {
   toggleSwitchProps: ToggleSwitchProps;

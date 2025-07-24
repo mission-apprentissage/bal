@@ -1,7 +1,7 @@
-import { MainNavigationProps } from "@codegouvfr/react-dsfr/MainNavigation";
-import { IUserPublic } from "shared/models/user.model";
+import type { MainNavigationProps } from "@codegouvfr/react-dsfr/MainNavigation";
+import type { IUserPublic } from "shared/models/user.model";
 
-import { PAGES } from "../breadcrumb/Breadcrumb";
+import { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 interface GetNavigationItemsProps {
   user?: IUserPublic;

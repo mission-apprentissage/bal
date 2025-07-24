@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import type { Db, MongoClient } from "mongodb";
 
 export const up = async (db: Db, _client: MongoClient) => {
   await db.collection("organisations").updateMany(
@@ -41,7 +41,7 @@ export const up = async (db: Db, _client: MongoClient) => {
 };
 
 export const down = async (db: Db, _client: MongoClient) => {
-  db.collection("organisations").updateMany(
+  await db.collection("organisations").updateMany(
     {
       "_meta.sources": { $exists: true },
     },
@@ -60,7 +60,7 @@ export const down = async (db: Db, _client: MongoClient) => {
     }
   );
 
-  db.collection("persons").updateMany(
+  await db.collection("persons").updateMany(
     {
       "_meta.sources": { $exists: true },
     },

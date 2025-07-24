@@ -1,12 +1,11 @@
 import { zRoutes } from "shared";
 
+import { ensureInitialization } from "../../common/utils/mongodbUtils";
+import type { Server } from "./server";
 import config from "@/config";
 
-import { ensureInitialization } from "../../common/utils/mongodbUtils";
-import { Server } from "./server";
-
 export const coreRoutes = ({ server }: { server: Server }) => {
-  server.get("/healthcheck", { schema: zRoutes.get["/healthcheck"] }, async (request, response) => {
+  server.get("/healthcheck", { schema: zRoutes.get["/healthcheck"] }, async (_request, response) => {
     ensureInitialization();
     response.status(200).send({
       name: "[BAL] Apprentissage API",

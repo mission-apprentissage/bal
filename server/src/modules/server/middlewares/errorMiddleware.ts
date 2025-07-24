@@ -1,13 +1,12 @@
 import Boom from "@hapi/boom";
 import { captureException } from "@sentry/node";
-import { FastifyError } from "fastify";
-import { ResponseValidationError } from "fastify-type-provider-zod";
-import { IResError } from "shared/routes/common.routes";
+import type { FastifyError } from "fastify";
+import type { ResponseValidationError } from "fastify-type-provider-zod";
+import type { IResError } from "shared/routes/common.routes";
 import { ZodError } from "zod";
 
+import type { Server } from "../server";
 import config from "@/config";
-
-import { Server } from "../server";
 
 function getZodMessageError(error: ZodError, context: string): string {
   const normalizedContext = context ? `${context}.` : "";

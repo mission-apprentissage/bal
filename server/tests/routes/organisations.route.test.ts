@@ -4,7 +4,8 @@ import nock from "nock";
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 
 import { createUser, generateApiKey } from "../../src/modules/actions/users.actions";
-import createServer, { Server } from "../../src/modules/server/server";
+import type { Server } from "../../src/modules/server/server";
+import createServer from "../../src/modules/server/server";
 import { aktoValid } from "../data/akto";
 import { opcoEpInvalid, opcoEpValidDomain, opcoEpValidEmail } from "../data/opcoEp";
 import { aktoTokenMock, aktoVerificationMock } from "../utils/mocks/akto.mock";

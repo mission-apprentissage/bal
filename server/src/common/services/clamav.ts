@@ -44,7 +44,7 @@ export const createClamav = (uri: string) => {
 
     return {
       scanStream,
-      getScanResults: () => scanResults,
+      getScanResults: async () => scanResults,
     };
   }
 

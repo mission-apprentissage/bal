@@ -2,7 +2,7 @@ import { zRoutes } from "shared";
 
 import { getUserFromRequest } from "../../security/authenticationService";
 import { generateApiKey } from "../actions/users.actions";
-import { Server } from "./server";
+import type { Server } from "./server";
 
 export const userRoutes = ({ server }: { server: Server }) => {
   /**

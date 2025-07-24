@@ -4,15 +4,15 @@ import "react-notion-x/src/styles.css";
 import { DsfrHead } from "@codegouvfr/react-dsfr/next-appdir/DsfrHead";
 import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
 import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { PropsWithChildren } from "react";
-import { IUserPublic } from "shared/models/user.model";
+import type { PropsWithChildren } from "react";
+import type { IUserPublic } from "shared/models/user.model";
 
-import { AuthContextProvider } from "../context/AuthContext";
-import { defaultColorScheme } from "../theme/defaultColorScheme";
-import { apiGet } from "../utils/api.utils";
 import { StartDsfr } from "./StartDsfr";
+import { AuthContextProvider } from "@/context/AuthContext";
+import { defaultColorScheme } from "@/theme/defaultColorScheme";
+import { apiGet } from "@/utils/api.utils";
 
 async function getSession(): Promise<IUserPublic | undefined> {
   try {

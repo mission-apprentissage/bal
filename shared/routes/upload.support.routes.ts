@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-import { IRoutesDef, ZResOk } from "./common.routes";
+import type { IRoutesDef } from "./common.routes";
+import { ZResOk } from "./common.routes";
 
 export const zUploadSupportRoutes = {
   get: {

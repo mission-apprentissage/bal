@@ -1,9 +1,8 @@
 import { isAxiosError } from "axios";
 
-import config from "@/config";
-
 import { ApiError } from "../utils/apiUtils";
 import getApiClient from "./client";
+import config from "@/config";
 
 export const LIMIT_TRAINING_LINKS_PER_REQUEST = 100;
 

@@ -1,6 +1,7 @@
 import { extensions } from "../../helpers/zodHelpers/zodPrimitives";
 import { z } from "../../helpers/zodWithOpenApi";
-import { IRoutesDef, ZReqHeadersAuthorization } from "../common.routes";
+import type { IRoutesDef } from "../common.routes";
+import { ZReqHeadersAuthorization } from "../common.routes";
 
 const validationSchema = {
   body: z
