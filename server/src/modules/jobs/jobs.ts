@@ -26,8 +26,6 @@ import { hydrateDeca } from "./deca/hydrate-deca";
 import { hydrateEffectifsEmail, processEffectifsPendingMail } from "./effectifs/import-effectifs-mail";
 import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
 import { hydrateLbaSiretList } from "./lba/hydrate-siretlist";
-import { run_hydrate_from_constructys } from "./validation/hydrate_from_constructys";
-import { run_hydrate_from_ocapiat } from "./validation/hydrate_from_ocapiat";
 import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
 import { sanitizeOrganisationDomains } from "./validation/organisations_sanitize_domains";
 
@@ -77,14 +75,6 @@ export async function setupJobProcessor() {
               maxRuntimeInMinutes: 12 * 60,
               // Keep long jobs in the main queue
               tag: "main",
-            },
-            "Vérfication des emails des rupturants du TDB": {
-              cron_string: "0 2 * * 6",
-              handler: async () => {
-                await hydrateEffectifsEmail();
-                await processEffectifsPendingMail();
-                return 0;
-              },
             },
           },
     jobs: {
@@ -175,12 +165,6 @@ export async function setupJobProcessor() {
         resumable: true,
         // Keep long jobs in the main queue
         tag: "main",
-      },
-      "job:validation:hydrate_from_constructys": {
-        handler: async () => run_hydrate_from_constructys(),
-      },
-      "job:validation:hydrate_from_ocapiat": {
-        handler: async () => run_hydrate_from_ocapiat(),
       },
       "organisation:sanitize:domains": {
         handler: async () => sanitizeOrganisationDomains(),

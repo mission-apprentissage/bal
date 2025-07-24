@@ -8,7 +8,7 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   },
 }));
 
-export const Table = <R extends GridValidRowModel>(props: DataGridProps<R>) => {
+const Table = <R extends GridValidRowModel>(props: DataGridProps<R>) => {
   return (
     <Box my={2}>
       <StyledDataGrid

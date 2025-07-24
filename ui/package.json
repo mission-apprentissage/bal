@@ -27,10 +27,8 @@
     "@types/node": "^20.17.30",
     "@types/react": "^18.3.20",
     "@types/react-dom": "^18.3.6",
-    "client-only": "^0.0.1",
     "crypto-random-string": "^5.0.0",
     "date-fns": "^2.30.0",
-    "framer-motion": "^10.18.0",
     "next": "^13.5.11",
     "next-plausible": "^3.12.4",
     "notion-client": "^6.16.0",
@@ -38,13 +36,10 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.55.0",
     "react-notion-x": "^6.16.0",
-    "server-only": "^0.0.1",
     "shared": "workspace:*",
-    "typescript": "^5.8.3",
-    "yup": "^1.6.1"
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "luxon": "^3.6.1",
     "notion-types": "^6.16.0",
     "sass": "^1.86.3",
     "type-fest": "^4.39.1"

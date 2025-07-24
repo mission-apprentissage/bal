@@ -6,7 +6,6 @@ import iconv from "iconv-lite";
 import { IJobsSimple } from "job-processor";
 import { Filter, FindOneAndUpdateOptions, FindOptions, ObjectId, UpdateFilter } from "mongodb";
 import { oleoduc, transformData, writeData } from "oleoduc";
-import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
 import { IDocumentContent } from "shared/models/documentContent.model";
 import { IMailingList } from "shared/models/mailingList.model";
@@ -23,15 +22,8 @@ import { sleep } from "../../common/utils/asyncUtils";
 import { deleteFromStorage, getFromStorage, uploadToStorage } from "../../common/utils/ovhUtils";
 import { DEFAULT_DELIMITER, parseCsv } from "../../common/utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
-import {
-  IConstructysParsedContentLine,
-  importConstructysContent,
-  parseConstructysContentLine,
-} from "./constructys.actions";
-import { DECAParsedContentLine, importDecaContent, parseContentLine } from "./deca.actions";
 import { createDocumentContent, deleteDocumentContent } from "./documentContent.actions";
 import { MAILING_LIST_DOCUMENT_PREFIX } from "./mailingLists.actions";
-import { importOcapiatContent, IOcapiatParsedContentLine, parseOcapiatContentLine } from "./ocapiat.actions";
 
 const testMode = config.env === "test";
 
@@ -279,7 +271,7 @@ interface IUploadDocumentOptions {
 }
 
 export const uploadFile = async (stream: Readable, doc: IUploadDocument, options: IUploadDocumentOptions) => {
-  const documentHash = doc.hash_secret || crypto.generateKey();
+  const documentHash = doc.hash_secret;
   const path = doc.chemin_fichier;
 
   const { scanStream, getScanResults } = await clamav.getScanner();
@@ -289,11 +281,9 @@ export const uploadFile = async (stream: Readable, doc: IUploadDocument, options
     throw Boom.badRequest("Missing mimetype");
   }
 
-  const isCsv = options.mimetype === "text/csv";
-
   await oleoduc(
     stream,
-    isCsv ? transformData(processCsvFile) : noop(),
+    transformData(processCsvFile),
     scanStream,
     hashStream,
     crypto.isCipherAvailable() ? crypto.cipher(documentHash) : noop(), // ISSUE
@@ -321,9 +311,7 @@ export const uploadFile = async (stream: Readable, doc: IUploadDocument, options
 
   await updateDocument({ _id: doc._id }, { $set: { hash_fichier } });
 
-  if (isCsv) {
-    await checkCsvFile(doc);
-  }
+  await checkCsvFile(doc);
 };
 
 export const checkCsvFile = async (document: IUploadDocument) => {
@@ -408,12 +396,9 @@ export const extractDocumentContent = async (
   {
     document,
     delimiter = DEFAULT_DELIMITER,
-    formatter = (line) => line,
   }: {
     document: IDocument;
     delimiter?: string | string[];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    formatter?: (line: any) => any;
   },
   signal: AbortSignal
 ) => {
@@ -422,7 +407,7 @@ export const extractDocumentContent = async (
     {
       $set: {
         lines_count: { $ifNull: ["$lines_count", 0] },
-        import_progress: { $ifNull: ["$lines_count", 0] },
+        import_progress: { $ifNull: ["$import_progress", 0] },
       },
     },
   ]);
@@ -450,7 +435,7 @@ export const extractDocumentContent = async (
       }
 
       if (skip === 0) {
-        await importDocumentContent(document, [json], formatter);
+        await importDocumentContent(document, [json]);
       } else {
         skip--;
       }
@@ -481,36 +466,17 @@ export const updateImportProgress = async (_id: ObjectId, importedLines: number,
   );
 };
 
-export const importDocumentContent = async <TFileLine = unknown, TContentLine = unknown>(
-  document: IDocument,
-  content: TFileLine[],
-  formatter: (line: TFileLine) => TContentLine
-) => {
+export const importDocumentContent = async <TFileLine = unknown>(document: IDocument, content: TFileLine[]) => {
   let documentContents: IDocumentContent[] = [];
 
   for (const [_lineNumber, line] of content.entries()) {
-    const contentLine = formatter(line);
-    if (!contentLine) {
+    if (!line) {
+      // TODO: check bug avec la reprise ?!
       continue;
     }
 
-    if (document.type_document === DOCUMENT_TYPES.DECA) {
-      const decaContent = contentLine as unknown as DECAParsedContentLine;
-      await importDecaContent(decaContent.emails, decaContent.siret);
-    }
-
-    if (document.type_document === DOCUMENT_TYPES.OCAPIAT) {
-      await importOcapiatContent(contentLine as unknown as IOcapiatParsedContentLine);
-      return [];
-    }
-
-    if (document.type_document === DOCUMENT_TYPES.CONSTRUCTYS) {
-      await importConstructysContent(contentLine as unknown as IConstructysParsedContentLine);
-      return [];
-    }
-
     const documentContent = await createDocumentContent({
-      content: contentLine,
+      content: line,
       document_id: document._id.toString(),
       type_document: document.type_document,
     });
@@ -519,8 +485,6 @@ export const importDocumentContent = async <TFileLine = unknown, TContentLine = 
 
     documentContents = [...documentContents, documentContent];
   }
-
-  // Create or update person
 
   return documentContents;
 };
@@ -595,40 +559,7 @@ export const handleDocumentFileContent = async (
   try {
     await updateDocument({ _id: document._id }, { $set: { job_id: job._id.toString(), job_status: "importing" } });
 
-    switch (document.type_document) {
-      case DOCUMENT_TYPES.DECA:
-        await extractDocumentContent(
-          {
-            document,
-            delimiter: "|",
-            formatter: parseContentLine,
-          },
-          signal
-        );
-        break;
-      case DOCUMENT_TYPES.OCAPIAT:
-        await extractDocumentContent(
-          {
-            document,
-            formatter: parseOcapiatContentLine,
-          },
-          signal
-        );
-        break;
-      case DOCUMENT_TYPES.CONSTRUCTYS:
-        await extractDocumentContent(
-          {
-            document,
-            formatter: parseConstructysContentLine,
-          },
-          signal
-        );
-        break;
-
-      default:
-        await extractDocumentContent({ document, delimiter: document.delimiter ?? DEFAULT_DELIMITER }, signal);
-        break;
-    }
+    await extractDocumentContent({ document, delimiter: document.delimiter ?? DEFAULT_DELIMITER }, signal);
 
     await updateDocument({ _id: document._id }, { $set: { job_error: null, job_status: "done" } });
   } catch (err) {

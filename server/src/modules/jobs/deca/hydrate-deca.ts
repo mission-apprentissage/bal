@@ -308,7 +308,7 @@ const hydrateDecaPeriod = async (
         );
       }
 
-      getDbCollection("deca.import.job.result").insertOne({
+      await getDbCollection("deca.import.job.result").insertOne({
         _id: new ObjectId(),
         has_completed: true,
         import_date_string: dateDebut,

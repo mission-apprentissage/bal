@@ -1,6 +1,5 @@
 import companyEmailValidator from "company-email-validator";
 import { IPostRoutes, IResponse } from "shared";
-import { DOCUMENT_TYPES } from "shared/constants/documents";
 import { SIRET_REGEX } from "shared/constants/regex";
 import { getSirenFromSiret } from "shared/helpers/common";
 
@@ -45,7 +44,7 @@ export const importDecaContent = async (emails: string[], siret: string) => {
     siren,
     sirets: [siret],
     email_domains: domains,
-    source: DOCUMENT_TYPES.DECA,
+    source: "DECA",
   });
 
   await Promise.all(

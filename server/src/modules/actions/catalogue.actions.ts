@@ -10,6 +10,7 @@ export const getCatalogueEmailVerification = async (
 ): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
   const siren = getSirenFromSiret(siret);
   if (
+    // TODO: Importer la liste des emails catalogue dans la base de données
     await getDbCollection("catalogueEmailSirets").findOne({
       email,
       siret: { $regex: `^${siren}` },
@@ -18,6 +19,7 @@ export const getCatalogueEmailVerification = async (
     return {
       is_valid: true,
       on: "email",
+      // TODO: identify as CFA
     };
   }
   const isBlacklisted = !companyEmailValidator.isCompanyEmail(email);

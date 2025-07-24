@@ -10,6 +10,8 @@ import { asyncGrouped } from "../../common/utils/asyncUtils";
 
 const zodEmail = z.string().email();
 
+// TODO: Import catalogue emails in organisation & person
+// Question: Do we need to clear previous email binding ?
 async function importCatalogueFormations(importDate: Date): Promise<number> {
   const collectionName = "catalogueEmailSirets";
 
