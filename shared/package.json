@@ -15,17 +15,17 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@asteasolutions/zod-to-openapi": "^7.3.0",
+    "@asteasolutions/zod-to-openapi": "^7.3.4",
     "lodash-es": "^4.17.21",
     "luhn": "^2.4.1",
-    "openapi3-ts": "^4.4.0",
-    "type-fest": "^4.39.1",
-    "zod": "^3.24.2",
+    "openapi3-ts": "^4.5.0",
+    "type-fest": "^4.41.0",
+    "zod": "^3.25.76",
     "zod-mongodb-schema": "^1.0.2"
   },
   "devDependencies": {
-    "mongodb": "^6.15.0",
+    "mongodb": "^6.18.0",
     "typescript": "^5.8.3",
-    "zod": "^3.24.2"
+    "zod": "^3.25.76"
   }
 }
