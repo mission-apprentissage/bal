@@ -35,17 +35,17 @@ Consultez la [Fiche Produit](https://www.notion.so/mission-apprentissage/Fiche-p
 
 Avant d'installer le projet, assurez-vous d'avoir les éléments suivants :
 
-  - **Bash** 5+
-  - **Docker** 23.03.0+
-  - **Git LFS**
-  - **GnuPG**
-  - **pwgen**
-  - **1password-cli**
-  - **yq**
-  - **shred**
-  - **sshpass**
-  - **NodeJS** 20+
-  - **Ansible** 2.7+
+- **Bash** 5+
+- **Docker** 23.03.0+
+- **Git LFS**
+- **GnuPG**
+- **pwgen**
+- **1password-cli**
+- **yq**
+- **shred**
+- **sshpass**
+- **NodeJS** 20+
+- **Ansible** 2.7+
 
 #### Installation des pré-requis sur un environnement **macOS** :
 
@@ -72,7 +72,6 @@ Pour décrypter les variables d'environnement, vous avez besoin d'une clé GPG. 
 Voici les étapes pour créer votre clé GPG :
 
 1. Lors de la création de la clé, choisissez les options suivantes :
-
    - `Please select what kind of key you want` > `ECC (sign and encrypt)`
    - `Please select which elliptic curve you want` > `Curve 25519`
    - `Please specify how long the key should be valid` > `0`
