@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import { zObjectId } from "../models/common";
 import type { IRoutesDef } from "./common.routes";
@@ -47,11 +47,9 @@ export const zEmailRoutes = {
     "/emails/webhook": {
       method: "post",
       path: "/emails/webhook",
-      querystring: z
-        .object({
-          webhookKey: z.string(),
-        })
-        .passthrough(),
+      querystring: z.looseObject({
+        webhookKey: z.string(),
+      }),
       body: z.object({
         event: z.string(), //https://developers.sendinblue.com/docs/transactional-webhooks
         "message-id": z.string(),

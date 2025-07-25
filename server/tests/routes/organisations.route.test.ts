@@ -144,14 +144,8 @@ describe("Organisations", () => {
             {
               instancePath: "/siret",
               keyword: "custom",
-              message: "Le siret ne respecte pas l'algorithme luhn (https://fr.wikipedia.org/wiki/Formule_de_Luhn)",
-              params: {
-                issue: {
-                  code: "custom",
-                  message: "Le siret ne respecte pas l'algorithme luhn (https://fr.wikipedia.org/wiki/Formule_de_Luhn)",
-                  path: ["siret"],
-                },
-              },
+              message: "SIRET does not pass the Luhn algorithm",
+              params: {},
               schemaPath: "#/siret/custom",
             },
           ],

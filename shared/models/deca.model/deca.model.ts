@@ -1,5 +1,5 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import type { IModelDescriptor } from "../common";
 import { zObjectId } from "../common";
@@ -24,36 +24,33 @@ const indexes: IModelDescriptor["indexes"] = [
 export const ZDeca = z.object({
   _id: zObjectId,
 
-  no_contrat: z.string().describe("Le numéro du contrat"),
-  statut: z.string().optional().describe("Le statut du contrat"), // Vide, corrigé, supprimé, rompu, annulé
-  flag_correction: z.boolean().optional().describe("Flag correction"),
-  date_suppression: z.date().optional().describe("La date de suppression ?"),
-  date_debut_contrat: z.date().describe("La date de début du contrat"), // AAAA-MM-JJ
-  date_fin_contrat: z.date().describe("La date de fin du contrat"), // AAAA-MM-JJ
-  date_effet_avenant: z.date().optional().describe("La date d'effet de l'avenant du contrat"), // AAAA-MM-JJ
-  date_effet_rupture: z.date().optional().describe("La date d'effet de la rupture"), // AAAA-MM-JJ
-  no_avenant: z.string().optional().describe("Le numéro de l'avenant du contrat"),
-  dispositif: z.string().optional().describe("dispositif"), // PROF/APPR
-  type_contrat: z.string().optional(),
+  no_contrat: z.string(),
+  statut: z.optional(z.string()),
+  flag_correction: z.optional(z.boolean()),
+  date_suppression: z.optional(z.date()),
+  date_debut_contrat: z.date(),
+  date_fin_contrat: z.date(),
+  date_effet_avenant: z.optional(z.date()),
+  date_effet_rupture: z.optional(z.date()),
+  no_avenant: z.optional(z.string()),
+  dispositif: z.optional(z.string()),
+  type_contrat: z.optional(z.string()),
   // type_contrat: z
   //   .enum(["11", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37", "38"]) // 24
   //   .optional()
-  //   .describe(
-  //     "Le type de contrat ou avenant doit correspondre à la situation du contrat (premier contrat, succession de contrats, avenants)."
-  //   ),
-  rupture_avant_debut: z.boolean().optional().describe("rupture_avant_debut"),
+  rupture_avant_debut: z.optional(z.boolean()),
 
-  type_employeur: z.number().optional().describe("Type employeur"),
-  employeur_specifique: z.number().optional().describe("Employeur specifique"),
-  type_derogation: z.number().optional().describe("Type de dérogation"),
+  type_employeur: z.optional(z.number()),
+  employeur_specifique: z.optional(z.number()),
+  type_derogation: z.optional(z.number()),
 
   alternant: ZDecaApprenant,
   formation: ZDecaFormation,
-  etablissement_formation: ZDecaEtablissementFormation.optional(),
-  organisme_formation: ZDecaOrganismeFormation.optional(),
+  etablissement_formation: z.optional(ZDecaEtablissementFormation),
+  organisme_formation: z.optional(ZDecaOrganismeFormation),
   employeur: ZDecaEmployeur,
-  updated_at: z.date().describe("Date de mise à jour en base de données"),
-  created_at: z.date().describe("Date d'ajout en base de données"),
+  updated_at: z.date(),
+  created_at: z.date(),
 });
 
 export type IDeca = z.output<typeof ZDeca>;

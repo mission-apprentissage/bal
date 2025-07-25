@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import type { IPostRoutes } from "shared";
 import type { IStatus } from "shared/routes/auth.routes";
 
-import type { z } from "zod";
+import type { z } from "zod/v4-mini";
 import { apiPost } from "@/utils/api.utils";
 import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 import FormContainer from "@/app/auth/components/FormContainer";

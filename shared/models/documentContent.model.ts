@@ -1,5 +1,5 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import type { IModelDescriptor } from "./common";
 import { zObjectId } from "./common";
@@ -14,11 +14,11 @@ const indexes: IModelDescriptor["indexes"] = [
 
 export const ZDocumentContent = z.object({
   _id: zObjectId,
-  document_id: z.string().describe("Identifiant du document"),
-  content: z.record(z.unknown()).optional().describe("Contenu du document"),
-  type_document: z.string().optional().describe("Le type de document (exemple: DECA, etc..)"),
-  updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
-  created_at: z.date().optional().describe("Date d'ajout en base de données"),
+  document_id: z.string(),
+  content: z.optional(z.record(z.string(), z.unknown())),
+  type_document: z.optional(z.string()),
+  updated_at: z.optional(z.date()),
+  created_at: z.optional(z.date()),
 });
 
 export type IDocumentContent = z.output<typeof ZDocumentContent>;

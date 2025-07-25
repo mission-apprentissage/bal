@@ -183,4 +183,10 @@ allowed_patterns:
 - apiKey
 - ApiKey
 - api_key
+- '@mail.com'
+- '@exemple.fr'
+- '@mail.fr'
+- '@apprentissage.beta.gouv.fr'
+- '@alternance.beta.gouv.fr'
+threshold: medium
 version: "1.0"

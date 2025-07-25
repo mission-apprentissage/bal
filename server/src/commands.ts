@@ -161,7 +161,7 @@ program
   .description("Créer un utilisateur")
   .requiredOption("-e, --email <string>", "Email de l'utilisateur")
   .requiredOption("-p, --password <string>", "Mot de passe de l'utilisateur")
-  .requiredOption("-oId, --organisationId <string>", "Organisation Id")
+  .requiredOption("-o, --organisationId <string>", "Organisation Id")
   .option("-a, --admin", "administrateur")
   .option("-s, --support", "support")
   .option("-q, --queued", "Run job asynchronously", false)
@@ -201,7 +201,7 @@ program
 program
   .command("import:document")
   .description("Import document content")
-  .requiredOption("-dId, --documentId <string>", "Document Id", (documentId) => new ObjectId(documentId))
+  .requiredOption("-d, --documentId <string>", "Document Id", (documentId) => new ObjectId(documentId))
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("import:document"));
 

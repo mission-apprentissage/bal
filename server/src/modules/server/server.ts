@@ -16,7 +16,7 @@ import type {
 import { fastify } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
-import { generateOpenApiSchema } from "shared/helpers/openapi/generateOpenapi";
+import { buildOpenApiSchema } from "shared/helpers/openapi/openapi.builder";
 import type { IRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
 
 import config from "../../config";
@@ -57,7 +57,7 @@ export async function bind(app: Server) {
   const swaggerOpts: FastifyStaticSwaggerOptions = {
     mode: "static",
     specification: {
-      document: generateOpenApiSchema(
+      document: buildOpenApiSchema(
         config.version,
         config.env,
         config.env === "local" ? "http://localhost:5001/api" : `${config.publicUrl}/api`

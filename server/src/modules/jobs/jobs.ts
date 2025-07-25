@@ -1,5 +1,5 @@
 import { addJob, initJobProcessor } from "job-processor";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import logger from "../../common/logger";
 import { verifyEmails } from "../../common/services/mailer/mailBouncer";
@@ -156,7 +156,7 @@ export async function setupJobProcessor() {
       },
       "email:verify": {
         handler: async (job) => {
-          const { emails } = z.object({ emails: z.string().array() }).parse(job.payload);
+          const { emails } = z.object({ emails: z.array(z.string()) }).parse(job.payload);
           const result = await verifyEmails(emails);
           logger.info("Email verification result", { result });
         },

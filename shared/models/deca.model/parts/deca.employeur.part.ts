@@ -1,20 +1,19 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 export const ZDecaEmployeur = z.object({
-  siret: z.string().optional().describe("N° SIRET de l'employeur"),
-  denomination: z.string().optional().describe("Denomination de l'employeur"),
-  adresse: z
-    .object({
-      code_postal: z.string().describe("Le code postal de l'adresse"),
+  siret: z.optional(z.string()),
+  denomination: z.optional(z.string()),
+  adresse: z.optional(
+    z.object({
+      code_postal: z.string(),
     })
-
-    .optional(),
-  naf: z.string().optional().describe("Code NAF de l’entreprise"),
-  code_idcc: z.string().optional().describe("Le code IDCC de l'employeur"),
-  nombre_de_salaries: z.number().nullish().describe("Effectif salarié de l'entreprise"),
-  courriel: z.string().optional().describe("Email de l’employeur"),
-  telephone: z.string().optional().describe("Téléphone de l'employeur"),
+  ),
+  naf: z.optional(z.string()),
+  code_idcc: z.optional(z.string()),
+  nombre_de_salaries: z.nullish(z.number()),
+  courriel: z.optional(z.string()),
+  telephone: z.optional(z.string()),
 });
 
 export type IDecaEmployeur = z.output<typeof ZDecaEmployeur>;

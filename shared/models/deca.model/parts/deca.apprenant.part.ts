@@ -1,25 +1,24 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 export const ZDecaApprenant = z.object({
-  nom: z.string().describe("Le nom de l'alternant"),
-  prenom: z.string().optional().describe("Le prenom de l'alternant"),
-  sexe: z.string().nullish().describe("Le sexe de l'alternant"),
-  date_naissance: z.date().describe("La date de naissance de l'alternant"), // AAAA-MM-JJ
-  departement_naissance: z.string().optional().describe("Le département de naissance de l'alternant"),
-  nationalite: z.number().optional().describe("Le code de la nationalité de l'alternant"),
-  handicap: z.boolean().optional().describe("Indique si l'alternant est identifié comme porteur d'un handicap"),
-  courriel: z.string().optional().describe("L'adresse email de l'alternant"),
-  telephone: z.string().optional().describe("Le numéro de téléphone de l'alternant"),
-  adresse: z
-    .object({
-      numero: z.coerce.string().nullish().describe("Le numéro de l'adresse"),
-      voie: z.string().optional().describe("La voie de l'adresse"),
-      code_postal: z.string().optional().describe("Le code postal de l'adresse"),
+  nom: z.string(),
+  prenom: z.optional(z.string()),
+  sexe: z.nullish(z.string()),
+  date_naissance: z.date(),
+  departement_naissance: z.optional(z.string()),
+  nationalite: z.optional(z.number()),
+  handicap: z.optional(z.boolean()),
+  courriel: z.optional(z.string()),
+  telephone: z.optional(z.string()),
+  adresse: z.optional(
+    z.object({
+      numero: z.nullish(z.coerce.string()),
+      voie: z.optional(z.string()),
+      code_postal: z.optional(z.string()),
     })
-
-    .optional(),
-  derniere_classe: z.coerce.number().nullish().describe("La dernière classe de l'apprenant"),
+  ),
+  derniere_classe: z.nullish(z.coerce.number()),
 });
 
 export type IDecaApprenant = z.output<typeof ZDecaApprenant>;

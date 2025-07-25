@@ -1,13 +1,13 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 export const ZDecaFormation = z.object({
-  date_debut_formation: z.date().optional().describe("La date de début de la formation"), // AAAA-MM-JJ
-  date_fin_formation: z.date().optional().describe("La date de fin de la formation"), // AAAA-MM-JJ
-  code_diplome: z.string().optional().describe("Le code diplôme de la formation"),
-  intitule_ou_qualification: z.string().optional().describe("L'adresse email de l'alternant"),
-  rncp: z.string().optional().describe("Le code RNCP de la formation"),
-  type_diplome: z.string().optional().describe("Catégorie par niveau du Diplôme ou titre visé par l'Alternant"),
+  date_debut_formation: z.optional(z.date()),
+  date_fin_formation: z.optional(z.date()),
+  code_diplome: z.optional(z.string()),
+  intitule_ou_qualification: z.optional(z.string()),
+  rncp: z.optional(z.string()),
+  type_diplome: z.optional(z.string()),
 });
 
 export type IDecaFormation = z.output<typeof ZDecaFormation>;

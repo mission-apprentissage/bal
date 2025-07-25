@@ -9,7 +9,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import type { IPostRoutes } from "shared";
 
-import type { z } from "zod";
+import type { z } from "zod/v4-mini";
 import Toast, { useToast } from "@/components/toast/Toast";
 import { apiPost } from "@/utils/api.utils";
 

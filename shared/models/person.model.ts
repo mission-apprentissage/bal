@@ -1,5 +1,5 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import type { IModelDescriptor } from "./common";
 import { zObjectId } from "./common";
@@ -24,25 +24,24 @@ const indexes: IModelDescriptor["indexes"] = [
 
 export const ZPerson = z.object({
   _id: zObjectId,
-  email: z.string().describe("Email de la personne"),
-  civility: z.enum(["Madame", "Monsieur"]).optional().describe("civilité"),
-  nom: z.string().optional().describe("Le nom de la personne"),
-  prenom: z.string().optional().describe("Le prénom de la personne"),
-  organisations: z.array(z.string().describe("Identifiant de l'organisation")).describe("Liste des organisations"),
-  sirets: z.array(z.string()).optional().describe("Liste de sirets recensé (sécurisation qualité de la donnée)"),
-  _meta: z
-    .object({
-      sources: z.array(z.string()).optional(),
+  email: z.string(),
+  civility: z.optional(z.enum(["Madame", "Monsieur"])),
+  nom: z.optional(z.string()),
+  prenom: z.optional(z.string()),
+  organisations: z.array(z.string()),
+  sirets: z.optional(z.array(z.string())),
+  _meta: z.optional(
+    z.looseObject({
+      sources: z.optional(z.array(z.string())),
     })
-    .passthrough()
-    .describe("Métadonnées")
-    .optional(),
-  updated_at: z.date().describe("Date de mise à jour en base de données").optional(),
-  created_at: z.date().describe("Date d'ajout en base de données").optional(),
+  ),
+  updated_at: z.optional(z.date()),
+  created_at: z.optional(z.date()),
 });
 
-export const ZPersonWithOrganisation = ZPerson.extend({
-  organisation: ZOrganisation.nullish(),
+export const ZPersonWithOrganisation = z.object({
+  ...ZPerson.shape,
+  organisation: z.nullish(ZOrganisation),
 });
 
 export type IPerson = z.output<typeof ZPerson>;

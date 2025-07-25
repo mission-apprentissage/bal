@@ -12,7 +12,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import type { IGetRoutes, IPostRoutes, IResponse } from "shared";
 
-import type { z } from "zod";
+import type { z } from "zod/v4-mini";
 import ToggleSwitchInput from "@/components/form/ToggleSwitchInput";
 import Toast, { useToast } from "@/components/toast/Toast";
 import { apiGet, apiPost } from "@/utils/api.utils";

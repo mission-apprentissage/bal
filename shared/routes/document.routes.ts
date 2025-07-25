@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import { ZDocumentContent } from "../models/documentContent.model";
 import type { IRoutesDef } from "./common.routes";

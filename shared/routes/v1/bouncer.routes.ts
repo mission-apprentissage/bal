@@ -1,9 +1,9 @@
-import { z } from "../../helpers/zodWithOpenApi";
+import { z } from "zod/v4-mini";
 import type { IRoutesDef } from "../common.routes";
 import { ZReqHeadersAuthorization } from "../common.routes";
 
 const zEmailResult = z.object({
-  email: z.string().email(),
+  email: z.email(),
   status: z.enum(["valid", "invalid", "unknown", "queued"]),
 });
 
@@ -17,7 +17,7 @@ export const zBouncerV1Routes = {
       headers: ZReqHeadersAuthorization,
       body: z.array(
         z.object({
-          email: z.string().email(),
+          email: z.email(),
         })
       ),
       response: {

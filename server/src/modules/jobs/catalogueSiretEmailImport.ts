@@ -1,13 +1,13 @@
 import { ObjectId } from "mongodb";
 import type { ICatalogueEmailSiret } from "shared/models/catalogueEmailSiret.model";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import { asyncGrouped } from "../../common/utils/asyncUtils";
 import { fetchCatalogueData } from "@/common/apis/catalogue";
 import logger from "@/common/logger";
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-const zodEmail = z.string().email();
+const zodEmail = z.email();
 
 // TODO: Import catalogue emails in organisation & person
 // Question: Do we need to clear previous email binding ?

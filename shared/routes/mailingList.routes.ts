@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import { zObjectId } from "../models/common";
 import { ZMailingListDocument } from "../models/document.model";
@@ -67,7 +67,7 @@ export const zMailingListRoutes = {
     "/mailing-list": {
       method: "post",
       path: "/mailing-list",
-      body: ZMailingList.pick({
+      body: z.pick(ZMailingList, {
         source: true,
         campaign_name: true,
         email: true,

@@ -1,5 +1,5 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import type { IModelDescriptor } from "../common";
 import { ZEventBalEmail } from "./bal_emails.event";

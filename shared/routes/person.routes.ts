@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import { zObjectId } from "../models/common";
 import { ZPersonWithOrganisation } from "../models/person.model";

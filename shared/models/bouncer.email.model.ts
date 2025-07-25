@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import type { IModelDescriptor } from "./common";
 import { zObjectId } from "./common";
@@ -17,8 +17,8 @@ export type EmailStatus = z.output<typeof zEmailStatus>;
 export const zBouncerPingResult = z.object({
   status: zEmailStatus,
   message: z.string(),
-  responseCode: z.string().nullable(),
-  responseMessage: z.string().nullable(),
+  responseCode: z.nullable(z.string()),
+  responseMessage: z.nullable(z.string()),
 });
 
 export type BouncerPingResult = z.output<typeof zBouncerPingResult>;
@@ -26,11 +26,11 @@ export type BouncerPingResult = z.output<typeof zBouncerPingResult>;
 export const zBouncerEmail = z.object({
   _id: zObjectId,
   email: z.string(),
-  domain: z.string().nullable(),
-  smtp: z.string().nullable(),
+  domain: z.nullable(z.string()),
+  smtp: z.nullable(z.string()),
   ping: zBouncerPingResult,
   created_at: z.date(),
-  ttl: z.date().nullable(),
+  ttl: z.nullable(z.date()),
 });
 
 export type BouncerEmail = z.output<typeof zBouncerEmail>;

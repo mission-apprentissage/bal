@@ -1,5 +1,5 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import type { IModelDescriptor } from "../common";
 import { zObjectId } from "../common";
@@ -10,11 +10,11 @@ const indexes: IModelDescriptor["indexes"] = [[{ deca_id: 1, time: -1 }, {}]];
 
 export const ZDecaHistory = z.object({
   _id: zObjectId,
-  key: z.string().describe("Modified key"),
-  from: z.any().describe("Value from"),
-  to: z.any().describe("Value to"),
+  key: z.string(),
+  from: z.optional(z.any()),
+  to: z.optional(z.any()),
   deca_id: zObjectId,
-  time: z.date().describe("Modified time"),
+  time: z.date(),
 });
 
 export type IDecaHistory = z.output<typeof ZDecaHistory>;

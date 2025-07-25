@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import type { IRoutesDef } from "./common.routes";
 import { ZResOk } from "./common.routes";
@@ -43,7 +43,7 @@ export const zUploadSupportRoutes = {
       path: "/support/upload",
       querystring: z.object({
         verified_key: z.string(),
-        email: z.string().email(),
+        email: z.email(),
       }),
       body: z.unknown(),
       response: {

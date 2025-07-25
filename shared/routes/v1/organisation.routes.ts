@@ -1,24 +1,19 @@
+import { z } from "zod/v4-mini";
 import { extensions } from "../../helpers/zodHelpers/zodPrimitives";
-import { z } from "../../helpers/zodWithOpenApi";
 import type { IRoutesDef } from "../common.routes";
 import { ZReqHeadersAuthorization } from "../common.routes";
 
 const validationSchema = {
-  body: z
-    .object({
-      email: z.string().trim().email("Email non valide"),
-      siret: extensions.siret,
-    })
-    .describe("Organisation validation Request body"),
+  body: z.object({
+    email: extensions.email,
+    siret: extensions.siret,
+  }),
   headers: ZReqHeadersAuthorization,
   response: {
-    "200": z
-      .object({
-        is_valid: z.boolean(),
-        on: z.enum(["email", "domain"]).optional(),
-      })
-
-      .describe("Organisation validation Response body"),
+    "200": z.object({
+      is_valid: z.boolean(),
+      on: z.optional(z.enum(["email", "domain"])),
+    }),
   },
 } as const;
 
