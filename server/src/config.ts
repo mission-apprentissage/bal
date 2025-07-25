@@ -18,7 +18,7 @@ const config = {
   },
   session: {
     secret: env.get("MNA_BAL_SESSION_SECRET").required().asString(),
-    cookieName: env.get("MNA_BAL_SESSION_COOKIE_NAME").default("bal_session").asString(),
+    cookieName: "bal_session",
     cookie: {
       maxAge: env
         .get("MNA_BAL_SESSION_COOKIE_MAX_AGE")

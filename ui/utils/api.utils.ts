@@ -9,10 +9,10 @@ import { publicConfig } from "@/config.public";
 type PathParam = Record<string, string>;
 type QueryString = Record<string, string | string[]>;
 type WithQueryStringAndPathParam =
-  | {
-      params?: PathParam;
-      querystring?: QueryString;
-    }
+  | Readonly<{
+      params?: Readonly<PathParam>;
+      querystring?: Readonly<QueryString>;
+    }>
   | EmptyObject;
 
 type OptionsGet = {
@@ -30,7 +30,11 @@ type OptionsWrite = {
 
 type IRequestOptions = OptionsGet | OptionsWrite | EmptyObject;
 
-async function optionsToFetchParams(method: RequestInit["method"], options: IRequestOptions) {
+async function optionsToFetchParams(
+  method: RequestInit["method"],
+  options: IRequestOptions,
+  rawOptions?: Pick<RequestInit, "cache">
+) {
   const headers = await getHeaders(options);
 
   let body: BodyInit | undefined = undefined;
@@ -51,6 +55,11 @@ async function optionsToFetchParams(method: RequestInit["method"], options: IReq
     method,
     headers,
   };
+
+  if (rawOptions) {
+    Object.assign(requestInit, rawOptions);
+  }
+
   return { requestInit, headers };
 }
 
@@ -69,7 +78,8 @@ async function getHeaders(options: IRequestOptions) {
       // By default server-side we don't use headers
       // But we need them for the api, as all routes are authenticated
       const { headers: nextHeaders } = await import("next/headers");
-      const cookie = nextHeaders().get("cookie");
+      const h = await nextHeaders();
+      const cookie = h.get("cookie");
       if (cookie) {
         headers.append("cookie", cookie);
       }
@@ -180,8 +190,8 @@ export class ApiError extends Error {
   constructor(context: ApiErrorContext) {
     super();
     this.context = context;
-    this.name = context.name;
-    this.message = context.message;
+    this.name = context.name ?? "ApiError";
+    this.message = context.message ?? `code ${context.statusCode}`;
   }
 
   toJSON(): ApiErrorContext {
@@ -242,9 +252,10 @@ export async function apiPost<P extends keyof IPostRoutes, S extends IPostRoutes
 
 export async function apiGet<P extends keyof IGetRoutes, S extends IGetRoutes[P] = IGetRoutes[P]>(
   path: P,
-  options: IRequest<S>
+  options: IRequest<S>,
+  rawOptions?: Pick<RequestInit, "cache">
 ): Promise<IResponse<S>> {
-  const { requestInit, headers } = await optionsToFetchParams("GET", options);
+  const { requestInit, headers } = await optionsToFetchParams("GET", options, rawOptions);
 
   const res = await fetch(generateUrl(path, options), requestInit);
 

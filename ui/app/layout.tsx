@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 import type { IUserPublic } from "shared/models/user.model";
+import { cookies } from "next/headers";
 
 import { StartDsfr } from "./StartDsfr";
 import { AuthContextProvider } from "@/context/AuthContext";
@@ -16,7 +17,14 @@ import { apiGet } from "@/utils/api.utils";
 
 async function getSession(): Promise<IUserPublic | undefined> {
   try {
-    const session: IUserPublic = await apiGet(`/auth/session`, {});
+    const cookieStore = await cookies();
+    const sessionCookie = cookieStore.get("bal_session");
+
+    if (!sessionCookie) {
+      return;
+    }
+
+    const session = await apiGet(`/auth/session`, {}, { cache: "no-store" });
     return session;
   } catch (error) {
     console.log(error);
