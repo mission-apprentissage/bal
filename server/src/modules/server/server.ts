@@ -19,8 +19,8 @@ import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod
 import { generateOpenApiSchema } from "shared/helpers/openapi/generateOpenapi";
 import type { IRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
 
-import { initSentryFastify } from "../../common/services/sentry/sentry";
 import config from "../../config";
+import { initSentryFastify } from "../../common/services/sentry/sentry.fastify";
 import { organisationAdminRoutes } from "./admin/organisation.routes";
 import { personAdminRoutes } from "./admin/person.routes";
 import { uploadAdminRoutes } from "./admin/upload.routes";
@@ -72,8 +72,9 @@ export async function bind(app: Server) {
       displayOperationId: true,
       operationsSorter: "method",
       tagsSorter: "alpha",
-      docExpansion: "list",
-      deepLinking: false,
+      docExpansion: "none",
+      filter: true,
+      deepLinking: true,
     },
   };
   await app.register(fastifySwaggerUi, swaggerUiOptions);

@@ -1,9 +1,9 @@
 import Boom from "@hapi/boom";
 import { captureException } from "@sentry/node";
 import type { FastifyError } from "fastify";
-import type { ResponseValidationError } from "fastify-type-provider-zod";
+import { hasZodFastifySchemaValidationErrors, isResponseSerializationError } from "fastify-type-provider-zod";
 import type { IResError } from "shared/routes/common.routes";
-import { ZodError } from "zod";
+import type { ZodError } from "zod";
 
 import type { Server } from "../server";
 import config from "@/config";
@@ -22,9 +22,9 @@ export function boomify(rawError: FastifyError | Boom.Boom<unknown> | Error | Zo
     return rawError;
   }
 
-  if (rawError.name === "ResponseValidationError") {
+  if (isResponseSerializationError(rawError)) {
     if (config.env === "local") {
-      return Boom.internal(getZodMessageError((rawError as ResponseValidationError).details as ZodError, "response"), {
+      return Boom.internal(getZodMessageError(rawError.cause, "response"), {
         rawError,
       });
     }
@@ -32,11 +32,10 @@ export function boomify(rawError: FastifyError | Boom.Boom<unknown> | Error | Zo
     return Boom.internal("Une erreur est survenue");
   }
 
-  if (rawError instanceof ZodError) {
-    return Boom.badRequest(
-      getZodMessageError(rawError, (rawError as unknown as FastifyError).validationContext ?? ""),
-      { validationError: rawError }
-    );
+  if (hasZodFastifySchemaValidationErrors(rawError)) {
+    return Boom.badRequest("Request validation failed", {
+      validationError: rawError.validation,
+    });
   }
 
   if ((rawError as FastifyError).statusCode) {

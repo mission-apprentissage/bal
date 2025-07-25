@@ -140,22 +140,23 @@ describe("Organisations", () => {
       assert.equal(response.statusCode, 400);
       assert.deepEqual(response.json(), {
         data: {
-          validationError: {
-            code: "FST_ERR_VALIDATION",
-            issues: [
-              {
-                code: "custom",
-                message: "Le siret ne respecte pas l'algorithme luhn (https://fr.wikipedia.org/wiki/Formule_de_Luhn)",
-                path: ["siret"],
+          validationError: [
+            {
+              instancePath: "/siret",
+              keyword: "custom",
+              message: "Le siret ne respecte pas l'algorithme luhn (https://fr.wikipedia.org/wiki/Formule_de_Luhn)",
+              params: {
+                issue: {
+                  code: "custom",
+                  message: "Le siret ne respecte pas l'algorithme luhn (https://fr.wikipedia.org/wiki/Formule_de_Luhn)",
+                  path: ["siret"],
+                },
               },
-            ],
-            name: "ZodError",
-            statusCode: 400,
-            validationContext: "body",
-          },
+              schemaPath: "#/siret/custom",
+            },
+          ],
         },
-        message:
-          "body.siret: Le siret ne respecte pas l'algorithme luhn (https://fr.wikipedia.org/wiki/Formule_de_Luhn)",
+        message: "Request validation failed",
         name: "Bad Request",
         statusCode: 400,
       });
