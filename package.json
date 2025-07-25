@@ -17,6 +17,7 @@
     "shared"
   ],
   "dependencies": {
+    "@sentry/cli": "^2.50.2",
     "dotenv": "^16.6.1",
     "husky": "^9.1.7"
   },

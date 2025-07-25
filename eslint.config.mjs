@@ -57,7 +57,6 @@ export default defineConfig([
         {
           devDependencies: [
             "**/*.dev.ts",
-            "**/dev.ts",
             "**/*.test.ts",
             "**/*.test.tsx",
             "**/tests/**/*.ts",

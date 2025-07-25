@@ -7,7 +7,7 @@ import HttpTerminator from "lil-http-terminator";
 import { ObjectId } from "mongodb";
 
 import { closeMailer } from "./common/services/mailer/mailer";
-import { closeSentry, initSentryProcessor } from "./common/services/sentry/sentry";
+import { closeSentry } from "./common/services/sentry/sentry";
 import { sleep } from "./common/utils/asyncUtils";
 import config from "./config";
 import createServer from "@/modules/server/server";
@@ -23,8 +23,6 @@ program
     // on définit le module du logger en global pour distinguer les logs des jobs
     if (command !== "start") {
       logger.fields.module = `cli:${command}`;
-      // Pas besoin d'init Sentry dans le cas du server car il est start automatiquement
-      initSentryProcessor();
     }
   })
   .hook("postAction", async () => {

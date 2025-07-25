@@ -1,8 +1,13 @@
-import * as Sentry from "@sentry/nextjs";
+// This file configures the initialization of Sentry for edge features (middleware, edge routes, and so on).
+// The config you add here will be used whenever one of the edge features is loaded.
+// Note that this config is unrelated to the Vercel Edge Runtime and is also required when running locally.
+// https://docs.sentry.io/platforms/javascript/guides/nextjs/
+
+import { captureConsoleIntegration, extraErrorDataIntegration, init } from "@sentry/nextjs";
 
 import { publicConfig } from "./config.public";
 
-Sentry.init({
+init({
   dsn: publicConfig.sentry.dsn,
   tracesSampleRate: publicConfig.env === "production" ? 0.01 : 1.0,
   tracePropagationTargets: [
@@ -14,5 +19,5 @@ Sentry.init({
   enabled: publicConfig.env !== "local",
   release: publicConfig.version,
   normalizeDepth: 8,
-  integrations: [],
+  integrations: [captureConsoleIntegration({ levels: ["error"] }), extraErrorDataIntegration({ depth: 8 })],
 });

@@ -29,10 +29,10 @@ services:
         limits:
           memory: 2g
       replicas: 2
-    env_file: .env_server
     stop_grace_period: 60s
     volumes:
       - /opt/app/data/server:/data
+      - /opt/app/.env_server:/app/server/.env
     logging:
       driver: "fluentd"
       options:
@@ -59,10 +59,10 @@ services:
           memory: 1g
       replicas: 4
     command: ["yarn", "cli", "processor"]
-    env_file: .env_server
     stop_grace_period: 2h
     volumes:
       - /opt/app/data/server:/data
+      - /opt/app/.env_server:/app/server/.env
     environment:
       INSTANCE_ID: "runner-{% raw %}{{.Task.Slot}}{% endraw %}"
       NODE_OPTIONS: "--max_old_space_size=1024"
@@ -93,7 +93,7 @@ services:
 
   metabase:
     <<: *default
-    image: metabase/metabase:v0.51.2
+    image: metabase/metabase:v0.55.x
     deploy:
       <<: *deploy-default
       resources:

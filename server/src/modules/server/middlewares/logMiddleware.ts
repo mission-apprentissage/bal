@@ -68,7 +68,7 @@ export function logMiddleware(): FastifyLoggerOptions | PinoLoggerOptions | fals
       },
       res: (res: ResSerializerReply<RawServerDefault, FastifyReply>) => {
         return {
-          responseTime: res.getResponseTime?.() ?? null,
+          responseTime: res.elapsedTime ?? null,
           statusCode: res.statusCode,
           headers: typeof res.getHeaders === "function" ? withoutSensibleFields(res.getHeaders(), new Set()) : {},
         };
