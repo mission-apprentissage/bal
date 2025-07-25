@@ -1,12 +1,12 @@
-import { IncomingMessage } from "node:http";
+import type { IncomingMessage } from "node:http";
 
+import type { Readable } from "stream";
 import Boom, { notFound } from "@hapi/boom";
 import { addJob } from "job-processor";
 import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
 import { zRoutes } from "shared";
-import { IMailingListDocument } from "shared/models/document.model";
-import { Readable } from "stream";
+import type { IMailingListDocument } from "shared/models/document.model";
 
 import logger from "../../common/logger";
 import * as crypto from "../../common/utils/cryptoUtils";
@@ -20,7 +20,7 @@ import {
   findMailingList,
   findMailingListWithDocument,
 } from "../actions/mailingLists.actions";
-import { Server } from "./server";
+import type { Server } from "./server";
 import { noop } from "./utils/upload.utils";
 
 export const mailingListRoutes = ({ server }: { server: Server }) => {
@@ -40,7 +40,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         });
 
         return response.status(200).send({ success: true });
-      } catch (error) {
+      } catch (_error) {
         throw Boom.badData("Impossible de créer la liste de diffusion");
       }
     }
@@ -52,7 +52,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       schema: zRoutes.get["/mailing-lists"],
       onRequest: [server.auth(zRoutes.get["/mailing-lists"])],
     },
-    async (request, response) => {
+    async (_request, response) => {
       const mailingLists = await findMailingListWithDocument({});
 
       return response.status(200).send(mailingLists);

@@ -1,11 +1,10 @@
-import logger from "@/common/logger";
-import { sendEmail } from "@/common/services/mailer/mailer";
-import { createResetPasswordToken } from "@/common/utils/jwtUtils";
-
-import { IAccessToken } from "../../security/accessTokenService";
+import type { IAccessToken } from "../../security/accessTokenService";
 import { hashPassword, verifyPassword } from "../server/utils/password.utils";
 import { findPerson } from "./persons.actions";
 import { findUser, updateUser } from "./users.actions";
+import { createResetPasswordToken } from "@/common/utils/jwtUtils";
+import { sendEmail } from "@/common/services/mailer/mailer";
+import logger from "@/common/logger";
 
 export const verifyEmailPassword = async (email: string, password: string) => {
   const user = await findUser({ email });

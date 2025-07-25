@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { ZDocumentContent } from "../models/documentContent.model";
-import { IRoutesDef } from "./common.routes";
+import type { IRoutesDef } from "./common.routes";
 
 export const zDocumentRoutes = {
   get: {

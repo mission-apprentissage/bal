@@ -7,15 +7,14 @@ import type { Readable } from "node:stream";
 import { internal } from "@hapi/boom";
 import { compose, oleoduc, writeData } from "oleoduc";
 import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
-import { ILbaRecruteursSiretEmail } from "shared/models/data/lba.recruteurs.siret.email.model";
-
-import parentLogger from "@/common/logger";
-import config from "@/config";
+import type { ILbaRecruteursSiretEmail } from "shared/models/data/lba.recruteurs.siret.email.model";
 
 import { withCause } from "../../../common/services/errors/withCause";
 import { getS3FileLastUpdate, s3ReadAsStream } from "../../../common/utils/awsUtils";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 import { streamJsonArray } from "../../../common/utils/streamUtils";
+import config from "@/config";
+import parentLogger from "@/common/logger";
 
 const logger = parentLogger.child({ module: "job:lba:hydrate:siret-list" });
 
@@ -29,7 +28,7 @@ export async function hydrateLbaSiretList() {
 
     await oleoduc(
       await readJson(destFile),
-      writeData(({ siret, email }: { siret: string; email: string | null }) => {
+      writeData(async ({ siret, email }: { siret: string; email: string | null }) => {
         if (email) {
           try {
             const emailNormalized = extensions.email.parse(email);
@@ -47,7 +46,7 @@ export async function hydrateLbaSiretList() {
               },
               { upsert: true }
             );
-          } catch (error) {
+          } catch (_error) {
             //
           }
         }

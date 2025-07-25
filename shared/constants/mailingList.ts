@@ -1,4 +1,4 @@
-import { IMailingList } from "../models/mailingList.model";
+import type { IMailingList } from "../models/mailingList.model";
 
 export const MAILING_LIST_COMPUTED_COLUMNS = {
   WEBHOOK_LBA: {

@@ -1,13 +1,12 @@
 import { readdir, writeFile } from "node:fs/promises";
 
+import path from "path";
 import { internal } from "@hapi/boom";
 import { format } from "date-fns";
-import path from "path";
-
-import { __dirname } from "@/common/utils/esmUtils";
 
 import { withCause } from "../../../common/services/errors/withCause";
 import { getDatabase, getMongodbClient } from "../../../common/utils/mongodbUtils";
+import { __dirname } from "@/common/utils/esmUtils";
 
 const myConfig = {
   mongodb: {

@@ -1,19 +1,19 @@
 "use client";
 
 import { fr } from "@codegouvfr/react-dsfr";
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Box, Tooltip, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { IUploadDocumentJson } from "shared/models/document.model";
+import type { IUploadDocumentJson } from "shared/models/document.model";
 
-import Table from "../../../components/table/Table";
-import { apiDelete, apiGet, apiPut, generateUrl } from "../../../utils/api.utils";
-import { formatDate } from "../../../utils/date.utils";
-import { formatBytes } from "../../../utils/file.utils";
-import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
-import Loading from "../../loading";
+import Table from "@/components/table/Table";
+import { apiDelete, apiGet, apiPut, generateUrl } from "@/utils/api.utils";
+import { formatDate } from "@/utils/date.utils";
+import { formatBytes } from "@/utils/file.utils";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import Loading from "@/app/loading";
 
 const modal = createModal({
   id: "delete-document-modal",
@@ -48,7 +48,7 @@ function RetryAction(props: { id: string; onRetry: () => Promise<unknown> }) {
       onClick={async () =>
         apiPut("/admin/document/:id/resume", {
           params: { id: props.id },
-        }).then(() => props.onRetry())
+        }).then(async () => props.onRetry())
       }
     />
   );

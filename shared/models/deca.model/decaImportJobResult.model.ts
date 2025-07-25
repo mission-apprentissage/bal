@@ -1,7 +1,8 @@
-import { Jsonify } from "type-fest";
+import type { Jsonify } from "type-fest";
 import { z } from "zod";
 
-import { IModelDescriptor, zObjectId } from "../common";
+import type { IModelDescriptor } from "../common";
+import { zObjectId } from "../common";
 
 const collectionName = "deca.import.job.result" as const;
 

@@ -1,19 +1,20 @@
 import Boom from "@hapi/boom";
 import { captureException } from "@sentry/node";
-import { FastifyRequest } from "fastify";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import type { FastifyRequest } from "fastify";
+import type { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
-import { IUserWithPerson } from "shared/models/user.model";
-import { ISecuredRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
-import { UserWithType } from "shared/security/permissions";
-
-import config from "@/config";
+import type { IUserWithPerson } from "shared/models/user.model";
+import type { ISecuredRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
+import type { UserWithType } from "shared/security/permissions";
 
 import { compareKeys } from "../common/utils/cryptoUtils";
 import { decodeToken } from "../common/utils/jwtUtils";
 import { getSession } from "../modules/actions/sessions.actions";
 import { findUser, updateUser } from "../modules/actions/users.actions";
-import { IAccessToken, parseAccessToken } from "./accessTokenService";
+import type { IAccessToken } from "./accessTokenService";
+import { parseAccessToken } from "./accessTokenService";
+import config from "@/config";
 
 export type IUserWithType =
   | UserWithType<"token", IAccessToken>
@@ -91,7 +92,7 @@ async function authApiKey(req: FastifyRequest): Promise<UserWithType<"user", IUs
 
     await updateUser(user.email, { api_key_used_at });
     return user ? { type: "user", value: { ...user, api_key_used_at } } : null;
-  } catch (error) {
+  } catch (_error) {
     throw Boom.forbidden("Jeton invalide");
   }
 }

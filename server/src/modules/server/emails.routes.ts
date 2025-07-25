@@ -1,12 +1,12 @@
 import Boom from "@hapi/boom";
 import { zRoutes } from "shared";
-import { IEmailError } from "shared/models/events/bal_emails.event";
+import type { IEmailError } from "shared/models/events/bal_emails.event";
 
 import { renderEmail } from "../../common/services/mailer/mailer";
 import { deserializeEmailTemplate } from "../../common/utils/jwtUtils";
 import config from "../../config";
 import { markEmailAsDelivered, markEmailAsFailed, markEmailAsOpened, unsubscribe } from "../actions/emails.actions";
-import { Server } from "./server";
+import type { Server } from "./server";
 
 export const emailsRoutes = ({ server }: { server: Server }) => {
   server.get(
@@ -95,9 +95,9 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
       const { event, "message-id": messageId } = request.body;
 
       if (event === "delivered") {
-        markEmailAsDelivered(messageId);
+        await markEmailAsDelivered(messageId);
       } else {
-        markEmailAsFailed(messageId, event as IEmailError["type"]);
+        await markEmailAsFailed(messageId, event as IEmailError["type"]);
       }
 
       return response.status(200).send();

@@ -5,13 +5,14 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { IGetRoutes, IQuery } from "shared";
-import { IStatus } from "shared/routes/auth.routes";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import type { IGetRoutes, IQuery } from "shared";
+import type { IStatus } from "shared/routes/auth.routes";
 
-import { apiGet } from "../../../utils/api.utils";
-import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
-import FormContainer from "../components/FormContainer";
+import { apiGet } from "@/utils/api.utils";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import FormContainer from "@/app/auth/components/FormContainer";
 
 type Route = IGetRoutes["/auth/reset-password"];
 

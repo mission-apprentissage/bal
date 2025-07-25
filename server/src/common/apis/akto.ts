@@ -1,10 +1,9 @@
-import axios from "axios";
 import querystring from "querystring";
-
-import config from "@/config";
+import axios from "axios";
 
 import { ApiError } from "../utils/apiUtils";
 import getApiClient from "./client";
+import config from "@/config";
 
 export const AKTO_API_BASE_URL = "https://api.akto.fr/referentiel/api/v1";
 export const AKTO_AUTH_BASE_URL = "https://login.microsoftonline.com";

@@ -1,22 +1,23 @@
 "use client";
 
-import Button from "@codegouvfr/react-dsfr/Button";
-import Input from "@codegouvfr/react-dsfr/Input";
-import Select from "@codegouvfr/react-dsfr/Select";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { Select } from "@codegouvfr/react-dsfr/Select";
 import { Upload as DSFRUpload } from "@codegouvfr/react-dsfr/Upload";
 import { Box, styled, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { IGetRoutes, IPostRoutes, IResponse } from "shared";
-import { z } from "zod";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import type { IGetRoutes, IPostRoutes, IResponse } from "shared";
 
-import ToggleSwitchInput from "../../../../components/form/ToggleSwitchInput";
-import Toast, { useToast } from "../../../../components/toast/Toast";
-import { apiGet, apiPost } from "../../../../utils/api.utils";
-import { queryClient } from "../../../../utils/query.utils";
-import Breadcrumb, { PAGES } from "../../../components/breadcrumb/Breadcrumb";
+import type { z } from "zod";
+import ToggleSwitchInput from "@/components/form/ToggleSwitchInput";
+import Toast, { useToast } from "@/components/toast/Toast";
+import { apiGet, apiPost } from "@/utils/api.utils";
+import { queryClient } from "@/utils/query.utils";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 interface FormValues extends z.input<IPostRoutes["/admin/upload"]["querystring"]> {
   file: FileList;

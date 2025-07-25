@@ -1,11 +1,10 @@
 import { internal } from "@hapi/boom";
 import { pMapIterable } from "p-map";
-import { IDeca } from "shared/models/deca.model/deca.model";
-
-import parentLogger from "@/common/logger";
+import type { IDeca } from "shared/models/deca.model/deca.model";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 import { updateOrganisationAndPerson } from "../../actions/organisations.actions";
+import parentLogger from "@/common/logger";
 
 const logger = parentLogger.child({ module: "job:validation:hydrate_from_deca" });
 

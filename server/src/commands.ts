@@ -6,14 +6,13 @@ import { addJob, startJobProcessor } from "job-processor";
 import HttpTerminator from "lil-http-terminator";
 import { ObjectId } from "mongodb";
 
-import logger from "@/common/logger";
-import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
-import createServer from "@/modules/server/server";
-
 import { closeMailer } from "./common/services/mailer/mailer";
 import { closeSentry, initSentryProcessor } from "./common/services/sentry/sentry";
 import { sleep } from "./common/utils/asyncUtils";
 import config from "./config";
+import createServer from "@/modules/server/server";
+import { closeMongodbConnection } from "@/common/utils/mongodbUtils";
+import logger from "@/common/logger";
 
 program
   .configureHelp({

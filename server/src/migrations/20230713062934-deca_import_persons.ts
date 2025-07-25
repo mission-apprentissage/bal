@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import type { Db, MongoClient } from "mongodb";
 
 import { importDecaContent } from "../modules/actions/deca.actions";
 

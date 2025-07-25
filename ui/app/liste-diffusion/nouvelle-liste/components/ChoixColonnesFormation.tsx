@@ -1,13 +1,14 @@
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Box, Typography } from "@mui/material";
-import { FC, useEffect } from "react";
+import type { FC } from "react";
+import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { IDocumentContentJson } from "shared/models/documentContent.model";
-import { IMailingListJson } from "shared/models/mailingList.model";
+import type { IDocumentContentJson } from "shared/models/documentContent.model";
+import type { IMailingListJson } from "shared/models/mailingList.model";
 
-import { IPostMailingListRoute } from "../page";
 import ChoixColonnesFormationRow from "./ChoixColonnesFormationRow";
+import type { IPostMailingListRoute } from "@/app/liste-diffusion/nouvelle-liste/page";
 
 interface Props {
   onSuccess: (data: Pick<IPostMailingListRoute, "training_columns">) => void;
@@ -128,7 +129,7 @@ const ChoixColonnesFormation: FC<Props> = ({ mailingList, onSuccess, columns, on
         setValue(key as keyof ITrainingColumnForm, value);
       });
     }
-  }, [mailingList, columns]);
+  }, [setValue, mailingList, columns]);
 
   const onSubmit = async (data: ITrainingColumnForm) => {
     onSuccess({ training_columns: data });

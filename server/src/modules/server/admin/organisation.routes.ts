@@ -2,7 +2,7 @@ import { notFound } from "@hapi/boom";
 import { zRoutes } from "shared";
 
 import { findOrganisation, findOrganisations } from "../../actions/organisations.actions";
-import { Server } from "../server";
+import type { Server } from "../server";
 
 export const organisationAdminRoutes = ({ server }: { server: Server }) => {
   server.get(

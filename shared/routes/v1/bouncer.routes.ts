@@ -1,5 +1,6 @@
 import { z } from "../../helpers/zodWithOpenApi";
-import { IRoutesDef, ZReqHeadersAuthorization } from "../common.routes";
+import type { IRoutesDef } from "../common.routes";
+import { ZReqHeadersAuthorization } from "../common.routes";
 
 const zEmailResult = z.object({
   email: z.string().email(),

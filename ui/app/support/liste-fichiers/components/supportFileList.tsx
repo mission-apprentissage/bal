@@ -1,12 +1,13 @@
 import { fr } from "@codegouvfr/react-dsfr";
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { FC, useState } from "react";
-import { IResErrorJson } from "shared/routes/common.routes";
+import type { FC } from "react";
+import { useState } from "react";
+import type { IResErrorJson } from "shared/routes/common.routes";
 
-import Table from "../../../../components/table/Table";
-import Toast, { useToast } from "../../../../components/toast/Toast";
-import { apiDelete, generateUrl } from "../../../../utils/api.utils";
+import Table from "@/components/table/Table";
+import Toast, { useToast } from "@/components/toast/Toast";
+import { apiDelete, generateUrl } from "@/utils/api.utils";
 
 type fichier = {
   id: string;

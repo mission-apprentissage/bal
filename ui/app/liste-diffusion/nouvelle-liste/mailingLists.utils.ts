@@ -1,5 +1,5 @@
 import { isComputedColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList";
-import { IDocumentContentJson } from "shared/models/documentContent.model";
+import type { IDocumentContentJson } from "shared/models/documentContent.model";
 
 export const getDataFromSample = (sample: IDocumentContentJson[], key: string) => {
   return (

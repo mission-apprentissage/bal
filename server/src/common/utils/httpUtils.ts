@@ -1,4 +1,4 @@
-import { IncomingMessage } from "node:http";
+import type { IncomingMessage } from "node:http";
 
 import https from "https";
 import { urlToHttpOptions } from "url";

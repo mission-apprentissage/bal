@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import type { Db, MongoClient } from "mongodb";
 
 // Migration already done, commented to avoid conflicts with 20230829073910-transform_job_to_mailing_list
 export const up = async (_db: Db, _client: MongoClient) => {

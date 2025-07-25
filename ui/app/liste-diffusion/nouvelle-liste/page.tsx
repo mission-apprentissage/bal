@@ -1,21 +1,22 @@
 "use client";
 import { fr } from "@codegouvfr/react-dsfr";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
-import Alert from "@codegouvfr/react-dsfr/Alert";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { IBody, IPostRoutes } from "shared";
-import { IDocumentContentJson } from "shared/models/documentContent.model";
-import { IMailingListJson } from "shared/models/mailingList.model";
+import type { IBody, IPostRoutes } from "shared";
+import type { IDocumentContentJson } from "shared/models/documentContent.model";
+import type { IMailingListJson } from "shared/models/mailingList.model";
 
-import { apiGet } from "../../../utils/api.utils";
-import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import ChoixColonnesFormation from "./components/ChoixColonnesFormation";
 import ChoixColonnesIdentifiant from "./components/ChoixColonnesIdentifiant";
 import ChoixColonnesSortie from "./components/ChoixColonnesSortie";
-import ChoixSource, { IChoseSourceForm } from "./components/ChoixSource";
+import type { IChoseSourceForm } from "./components/ChoixSource";
+import ChoixSource from "./components/ChoixSource";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import { apiGet } from "@/utils/api.utils";
 
 export type IPostMailingListRoute = IBody<IPostRoutes["/mailing-list"]>;
 

@@ -2,10 +2,11 @@
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { Typography } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
-import { FC, PropsWithChildren } from "react";
+import type { FC, PropsWithChildren } from "react";
 
-import { useAuth } from "../../context/AuthContext";
-import Breadcrumb, { Page, PAGES } from "../components/breadcrumb/Breadcrumb";
+import type { Page } from "@/app/components/breadcrumb/Breadcrumb";
+import { useAuth } from "@/context/AuthContext";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 interface Tab extends Page {
   secure?: boolean;

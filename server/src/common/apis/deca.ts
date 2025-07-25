@@ -1,11 +1,10 @@
 import { formatDuration, intervalToDuration } from "date-fns";
-import { ApiDeca, Contrat } from "shared/apis/deca";
+import type { ApiDeca, Contrat } from "shared/apis/deca";
 
+import getApiClient from "./client";
 import logger from "@/common/logger";
 import { ApiError, apiRateLimiter } from "@/common/utils/apiUtils";
 import config from "@/config";
-
-import getApiClient from "./client";
 
 export const API_ENDPOINT = config.decaApi.endpoint;
 

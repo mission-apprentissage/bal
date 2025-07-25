@@ -1,10 +1,9 @@
-import nock from "nock";
 import querystring from "querystring";
-
-import config from "@/config";
+import nock from "nock";
 
 import { AKTO_API_BASE_URL, AKTO_AUTH_BASE_URL } from "../../../src/common/apis/akto";
 import { aktoMatch, aktoNotMatch, aktoToken, aktoValid } from "../../data/akto";
+import config from "@/config";
 
 export const aktoTokenMock = () => {
   return nock(AKTO_AUTH_BASE_URL)

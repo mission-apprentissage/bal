@@ -1,29 +1,30 @@
+import type { Readable } from "stream";
 import Boom from "@hapi/boom";
 import { captureException } from "@sentry/node";
 import chardet from "chardet";
-import { Options } from "csv-parse";
+import type { Options } from "csv-parse";
 import iconv from "iconv-lite";
-import { IJobsSimple } from "job-processor";
-import { Filter, FindOneAndUpdateOptions, FindOptions, ObjectId, UpdateFilter } from "mongodb";
+import type { IJobsSimple } from "job-processor";
+import type { Filter, FindOneAndUpdateOptions, FindOptions, UpdateFilter } from "mongodb";
+import { ObjectId } from "mongodb";
 import { oleoduc, transformData, writeData } from "oleoduc";
-import { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
-import { IDocumentContent } from "shared/models/documentContent.model";
-import { IMailingList } from "shared/models/mailingList.model";
-import { Readable } from "stream";
-import { JsonObject } from "type-fest";
-
-import logger from "@/common/logger";
-import * as crypto from "@/common/utils/cryptoUtils";
-import { getDbCollection } from "@/common/utils/mongodbUtils";
-import config from "@/config";
-import { clamav } from "@/services";
+import type { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
+import type { IDocumentContent } from "shared/models/documentContent.model";
+import type { IMailingList } from "shared/models/mailingList.model";
+import type { JsonObject } from "type-fest";
 
 import { sleep } from "../../common/utils/asyncUtils";
 import { deleteFromStorage, getFromStorage, uploadToStorage } from "../../common/utils/ovhUtils";
 import { DEFAULT_DELIMITER, parseCsv } from "../../common/utils/parserUtils";
 import { noop } from "../server/utils/upload.utils";
 import { createDocumentContent, deleteDocumentContent } from "./documentContent.actions";
-import { MAILING_LIST_DOCUMENT_PREFIX } from "./mailingLists.actions";
+import logger from "@/common/logger";
+import * as crypto from "@/common/utils/cryptoUtils";
+import { getDbCollection } from "@/common/utils/mongodbUtils";
+import config from "@/config";
+import { clamav } from "@/services";
+
+export const MAILING_LIST_DOCUMENT_PREFIX = "mailing-list";
 
 const testMode = config.env === "test";
 
@@ -101,7 +102,7 @@ export const readDocumentContent = async (
 export const saveDocumentsColumns = async () => {
   const documents = await findDocuments<IUploadDocument>({ kind: "upload" });
 
-  await Promise.all(documents.map((document) => saveDocumentColumns(document)));
+  await Promise.all(documents.map(async (document) => saveDocumentColumns(document)));
 };
 
 export const saveDocumentColumns = async (document: IUploadDocument) => {
@@ -132,7 +133,7 @@ export const saveDocumentColumns = async (document: IUploadDocument) => {
     );
 
     return columns;
-  } catch (error) {
+  } catch (_error) {
     logger.error(`Error while saving document columns for document ${document._id.toString()}`);
     return [];
   }
@@ -416,9 +417,9 @@ export const extractDocumentContent = async (
   let importedLines = 0;
   let importedSize = 0;
 
-  const updateProgress = setInterval(() => {
+  const updateProgress = setInterval(async () => {
     if (skip === 0) {
-      updateImportProgress(document._id, importedLines, importedSize);
+      await updateImportProgress(document._id, importedLines, importedSize);
     }
   }, 5_000);
 
@@ -430,7 +431,7 @@ export const extractDocumentContent = async (
     async (json: JsonObject) => {
       if (signal.aborted) {
         clearInterval(updateProgress);
-        updateImportProgress(document._id, importedLines, importedSize);
+        await updateImportProgress(document._id, importedLines, importedSize);
         throw signal.reason;
       }
 

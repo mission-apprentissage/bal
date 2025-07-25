@@ -4,13 +4,11 @@ import ejs from "ejs";
 import { omit } from "lodash-es";
 import mjml from "mjml";
 import nodemailer from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 import { htmlToText } from "nodemailer-html-to-text";
 import { zRoutes } from "shared";
-import { ITemplate } from "shared/mailer";
-import { IEventBalEmail } from "shared/models/events/bal_emails.event";
-
-import config from "@/config";
+import type { ITemplate } from "shared/mailer";
+import type { IEventBalEmail } from "shared/models/events/bal_emails.event";
 
 import {
   addEmailError,
@@ -22,6 +20,7 @@ import { generateAccessToken } from "../../../security/accessTokenService";
 import logger from "../../logger";
 import { getStaticFilePath } from "../../utils/getStaticFilePath";
 import { serializeEmailTemplate } from "../../utils/jwtUtils";
+import config from "@/config";
 
 let transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo> | null = null;
 

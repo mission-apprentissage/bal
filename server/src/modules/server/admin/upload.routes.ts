@@ -1,19 +1,18 @@
-import { IncomingMessage } from "node:http";
+import type { IncomingMessage } from "node:http";
 
-import { MultipartFile } from "@fastify/multipart";
+import type { Readable } from "stream";
+import type { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
 import { addJob, scheduleJob } from "job-processor";
 import { ObjectId } from "mongodb";
 import { oleoduc } from "oleoduc";
 import { zRoutes } from "shared";
 import { FILE_SIZE_LIMIT } from "shared/constants/index";
-import { IDocument, IUploadDocument, toPublicDocument } from "shared/models/document.model";
-import { Readable } from "stream";
-
-import logger from "@/common/logger";
-import * as crypto from "@/common/utils/cryptoUtils";
+import type { IDocument, IUploadDocument } from "shared/models/document.model";
+import { toPublicDocument } from "shared/models/document.model";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
+
 import { getFromStorage } from "../../../common/utils/ovhUtils";
 import { getUserFromRequest } from "../../../security/authenticationService";
 import {
@@ -26,8 +25,10 @@ import {
   uploadFile,
 } from "../../actions/documents.actions";
 import { findMailingListWithDocument } from "../../actions/mailingLists.actions";
-import { Server } from "../server";
+import type { Server } from "../server";
 import { noop } from "../utils/upload.utils";
+import * as crypto from "@/common/utils/cryptoUtils";
+import logger from "@/common/logger";
 
 const validateFile = (file: MultipartFile) => {
   if (file.mimetype !== "text/csv") {

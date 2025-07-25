@@ -1,9 +1,10 @@
-import fastifySentryPlugin, { FastifySentryOptions } from "@immobiliarelabs/fastify-sentry";
+import type { FastifySentryOptions } from "@immobiliarelabs/fastify-sentry";
+import fastifySentryPlugin from "@immobiliarelabs/fastify-sentry";
 import * as Sentry from "@sentry/node";
-import { FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 
 import config from "../../../config";
-import { Server } from "../../../modules/server/server";
+import type { Server } from "../../../modules/server/server";
 
 function getOptions(): Sentry.NodeOptions {
   return {

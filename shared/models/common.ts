@@ -1,5 +1,5 @@
 import type { CreateIndexesOptions, IndexSpecification } from "mongodb";
-import { ZodType } from "zod";
+import type { ZodType } from "zod";
 
 export type CollectionName =
   | "users"

@@ -2,11 +2,11 @@
 
 import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { IMailingListWithDocumentAndOwnerJson } from "shared/models/mailingList.model";
+import type { IMailingListWithDocumentAndOwnerJson } from "shared/models/mailingList.model";
 
-import { apiGet } from "../../../../../utils/api.utils";
-import Breadcrumb, { PAGES } from "../../../../components/breadcrumb/Breadcrumb";
-import ListMailingList from "../../../../liste-diffusion/components/ListMailingList";
+import { apiGet } from "@/utils/api.utils";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import ListMailingList from "@/app/liste-diffusion/components/ListMailingList";
 
 interface Props {
   params: { id: string };

@@ -1,8 +1,10 @@
 import Boom from "@hapi/boom";
 import { captureException } from "@sentry/node";
-import { Options, parse } from "csv-parse";
+import type { Options } from "csv-parse";
+import { parse } from "csv-parse";
 import { isEmpty, pickBy } from "lodash-es";
-import XLSX, { WorkSheet } from "xlsx";
+import type { WorkSheet } from "xlsx";
+import XLSX from "xlsx";
 
 export const DEFAULT_DELIMITER = ";";
 

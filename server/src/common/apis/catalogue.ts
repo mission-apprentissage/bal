@@ -1,10 +1,9 @@
 import { zFormationCatalogue } from "shared/models/catalogue.api.model";
-import { z } from "zod";
-
-import config from "@/config";
+import type { z } from "zod";
 
 import logger from "../logger";
 import getApiClient from "./client";
+import config from "@/config";
 
 const catalogueClient = getApiClient(
   {

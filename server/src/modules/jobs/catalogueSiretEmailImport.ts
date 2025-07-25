@@ -1,12 +1,11 @@
 import { ObjectId } from "mongodb";
-import { ICatalogueEmailSiret } from "shared/models/catalogueEmailSiret.model";
+import type { ICatalogueEmailSiret } from "shared/models/catalogueEmailSiret.model";
 import { z } from "zod";
 
+import { asyncGrouped } from "../../common/utils/asyncUtils";
 import { fetchCatalogueData } from "@/common/apis/catalogue";
 import logger from "@/common/logger";
 import { getDbCollection } from "@/common/utils/mongodbUtils";
-
-import { asyncGrouped } from "../../common/utils/asyncUtils";
 
 const zodEmail = z.string().email();
 

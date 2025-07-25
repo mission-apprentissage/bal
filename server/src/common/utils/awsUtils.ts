@@ -1,19 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { PutObjectRequest, S3ClientConfig } from "@aws-sdk/client-s3";
 import {
   DeleteObjectCommand,
   GetObjectCommand,
   HeadObjectCommand,
   PutObjectCommand,
-  PutObjectRequest,
   S3Client,
-  S3ClientConfig,
 } from "@aws-sdk/client-s3";
-// eslint-disable-next-line n/no-extraneous-import
+
 import { Upload } from "@aws-sdk/lib-storage";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { RequestPresigningArguments } from "@aws-sdk/types";
+import type { RequestPresigningArguments } from "@aws-sdk/types";
 import { internal } from "@hapi/boom";
-import { StreamingBlobPayloadInputTypes } from "@smithy/types";
+import type { StreamingBlobPayloadInputTypes } from "@smithy/types";
 
 import config from "../../config";
 import logger from "../logger";

@@ -1,9 +1,9 @@
 import { Typography } from "@mui/material";
-import { FC } from "react";
+import type { FC } from "react";
 import { isComputedColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList";
-import { IDocumentContentJson } from "shared/models/documentContent.model";
+import type { IDocumentContentJson } from "shared/models/documentContent.model";
 
-import { getDataFromSample } from "../mailingLists.utils";
+import { getDataFromSample } from "@/app/liste-diffusion/nouvelle-liste/mailingLists.utils";
 
 interface Props {
   sample: IDocumentContentJson[];

@@ -1,6 +1,5 @@
-import { apiGet } from "@/utils/api.utils";
-
 import UserView from "./components/UserView";
+import { apiGet } from "@/utils/api.utils";
 
 interface Props {
   params: { id: string };

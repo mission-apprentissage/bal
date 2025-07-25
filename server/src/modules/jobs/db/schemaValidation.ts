@@ -20,5 +20,5 @@ export async function validateDocuments(collectionName: string) {
 }
 
 export async function validateModels(): Promise<void> {
-  await Promise.all(modelDescriptors.map((d) => validateDocuments(d.collectionName)));
+  await Promise.all(modelDescriptors.map(async (d) => validateDocuments(d.collectionName)));
 }

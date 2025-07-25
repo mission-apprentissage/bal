@@ -1,4 +1,4 @@
-import { IPersonJson } from "shared/models/person.model";
+import type { IPersonJson } from "shared/models/person.model";
 
 export const getPersonDisplayName = (person: IPersonJson) => {
   if (person.nom || person.prenom) {

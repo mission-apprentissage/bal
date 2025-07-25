@@ -1,6 +1,7 @@
 "use client";
-import { createContext, FC, PropsWithChildren, useContext, useState } from "react";
-import { IUserPublic } from "shared/models/user.model";
+import type { FC, PropsWithChildren } from "react";
+import { createContext, useContext, useState } from "react";
+import type { IUserPublic } from "shared/models/user.model";
 
 interface IAuthContext {
   user?: IUserPublic;

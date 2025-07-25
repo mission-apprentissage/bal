@@ -1,8 +1,8 @@
-import axios, { AxiosResponse } from "axios";
-
-import config from "@/config";
+import type { AxiosResponse } from "axios";
+import axios from "axios";
 
 import { createRequestStream, createUploadStream } from "./httpUtils";
+import config from "@/config";
 
 interface Options {
   storage?: string;

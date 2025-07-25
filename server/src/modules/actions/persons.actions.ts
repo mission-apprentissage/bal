@@ -1,5 +1,6 @@
-import { Filter, ObjectId, UpdateFilter } from "mongodb";
-import { IPerson, PersonWithOrganisation } from "shared/models/person.model";
+import type { Filter, UpdateFilter } from "mongodb";
+import { ObjectId } from "mongodb";
+import type { IPerson, PersonWithOrganisation } from "shared/models/person.model";
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 

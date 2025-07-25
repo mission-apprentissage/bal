@@ -1,10 +1,10 @@
 import { getLink } from "@codegouvfr/react-dsfr/link";
-import Summary from "@codegouvfr/react-dsfr/Summary";
-import Table from "@codegouvfr/react-dsfr/Table";
+import { Summary } from "@codegouvfr/react-dsfr/Summary";
+import { Table } from "@codegouvfr/react-dsfr/Table";
 import { Grid, Typography } from "@mui/material";
 import React from "react";
 
-import Section from "../../components/section/Section";
+import Section from "@/app/components/section/Section";
 
 const CONTACT_ADDRESS = "tableau-de-bord@apprentissage.beta.gouv.fr";
 

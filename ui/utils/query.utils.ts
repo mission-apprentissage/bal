@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
-import { ReadonlyURLSearchParams } from "next/navigation";
+import type { ReadonlyURLSearchParams } from "next/navigation";
 
 const QUERY_CLIENT_RETRY_DELAY = 3000;
 const QUERY_CLIENT_RETRY_ATTEMPTS = 1;

@@ -1,5 +1,6 @@
-import { SearchBar as DSFRSearchBar, SearchBarProps } from "@codegouvfr/react-dsfr/SearchBar";
-import { FC } from "react";
+import type { SearchBarProps } from "@codegouvfr/react-dsfr/SearchBar";
+import { SearchBar as DSFRSearchBar } from "@codegouvfr/react-dsfr/SearchBar";
+import type { FC } from "react";
 
 interface Props extends SearchBarProps {
   defaultValue?: string;

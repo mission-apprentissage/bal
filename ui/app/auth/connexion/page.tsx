@@ -8,14 +8,15 @@ import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { IBody, IPostRoutes } from "shared";
-import { IStatus } from "shared/routes/auth.routes";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import type { IBody, IPostRoutes } from "shared";
+import type { IStatus } from "shared/routes/auth.routes";
 
-import { useAuth } from "../../../context/AuthContext";
-import { apiPost } from "../../../utils/api.utils";
-import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
-import FormContainer from "../components/FormContainer";
+import { useAuth } from "@/context/AuthContext";
+import { apiPost } from "@/utils/api.utils";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import FormContainer from "@/app/auth/components/FormContainer";
 
 type Route = IPostRoutes["/auth/login"];
 

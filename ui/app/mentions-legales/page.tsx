@@ -1,7 +1,7 @@
 "use client";
 
-import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
 import MentionsLegales from "./components/MentionLegales";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 const MentionsLegalesPage = () => {
   return (

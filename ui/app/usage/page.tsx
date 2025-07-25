@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import { PAGES } from "../components/breadcrumb/Breadcrumb";
+import { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 const UsagePage = () => {
   const { push } = useRouter();

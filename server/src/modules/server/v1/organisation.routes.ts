@@ -1,8 +1,8 @@
 import Boom from "@hapi/boom";
 import { zRoutes } from "shared";
 
-import { validation } from "../../actions/organisations.actions";
-import { Server } from "../server";
+import type { Server } from "../server";
+import { validation } from "../../actions/validation.action";
 
 export const organisationRoutes = ({ server }: { server: Server }) => {
   server.post(

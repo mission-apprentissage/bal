@@ -5,18 +5,18 @@ import deepmerge from "deepmerge";
 import { addJob } from "job-processor";
 import { DateTime } from "luxon";
 import { ObjectId } from "mongodb";
-import { IDeca, ZDeca } from "shared/models/deca.model/deca.model";
-import { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model";
+import type { IDeca } from "shared/models/deca.model/deca.model";
+import { ZDeca } from "shared/models/deca.model/deca.model";
+import type { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model";
 import { z } from "zod";
-
-import { getAllContrats } from "@/common/apis/deca";
-import parentLogger from "@/common/logger";
 
 import { withCause } from "../../../common/services/errors/withCause";
 import { asyncForEach } from "../../../common/utils/asyncUtils";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 import config from "../../../config";
 import { saveHistory } from "./hydrate-deca-history";
+import parentLogger from "@/common/logger";
+import { getAllContrats } from "@/common/apis/deca";
 
 const logger = parentLogger.child({ module: "job:hydrate:deca" });
 const DATE_DEBUT_CONTRATS_DISPONIBLES = new Date("2022-06-07T00:00:00.000+02:00"); // Date de début de disponibilité des données dans l'API Deca

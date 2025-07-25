@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 import { ZUser, zUserWithPersonPublic } from "../models/user.model";
-import { IRoutesDef, ZReqHeadersAuthorization, ZResOk } from "./common.routes";
+import type { IRoutesDef } from "./common.routes";
+import { ZReqHeadersAuthorization, ZResOk } from "./common.routes";
 
 export const zAuthRoutes = {
   get: {

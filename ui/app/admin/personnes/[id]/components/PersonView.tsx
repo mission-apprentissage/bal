@@ -1,10 +1,10 @@
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Typography } from "@mui/material";
-import { FC } from "react";
-import { PersonWithOrganisationJson } from "shared/models/person.model";
+import type { FC } from "react";
+import type { PersonWithOrganisationJson } from "shared/models/person.model";
 
-import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
-import Breadcrumb, { PAGES } from "../../../../components/breadcrumb/Breadcrumb";
+import InfoDetails from "@/components/infoDetails/InfoDetails";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 interface Props {
   person: PersonWithOrganisationJson;

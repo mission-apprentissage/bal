@@ -1,15 +1,15 @@
 import { captureException } from "@sentry/node";
 import { modelDescriptors } from "shared/models/models";
 
+import { initMailer } from "./common/services/mailer/mailer";
+import { setupJobProcessor } from "./modules/jobs/jobs";
 import { startCLI } from "@/commands";
 import logger from "@/common/logger";
 import { configureDbSchemaValidation, connectToMongodb } from "@/common/utils/mongodbUtils";
 import config from "@/config";
 import createGlobalServices from "@/services";
 
-import { initMailer } from "./common/services/mailer/mailer";
-import { setupJobProcessor } from "./modules/jobs/jobs";
-
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async function () {
   try {
     await connectToMongodb(config.mongodb.uri);

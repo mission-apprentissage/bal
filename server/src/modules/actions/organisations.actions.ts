@@ -1,83 +1,20 @@
 import dns from "node:dns";
 
+import util from "util";
 import { internal } from "@hapi/boom";
 import companyEmailValidator from "company-email-validator";
-import { Filter, FindOptions, ObjectId } from "mongodb";
-import { IPostRoutes, IResponse } from "shared";
+import type { Filter, FindOptions } from "mongodb";
+import { ObjectId } from "mongodb";
 import { getSirenFromSiret } from "shared/helpers/common";
-import { IOrganisation } from "shared/models/organisation.model";
-import util from "util";
+import type { IOrganisation } from "shared/models/organisation.model";
 import { z } from "zod";
 
 const dnsLookup = util.promisify(dns.lookup);
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-import { getAktoVerification } from "../../common/apis/akto";
-import {
-  getOpcoEpVerification,
-  OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE,
-  OPCO_EP_CODE_RETOUR_EMAIL_TROUVE,
-} from "../../common/apis/opcoEp";
-import { getCatalogueEmailVerification } from "./catalogue.actions";
-import { getDbVerification } from "./deca.actions";
-import { getLbaAlgoEmailVerification } from "./lba.algo.siret.email.actions";
+type ICreateOrganisation = Omit<IOrganisation, "_id">;
 
-export const validation = async ({
-  email,
-  siret,
-}: {
-  email: string;
-  siret: string;
-}): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
-  const testDeca = await getDbVerification(siret, email);
-  if (testDeca.is_valid) {
-    return testDeca;
-  }
-
-  const testCatalogue = await getCatalogueEmailVerification(siret, email);
-  if (testCatalogue.is_valid) {
-    return testCatalogue;
-  }
-
-  const testLbaAlgo = await getLbaAlgoEmailVerification(siret, email);
-  if (testLbaAlgo.is_valid) {
-    return testLbaAlgo;
-  }
-
-  const siren = getSirenFromSiret(siret);
-  const testAkto = await getAktoVerification(siren, email);
-  if (testAkto) {
-    await updateOrganisationAndPerson(siret, email, "AKTO");
-    return {
-      is_valid: true,
-      on: "email",
-    };
-  }
-
-  const testOpcoEp = await getOpcoEpVerification(siret, email);
-  if (testOpcoEp.codeRetour === OPCO_EP_CODE_RETOUR_EMAIL_TROUVE) {
-    await updateOrganisationAndPerson(siret, email, "OPCO_EP");
-    return {
-      is_valid: true,
-      on: "email",
-    };
-  }
-
-  if (testOpcoEp.codeRetour === OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE) {
-    await updateOrganisationAndPerson(siret, email, "OPCO_EP");
-    return {
-      is_valid: true,
-      on: "domain",
-    };
-  }
-
-  return {
-    is_valid: false,
-  };
-};
-
-interface ICreateOrganisation extends Omit<IOrganisation, "_id"> {}
 export const createOrganisation = async (data: ICreateOrganisation): Promise<IOrganisation> => {
   const now = new Date();
   const organisation = {
@@ -177,7 +114,7 @@ export const updateOrganisationAndPerson = async (
     // TODO: Check company domain validity
     try {
       await dnsLookup(domain);
-    } catch (error) {
+    } catch (_error) {
       domain = "";
     }
   }

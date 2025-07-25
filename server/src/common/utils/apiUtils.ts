@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios";
+import type { AxiosInstance } from "axios";
 import { RateLimiterMemory, RateLimiterQueue } from "rate-limiter-flexible";
 
 import { timeout } from "./asyncUtils";

@@ -1,11 +1,12 @@
-import jwt, { SignOptions } from "jsonwebtoken";
+import type { SignOptions } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { zRoutes } from "shared";
-import { ITemplate, zTemplate } from "shared/mailer";
-import { IUserWithPerson } from "shared/models/user.model";
-
-import config from "@/config";
+import type { ITemplate } from "shared/mailer";
+import { zTemplate } from "shared/mailer";
+import type { IUserWithPerson } from "shared/models/user.model";
 
 import { generateAccessToken } from "../../security/accessTokenService";
+import config from "@/config";
 
 interface ICreateTokenOptions {
   secret?: string;

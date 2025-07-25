@@ -1,19 +1,20 @@
 "use client";
 
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import PasswordInput from "@codegouvfr/react-dsfr/blocks/PasswordInput";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import { PasswordInput } from "@codegouvfr/react-dsfr/blocks/PasswordInput";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Box, Typography } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { IPostRoutes } from "shared";
-import { IStatus } from "shared/routes/auth.routes";
-import { z } from "zod";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import type { IPostRoutes } from "shared";
+import type { IStatus } from "shared/routes/auth.routes";
 
-import { apiPost } from "../../../utils/api.utils";
-import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
-import FormContainer from "../components/FormContainer";
+import type { z } from "zod";
+import { apiPost } from "@/utils/api.utils";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import FormContainer from "@/app/auth/components/FormContainer";
 // import { NavLink } from "../../components/NavLink";
 
 type IFormValues = z.input<IPostRoutes["/auth/reset-password"]["body"]> & {

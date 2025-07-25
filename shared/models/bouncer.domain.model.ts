@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 import { zBouncerPingResult } from "./bouncer.email.model";
-import { IModelDescriptor, zObjectId } from "./common";
+import type { IModelDescriptor } from "./common";
+import { zObjectId } from "./common";
 
 const collectionName = "bouncer.domain" as const;
 

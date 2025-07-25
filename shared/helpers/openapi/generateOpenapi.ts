@@ -1,10 +1,12 @@
-import { OpenApiGeneratorV31, OpenAPIRegistry, ResponseConfig, RouteConfig } from "@asteasolutions/zod-to-openapi";
+import type { ResponseConfig, RouteConfig } from "@asteasolutions/zod-to-openapi";
+import { OpenApiGeneratorV31, OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import { formatParamUrl } from "@fastify/swagger";
 import type { oas30 } from "openapi3-ts";
-import { ZodType } from "zod";
+import type { ZodType } from "zod";
 
 import { zRoutes } from "../../index";
-import { IRouteSchema, ZResError } from "../../routes/common.routes";
+import type { IRouteSchema } from "../../routes/common.routes";
+import { ZResError } from "../../routes/common.routes";
 
 function generateOpenApiResponseObject(schema: ZodType, description: string | null = null): ResponseConfig {
   return {

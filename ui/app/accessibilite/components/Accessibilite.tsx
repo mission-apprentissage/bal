@@ -2,8 +2,8 @@ import { getLink } from "@codegouvfr/react-dsfr/link";
 import { Typography } from "@mui/material";
 import React from "react";
 
-import { PAGES } from "../../components/breadcrumb/Breadcrumb";
-import Section from "../../components/section/Section";
+import { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import Section from "@/app/components/section/Section";
 
 const Accessibilite = () => {
   const { Link } = getLink();

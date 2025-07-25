@@ -1,7 +1,7 @@
-import { Jsonify } from "type-fest";
+import type { Jsonify } from "type-fest";
 import { z } from "zod";
 
-import { IModelDescriptor } from "../common";
+import type { IModelDescriptor } from "../common";
 import { ZEventBalEmail } from "./bal_emails.event";
 
 const collectionName = "events" as const;

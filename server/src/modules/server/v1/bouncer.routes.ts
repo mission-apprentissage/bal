@@ -1,9 +1,9 @@
 import { addJob } from "job-processor";
 import { zRoutes } from "shared";
-import { IEmailResult } from "shared/routes/v1/bouncer.routes";
+import type { IEmailResult } from "shared/routes/v1/bouncer.routes";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
-import { Server } from "../server";
+import type { Server } from "../server";
 
 export const bouncerRoutes = ({ server }: { server: Server }) => {
   server.post(

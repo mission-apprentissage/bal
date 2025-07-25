@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import { captureException } from "@sentry/node";
 import { ObjectId } from "mongodb";
-import { BouncerPingResult } from "shared/models/bouncer.email.model";
+import type { BouncerPingResult } from "shared/models/bouncer.email.model";
 
 import logger from "../../logger";
 import { sleep } from "../../utils/asyncUtils";
@@ -114,7 +114,7 @@ async function tryVerifyEmail(email: string, retryCount = 0): Promise<BouncerPin
   }
 }
 
-async function tryWithRandomEmail(smtp: string, email: string): Promise<BouncerPingResult | null> {
+async function tryWithRandomEmail(_smtp: string, email: string): Promise<BouncerPingResult | null> {
   const randomEmail = `${randomUUID()}@${email.split("@")[1]}`;
   const randomResult = await tryVerifyEmail(randomEmail);
 
@@ -271,7 +271,7 @@ export async function verifyEmails(emails: string[]): Promise<{ email: string; p
   }, new Map<string, string[]>());
 
   const data = await Promise.all(
-    Array.from(perDomain.entries()).map(([_, emails]) => verifyEmailsSequentially(emails, domainMap))
+    Array.from(perDomain.entries()).map(async ([_, emails]) => verifyEmailsSequentially(emails, domainMap))
   );
 
   return data.flat();

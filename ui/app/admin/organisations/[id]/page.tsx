@@ -1,6 +1,5 @@
-import { apiGet } from "@/utils/api.utils";
-
 import OrganisationView from "./components/OrganisationView";
+import { apiGet } from "@/utils/api.utils";
 
 interface Props {
   params: { id: string };

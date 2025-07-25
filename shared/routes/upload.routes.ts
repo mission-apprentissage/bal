@@ -3,7 +3,7 @@ import { z } from "zod";
 import { zObjectId } from "../models/common";
 import { ZUploadDocumentPublic } from "../models/document.model";
 import { ZMailingListWithDocumenAndOwner } from "../models/mailingList.model";
-import { IRoutesDef } from "./common.routes";
+import type { IRoutesDef } from "./common.routes";
 
 export const zUploadRoutes = {
   get: {

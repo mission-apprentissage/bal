@@ -1,14 +1,14 @@
 "use client";
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Box, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { IMailingListWithDocumentAndOwnerJson } from "shared/models/mailingList.model";
+import type { IMailingListWithDocumentAndOwnerJson } from "shared/models/mailingList.model";
 
-import { apiGet } from "../../utils/api.utils";
-import Breadcrumb, { PAGES } from "../components/breadcrumb/Breadcrumb";
-import Loading from "../loading";
 import GeneratingMailingList from "./components/GeneratingMailingList";
 import ListMailingList from "./components/ListMailingList";
+import { apiGet } from "@/utils/api.utils";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import Loading from "@/app/loading";
 
 const ListeDiffusionPage = () => {
   const {

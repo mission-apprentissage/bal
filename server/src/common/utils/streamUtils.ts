@@ -1,10 +1,9 @@
-// import type { Readable, Writable } from "node:stream";
-import { Readable, Transform, Writable } from "node:stream";
+import type { Readable, Writable } from "node:stream";
+import { Transform } from "node:stream";
 
 import type { AbstractCursor } from "mongodb";
 import { compose as _compose, transformData } from "oleoduc";
 import streamJson from "stream-json";
-// eslint-disable-next-line import/extensions
 import jsonFilters from "stream-json/filters/Pick.js";
 import streamers from "stream-json/streamers/StreamArray.js";
 import type { z, ZodArray, ZodType, ZodTypeAny } from "zod";

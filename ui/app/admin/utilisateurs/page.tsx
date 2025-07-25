@@ -2,8 +2,8 @@
 
 import { Typography } from "@mui/material";
 
-import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import UserList from "./components/UserList";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 const AdminUsersPage = () => {
   return (

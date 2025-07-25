@@ -1,20 +1,21 @@
 "use client";
 import { fr } from "@codegouvfr/react-dsfr";
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
-import { IUserWithPersonPublic } from "shared/models/user.model";
+import type { FC } from "react";
+import { useState } from "react";
+import type { IUserWithPersonPublic } from "shared/models/user.model";
 import type { IResErrorJson } from "shared/routes/common.routes";
 
-import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
-import Toast, { useToast } from "../../../../../components/toast/Toast";
-import { apiDelete } from "../../../../../utils/api.utils";
-import { formatDate } from "../../../../../utils/date.utils";
-import { queryClient } from "../../../../../utils/query.utils";
-import Breadcrumb, { PAGES } from "../../../../components/breadcrumb/Breadcrumb";
-import { getPersonDisplayName } from "../../../personnes/persons.format";
+import InfoDetails from "@/components/infoDetails/InfoDetails";
+import Toast, { useToast } from "@/components/toast/Toast";
+import { apiDelete } from "@/utils/api.utils";
+import { formatDate } from "@/utils/date.utils";
+import { queryClient } from "@/utils/query.utils";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import { getPersonDisplayName } from "@/app/admin/personnes/persons.format";
 
 interface Props {
   user: IUserWithPersonPublic;

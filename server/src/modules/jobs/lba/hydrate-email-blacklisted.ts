@@ -2,12 +2,11 @@ import { captureException } from "@sentry/node";
 import * as Sentry from "@sentry/node";
 import { MongoClient } from "mongodb";
 import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
-import { ILbaEmailBlacklist } from "shared/models/data/lba.emailBlacklist.model";
-
-import parentLogger from "@/common/logger";
-import config from "@/config";
+import type { ILbaEmailBlacklist } from "shared/models/data/lba.emailBlacklist.model";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
+import parentLogger from "@/common/logger";
+import config from "@/config";
 
 const logger = parentLogger.child({ module: "job:lba:hydrate:email-balcklisted" });
 

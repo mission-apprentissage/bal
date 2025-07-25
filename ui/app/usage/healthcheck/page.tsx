@@ -2,10 +2,10 @@
 
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { IGetRoutes, IResponse } from "shared";
+import type { IGetRoutes, IResponse } from "shared";
 
-import { apiGet } from "../../../utils/api.utils";
-import ViewData from "../components/ViewData";
+import { apiGet } from "@/utils/api.utils";
+import ViewData from "@/app/usage/components/ViewData";
 
 const UsageHealthcheckPage = () => {
   const [responseData, setResponseData] = useState<IResponse<IGetRoutes["/healthcheck"]>>();

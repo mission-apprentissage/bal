@@ -1,10 +1,11 @@
 import Boom from "@hapi/boom";
-import { FastifyRequest } from "fastify";
-import { IUserWithPerson } from "shared/models/user.model";
-import { IRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
-import { AccessPermission, AdminRole, NoneRole, Role, SupportRole } from "shared/security/permissions";
+import type { FastifyRequest } from "fastify";
+import type { IUserWithPerson } from "shared/models/user.model";
+import type { IRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
+import type { AccessPermission, Role } from "shared/security/permissions";
+import { AdminRole, NoneRole, SupportRole } from "shared/security/permissions";
 
-import { IAccessToken } from "./accessTokenService";
+import type { IAccessToken } from "./accessTokenService";
 import { getUserFromRequest } from "./authenticationService";
 
 // Specify what we need to simplify mocking in tests

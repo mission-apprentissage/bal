@@ -1,5 +1,5 @@
 import { z } from "../../helpers/zodWithOpenApi";
-import { IRoutesDef } from "../common.routes";
+import type { IRoutesDef } from "../common.routes";
 
 export const zBrevoWebhooks = {
   post: {

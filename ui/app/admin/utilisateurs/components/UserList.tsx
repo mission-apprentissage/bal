@@ -1,17 +1,17 @@
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { IUserWithPersonPublic } from "shared/models/user.model";
+import type { IUserWithPersonPublic } from "shared/models/user.model";
 
-import SearchBar from "../../../../components/SearchBar";
-import Table from "../../../../components/table/Table";
-import { apiGet } from "../../../../utils/api.utils";
-import { formatDate } from "../../../../utils/date.utils";
-import { formatUrlWithNewParams, getSearchParamsForQuery } from "../../../../utils/query.utils";
-import { PAGES } from "../../../components/breadcrumb/Breadcrumb";
-import Loading from "../../../loading";
-import { getPersonDisplayName } from "../../personnes/persons.format";
+import SearchBar from "@/components/SearchBar";
+import Table from "@/components/table/Table";
+import { apiGet } from "@/utils/api.utils";
+import { formatDate } from "@/utils/date.utils";
+import { formatUrlWithNewParams, getSearchParamsForQuery } from "@/utils/query.utils";
+import { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import Loading from "@/app/loading";
+import { getPersonDisplayName } from "@/app/admin/personnes/persons.format";
 
 const UserList = () => {
   const searchParams = useSearchParams();

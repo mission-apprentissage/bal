@@ -1,17 +1,17 @@
-import { IncomingMessage } from "node:http";
+import type { IncomingMessage } from "node:http";
 
-import { MultipartFile } from "@fastify/multipart";
+import type { Readable } from "stream";
+import type { MultipartFile } from "@fastify/multipart";
 import Boom from "@hapi/boom";
 import { oleoduc, transformData, writeData } from "oleoduc";
 import { zRoutes } from "shared";
 import { FILE_SIZE_LIMIT } from "shared/constants/index";
-import { Readable } from "stream";
-
-import logger from "@/common/logger";
 
 import { deleteFromStorage, getFromStorage } from "../../common/utils/ovhUtils";
+
 import { uploadSupportFile } from "../actions/documents.actions";
-import { Server } from "./server";
+import type { Server } from "./server";
+import logger from "@/common/logger";
 
 const validateFile = (file: MultipartFile) => {
   if (
@@ -88,7 +88,7 @@ export const uploadSupportRoutes = ({ server }: { server: Server }) => {
       schema: zRoutes.get["/support/files-list"],
       onRequest: [server.auth(zRoutes.get["/support/files-list"])],
     },
-    async (request, response) => {
+    async (_request, response) => {
       const stream = await getFromStorage("/", {
         account: "mna",
         storage: "mna-support",

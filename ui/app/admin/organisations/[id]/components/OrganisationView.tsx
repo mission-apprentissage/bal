@@ -1,12 +1,12 @@
 "use client";
 
 import { Typography } from "@mui/material";
-import { FC } from "react";
-import { IOrganisationJson } from "shared/models/organisation.model";
+import type { FC } from "react";
+import type { IOrganisationJson } from "shared/models/organisation.model";
 
-import InfoDetails from "../../../../../components/infoDetails/InfoDetails";
-import Table from "../../../../../components/table/Table";
-import Breadcrumb, { PAGES } from "../../../../components/breadcrumb/Breadcrumb";
+import InfoDetails from "@/components/infoDetails/InfoDetails";
+import Table from "@/components/table/Table";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 interface Props {
   organisation: IOrganisationJson;
