@@ -7,11 +7,12 @@ import { Box, styled, Typography } from "@mui/material";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IPostRoutes } from "shared";
+import { z } from "zod";
 
 import Toast, { useToast } from "../../../components/toast/Toast";
 import { apiPost } from "../../../utils/api.utils";
 
-interface FormValues extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
+interface FormValues extends z.input<IPostRoutes["/admin/upload"]["querystring"]> {
   file: FileList;
   email: string;
   verified_key: string;
