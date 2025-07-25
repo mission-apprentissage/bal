@@ -1,5 +1,6 @@
 import type { ConditionalExcept, EmptyObject, Jsonify } from "type-fest";
-import type { ZodType, z } from "zod";
+import type { z } from "zod/v4-mini";
+import type { $ZodType } from "zod/v4/core";
 
 import { zAuthRoutes } from "./auth.routes";
 import type { IRouteSchema, IRouteSchemaWrite } from "./common.routes";
@@ -82,17 +83,17 @@ export const zRoutes: IRoutes = {
   delete: zRoutesDelete,
 } as const;
 
-export type IResponse<S extends IRouteSchema> = S["response"][`200`] extends ZodType
+export type IResponse<S extends IRouteSchema> = S["response"][`200`] extends $ZodType
   ? Jsonify<z.output<S["response"][`200`]>>
-  : S["response"][`2${string}`] extends ZodType
+  : S["response"][`2${string}`] extends $ZodType
     ? Jsonify<z.output<S["response"][`2${string}`]>>
     : never;
 
-export type IBody<S extends IRouteSchemaWrite> = S["body"] extends ZodType ? z.input<S["body"]> : never;
+export type IBody<S extends IRouteSchemaWrite> = S["body"] extends $ZodType ? z.input<S["body"]> : never;
 
-export type IQuery<S extends IRouteSchema> = S["querystring"] extends ZodType ? z.input<S["querystring"]> : never;
+export type IQuery<S extends IRouteSchema> = S["querystring"] extends $ZodType ? z.input<S["querystring"]> : never;
 
-export type IParam<S extends IRouteSchema> = S["params"] extends ZodType ? z.input<S["params"]> : never;
+export type IParam<S extends IRouteSchema> = S["params"] extends $ZodType ? z.input<S["params"]> : never;
 
 type IHeadersAuth<S extends IRouteSchema> = S extends { securityScheme: { auth: infer A } }
   ? A extends "access-token" | "api-key"
@@ -100,7 +101,7 @@ type IHeadersAuth<S extends IRouteSchema> = S extends { securityScheme: { auth: 
     : object
   : object;
 
-export type IHeaders<S extends IRouteSchema> = S["headers"] extends ZodType
+export type IHeaders<S extends IRouteSchema> = S["headers"] extends $ZodType
   ? Omit<z.input<S["headers"]>, "referrer">
   : object;
 

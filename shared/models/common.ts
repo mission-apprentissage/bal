@@ -1,5 +1,5 @@
 import type { CreateIndexesOptions, IndexSpecification } from "mongodb";
-import type { ZodType } from "zod";
+import type { $ZodType } from "zod/v4/core";
 
 export type CollectionName =
   | "users"
@@ -21,7 +21,7 @@ export type CollectionName =
   | "lba.recruteurs.siret.email";
 
 export interface IModelDescriptor {
-  zod: ZodType;
+  zod: $ZodType;
   indexes: [IndexSpecification, CreateIndexesOptions][];
   collectionName: CollectionName;
 }

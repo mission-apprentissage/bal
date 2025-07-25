@@ -7,7 +7,7 @@ import type { Filter, FindOptions } from "mongodb";
 import { ObjectId } from "mongodb";
 import { getSirenFromSiret } from "shared/helpers/common";
 import type { IOrganisation } from "shared/models/organisation.model";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 const dnsLookup = util.promisify(dns.lookup);
 
@@ -101,7 +101,7 @@ export const updateOrganisationAndPerson = async (
 ) => {
   const siren = getSirenFromSiret(siret);
 
-  const courrielParsed = z.string().email().safeParse(argCourriel);
+  const courrielParsed = z.email().safeParse(argCourriel);
   if (!courrielParsed.success) return;
 
   const courriel = courrielParsed.data;

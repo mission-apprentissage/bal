@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import { zBouncerPingResult } from "./bouncer.email.model";
 import type { IModelDescriptor } from "./common";
@@ -15,7 +15,7 @@ export const zBouncerDomain = z.object({
   _id: zObjectId,
   domain: z.string(),
   smtp: z.string(),
-  ping: zBouncerPingResult.nullable(),
+  ping: z.nullable(zBouncerPingResult),
   updated_at: z.date(),
   created_at: z.date(),
 });

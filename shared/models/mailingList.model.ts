@@ -1,5 +1,5 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import type { IModelDescriptor } from "./common";
 import { zObjectId } from "./common";
@@ -15,43 +15,39 @@ const indexes: IModelDescriptor["indexes"] = [
 
 export const ZMailingList = z.object({
   _id: zObjectId,
-  campaign_name: z.string().describe("Nom de la campagne"),
-  source: z.string().describe("Source de la campagne"),
-  email: z.string().describe("Nom de la colonne email"),
-  secondary_email: z.string().optional().describe("Nom de la colonne email secondaire"),
-  identifier_columns: z.array(z.string()).describe("Liste des colonnes d'identifiants"),
-  output_columns: z
-    .array(
-      z.object({
-        column: z.string(),
-        output: z.string(),
-        simple: z.boolean(),
-      })
-    )
-    .describe("Liste des colonnes de sortie"),
-  training_columns: z
-    .object({
-      cle_ministere_educatif: z.string().optional(),
-      mef: z.string().optional(),
-      cfd: z.string().optional(),
-      rncp: z.string().optional(),
-      code_postal: z.string().optional(),
-      uai_lieu_formation: z.string().optional(),
-      uai_formateur: z.string().optional(),
-      uai_formateur_responsable: z.string().optional(),
-      code_insee: z.string().optional(),
+  campaign_name: z.string(),
+  source: z.string(),
+  email: z.string(),
+  secondary_email: z.optional(z.string()),
+  identifier_columns: z.array(z.string()),
+  output_columns: z.array(
+    z.object({
+      column: z.string(),
+      output: z.string(),
+      simple: z.boolean(),
     })
-
-    .describe("Liste des colonnes lié à la formation"),
-  document_id: z.string().optional().describe("Identifiant du document généré"),
-  added_by: z.string().describe("L'utilisateur ayant crée la liste"),
-  updated_at: z.date().describe("Date de mise à jour en base de données"),
-  created_at: z.date().describe("Date d'ajout en base de données"),
+  ),
+  training_columns: z.object({
+    cle_ministere_educatif: z.optional(z.string()),
+    mef: z.optional(z.string()),
+    cfd: z.optional(z.string()),
+    rncp: z.optional(z.string()),
+    code_postal: z.optional(z.string()),
+    uai_lieu_formation: z.optional(z.string()),
+    uai_formateur: z.optional(z.string()),
+    uai_formateur_responsable: z.optional(z.string()),
+    code_insee: z.optional(z.string()),
+  }),
+  document_id: z.optional(z.string()),
+  added_by: z.string(),
+  updated_at: z.date(),
+  created_at: z.date(),
 });
 
-export const ZMailingListWithDocumenAndOwner = ZMailingList.extend({
-  document: ZMailingListDocument.nullish(),
-  owner: ZUserPublic.nullish(),
+export const ZMailingListWithDocumenAndOwner = z.object({
+  ...ZMailingList.shape,
+  document: z.nullish(ZMailingListDocument),
+  owner: z.nullish(ZUserPublic),
 });
 
 export type IMailingList = z.output<typeof ZMailingList>;

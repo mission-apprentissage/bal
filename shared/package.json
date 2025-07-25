@@ -22,9 +22,12 @@
     "openapi3-ts": "^4.5.0",
     "type-fest": "^4.41.0",
     "zod": "^3.25.76",
-    "zod-mongodb-schema": "^1.0.2"
+    "zod-mongodb-schema": "^2.0.0-next.6"
   },
   "devDependencies": {
+    "@readme/openapi-parser": "^4.1.2",
+    "@tsconfig/node24": "^24.0.1",
+    "api-alternance-sdk": "^2.13.0",
     "mongodb": "^6.18.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4",

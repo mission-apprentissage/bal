@@ -48,7 +48,7 @@ describe("zRoutes", () => {
               for (const [, access] of Object.entries(resourceAccess)) {
                 const zodInputShape = access.type === "params" ? typedDef.params : typedDef.querystring;
                 assert.notEqual(
-                  zodInputShape?.shape?.[access.key],
+                  zodInputShape?._zod.def.shape?.[access.key],
                   undefined,
                   `${method} ${path} ${resourceType}.${access.type}.${access.key}: does not exists`
                 );

@@ -138,13 +138,9 @@ exports[`zodToMongoSchema > should convert bouncer.email schema 1`] = `
       ],
     },
     "ttl": {
-      "anyOf": [
-        {
-          "bsonType": "date",
-        },
-        {
-          "bsonType": "null",
-        },
+      "bsonType": [
+        "date",
+        "null",
       ],
     },
   },
@@ -170,19 +166,16 @@ exports[`zodToMongoSchema > should convert catalogueEmailSirets schema 1`] = `
     },
     "created_at": {
       "bsonType": "date",
-      "description": "Date d'ajout en base de données",
     },
     "email": {
       "bsonType": "string",
-      "description": "Email de l'utilisateur",
+      "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
     },
     "siret": {
       "bsonType": "string",
-      "description": "Siret de l'utilisateur",
     },
     "updated_at": {
       "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
     },
   },
   "required": [
@@ -211,66 +204,53 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
           "properties": {
             "code_postal": {
               "bsonType": "string",
-              "description": "Le code postal de l'adresse",
             },
             "numero": {
               "bsonType": [
                 "string",
                 "null",
               ],
-              "description": "Le numéro de l'adresse",
             },
             "voie": {
               "bsonType": "string",
-              "description": "La voie de l'adresse",
             },
           },
         },
         "courriel": {
           "bsonType": "string",
-          "description": "L'adresse email de l'alternant",
         },
         "date_naissance": {
           "bsonType": "date",
-          "description": "La date de naissance de l'alternant",
         },
         "departement_naissance": {
           "bsonType": "string",
-          "description": "Le département de naissance de l'alternant",
         },
         "derniere_classe": {
           "bsonType": [
             "number",
             "null",
           ],
-          "description": "La dernière classe de l'apprenant",
         },
         "handicap": {
           "bsonType": "bool",
-          "description": "Indique si l'alternant est identifié comme porteur d'un handicap",
         },
         "nationalite": {
           "bsonType": "number",
-          "description": "Le code de la nationalité de l'alternant",
         },
         "nom": {
           "bsonType": "string",
-          "description": "Le nom de l'alternant",
         },
         "prenom": {
           "bsonType": "string",
-          "description": "Le prenom de l'alternant",
         },
         "sexe": {
           "bsonType": [
             "string",
             "null",
           ],
-          "description": "Le sexe de l'alternant",
         },
         "telephone": {
           "bsonType": "string",
-          "description": "Le numéro de téléphone de l'alternant",
         },
       },
       "required": [
@@ -280,31 +260,24 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
     },
     "created_at": {
       "bsonType": "date",
-      "description": "Date d'ajout en base de données",
     },
     "date_debut_contrat": {
       "bsonType": "date",
-      "description": "La date de début du contrat",
     },
     "date_effet_avenant": {
       "bsonType": "date",
-      "description": "La date d'effet de l'avenant du contrat",
     },
     "date_effet_rupture": {
       "bsonType": "date",
-      "description": "La date d'effet de la rupture",
     },
     "date_fin_contrat": {
       "bsonType": "date",
-      "description": "La date de fin du contrat",
     },
     "date_suppression": {
       "bsonType": "date",
-      "description": "La date de suppression ?",
     },
     "dispositif": {
       "bsonType": "string",
-      "description": "dispositif",
     },
     "employeur": {
       "additionalProperties": false,
@@ -316,7 +289,6 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
           "properties": {
             "code_postal": {
               "bsonType": "string",
-              "description": "Le code postal de l'adresse",
             },
           },
           "required": [
@@ -325,40 +297,32 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
         },
         "code_idcc": {
           "bsonType": "string",
-          "description": "Le code IDCC de l'employeur",
         },
         "courriel": {
           "bsonType": "string",
-          "description": "Email de l’employeur",
         },
         "denomination": {
           "bsonType": "string",
-          "description": "Denomination de l'employeur",
         },
         "naf": {
           "bsonType": "string",
-          "description": "Code NAF de l’entreprise",
         },
         "nombre_de_salaries": {
           "bsonType": [
             "number",
             "null",
           ],
-          "description": "Effectif salarié de l'entreprise",
         },
         "siret": {
           "bsonType": "string",
-          "description": "N° SIRET de l'employeur",
         },
         "telephone": {
           "bsonType": "string",
-          "description": "Téléphone de l'employeur",
         },
       },
     },
     "employeur_specifique": {
       "bsonType": "number",
-      "description": "Employeur specifique",
     },
     "etablissement_formation": {
       "additionalProperties": false,
@@ -366,14 +330,12 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
       "properties": {
         "siret": {
           "bsonType": "string",
-          "description": "Le siret de l'établissement de la formation",
-          "pattern": "^[0-9]{14}$",
+          "pattern": "^\\d{14}$",
         },
       },
     },
     "flag_correction": {
       "bsonType": "bool",
-      "description": "Flag correction",
     },
     "formation": {
       "additionalProperties": false,
@@ -381,37 +343,29 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
       "properties": {
         "code_diplome": {
           "bsonType": "string",
-          "description": "Le code diplôme de la formation",
         },
         "date_debut_formation": {
           "bsonType": "date",
-          "description": "La date de début de la formation",
         },
         "date_fin_formation": {
           "bsonType": "date",
-          "description": "La date de fin de la formation",
         },
         "intitule_ou_qualification": {
           "bsonType": "string",
-          "description": "L'adresse email de l'alternant",
         },
         "rncp": {
           "bsonType": "string",
-          "description": "Le code RNCP de la formation",
         },
         "type_diplome": {
           "bsonType": "string",
-          "description": "Catégorie par niveau du Diplôme ou titre visé par l'Alternant",
         },
       },
     },
     "no_avenant": {
       "bsonType": "string",
-      "description": "Le numéro de l'avenant du contrat",
     },
     "no_contrat": {
       "bsonType": "string",
-      "description": "Le numéro du contrat",
     },
     "organisme_formation": {
       "additionalProperties": false,
@@ -419,36 +373,29 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
       "properties": {
         "siret": {
           "bsonType": "string",
-          "description": "Le SIRET de l'organisme de formation principal",
         },
         "uai_cfa": {
           "bsonType": "string",
-          "description": "L'UAI de l'organisme responsable",
         },
       },
     },
     "rupture_avant_debut": {
       "bsonType": "bool",
-      "description": "rupture_avant_debut",
     },
     "statut": {
       "bsonType": "string",
-      "description": "Le statut du contrat",
     },
     "type_contrat": {
       "bsonType": "string",
     },
     "type_derogation": {
       "bsonType": "number",
-      "description": "Type de dérogation",
     },
     "type_employeur": {
       "bsonType": "number",
-      "description": "Type employeur",
     },
     "updated_at": {
       "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
     },
   },
   "required": [
@@ -475,19 +422,15 @@ exports[`zodToMongoSchema > should convert deca.import.job.result schema 1`] = `
     },
     "created_at": {
       "bsonType": "date",
-      "description": "Date d'ajout en base de données",
     },
     "has_completed": {
       "bsonType": "bool",
-      "description": "true marque que l'import pour ce jour précis est complet. informatif uniquement. false ne sera jamais enregistré",
     },
     "import_date": {
       "bsonType": "date",
-      "description": "La date d'un import deca au format date tz Paris",
     },
     "import_date_string": {
       "bsonType": "string",
-      "description": "La date d'un import deca au format yyyy-MM-dd",
     },
   },
   "required": [
@@ -511,20 +454,14 @@ exports[`zodToMongoSchema > should convert decaHistory schema 1`] = `
     "deca_id": {
       "bsonType": "objectId",
     },
-    "from": {
-      "description": "Value from",
-    },
+    "from": {},
     "key": {
       "bsonType": "string",
-      "description": "Modified key",
     },
     "time": {
       "bsonType": "date",
-      "description": "Modified time",
     },
-    "to": {
-      "description": "Value to",
-    },
+    "to": {},
   },
   "required": [
     "_id",
@@ -546,23 +483,18 @@ exports[`zodToMongoSchema > should convert documentContents schema 1`] = `
     "content": {
       "additionalProperties": true,
       "bsonType": "object",
-      "description": "Contenu du document",
     },
     "created_at": {
       "bsonType": "date",
-      "description": "Date d'ajout en base de données",
     },
     "document_id": {
       "bsonType": "string",
-      "description": "Identifiant du document",
     },
     "type_document": {
       "bsonType": "string",
-      "description": "Le type de document (exemple: DECA, etc..)",
     },
     "updated_at": {
       "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
     },
   },
   "required": [
@@ -584,11 +516,9 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
         },
         "added_by": {
           "bsonType": "string",
-          "description": "Qui a ajouté le fichier",
         },
         "chemin_fichier": {
           "bsonType": "string",
-          "description": "Chemin du fichier binaire",
         },
         "columns": {
           "anyOf": [
@@ -602,22 +532,18 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
               "bsonType": "null",
             },
           ],
-          "description": "Liste des colonnes",
         },
         "created_at": {
           "bsonType": "date",
-          "description": "Date d'ajout en base de données",
         },
         "delimiter": {
           "bsonType": [
             "string",
             "null",
           ],
-          "description": "Délimiteur",
         },
         "ext_fichier": {
           "bsonType": "string",
-          "description": "Le type de fichier extension",
           "enum": [
             "xlsx",
             "xls",
@@ -626,40 +552,30 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
         },
         "hash_fichier": {
           "bsonType": "string",
-          "description": "Checksum fichier",
         },
         "hash_secret": {
           "bsonType": "string",
-          "description": "Hash fichier",
         },
         "import_progress": {
-          "anyOf": [
-            {
-              "bsonType": "number",
-            },
-            {
-              "bsonType": "null",
-            },
+          "bsonType": [
+            "number",
+            "null",
           ],
-          "description": "Progress percentage (-1 not started)",
         },
         "job_error": {
           "bsonType": [
             "string",
             "null",
           ],
-          "description": "Erreur du job de génération",
         },
         "job_id": {
           "bsonType": [
             "string",
             "null",
           ],
-          "description": "Identifiant du job de génération",
         },
         "job_status": {
           "bsonType": "string",
-          "description": "Status du job de génération",
           "enum": [
             "pending",
             "paused",
@@ -670,40 +586,38 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
         },
         "kind": {
           "bsonType": "string",
+          "enum": [
+            "upload",
+          ],
         },
         "lines_count": {
           "anyOf": [
             {
               "bsonType": "int",
+              "maximum": 9007199254740991,
+              "minimum": -9007199254740991,
             },
             {
               "bsonType": "null",
             },
           ],
-          "description": "Number of lines",
         },
         "nom_fichier": {
           "bsonType": "string",
-          "description": "Le nom de fichier",
         },
         "taille_fichier": {
           "bsonType": "int",
-          "description": "Taille du fichier en bytes",
+          "maximum": 9007199254740991,
+          "minimum": -9007199254740991,
         },
         "type_document": {
           "bsonType": "string",
-          "description": "Le type de document (exemple: DECA, etc..)",
         },
         "updated_at": {
-          "anyOf": [
-            {
-              "bsonType": "date",
-            },
-            {
-              "bsonType": "null",
-            },
+          "bsonType": [
+            "date",
+            "null",
           ],
-          "description": "Date de mise à jour en base de données",
         },
       },
       "required": [
@@ -730,19 +644,15 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
         },
         "added_by": {
           "bsonType": "string",
-          "description": "Qui a ajouté le fichier",
         },
         "chemin_fichier": {
           "bsonType": "string",
-          "description": "Chemin du fichier binaire",
         },
         "created_at": {
           "bsonType": "date",
-          "description": "Date d'ajout en base de données",
         },
         "ext_fichier": {
           "bsonType": "string",
-          "description": "Le type de fichier extension",
           "enum": [
             "xlsx",
             "xls",
@@ -751,22 +661,18 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
         },
         "hash_fichier": {
           "bsonType": "string",
-          "description": "Checksum fichier",
         },
         "hash_secret": {
           "bsonType": "string",
-          "description": "Hash fichier",
         },
         "job_id": {
           "bsonType": [
             "string",
             "null",
           ],
-          "description": "Identifiant du job de génération",
         },
         "job_status": {
           "bsonType": "string",
-          "description": "Status du job de génération",
           "enum": [
             "pending",
             "paused",
@@ -777,30 +683,31 @@ exports[`zodToMongoSchema > should convert documents schema 1`] = `
         },
         "kind": {
           "bsonType": "string",
+          "enum": [
+            "mailingList",
+          ],
         },
         "lines_count": {
           "bsonType": "int",
-          "description": "Number of lines",
+          "maximum": 9007199254740991,
+          "minimum": -9007199254740991,
         },
         "nom_fichier": {
           "bsonType": "string",
-          "description": "Le nom de fichier",
         },
         "process_progress": {
           "bsonType": "number",
-          "description": "Number of lines processed",
         },
         "taille_fichier": {
           "bsonType": "int",
-          "description": "Taille du fichier en bytes",
+          "maximum": 9007199254740991,
+          "minimum": -9007199254740991,
         },
         "type_document": {
           "bsonType": "string",
-          "description": "Le type de document (exemple: DECA, etc..)",
         },
         "updated_at": {
           "bsonType": "date",
-          "description": "Date de mise à jour en base de données",
         },
       },
       "required": [
@@ -832,11 +739,9 @@ exports[`zodToMongoSchema > should convert emailDenied schema 1`] = `
     },
     "created_at": {
       "bsonType": "date",
-      "description": "Date d'ajout en base de données",
     },
     "email": {
       "bsonType": "string",
-      "description": "L'email rejetée",
     },
     "reason": {
       "bsonType": "string",
@@ -846,7 +751,6 @@ exports[`zodToMongoSchema > should convert emailDenied schema 1`] = `
     },
     "updated_at": {
       "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
     },
   },
   "required": [
@@ -860,142 +764,131 @@ exports[`zodToMongoSchema > should convert emailDenied schema 1`] = `
 
 exports[`zodToMongoSchema > should convert events schema 1`] = `
 {
-  "anyOf": [
-    {
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "created_at": {
+      "bsonType": "date",
+    },
+    "delivered_at": {
+      "bsonType": [
+        "date",
+        "null",
+      ],
+    },
+    "errors": {
+      "bsonType": "array",
+      "items": {
+        "additionalProperties": false,
+        "bsonType": "object",
+        "properties": {
+          "message": {
+            "bsonType": "string",
+          },
+          "type": {
+            "bsonType": "string",
+            "enum": [
+              "fatal",
+              "soft_bounce",
+              "hard_bounce",
+              "complaint",
+              "invalid_email",
+              "blocked",
+              "error",
+            ],
+          },
+        },
+      },
+    },
+    "messageId": {
+      "bsonType": [
+        "string",
+        "null",
+      ],
+    },
+    "opened_at": {
+      "bsonType": [
+        "date",
+        "null",
+      ],
+    },
+    "person_id": {
+      "bsonType": "string",
+    },
+    "template": {
       "additionalProperties": false,
       "bsonType": "object",
       "properties": {
-        "_id": {
-          "bsonType": "objectId",
-        },
-        "created_at": {
-          "bsonType": "date",
-        },
-        "delivered_at": {
+        "civility": {
           "anyOf": [
             {
-              "bsonType": "date",
+              "bsonType": "string",
+              "enum": [
+                "Madame",
+                "Monsieur",
+              ],
             },
             {
               "bsonType": "null",
             },
           ],
         },
-        "errors": {
-          "bsonType": "array",
-          "items": {
-            "additionalProperties": false,
-            "bsonType": "object",
-            "properties": {
-              "message": {
-                "bsonType": "string",
-              },
-              "type": {
-                "bsonType": "string",
-                "enum": [
-                  "fatal",
-                  "soft_bounce",
-                  "hard_bounce",
-                  "complaint",
-                  "invalid_email",
-                  "blocked",
-                  "error",
-                ],
-              },
-            },
-          },
+        "name": {
+          "bsonType": "string",
+          "enum": [
+            "reset_password",
+          ],
         },
-        "messageId": {
+        "nom": {
           "bsonType": [
             "string",
             "null",
           ],
         },
-        "opened_at": {
-          "anyOf": [
-            {
-              "bsonType": "date",
-            },
-            {
-              "bsonType": "null",
-            },
+        "prenom": {
+          "bsonType": [
+            "string",
+            "null",
           ],
         },
-        "person_id": {
+        "resetPasswordToken": {
           "bsonType": "string",
-          "description": "Identifiant de la personne",
         },
-        "template": {
-          "anyOf": [
-            {
-              "additionalProperties": false,
-              "bsonType": "object",
-              "properties": {
-                "civility": {
-                  "anyOf": [
-                    {
-                      "bsonType": "string",
-                      "enum": [
-                        "Madame",
-                        "Monsieur",
-                      ],
-                    },
-                    {
-                      "bsonType": "null",
-                    },
-                  ],
-                },
-                "name": {
-                  "bsonType": "string",
-                },
-                "nom": {
-                  "bsonType": [
-                    "string",
-                    "null",
-                  ],
-                },
-                "prenom": {
-                  "bsonType": [
-                    "string",
-                    "null",
-                  ],
-                },
-                "resetPasswordToken": {
-                  "bsonType": "string",
-                },
-                "to": {
-                  "bsonType": "string",
-                },
-              },
-              "required": [
-                "name",
-                "to",
-                "resetPasswordToken",
-              ],
-            },
-          ],
-        },
-        "type": {
+        "to": {
           "bsonType": "string",
-          "description": "Type de l'évènement",
-        },
-        "updated_at": {
-          "bsonType": "date",
+          "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
         },
       },
       "required": [
-        "_id",
-        "type",
-        "person_id",
-        "template",
-        "created_at",
-        "updated_at",
-        "opened_at",
-        "delivered_at",
-        "messageId",
-        "errors",
+        "name",
+        "to",
+        "resetPasswordToken",
       ],
     },
+    "type": {
+      "bsonType": "string",
+      "enum": [
+        "email.bal",
+      ],
+    },
+    "updated_at": {
+      "bsonType": "date",
+    },
+  },
+  "required": [
+    "_id",
+    "type",
+    "person_id",
+    "template",
+    "created_at",
+    "updated_at",
+    "opened_at",
+    "delivered_at",
+    "messageId",
+    "errors",
   ],
 }
 `;
@@ -1016,6 +909,7 @@ exports[`zodToMongoSchema > should convert lba.emailblacklists schema 1`] = `
     },
     "email": {
       "bsonType": "string",
+      "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
     },
     "updated_at": {
       "bsonType": "date",
@@ -1041,19 +935,15 @@ exports[`zodToMongoSchema > should convert lba.recruteurs.siret.email schema 1`]
     },
     "created_at": {
       "bsonType": "date",
-      "description": "La date création de la demande",
     },
     "email": {
       "bsonType": "string",
-      "description": "Adresse email de contact",
     },
     "siret": {
       "bsonType": "string",
-      "description": "Le Siret de la société",
     },
     "updated_at": {
       "bsonType": "date",
-      "description": "Date de dernières mise à jour",
     },
   },
   "required": [
@@ -1076,34 +966,27 @@ exports[`zodToMongoSchema > should convert mailingLists schema 1`] = `
     },
     "added_by": {
       "bsonType": "string",
-      "description": "L'utilisateur ayant crée la liste",
     },
     "campaign_name": {
       "bsonType": "string",
-      "description": "Nom de la campagne",
     },
     "created_at": {
       "bsonType": "date",
-      "description": "Date d'ajout en base de données",
     },
     "document_id": {
       "bsonType": "string",
-      "description": "Identifiant du document généré",
     },
     "email": {
       "bsonType": "string",
-      "description": "Nom de la colonne email",
     },
     "identifier_columns": {
       "bsonType": "array",
-      "description": "Liste des colonnes d'identifiants",
       "items": {
         "bsonType": "string",
       },
     },
     "output_columns": {
       "bsonType": "array",
-      "description": "Liste des colonnes de sortie",
       "items": {
         "additionalProperties": false,
         "bsonType": "object",
@@ -1127,16 +1010,13 @@ exports[`zodToMongoSchema > should convert mailingLists schema 1`] = `
     },
     "secondary_email": {
       "bsonType": "string",
-      "description": "Nom de la colonne email secondaire",
     },
     "source": {
       "bsonType": "string",
-      "description": "Source de la campagne",
     },
     "training_columns": {
       "additionalProperties": false,
       "bsonType": "object",
-      "description": "Liste des colonnes lié à la formation",
       "properties": {
         "cfd": {
           "bsonType": "string",
@@ -1169,7 +1049,6 @@ exports[`zodToMongoSchema > should convert mailingLists schema 1`] = `
     },
     "updated_at": {
       "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
     },
   },
   "required": [
@@ -1198,7 +1077,6 @@ exports[`zodToMongoSchema > should convert organisations schema 1`] = `
     "_meta": {
       "additionalProperties": true,
       "bsonType": "object",
-      "description": "Métadonnées",
       "properties": {
         "sources": {
           "bsonType": "array",
@@ -1210,52 +1088,42 @@ exports[`zodToMongoSchema > should convert organisations schema 1`] = `
     },
     "created_at": {
       "bsonType": "date",
-      "description": "Date d'ajout en base de données",
     },
     "email_domains": {
       "bsonType": "array",
-      "description": "Liste des domaines email",
       "items": {
         "bsonType": "string",
       },
     },
     "etablissements": {
       "bsonType": "array",
-      "description": "Liste des établissements",
       "items": {
         "additionalProperties": false,
         "bsonType": "object",
         "properties": {
           "is_close": {
             "bsonType": "bool",
-            "description": "Est fermé",
           },
           "is_hq": {
             "bsonType": "bool",
-            "description": "Siège social",
           },
           "nom": {
             "bsonType": "string",
-            "description": "Nom de l'établissement",
           },
           "siret": {
             "bsonType": "string",
-            "description": "Siret actif de l'établissement",
           },
         },
       },
     },
     "nom": {
       "bsonType": "string",
-      "description": "Nom de l'organisation",
     },
     "siren": {
       "bsonType": "string",
-      "description": "Siren de l'organisation",
     },
     "updated_at": {
       "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
     },
   },
   "required": [
@@ -1275,7 +1143,6 @@ exports[`zodToMongoSchema > should convert persons schema 1`] = `
     "_meta": {
       "additionalProperties": true,
       "bsonType": "object",
-      "description": "Métadonnées",
       "properties": {
         "sources": {
           "bsonType": "array",
@@ -1287,7 +1154,6 @@ exports[`zodToMongoSchema > should convert persons schema 1`] = `
     },
     "civility": {
       "bsonType": "string",
-      "description": "civilité",
       "enum": [
         "Madame",
         "Monsieur",
@@ -1295,38 +1161,30 @@ exports[`zodToMongoSchema > should convert persons schema 1`] = `
     },
     "created_at": {
       "bsonType": "date",
-      "description": "Date d'ajout en base de données",
     },
     "email": {
       "bsonType": "string",
-      "description": "Email de la personne",
     },
     "nom": {
       "bsonType": "string",
-      "description": "Le nom de la personne",
     },
     "organisations": {
       "bsonType": "array",
-      "description": "Liste des organisations",
       "items": {
         "bsonType": "string",
-        "description": "Identifiant de l'organisation",
       },
     },
     "prenom": {
       "bsonType": "string",
-      "description": "Le prénom de la personne",
     },
     "sirets": {
       "bsonType": "array",
-      "description": "Liste de sirets recensé (sécurisation qualité de la donnée)",
       "items": {
         "bsonType": "string",
       },
     },
     "updated_at": {
       "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
     },
   },
   "required": [
@@ -1347,19 +1205,15 @@ exports[`zodToMongoSchema > should convert sessions schema 1`] = `
     },
     "created_at": {
       "bsonType": "date",
-      "description": "Date d'ajout en base de données",
     },
     "expires_at": {
       "bsonType": "date",
-      "description": "Date d'expiration",
     },
     "token": {
       "bsonType": "string",
-      "description": "Token de la session",
     },
     "updated_at": {
       "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
     },
   },
   "required": [
@@ -1382,46 +1236,34 @@ exports[`zodToMongoSchema > should convert users schema 1`] = `
     },
     "api_key": {
       "bsonType": "string",
-      "description": "Clé API",
     },
     "api_key_used_at": {
-      "anyOf": [
-        {
-          "bsonType": "date",
-        },
-        {
-          "bsonType": "null",
-        },
+      "bsonType": [
+        "date",
+        "null",
       ],
-      "description": "Date de dernière utilisation de la clé API",
     },
     "created_at": {
       "bsonType": "date",
-      "description": "Date d'ajout en base de données",
     },
     "email": {
       "bsonType": "string",
-      "description": "Email de l'utilisateur",
+      "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
     },
     "is_admin": {
       "bsonType": "bool",
-      "description": "Est administrateur",
     },
     "is_support": {
       "bsonType": "bool",
-      "description": "Est support",
     },
     "password": {
       "bsonType": "string",
-      "description": "Mot de passe de l'utilisateur",
     },
     "person_id": {
       "bsonType": "string",
-      "description": "Identifiant de la personne",
     },
     "updated_at": {
       "bsonType": "date",
-      "description": "Date de mise à jour en base de données",
     },
   },
   "required": [

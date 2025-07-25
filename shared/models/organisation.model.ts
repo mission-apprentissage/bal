@@ -1,5 +1,5 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import type { IModelDescriptor } from "./common";
 import { zObjectId } from "./common";
@@ -30,29 +30,26 @@ const indexes: IModelDescriptor["indexes"] = [
 
 export const ZOrganisation = z.object({
   _id: zObjectId,
-  nom: z.string().optional().describe("Nom de l'organisation"),
-  siren: z.string().optional().describe("Siren de l'organisation"),
-  email_domains: z.array(z.string()).optional().describe("Liste des domaines email"),
-  etablissements: z
-    .array(
+  nom: z.optional(z.string()),
+  siren: z.optional(z.string()),
+  email_domains: z.optional(z.array(z.string())),
+  etablissements: z.optional(
+    z.array(
       z.object({
-        nom: z.string().optional().describe("Nom de l'établissement"),
-        siret: z.string().optional().describe("Siret actif de l'établissement"),
-        is_hq: z.boolean().optional().describe("Siège social"),
-        is_close: z.boolean().optional().describe("Est fermé"),
+        nom: z.optional(z.string()),
+        siret: z.optional(z.string()),
+        is_hq: z.optional(z.boolean()),
+        is_close: z.optional(z.boolean()),
       })
     )
-    .optional()
-    .describe("Liste des établissements"),
-  _meta: z
-    .object({
-      sources: z.array(z.string()).optional(),
+  ),
+  _meta: z.optional(
+    z.looseObject({
+      sources: z.optional(z.array(z.string())),
     })
-    .passthrough()
-    .optional()
-    .describe("Métadonnées"),
-  updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
-  created_at: z.date().optional().describe("Date d'ajout en base de données"),
+  ),
+  updated_at: z.optional(z.date()),
+  created_at: z.optional(z.date()),
 });
 
 export type IOrganisation = z.output<typeof ZOrganisation>;

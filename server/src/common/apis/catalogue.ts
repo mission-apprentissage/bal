@@ -1,5 +1,5 @@
 import { zFormationCatalogue } from "shared/models/catalogue.api.model";
-import type { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import logger from "../logger";
 import getApiClient from "./client";
@@ -36,7 +36,7 @@ export async function fetchCatalogueData(): Promise<CatalogueData[]> {
     },
   });
   const data = (response.data as object[]).flatMap((obj) => {
-    const parseResult = ZCatalogueData.strip().safeParse(obj);
+    const parseResult = ZCatalogueData.safeParse(obj);
     if (!parseResult.success) {
       logger.warn(`objet ${JSON.stringify(obj)} non valide`);
       return [];
@@ -46,7 +46,7 @@ export async function fetchCatalogueData(): Promise<CatalogueData[]> {
   return data;
 }
 
-const ZCatalogueData = zFormationCatalogue.pick({
+const ZCatalogueData = z.pick(zFormationCatalogue, {
   email: true,
   etablissement_formateur_courriel: true,
   etablissement_gestionnaire_courriel: true,

@@ -1,8 +1,9 @@
 import type { IDeleteRoutes, IGetRoutes, IPostRoutes, IPutRoutes, IRequest, IResponse } from "shared";
 import type { IResErrorJson, IRouteSchema, IRouteSchemaWrite } from "shared/routes/common.routes";
 import type { EmptyObject } from "type-fest";
-import type { ZodType, z } from "zod";
+import type { z } from "zod/v4-mini";
 
+import type { $ZodType } from "zod/v4/core";
 import { publicConfig } from "@/config.public";
 
 type PathParam = Record<string, string>;
@@ -15,7 +16,7 @@ type WithQueryStringAndPathParam =
   | EmptyObject;
 
 type OptionsGet = {
-  [Prop in keyof Pick<IRouteSchema, "params" | "querystring" | "headers">]: IRouteSchema[Prop] extends ZodType
+  [Prop in keyof Pick<IRouteSchema, "params" | "querystring" | "headers">]: IRouteSchema[Prop] extends $ZodType
     ? z.input<IRouteSchema[Prop]>
     : never;
 };
@@ -24,7 +25,7 @@ type OptionsWrite = {
   [Prop in keyof Pick<
     IRouteSchemaWrite,
     "params" | "querystring" | "headers" | "body"
-  >]: IRouteSchemaWrite[Prop] extends ZodType ? z.input<IRouteSchemaWrite[Prop]> : never;
+  >]: IRouteSchemaWrite[Prop] extends $ZodType ? z.input<IRouteSchemaWrite[Prop]> : never;
 };
 
 type IRequestOptions = OptionsGet | OptionsWrite | EmptyObject;

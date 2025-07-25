@@ -13,7 +13,7 @@ import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
 import type { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
 import type { IDocumentContent } from "shared/models/documentContent.model";
 import type { IMailingList, IMailingListWithDocumentAndOwner } from "shared/models/mailingList.model";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 import type { TrainingLink, TrainingLinkData } from "../../common/apis/lba";
 import { getTrainingLinks } from "../../common/apis/lba";
 import { verifyEmails } from "../../common/services/mailer/mailBouncer";
@@ -295,7 +295,7 @@ export const processMailingList = async (job: IJobsSimple, mailingList: IMailing
   }
 };
 
-const zCsvDatum = z.record(z.string().optional());
+const zCsvDatum = z.record(z.string(), z.optional(z.string()));
 
 type ICsvDatum = z.infer<typeof zCsvDatum>;
 

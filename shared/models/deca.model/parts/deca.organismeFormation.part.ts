@@ -1,9 +1,9 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 export const ZDecaOrganismeFormation = z.object({
-  siret: z.string().optional().describe("Le SIRET de l'organisme de formation principal"),
-  uai_cfa: z.string().optional().describe("L'UAI de l'organisme responsable"),
+  siret: z.optional(z.string()),
+  uai_cfa: z.optional(z.string()),
 });
 
 export type IDecaOrganismeFormation = z.output<typeof ZDecaOrganismeFormation>;

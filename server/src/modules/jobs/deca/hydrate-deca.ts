@@ -8,7 +8,7 @@ import { ObjectId } from "mongodb";
 import type { IDeca } from "shared/models/deca.model/deca.model";
 import { ZDeca } from "shared/models/deca.model/deca.model";
 import type { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import { withCause } from "../../../common/services/errors/withCause";
 import { asyncForEach } from "../../../common/utils/asyncUtils";
@@ -120,7 +120,7 @@ export const isDecaApiAvailable = () => {
   return currentHour > 19 || currentHour < 7;
 };
 
-const zEmail = z.string().email();
+const zEmail = z.email();
 
 /**
  * Ce job peuple la collection contratsDeca via l'API Deca

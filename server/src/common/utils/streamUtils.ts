@@ -6,7 +6,9 @@ import { compose as _compose, transformData } from "oleoduc";
 import streamJson from "stream-json";
 import jsonFilters from "stream-json/filters/Pick.js";
 import streamers from "stream-json/streamers/StreamArray.js";
-import type { z, ZodArray, ZodType, ZodTypeAny } from "zod";
+import type { z } from "zod/v4-mini";
+import { parse } from "zod/v4/core";
+import type { $ZodType, $ZodArray } from "zod/v4/core";
 
 type Options = {
   size: number;
@@ -85,11 +87,11 @@ export function createJsonLineTransformStream(): Transform {
   );
 }
 
-export function createToJsonTransformStream<T extends ZodTypeAny>({
+export function createToJsonTransformStream<T extends $ZodType>({
   schema,
   opt = { noParse: false },
 }: {
-  schema: ZodArray<T, "many"> | null;
+  schema: $ZodArray<T> | null;
   opt?: { noParse?: boolean };
 }): Transform {
   let inited = false;
@@ -104,7 +106,9 @@ export function createToJsonTransformStream<T extends ZodTypeAny>({
         } else {
           this.push(",\n");
         }
-        this.push(opt.noParse ? JSON.stringify(chunk) : JSON.stringify(schema ? schema.element.parse(chunk) : chunk));
+        this.push(
+          opt.noParse ? JSON.stringify(chunk) : JSON.stringify(schema ? parse(schema._zod.def.element, chunk) : chunk)
+        );
         callback();
       } catch (error) {
         callback(error);
@@ -120,9 +124,9 @@ export function createToJsonTransformStream<T extends ZodTypeAny>({
   });
 }
 
-export function createResponseStream<Z extends ZodType>(
+export function createResponseStream<Z extends $ZodType>(
   cursor: AbstractCursor<z.output<Z>>,
-  schema: ZodArray<Z>
+  schema: $ZodArray<Z>
 ): z.output<Z>[] {
   const transformStream = createToJsonTransformStream({ schema });
 

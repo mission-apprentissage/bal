@@ -1,5 +1,5 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import type { IModelDescriptor } from "./common";
 import { zObjectId } from "./common";
@@ -27,15 +27,15 @@ const indexes: IModelDescriptor["indexes"] = [
 
 export const ZUser = z.object({
   _id: zObjectId,
-  email: z.string().email().describe("Email de l'utilisateur"),
-  password: z.string().describe("Mot de passe de l'utilisateur"),
-  person_id: z.string().describe("Identifiant de la personne"),
-  is_admin: z.boolean().optional().describe("Est administrateur"),
-  is_support: z.boolean().optional().describe("Est support"),
-  api_key: z.string().optional().describe("Clé API"),
-  api_key_used_at: z.date().nullish().describe("Date de dernière utilisation de la clé API"),
-  updated_at: z.date().optional().describe("Date de mise à jour en base de données"),
-  created_at: z.date().optional().describe("Date d'ajout en base de données"),
+  email: z.email(),
+  password: z.string(),
+  person_id: z.string(),
+  is_admin: z.optional(z.boolean()),
+  is_support: z.optional(z.boolean()),
+  api_key: z.optional(z.string()),
+  api_key_used_at: z.nullish(z.date()),
+  updated_at: z.optional(z.date()),
+  created_at: z.optional(z.date()),
 });
 
 export const ZUserPublic = z.object({
@@ -55,8 +55,9 @@ export type IUserPublic = Jsonify<z.output<typeof ZUserPublic>>;
 export interface IUserWithPerson extends IUser {
   person: null | IPerson;
 }
-export const zUserWithPersonPublic = ZUserPublic.extend({
-  person: ZPerson.nullish(),
+export const zUserWithPersonPublic = z.object({
+  ...ZUserPublic.shape,
+  person: z.nullish(ZPerson),
 });
 export type IUserWithPersonPublic = Jsonify<z.output<typeof zUserWithPersonPublic>>;
 

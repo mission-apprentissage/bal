@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import { ZUser, zUserWithPersonPublic } from "../models/user.model";
 import type { IRoutesDef } from "./common.routes";
@@ -9,7 +9,7 @@ export const zAuthRoutes = {
     "/auth/reset-password": {
       method: "get",
       path: "/auth/reset-password",
-      querystring: z.object({ email: z.string().email() }),
+      querystring: z.object({ email: z.email() }),
       response: {
         "200": ZResOk,
       },

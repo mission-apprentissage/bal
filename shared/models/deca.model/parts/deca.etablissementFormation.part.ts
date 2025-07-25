@@ -1,10 +1,10 @@
 import type { Jsonify } from "type-fest";
-import { z } from "zod";
+import { z } from "zod/v4-mini";
 
 import { extensions } from "../../../helpers/zodHelpers/zodPrimitives";
 
 export const ZDecaEtablissementFormation = z.object({
-  siret: extensions.siret.optional().describe("Le siret de l'établissement de la formation"),
+  siret: z.optional(extensions.siret),
 });
 
 export type IDecaEtablissementFormation = z.output<typeof ZDecaEtablissementFormation>;
