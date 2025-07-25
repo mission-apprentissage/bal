@@ -75,7 +75,7 @@ export function parseAccessToken<S extends Pick<IRouteSchema, "method" | "path">
 
   const data = jwt.verify(accessToken, config.auth.user.jwtSecret, {
     complete: true,
-    audience: getAudience([schema]),
+    audience: getAudience([schema])[0],
     issuer: config.publicUrl,
   });
 

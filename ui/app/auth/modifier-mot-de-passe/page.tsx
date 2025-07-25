@@ -9,15 +9,16 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IPostRoutes } from "shared";
 import { IStatus } from "shared/routes/auth.routes";
+import { z } from "zod";
 
 import { apiPost } from "../../../utils/api.utils";
 import Breadcrumb, { PAGES } from "../../components/breadcrumb/Breadcrumb";
 import FormContainer from "../components/FormContainer";
 // import { NavLink } from "../../components/NavLink";
 
-interface IFormValues extends Zod.input<IPostRoutes["/auth/reset-password"]["body"]> {
+type IFormValues = z.input<IPostRoutes["/auth/reset-password"]["body"]> & {
   password_confirmation: string;
-}
+};
 
 const ModifierMotDePassePage = () => {
   const [status, setStatus] = useState<IStatus>();

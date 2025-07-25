@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IGetRoutes, IPostRoutes, IResponse } from "shared";
+import { z } from "zod";
 
 import ToggleSwitchInput from "../../../../components/form/ToggleSwitchInput";
 import Toast, { useToast } from "../../../../components/toast/Toast";
@@ -17,7 +18,7 @@ import { apiGet, apiPost } from "../../../../utils/api.utils";
 import { queryClient } from "../../../../utils/query.utils";
 import Breadcrumb, { PAGES } from "../../../components/breadcrumb/Breadcrumb";
 
-interface FormValues extends Zod.input<IPostRoutes["/admin/upload"]["querystring"]> {
+interface FormValues extends z.input<IPostRoutes["/admin/upload"]["querystring"]> {
   file: FileList;
   has_new_type_document: boolean;
   new_type_document: string;
@@ -125,7 +126,9 @@ const AdminImportPage = () => {
             <option value="" disabled hidden>
               Choisir un type de document
             </option>
-            {types?.map((type) => <option key={type}>{type}</option>)}
+            {types?.map((type) => (
+              <option key={type}>{type}</option>
+            ))}
           </Select>
 
           <ToggleSwitchInput

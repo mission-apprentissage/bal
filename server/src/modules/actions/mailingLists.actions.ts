@@ -5,7 +5,7 @@ import { internal } from "@hapi/boom";
 import * as Sentry from "@sentry/node";
 import { stringify } from "csv-stringify";
 import { addJob, IJobsSimple } from "job-processor";
-import { Filter, FindCursor, FindOptions, ObjectId, Sort } from "mongodb";
+import { Filter, FindCursor, FindOptions, ObjectId } from "mongodb";
 import { getMailingOutputColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList";
 import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
 import { IDocument, IMailingListDocument, IUploadDocument } from "shared/models/document.model";
@@ -571,7 +571,7 @@ export const createMailingListFile = async (mailingList: IMailingList, document:
     .filter((c) => mailingList.identifier_columns.includes(c.column))
     .map((c) => c.output);
 
-  const sort: Sort = {
+  const sort: Record<string, 1> = {
     "content.email": 1,
   };
 
