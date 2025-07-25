@@ -1,6 +1,6 @@
 import { captureException } from "@sentry/node";
 
-import { IBrevoWebhookEvent } from "../../common/services/brevo/brevo";
+import type { IBrevoWebhookEvent } from "../../common/services/brevo/brevo";
 
 export const processHardbounce = async (payload: IBrevoWebhookEvent) => {
   // Log the hard bounce event

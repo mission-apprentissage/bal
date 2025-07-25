@@ -12,12 +12,12 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import type { IGetRoutes, IPostRoutes, IResponse } from "shared";
 
+import type { z } from "zod";
 import ToggleSwitchInput from "@/components/form/ToggleSwitchInput";
 import Toast, { useToast } from "@/components/toast/Toast";
 import { apiGet, apiPost } from "@/utils/api.utils";
 import { queryClient } from "@/utils/query.utils";
 import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
-import { z } from "zod";
 
 interface FormValues extends z.input<IPostRoutes["/admin/upload"]["querystring"]> {
   file: FileList;

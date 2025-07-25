@@ -9,9 +9,9 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import type { IPostRoutes } from "shared";
 
+import type { z } from "zod";
 import Toast, { useToast } from "@/components/toast/Toast";
 import { apiPost } from "@/utils/api.utils";
-import { z } from "zod";
 
 interface FormValues extends z.input<IPostRoutes["/admin/upload"]["querystring"]> {
   file: FileList;
