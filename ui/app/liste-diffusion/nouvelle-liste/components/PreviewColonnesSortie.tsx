@@ -1,4 +1,4 @@
-import { Table } from "@codegouvfr/react-dsfr/Select";
+import { Table } from "@codegouvfr/react-dsfr/Table";
 import { Box, Typography } from "@mui/material";
 import type { ReactNode } from "react";
 import { getMailingOutputColumns } from "shared/constants/mailingList";
