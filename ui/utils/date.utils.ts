@@ -1,4 +1,5 @@
-import fr, { format, parseISO } from "date-fns";
+import { format, parseISO } from "date-fns";
+import { fr } from "date-fns/locale";
 
 export const prettyPrintDate = (date: string) => {
   const event = new Date(date);
