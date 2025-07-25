@@ -855,7 +855,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.2.0, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.2.0, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.28.2
   resolution: "@babel/runtime@npm:7.28.2"
   checksum: 8673eb2311752929f5b0167f42cff4cc1d5fadddd0394baca27d06c1618680ffcf95e9f01061f5c4dc3f6a32b6bbf500e7762c02dc22bcd273c2947b9774ddad
@@ -2168,7 +2168,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/eslint-plugin-next@npm:^15.4.3":
+"@next/eslint-plugin-next@npm:^15.4.4":
   version: 15.4.4
   resolution: "@next/eslint-plugin-next@npm:15.4.4"
   dependencies:
@@ -3712,7 +3712,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/nextjs@npm:^9.40.0":
+"@sentry/nextjs@npm:^9.42.0":
   version: 9.42.0
   resolution: "@sentry/nextjs@npm:9.42.0"
   dependencies:
@@ -3755,7 +3755,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/node@npm:9.42.0, @sentry/node@npm:^9.40.0":
+"@sentry/node@npm:9.42.0, @sentry/node@npm:^9.42.0":
   version: 9.42.0
   resolution: "@sentry/node@npm:9.42.0"
   dependencies:
@@ -3813,7 +3813,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/profiling-node@npm:^9.40.0":
+"@sentry/profiling-node@npm:^9.42.0":
   version: 9.42.0
   resolution: "@sentry/profiling-node@npm:9.42.0"
   dependencies:
@@ -6309,10 +6309,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chardet@npm:^1.6.1":
-  version: 1.6.1
-  resolution: "chardet@npm:1.6.1"
-  checksum: 51c99745c41f65194744442bc0c21e0d6fa6bb73e63687f9fd221c7dcd385024bd41e3e694f65f9266fcfb5008bb6546b797a41c09a53096453a406f7d9b3c47
+"chardet@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "chardet@npm:2.1.0"
+  checksum: 491f8ea54ed3693598c98cb8785531b94b71e59b04ef8dd2b6fea4947f785297fb5c2ae1109adca6fdd453a8a7181cfc4a85c07dbbe96a156d0908f4188a6b9a
   languageName: node
   linkType: hard
 
@@ -6644,17 +6644,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^12.1.0":
-  version: 12.1.0
-  resolution: "commander@npm:12.1.0"
-  checksum: 68e9818b00fc1ed9cdab9eb16905551c2b768a317ae69a5e3c43924c2b20ac9bb65b27e1cab36aeda7b6496376d4da908996ba2c0b5d79463e0fb1e77935d514
-  languageName: node
-  linkType: hard
-
-"commander@npm:^13.1.0":
-  version: 13.1.0
-  resolution: "commander@npm:13.1.0"
-  checksum: 8ca2fcb33caf2aa06fba3722d7a9440921331d54019dabf906f3603313e7bf334b009b862257b44083ff65d5a3ab19e83ad73af282bd5319f01dc228bdf87ef0
+"commander@npm:^14.0.0":
+  version: 14.0.0
+  resolution: "commander@npm:14.0.0"
+  checksum: 6e9bdaf2e8e4f512855ffc10579eeae2e84c4a7697a91b1a5f62aab3c9849182207855268dd7c3952ae7a2334312a7138f58e929e4b428aef5bf8af862685c9b
   languageName: node
   linkType: hard
 
@@ -7112,15 +7105,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.30.0":
-  version: 2.30.0
-  resolution: "date-fns@npm:2.30.0"
-  dependencies:
-    "@babel/runtime": ^7.21.0
-  checksum: f7be01523282e9bb06c0cd2693d34f245247a29098527d4420628966a2d9aad154bd0e90a6b1cf66d37adcb769cd108cf8a7bd49d76db0fb119af5cdd13644f4
-  languageName: node
-  linkType: hard
-
 "date-fns@npm:^4.1.0":
   version: 4.1.0
   resolution: "date-fns@npm:4.1.0"
@@ -7414,10 +7398,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^16.3.1, dotenv@npm:^16.6.1":
+"dotenv@npm:^16.3.1":
   version: 16.6.1
   resolution: "dotenv@npm:16.6.1"
   checksum: e8bd63c9a37f57934f7938a9cf35de698097fadf980cb6edb61d33b3e424ceccfe4d10f37130b904a973b9038627c2646a3365a904b4406514ea94d7f1816b69
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^17.2.1":
+  version: 17.2.1
+  resolution: "dotenv@npm:17.2.1"
+  checksum: 2a3842a5451eb64f41cd11bd30d4d9d83941058f952f5e3adc3ca470d381e46ed8acbb0c0e3059da9725df91b42796987fa1deb032fafac992c37b94870ef085
   languageName: node
   linkType: hard
 
@@ -8310,7 +8301,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"execa@npm:^8.0.0, execa@npm:^8.0.1":
+"execa@npm:^8.0.0":
   version: 8.0.1
   resolution: "execa@npm:8.0.1"
   dependencies:
@@ -10993,27 +10984,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^15.5.2":
-  version: 15.5.2
-  resolution: "lint-staged@npm:15.5.2"
+"lint-staged@npm:^16.1.2":
+  version: 16.1.2
+  resolution: "lint-staged@npm:16.1.2"
   dependencies:
     chalk: ^5.4.1
-    commander: ^13.1.0
-    debug: ^4.4.0
-    execa: ^8.0.1
+    commander: ^14.0.0
+    debug: ^4.4.1
     lilconfig: ^3.1.3
-    listr2: ^8.2.5
+    listr2: ^8.3.3
     micromatch: ^4.0.8
+    nano-spawn: ^1.0.2
     pidtree: ^0.6.0
     string-argv: ^0.3.2
-    yaml: ^2.7.0
+    yaml: ^2.8.0
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: 70380f07be12b3557ae5857a6f081c03f3c62774afd3015ca77dd20fbad991c3b28de4981c3a7b0c61d482c1b3a0d2310f031f9d3ae36cb0e21e1e8a674ed30e
+  checksum: e91a8a8d86c09bf6ec48e8c407595f801535c38c7f6a9bba3c45f71cb312c76f21e0151b439535bdc8f1c45462d887b68c99b75b00b48b2be954fd06064db780
   languageName: node
   linkType: hard
 
-"listr2@npm:^8.2.5":
+"listr2@npm:^8.3.3":
   version: 8.3.3
   resolution: "listr2@npm:8.3.3"
   dependencies:
@@ -12380,12 +12371,12 @@ __metadata:
     "@dword-design/eslint-plugin-import-alias": ^6.0.3
     "@eslint/compat": ^1.3.1
     "@eslint/js": ^9.31.0
-    "@next/eslint-plugin-next": ^15.4.3
+    "@next/eslint-plugin-next": ^15.4.4
     "@semantic-release/changelog": ^6.0.3
     "@semantic-release/exec": ^7.1.0
     "@sentry/cli": ^2.50.2
-    commander: ^12.1.0
-    dotenv: ^16.6.1
+    commander: ^14.0.0
+    dotenv: ^17.2.1
     eslint: ^9.31.0
     eslint-import-resolver-typescript: ^4.4.4
     eslint-plugin-import-x: ^4.16.1
@@ -12394,7 +12385,7 @@ __metadata:
     eslint-plugin-react-hooks: ^5.2.0
     globals: ^16.3.0
     husky: ^9.1.7
-    lint-staged: ^15.5.2
+    lint-staged: ^16.1.2
     node-talisman: ^1.29.22
     prettier: ^3.6.2
     semantic-release: ^24.2.7
@@ -12542,6 +12533,13 @@ __metadata:
     react: "*"
     react-dom: "*"
   checksum: 85d5e730798387bee3090e9943801489ec4269bd376a848b75515cf0f44dc7ce53d4a9fec575081a7dff53a8a5d4b00eebdc1bbf217d75fae7195819f917aba1
+  languageName: node
+  linkType: hard
+
+"nano-spawn@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "nano-spawn@npm:1.0.2"
+  checksum: 195eb751f5f32bebb622c57e3fdb2ebac8b9ffea301c94412a0fb0d3c0035854884e505a0518ff2dd50faf12d005843a0409b1316dd3746e3c5e696a77ccff16
   languageName: node
   linkType: hard
 
@@ -15260,8 +15258,8 @@ __metadata:
     "@fastify/swagger-ui": ^5.2.3
     "@getbrevo/brevo": ^2.5.0
     "@hapi/boom": ^10.0.1
-    "@sentry/node": ^9.40.0
-    "@sentry/profiling-node": ^9.40.0
+    "@sentry/node": ^9.42.0
+    "@sentry/profiling-node": ^9.42.0
     "@smithy/types": ^3.7.2
     "@types/bunyan": ^1.8.11
     "@types/bunyan-prettystream": ^0.1.35
@@ -15279,17 +15277,17 @@ __metadata:
     axios-cache-interceptor: ^1.8.0
     bunyan: ^1.8.15
     bunyan-prettystream: ^0.1.3
-    chardet: ^1.6.1
+    chardet: ^2.1.0
     checksum-stream: ^1.0.3
     clamscan: ^2.4.0
-    commander: ^12.1.0
+    commander: ^14.0.0
     company-email-validator: ^1.1.0
     csv-parse: ^5.6.0
     csv-stringify: ^6.6.0
-    date-fns: ^2.30.0
+    date-fns: ^4.1.0
     deep-object-diff: ^1.1.9
     deepmerge: ^4.3.1
-    dotenv: ^16.6.1
+    dotenv: ^17.2.1
     ejs: ^3.1.10
     env-var: ^7.5.0
     fastify: ^5.4.0
@@ -16813,14 +16811,14 @@ __metadata:
     "@emotion/styled": ^11.14.1
     "@mui/material": ^5.18.0
     "@mui/x-data-grid": ^6.20.4
-    "@sentry/nextjs": ^9.40.0
+    "@sentry/nextjs": ^9.42.0
     "@tanstack/react-query": ^5.83.0
     "@types/node": ^24.1.0
     "@types/react": ^18.3.23
     "@types/react-dom": ^18.3.7
     crypto-random-string: ^5.0.0
-    date-fns: ^2.30.0
-    dotenv: ^16.6.1
+    date-fns: ^4.1.0
+    dotenv: ^17.2.1
     next: ^13.5.11
     next-plausible: ^3.12.4
     notion-client: ^6.16.0
@@ -17672,7 +17670,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.4.1, yaml@npm:^2.4.2, yaml@npm:^2.7.0, yaml@npm:^2.8.0":
+"yaml@npm:^2.4.1, yaml@npm:^2.4.2, yaml@npm:^2.8.0":
   version: 2.8.0
   resolution: "yaml@npm:2.8.0"
   bin:
