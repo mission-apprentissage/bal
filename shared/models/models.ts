@@ -1,7 +1,5 @@
 import { bouncerDomailModelDescriptor, BouncerDomain } from "./bouncer.domain.model";
 import { BouncerEmail, bouncerEmailModelDescriptor } from "./bouncer.email.model";
-import { BrevoContacts, brevoContactsModelDescriptor } from "./brevo.contacts.model";
-import { BrevoListes, brevoListesModelDescriptor } from "./brevo.listes.model";
 import catalogueEmailSiretDescriptor, { ICatalogueEmailSiret } from "./catalogueEmailSiret.model";
 import { IModelDescriptor } from "./common";
 import lbaEmailBlackListedModelDescriptor, { ILbaEmailBlacklist } from "./data/lba.emailBlacklist.model";
@@ -39,8 +37,6 @@ export const modelDescriptors: IModelDescriptor[] = [
   bouncerDomailModelDescriptor,
   lbaEmailBlackListedModelDescriptor,
   lbaRecruteursSiretEmailModelDescriptor,
-  brevoContactsModelDescriptor,
-  brevoListesModelDescriptor,
 ];
 
 export type IDocumentMap = {
@@ -61,6 +57,4 @@ export type IDocumentMap = {
   ["bouncer.domain"]: BouncerDomain;
   ["lba.emailblacklists"]: ILbaEmailBlacklist;
   ["lba.recruteurs.siret.email"]: ILbaRecruteursSiretEmail;
-  ["brevo.contacts"]: BrevoContacts;
-  ["brevo.listes"]: BrevoListes;
 };

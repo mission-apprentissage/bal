@@ -18,9 +18,7 @@ export type CollectionName =
   | "bouncer.email"
   | "bouncer.domain"
   | "lba.emailblacklists"
-  | "lba.recruteurs.siret.email"
-  | "brevo.contacts"
-  | "brevo.listes";
+  | "lba.recruteurs.siret.email";
 
 export interface IModelDescriptor {
   zod: ZodType;

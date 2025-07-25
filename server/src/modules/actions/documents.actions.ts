@@ -294,6 +294,8 @@ export const uploadFile = async (stream: Readable, doc: IUploadDocument, options
         })
   );
 
+  logger.info(` File ${path} uploaded to storage`);
+
   const hash_fichier = await getHash();
   const { isInfected, viruses } = await getScanResults();
 
