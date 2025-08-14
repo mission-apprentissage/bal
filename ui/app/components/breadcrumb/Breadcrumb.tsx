@@ -103,6 +103,31 @@ export const PAGES = {
     title: "Créer une liste de diffusion",
     path: "/liste-diffusion/nouvelle-liste",
   }),
+  adminProcessor: () => ({
+    path: `/admin/processeur`,
+    index: false,
+    title: "Administration du processeur",
+  }),
+  adminProcessorJob: (name: string) => ({
+    path: `/admin/processeur/job/${name}`,
+    index: false,
+    title: `Job ${name}`,
+  }),
+  adminProcessorJobInstance: (params: { name: string; id: string }) => ({
+    path: `/admin/processeur/job/${params.name}/${params.id}`,
+    index: false,
+    title: `Tâche Job ${params.id}`,
+  }),
+  adminProcessorCron: (name: string) => ({
+    path: `/admin/processeur/cron/${name}`,
+    index: false,
+    title: `CRON ${name}`,
+  }),
+  adminProcessorCronTask: (params: { name: string; id: string }) => ({
+    path: `/admin/processeur/cron/${params.name}/${params.id}`,
+    index: false,
+    title: `Tâche CRON ${params.id}`,
+  }),
 };
 
 export interface Page {

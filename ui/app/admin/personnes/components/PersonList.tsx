@@ -50,7 +50,7 @@ const PersonList = () => {
               field: "name",
               headerName: "Nom complet",
               flex: 1,
-              valueGetter: ({ row }) => {
+              valueGetter: (_value, row) => {
                 const { nom, prenom, _id } = row;
                 return nom || prenom ? `${nom ?? ""} ${prenom ?? ""}` : _id;
               },
@@ -69,11 +69,11 @@ const PersonList = () => {
               field: "organisation_id",
               headerName: "Organisation",
               flex: 1,
-              valueFormatter: ({ value: organisation }) => {
-                if (!organisation) return null;
+              valueFormatter: (_value, row) => {
+                if (!row.organisation) return null;
                 return (
-                  <Link href={PAGES.adminViewOrganisation(organisation._id as unknown as string).path}>
-                    {organisation.nom}
+                  <Link href={PAGES.adminViewOrganisation(row.organisation._id as unknown as string).path}>
+                    {row.organisation.nom}
                   </Link>
                 );
               },
@@ -81,7 +81,7 @@ const PersonList = () => {
             {
               field: "sources",
               headerName: "Sources",
-              valueGetter: ({ row }) => {
+              valueGetter: (_value, row) => {
                 // @ts-expect-error
                 return row._meta?.sources?.join(", ") ?? "";
               },

@@ -1,18 +1,14 @@
-import { isAxiosError } from "axios";
+import axios, { isAxiosError } from "axios";
 
 import { ApiError } from "../utils/apiUtils";
-import getApiClient from "./client";
 import config from "@/config";
 
 export const LIMIT_TRAINING_LINKS_PER_REQUEST = 100;
 
-const client = getApiClient(
-  {
-    baseURL: config.lba.baseURL,
-    timeout: 0, // no timeout
-  },
-  { cache: false }
-);
+const client = axios.create({
+  baseURL: config.lba.baseURL,
+  timeout: 0, // no timeout
+});
 
 export interface TrainingLinkData {
   id: string;

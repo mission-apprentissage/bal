@@ -30,10 +30,10 @@ const InfoDetails = <TData,>({ title, rows, data }: Props<TData>) => {
 
           return (
             <Fragment key={key}>
-              <Grid item xs={6} md={3} display="flex" alignItems="center">
+              <Grid size={{ xs: 6, md: 3 }} display="flex" alignItems="center">
                 {header?.() ?? key}
               </Grid>
-              <Grid item xs={6} md={9} display="flex" alignItems="center">
+              <Grid size={{ xs: 6, md: 9 }} display="flex" alignItems="center">
                 {/* @ts-ignore */}
                 {cell?.(data) ?? value}
               </Grid>

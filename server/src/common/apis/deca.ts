@@ -1,14 +1,14 @@
 import { formatDuration, intervalToDuration } from "date-fns";
 import type { ApiDeca, Contrat } from "shared/apis/deca";
 
-import getApiClient from "./client";
+import axios from "axios";
 import logger from "@/common/logger";
 import { ApiError, apiRateLimiter } from "@/common/utils/apiUtils";
 import config from "@/config";
 
 export const API_ENDPOINT = config.decaApi.endpoint;
 
-const axiosClient = getApiClient({
+const axiosClient = axios.create({
   baseURL: API_ENDPOINT,
   timeout: 600000, // Nécessaire pour Deca car très long - en attente optimisation de leur coté
 });

@@ -51,7 +51,7 @@ const summaryData = [
 const PolitiqueDeConfidentialite = () => {
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} lg={3}>
+      <Grid size={{ xs: 12, lg: 3 }}>
         <Summary
           links={summaryData.map((item) => ({
             linkProps: {
@@ -61,7 +61,7 @@ const PolitiqueDeConfidentialite = () => {
           }))}
         />
       </Grid>
-      <Grid item xs={12} lg={9}>
+      <Grid size={{ xs: 12, lg: 9 }}>
         <Typography variant="h2" gutterBottom>
           Politique de confidentialité
         </Typography>

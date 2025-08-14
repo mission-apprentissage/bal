@@ -114,7 +114,7 @@ const AdminImportPage = () => {
             field: "taille_fichier",
             headerName: "Taille du fichier",
             minWidth: 150,
-            valueFormatter: ({ value }) => {
+            valueFormatter: (value) => {
               return formatBytes(value);
             },
           },
@@ -127,7 +127,7 @@ const AdminImportPage = () => {
             field: "created_at",
             headerName: "Date d'import",
             minWidth: 150,
-            valueFormatter: ({ value }) => {
+            valueFormatter: (value) => {
               return value && formatDate(value, "dd/MM/yyyy à HH:mm");
             },
           },

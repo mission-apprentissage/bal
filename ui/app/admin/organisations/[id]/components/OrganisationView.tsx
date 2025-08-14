@@ -66,13 +66,13 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
             field: "is_hq",
             headerName: "Siège social",
             minWidth: 100,
-            valueFormatter: ({ value }) => (value ? "Oui" : "Non"),
+            valueFormatter: (value) => (value ? "Oui" : "Non"),
           },
           {
             field: "is_close",
             headerName: "Fermé",
             minWidth: 100,
-            valueFormatter: ({ value }) => (value ? "Oui" : "Non"),
+            valueFormatter: (value) => (value ? "Oui" : "Non"),
           },
         ]}
       />

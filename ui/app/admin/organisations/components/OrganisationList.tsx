@@ -59,7 +59,7 @@ const OrganisationList = () => {
               field: "email_domains",
               headerName: "Domaines",
               flex: 1,
-              valueFormatter: ({ value }) => value?.join(", "),
+              valueFormatter: (_value, row) => row.email_domains?.join(", "),
             },
             {
               field: "actions",

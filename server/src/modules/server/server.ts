@@ -39,6 +39,7 @@ import { bouncerRoutes } from "./v1/bouncer.routes";
 import { decaRoutes } from "./v1/deca.routes";
 import { organisationRoutes } from "./v1/organisation.routes";
 import { webhookRoutes } from "./webhooks.routes";
+import { processorAdminRoutes } from "./admin/processor.admin.routes";
 
 export type Server = FastifyInstance<
   RawServerDefault,
@@ -139,6 +140,7 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
   mailingListRoutes({ server });
   documentsRoutes({ server });
   uploadSupportRoutes({ server });
+  processorAdminRoutes({ server });
 };
 
 export const registerV1Routes: RegisterRoutes = ({ server }) => {

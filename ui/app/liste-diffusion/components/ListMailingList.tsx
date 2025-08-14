@@ -121,8 +121,8 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             field: "owner",
             headerName: "Créé par",
             width: 200,
-            valueGetter: ({ row }) => row.owner?.email ?? null,
-            valueFormatter: ({ value }) => {
+            valueGetter: (_value, row) => row.owner?.email ?? null,
+            valueFormatter: (value) => {
               return value || "Inconnu";
             },
           },
@@ -130,7 +130,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             field: "created_at",
             headerName: "Date de génération",
             width: 200,
-            valueFormatter: ({ value }) => {
+            valueFormatter: (value) => {
               return value && formatDate(value, "dd/MM/yyyy à HH:mm");
             },
           },

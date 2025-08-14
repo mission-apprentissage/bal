@@ -1,19 +1,23 @@
-import "./globals.css";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import "react-notion-x/src/styles.css";
 
-import { DsfrHead } from "@codegouvfr/react-dsfr/next-appdir/DsfrHead";
-import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
-import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes";
-import type { Metadata } from "next";
+import { createGetHtmlAttributes, DsfrHeadBase } from "@codegouvfr/react-dsfr/next-app-router/server-only-index";
+
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 import type { IUserPublic } from "shared/models/user.model";
 import { cookies } from "next/headers";
 
-import { StartDsfr } from "./StartDsfr";
+import { captureException } from "@sentry/nextjs";
+import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
+import { DsfrProvider, StartDsfrOnHydration } from "./DsfrProvider";
+import { defaultColorScheme } from "./defaultColorScheme";
 import { AuthContextProvider } from "@/context/AuthContext";
-import { defaultColorScheme } from "@/theme/defaultColorScheme";
 import { apiGet } from "@/utils/api.utils";
+import type { ApiError } from "@/utils/api.utils";
+
+const { getHtmlAttributes } = createGetHtmlAttributes({ defaultColorScheme });
 
 async function getSession(): Promise<IUserPublic | undefined> {
   try {
@@ -27,13 +31,19 @@ async function getSession(): Promise<IUserPublic | undefined> {
     const session = await apiGet(`/auth/session`, {}, { cache: "no-store" });
     return session;
   } catch (error) {
-    console.log(error);
+    if ((error as ApiError).context?.statusCode !== 401) {
+      captureException(error);
+    }
     return;
   }
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
-  viewport: "width=device-width, initial-scale=1",
   icons: {
     icon: [{ url: "/favicon.ico" }, { url: "/favicon.svg" }],
     apple: [{ url: "/apple-touch-icon.png" }],
@@ -51,10 +61,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   const session = await getSession();
   const lang = "fr";
   return (
-    <html {...getHtmlAttributes({ defaultColorScheme, lang })}>
+    <html {...getHtmlAttributes({ lang })}>
       <head>
-        <StartDsfr />
-        <DsfrHead
+        <DsfrHeadBase
           Link={Link}
           preloadFonts={[
             //"Marianne-Light",
@@ -71,9 +80,14 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         />
       </head>
       <body>
-        <AuthContextProvider initialUser={session}>
-          <DsfrProvider lang={lang}>{children}</DsfrProvider>
-        </AuthContextProvider>
+        <AppRouterCacheProvider>
+          <AuthContextProvider initialUser={session}>
+            <DsfrProvider lang={lang}>
+              <StartDsfrOnHydration />
+              <MuiDsfrThemeProvider>{children}</MuiDsfrThemeProvider>
+            </DsfrProvider>
+          </AuthContextProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
