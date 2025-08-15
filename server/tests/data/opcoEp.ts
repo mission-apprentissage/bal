@@ -45,8 +45,3 @@ export const opcoEpInvalid = {
   email: "invalid-opco@test.dev",
   siret: "99999999999999",
 };
-
-export const opcoEpInvalidSiret = {
-  email: "invalid-siret-opco@test.dev",
-  siret: "88888888888888",
-};

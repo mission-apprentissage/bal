@@ -59,13 +59,6 @@ export function generateAccessToken<S extends ISecuredRouteSchema>(
   return jwt.sign(data, config.auth.user.jwtSecret, signOptions);
 }
 
-export function getAccessTokenScope<S extends Pick<IRouteSchema, "method" | "path"> & WithSecurityScheme>(
-  token: IAccessToken<S> | null,
-  schema: Pick<S, "method" | "path">
-): IScope<S> | null {
-  return token?.scopes.find((s) => s.path === schema.path && s.method === schema.method) ?? null;
-}
-
 export function parseAccessToken<S extends Pick<IRouteSchema, "method" | "path"> & WithSecurityScheme>(
   accessToken: null | string,
   schema: Pick<S, "method" | "path">

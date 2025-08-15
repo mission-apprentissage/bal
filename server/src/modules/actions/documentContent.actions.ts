@@ -1,4 +1,4 @@
-import type { Filter, FindOptions } from "mongodb";
+import type { Filter } from "mongodb";
 import { ObjectId } from "mongodb";
 import type { IDocumentContent } from "shared/models/documentContent.model";
 
@@ -20,21 +20,6 @@ export const createDocumentContent = async (data: TCreateDocumentContent) => {
   return documentContent;
 };
 
-export const findOneDocumentContent = async (filter: Filter<IDocumentContent>, options?: FindOptions) => {
-  return await getDbCollection("documentContents").findOne<IDocumentContent>(filter, options);
-};
-
-export const findDocumentContents = async (
-  filter: Filter<IDocumentContent>,
-  options?: FindOptions
-): Promise<IDocumentContent[]> => {
-  return await getDbCollection("documentContents").find(filter, options).toArray();
-};
-
 export const deleteDocumentContent = async (filter: Filter<IDocumentContent>) => {
   await getDbCollection("documentContents").deleteMany(filter);
-};
-
-export const updateDocumentContent = async (_id: ObjectId, data: Partial<IDocumentContent>) => {
-  return getDbCollection("documentContents").updateOne({ _id }, { $set: { ...data, updated_at: new Date() } });
 };

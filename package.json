@@ -71,7 +71,6 @@
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import-x": "^4.16.1",
     "eslint-plugin-n": "^17.21.3",
-    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "globals": "^16.3.0",
     "lint-staged": "^16.1.5",
@@ -81,7 +80,6 @@
     "semantic-release-slack-bot": "^4.0.2",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.39.1",
-    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"
   },
   "prettier": {

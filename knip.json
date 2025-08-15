@@ -1,7 +1,7 @@
 {
   "workspaces": {
     "server": {
-      "entry": ["src/index.ts!", "src/dev.ts", "src/migrations/*.ts!"],
+      "entry": ["src/index.ts!", "src/migrations/*.ts!"],
       "project": ["src/**/*.ts!", "tests/**/*.ts", "!src/**/*.test.ts!"],
       "tsup": false
     },

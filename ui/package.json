@@ -40,7 +40,8 @@
     "react-hook-form": "^7.62.0",
     "react-notion-x": "^7.4.3",
     "shared": "workspace:*",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "zod": "4.0.17"
   },
   "devDependencies": {
     "dotenv": "^17.2.1",

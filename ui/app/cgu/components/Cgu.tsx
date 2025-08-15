@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 
 import Section from "@/app/components/section/Section";
 
-export const cguVersion = "v0.1";
+const cguVersion = "v0.1";
 
 const anchors = {
   ChampApplication: "champ-application",

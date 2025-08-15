@@ -3,7 +3,7 @@ import axios, { isAxiosError } from "axios";
 import { ApiError } from "../utils/apiUtils";
 import config from "@/config";
 
-export const LIMIT_TRAINING_LINKS_PER_REQUEST = 100;
+const LIMIT_TRAINING_LINKS_PER_REQUEST = 100;
 
 const client = axios.create({
   baseURL: config.lba.baseURL,

@@ -6,7 +6,7 @@ import * as Sentry from "@sentry/node";
 import { stringify } from "csv-stringify";
 import type { IJobsSimple } from "job-processor";
 import { addJob } from "job-processor";
-import type { Filter, FindCursor, FindOptions } from "mongodb";
+import type { Filter, FindCursor } from "mongodb";
 import { ObjectId } from "mongodb";
 import { getMailingOutputColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList";
 import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
@@ -57,10 +57,6 @@ export const createMailingList = async (data: Omit<IMailingList, "_id" | "status
 
 export const findMailingList = async (filter: Filter<IMailingList>) => {
   return getDbCollection("mailingLists").findOne<IMailingList>(filter);
-};
-
-export const findMailingLists = async (filter: Filter<IMailingList>, options?: FindOptions<IMailingList>) => {
-  return getDbCollection("mailingLists").find(filter, options).toArray();
 };
 
 export const findMailingListWithDocument = async (filter: Filter<IMailingList> | null) => {
@@ -133,7 +129,7 @@ export const findMailingListWithDocument = async (filter: Filter<IMailingList> |
     .toArray();
 };
 
-export const updateMailingList = async (filter: Filter<IMailingList>, data: Partial<IMailingList>) => {
+const updateMailingList = async (filter: Filter<IMailingList>, data: Partial<IMailingList>) => {
   return getDbCollection("mailingLists").updateOne(filter, {
     $set: { ...data, updated_at: new Date() },
   });
@@ -226,7 +222,7 @@ async function findOrCreateMailingListDocument(
   return outputDocument;
 }
 
-export const processMailingList = async (job: IJobsSimple, mailingList: IMailingList, signal: AbortSignal) => {
+const processMailingList = async (job: IJobsSimple, mailingList: IMailingList, signal: AbortSignal) => {
   const sourceDocuments = await findDocuments<IUploadDocument>({
     type_document: mailingList.source,
     kind: "upload",

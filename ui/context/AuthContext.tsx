@@ -8,7 +8,7 @@ interface IAuthContext {
   setUser: (user?: IUserPublic) => void;
 }
 
-export const AuthContext = createContext<IAuthContext>({
+const AuthContext = createContext<IAuthContext>({
   user: undefined,
   setUser: () => {},
 });

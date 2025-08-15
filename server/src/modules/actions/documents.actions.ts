@@ -24,7 +24,7 @@ import { getDbCollection } from "@/common/utils/mongodbUtils";
 import config from "@/config";
 import { clamav } from "@/services";
 
-export const MAILING_LIST_DOCUMENT_PREFIX = "mailing-list";
+const MAILING_LIST_DOCUMENT_PREFIX = "mailing-list";
 
 const testMode = config.env === "test";
 
@@ -113,7 +113,6 @@ export const saveDocumentColumns = async (document: IUploadDocument) => {
       {
         // get only 1 record to get the columns
         to: 1,
-        on_record: (record: unknown) => record,
         delimiter: document.delimiter ?? DEFAULT_DELIMITER,
       },
       async (json: JsonObject) => {
@@ -323,7 +322,6 @@ export const checkCsvFile = async (document: IUploadDocument) => {
     {
       // get only 1 record to get the columns
       to: 1,
-      on_record: (record: unknown) => record,
       delimiter: document.delimiter ?? DEFAULT_DELIMITER,
     },
     async (json: JsonObject) => {

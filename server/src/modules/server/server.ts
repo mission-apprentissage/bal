@@ -128,7 +128,7 @@ export default async (): Promise<Server> => {
 
 type RegisterRoutes = (opts: { server: Server }) => void;
 
-export const registerRoutes: RegisterRoutes = ({ server }) => {
+const registerRoutes: RegisterRoutes = ({ server }) => {
   coreRoutes({ server });
   authRoutes({ server });
   userRoutes({ server });
@@ -143,7 +143,7 @@ export const registerRoutes: RegisterRoutes = ({ server }) => {
   processorAdminRoutes({ server });
 };
 
-export const registerV1Routes: RegisterRoutes = ({ server }) => {
+const registerV1Routes: RegisterRoutes = ({ server }) => {
   organisationRoutes({ server });
   decaRoutes({ server });
   webhookRoutes({ server });

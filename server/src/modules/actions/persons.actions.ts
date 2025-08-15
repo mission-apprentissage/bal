@@ -1,4 +1,4 @@
-import type { Filter, UpdateFilter } from "mongodb";
+import type { Filter } from "mongodb";
 import { ObjectId } from "mongodb";
 import type { IPerson, PersonWithOrganisation } from "shared/models/person.model";
 
@@ -86,20 +86,4 @@ export const findPersons = async (filter: Filter<IPerson> | null): Promise<Perso
     .toArray();
 
   return persons;
-};
-
-export const updatePerson = async (
-  person: IPerson,
-  data: Partial<IPerson>,
-  updateFilter: UpdateFilter<IPerson> = {}
-) => {
-  return await getDbCollection("persons").findOneAndUpdate(
-    {
-      _id: person._id,
-    },
-    {
-      $set: { ...data, updated_at: new Date() },
-      ...updateFilter,
-    }
-  );
 };

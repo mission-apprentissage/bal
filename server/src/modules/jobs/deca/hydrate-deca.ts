@@ -357,7 +357,7 @@ const pushPeriod = async (periods: Array<{ dateDebut: string; dateFin: string }>
  * Fonction de récupération de la dernière date de contrat Deca ajouté en base
  * @returns
  */
-export const getLastDecaCreatedDateInDb = async () => {
+const getLastDecaCreatedDateInDb = async () => {
   const lastDecaLogEntry = await getDbCollection("deca.import.job.result").findOne({}, { sort: { import_date: -1 } });
 
   let lastCreatedAt = lastDecaLogEntry?.import_date ?? null;

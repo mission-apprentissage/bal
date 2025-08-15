@@ -17,8 +17,3 @@ export const aktoValid = {
   email: "valid-akto@test.dev",
   siren: "123412341",
 };
-
-export const aktoInvalid = {
-  email: "invalid-akto@test.dev",
-  siren: "432143214",
-};
