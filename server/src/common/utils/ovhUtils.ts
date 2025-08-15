@@ -1,14 +1,11 @@
 import type { AxiosResponse } from "axios";
 import axios from "axios";
 
+import { z } from "zod/v4-mini";
 import { createRequestStream, createUploadStream } from "./httpUtils";
 import config from "@/config";
 
-interface Options {
-  storage?: string;
-  account?: "mna" | "sbs";
-  contentType?: string;
-}
+type AccountName = "main" | "support";
 
 export interface IAuthResponse {
   token: Token;
@@ -82,14 +79,11 @@ async function authenticate(uri: string) {
   return { baseUrl: endpoint.url, token };
 }
 
-async function requestObjectAccess(path: string, options: Options = {}) {
-  const ovhStorageAccount = options.account
-    ? options.account === "mna"
-      ? config.ovhStorageMna
-      : config.ovhStorage
-    : config.ovhStorage;
+// DOC https://docs.openstack.org/api-ref/object-store/
+async function requestObjectAccess(path: string, account: AccountName) {
+  const ovhStorageAccount = account === "support" ? config.ovhStorageSupport : config.ovhStorage;
 
-  const storage = options.storage || ovhStorageAccount.containerName;
+  const storage = ovhStorageAccount.containerName;
   const { baseUrl, token } = await authenticate(ovhStorageAccount.uri);
 
   return {
@@ -98,8 +92,8 @@ async function requestObjectAccess(path: string, options: Options = {}) {
   };
 }
 
-export const getFromStorage = async (path: string, options: Options = {}) => {
-  const { url, token } = await requestObjectAccess(path, options);
+export const getFromStorage = async (path: string, account: AccountName) => {
+  const { url, token } = await requestObjectAccess(path, account);
   return createRequestStream(url, {
     method: "GET",
     headers: {
@@ -109,19 +103,44 @@ export const getFromStorage = async (path: string, options: Options = {}) => {
   });
 };
 
-export const uploadToStorage = async (path: string, options: Options = {}) => {
-  const { url, token } = await requestObjectAccess(path, options);
+const zItemInfo = z.object({
+  bytes: z.number(),
+  hash: z.string(),
+  name: z.string(),
+  last_modified: z.string(),
+  content_type: z.string(),
+});
+
+export const listFromStorage = async (account: AccountName): Promise<Array<z.infer<typeof zItemInfo>>> => {
+  const { url, token } = await requestObjectAccess("/", account);
+  const data = await axios.get(url, {
+    method: "GET",
+    headers: {
+      "X-Auth-Token": token,
+      Accept: "application/json",
+    },
+  });
+
+  return z.array(zItemInfo).parse(data.data);
+};
+
+export const uploadToStorage = async (
+  path: string,
+  account: AccountName,
+  contentType: string = "application/octet-stream"
+) => {
+  const { url, token } = await requestObjectAccess(path, account);
   return createUploadStream(url, {
     headers: {
       "X-Auth-Token": token,
       Accept: "application/json",
-      "Content-Type": options.contentType || "application/octet-stream",
+      "Content-Type": contentType,
     },
   });
 };
 
-export const deleteFromStorage = async (path: string, options: Options = {}) => {
-  const { url, token } = await requestObjectAccess(path, options);
+export const deleteFromStorage = async (path: string, account: AccountName) => {
+  const { url, token } = await requestObjectAccess(path, account);
   return createRequestStream(url, {
     method: "DELETE",
     headers: {

@@ -84,12 +84,12 @@ export const getDocumentTypes = async (): Promise<string[]> => {
   });
 };
 
-export const readDocumentContent = async (
+const readDocumentContent = async (
   document: IDocument,
   options: Options = {},
   callback: (line: JsonObject) => void
 ) => {
-  const stream = await getFromStorage(document.chemin_fichier);
+  const stream = await getFromStorage(document.chemin_fichier, "main");
 
   await oleoduc(
     stream,
@@ -287,11 +287,7 @@ export const uploadFile = async (stream: Readable, doc: IUploadDocument, options
     scanStream,
     hashStream,
     crypto.isCipherAvailable() ? crypto.cipher(documentHash) : noop(), // ISSUE
-    testMode
-      ? noop()
-      : await uploadToStorage(path, {
-          contentType: options.mimetype,
-        })
+    testMode ? noop() : await uploadToStorage(path, "main", options.mimetype)
   );
 
   logger.info(` File ${path} uploaded to storage`);
@@ -304,7 +300,7 @@ export const uploadFile = async (stream: Readable, doc: IUploadDocument, options
       const listViruses = viruses.join(",");
       logger.error(`Uploaded file ${path} is infected by ${listViruses}. Deleting file from storage...`);
 
-      await deleteFromStorage(path);
+      await deleteFromStorage(path, "main");
     }
     throw Boom.badRequest("Le contenu du fichier est invalide");
   }
@@ -357,13 +353,7 @@ export const uploadSupportFile = async (stream: Readable, chemin_fichier: string
   await oleoduc(
     stream,
     scanStream,
-    testMode
-      ? noop()
-      : await uploadToStorage(chemin_fichier, {
-          contentType: options.mimetype,
-          account: "mna",
-          storage: "mna-support",
-        })
+    testMode ? noop() : await uploadToStorage(chemin_fichier, "support", options.mimetype)
   );
 
   const { isInfected, viruses } = await getScanResults();
@@ -373,7 +363,7 @@ export const uploadSupportFile = async (stream: Readable, chemin_fichier: string
       const listViruses = viruses.join(",");
       logger.error(`Uploaded file ${chemin_fichier} is infected by ${listViruses}. Deleting file from storage...`);
 
-      await deleteFromStorage(chemin_fichier);
+      await deleteFromStorage(chemin_fichier, "support");
     }
     throw Boom.badRequest("Le contenu du fichier est invalide");
   }
@@ -494,7 +484,7 @@ export const deleteDocumentById = async (documentId: ObjectId) => {
     throw Boom.forbidden("Impossible de trouver le document");
   }
   try {
-    await deleteFromStorage(document.chemin_fichier);
+    await deleteFromStorage(document.chemin_fichier, "main");
   } catch (error) {
     captureException(error);
     logger.error(error);
