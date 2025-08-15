@@ -19,6 +19,7 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ "organisme_formation.siret": 1 }, {}],
   [{ "etablissement_formation.siret": 1 }, {}],
   [{ created_at: -1 }, {}],
+  [{ date_fin_contrat: 1 }, {}],
 ];
 
 export const ZDeca = z.object({

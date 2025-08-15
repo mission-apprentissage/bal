@@ -11,6 +11,8 @@ import type { ILbaRecruteursSiretEmail } from "./data/lba.recruteurs.siret.email
 import lbaRecruteursSiretEmailModelDescriptor from "./data/lba.recruteurs.siret.email.model";
 import type { IDeca } from "./deca.model/deca.model";
 import decaModelDescriptor from "./deca.model/deca.model";
+import decaAnonymisedModelDescriptor from "./deca.model/deca.anonymised.model";
+import type { IDecaAnonimised } from "./deca.model/deca.anonymised.model";
 import type { IDecaHistory } from "./deca.model/decaHistory.model";
 import decaHistoryModelDescriptor from "./deca.model/decaHistory.model";
 import type { IDecaImportJobResult } from "./deca.model/decaImportJobResult.model";
@@ -44,6 +46,7 @@ export const modelDescriptors: IModelDescriptor[] = [
   documentContentsModelDescriptor,
   emailDeniedModelDescriptor,
   decaModelDescriptor,
+  decaAnonymisedModelDescriptor,
   decaHistoryModelDescriptor,
   decaImportJobResultModelDescriptor,
   mailingListModelDescriptor,
@@ -65,6 +68,7 @@ export type IDocumentMap = {
   mailingLists: IMailingList;
   emailDenied: IEmailDenied;
   deca: IDeca;
+  ["deca.anonimised"]: IDecaAnonimised;
   decaHistory: IDecaHistory;
   ["deca.import.job.result"]: IDecaImportJobResult;
   catalogueEmailSirets: ICatalogueEmailSiret;
