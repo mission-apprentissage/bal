@@ -1,6 +1,5 @@
 import { Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
-
 import { internal } from "@hapi/boom";
 import * as Sentry from "@sentry/node";
 import { stringify } from "csv-stringify";
@@ -355,13 +354,15 @@ async function getComputeColumnsData(
   documentContents: IDocumentContent[]
 ): Promise<Map<string, ICsvDatum>> {
   const names = new Set(mailingList.output_columns.map((c) => c.column));
+  const controller = new AbortController();
+  const { signal } = controller;
 
   const computedData = await Promise.all([
     names.has(MAILING_LIST_COMPUTED_COLUMNS.WEBHOOK_LBA.key)
       ? getLbaComputeData(mailingList, documentContents)
       : new Map(),
     names.has(MAILING_LIST_COMPUTED_COLUMNS.BOUNCER.key)
-      ? getBouncerComputeData(mailingList, documentContents)
+      ? getBouncerComputeData(mailingList, documentContents, signal)
       : new Map(),
   ]);
 
@@ -472,7 +473,8 @@ const getLbaComputeData = async (
 
 const getBouncerComputeData = async (
   mailingList: IMailingList,
-  documentContents: IDocumentContent[]
+  documentContents: IDocumentContent[],
+  signal: AbortSignal
 ): Promise<Map<string, ICsvDatum>> => {
   const emailColumn = mailingList.output_columns.find((c) => c.output === "email")?.column;
 
@@ -486,7 +488,7 @@ const getBouncerComputeData = async (
     documentIdToEmail.set(documentContent._id.toString(), email);
   }
 
-  const pingResults = await verifyEmails(Array.from(documentIdToEmail.values()));
+  const pingResults = await verifyEmails(Array.from(documentIdToEmail.values()), signal);
 
   const pingResultsMap = new Map<string, ICsvDatum>();
   for (let i = 0; i < pingResults.length; i++) {
@@ -614,6 +616,7 @@ export const createMailingListFile = async (mailingList: IMailingList, document:
   });
 
   let progress = 0;
+  const _90daysInSecs = 90 * 24 * 3600;
 
   await pipeline(
     getLine(mailingList, documentContentsCursor),
@@ -647,7 +650,7 @@ export const createMailingListFile = async (mailingList: IMailingList, document:
     }),
     parser,
     crypto.isCipherAvailable() ? crypto.cipher(document.hash_secret) : noop(),
-    await uploadToStorage(document.chemin_fichier, "main", "text/csv")
+    await uploadToStorage(document.chemin_fichier, "main", _90daysInSecs, "text/csv")
   );
 
   // await deleteDocumentContent({

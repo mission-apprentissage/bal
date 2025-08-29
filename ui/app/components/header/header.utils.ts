@@ -49,6 +49,13 @@ export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps):
           href: PAGES.listeDiffusion().path,
         },
       },
+      {
+        text: PAGES.mailingList().title,
+        isActive: pathname.startsWith(PAGES.mailingList().path),
+        linkProps: {
+          href: PAGES.mailingList().path,
+        },
+      },
     ];
   }
 

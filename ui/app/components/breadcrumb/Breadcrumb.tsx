@@ -95,12 +95,24 @@ export const PAGES = {
     title: "Listes de diffusion",
     path: "/liste-diffusion",
   }),
+  mailingList: () => ({
+    title: "Listes de diffusion V2",
+    path: "/mailing-list",
+  }),
+  mailingListCreate: () => ({
+    title: "Créer une liste de diffusion V2",
+    path: "/mailing-list/create",
+  }),
+  mailingListView: (id: string) => ({
+    title: `Liste de diffusion V2 ${id}`,
+    path: `/mailing-list/view/${id}`,
+  }),
   listeDepot: () => ({
     title: "Fichiers déposés",
     path: "/support/liste-fichiers",
   }),
   nouvelleListe: () => ({
-    title: "Créer une liste de diffusion",
+    title: "Créer une liste de diffusion V2",
     path: "/liste-diffusion/nouvelle-liste",
   }),
   adminProcessor: () => ({

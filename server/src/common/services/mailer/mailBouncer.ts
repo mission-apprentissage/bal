@@ -14,14 +14,15 @@ const ONE_DAY = 24 * ONE_HOUR;
 
 type SmtpSupportMap = Map<string, BouncerPingResult | null>;
 
-async function tryVerifyEmail(email: string, retryCount = 0): Promise<BouncerPingResult> {
+async function tryVerifyEmail(email: string, signal: AbortSignal, retryCount = 0): Promise<BouncerPingResult> {
   const smtp = await getSmtpServer(email);
 
   const retry = async (r: BouncerPingResult): Promise<BouncerPingResult> => {
     if (r.status === "error" && r.responseCode?.startsWith("4") && retryCount < 3) {
       // Exponential backoff (10s, 60s, 360s)
-      await sleep(10_000 * 6 ** retryCount);
-      return tryVerifyEmail(email, retryCount + 1);
+      await sleep(10_000 * 6 ** retryCount, signal);
+      signal?.throwIfAborted();
+      return tryVerifyEmail(email, signal, retryCount + 1);
     }
 
     return r;
@@ -36,13 +37,18 @@ async function tryVerifyEmail(email: string, retryCount = 0): Promise<BouncerPin
     };
   }
 
-  const smtpConnection = createSmtpConnection({
-    port: 25, // Default SMTP port
-    fqdn: "bal-mail.apprentissage.beta.gouv.fr", // Fully Qualified Domain Name of your SMTP server
-    sender: "nepasrepondre@apprentissage.beta.gouv.fr", // Email address to use as the sender in SMTP checks,
-    email,
-    smtp,
-  });
+  signal.throwIfAborted();
+
+  const smtpConnection = createSmtpConnection(
+    {
+      port: 25, // Default SMTP port
+      fqdn: "bal-mail.apprentissage.beta.gouv.fr", // Fully Qualified Domain Name of your SMTP server
+      sender: "nepasrepondre@apprentissage.beta.gouv.fr", // Email address to use as the sender in SMTP checks,
+      email,
+      smtp,
+    },
+    signal
+  );
 
   try {
     const elhoResult = await sayEhlo(smtpConnection);
@@ -102,6 +108,9 @@ async function tryVerifyEmail(email: string, retryCount = 0): Promise<BouncerPin
     };
   } catch (err) {
     await smtpConnection.throw(err);
+
+    signal?.throwIfAborted();
+
     captureException(err);
     logger.error(err, { email });
 
@@ -114,9 +123,13 @@ async function tryVerifyEmail(email: string, retryCount = 0): Promise<BouncerPin
   }
 }
 
-async function tryWithRandomEmail(_smtp: string, email: string): Promise<BouncerPingResult | null> {
+async function tryWithRandomEmail(
+  _smtp: string,
+  email: string,
+  signal: AbortSignal
+): Promise<BouncerPingResult | null> {
   const randomEmail = `${randomUUID()}@${email.split("@")[1]}`;
-  const randomResult = await tryVerifyEmail(randomEmail);
+  const randomResult = await tryVerifyEmail(randomEmail, signal);
 
   if (randomResult.status === "error") {
     return {
@@ -139,11 +152,12 @@ async function tryWithRandomEmail(_smtp: string, email: string): Promise<Bouncer
 async function verifyDomain(
   smtp: string,
   email: string,
-  smtpSupportMap: SmtpSupportMap
+  smtpSupportMap: SmtpSupportMap,
+  signal: AbortSignal
 ): Promise<BouncerPingResult | null> {
   if (!smtpSupportMap.has(smtp)) {
     const domain = email.split("@")[1];
-    const randomResult = await tryWithRandomEmail(smtp, email);
+    const randomResult = await tryWithRandomEmail(smtp, email, signal);
 
     const now = new Date();
     await getDbCollection("bouncer.domain").updateOne(
@@ -190,7 +204,8 @@ async function persistPingResultCache(
 
 export async function verifyEmail(
   email: string,
-  domainMap: SmtpSupportMap
+  domainMap: SmtpSupportMap,
+  signal: AbortSignal
 ): Promise<{ email: string; ping: BouncerPingResult }> {
   try {
     const cached = await getDbCollection("bouncer.email").findOne({ email });
@@ -201,6 +216,8 @@ export async function verifyEmail(
 
     const smtp = await getSmtpServer(email);
 
+    signal.throwIfAborted();
+
     if (!smtp) {
       return persistPingResultCache(email, null, {
         status: "invalid",
@@ -210,14 +227,16 @@ export async function verifyEmail(
       });
     }
 
-    const domainResult = await verifyDomain(smtp, email, domainMap);
+    const domainResult = await verifyDomain(smtp, email, domainMap, signal);
 
     if (domainResult) {
       return { email, ping: domainResult };
     }
 
-    return persistPingResultCache(email, smtp, await tryVerifyEmail(email));
+    return persistPingResultCache(email, smtp, await tryVerifyEmail(email, signal));
   } catch (err) {
+    signal.throwIfAborted();
+
     captureException(err);
     logger.error(err, { email });
 
@@ -245,18 +264,26 @@ export async function getDomainMap(): Promise<SmtpSupportMap> {
 
 async function verifyEmailsSequentially(
   emails: string[],
-  domainMap: SmtpSupportMap
+  domainMap: SmtpSupportMap,
+  signal: AbortSignal
 ): Promise<{ email: string; ping: BouncerPingResult }[]> {
   const result: { email: string; ping: BouncerPingResult }[] = [];
 
   for (const email of emails) {
-    result.push(await verifyEmail(email, domainMap));
+    if (signal?.aborted) {
+      throw signal.reason;
+    }
+
+    result.push(await verifyEmail(email, domainMap, signal));
   }
 
   return result;
 }
 
-export async function verifyEmails(emails: string[]): Promise<{ email: string; ping: BouncerPingResult }[]> {
+export async function verifyEmails(
+  emails: string[],
+  signal: AbortSignal
+): Promise<{ email: string; ping: BouncerPingResult }[]> {
   const domainMap: Map<string, BouncerPingResult | null> = await getDomainMap();
 
   const perDomain = emails.reduce((acc, email) => {
@@ -271,7 +298,7 @@ export async function verifyEmails(emails: string[]): Promise<{ email: string; p
   }, new Map<string, string[]>());
 
   const data = await Promise.all(
-    Array.from(perDomain.entries()).map(async ([_, emails]) => verifyEmailsSequentially(emails, domainMap))
+    Array.from(perDomain.entries()).map(async ([_, emails]) => verifyEmailsSequentially(emails, domainMap, signal))
   );
 
   return data.flat();

@@ -1,19 +1,17 @@
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Box } from "@mui/material";
-import type { FC } from "react";
-import type { IDocumentContentJson } from "shared/models/documentContent.model";
-
 import Sample from "./Sample";
 import { getDataFromSample } from "@/app/liste-diffusion/nouvelle-liste/mailingLists.utils";
 
 interface Props {
-  sample: IDocumentContentJson[];
+  sample: Array<Record<string, string> | undefined>;
   emailKey?: string;
+  isLoading?: boolean;
 }
 
-const EmailSample: FC<Props> = ({ sample, emailKey }) => {
-  if (!emailKey) {
-    return <Sample sample={sample} column={emailKey} />;
+export default function EmailSample({ sample, emailKey, isLoading }: Props) {
+  if (!emailKey || isLoading) {
+    return <Sample sample={sample} column={emailKey} isLoading={isLoading} />;
   }
 
   const data = getDataFromSample(sample, emailKey);
@@ -35,6 +33,4 @@ const EmailSample: FC<Props> = ({ sample, emailKey }) => {
       )}
     </Box>
   );
-};
-
-export default EmailSample;
+}

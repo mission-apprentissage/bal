@@ -89,7 +89,7 @@ type Response = {
 
 type SMTPConnection = AsyncGenerator<Response, Response, SMTP_COMMAND>;
 
-export async function* createSmtpConnection(config: SMTPConfig): SMTPConnection {
+export async function* createSmtpConnection(config: SMTPConfig, signal: AbortSignal): SMTPConnection {
   const connection = createConnection(config.port, config.smtp);
 
   let error: Error | null = null;
@@ -101,6 +101,10 @@ export async function* createSmtpConnection(config: SMTPConfig): SMTPConnection 
 
   const waitResponse = async (): Promise<Response> =>
     new Promise((resolve, reject) => {
+      if (signal.aborted) {
+        reject(signal.reason);
+      }
+
       if (state === "error") {
         state = "pending";
 

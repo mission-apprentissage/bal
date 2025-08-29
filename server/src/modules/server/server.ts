@@ -40,6 +40,7 @@ import { decaRoutes } from "./v1/deca.routes";
 import { organisationRoutes } from "./v1/organisation.routes";
 import { webhookRoutes } from "./webhooks.routes";
 import { processorAdminRoutes } from "./admin/processor.admin.routes";
+import { mailingListRoutesPrivate } from "./_private/mailing-list.routes";
 
 export type Server = FastifyInstance<
   RawServerDefault,
@@ -89,6 +90,7 @@ export async function bind(app: Server) {
       ? {
           origin: true,
           credentials: true,
+          methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
         }
       : {}),
   });
@@ -141,6 +143,7 @@ const registerRoutes: RegisterRoutes = ({ server }) => {
   documentsRoutes({ server });
   uploadSupportRoutes({ server });
   processorAdminRoutes({ server });
+  mailingListRoutesPrivate({ server });
 };
 
 const registerV1Routes: RegisterRoutes = ({ server }) => {
