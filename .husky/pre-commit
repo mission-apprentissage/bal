@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+yarn dedupe --check
 yarn lint-staged
 ./.husky/preventSensibleFilesCommit.sh
 yarn node-talisman --githook pre-commit
