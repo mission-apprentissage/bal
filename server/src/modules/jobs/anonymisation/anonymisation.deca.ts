@@ -1,6 +1,6 @@
 import { addYears } from "date-fns";
-import { ZDecaAnonymised } from "shared/models/deca.model/deca.anonymised.model";
-import type { IDecaAnonimised } from "shared/models/deca.model/deca.anonymised.model";
+import { ZDecaAnonymized } from "shared/models/deca.model/deca.anonymized.model";
+import type { IDecaAnonymized } from "shared/models/deca.model/deca.anonymized.model";
 import type { AnyBulkWriteOperation, ObjectId } from "mongodb";
 import { internal } from "@hapi/boom";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
@@ -15,14 +15,14 @@ export async function anonymisationDECA() {
       date_fin_contrat: { $lt: twoYearsAgo },
     });
 
-    const batchOpsAnom: AnyBulkWriteOperation<IDecaAnonimised>[] = [];
+    const batchOpsAnom: AnyBulkWriteOperation<IDecaAnonymized>[] = [];
     const toDelete: ObjectId[] = [];
 
     const processBatch = async () => {
       if (batchOpsAnom.length === 0) return;
 
-      // Write anonymised documents before deleting to be sure we don't lose data
-      await getDbCollection("deca.anonimised").bulkWrite(batchOpsAnom);
+      // Write anonymized documents before deleting to be sure we don't lose data
+      await getDbCollection("anonymized.deca").bulkWrite(batchOpsAnom);
       batchOpsAnom.length = 0;
       await getDbCollection("deca").deleteMany({
         _id: { $in: toDelete },
@@ -31,19 +31,19 @@ export async function anonymisationDECA() {
     };
 
     for await (const doc of cursor) {
-      const anonymisedDoc = ZDecaAnonymised.parse(doc);
+      const anonymizedDoc = ZDecaAnonymized.parse(doc);
 
       batchOpsAnom.push({
         updateOne: {
           // Preserve the original _id
-          filter: { _id: anonymisedDoc._id },
+          filter: { _id: anonymizedDoc._id },
           update: {
-            $set: anonymisedDoc,
+            $set: anonymizedDoc,
           },
           upsert: true,
         },
       });
-      toDelete.push(anonymisedDoc._id);
+      toDelete.push(anonymizedDoc._id);
 
       if (batchOpsAnom.length >= 1_000) {
         await processBatch();
