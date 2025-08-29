@@ -21,6 +21,7 @@ import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
 import { hydrateLbaSiretList } from "./lba/hydrate-siretlist";
 import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
 import { sanitizeOrganisationDomains } from "./validation/organisations_sanitize_domains";
+import { anonymisationService } from "./anonymisation/anonymisation.service";
 import {
   create as createMigration,
   status as statusMigration,
@@ -73,6 +74,12 @@ export async function setupJobProcessor() {
               maxRuntimeInMinutes: 12 * 60,
               // Keep long jobs in the main queue
               tag: "main",
+            },
+            "Anonymisation des données DECA": {
+              cron_string: "0 8 * * *",
+              handler: anonymisationService,
+              resumable: true,
+              maxRuntimeInMinutes: 15,
             },
           },
     jobs: {
@@ -153,6 +160,9 @@ export async function setupJobProcessor() {
           const { offset } = job.payload ?? {};
           return run_hydrate_from_deca(offset ? parseInt(offset.toString(), 10) : 0, signal);
         },
+      },
+      anonymisation: {
+        handler: anonymisationService,
       },
       "email:verify": {
         handler: async (job) => {
