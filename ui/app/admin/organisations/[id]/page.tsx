@@ -2,12 +2,13 @@ import OrganisationView from "./components/OrganisationView";
 import { apiGet } from "@/utils/api.utils";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 const AdminOrganisationViewPage = async ({ params }: Props) => {
+  const { id } = await params;
   const organisation = await apiGet(`/admin/organisations/:id`, {
-    params,
+    params: { id },
   });
 
   return <OrganisationView organisation={organisation} />;
