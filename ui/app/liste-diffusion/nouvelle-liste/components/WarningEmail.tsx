@@ -1,16 +1,17 @@
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Box } from "@mui/material";
 import type { FC } from "react";
-import type { IDocumentContentJson } from "shared/models/documentContent.model";
-
 import { getDataFromSample } from "@/app/liste-diffusion/nouvelle-liste/mailingLists.utils";
 
 interface Props {
   email: string;
-  sample: IDocumentContentJson[];
+  sample: Array<Record<string, string> | undefined>;
+  isLoading?: boolean;
 }
 
-const WarningEmail: FC<Props> = ({ email, sample }) => {
+const WarningEmail: FC<Props> = ({ email, sample, isLoading }) => {
+  if (isLoading) return null;
+
   const data = getDataFromSample(sample, email);
 
   // check if data has at least an email

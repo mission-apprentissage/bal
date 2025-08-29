@@ -92,7 +92,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             field: "document",
             headerName: "Statut",
             width: 120,
-            valueGetter: ({ row }) => {
+            valueGetter: (_value, row) => {
               const progress = getMailingListProgress(row);
 
               return {

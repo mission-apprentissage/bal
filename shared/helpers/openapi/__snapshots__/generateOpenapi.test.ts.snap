@@ -1221,6 +1221,82 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         ],
         "type": "object",
       },
+      "mailingList.computed": {
+        "additionalProperties": false,
+        "properties": {
+          "_id": {},
+          "data": {
+            "additionalProperties": {
+              "type": "string",
+            },
+            "propertyNames": {
+              "type": "string",
+            },
+            "type": "object",
+          },
+          "email": {
+            "type": "string",
+          },
+          "email_status": {
+            "enum": [
+              "empty",
+              "invalid",
+              "blacklisted",
+              "valid",
+            ],
+            "type": "string",
+          },
+          "line_number": {
+            "type": "number",
+          },
+          "mailing_list_id": {},
+          "ttl": {
+            "format": "date-time",
+            "type": "string",
+          },
+        },
+        "required": [
+          "_id",
+          "mailing_list_id",
+          "line_number",
+          "email",
+          "data",
+          "email_status",
+          "ttl",
+        ],
+        "type": "object",
+      },
+      "mailingList.source": {
+        "additionalProperties": false,
+        "properties": {
+          "_id": {},
+          "data": {
+            "additionalProperties": {
+              "type": "string",
+            },
+            "propertyNames": {
+              "type": "string",
+            },
+            "type": "object",
+          },
+          "line_number": {
+            "type": "number",
+          },
+          "mailing_list_id": {},
+          "ttl": {
+            "format": "date-time",
+            "type": "string",
+          },
+        },
+        "required": [
+          "_id",
+          "mailing_list_id",
+          "line_number",
+          "data",
+          "ttl",
+        ],
+        "type": "object",
+      },
       "mailingLists": {
         "additionalProperties": false,
         "properties": {
@@ -1322,6 +1398,284 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "identifier_columns",
           "output_columns",
           "training_columns",
+          "added_by",
+          "updated_at",
+          "created_at",
+        ],
+        "type": "object",
+      },
+      "mailingListsV2": {
+        "additionalProperties": false,
+        "properties": {
+          "_id": {},
+          "added_by": {},
+          "config": {
+            "additionalProperties": false,
+            "properties": {
+              "email_column": {
+                "type": "string",
+              },
+              "lba_columns": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "cfd": {
+                        "type": "string",
+                      },
+                      "cle_ministere_educatif": {
+                        "type": "string",
+                      },
+                      "code_insee": {
+                        "type": "string",
+                      },
+                      "code_postal": {
+                        "type": "string",
+                      },
+                      "mef": {
+                        "type": "string",
+                      },
+                      "rncp": {
+                        "type": "string",
+                      },
+                      "uai_formateur": {
+                        "type": "string",
+                      },
+                      "uai_formateur_responsable": {
+                        "type": "string",
+                      },
+                      "uai_lieu_formation": {
+                        "type": "string",
+                      },
+                    },
+                    "required": [
+                      "cle_ministere_educatif",
+                      "mef",
+                      "cfd",
+                      "rncp",
+                      "code_postal",
+                      "uai_lieu_formation",
+                      "uai_formateur",
+                      "uai_formateur_responsable",
+                      "code_insee",
+                    ],
+                    "type": "object",
+                  },
+                  {
+                    "type": "null",
+                  },
+                ],
+              },
+              "output_columns": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "input": {
+                      "anyOf": [
+                        {
+                          "additionalProperties": false,
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                            },
+                            "type": {
+                              "const": "source",
+                              "type": "string",
+                            },
+                          },
+                          "required": [
+                            "type",
+                            "name",
+                          ],
+                          "type": "object",
+                        },
+                        {
+                          "additionalProperties": false,
+                          "properties": {
+                            "name": {
+                              "enum": [
+                                "WEBHOOK_LBA",
+                                "BOUNCER",
+                              ],
+                              "type": "string",
+                            },
+                            "type": {
+                              "const": "computed",
+                              "type": "string",
+                            },
+                          },
+                          "required": [
+                            "type",
+                            "name",
+                          ],
+                          "type": "object",
+                        },
+                      ],
+                    },
+                    "output": {
+                      "type": "string",
+                    },
+                    "simple": {
+                      "type": "boolean",
+                    },
+                  },
+                  "required": [
+                    "input",
+                    "output",
+                    "simple",
+                  ],
+                  "type": "object",
+                },
+                "type": "array",
+              },
+            },
+            "required": [
+              "email_column",
+              "output_columns",
+              "lba_columns",
+            ],
+            "type": "object",
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "encode_key": {
+            "type": "string",
+          },
+          "job_id": {
+            "anyOf": [
+              {},
+              {
+                "type": "null",
+              },
+            ],
+          },
+          "name": {
+            "type": "string",
+          },
+          "output": {
+            "additionalProperties": false,
+            "properties": {
+              "blacklisted_email_count": {
+                "type": "number",
+              },
+              "empty_source_lines": {
+                "type": "number",
+              },
+              "invalid_email_count": {
+                "type": "number",
+              },
+              "lines": {
+                "type": "number",
+              },
+            },
+            "required": [
+              "lines",
+              "empty_source_lines",
+              "blacklisted_email_count",
+              "invalid_email_count",
+            ],
+            "type": "object",
+          },
+          "progress": {
+            "additionalProperties": false,
+            "properties": {
+              "export": {
+                "type": "integer",
+              },
+              "generate": {
+                "type": "integer",
+              },
+              "parse": {
+                "type": "integer",
+              },
+            },
+            "required": [
+              "parse",
+              "generate",
+              "export",
+            ],
+            "type": "object",
+          },
+          "source": {
+            "additionalProperties": false,
+            "properties": {
+              "columns": {
+                "items": {
+                  "type": "string",
+                },
+                "type": "array",
+              },
+              "file": {
+                "additionalProperties": false,
+                "properties": {
+                  "delimiter": {
+                    "type": "string",
+                  },
+                  "hash_fichier": {
+                    "type": "string",
+                  },
+                  "size": {
+                    "type": "number",
+                  },
+                },
+                "required": [
+                  "hash_fichier",
+                  "delimiter",
+                  "size",
+                ],
+                "type": "object",
+              },
+              "lines": {
+                "type": "number",
+              },
+            },
+            "required": [
+              "file",
+              "lines",
+              "columns",
+            ],
+            "type": "object",
+          },
+          "status": {
+            "enum": [
+              "initial",
+              "parse:scheduled",
+              "parse:in_progress",
+              "parse:failure",
+              "parse:success",
+              "generate:scheduled",
+              "generate:in_progress",
+              "generate:failure",
+              "generate:success",
+              "export:scheduled",
+              "export:in_progress",
+              "export:failure",
+              "export:success",
+            ],
+            "type": "string",
+          },
+          "ttl": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string",
+          },
+        },
+        "required": [
+          "_id",
+          "name",
+          "source",
+          "config",
+          "status",
+          "progress",
+          "output",
+          "job_id",
+          "ttl",
+          "encode_key",
           "added_by",
           "updated_at",
           "created_at",

@@ -92,7 +92,7 @@ async function requestObjectAccess(path: string, account: AccountName) {
   };
 }
 
-export const getFromStorage = async (path: string, account: AccountName) => {
+export const getFromStorage = async (path: string, account: AccountName, signal?: AbortSignal) => {
   const { url, token } = await requestObjectAccess(path, account);
   return createRequestStream(url, {
     method: "GET",
@@ -100,6 +100,7 @@ export const getFromStorage = async (path: string, account: AccountName) => {
       "X-Auth-Token": token,
       Accept: "application/json",
     },
+    signal,
   });
 };
 
@@ -127,6 +128,7 @@ export const listFromStorage = async (account: AccountName): Promise<Array<z.inf
 export const uploadToStorage = async (
   path: string,
   account: AccountName,
+  ttlInSeconds: number,
   contentType: string = "application/octet-stream"
 ) => {
   const { url, token } = await requestObjectAccess(path, account);
@@ -135,6 +137,19 @@ export const uploadToStorage = async (
       "X-Auth-Token": token,
       Accept: "application/json",
       "Content-Type": contentType,
+      "X-Delete-After": ttlInSeconds.toString(), // Time to live in seconds
+    },
+  });
+};
+
+export const updateUploadTtl = async (path: string, account: AccountName, ttlInSeconds: number) => {
+  const { url, token } = await requestObjectAccess(path, account);
+
+  await axios.post(url, null, {
+    headers: {
+      "X-Auth-Token": token,
+      Accept: "application/json",
+      "X-Delete-After": ttlInSeconds.toString(), // Time to live in seconds
     },
   });
 };

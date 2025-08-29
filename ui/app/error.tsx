@@ -6,6 +6,7 @@ import { captureException } from "@sentry/nextjs";
 import { useEffect } from "react";
 
 import Link from "next/link";
+import { useQueryErrorResetBoundary } from "@tanstack/react-query";
 import { publicConfig } from "@/config.public";
 import { NotFound } from "@/icons/NotFound";
 import { ApiError } from "@/utils/api.utils";
@@ -38,6 +39,8 @@ export default function ErrorComponent({ error, reset }: { error: Error & { dige
     console.error(error);
   }, [error]);
 
+  const resetUseQuery = useQueryErrorResetBoundary();
+
   const details = getErrorDescription(error);
 
   return (
@@ -61,7 +64,13 @@ export default function ErrorComponent({ error, reset }: { error: Error & { dige
             {details && <Typography gutterBottom>{details}</Typography>}
 
             <Box mt={2}>
-              <Button onClick={() => reset()} type="button">
+              <Button
+                onClick={() => {
+                  resetUseQuery.reset();
+                  reset();
+                }}
+                type="button"
+              >
                 Essayer à nouveau
               </Button>
             </Box>

@@ -18,6 +18,7 @@ import { zBrevoWebhooks } from "./v1/brevo.routes";
 import { zDecaV1Routes } from "./v1/deca.routes";
 import { zOrganisationV1Routes } from "./v1/organisation.routes";
 import { zProcessorAdminRoutes } from "./admin/processor.admin.routes";
+import { zPrivateMailingListRoutes } from "./_private/mailing-list.routes";
 
 const zRoutesGet = {
   ...zUserAdminRoutes.get,
@@ -32,6 +33,7 @@ const zRoutesGet = {
   ...zMailingListRoutes.get,
   ...zUploadSupportRoutes.get,
   ...zProcessorAdminRoutes.get,
+  ...zPrivateMailingListRoutes.get,
 } as const;
 
 const zRoutesPost = {
@@ -45,11 +47,13 @@ const zRoutesPost = {
   ...zUploadSupportRoutes.post,
   ...zBouncerV1Routes.post,
   ...zBrevoWebhooks.post,
+  ...zPrivateMailingListRoutes.post,
 } as const;
 
 const zRoutesPut = {
   ...zUploadRoutes.put,
   ...zMailingListRoutes.put,
+  ...zPrivateMailingListRoutes.put,
 } as const;
 
 const zRoutesDelete = {

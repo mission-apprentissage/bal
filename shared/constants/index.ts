@@ -1,2 +1,4 @@
 const megaByte = 1024 ** 2;
-export const FILE_SIZE_LIMIT = 500 * megaByte;
+const gigaByte = 1024 ** megaByte;
+
+export const FILE_SIZE_LIMIT = 2 * gigaByte;

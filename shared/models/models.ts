@@ -35,6 +35,12 @@ import type { ISession } from "./session.model";
 import sessionsModelDescriptor from "./session.model";
 import type { IUser } from "./user.model";
 import usersModelDescriptor from "./user.model";
+import { mailingListModelDescriptorV2 } from "./mailingListV2.model";
+import type { IMailingListV2 } from "./mailingListV2.model";
+import { mailingListSourceModelDescriptor } from "./mailingList.source.model";
+import type { IMailingListSource } from "./mailingList.source.model";
+import { mailingListComputedDatumModelDescriptor } from "./mailingList.computed.model";
+import type { IMailingListComputedDatum } from "./mailingList.computed.model";
 
 export const modelDescriptors: IModelDescriptor[] = [
   usersModelDescriptor,
@@ -55,6 +61,9 @@ export const modelDescriptors: IModelDescriptor[] = [
   bouncerDomailModelDescriptor,
   lbaEmailBlackListedModelDescriptor,
   lbaRecruteursSiretEmailModelDescriptor,
+  mailingListModelDescriptorV2,
+  mailingListSourceModelDescriptor,
+  mailingListComputedDatumModelDescriptor,
 ];
 
 export type IDocumentMap = {
@@ -66,6 +75,9 @@ export type IDocumentMap = {
   documents: IDocument;
   documentContents: IDocumentContent;
   mailingLists: IMailingList;
+  mailingListsV2: IMailingListV2;
+  ["mailingList.source"]: IMailingListSource;
+  ["mailingList.computed"]: IMailingListComputedDatum;
   emailDenied: IEmailDenied;
   deca: IDeca;
   ["anonymized.deca"]: IDecaAnonymized;

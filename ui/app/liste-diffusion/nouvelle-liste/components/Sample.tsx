@@ -1,18 +1,17 @@
 import { Typography } from "@mui/material";
-import type { FC } from "react";
 import { isComputedColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList";
-import type { IDocumentContentJson } from "shared/models/documentContent.model";
 
 import { getDataFromSample } from "@/app/liste-diffusion/nouvelle-liste/mailingLists.utils";
 
 interface Props {
-  sample: IDocumentContentJson[];
+  sample: Array<Record<string, string> | undefined>;
   column?: string;
   size?: number;
+  isLoading?: boolean;
 }
 
-const Sample: FC<Props> = ({ sample, column, size = 3 }) => {
-  if (!column || column === "") {
+export default function Sample({ sample, column, size = 3, isLoading = false }: Props) {
+  if (!column || column === "" || isLoading) {
     return <Typography variant="caption">Ici apparaitra un aperçu des données sur votre fichier</Typography>;
   }
 
@@ -27,6 +26,4 @@ const Sample: FC<Props> = ({ sample, column, size = 3 }) => {
   }
 
   return data.slice(0, size).join(", ");
-};
-
-export default Sample;
+}

@@ -29,6 +29,7 @@
     "@types/node": "^24.2.1",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
+    "byte-size": "^9.0.1",
     "crypto-random-string": "^5.0.0",
     "date-fns": "^4.1.0",
     "job-processor": "^2.0.0-next.3",
@@ -44,6 +45,7 @@
     "zod": "4.0.17"
   },
   "devDependencies": {
+    "@types/byte-size": "^8.1.2",
     "dotenv": "^17.2.1",
     "notion-types": "^7.4.3",
     "sass": "^1.90.0",

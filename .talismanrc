@@ -168,6 +168,8 @@ fileignoreconfig:
   checksum: 45f9be77c128393e81fe337258853f824e63867b65abeae1acb8a74507922b58
 - filename: ui/app/usage/validation/page.tsx
   checksum: 2123980fbc1470fc2791b08e838ad20207483a7770301014c3e44ac80f660c09
+- filename: ui/components/connexion/ConnexionComponent.tsx
+  checksum: 26ca6bbb30121a6b3cee62d68e8969fe194a23fd233fa1f8c1b3464b8b549f90
 scopeconfig:
 - scope: node
 custom_patterns:

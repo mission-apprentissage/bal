@@ -22,6 +22,7 @@ import { hydrateLbaSiretList } from "./lba/hydrate-siretlist";
 import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
 import { sanitizeOrganisationDomains } from "./validation/organisations_sanitize_domains";
 import { anonymisationService } from "./anonymisation/anonymisation.service";
+import { processMailingList, recoverMailingListJobs } from "./mailing-list/mailing-list.processor";
 import {
   create as createMigration,
   status as statusMigration,
@@ -81,6 +82,12 @@ export async function setupJobProcessor() {
               resumable: true,
               maxRuntimeInMinutes: 15,
             },
+            "Récupération des mailing-lists": {
+              cron_string: "*/30 * * * *",
+              handler: recoverMailingListJobs,
+              resumable: true,
+              maxRuntimeInMinutes: 15,
+            },
           },
     jobs: {
       "users:create": {
@@ -132,7 +139,6 @@ export async function setupJobProcessor() {
         onJobExited: onImportDocumentJobExited,
         resumable: true,
       },
-
       "documents:save-columns": {
         handler: async () => saveDocumentsColumns(),
       },
@@ -165,9 +171,9 @@ export async function setupJobProcessor() {
         handler: anonymisationService,
       },
       "email:verify": {
-        handler: async (job) => {
+        handler: async (job, signal) => {
           const { emails } = z.object({ emails: z.array(z.string()) }).parse(job.payload);
-          const result = await verifyEmails(emails);
+          const result = await verifyEmails(emails, signal);
           logger.info("Email verification result", { result });
         },
         resumable: true,
@@ -182,6 +188,15 @@ export async function setupJobProcessor() {
       },
       "job:lba:hydrate:siret-list": {
         handler: async () => hydrateLbaSiretList(),
+      },
+      "mailing-list:process": {
+        handler: processMailingList,
+        onJobExited: onMailingListJobExited,
+        resumable: true,
+      },
+      "mailing-list:recover": {
+        handler: async (_job, signal) => recoverMailingListJobs(signal),
+        resumable: true,
       },
     },
   });

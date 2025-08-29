@@ -1,3 +1,4 @@
+import { z } from "zod/v4-mini";
 import type { IMailingList } from "../models/mailingList.model";
 
 export const MAILING_LIST_COMPUTED_COLUMNS = {
@@ -32,6 +33,8 @@ export function isComputedColumns(column: string): column is IMailingListCompute
   return MAILING_LIST_COMPUTED_COLUMNS_KEYS.includes(column as IMailingListComputedColumnsKeys);
 }
 
+export const zComputedColumnKey = z.enum(MAILING_LIST_COMPUTED_COLUMNS_KEYS);
+
 export function getMailingOutputColumns(
   mailingList: Pick<IMailingList, "output_columns">
 ): IMailingList["output_columns"] {
@@ -46,4 +49,18 @@ export function getMailingOutputColumns(
   }
 
   return outputColumns;
+}
+
+const reservedOutputNames: RegExp[] = [/^email$/i];
+MAILING_LIST_COMPUTED_COLUMNS_KEYS.map((k) => {
+  MAILING_LIST_COMPUTED_COLUMNS[k].columns.forEach((c) => {
+    const reserved = c.simple ? new RegExp(`^${c.output}$`, "i") : new RegExp(`^${c.output}(_[0-9]+)?$`, "i");
+
+    reservedOutputNames.push(reserved);
+  });
+});
+
+// Returns true is a simple column name is reserved (used by Bouncer or LBA)
+export function isColumnReserved(name: string): boolean {
+  return reservedOutputNames.some((r) => r.test(name));
 }

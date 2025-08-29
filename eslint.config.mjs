@@ -10,6 +10,7 @@ import * as tseslint from "typescript-eslint";
 import * as importX from "eslint-plugin-import-x";
 import next from "@next/eslint-plugin-next";
 import nodePlugin from "eslint-plugin-n";
+import pluginQuery from "@tanstack/eslint-plugin-query";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
@@ -147,6 +148,10 @@ export default defineConfig([
     files: [["ui/**", ALL_FILES]],
     ...reactHooks.configs["recommended-latest"],
   },
+  ...pluginQuery.configs["flat/recommended"].map((c) => ({
+    ...c,
+    files: [["ui/**", ALL_FILES]],
+  })),
   {
     name: "ui-files",
     plugins: importAlias.configs.recommended.plugins,

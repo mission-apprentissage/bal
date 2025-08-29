@@ -118,7 +118,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
             </Select>
           </MailingListSectionCell>
           <MailingListSectionCell>
-            <EmailSample sample={sample} emailKey={watchEmail} />
+            <EmailSample sample={sample.map((c) => c.content)} emailKey={watchEmail} />
           </MailingListSectionCell>
           <MailingListSectionCell>ou</MailingListSectionCell>
           <MailingListSectionCell></MailingListSectionCell>
@@ -145,7 +145,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
             </Select>
           </MailingListSectionCell>
           <MailingListSectionCell>
-            <EmailSample sample={sample} emailKey={watchSecondaryEmail} />
+            <EmailSample sample={sample.map((c) => c.content)} emailKey={watchSecondaryEmail} />
           </MailingListSectionCell>
         </MailingListSectionRow>
 
@@ -184,7 +184,7 @@ const ChoixColonnesIdentifiant: FC<Props> = ({ onSuccess, columns, onCancel, sam
               </Select>
             </MailingListSectionCell>
             <MailingListSectionCell>
-              <Sample sample={sample} column={watchIdentifierColumns?.[index]?.name} />
+              <Sample sample={sample.map((c) => c.content)} column={watchIdentifierColumns?.[index]?.name} />
 
               <Box ml="auto">
                 <Button

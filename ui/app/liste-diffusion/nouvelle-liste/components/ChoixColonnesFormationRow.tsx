@@ -73,7 +73,7 @@ const ChoixColonnesFormationRow: FC<Props> = ({ columns, sample, field }) => {
         </Select>
       </MailingListSectionCell>
       <MailingListSectionCell>
-        <Sample sample={sample} column={value} />
+        <Sample sample={sample.map((c) => c.content)} column={value} />
       </MailingListSectionCell>
     </MailingListSectionRow>
   );

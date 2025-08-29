@@ -23,12 +23,19 @@ export async function timeout<T>(promise: Promise<T>, millis: number): Promise<T
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timeoutID));
 }
 
-export async function sleep(durationMs: number, signal?: AbortSignal): Promise<void> {
-  await new Promise<void>((resolve) => {
+export async function sleep(durationMs: number, signal: AbortSignal | null = null): Promise<void> {
+  await new Promise<void>((resolve, reject) => {
     let timeout: NodeJS.Timeout | null = null;
 
     const listener = () => {
       if (timeout) clearTimeout(timeout);
+      if (signal) {
+        signal?.removeEventListener("abort", listener);
+        if (signal.aborted) {
+          reject(signal.reason);
+          return;
+        }
+      }
       resolve();
     };
 

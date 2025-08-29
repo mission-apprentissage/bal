@@ -50,3 +50,27 @@ export function streamJsonArray() {
     transformData((data: any) => data.value)
   );
 }
+
+export function createBatchTransformStream(size: number): Transform {
+  let currentBatch: unknown[] = [];
+
+  return new Transform({
+    objectMode: true,
+    transform(chunk, _encoding, callback) {
+      currentBatch.push(chunk);
+
+      if (currentBatch.length >= size) {
+        this.push(currentBatch);
+        currentBatch = [];
+      }
+
+      callback();
+    },
+    flush(callback) {
+      if (currentBatch.length > 0) {
+        this.push(currentBatch);
+      }
+      callback();
+    },
+  });
+}
