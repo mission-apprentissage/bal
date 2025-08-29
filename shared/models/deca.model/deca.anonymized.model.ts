@@ -1,11 +1,10 @@
 import { z } from "zod/v4-mini";
 
 import type { IModelDescriptor } from "../common";
-import { ZDecaApprenant } from "./parts/deca.apprenant.part";
 import { ZDecaEmployeur } from "./parts/deca.employeur.part";
 import { ZDeca } from "./deca.model";
 
-const collectionName = "deca.anonimised" as const;
+const collectionName = "anonymized.deca" as const;
 
 const indexes: IModelDescriptor["indexes"] = [
   [
@@ -17,17 +16,12 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ created_at: -1 }, {}],
 ];
 
-export const ZDecaAnonymised = z.extend(
+export const ZDecaAnonymized = z.extend(
   z.omit(ZDeca, {
     alternant: true,
     employeur: true,
   }),
   {
-    alternant: z.pick(ZDecaApprenant, {
-      sexe: true,
-      nationalite: true,
-      handicap: true,
-    }),
     employeur: z.omit(ZDecaEmployeur, {
       telephone: true,
       courriel: true,
@@ -35,10 +29,10 @@ export const ZDecaAnonymised = z.extend(
   }
 );
 
-export type IDecaAnonimised = z.output<typeof ZDecaAnonymised>;
+export type IDecaAnonymized = z.output<typeof ZDecaAnonymized>;
 
 export default {
-  zod: ZDecaAnonymised,
+  zod: ZDecaAnonymized,
   indexes,
   collectionName,
 };
