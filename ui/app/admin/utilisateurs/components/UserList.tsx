@@ -66,13 +66,13 @@ const UserList = () => {
           {
             field: "is_admin",
             headerName: "Administrateur",
-            valueGetter: ({ value }) => (value ? "Oui" : "Non"),
+            valueGetter: (value) => (value ? "Oui" : "Non"),
             minWidth: 150,
           },
           {
             field: "api_key_used_at",
             headerName: "Dernière utilisation API",
-            valueGetter: ({ value }) => {
+            valueGetter: (value) => {
               return value ? formatDate(value as unknown as string, "PPP à p") : "Jamais";
             },
             minWidth: 180,

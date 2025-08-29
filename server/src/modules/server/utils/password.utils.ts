@@ -3,7 +3,7 @@ import Boom from "@hapi/boom";
 
 import config from "@/config";
 
-export const generateSalt = () => {
+const generateSalt = () => {
   return crypto.randomBytes(16).toString("hex");
 };
 

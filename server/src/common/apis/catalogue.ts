@@ -1,16 +1,14 @@
 import { zFormationCatalogue } from "shared/models/catalogue.api.model";
 import { z } from "zod/v4-mini";
 
+import axios from "axios";
 import logger from "../logger";
-import getApiClient from "./client";
 import config from "@/config";
 
-const catalogueClient = getApiClient(
-  {
-    baseURL: config.catalogue.baseUrl,
-  },
-  { cache: false }
-);
+const catalogueClient = axios.create({
+  timeout: 5_000,
+  baseURL: config.catalogue.baseUrl,
+});
 
 export async function fetchCatalogueData(): Promise<CatalogueData[]> {
   const projectKeys: (keyof CatalogueData)[] = Object.keys(ZCatalogueData.shape) as (keyof CatalogueData)[];

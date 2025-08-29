@@ -69,7 +69,7 @@ async function downloadFile(): Promise<string> {
   }
 }
 
-export async function downloadFileAsTmp(stream: Readable, filename: string): Promise<string> {
+async function downloadFileAsTmp(stream: Readable, filename: string): Promise<string> {
   const tmpDir = await mkdtemp(join(tmpdir(), `bal-download-${config.env}-`));
   const destFile = join(tmpDir, filename);
 
@@ -83,7 +83,7 @@ export async function downloadFileAsTmp(stream: Readable, filename: string): Pro
   }
 }
 
-export const readJson = async (filePath: string) => {
+const readJson = async (filePath: string) => {
   logger.info(`Reading bonnes boites json`);
 
   const streamCompanies = async () => {
@@ -94,7 +94,7 @@ export const readJson = async (filePath: string) => {
   return streamCompanies();
 };
 
-export async function cleanupTmp(filePath: string): Promise<void> {
+async function cleanupTmp(filePath: string): Promise<void> {
   try {
     await rm(dirname(filePath), { force: true, recursive: true });
   } catch (error) {
@@ -107,7 +107,7 @@ export async function cleanupTmp(filePath: string): Promise<void> {
   }
 }
 
-export const verifyAlgoFileDate = async () => {
+const verifyAlgoFileDate = async () => {
   const algoFileLastModificationDate = await getS3FileLastUpdate("storage", s3File);
   if (!algoFileLastModificationDate) {
     throw new Error("Aucune date de dernière modifications disponible sur le fichier issue de l'algo.");

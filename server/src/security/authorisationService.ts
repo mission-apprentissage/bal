@@ -15,7 +15,7 @@ function assertUnreachable(_x: never): never {
   throw new Error("Didn't expect to get here");
 }
 
-export function getUserRole(userOrToken: IAccessToken | IUserWithPerson): Role {
+function getUserRole(userOrToken: IAccessToken | IUserWithPerson): Role {
   if ("identity" in userOrToken) {
     return NoneRole;
   }
@@ -23,7 +23,7 @@ export function getUserRole(userOrToken: IAccessToken | IUserWithPerson): Role {
   return userOrToken.is_admin ? AdminRole : userOrToken.is_support ? SupportRole : NoneRole;
 }
 
-export function isAuthorized<S extends Pick<IRouteSchema, "method" | "path"> & WithSecurityScheme>(
+function isAuthorized<S extends Pick<IRouteSchema, "method" | "path"> & WithSecurityScheme>(
   access: AccessPermission,
   userOrToken: IAccessToken | IUserWithPerson,
   role: Role,

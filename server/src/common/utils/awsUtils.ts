@@ -17,7 +17,7 @@ import type { StreamingBlobPayloadInputTypes } from "@smithy/types";
 import config from "../../config";
 import logger from "../logger";
 
-export function assertUnreachable(_x: never): never {
+function assertUnreachable(_x: never): never {
   throw new Error("Didn't expect to get here");
 }
 

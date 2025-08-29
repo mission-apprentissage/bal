@@ -88,7 +88,7 @@ const ChoixSource: FC<Props> = ({ mailingList, onSuccess }) => {
     tableColumns.push({
       field: column,
       headerName: column,
-      valueGetter: ({ row }) => row.content?.[column],
+      valueGetter: (_value, row) => row.content?.[column],
       minWidth: 200,
     });
   }

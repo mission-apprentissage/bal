@@ -26,4 +26,4 @@ export interface IModelDescriptor {
   collectionName: CollectionName;
 }
 
-export { zObjectId } from "zod-mongodb-schema";
+export { zObjectIdMini as zObjectId } from "zod-mongodb-schema";

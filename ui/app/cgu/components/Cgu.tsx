@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 
 import Section from "@/app/components/section/Section";
 
-export const cguVersion = "v0.1";
+const cguVersion = "v0.1";
 
 const anchors = {
   ChampApplication: "champ-application",
@@ -69,7 +69,7 @@ const Cgu: FC<Props> = ({ onLoad }) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} lg={3}>
+      <Grid size={{ xs: 12, lg: 3 }}>
         <Summary
           links={summaryData.map((item) => ({
             linkProps: {
@@ -79,7 +79,7 @@ const Cgu: FC<Props> = ({ onLoad }) => {
           }))}
         />
       </Grid>
-      <Grid item xs={12} lg={9}>
+      <Grid size={{ xs: 12, lg: 9 }}>
         <Typography variant="h2" gutterBottom>
           CONDITIONS GÉNÉRALES D&apos;UTILISATION
         </Typography>

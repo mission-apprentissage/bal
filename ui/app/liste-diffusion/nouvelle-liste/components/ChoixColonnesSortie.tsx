@@ -126,10 +126,10 @@ const ChoixColonnesSortie: FC<Props> = ({
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <MailingListSectionRow>
-          <MailingListSectionCell xs={3}>Nom de sortie</MailingListSectionCell>
-          <MailingListSectionCell xs={3}>En-têtes des colonnes (fichier source)</MailingListSectionCell>
-          <MailingListSectionCell xs={3}>Fusionner les valeurs</MailingListSectionCell>
-          <MailingListSectionCell xs={3}>3 premières lignes de données</MailingListSectionCell>
+          <MailingListSectionCell size={{ xs: 3 }}>Nom de sortie</MailingListSectionCell>
+          <MailingListSectionCell size={{ xs: 3 }}>En-têtes des colonnes (fichier source)</MailingListSectionCell>
+          <MailingListSectionCell size={{ xs: 3 }}>Fusionner les valeurs</MailingListSectionCell>
+          <MailingListSectionCell size={{ xs: 3 }}>3 premières lignes de données</MailingListSectionCell>
         </MailingListSectionRow>
         {fields.map((field, index) => {
           const { onChange, ...columnField } = register(`output_columns.${index}.column`, {
@@ -148,7 +148,7 @@ const ChoixColonnesSortie: FC<Props> = ({
 
           return (
             <MailingListSectionRow key={field.id}>
-              <MailingListSectionCell xs={3}>
+              <MailingListSectionCell size={{ xs: 3 }}>
                 <Select
                   label=""
                   disabled={selectColumnDisabled}
@@ -191,7 +191,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                   </optgroup>
                 </Select>
               </MailingListSectionCell>
-              <MailingListSectionCell xs={3}>
+              <MailingListSectionCell size={{ xs: 3 }}>
                 <Input
                   label=""
                   state={errors.output_columns?.[index]?.output?.message ? "error" : "default"}
@@ -205,7 +205,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                   }}
                 />
               </MailingListSectionCell>
-              <MailingListSectionCell xs={3}>
+              <MailingListSectionCell size={{ xs: 3 }}>
                 {index !== 0 && (
                   <>
                     <ToggleSwitchInput
@@ -230,7 +230,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                   </>
                 )}
               </MailingListSectionCell>
-              <MailingListSectionCell xs={3}>
+              <MailingListSectionCell size={{ xs: 3 }}>
                 <Sample sample={sample} column={outputColumns[index].column} />
                 {index !== 0 && (
                   <Box ml="auto">

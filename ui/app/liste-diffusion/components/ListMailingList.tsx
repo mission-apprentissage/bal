@@ -46,18 +46,6 @@ function getMailingListProgress(mailingList: IMailingListWithDocumentAndOwnerJso
 
 const formater = new Intl.NumberFormat("fr-FR", { notation: "compact" });
 
-export function getMailingListStatus(mailing: IMailingListWithDocumentAndOwnerJson): IDocument["job_status"] {
-  if (mailing.document) return mailing.document.job_status;
-
-  const createdTime = new Date(mailing.created_at).getTime();
-
-  if (createdTime + 2 * 3600 * 1000 < Date.now()) {
-    return "error";
-  }
-
-  return "pending";
-}
-
 const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
   const [toDelete, setToDelete] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -121,8 +109,8 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             field: "owner",
             headerName: "Créé par",
             width: 200,
-            valueGetter: ({ row }) => row.owner?.email ?? null,
-            valueFormatter: ({ value }) => {
+            valueGetter: (_value, row) => row.owner?.email ?? null,
+            valueFormatter: (value) => {
               return value || "Inconnu";
             },
           },
@@ -130,7 +118,7 @@ const ListMailingList: FC<Props> = ({ mailingLists, onDelete }) => {
             field: "created_at",
             headerName: "Date de génération",
             width: 200,
-            valueFormatter: ({ value }) => {
+            valueFormatter: (value) => {
               return value && formatDate(value, "dd/MM/yyyy à HH:mm");
             },
           },

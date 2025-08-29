@@ -1,6 +1,5 @@
 "use client";
 
-import { MuiDsfrThemeProvider } from "@codegouvfr/react-dsfr/mui";
 import { Box, Container } from "@mui/material";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
@@ -24,13 +23,11 @@ const RootTemplate: FC<Props> = ({ children }) => {
   return (
     <PlausibleProvider trackLocalhost={false} enabled={tracking.current} domain={publicConfig.host}>
       <QueryClientProvider client={queryClient}>
-        <MuiDsfrThemeProvider>
-          <Header />
-          <Container maxWidth="xl">
-            <Box minHeight="60vh">{children}</Box>
-          </Container>
-          <Footer />
-        </MuiDsfrThemeProvider>
+        <Header />
+        <Container maxWidth="xl">
+          <Box minHeight="60vh">{children}</Box>
+        </Container>
+        <Footer />
       </QueryClientProvider>
     </PlausibleProvider>
   );

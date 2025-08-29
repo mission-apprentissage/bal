@@ -4,7 +4,6 @@ import util from "util";
 import { internal } from "@hapi/boom";
 import companyEmailValidator from "company-email-validator";
 import type { Filter, FindOptions } from "mongodb";
-import { ObjectId } from "mongodb";
 import { getSirenFromSiret } from "shared/helpers/common";
 import type { IOrganisation } from "shared/models/organisation.model";
 import { z } from "zod/v4-mini";
@@ -14,20 +13,6 @@ const dnsLookup = util.promisify(dns.lookup);
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
 type ICreateOrganisation = Omit<IOrganisation, "_id">;
-
-export const createOrganisation = async (data: ICreateOrganisation): Promise<IOrganisation> => {
-  const now = new Date();
-  const organisation = {
-    _id: new ObjectId(),
-    ...data,
-    updated_at: now,
-    created_at: now,
-  };
-
-  await getDbCollection("organisations").insertOne(organisation);
-
-  return organisation;
-};
 
 export const findOrganisations = async (filter: Filter<IOrganisation> | null) => {
   const organisations = await getDbCollection("organisations")
@@ -43,7 +28,7 @@ export const findOrganisation = async (filter: Filter<IOrganisation>, options?: 
   return organisation;
 };
 
-export const findOrCreateOrganisation = async (
+const findOrCreateOrganisation = async (
   filter: Filter<IOrganisation>,
   data: ICreateOrganisation
 ): Promise<IOrganisation> => {
@@ -63,15 +48,6 @@ export const findOrCreateOrganisation = async (
   if (organisation === null) {
     throw internal("fail to create organisation");
   }
-
-  return organisation;
-};
-
-export const findOrganisationBySiret = async (siret: string, options?: FindOptions) => {
-  const organisation = await getDbCollection("organisations").findOne<IOrganisation>(
-    { "etablissements.siret": siret },
-    options
-  );
 
   return organisation;
 };

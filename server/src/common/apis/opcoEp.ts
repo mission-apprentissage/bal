@@ -2,7 +2,6 @@ import querystring from "querystring";
 import axios from "axios";
 
 import { ApiError } from "../utils/apiUtils";
-import getApiClient from "./client";
 import config from "@/config";
 
 export const OPCO_EP_BASE_URL = `https://${config.opcoEp.baseUrl}`;
@@ -11,7 +10,8 @@ export const OPCO_EP_AUTH_BASE_URL = `https://${config.opcoEp.baseAuthUrl}`;
 export const OPCO_EP_CODE_RETOUR_EMAIL_TROUVE = 1;
 export const OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE = 2;
 
-const axiosClient = getApiClient({
+const axiosClient = axios.create({
+  timeout: 5_000,
   baseURL: OPCO_EP_BASE_URL,
 });
 

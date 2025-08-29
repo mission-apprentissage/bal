@@ -81,6 +81,7 @@ export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps):
           PAGES.adminPersons().path,
           PAGES.adminOrganisations().path,
           PAGES.adminFichier().path,
+          PAGES.adminProcessor().path,
         ].includes(pathname),
         menuLinks: [
           {
@@ -109,6 +110,13 @@ export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps):
             isActive: pathname === PAGES.adminFichier().path,
             linkProps: {
               href: PAGES.adminFichier().path,
+            },
+          },
+          {
+            text: PAGES.adminProcessor().title,
+            isActive: pathname === PAGES.adminProcessor().path,
+            linkProps: {
+              href: PAGES.adminProcessor().path,
             },
           },
         ],
