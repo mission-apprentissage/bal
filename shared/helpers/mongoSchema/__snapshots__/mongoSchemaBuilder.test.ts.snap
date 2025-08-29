@@ -1,5 +1,160 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`zodToMongoSchema > should convert anonymized.deca schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "created_at": {
+      "bsonType": "date",
+    },
+    "date_debut_contrat": {
+      "bsonType": "date",
+    },
+    "date_effet_avenant": {
+      "bsonType": "date",
+    },
+    "date_effet_rupture": {
+      "bsonType": "date",
+    },
+    "date_fin_contrat": {
+      "bsonType": "date",
+    },
+    "date_suppression": {
+      "bsonType": "date",
+    },
+    "dispositif": {
+      "bsonType": "string",
+    },
+    "employeur": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "adresse": {
+          "additionalProperties": false,
+          "bsonType": "object",
+          "properties": {
+            "code_postal": {
+              "bsonType": "string",
+            },
+          },
+          "required": [
+            "code_postal",
+          ],
+        },
+        "code_idcc": {
+          "bsonType": "string",
+        },
+        "denomination": {
+          "bsonType": "string",
+        },
+        "naf": {
+          "bsonType": "string",
+        },
+        "nombre_de_salaries": {
+          "bsonType": [
+            "number",
+            "null",
+          ],
+        },
+        "siret": {
+          "bsonType": "string",
+        },
+      },
+    },
+    "employeur_specifique": {
+      "bsonType": "number",
+    },
+    "etablissement_formation": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "siret": {
+          "bsonType": "string",
+          "pattern": "^\\d{14}$",
+        },
+      },
+    },
+    "flag_correction": {
+      "bsonType": "bool",
+    },
+    "formation": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "code_diplome": {
+          "bsonType": "string",
+        },
+        "date_debut_formation": {
+          "bsonType": "date",
+        },
+        "date_fin_formation": {
+          "bsonType": "date",
+        },
+        "intitule_ou_qualification": {
+          "bsonType": "string",
+        },
+        "rncp": {
+          "bsonType": "string",
+        },
+        "type_diplome": {
+          "bsonType": "string",
+        },
+      },
+    },
+    "no_avenant": {
+      "bsonType": "string",
+    },
+    "no_contrat": {
+      "bsonType": "string",
+    },
+    "organisme_formation": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "siret": {
+          "bsonType": "string",
+        },
+        "uai_cfa": {
+          "bsonType": "string",
+        },
+      },
+    },
+    "rupture_avant_debut": {
+      "bsonType": "bool",
+    },
+    "statut": {
+      "bsonType": "string",
+    },
+    "type_contrat": {
+      "bsonType": "string",
+    },
+    "type_derogation": {
+      "bsonType": "number",
+    },
+    "type_employeur": {
+      "bsonType": "number",
+    },
+    "updated_at": {
+      "bsonType": "date",
+    },
+  },
+  "required": [
+    "_id",
+    "no_contrat",
+    "date_debut_contrat",
+    "date_fin_contrat",
+    "formation",
+    "updated_at",
+    "created_at",
+    "employeur",
+  ],
+}
+`;
+
 exports[`zodToMongoSchema > should convert bouncer.domain schema 1`] = `
 {
   "additionalProperties": false,
