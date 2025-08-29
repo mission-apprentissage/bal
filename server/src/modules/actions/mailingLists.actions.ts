@@ -647,9 +647,7 @@ export const createMailingListFile = async (mailingList: IMailingList, document:
     }),
     parser,
     crypto.isCipherAvailable() ? crypto.cipher(document.hash_secret) : noop(),
-    await uploadToStorage(document.chemin_fichier, {
-      contentType: "text/csv",
-    })
+    await uploadToStorage(document.chemin_fichier, "main", "text/csv")
   );
 
   // await deleteDocumentContent({

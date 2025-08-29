@@ -89,10 +89,7 @@ export const uploadSupportRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/support/files-list"])],
     },
     async (_request, response) => {
-      const stream = await getFromStorage("/", {
-        account: "mna",
-        storage: "mna-support",
-      });
+      const stream = await getFromStorage("/", "support");
       let result: { id: string }[] = [];
       await oleoduc(
         // @ts-ignore
@@ -123,10 +120,7 @@ export const uploadSupportRoutes = ({ server }: { server: Server }) => {
       let stream: IncomingMessage | Readable;
       let fileNotFound = false;
       try {
-        stream = await getFromStorage(id, {
-          account: "mna",
-          storage: "mna-support",
-        });
+        stream = await getFromStorage(id, "support");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         if (error.message.includes("Status code 404")) {
@@ -164,10 +158,7 @@ export const uploadSupportRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const { id } = request.query;
 
-      await deleteFromStorage(id, {
-        account: "mna",
-        storage: "mna-support",
-      });
+      await deleteFromStorage(id, "support");
 
       return response.status(200).send({ success: true });
     }

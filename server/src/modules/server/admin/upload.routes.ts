@@ -223,7 +223,7 @@ export const uploadAdminRoutes = ({ server }: { server: Server }) => {
 
       let stream: IncomingMessage | Readable;
       try {
-        stream = await getFromStorage(document.chemin_fichier);
+        stream = await getFromStorage(document.chemin_fichier, "main");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         if (error.message.includes("Status code 404")) {

@@ -148,7 +148,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       let stream: IncomingMessage | Readable;
       let fileNotFound = false;
       try {
-        stream = await getFromStorage(document.chemin_fichier);
+        stream = await getFromStorage(document.chemin_fichier, "main");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         if (error.message.includes("Status code 404")) {
@@ -161,7 +161,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       if (fileNotFound) {
         logger.info("file not found");
         await createMailingListFile(mailingList, document);
-        stream = await getFromStorage(document.chemin_fichier);
+        stream = await getFromStorage(document.chemin_fichier, "main");
       }
 
       const fileName = `liste-diffusion-${mailingList.campaign_name}-${mailingList.source}.csv`;
