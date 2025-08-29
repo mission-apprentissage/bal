@@ -47,6 +47,169 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         ],
         "type": "object",
       },
+      "anonymized.deca": {
+        "additionalProperties": false,
+        "properties": {
+          "_id": {},
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "date_debut_contrat": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "date_effet_avenant": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "date_effet_rupture": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "date_fin_contrat": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "date_suppression": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "dispositif": {
+            "type": "string",
+          },
+          "employeur": {
+            "additionalProperties": false,
+            "properties": {
+              "adresse": {
+                "additionalProperties": false,
+                "properties": {
+                  "code_postal": {
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "code_postal",
+                ],
+                "type": "object",
+              },
+              "code_idcc": {
+                "type": "string",
+              },
+              "denomination": {
+                "type": "string",
+              },
+              "naf": {
+                "type": "string",
+              },
+              "nombre_de_salaries": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                  },
+                  {
+                    "type": "null",
+                  },
+                ],
+              },
+              "siret": {
+                "type": "string",
+              },
+            },
+            "type": "object",
+          },
+          "employeur_specifique": {
+            "type": "number",
+          },
+          "etablissement_formation": {
+            "additionalProperties": false,
+            "properties": {
+              "siret": {
+                "pattern": "^\\d{14}$",
+                "type": "string",
+              },
+            },
+            "type": "object",
+          },
+          "flag_correction": {
+            "type": "boolean",
+          },
+          "formation": {
+            "additionalProperties": false,
+            "properties": {
+              "code_diplome": {
+                "type": "string",
+              },
+              "date_debut_formation": {
+                "format": "date-time",
+                "type": "string",
+              },
+              "date_fin_formation": {
+                "format": "date-time",
+                "type": "string",
+              },
+              "intitule_ou_qualification": {
+                "type": "string",
+              },
+              "rncp": {
+                "type": "string",
+              },
+              "type_diplome": {
+                "type": "string",
+              },
+            },
+            "type": "object",
+          },
+          "no_avenant": {
+            "type": "string",
+          },
+          "no_contrat": {
+            "type": "string",
+          },
+          "organisme_formation": {
+            "additionalProperties": false,
+            "properties": {
+              "siret": {
+                "type": "string",
+              },
+              "uai_cfa": {
+                "type": "string",
+              },
+            },
+            "type": "object",
+          },
+          "rupture_avant_debut": {
+            "type": "boolean",
+          },
+          "statut": {
+            "type": "string",
+          },
+          "type_contrat": {
+            "type": "string",
+          },
+          "type_derogation": {
+            "type": "number",
+          },
+          "type_employeur": {
+            "type": "number",
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string",
+          },
+        },
+        "required": [
+          "_id",
+          "no_contrat",
+          "date_debut_contrat",
+          "date_fin_contrat",
+          "formation",
+          "updated_at",
+          "created_at",
+          "employeur",
+        ],
+        "type": "object",
+      },
       "bouncer.domain": {
         "additionalProperties": false,
         "properties": {
