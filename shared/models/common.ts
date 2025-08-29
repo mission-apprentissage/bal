@@ -12,7 +12,7 @@ export type CollectionName =
   | "mailingLists"
   | "emailDenied"
   | "deca"
-  | "deca.anonimised"
+  | "anonymized.deca"
   | "decaHistory"
   | "deca.import.job.result"
   | "catalogueEmailSirets"
