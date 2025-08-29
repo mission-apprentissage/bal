@@ -1,5 +1,160 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`zodToMongoSchema > should convert anonymized.deca schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "created_at": {
+      "bsonType": "date",
+    },
+    "date_debut_contrat": {
+      "bsonType": "date",
+    },
+    "date_effet_avenant": {
+      "bsonType": "date",
+    },
+    "date_effet_rupture": {
+      "bsonType": "date",
+    },
+    "date_fin_contrat": {
+      "bsonType": "date",
+    },
+    "date_suppression": {
+      "bsonType": "date",
+    },
+    "dispositif": {
+      "bsonType": "string",
+    },
+    "employeur": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "adresse": {
+          "additionalProperties": false,
+          "bsonType": "object",
+          "properties": {
+            "code_postal": {
+              "bsonType": "string",
+            },
+          },
+          "required": [
+            "code_postal",
+          ],
+        },
+        "code_idcc": {
+          "bsonType": "string",
+        },
+        "denomination": {
+          "bsonType": "string",
+        },
+        "naf": {
+          "bsonType": "string",
+        },
+        "nombre_de_salaries": {
+          "bsonType": [
+            "number",
+            "null",
+          ],
+        },
+        "siret": {
+          "bsonType": "string",
+        },
+      },
+    },
+    "employeur_specifique": {
+      "bsonType": "number",
+    },
+    "etablissement_formation": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "siret": {
+          "bsonType": "string",
+          "pattern": "^\\d{14}$",
+        },
+      },
+    },
+    "flag_correction": {
+      "bsonType": "bool",
+    },
+    "formation": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "code_diplome": {
+          "bsonType": "string",
+        },
+        "date_debut_formation": {
+          "bsonType": "date",
+        },
+        "date_fin_formation": {
+          "bsonType": "date",
+        },
+        "intitule_ou_qualification": {
+          "bsonType": "string",
+        },
+        "rncp": {
+          "bsonType": "string",
+        },
+        "type_diplome": {
+          "bsonType": "string",
+        },
+      },
+    },
+    "no_avenant": {
+      "bsonType": "string",
+    },
+    "no_contrat": {
+      "bsonType": "string",
+    },
+    "organisme_formation": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "siret": {
+          "bsonType": "string",
+        },
+        "uai_cfa": {
+          "bsonType": "string",
+        },
+      },
+    },
+    "rupture_avant_debut": {
+      "bsonType": "bool",
+    },
+    "statut": {
+      "bsonType": "string",
+    },
+    "type_contrat": {
+      "bsonType": "string",
+    },
+    "type_derogation": {
+      "bsonType": "number",
+    },
+    "type_employeur": {
+      "bsonType": "number",
+    },
+    "updated_at": {
+      "bsonType": "date",
+    },
+  },
+  "required": [
+    "_id",
+    "no_contrat",
+    "date_debut_contrat",
+    "date_fin_contrat",
+    "formation",
+    "updated_at",
+    "created_at",
+    "employeur",
+  ],
+}
+`;
+
 exports[`zodToMongoSchema > should convert bouncer.domain schema 1`] = `
 {
   "additionalProperties": false,
@@ -956,6 +1111,88 @@ exports[`zodToMongoSchema > should convert lba.recruteurs.siret.email schema 1`]
 }
 `;
 
+exports[`zodToMongoSchema > should convert mailingList.computed schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "data": {
+      "additionalProperties": {
+        "bsonType": "string",
+      },
+      "bsonType": "object",
+    },
+    "email": {
+      "bsonType": "string",
+    },
+    "email_status": {
+      "bsonType": "string",
+      "enum": [
+        "empty",
+        "invalid",
+        "blacklisted",
+        "valid",
+      ],
+    },
+    "line_number": {
+      "bsonType": "number",
+    },
+    "mailing_list_id": {
+      "bsonType": "objectId",
+    },
+    "ttl": {
+      "bsonType": "date",
+    },
+  },
+  "required": [
+    "_id",
+    "mailing_list_id",
+    "line_number",
+    "email",
+    "data",
+    "email_status",
+    "ttl",
+  ],
+}
+`;
+
+exports[`zodToMongoSchema > should convert mailingList.source schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "data": {
+      "additionalProperties": {
+        "bsonType": "string",
+      },
+      "bsonType": "object",
+    },
+    "line_number": {
+      "bsonType": "number",
+    },
+    "mailing_list_id": {
+      "bsonType": "objectId",
+    },
+    "ttl": {
+      "bsonType": "date",
+    },
+  },
+  "required": [
+    "_id",
+    "mailing_list_id",
+    "line_number",
+    "data",
+    "ttl",
+  ],
+}
+`;
+
 exports[`zodToMongoSchema > should convert mailingLists schema 1`] = `
 {
   "additionalProperties": false,
@@ -1059,6 +1296,296 @@ exports[`zodToMongoSchema > should convert mailingLists schema 1`] = `
     "identifier_columns",
     "output_columns",
     "training_columns",
+    "added_by",
+    "updated_at",
+    "created_at",
+  ],
+}
+`;
+
+exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "added_by": {
+      "bsonType": "objectId",
+    },
+    "config": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "email_column": {
+          "bsonType": "string",
+        },
+        "lba_columns": {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "cfd": {
+                  "bsonType": "string",
+                },
+                "cle_ministere_educatif": {
+                  "bsonType": "string",
+                },
+                "code_insee": {
+                  "bsonType": "string",
+                },
+                "code_postal": {
+                  "bsonType": "string",
+                },
+                "mef": {
+                  "bsonType": "string",
+                },
+                "rncp": {
+                  "bsonType": "string",
+                },
+                "uai_formateur": {
+                  "bsonType": "string",
+                },
+                "uai_formateur_responsable": {
+                  "bsonType": "string",
+                },
+                "uai_lieu_formation": {
+                  "bsonType": "string",
+                },
+              },
+              "required": [
+                "cle_ministere_educatif",
+                "mef",
+                "cfd",
+                "rncp",
+                "code_postal",
+                "uai_lieu_formation",
+                "uai_formateur",
+                "uai_formateur_responsable",
+                "code_insee",
+              ],
+            },
+            {
+              "bsonType": "null",
+            },
+          ],
+        },
+        "output_columns": {
+          "bsonType": "array",
+          "items": {
+            "additionalProperties": false,
+            "bsonType": "object",
+            "properties": {
+              "input": {
+                "anyOf": [
+                  {
+                    "additionalProperties": false,
+                    "bsonType": "object",
+                    "properties": {
+                      "name": {
+                        "bsonType": "string",
+                      },
+                      "type": {
+                        "bsonType": "string",
+                        "enum": [
+                          "source",
+                        ],
+                      },
+                    },
+                    "required": [
+                      "type",
+                      "name",
+                    ],
+                  },
+                  {
+                    "additionalProperties": false,
+                    "bsonType": "object",
+                    "properties": {
+                      "name": {
+                        "bsonType": "string",
+                        "enum": [
+                          "WEBHOOK_LBA",
+                          "BOUNCER",
+                        ],
+                      },
+                      "type": {
+                        "bsonType": "string",
+                        "enum": [
+                          "computed",
+                        ],
+                      },
+                    },
+                    "required": [
+                      "type",
+                      "name",
+                    ],
+                  },
+                ],
+              },
+              "output": {
+                "bsonType": "string",
+              },
+              "simple": {
+                "bsonType": "bool",
+              },
+            },
+            "required": [
+              "input",
+              "output",
+              "simple",
+            ],
+          },
+        },
+      },
+      "required": [
+        "email_column",
+        "output_columns",
+        "lba_columns",
+      ],
+    },
+    "created_at": {
+      "bsonType": "date",
+    },
+    "encode_key": {
+      "bsonType": "string",
+    },
+    "job_id": {
+      "bsonType": [
+        "objectId",
+        "null",
+      ],
+    },
+    "name": {
+      "bsonType": "string",
+    },
+    "output": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "blacklisted_email_count": {
+          "bsonType": "number",
+        },
+        "empty_source_lines": {
+          "bsonType": "number",
+        },
+        "invalid_email_count": {
+          "bsonType": "number",
+        },
+        "lines": {
+          "bsonType": "number",
+        },
+      },
+      "required": [
+        "lines",
+        "empty_source_lines",
+        "blacklisted_email_count",
+        "invalid_email_count",
+      ],
+    },
+    "progress": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "export": {
+          "bsonType": "int",
+          "maximum": 9007199254740991,
+          "minimum": -9007199254740991,
+        },
+        "generate": {
+          "bsonType": "int",
+          "maximum": 9007199254740991,
+          "minimum": -9007199254740991,
+        },
+        "parse": {
+          "bsonType": "int",
+          "maximum": 9007199254740991,
+          "minimum": -9007199254740991,
+        },
+      },
+      "required": [
+        "parse",
+        "generate",
+        "export",
+      ],
+    },
+    "source": {
+      "additionalProperties": false,
+      "bsonType": "object",
+      "properties": {
+        "columns": {
+          "bsonType": "array",
+          "items": {
+            "bsonType": "string",
+          },
+        },
+        "file": {
+          "additionalProperties": false,
+          "bsonType": "object",
+          "properties": {
+            "delimiter": {
+              "bsonType": "string",
+            },
+            "hash_fichier": {
+              "bsonType": "string",
+            },
+            "size": {
+              "bsonType": "number",
+            },
+          },
+          "required": [
+            "hash_fichier",
+            "delimiter",
+            "size",
+          ],
+        },
+        "lines": {
+          "bsonType": "number",
+        },
+      },
+      "required": [
+        "file",
+        "lines",
+        "columns",
+      ],
+    },
+    "status": {
+      "bsonType": "string",
+      "enum": [
+        "initial",
+        "parse:scheduled",
+        "parse:in_progress",
+        "parse:failure",
+        "parse:success",
+        "generate:scheduled",
+        "generate:in_progress",
+        "generate:failure",
+        "generate:success",
+        "export:scheduled",
+        "export:in_progress",
+        "export:failure",
+        "export:success",
+      ],
+    },
+    "ttl": {
+      "bsonType": "date",
+    },
+    "updated_at": {
+      "bsonType": "date",
+    },
+  },
+  "required": [
+    "_id",
+    "name",
+    "source",
+    "config",
+    "status",
+    "progress",
+    "output",
+    "job_id",
+    "ttl",
+    "encode_key",
     "added_by",
     "updated_at",
     "created_at",

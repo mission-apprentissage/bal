@@ -164,7 +164,7 @@ export const zPrivateMailingListRoutes = {
   },
   put: {
     "/_private/mailing-list/:id/config": {
-      method: "post",
+      method: "put",
       path: "/_private/mailing-list/:id/config",
       params: z.object({
         id: zObjectIdMini,
@@ -180,7 +180,7 @@ export const zPrivateMailingListRoutes = {
       },
     },
     "/_private/mailing-list/:id/name": {
-      method: "post",
+      method: "put",
       path: "/_private/mailing-list/:id/name",
       params: z.object({
         id: zObjectIdMini,
