@@ -5,6 +5,7 @@ import { createGetHtmlAttributes, DsfrHeadBase } from "@codegouvfr/react-dsfr/ne
 
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import type { PropsWithChildren } from "react";
 import type { IUserPublic } from "shared/models/user.model";
 import { cookies } from "next/headers";
@@ -84,7 +85,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
           <AuthContextProvider initialUser={session}>
             <DsfrProvider lang={lang}>
               <StartDsfrOnHydration />
-              <MuiDsfrThemeProvider>{children}</MuiDsfrThemeProvider>
+              <MuiDsfrThemeProvider>
+                <Suspense>{children}</Suspense>
+              </MuiDsfrThemeProvider>
             </DsfrProvider>
           </AuthContextProvider>
         </AppRouterCacheProvider>
