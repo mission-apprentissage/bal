@@ -1,4 +1,4 @@
-import type { Stream } from "stream";
+import type { TransformStream } from "stream";
 
 declare module "checksum-stream" {
   interface Options {
@@ -6,6 +6,6 @@ declare module "checksum-stream" {
     digest?: string;
     algorithm: string;
   }
-  function checksumStream(opt: Options): Stream;
+  function checksumStream(opt: Options): TransformStream;
   export = checksumStream;
 }

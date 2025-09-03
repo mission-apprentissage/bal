@@ -231,7 +231,7 @@ const ChoixColonnesSortie: FC<Props> = ({
                 )}
               </MailingListSectionCell>
               <MailingListSectionCell size={{ xs: 3 }}>
-                <Sample sample={sample} column={outputColumns[index].column} />
+                <Sample sample={sample.map((c) => c.content)} column={outputColumns[index].column} />
                 {index !== 0 && (
                   <Box ml="auto">
                     <Button
@@ -255,7 +255,7 @@ const ChoixColonnesSortie: FC<Props> = ({
 
         <PreviewColonnesSortie columns={outputColumns} />
 
-        <WarningEmail email={email} sample={sample} />
+        <WarningEmail email={email} sample={sample.map((c) => c.content)} />
 
         <Box>
           <Box mx={2} display="inline-block">

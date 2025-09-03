@@ -23,16 +23,18 @@ const GeneratingMailingList: FC<Props> = ({ mailingList, onDone }) => {
   const [allowRefetch, setAllowRefetch] = useState(shouldRefetch(mailingList?.document?.job_status ?? null));
   const queryClient = useQueryClient();
 
+  const mailingListId = mailingList?._id;
+
   const { data: progress } = useQuery({
-    queryKey: ["generatingMailingListProgress"],
+    queryKey: ["generatingMailingListProgress", mailingListId],
     enabled: allowRefetch,
-    queryFn: async () => {
-      if (!mailingList) {
+    queryFn: async ({ queryKey }) => {
+      if (!queryKey[1]) {
         return null;
       }
 
       const data = await apiGet("/mailing-lists/:id/progress", {
-        params: { id: mailingList._id },
+        params: { id: queryKey[1] },
       });
 
       if (!shouldRefetch(data.status)) {

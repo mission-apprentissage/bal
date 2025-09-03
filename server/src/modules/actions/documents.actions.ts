@@ -270,6 +270,8 @@ interface IUploadDocumentOptions {
   mimetype: string;
 }
 
+const _90daysInSecs = 90 * 24 * 3600;
+
 export const uploadFile = async (stream: Readable, doc: IUploadDocument, options: IUploadDocumentOptions) => {
   const documentHash = doc.hash_secret;
   const path = doc.chemin_fichier;
@@ -280,14 +282,13 @@ export const uploadFile = async (stream: Readable, doc: IUploadDocument, options
   if (!options.mimetype) {
     throw Boom.badRequest("Missing mimetype");
   }
-
   await oleoduc(
     stream,
     transformData(processCsvFile),
     scanStream,
     hashStream,
     crypto.isCipherAvailable() ? crypto.cipher(documentHash) : noop(), // ISSUE
-    testMode ? noop() : await uploadToStorage(path, "main", options.mimetype)
+    testMode ? noop() : await uploadToStorage(path, "main", _90daysInSecs, options.mimetype)
   );
 
   logger.info(` File ${path} uploaded to storage`);
@@ -353,7 +354,7 @@ export const uploadSupportFile = async (stream: Readable, chemin_fichier: string
   await oleoduc(
     stream,
     scanStream,
-    testMode ? noop() : await uploadToStorage(chemin_fichier, "support", options.mimetype)
+    testMode ? noop() : await uploadToStorage(chemin_fichier, "support", _90daysInSecs, options.mimetype)
   );
 
   const { isInfected, viruses } = await getScanResults();

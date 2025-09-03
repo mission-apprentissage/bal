@@ -1,3 +1,4 @@
+import { fr } from "@codegouvfr/react-dsfr";
 import { Box, Grid, Typography } from "@mui/material";
 import React, { Fragment } from "react";
 
@@ -31,7 +32,7 @@ const InfoDetails = <TData,>({ title, rows, data }: Props<TData>) => {
           return (
             <Fragment key={key}>
               <Grid size={{ xs: 6, md: 3 }} display="flex" alignItems="center">
-                {header?.() ?? key}
+                <span className={fr.cx("fr-text--bold")}>{header?.() ?? key}</span>
               </Grid>
               <Grid size={{ xs: 6, md: 9 }} display="flex" alignItems="center">
                 {/* @ts-ignore */}

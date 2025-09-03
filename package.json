@@ -66,6 +66,7 @@
     "@next/eslint-plugin-next": "^15.4.6",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^7.1.0",
+    "@tanstack/eslint-plugin-query": "5.83.1",
     "commander": "^14.0.0",
     "eslint": "^9.33.0",
     "eslint-import-resolver-typescript": "^4.4.4",
