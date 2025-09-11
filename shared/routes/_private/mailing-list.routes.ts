@@ -145,6 +145,22 @@ export const zPrivateMailingListRoutes = {
         ressources: {},
       },
     },
+    "/_private/mailing-list/:id/kill": {
+      method: "post",
+      path: "/_private/mailing-list/:id/kill",
+      params: z.object({
+        id: zObjectIdMini,
+      }),
+      body: z.unknown(),
+      response: {
+        "200": z.object({ success: z.boolean() }),
+      },
+      securityScheme: {
+        auth: "cookie-session",
+        access: null,
+        ressources: {},
+      },
+    },
     "/_private/mailing-list/:id/generate": {
       method: "post",
       path: "/_private/mailing-list/:id/generate",
@@ -213,6 +229,24 @@ export const zPrivateMailingListRoutes = {
             z.maximum(365, "La durée d'expiration ne peut pas dépasser 365 jours")
           ),
       }),
+      response: {
+        "200": z.object({ success: z.boolean() }),
+      },
+      securityScheme: {
+        auth: "cookie-session",
+        access: null,
+        ressources: {},
+      },
+    },
+  },
+  delete: {
+    "/_private/mailing-list/:id": {
+      method: "delete",
+      path: "/_private/mailing-list/:id",
+      params: z.object({
+        id: zObjectIdMini,
+      }),
+      body: z.unknown(),
       response: {
         "200": z.object({ success: z.boolean() }),
       },

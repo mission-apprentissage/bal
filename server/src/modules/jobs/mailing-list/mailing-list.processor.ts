@@ -6,7 +6,7 @@ import {
   canScheduleGenerate,
   canScheduleParse,
 } from "shared/mailing-list/mailing-list.utils";
-import { getSimpleJob, scheduleJob } from "job-processor";
+import { getSimpleJob, killJob, scheduleJob } from "job-processor";
 import type { IJobsSimple } from "job-processor";
 import type { ObjectId } from "mongodb";
 import { zObjectIdMini } from "zod-mongodb-schema";
@@ -17,6 +17,7 @@ import { getDbCollection } from "../../../common/utils/mongodbUtils";
 import { parseMailingList } from "./parsing/mailing-list-parser";
 import { generateMailingList, validateMailingListConfiguration } from "./generator/mailing-list-generator";
 import { exportMailingList } from "./exporter/mailing-list-exporter";
+import { deleteMailingListFile } from "./storage/mailing-list-storage";
 
 const zJobPayload = z.object({
   id: zObjectIdMini,
@@ -58,6 +59,10 @@ export async function processMailingList(job: IJobsSimple, signal: AbortSignal) 
 
     throw internal("La liste de diffusion n'est pas planifiée pour l'analyse ou la génération", { mailingList });
   } catch (error) {
+    if (signal.aborted) {
+      await onMailingListJobFailed(mailingList, "Le traitement de la liste de diffusion a été annulé");
+      return;
+    }
     await onMailingListJobFailed(mailingList, error.message);
     throw error;
   }
@@ -78,6 +83,9 @@ export async function onMailingListJobExited(job: IJobsSimple) {
       mailingList,
       job.output?.error ?? "Une erreur est survenue lors du traitement de la liste de diffusion"
     );
+  }
+  if (job.status === "killed") {
+    await onMailingListJobFailed(mailingList, "Le traitement de la liste de diffusion a été annulé");
   }
 }
 
@@ -181,6 +189,7 @@ function isJobDone(job: IJobsSimple): boolean {
       return false;
     case "errored":
     case "finished":
+    case "killed":
       return true;
     default:
       assertUnreachable(job.status);
@@ -271,4 +280,38 @@ export async function scheduleGenerate(id: ObjectId) {
   await getDbCollection("mailingList.computed").deleteMany({ mailing_list_id: mailingList._id });
 
   await scheduleMailingListJob(mailingList._id, "generate:scheduled");
+}
+
+export async function killMailingList(mailingListId: ObjectId): Promise<void> {
+  const mailingList = await getDbCollection("mailingListsV2").findOne({
+    _id: mailingListId,
+  });
+
+  if (!mailingList) {
+    throw notFound("La liste de diffusion n'existe pas");
+  }
+
+  if (mailingList.job_id) {
+    await killJob(mailingList.job_id);
+  }
+}
+
+export async function deleteMailingList(mailingListId: ObjectId): Promise<void> {
+  const mailingList = await getDbCollection("mailingListsV2").findOne({
+    _id: mailingListId,
+  });
+
+  if (!mailingList) {
+    throw notFound("La liste de diffusion n'existe pas");
+  }
+
+  if (mailingList.job_id !== null) {
+    throw conflict("La liste de diffusion est en cours de traitement et ne peut pas être supprimée");
+  }
+
+  await deleteMailingListFile(mailingListId, "result");
+  await getDbCollection("mailingList.computed").deleteMany({ mailing_list_id: mailingListId });
+  await getDbCollection("mailingList.source").deleteMany({ mailing_list_id: mailingListId });
+  await deleteMailingListFile(mailingListId, "source");
+  await getDbCollection("mailingListsV2").deleteOne({ _id: mailingListId });
 }

@@ -63,6 +63,7 @@ const zRoutesDelete = {
   ...zMailingListRoutes.delete,
   ...zUploadSupportRoutes.delete,
   ...zUserAdminRoutes.delete,
+  ...zPrivateMailingListRoutes.delete,
 } as const;
 
 export type IGetRoutes = typeof zRoutesGet;

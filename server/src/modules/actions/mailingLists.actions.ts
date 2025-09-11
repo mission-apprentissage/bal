@@ -148,6 +148,7 @@ export const onMailingListJobExited = async (job: IJobsSimple) => {
   let status: IMailingListDocument["job_status"] = "pending";
   switch (job.status) {
     case "errored":
+    case "killed":
       status = "error";
       break;
     case "finished":

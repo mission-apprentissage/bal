@@ -3,6 +3,7 @@ import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
 import { fr } from "@codegouvfr/react-dsfr";
 import { Box, LinearProgress, Typography } from "@mui/material";
 import { assertUnreachable } from "shared/utils/assertUnreachable";
+import { KillJob } from "./KillJob";
 import { MailingListRetry } from "@/app/mailing-list/view/[id]/_hooks/useMailingListRetry";
 
 export function MailingListGenerating(props: { mailingList: IMailingListV2Json }) {
@@ -32,7 +33,7 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
                 revenir plus tard.`}
             severity="info"
           />
-          <Box sx={{ display: "grid" }}>
+          <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
             <Typography
               textAlign="center"
               className={fr.cx("fr-text--lead")}
@@ -41,6 +42,7 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
               <LinearProgress variant="determinate" color="primary" value={mailingList.progress.generate} />
             </Box>
           </Box>
+          <KillJob mailingList={mailingList} />
         </Box>
       );
     case "generate:failure":
@@ -73,6 +75,7 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
               <LinearProgress variant="determinate" color="primary" value={mailingList.progress.export} />
             </Box>
           </Box>
+          <KillJob mailingList={mailingList} />
         </Box>
       );
     case "export:failure":

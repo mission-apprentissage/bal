@@ -10,6 +10,8 @@ import type { Server } from "../server";
 import logger from "../../../common/logger";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 import {
+  deleteMailingList,
+  killMailingList,
   resetMailingList,
   scheduleGenerate,
   scheduleMailingListJob,
@@ -271,6 +273,36 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       if (mailingList.matchedCount === 0) {
         throw notFound("La liste de diffusion n'existe pas");
       }
+
+      return response.status(200).send({ success: true });
+    }
+  );
+
+  server.post(
+    "/_private/mailing-list/:id/kill",
+    {
+      schema: zRoutes.post["/_private/mailing-list/:id/kill"],
+      onRequest: [server.auth(zRoutes.post["/_private/mailing-list/:id/kill"])],
+    },
+    async (request, response) => {
+      const { id } = request.params;
+
+      await killMailingList(id);
+
+      return response.status(200).send({ success: true });
+    }
+  );
+
+  server.delete(
+    "/_private/mailing-list/:id",
+    {
+      schema: zRoutes.delete["/_private/mailing-list/:id"],
+      onRequest: [server.auth(zRoutes.delete["/_private/mailing-list/:id"])],
+    },
+    async (request, response) => {
+      const { id } = request.params;
+
+      await deleteMailingList(id);
 
       return response.status(200).send({ success: true });
     }

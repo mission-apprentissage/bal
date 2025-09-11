@@ -2,7 +2,7 @@ import type { Readable } from "stream";
 import type { ObjectId } from "mongodb";
 import { notFound } from "@hapi/boom";
 import { getStepCompletion } from "shared/mailing-list/mailing-list.utils";
-import { getFromStorage } from "../../../../common/utils/ovhUtils";
+import { deleteFromStorage, getFromStorage } from "../../../../common/utils/ovhUtils";
 import { decipher } from "../../../../common/utils/cryptoUtils";
 import { getDbCollection } from "../../../../common/utils/mongodbUtils";
 
@@ -55,4 +55,10 @@ export async function downloadMailingListFile(
       "Content-Disposition": `attachment; filename="${fileName}"`,
     },
   };
+}
+
+export async function deleteMailingListFile(mailingListId: ObjectId, type: "source" | "result") {
+  const { source, result, account } = getMailingListStoragePath(mailingListId);
+
+  await deleteFromStorage(type === "source" ? source : result, account);
 }
