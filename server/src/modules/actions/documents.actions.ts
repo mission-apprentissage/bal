@@ -505,6 +505,7 @@ export const onImportDocumentJobExited = async (job: IJobsSimple) => {
   let status: IUploadDocument["job_status"] = "pending";
   switch (job.status) {
     case "errored":
+    case "killed":
       status = "error";
       break;
     case "finished":
