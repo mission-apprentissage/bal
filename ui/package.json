@@ -32,7 +32,7 @@
     "byte-size": "^9.0.1",
     "crypto-random-string": "^5.0.0",
     "date-fns": "^4.1.0",
-    "job-processor": "^2.0.0-next.3",
+    "job-processor": "^2.1.0-next.3",
     "next": "^15.4.6",
     "next-plausible": "^3.12.4",
     "notion-client": "^7.4.3",

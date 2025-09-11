@@ -2,10 +2,14 @@
 
 import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
 import { fr } from "@codegouvfr/react-dsfr";
-import { useQuery } from "@tanstack/react-query";
-import { notFound } from "next/navigation";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { notFound, useRouter } from "next/navigation";
 import { Box, Typography } from "@mui/material";
 import { useLayoutEffect, useState } from "react";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { captureException } from "@sentry/nextjs";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { MailingListConfigure } from "./MailingListConfig";
 import { MailingListExtracting } from "./MailingListExtracting";
 import { MailingListGenerating } from "./MailingListGenerating";
@@ -13,11 +17,18 @@ import { MailingListDownload } from "./MailingListDownload";
 import { MailingListSource } from "./MailingListSource";
 import Loading from "@/app/loading";
 import { getStepNumber, MailingListStepper } from "@/app/mailing-list/_components/MailingListStepper";
-import { apiGet } from "@/utils/api.utils";
+import { apiDelete, apiGet } from "@/utils/api.utils";
 import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import { queryClient } from "@/utils/query.utils";
+
+const removeModal = createModal({
+  isOpenedByDefault: false,
+  id: "remove-mailing-list-modal",
+});
 
 export function MailingListView(props: { id: string }) {
   const mailingListId = props.id;
+  const { push } = useRouter();
 
   const { data: mailingList, isLoading } = useQuery({
     queryKey: ["/_private/mailing-list", mailingListId],
@@ -28,6 +39,22 @@ export function MailingListView(props: { id: string }) {
     throwOnError: true,
     refetchInterval: 10_000,
     retry: 5,
+  });
+
+  const removeMutation = useMutation({
+    mutationKey: ["_private/mailing-list", mailingListId, "remove"],
+    mutationFn: async () =>
+      apiDelete(`/_private/mailing-list/:id`, {
+        params: { id: mailingListId },
+        body: null,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/_private/mailing-list"], exact: true });
+      push(PAGES.mailingList().path);
+    },
+    onError: (error) => {
+      captureException(error);
+    },
   });
 
   const step = mailingList == null ? 0 : getStepNumber(mailingList.status);
@@ -59,6 +86,8 @@ export function MailingListView(props: { id: string }) {
     notFound();
   }
 
+  const canRemove = mailingList.job_id === null;
+
   return (
     <>
       <Breadcrumb pages={[PAGES.mailingList(), PAGES.mailingListView(mailingList._id)]} />
@@ -69,10 +98,33 @@ export function MailingListView(props: { id: string }) {
           marginBottom: fr.spacing("4w"),
         }}
       >
-        <Typography flexGrow={1} variant="h2">
-          {`Générer une liste de diffusion - ${mailingList.name}`}
-        </Typography>
-
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: fr.spacing("2w"),
+          }}
+        >
+          <Typography flexGrow={1} variant="h2">
+            Générer une liste de diffusion
+            <br />
+            <span className={fr.cx("fr-text--lg")}>{mailingList.name}</span>
+          </Typography>
+          <Button
+            disabled={!canRemove}
+            className={fr.cx("fr-btn", "fr-btn--tertiary", "fr-btn--icon-left")}
+            onClick={removeModal.open}
+            title={
+              canRemove
+                ? "Supprimer la liste de diffusion"
+                : "Impossible de supprimer la liste de diffusion tant qu'elle est en cours de traitement"
+            }
+          >
+            <i className={fr.cx("fr-icon-delete-bin-line")} aria-hidden="true" />
+            Supprimer
+          </Button>
+        </Box>
         <MailingListStepper mailingList={mailingList} />
 
         <Tabs
@@ -120,6 +172,44 @@ export function MailingListView(props: { id: string }) {
           </>
         </Tabs>
       </Box>
+      <removeModal.Component
+        title="Confirmer la suppression"
+        size="large"
+        buttons={[
+          {
+            doClosesModal: true,
+            children: "Cancel",
+          },
+          {
+            doClosesModal: false,
+            children: "Supprimer",
+            disabled: removeMutation.isPending,
+            onClick: async () => {
+              await removeMutation.mutateAsync();
+              removeModal.close();
+            },
+          },
+        ]}
+      >
+        <Typography>
+          Êtes-vous sûr de vouloir supprimer cette liste de diffusion ? Cette action est irréversible.
+        </Typography>
+        {!canRemove && (
+          <Alert
+            className={fr.cx("fr-mt-2w")}
+            severity="info"
+            title="La liste de diffusion est en cours de traitement, elle ne peut pas être supprimée."
+          />
+        )}
+
+        {removeMutation.isError && (
+          <Alert
+            title="Une erreur est survenue lors de la suppression"
+            description={removeMutation.error.message}
+            severity="error"
+          />
+        )}
+      </removeModal.Component>
     </>
   );
 }

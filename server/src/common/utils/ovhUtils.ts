@@ -156,11 +156,23 @@ export const updateUploadTtl = async (path: string, account: AccountName, ttlInS
 
 export const deleteFromStorage = async (path: string, account: AccountName) => {
   const { url, token } = await requestObjectAccess(path, account);
-  return createRequestStream(url, {
+
+  const req = await fetch(url, {
     method: "DELETE",
     headers: {
       "X-Auth-Token": token,
       Accept: "application/json",
     },
   });
+
+  if (!req.ok) {
+    if (req.status === 404) {
+      // File already deleted
+      return;
+    }
+
+    throw new Error(`Unable to delete ${path}. Status code ${req.status}`);
+  }
+
+  await req.text();
 };

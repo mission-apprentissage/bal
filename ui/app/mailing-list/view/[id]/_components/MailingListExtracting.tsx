@@ -6,6 +6,7 @@ import { assertUnreachable } from "shared/utils/assertUnreachable";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import byteSize from "byte-size";
 import { MailingListSourceSample } from "./MailingListSourceSample";
+import { KillJob } from "./KillJob";
 import { MailingListRetry } from "@/app/mailing-list/view/[id]/_hooks/useMailingListRetry";
 
 function MailingListParseResult(props: { mailingList: IMailingListV2Json }) {
@@ -63,6 +64,7 @@ export function MailingListExtracting(props: { mailingList: IMailingListV2Json }
             <Box>
               <LinearProgress variant="determinate" color="primary" value={mailingList.progress.parse} />
             </Box>
+            <KillJob mailingList={mailingList} />
           </Box>
         </Box>
       );

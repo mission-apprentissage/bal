@@ -9996,9 +9996,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"job-processor@npm:^2.0.0-next.3":
-  version: 2.0.0-next.3
-  resolution: "job-processor@npm:2.0.0-next.3"
+"job-processor@npm:^2.1.0-next.3":
+  version: 2.1.0-next.3
+  resolution: "job-processor@npm:2.1.0-next.3"
   dependencies:
     cron-parser: ^5.3.0
     date-fns: ^4.1.0
@@ -10007,11 +10007,11 @@ __metadata:
     "@codegouvfr/react-dsfr": ^1.25.3
     "@mui/material": ^7.1.1
     "@mui/x-data-grid": ^8.5.2
-    "@sentry/node": ^9.29.0
+    "@sentry/node": ^9.29.0 || ^10.0.0
     mongodb: "*"
     react: ^19.1.0
     zod: ^3.25.64 || ^4.0.0
-    zod-mongodb-schema: ^2.0.0-next.8
+    zod-mongodb-schema: ^2.0.0
   peerDependenciesMeta:
     "@codegouvfr/react-dsfr":
       optional: true
@@ -10021,7 +10021,7 @@ __metadata:
       optional: true
     react:
       optional: true
-  checksum: 2c779b7ee941fee122951d7be5b0c9d706c367dbbdd4e60302ff55e396e3dd68fc47faf29a6c285439833400b68c6f42afef07c113873e70b42eba54e9c14f94
+  checksum: a6192dd947f8eb25f77ba0bd8559e540ae5c636538aee0089f05bd98607af19759850b5b4c337b9155bbe477def19a7ac837820036a179787563afcf8e4bdd4f
   languageName: node
   linkType: hard
 
@@ -14480,7 +14480,7 @@ __metadata:
     fastify: ^5.5.0
     fastify-type-provider-zod: ^5.0.3
     iconv-lite: ^0.6.3
-    job-processor: ^2.0.0-next.3
+    job-processor: ^2.1.0-next.3
     jsonwebtoken: ^9.0.2
     lil-http-terminator: ^1.2.3
     lodash-es: ^4.17.21
@@ -14502,7 +14502,7 @@ __metadata:
     typescript: ^5.9.2
     vitest: ^3.2.4
     zod: ^4.0.17
-    zod-mongodb-schema: ^2.0.0-next.9
+    zod-mongodb-schema: ^2.0.0
   languageName: unknown
   linkType: soft
 
@@ -14527,7 +14527,7 @@ __metadata:
     "@readme/openapi-parser": ^5.0.1
     "@tsconfig/node24": ^24.0.1
     api-alternance-sdk: ^2.14.0
-    job-processor: ^2.0.0-next.3
+    job-processor: ^2.1.0-next.3
     luhn: ^2.4.1
     mongodb: ^6.18.0
     openapi3-ts: ^4.5.0
@@ -14535,7 +14535,7 @@ __metadata:
     typescript: ^5.9.2
     vitest: ^3.2.4
     zod: ^4.0.17
-    zod-mongodb-schema: ^2.0.0-next.9
+    zod-mongodb-schema: ^2.0.0
   languageName: unknown
   linkType: soft
 
@@ -15804,7 +15804,7 @@ __metadata:
     crypto-random-string: ^5.0.0
     date-fns: ^4.1.0
     dotenv: ^17.2.1
-    job-processor: ^2.0.0-next.3
+    job-processor: ^2.1.0-next.3
     next: ^15.4.6
     next-plausible: ^3.12.4
     notion-client: ^7.4.3
@@ -16610,13 +16610,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod-mongodb-schema@npm:^2.0.0-next.9":
-  version: 2.0.0-next.9
-  resolution: "zod-mongodb-schema@npm:2.0.0-next.9"
+"zod-mongodb-schema@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "zod-mongodb-schema@npm:2.0.0"
   peerDependencies:
     bson: ^6.0.0
     zod: ^3.25.64 || ^4.0.0
-  checksum: ffec4194c162f20d6afac6b2d1d15ea4e2bb3796ad751ebd2118cb2ea56498e1353ecf5c93a8f97e5d32750962b11d31c2ba3a18bbcec21f2291aa2db9ef30a0
+  checksum: 4bc614914469c47a8598310698d4db43c65cd4ad85aded72acb865a34d5c1b0eab2bc1c744ffd0f12f674090f43c2ecdfd9c6f4410f810eec811f1e5c7657b14
   languageName: node
   linkType: hard
 
