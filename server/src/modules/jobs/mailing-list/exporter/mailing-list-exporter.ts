@@ -1,5 +1,5 @@
 import { pipeline } from "stream/promises";
-import { Readable } from "stream";
+import { Readable, Transform } from "stream";
 import type { IJobsSimple } from "job-processor";
 import type { IMailingListV2 } from "shared/models/mailingListV2.model";
 import type { Filter } from "mongodb";
@@ -151,6 +151,8 @@ export async function exportMailingList(
     {
       $set: {
         status: "export:in_progress",
+        eta: null,
+        error: null,
         "progress.export": 0,
         job_id: job._id,
         updated_at: new Date(),
@@ -160,8 +162,41 @@ export async function exportMailingList(
 
   const { account, result: path } = getMailingListStoragePath(mailingList._id);
 
+  let exportedLines = 0;
+  const totalLines = mailingList.output.lines;
+  const startedAt = Date.now();
+
   await pipeline(
     Readable.from(buildLine(mailingList, signal), { objectMode: true }),
+    new Transform({
+      objectMode: true,
+      async transform(line: Record<string, string>, _encoding, callback) {
+        exportedLines++;
+
+        if (exportedLines % 10_000 === 0) {
+          const remainingCount = totalLines - exportedLines;
+          const now = Date.now();
+          const elapsed = now - startedAt;
+          const eta = new Date(now + (elapsed / exportedLines) * remainingCount);
+
+          await getDbCollection("mailingListsV2")
+            .updateOne(
+              { _id: mailingList._id },
+              {
+                $set: {
+                  eta,
+                  updated_at: new Date(),
+                },
+              }
+            )
+            .catch(() => {
+              // Ignore errors
+            });
+        }
+
+        callback(null, line);
+      },
+    }),
     stringify({
       header: true,
       delimiter: ",",
@@ -177,6 +212,7 @@ export async function exportMailingList(
     {
       $set: {
         status: "export:success",
+        error: null,
         job_id: null,
         "progress.export": 100,
         updated_at: new Date(),

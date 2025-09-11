@@ -57,6 +57,8 @@ export async function createMailingList(
       output_columns: [],
       lba_columns: null,
     },
+    eta: null,
+    error: null,
     progress: {
       parse: 0,
       generate: 0,

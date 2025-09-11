@@ -36,6 +36,8 @@ export async function parseMailingList(
     {
       $set: {
         status: "parse:in_progress",
+        eta: null,
+        error: null,
         job_id: job._id,
         updated_at: new Date(),
         "source.lines": lastImported?.line_number ?? 0,
@@ -56,6 +58,7 @@ export async function parseMailingList(
   let lineCount = 0;
 
   const { source: storagePath, account } = getMailingListStoragePath(mailingList._id);
+  const startedAt = Date.now();
 
   await pipeline(
     await getFromStorage(storagePath, account, signal),
@@ -100,7 +103,9 @@ export async function parseMailingList(
 
           callback(null, op);
         } catch (error) {
-          callback(withCause(internal("mailing-list-parser: error while building op", { chunk }), error));
+          callback(
+            withCause(internal("Erreur lors de la ligne pour insérer dans la base de données", { chunk }), error)
+          );
         }
       },
     }),
@@ -113,11 +118,17 @@ export async function parseMailingList(
             ordered: false,
           });
 
+          const now = Date.now();
+          const elapsed = now - startedAt;
+          const remainingSize = mailingList.source.file.size - importedSize;
+          const eta = new Date(now + (elapsed / importedSize) * remainingSize);
+
           await getDbCollection("mailingListsV2").updateOne(
             { _id: mailingList._id },
             {
               $set: {
                 "progress.parse": Math.round((importedSize / mailingList.source.file.size) * 100),
+                eta,
                 "source.lines": lineCount,
                 updated_at: new Date(),
               },
@@ -135,7 +146,7 @@ export async function parseMailingList(
 
   const columns = z.array(z.object({ name: z.string() })).safeParse(parser.options.columns);
   if (!columns.success) {
-    throw internal("mailing-list-parser: no columns found in the CSV file", { columns });
+    throw internal("Aucune colonne trouvée dans le fichier CSV", { columns });
   }
 
   await getDbCollection("mailingListsV2").updateOne(
@@ -145,6 +156,7 @@ export async function parseMailingList(
     {
       $set: {
         status: "parse:success",
+        error: null,
         job_id: null,
         updated_at: new Date(),
         "progress.parse": 100,

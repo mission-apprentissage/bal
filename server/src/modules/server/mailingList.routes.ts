@@ -73,7 +73,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       });
 
       if (!mailingList) {
-        throw notFound();
+        throw notFound("Liste de diffusion introuvable");
       }
 
       return response.status(200).send(mailingList);
@@ -87,16 +87,14 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/mailing-lists/:id/progress"])],
     },
     async (request, response) => {
-      const user = getUserFromRequest(request, zRoutes.get["/mailing-lists/:id/progress"]);
       const { id } = request.params;
 
       const mailingList = await findMailingList({
         _id: new ObjectId(id),
-        added_by: user._id.toString(),
       });
 
       if (!mailingList) {
-        throw Boom.forbidden("Forbidden");
+        throw Boom.notFound("Liste de diffusion introuvable");
       }
 
       const document = mailingList.document_id
@@ -133,8 +131,12 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
         _id: new ObjectId(id),
       });
 
-      if (!mailingList?.document_id) {
-        throw Boom.forbidden("Forbidden");
+      if (!mailingList) {
+        throw Boom.notFound("Liste de diffusion introuvable");
+      }
+
+      if (!mailingList.document_id) {
+        throw Boom.conflict("Impossible de télécharger le fichier, aucun document associé");
       }
 
       const document = await findDocument({
@@ -194,7 +196,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       });
 
       if (!mailingList) {
-        throw Boom.forbidden("Forbidden");
+        throw Boom.notFound("Liste de diffusion introuvable");
       }
 
       await deleteMailingList(mailingList);
@@ -217,7 +219,7 @@ export const mailingListRoutes = ({ server }: { server: Server }) => {
       });
 
       if (!mailingList) {
-        throw Boom.notFound();
+        throw Boom.notFound("Liste de diffusion introuvable");
       }
 
       await addJob({

@@ -41,6 +41,7 @@ import { organisationRoutes } from "./v1/organisation.routes";
 import { webhookRoutes } from "./webhooks.routes";
 import { processorAdminRoutes } from "./admin/processor.admin.routes";
 import { mailingListRoutesPrivate } from "./_private/mailing-list.routes";
+import { userPrivateRoutes } from "./_private/user.routes";
 
 export type Server = FastifyInstance<
   RawServerDefault,
@@ -144,6 +145,7 @@ const registerRoutes: RegisterRoutes = ({ server }) => {
   uploadSupportRoutes({ server });
   processorAdminRoutes({ server });
   mailingListRoutesPrivate({ server });
+  userPrivateRoutes({ server });
 };
 
 const registerV1Routes: RegisterRoutes = ({ server }) => {

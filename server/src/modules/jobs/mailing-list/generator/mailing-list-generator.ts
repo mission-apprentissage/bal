@@ -1,4 +1,4 @@
-import { badRequest, conflict, notFound } from "@hapi/boom";
+import { badRequest, conflict, internal, notFound } from "@hapi/boom";
 import type { IJobsSimple } from "job-processor";
 import { isColumnReserved } from "shared/constants/mailingList";
 import type { IMailingListV2, IMailingListV2ConfigUpdateQuery } from "shared/models/mailingListV2.model";
@@ -115,9 +115,14 @@ async function addLbaData({
     throw badRequest("La configuration des colonnes LBA est requise pour utiliser la colonne WEBHOOK_LBA");
   }
 
+  const lineNumberToIndex = new Map<number, number>();
+  sourceLines.forEach((line, i) => {
+    lineNumberToIndex.set(line.line_number, i);
+  });
+
   const queryData: TrainingLinkData[] = sourceLines.map(
-    (line, i): TrainingLinkData => ({
-      id: `${i}`,
+    (line): TrainingLinkData => ({
+      id: `${line.line_number}`,
       cle_ministere_educatif: line.data[lbaColummns.cle_ministere_educatif] ?? "",
       mef: line.data[lbaColummns.mef] ?? "",
       cfd: line.data[lbaColummns.cfd] ?? "",
@@ -133,7 +138,12 @@ async function addLbaData({
   const trainingLinks = await getTrainingLinks(queryData, signal);
 
   for (const trainingLink of trainingLinks) {
-    const index = parseInt(trainingLink.id, 10);
+    const line_number = parseInt(trainingLink.id, 10);
+    const index = lineNumberToIndex.get(line_number);
+
+    if (index == null) {
+      throw internal(`Line number ${line_number} not found in source lines from response of LBA`);
+    }
 
     const computedLine = computedLines[index];
     computedLine.data["lien_lba"] = trainingLink.lien_lba;
@@ -275,10 +285,11 @@ async function generateMailingListBatch(
 
 export async function forEachMailingListBatch(
   params: { start: number; total: number },
-  callback: (bound: { from: number; to: number }) => Promise<void>,
+  callback: (bound: { from: number; to: number }, eta: Date | null) => Promise<void>,
   signal: AbortSignal
 ): Promise<void> {
-  const batchSize = 10_000;
+  const startedAt = Date.now();
+  const batchSize = 1_000;
 
   for (let from = params.start; from <= params.total; from += batchSize) {
     const to = Math.min(from + batchSize - 1, params.total);
@@ -287,7 +298,13 @@ export async function forEachMailingListBatch(
       throw signal.reason;
     }
 
-    await callback({ from, to });
+    const now = Date.now();
+    const elapsed = now - startedAt;
+    const remainingCount = params.total - from;
+    const processedCount = params.start - from;
+    const eta = processedCount === 0 ? null : new Date(now + (elapsed / processedCount) * remainingCount);
+
+    await callback({ from, to }, eta);
   }
 }
 
@@ -309,6 +326,8 @@ export async function generateMailingList(
     {
       $set: {
         status: "generate:in_progress",
+        eta: null,
+        error: null,
         job_id: job._id,
         updated_at: new Date(),
       },
@@ -322,7 +341,7 @@ export async function generateMailingList(
   // Hence we cannot user cursor as it will be limited by cursor timeout
   await forEachMailingListBatch(
     { start: computedLines + 1, total: sourceLines },
-    async (bounds) => {
+    async (bounds, eta) => {
       await generateMailingListBatch(mailingList, signal, bounds);
       await getDbCollection("mailingListsV2").updateOne(
         { _id: mailingList._id },
@@ -330,6 +349,7 @@ export async function generateMailingList(
           $set: {
             "progress.generate": Math.floor((bounds.to / sourceLines) * 100),
             updated_at: new Date(),
+            eta,
           },
         }
       );
@@ -342,6 +362,7 @@ export async function generateMailingList(
     {
       $set: {
         status: "generate:success",
+        error: null,
         job_id: null,
         updated_at: new Date(),
         "progress.generate": 100,

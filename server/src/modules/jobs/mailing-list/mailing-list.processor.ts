@@ -29,12 +29,12 @@ export async function processMailingList(job: IJobsSimple, signal: AbortSignal) 
   });
 
   if (!mailingList) {
-    throw notFound("Mailing list not found", { id: payload.id });
+    throw notFound("Liste de diffusion introuvable", { id: payload.id });
   }
 
   try {
     if (!job._id.equals(mailingList.job_id)) {
-      throw internal(`Mailing list job ID does not match`, {
+      throw internal(`L'ID du travail de la liste de diffusion ne correspond pas`, {
         mailingList,
         job,
       });
@@ -56,9 +56,9 @@ export async function processMailingList(job: IJobsSimple, signal: AbortSignal) 
       return;
     }
 
-    throw internal("Mailing list is not scheduled for parsing or genenerating", { mailingList });
+    throw internal("La liste de diffusion n'est pas planifiée pour l'analyse ou la génération", { mailingList });
   } catch (error) {
-    await onMailingListJobFailed(mailingList);
+    await onMailingListJobFailed(mailingList, error.message);
     throw error;
   }
 }
@@ -74,7 +74,10 @@ export async function onMailingListJobExited(job: IJobsSimple) {
   }
 
   if (job.status === "errored") {
-    await onMailingListJobFailed(mailingList);
+    await onMailingListJobFailed(
+      mailingList,
+      job.output?.error ?? "Une erreur est survenue lors du traitement de la liste de diffusion"
+    );
   }
 }
 
@@ -107,7 +110,7 @@ function getFailingStatus(mailingList: IMailingListV2): IMailingListV2["status"]
   }
 }
 
-async function onMailingListJobFailed(mailingList: IMailingListV2) {
+async function onMailingListJobFailed(mailingList: IMailingListV2, error: string) {
   const refreshed = await getDbCollection("mailingListsV2").findOne({ _id: mailingList._id });
   if (!refreshed) {
     throw notFound();
@@ -115,7 +118,14 @@ async function onMailingListJobFailed(mailingList: IMailingListV2) {
   const failingStatus = getFailingStatus(refreshed);
   await getDbCollection("mailingListsV2").updateOne(
     { _id: mailingList._id },
-    { $set: { status: failingStatus, job_id: null, updated_at: new Date() } }
+    {
+      $set: {
+        status: failingStatus,
+        error,
+        job_id: null,
+        updated_at: new Date(),
+      },
+    }
   );
 }
 
@@ -190,7 +200,7 @@ export async function recoverMailingListJobs(signal: AbortSignal) {
         const job = await getSimpleJob(mailingList.job_id);
         if (job === null || isJobDone(job)) {
           // Even if the job finished without error, we consider it failed because the mailing list job_id was not reset
-          await onMailingListJobFailed(mailingList);
+          await onMailingListJobFailed(mailingList, "Le traitement a échoué de manière inattendue");
         }
       } catch (error) {
         console.error("Error scheduling mailing list job:", error);
@@ -214,10 +224,6 @@ export async function resetMailingList(id: ObjectId, status: "initial" | "parse:
         throw conflict("La liste de diffusion ne peut pas être réinitialisée");
       }
 
-      await getDbCollection("mailingListsV2").updateOne(
-        { _id: id },
-        { $set: { status: "initial", updated_at: new Date() } }
-      );
       break;
     }
     case "parse:success": {
@@ -231,7 +237,10 @@ export async function resetMailingList(id: ObjectId, status: "initial" | "parse:
       assertUnreachable(status);
   }
 
-  await getDbCollection("mailingListsV2").updateOne({ _id: id }, { $set: { status: status, updated_at: new Date() } });
+  await getDbCollection("mailingListsV2").updateOne(
+    { _id: id },
+    { $set: { status: status, error: null, updated_at: new Date() } }
+  );
 }
 
 export async function scheduleGenerate(id: ObjectId) {

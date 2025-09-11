@@ -19,6 +19,7 @@ import { zDecaV1Routes } from "./v1/deca.routes";
 import { zOrganisationV1Routes } from "./v1/organisation.routes";
 import { zProcessorAdminRoutes } from "./admin/processor.admin.routes";
 import { zPrivateMailingListRoutes } from "./_private/mailing-list.routes";
+import { zUserPrivateRoutes } from "./_private/user.routes";
 
 const zRoutesGet = {
   ...zUserAdminRoutes.get,
@@ -34,6 +35,7 @@ const zRoutesGet = {
   ...zUploadSupportRoutes.get,
   ...zProcessorAdminRoutes.get,
   ...zPrivateMailingListRoutes.get,
+  ...zUserPrivateRoutes.get,
 } as const;
 
 const zRoutesPost = {

@@ -13,9 +13,9 @@ export function MailingListSource(props: { mailingList: IMailingListV2Json }) {
   const readonly = props.mailingList.status !== "initial";
 
   const userQuery = useQuery<IUserWithPersonPublic>({
-    queryKey: ["/admin/users", props.mailingList.added_by],
+    queryKey: ["/_private/users", props.mailingList.added_by],
     queryFn: async () =>
-      apiGet("/admin/users/:id", {
+      apiGet("/_private/users/:id", {
         params: { id: props.mailingList.added_by },
       }),
     throwOnError: true,
