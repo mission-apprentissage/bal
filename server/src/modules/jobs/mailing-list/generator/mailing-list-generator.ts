@@ -300,8 +300,8 @@ export async function forEachMailingListBatch(
 
     const now = Date.now();
     const elapsed = now - startedAt;
-    const remainingCount = params.total - from;
-    const processedCount = params.start - from;
+    const remainingCount = params.total - from + 1;
+    const processedCount = from - params.start;
     const eta = processedCount === 0 ? null : new Date(now + (elapsed / processedCount) * remainingCount);
 
     await callback({ from, to }, eta);
