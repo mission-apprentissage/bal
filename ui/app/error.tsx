@@ -7,7 +7,6 @@ import { useEffect } from "react";
 
 import Link from "next/link";
 import { useQueryErrorResetBoundary } from "@tanstack/react-query";
-import { publicConfig } from "@/config.public";
 import { NotFound } from "@/icons/NotFound";
 import { ApiError } from "@/utils/api.utils";
 
@@ -17,17 +16,15 @@ function getErrorDescription(error: unknown): string | null {
   }
 
   if (error instanceof ApiError) {
-    return error.context.statusCode < 500 || publicConfig.env === "local" ? error.context.message : null;
+    return error.context.statusCode < 500 ? error.context.message : null;
   }
 
-  if (publicConfig.env === "local") {
-    if (error instanceof Error) {
-      return error.message;
-    }
+  if (error instanceof Error) {
+    return error.message;
+  }
 
-    if (typeof error === "string") {
-      return error;
-    }
+  if (typeof error === "string") {
+    return error;
   }
 
   return null;

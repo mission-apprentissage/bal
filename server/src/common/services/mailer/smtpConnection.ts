@@ -478,5 +478,7 @@ export async function vrfyWorkaround(
 }
 
 export async function quit(connection: SMTPConnection): Promise<void> {
-  await connection.next("QUIT");
+  await connection.next("QUIT").catch((_e) => {
+    // Ignore error
+  });
 }

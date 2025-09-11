@@ -1,5 +1,4 @@
 import Boom from "@hapi/boom";
-import { captureException } from "@sentry/node";
 import type { FastifyRequest } from "fastify";
 import type { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
@@ -66,8 +65,7 @@ async function authCookieSession(req: FastifyRequest): Promise<UserWithType<"use
     const user = await findUser({ email: email.toLowerCase() });
 
     return user ? { type: "user", value: user } : user;
-  } catch (error) {
-    captureException(error);
+  } catch (_error) {
     return null;
   }
 }

@@ -1451,6 +1451,18 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
     "encode_key": {
       "bsonType": "string",
     },
+    "error": {
+      "bsonType": [
+        "string",
+        "null",
+      ],
+    },
+    "eta": {
+      "bsonType": [
+        "date",
+        "null",
+      ],
+    },
     "job_id": {
       "bsonType": [
         "objectId",
@@ -1581,6 +1593,8 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
     "source",
     "config",
     "status",
+    "error",
+    "eta",
     "progress",
     "output",
     "job_id",

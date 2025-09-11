@@ -9,6 +9,7 @@ import { useState } from "react";
 import type { IUserWithPersonPublic } from "shared/models/user.model";
 import type { IResErrorJson } from "shared/routes/common.routes";
 
+import { captureException } from "@sentry/nextjs";
 import InfoDetails from "@/components/infoDetails/InfoDetails";
 import Toast, { useToast } from "@/components/toast/Toast";
 import { apiDelete } from "@/utils/api.utils";
@@ -38,6 +39,7 @@ const UserView: FC<Props> = ({ user }) => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
       push(PAGES.adminUsers().path);
     } catch (error) {
+      captureException(error);
       console.error(error);
       const serverError = error as IResErrorJson;
       setToast({

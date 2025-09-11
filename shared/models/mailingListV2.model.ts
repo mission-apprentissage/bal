@@ -77,6 +77,8 @@ export const ZMailingListV2 = z.object({
     "export:failure",
     "export:success",
   ]),
+  error: z.nullable(z.string()),
+  eta: z.nullable(z.date()),
   progress: z.object({
     parse: z.int(),
     generate: z.int(),

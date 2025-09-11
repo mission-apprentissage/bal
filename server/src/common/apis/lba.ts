@@ -1,6 +1,5 @@
 import axios, { isAxiosError } from "axios";
-
-import { ApiError } from "../utils/apiUtils";
+import { internal } from "@hapi/boom";
 import config from "@/config";
 
 const LIMIT_TRAINING_LINKS_PER_REQUEST = 100;
@@ -52,9 +51,14 @@ export const getTrainingLinks = async (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (isAxiosError(error)) {
-      throw new ApiError("Api LBA", `${error.code}: ${error.message}`, JSON.stringify(error.response?.data ?? null));
+      throw internal(
+        `Erreur lors de la génération des liens de prises de rendez-vous. ${error.code ?? ""}: ${error.message}. Le serveur a répondu avec le message suivant : ${JSON.stringify(
+          error.response?.data ?? null
+        )}`,
+        { error }
+      );
     }
 
-    throw new ApiError("Api LBA", `${error.message}`, error.code || error.response?.status);
+    throw internal(`Erreur lors de la génération des liens de prises de rendez-vous. ${error.message}`, { error });
   }
 };

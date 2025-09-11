@@ -1543,6 +1543,27 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "encode_key": {
             "type": "string",
           },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string",
+              },
+              {
+                "type": "null",
+              },
+            ],
+          },
+          "eta": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string",
+              },
+              {
+                "type": "null",
+              },
+            ],
+          },
           "job_id": {
             "anyOf": [
               {},
@@ -1671,6 +1692,8 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "source",
           "config",
           "status",
+          "error",
+          "eta",
           "progress",
           "output",
           "job_id",

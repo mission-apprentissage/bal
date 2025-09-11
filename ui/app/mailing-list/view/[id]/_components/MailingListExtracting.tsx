@@ -52,15 +52,14 @@ export function MailingListExtracting(props: { mailingList: IMailingListV2Json }
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
           <Alert
             title="Extraction du fichier en cours"
-            description="L'extraction du fichier est en cours. Cette opération peut durer jusqu'à 2 heures selon la taille du fichier, vous pouvez quitter cette page et
-                revenir plus tard."
+            description={`L'extraction du fichier est en cours. Cette opération peut durer plusieurs heures selon la taille du fichier, vous pouvez quitter cette page et revenir plus tard.`}
             severity="info"
           />
           <Box sx={{ display: "grid" }}>
             <Typography
               textAlign="center"
               className={fr.cx("fr-text--lead")}
-            >{`${mailingList.progress.parse}%`}</Typography>
+            >{`${mailingList.progress.parse}% - ETA estimée : ${mailingList.eta === null ? "En cours de calcul" : new Date(mailingList.eta).toLocaleString()}`}</Typography>
             <Box>
               <LinearProgress variant="determinate" color="primary" value={mailingList.progress.parse} />
             </Box>
@@ -72,7 +71,7 @@ export function MailingListExtracting(props: { mailingList: IMailingListV2Json }
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
           <Alert
             title="Échec de l'extraction du fichier"
-            description="Vous pouvez réessayer l'extraction ou contacter Kevin si le problème persiste."
+            description={`${mailingList.error ?? "Erreur inconnue"}. Vous pouvez réessayer l'extraction ou contacter Kevin si le problème persiste.`}
             severity="error"
           />
           <MailingListRetry mailingListId={mailingList._id} status="parse:scheduled" />

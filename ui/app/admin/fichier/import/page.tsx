@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import type { IGetRoutes, IPostRoutes, IResponse } from "shared";
 
 import type { z } from "zod/v4-mini";
+import { captureException } from "@sentry/nextjs";
 import ToggleSwitchInput from "@/components/form/ToggleSwitchInput";
 import Toast, { useToast } from "@/components/toast/Toast";
 import { apiGet, apiPost } from "@/utils/api.utils";
@@ -99,6 +100,7 @@ const AdminImportPage = () => {
       } else {
         setToast({ severity: "error", message: "Une erreur s'est produite pendant le téléversement du fichier." });
       }
+      captureException(error);
       console.error(error);
     } finally {
       setIsSubmitting(false);

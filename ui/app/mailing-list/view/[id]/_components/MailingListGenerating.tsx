@@ -28,15 +28,15 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
           <Alert
             title="Génération de la liste de diffusion en cours"
-            description="La génération de la liste est en cours. Cette opération peut durer plusieurs heures selon la taille du fichier, vous pouvez quitter cette page et
-                revenir plus tard."
+            description={`La génération de la liste est en cours. Cette opération peut durer plusieurs heures selon la taille du fichier, vous pouvez quitter cette page et
+                revenir plus tard.`}
             severity="info"
           />
           <Box sx={{ display: "grid" }}>
             <Typography
               textAlign="center"
               className={fr.cx("fr-text--lead")}
-            >{`${mailingList.progress.generate}%`}</Typography>
+            >{`${mailingList.progress.generate}% - ETA estimée : ${mailingList.eta === null ? "En cours de calcul" : new Date(mailingList.eta).toLocaleString()}`}</Typography>
             <Box>
               <LinearProgress variant="determinate" color="primary" value={mailingList.progress.generate} />
             </Box>
@@ -48,7 +48,7 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
           <Alert
             title="Échec de lors de la génération de la liste de diffusion"
-            description="Vous pouvez réessayer la génération ou contacter Kevin si le problème persiste."
+            description={`${mailingList.error ?? "Erreur inconnue"}. Vous pouvez réessayer la génération ou contacter Kevin si le problème persiste.`}
             severity="error"
           />
           <MailingListRetry mailingListId={mailingList._id} status="generate:scheduled" />
@@ -61,14 +61,14 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
           <Alert
             title="Préparation du fichier de la liste de diffusion en cours"
-            description="La liste de diffusion est prête. Il ne reste plus qu'à préparer le fichier à télécharger."
+            description={`La liste de diffusion est prête. Il ne reste plus qu'à préparer le fichier à télécharger.`}
             severity="info"
           />
           <Box sx={{ display: "grid" }}>
             <Typography
               textAlign="center"
               className={fr.cx("fr-text--lead")}
-            >{`${mailingList.progress.generate}%`}</Typography>
+            >{`${mailingList.progress.generate}% - ETA estimée: ${mailingList.eta === null ? "En cours de calcul" : new Date(mailingList.eta).toLocaleString()}`}</Typography>
             <Box>
               <LinearProgress variant="determinate" color="primary" value={mailingList.progress.export} />
             </Box>
@@ -80,7 +80,7 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
           <Alert
             title="Échec de lors de la préparation du fichier de la liste de diffusion"
-            description="Vous pouvez réessayer la génération ou contacter Kevin si le problème persiste."
+            description={`${mailingList.error ?? "Erreur inconnue"}. Vous pouvez réessayer la génération ou contacter Kevin si le problème persiste.`}
             severity="error"
           />
           <MailingListRetry mailingListId={mailingList._id} status="export:scheduled" />
