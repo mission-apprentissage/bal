@@ -9,7 +9,6 @@ import { htmlToText } from "nodemailer-html-to-text";
 import { zRoutes } from "shared";
 import type { ITemplate } from "shared/mailer";
 import type { IEventBalEmail } from "shared/models/events/bal_emails.event";
-
 import {
   addEmailError,
   createBalEmailEvent,
@@ -63,8 +62,8 @@ function assertUnreachable(_x: never): never {
   throw internal("Didn't expect to get here");
 }
 
-export async function sendEmail<T extends ITemplate>(person_id: string, template: T): Promise<void> {
-  const emailEvent = await createBalEmailEvent(person_id, template);
+export async function sendEmail<T extends ITemplate>(template: T): Promise<void> {
+  const emailEvent = await createBalEmailEvent(template);
 
   try {
     const messageId = await sendEmailMessage(template, emailEvent);
@@ -107,7 +106,7 @@ function getMarkAsOpenedActionLink(emailEvent: IEventBalEmail | null) {
     return null;
   }
 
-  const token = generateAccessToken({ person_id: emailEvent.person_id, email: emailEvent.template.to }, [
+  const token = generateAccessToken({ email: emailEvent.template.to }, [
     {
       route: zRoutes.get["/emails/:id/markAsOpened"],
       resources: {

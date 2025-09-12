@@ -6,10 +6,7 @@ import { ZEventBalEmail } from "./bal_emails.event";
 
 const collectionName = "events" as const;
 
-const indexes: IModelDescriptor["indexes"] = [
-  [{ person_id: 1 }, {}],
-  [{ type: 1, messageId: 1 }, {}],
-];
+const indexes: IModelDescriptor["indexes"] = [[{ type: 1, messageId: 1 }, {}]];
 
 export const ZEvent = z.discriminatedUnion("type", [ZEventBalEmail]);
 

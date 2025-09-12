@@ -1,12 +1,12 @@
+import type { IUser } from "shared/models/user.model";
 import type { IAccessToken } from "../../security/accessTokenService";
 import { hashPassword, verifyPassword } from "../server/utils/password.utils";
-import { findPerson } from "./persons.actions";
 import { findUser, updateUser } from "./users.actions";
 import { createResetPasswordToken } from "@/common/utils/jwtUtils";
 import { sendEmail } from "@/common/services/mailer/mailer";
 import logger from "@/common/logger";
 
-export const verifyEmailPassword = async (email: string, password: string) => {
+export const verifyEmailPassword = async (email: string, password: string): Promise<IUser | undefined> => {
   const user = await findUser({ email });
 
   if (!user) {
@@ -30,21 +30,11 @@ export const sendResetPasswordEmail = async (email: string) => {
     return;
   }
 
-  const person = await findPerson({ email });
-
-  if (!person) {
-    logger.warn({ email }, "forgot-password: missing Person");
-    return;
-  }
-
   const token = createResetPasswordToken(user);
 
-  await sendEmail(person._id.toString(), {
+  await sendEmail({
     name: "reset_password",
     to: email,
-    civility: person.civility,
-    prenom: person.prenom,
-    nom: person.nom,
     resetPasswordToken: token,
   });
 };

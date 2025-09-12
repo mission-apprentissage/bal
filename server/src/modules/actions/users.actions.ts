@@ -1,6 +1,6 @@
 import type { Filter, UpdateFilter } from "mongodb";
 import { ObjectId } from "mongodb";
-import type { IUser, IUserWithPerson } from "shared/models/user.model";
+import type { IUser } from "shared/models/user.model";
 
 import { generateKey, generateSecretHash } from "../../common/utils/cryptoUtils";
 import { createUserTokenSimple } from "../../common/utils/jwtUtils";
@@ -16,24 +16,6 @@ type ICreateUser = {
   is_support?: boolean;
 };
 
-const DEFAULT_LOOKUP = {
-  from: "persons",
-  let: { personId: { $toObjectId: "$person_id" } },
-  pipeline: [
-    {
-      $match: {
-        $expr: { $eq: ["$_id", "$$personId"] },
-      },
-    },
-  ],
-  as: "person",
-};
-
-const DEFAULT_UNWIND = {
-  path: "$person",
-  preserveNullAndEmptyArrays: true,
-};
-
 export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   const person = await createPerson({
     email: data.email,
@@ -45,9 +27,12 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
 
   const password = hashPassword(data.password);
   const now = new Date();
-  const user = {
+  const user: IUser = {
+    is_admin: false,
+    is_support: false,
+    api_key: null,
+    api_key_used_at: null,
     ...data,
-    person_id: person._id.toString(),
     _id,
     password,
     updated_at: now,
@@ -62,38 +47,14 @@ export const createUser = async ({ organisation_id, ...data }: ICreateUser) => {
   };
 };
 
-export const findUsers = async (filter: Filter<IUser>): Promise<IUserWithPerson[]> => {
-  const users = await getDbCollection("users")
-    .aggregate<IUserWithPerson>([
-      {
-        $match: filter,
-      },
-      {
-        $lookup: DEFAULT_LOOKUP,
-      },
-      {
-        $unwind: DEFAULT_UNWIND,
-      },
-    ])
-    .toArray();
+export const findUsers = async (filter: Filter<IUser>): Promise<IUser[]> => {
+  const users = await getDbCollection("users").find(filter).toArray();
 
   return users;
 };
 
-export const findUser = async (filter: Filter<IUser>): Promise<IUserWithPerson | null> => {
-  const user = await getDbCollection("users")
-    .aggregate<IUserWithPerson>([
-      {
-        $match: filter,
-      },
-      {
-        $lookup: DEFAULT_LOOKUP,
-      },
-      {
-        $unwind: DEFAULT_UNWIND,
-      },
-    ])
-    .next();
+export const findUser = async (filter: Filter<IUser>): Promise<IUser | null> => {
+  const user = await getDbCollection("users").findOne(filter);
 
   return user;
 };

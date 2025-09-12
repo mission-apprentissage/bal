@@ -1,7 +1,6 @@
 import Boom from "@hapi/boom";
 import type { RootFilterOperators } from "mongodb";
 import type { IUser } from "shared/models/user.model";
-import { toPublicUser } from "shared/models/user.model";
 import { zUserAdminRoutes } from "shared/routes/user.routes";
 
 import { createUser, deleteUser, findUser, findUsers } from "../../actions/users.actions";
@@ -21,7 +20,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
         throw Boom.badImplementation("Impossible de créer l'utilisateur");
       }
 
-      return response.status(200).send(toPublicUser(user));
+      return response.status(200).send(user);
     }
   );
 
@@ -42,7 +41,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
 
       const users = await findUsers(filter);
 
-      return response.status(200).send(users.map(toPublicUser));
+      return response.status(200).send(users);
     }
   );
 
@@ -59,7 +58,6 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
         throw Boom.notFound();
       }
 
-      // Fixme: maybe we return too much data!!
       return response.status(200).send(user);
     }
   );

@@ -3,7 +3,7 @@
 import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
 import { useQuery } from "@tanstack/react-query";
 import { Box } from "@mui/material";
-import type { IUserWithPersonPublic } from "shared/models/user.model";
+import type { IUserPublic } from "shared/models/user.model";
 import { MailingListEditSourceForm } from "./source/MailingListEditSourceForm";
 import { MailingListSourceReadonly } from "./source/MailingListSourceReadonly";
 import { apiGet } from "@/utils/api.utils";
@@ -12,7 +12,7 @@ import Loading from "@/app/loading";
 export function MailingListSource(props: { mailingList: IMailingListV2Json }) {
   const readonly = props.mailingList.status !== "initial";
 
-  const userQuery = useQuery<IUserWithPersonPublic>({
+  const userQuery = useQuery<IUserPublic>({
     queryKey: ["/_private/users", props.mailingList.added_by],
     queryFn: async () =>
       apiGet("/_private/users/:id", {
