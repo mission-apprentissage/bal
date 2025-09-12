@@ -96,8 +96,8 @@ export async function setupJobProcessor() {
           const { organisationId, admin, support, ...rest } = job.payload as any;
           await createUser({
             organisation_id: organisationId,
-            ...(admin ? { is_admin: admin } : {}),
-            ...(support ? { is_support: support } : {}),
+            is_admin: admin ?? false,
+            is_support: support ?? false,
             ...rest,
           });
         },

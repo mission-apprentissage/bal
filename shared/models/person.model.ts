@@ -25,18 +25,16 @@ const indexes: IModelDescriptor["indexes"] = [
 export const ZPerson = z.object({
   _id: zObjectId,
   email: z.string(),
-  civility: z.optional(z.enum(["Madame", "Monsieur"])),
-  nom: z.optional(z.string()),
-  prenom: z.optional(z.string()),
+  civility: z.nullable(z.enum(["Madame", "Monsieur"])),
+  nom: z.nullable(z.string()),
+  prenom: z.nullable(z.string()),
   organisations: z.array(z.string()),
-  sirets: z.optional(z.array(z.string())),
-  _meta: z.optional(
-    z.looseObject({
-      sources: z.optional(z.array(z.string())),
-    })
-  ),
-  updated_at: z.optional(z.date()),
-  created_at: z.optional(z.date()),
+  sirets: z.array(z.string()),
+  _meta: z.looseObject({
+    sources: z.array(z.string()),
+  }),
+  updated_at: z.date(),
+  created_at: z.date(),
 });
 
 export const ZPersonWithOrganisation = z.object({

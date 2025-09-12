@@ -32,7 +32,12 @@ export const createPerson = async (data: ICreatePerson) => {
   const now = new Date();
   const person: IPerson = {
     _id: new ObjectId(),
+    civility: null,
+    nom: null,
+    prenom: null,
+    sirets: [],
     ...data,
+    _meta: { sources: [], ...data._meta },
     updated_at: now,
     created_at: now,
   };
