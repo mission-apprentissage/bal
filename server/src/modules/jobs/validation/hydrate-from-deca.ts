@@ -1,27 +1,18 @@
-import { internal } from "@hapi/boom";
 import { pMapIterable } from "p-map";
 import type { IDeca } from "shared/models/deca.model/deca.model";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
-import { updateOrganisationAndPerson } from "../../actions/organisations.actions";
+import { importPerson } from "../../actions/persons.actions";
 import parentLogger from "@/common/logger";
 
 const logger = parentLogger.child({ module: "job:validation:hydrate_from_deca" });
 
 async function runDoc(docDeca: IDeca) {
-  const courriel = docDeca.employeur.courriel || null;
-  const siret = docDeca.employeur.siret || null;
-
-  if (!courriel || !siret) return;
-
-  const countA = (courriel.match(/@/g) || []).length;
-  if (countA > 1) return; // bad data multiple email
-
-  try {
-    await updateOrganisationAndPerson(siret, courriel, "DECA", false);
-  } catch (error) {
-    internal(error);
-  }
+  await importPerson({
+    email: docDeca.employeur.courriel,
+    siret: docDeca.employeur.siret,
+    source: "DECA",
+  });
 }
 
 export async function run_hydrate_from_deca(offset = 0, signal: AbortSignal) {

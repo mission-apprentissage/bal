@@ -16,8 +16,8 @@ type IPersonLegacy = {
 
 export const up = async () => {
   await getDbCollection("persons").updateMany(
-    { civility: { $exists: false } },
-    { $set: { civility: null } },
+    { civility: { $exists: true } },
+    { $unset: { civility: "" } },
     { bypassDocumentValidation: true }
   );
   await getDbCollection("persons").updateMany(
@@ -55,6 +55,16 @@ export const up = async () => {
     await getDbCollection("persons").updateOne(
       { _id: doc._id },
       { $set: { created_at: new Date(doc._id.getTimestamp()) } },
+      { bypassDocumentValidation: true }
+    );
+  }
+
+  const c3 = getDbCollection("persons").find<IPersonLegacy>({ email_domain: { $exists: true } });
+  for await (const doc of c3) {
+    const [_, domain] = doc.email.split("@");
+    await getDbCollection("persons").updateOne(
+      { _id: doc._id },
+      { $set: { email_domain: domain } },
       { bypassDocumentValidation: true }
     );
   }

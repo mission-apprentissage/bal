@@ -2,17 +2,15 @@ import fs from "node:fs";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
+import { Transform } from "node:stream";
 import type { Readable } from "node:stream";
-
+import { pipeline } from "node:stream/promises";
 import { internal } from "@hapi/boom";
-import { compose, oleoduc, writeData } from "oleoduc";
-import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
-import type { ILbaRecruteursSiretEmail } from "shared/models/data/lba.recruteurs.siret.email.model";
-
+import { z } from "zod/v4-mini";
 import { withCause } from "../../../common/services/errors/withCause";
-import { getS3FileLastUpdate, s3ReadAsStream } from "../../../common/utils/awsUtils";
-import { getDbCollection } from "../../../common/utils/mongodbUtils";
+import { s3ReadAsStream } from "../../../common/utils/awsUtils";
 import { streamJsonArray } from "../../../common/utils/streamUtils";
+import { importPerson } from "../../actions/persons.actions";
 import config from "@/config";
 import parentLogger from "@/common/logger";
 
@@ -20,40 +18,34 @@ const logger = parentLogger.child({ module: "job:lba:hydrate:siret-list" });
 
 const s3File = config.lba.algoRecuteurs.s3File;
 
-export async function hydrateLbaSiretList() {
-  const isAlgoFileUptoDate = await verifyAlgoFileDate();
-  if (!isAlgoFileUptoDate) {
-    logger.info(`Downloading algo file from S3 Bucket...`);
-    const destFile = await downloadFile();
+const schema = z.object({
+  siret: z.string(),
+  email: z.string(),
+});
 
-    await oleoduc(
-      await readJson(destFile),
-      writeData(async ({ siret, email }: { siret: string; email: string | null }) => {
-        if (email) {
-          try {
-            const emailNormalized = extensions.email.parse(email);
-            return getDbCollection("lba.recruteurs.siret.email").updateOne(
-              { email: emailNormalized },
-              {
-                $set: {
-                  siret,
-                  email: emailNormalized,
-                  updated_at: new Date(),
-                },
-                $setOnInsert: {
-                  created_at: new Date(),
-                },
-              },
-              { upsert: true }
-            );
-          } catch (_error) {
-            //
-          }
+export async function hydrateLbaSiretList() {
+  logger.info(`Downloading algo file from S3 Bucket...`);
+  const destFile = await downloadFile();
+
+  await pipeline(
+    fs.createReadStream(destFile),
+    streamJsonArray(),
+    new Transform({
+      objectMode: true,
+      transform: async (data: unknown, _encoding, callback) => {
+        const parsed = schema.safeParse(data);
+
+        if (parsed.success) {
+          await importPerson({
+            email: parsed.data.email,
+            source: "LBA_ALGO",
+            siret: parsed.data.siret,
+          });
         }
-        return;
-      })
-    );
-  }
+        callback();
+      },
+    })
+  );
 }
 
 async function downloadFile(): Promise<string> {
@@ -83,17 +75,6 @@ async function downloadFileAsTmp(stream: Readable, filename: string): Promise<st
   }
 }
 
-const readJson = async (filePath: string) => {
-  logger.info(`Reading bonnes boites json`);
-
-  const streamCompanies = async () => {
-    const response = fs.createReadStream(filePath);
-    return compose(response, streamJsonArray());
-  };
-
-  return streamCompanies();
-};
-
 async function cleanupTmp(filePath: string): Promise<void> {
   try {
     await rm(dirname(filePath), { force: true, recursive: true });
@@ -106,23 +87,3 @@ async function cleanupTmp(filePath: string): Promise<void> {
     throw withCause(internal("bal.utils: unable to cleanup downloaded file"), error);
   }
 }
-
-const verifyAlgoFileDate = async () => {
-  const algoFileLastModificationDate = await getS3FileLastUpdate("storage", s3File);
-  if (!algoFileLastModificationDate) {
-    throw new Error("Aucune date de dernière modifications disponible sur le fichier issue de l'algo.");
-  }
-
-  const currentDbCreatedDate = (
-    (await getDbCollection("lba.recruteurs.siret.email").findOne(
-      {},
-      { projection: { created_at: 1 } }
-    )) as ILbaRecruteursSiretEmail
-  ).created_at;
-
-  if (algoFileLastModificationDate.getTime() < currentDbCreatedDate.getTime()) {
-    logger.info("Sociétés issues de l'algo déjà à jour");
-    return true;
-  }
-  return false;
-};

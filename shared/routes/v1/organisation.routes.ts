@@ -10,10 +10,16 @@ const validationSchema = {
   }),
   headers: ZReqHeadersAuthorization,
   response: {
-    "200": z.object({
-      is_valid: z.boolean(),
-      on: z.optional(z.enum(["email", "domain"])),
-    }),
+    "200": z.discriminatedUnion("is_valid", [
+      z.object({
+        is_valid: z.literal(true),
+        on: z.optional(z.enum(["email", "domain"])),
+      }),
+      z.object({
+        is_valid: z.literal(false),
+        is_company_email: z.boolean(),
+      }),
+    ]),
   },
 } as const;
 

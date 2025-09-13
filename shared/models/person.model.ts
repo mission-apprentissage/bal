@@ -9,6 +9,7 @@ const collectionName = "persons" as const;
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ email: 1 }, { unique: true }],
+  [{ email_domain: 1 }, {}],
   [
     { email: "text", nom: "text", prenom: "text", sirets: "text" },
     {
@@ -25,7 +26,7 @@ const indexes: IModelDescriptor["indexes"] = [
 export const ZPerson = z.object({
   _id: zObjectId,
   email: z.string(),
-  civility: z.nullable(z.enum(["Madame", "Monsieur"])),
+  email_domain: z.string(),
   nom: z.nullable(z.string()),
   prenom: z.nullable(z.string()),
   organisations: z.array(z.string()),

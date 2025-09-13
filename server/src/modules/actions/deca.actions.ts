@@ -4,8 +4,7 @@ import { SIRET_REGEX } from "shared/constants/regex";
 import { getSirenFromSiret } from "shared/helpers/common";
 
 import { getDbCollection } from "../../common/utils/mongodbUtils";
-import { findOrganisation, updateOrganisationData } from "./organisations.actions";
-import { findPerson } from "./persons.actions";
+import { findPerson, importPerson } from "./persons.actions";
 
 interface ContentLine {
   SIRET: string;
@@ -36,36 +35,13 @@ export const parseContentLine = (line: ContentLine): DECAParsedContentLine | und
 };
 
 export const importDecaContent = async (emails: string[], siret: string) => {
-  const uniqueEmails = [...new Set(emails)];
-  const siren = getSirenFromSiret(siret);
-  const domains = [...new Set(uniqueEmails.map((e) => e.split("@")[1]))];
-
-  const organisation = await updateOrganisationData({
-    siren,
-    sirets: [siret],
-    email_domains: domains,
-    source: "DECA",
-  });
-
   await Promise.all(
-    uniqueEmails.map(async (email) =>
-      getDbCollection("persons").updateOne(
-        {
-          email,
-        },
-        {
-          $addToSet: {
-            ...(organisation && { organisations: organisation._id.toString() }),
-            sirets: siret,
-          },
-          $setOnInsert: {
-            email,
-          },
-        },
-        {
-          upsert: true,
-        }
-      )
+    emails.map(async (email) =>
+      importPerson({
+        email,
+        siret,
+        source: "DECA",
+      })
     )
   );
 };
@@ -74,46 +50,17 @@ export const getDbVerification = async (
   siret: string,
   email: string
 ): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
-  let is_valid = false;
-  const isBlacklisted = !companyEmailValidator.isCompanyEmail(email);
+  const isCompanyEmail = companyEmailValidator.isCompanyEmail(email);
   const [_user, domain] = email.split("@");
   const siren = getSirenFromSiret(siret);
 
-  // check siret / email
-  is_valid = !!(await findPerson({
-    email: email,
-    sirets: siret,
-  }));
-
-  if (is_valid) {
-    return {
-      is_valid: true,
-      on: "email",
-    };
-  }
-
-  // check siret / domain
-  if (!isBlacklisted) {
-    is_valid = !!(await findOrganisation({
-      "etablissements.siret": siret,
-      email_domains: domain,
-    }));
-
-    if (is_valid) {
-      return {
-        is_valid: true,
-        on: "domain",
-      };
-    }
-  }
-
   // check siren / email
-  is_valid = !!(await findPerson({
+  const personFromEmail = await findPerson({
     email: email,
     sirets: { $regex: `^${siren}` },
-  }));
+  });
 
-  if (is_valid) {
+  if (personFromEmail !== null) {
     return {
       is_valid: true,
       on: "email",
@@ -121,13 +68,25 @@ export const getDbVerification = async (
   }
 
   // check siren / domain
-  if (!isBlacklisted) {
-    is_valid = !!(await findOrganisation({
-      siren: siren,
+  if (isCompanyEmail) {
+    const organisationFromDomain = await getDbCollection("organisations").findOne({
       email_domains: domain,
-    }));
+      siren,
+    });
 
-    if (is_valid) {
+    if (organisationFromDomain) {
+      return {
+        is_valid: true,
+        on: "domain",
+      };
+    }
+
+    const personFromDomain = await findPerson({
+      email_domain: domain,
+      sirets: { $regex: `^${siren}` },
+    });
+
+    if (personFromDomain !== null) {
       return {
         is_valid: true,
         on: "domain",
@@ -135,5 +94,5 @@ export const getDbVerification = async (
     }
   }
 
-  return { is_valid };
+  return { is_valid: false, is_company_email: isCompanyEmail };
 };
