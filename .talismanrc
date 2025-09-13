@@ -54,7 +54,7 @@ fileignoreconfig:
 - filename: .infra/env.ini
   checksum: 9c543f5fbadcb0467b6ba063b1eda18e46091102fa54331ba0fc34902932c605
 - filename: .infra/files/configs/mongodb/seed.gpg
-  checksum: ac11938b340765ededb9930fd672535c0044d2067b617601862ba5176ecb3356
+  checksum: af329ef58b5ba37d65e1049709460d488d6de21b430bec4d6026c7f31d89210b
 - filename: .infra/files/scripts/seed.sh
   checksum: 7f946642b25cf10f111225b27e2f96f77cfc728bc22c4bc3ae95968acf8f6197
 - filename: .infra/scripts/deploy-app.sh
