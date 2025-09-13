@@ -1,10 +1,7 @@
-import companyEmailValidator from "company-email-validator";
-import type { IPostRoutes, IResponse } from "shared";
 import { SIRET_REGEX } from "shared/constants/regex";
-import { getSirenFromSiret } from "shared/helpers/common";
-
 import { getDbCollection } from "../../common/utils/mongodbUtils";
-import { findPerson, importPerson } from "./persons.actions";
+import { getImportPersonBulkOp } from "./persons.actions";
+import { getImportOrganisationBulkOp } from "./organisations.actions";
 
 interface ContentLine {
   SIRET: string;
@@ -35,64 +32,11 @@ export const parseContentLine = (line: ContentLine): DECAParsedContentLine | und
 };
 
 export const importDecaContent = async (emails: string[], siret: string) => {
-  await Promise.all(
-    emails.map(async (email) =>
-      importPerson({
-        email,
-        siret,
-        source: "DECA",
-      })
-    )
-  );
-};
+  const opsPersons = emails.flatMap((email) => getImportPersonBulkOp({ email, siret, source: "DECA" }));
+  const organisationsOps = emails.flatMap((email) => getImportOrganisationBulkOp({ email, siret, source: "DECA" }));
 
-export const getDbVerification = async (
-  siret: string,
-  email: string
-): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
-  const isCompanyEmail = companyEmailValidator.isCompanyEmail(email);
-  const [_user, domain] = email.split("@");
-  const siren = getSirenFromSiret(siret);
-
-  // check siren / email
-  const personFromEmail = await findPerson({
-    email: email,
-    sirets: { $regex: `^${siren}` },
-  });
-
-  if (personFromEmail !== null) {
-    return {
-      is_valid: true,
-      on: "email",
-    };
-  }
-
-  // check siren / domain
-  if (isCompanyEmail) {
-    const organisationFromDomain = await getDbCollection("organisations").findOne({
-      email_domains: domain,
-      siren,
-    });
-
-    if (organisationFromDomain) {
-      return {
-        is_valid: true,
-        on: "domain",
-      };
-    }
-
-    const personFromDomain = await findPerson({
-      email_domain: domain,
-      sirets: { $regex: `^${siren}` },
-    });
-
-    if (personFromDomain !== null) {
-      return {
-        is_valid: true,
-        on: "domain",
-      };
-    }
-  }
-
-  return { is_valid: false, is_company_email: isCompanyEmail };
+  await Promise.all([
+    getDbCollection("persons").bulkWrite(opsPersons),
+    getDbCollection("organisations").bulkWrite(organisationsOps),
+  ]);
 };

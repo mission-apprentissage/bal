@@ -14,6 +14,7 @@ const validationSchema = {
       z.object({
         is_valid: z.literal(true),
         on: z.optional(z.enum(["email", "domain"])),
+        sources: z.array(z.string()),
       }),
       z.object({
         is_valid: z.literal(false),

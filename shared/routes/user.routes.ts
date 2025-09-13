@@ -37,7 +37,6 @@ export const zUserAdminRoutes = {
       body: z.object({
         email: ZUser.shape.email,
         password: ZUser.shape.password,
-        organisation_id: z.string(),
       }),
       response: {
         "200": ZUserPublic,

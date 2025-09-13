@@ -9,7 +9,8 @@ import type { UserWithType } from "shared/security/permissions";
 import { compareKeys } from "../common/utils/cryptoUtils";
 import { decodeToken } from "../common/utils/jwtUtils";
 import { getSession } from "../modules/actions/sessions.actions";
-import { findUser, updateUser } from "../modules/actions/users.actions";
+import { updateUser } from "../modules/actions/users.actions";
+import { getDbCollection } from "../common/utils/mongodbUtils";
 import type { IAccessToken } from "./accessTokenService";
 import { parseAccessToken } from "./accessTokenService";
 import config from "@/config";
@@ -61,7 +62,7 @@ async function authCookieSession(req: FastifyRequest): Promise<UserWithType<"use
 
     const { email } = jwt.verify(token, config.auth.user.jwtSecret) as JwtPayload;
 
-    const user = await findUser({ email: email.toLowerCase() });
+    const user = await getDbCollection("users").findOne({ email: email.toLowerCase() });
 
     return user ? { type: "user", value: user } : user;
   } catch (_error) {
@@ -79,7 +80,7 @@ async function authApiKey(req: FastifyRequest): Promise<UserWithType<"user", IUs
   try {
     const { _id, api_key } = decodeToken(token) as JwtPayload;
 
-    const user = await findUser({ _id: new ObjectId(_id) });
+    const user = await getDbCollection("users").findOne({ _id: new ObjectId(_id) });
 
     if (!user || !user?.api_key || !compareKeys(user.api_key, api_key)) {
       throw Boom.forbidden("Jeton invalide");

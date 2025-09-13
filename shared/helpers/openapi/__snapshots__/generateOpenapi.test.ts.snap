@@ -388,34 +388,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         ],
         "type": "object",
       },
-      "catalogueEmailSirets": {
-        "additionalProperties": false,
-        "properties": {
-          "_id": {},
-          "created_at": {
-            "format": "date-time",
-            "type": "string",
-          },
-          "email": {
-            "format": "email",
-            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
-            "type": "string",
-          },
-          "siret": {
-            "type": "string",
-          },
-          "updated_at": {
-            "format": "date-time",
-            "type": "string",
-          },
-        },
-        "required": [
-          "_id",
-          "email",
-          "siret",
-        ],
-        "type": "object",
-      },
       "deca": {
         "additionalProperties": false,
         "properties": {
@@ -1074,51 +1046,14 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                   },
                 ],
               },
-              "person_id": {
-                "type": "string",
-              },
               "template": {
                 "anyOf": [
                   {
                     "additionalProperties": false,
                     "properties": {
-                      "civility": {
-                        "anyOf": [
-                          {
-                            "enum": [
-                              "Madame",
-                              "Monsieur",
-                            ],
-                            "type": "string",
-                          },
-                          {
-                            "type": "null",
-                          },
-                        ],
-                      },
                       "name": {
                         "const": "reset_password",
                         "type": "string",
-                      },
-                      "nom": {
-                        "anyOf": [
-                          {
-                            "type": "string",
-                          },
-                          {
-                            "type": "null",
-                          },
-                        ],
-                      },
-                      "prenom": {
-                        "anyOf": [
-                          {
-                            "type": "string",
-                          },
-                          {
-                            "type": "null",
-                          },
-                        ],
                       },
                       "resetPasswordToken": {
                         "type": "string",
@@ -1150,7 +1085,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "required": [
               "_id",
               "type",
-              "person_id",
               "template",
               "created_at",
               "updated_at",
@@ -1188,34 +1122,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "_id",
           "email",
           "blacklisting_origin",
-          "created_at",
-          "updated_at",
-        ],
-        "type": "object",
-      },
-      "lba.recruteurs.siret.email": {
-        "additionalProperties": false,
-        "properties": {
-          "_id": {},
-          "created_at": {
-            "format": "date-time",
-            "type": "string",
-          },
-          "email": {
-            "type": "string",
-          },
-          "siret": {
-            "type": "string",
-          },
-          "updated_at": {
-            "format": "date-time",
-            "type": "string",
-          },
-        },
-        "required": [
-          "_id",
-          "siret",
-          "email",
           "created_at",
           "updated_at",
         ],
@@ -1709,53 +1615,17 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         "additionalProperties": false,
         "properties": {
           "_id": {},
-          "_meta": {
-            "additionalProperties": {},
-            "properties": {
-              "sources": {
-                "items": {
-                  "type": "string",
-                },
-                "type": "array",
-              },
-            },
-            "type": "object",
-          },
           "created_at": {
             "format": "date-time",
             "type": "string",
           },
-          "email_domains": {
-            "items": {
-              "type": "string",
-            },
-            "type": "array",
-          },
-          "etablissements": {
-            "items": {
-              "additionalProperties": false,
-              "properties": {
-                "is_close": {
-                  "type": "boolean",
-                },
-                "is_hq": {
-                  "type": "boolean",
-                },
-                "nom": {
-                  "type": "string",
-                },
-                "siret": {
-                  "type": "string",
-                },
-              },
-              "type": "object",
-            },
-            "type": "array",
-          },
-          "nom": {
+          "email_domain": {
             "type": "string",
           },
           "siren": {
+            "type": "string",
+          },
+          "source": {
             "type": "string",
           },
           "updated_at": {
@@ -1765,6 +1635,9 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         },
         "required": [
           "_id",
+          "siren",
+          "email_domain",
+          "source",
         ],
         "type": "object",
       },
@@ -1772,25 +1645,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         "additionalProperties": false,
         "properties": {
           "_id": {},
-          "_meta": {
-            "additionalProperties": {},
-            "properties": {
-              "sources": {
-                "items": {
-                  "type": "string",
-                },
-                "type": "array",
-              },
-            },
-            "type": "object",
-          },
-          "civility": {
-            "enum": [
-              "Madame",
-              "Monsieur",
-            ],
-            "type": "string",
-          },
           "created_at": {
             "format": "date-time",
             "type": "string",
@@ -1798,23 +1652,11 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "email": {
             "type": "string",
           },
-          "nom": {
+          "siret": {
             "type": "string",
           },
-          "organisations": {
-            "items": {
-              "type": "string",
-            },
-            "type": "array",
-          },
-          "prenom": {
+          "source": {
             "type": "string",
-          },
-          "sirets": {
-            "items": {
-              "type": "string",
-            },
-            "type": "array",
           },
           "updated_at": {
             "format": "date-time",
@@ -1824,7 +1666,10 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         "required": [
           "_id",
           "email",
-          "organisations",
+          "siret",
+          "source",
+          "updated_at",
+          "created_at",
         ],
         "type": "object",
       },
@@ -1862,7 +1707,14 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         "properties": {
           "_id": {},
           "api_key": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string",
+              },
+              {
+                "type": "null",
+              },
+            ],
           },
           "api_key_used_at": {
             "anyOf": [
@@ -1893,9 +1745,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "password": {
             "type": "string",
           },
-          "person_id": {
-            "type": "string",
-          },
           "updated_at": {
             "format": "date-time",
             "type": "string",
@@ -1905,7 +1754,12 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "_id",
           "email",
           "password",
-          "person_id",
+          "is_admin",
+          "is_support",
+          "api_key",
+          "api_key_used_at",
+          "updated_at",
+          "created_at",
         ],
         "type": "object",
       },
@@ -2305,23 +2159,52 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "is_valid": {
-                      "type": "boolean",
-                    },
-                    "on": {
-                      "enum": [
-                        "email",
-                        "domain",
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "is_valid": {
+                          "const": true,
+                          "type": "boolean",
+                        },
+                        "on": {
+                          "enum": [
+                            "email",
+                            "domain",
+                          ],
+                          "type": "string",
+                        },
+                        "sources": {
+                          "items": {
+                            "type": "string",
+                          },
+                          "type": "array",
+                        },
+                      },
+                      "required": [
+                        "is_valid",
+                        "sources",
                       ],
-                      "type": "string",
+                      "type": "object",
                     },
-                  },
-                  "required": [
-                    "is_valid",
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "is_company_email": {
+                          "type": "boolean",
+                        },
+                        "is_valid": {
+                          "const": false,
+                          "type": "boolean",
+                        },
+                      },
+                      "required": [
+                        "is_valid",
+                        "is_company_email",
+                      ],
+                      "type": "object",
+                    },
                   ],
-                  "type": "object",
                 },
               },
             },

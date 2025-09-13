@@ -22,7 +22,7 @@ export default function JobTypePage({ params }: { params: Promise<{ name: string
           <ProcessorStatusJobComponent
             name={name}
             status={status}
-            baseUrl={new URL(PAGES.adminProcessor().title, publicConfig.baseUrl).href}
+            baseUrl={new URL(PAGES.adminProcessor().path, publicConfig.baseUrl).href}
           />
         )}
       </ProcessorStatusProvider>

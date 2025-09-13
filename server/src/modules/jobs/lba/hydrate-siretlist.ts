@@ -7,10 +7,14 @@ import type { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { internal } from "@hapi/boom";
 import { z } from "zod/v4-mini";
+import type { AnyBulkWriteOperation } from "mongodb";
+import type { IPerson } from "shared/models/person.model";
+import type { IOrganisation } from "shared/models/organisation.model";
 import { withCause } from "../../../common/services/errors/withCause";
 import { s3ReadAsStream } from "../../../common/utils/awsUtils";
 import { streamJsonArray } from "../../../common/utils/streamUtils";
-import { importPerson } from "../../actions/persons.actions";
+import { bulkWritePersons, getImportPersonBulkOp } from "../../actions/persons.actions";
+import { bulkWriteOrganisations, getImportOrganisationBulkOp } from "../../actions/organisations.actions";
 import config from "@/config";
 import parentLogger from "@/common/logger";
 
@@ -23,9 +27,15 @@ const schema = z.object({
   email: z.string(),
 });
 
-export async function hydrateLbaSiretList() {
+export async function importPersonFromAlgoLba() {
   logger.info(`Downloading algo file from S3 Bucket...`);
   const destFile = await downloadFile();
+
+  let buffer: { personOps: AnyBulkWriteOperation<IPerson>[]; organisationOps: AnyBulkWriteOperation<IOrganisation>[] } =
+    {
+      personOps: [],
+      organisationOps: [],
+    };
 
   await pipeline(
     fs.createReadStream(destFile),
@@ -35,14 +45,66 @@ export async function hydrateLbaSiretList() {
       transform: async (data: unknown, _encoding, callback) => {
         const parsed = schema.safeParse(data);
 
-        if (parsed.success) {
-          await importPerson({
-            email: parsed.data.email,
-            source: "LBA_ALGO",
-            siret: parsed.data.siret,
-          });
+        if (!parsed.success) {
+          callback();
+          return;
         }
-        callback();
+
+        const input = {
+          email: parsed.data.email,
+          source: "LBA_ALGO",
+          siret: parsed.data.siret,
+        };
+
+        const personOps = getImportPersonBulkOp(input);
+        const organisationOps = getImportOrganisationBulkOp(input);
+        callback(null, { personOps, organisationOps });
+      },
+    }),
+
+    // Regroup bulks operations to make batch of 1000
+    new Transform({
+      objectMode: true,
+      transform: function (
+        data: { personOps: AnyBulkWriteOperation<IPerson>[]; organisationOps: AnyBulkWriteOperation<IOrganisation>[] },
+        _encoding,
+        callback
+      ) {
+        if (data.personOps.length > 0) {
+          buffer.personOps.push(...data.personOps);
+        }
+
+        if (data.organisationOps.length > 0) {
+          buffer.organisationOps.push(...data.organisationOps);
+        }
+
+        if (buffer.personOps.length > 1000 || buffer.organisationOps.length > 1000) {
+          const output = buffer;
+          buffer = { personOps: [], organisationOps: [] };
+          callback(null, output);
+        } else {
+          callback();
+        }
+      },
+      flush: function (callback) {
+        callback(null, buffer);
+      },
+    }),
+
+    new Transform({
+      objectMode: true,
+      transform: async (
+        data: { personOps: AnyBulkWriteOperation<IPerson>[]; organisationOps: AnyBulkWriteOperation<IOrganisation>[] },
+        _encoding,
+        callback
+      ) => {
+        try {
+          await Promise.all([bulkWritePersons(data.personOps), bulkWriteOrganisations(data.organisationOps)]);
+          callback();
+        } catch (error) {
+          logger.error("Error importing person or organisation", { error });
+          callback(error);
+        }
       },
     })
   );

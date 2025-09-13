@@ -1,13 +1,14 @@
 import type { IUser } from "shared/models/user.model";
 import type { IAccessToken } from "../../security/accessTokenService";
 import { hashPassword, verifyPassword } from "../server/utils/password.utils";
-import { findUser, updateUser } from "./users.actions";
+import { getDbCollection } from "../../common/utils/mongodbUtils";
+import { updateUser } from "./users.actions";
 import { createResetPasswordToken } from "@/common/utils/jwtUtils";
 import { sendEmail } from "@/common/services/mailer/mailer";
 import logger from "@/common/logger";
 
 export const verifyEmailPassword = async (email: string, password: string): Promise<IUser | undefined> => {
-  const user = await findUser({ email });
+  const user = await getDbCollection("users").findOne({ email });
 
   if (!user) {
     return;
@@ -23,7 +24,7 @@ export const verifyEmailPassword = async (email: string, password: string): Prom
 };
 
 export const sendResetPasswordEmail = async (email: string) => {
-  const user = await findUser({ email });
+  const user = await getDbCollection("users").findOne({ email });
 
   if (!user) {
     logger.warn({ email }, "forgot-password: missing user");

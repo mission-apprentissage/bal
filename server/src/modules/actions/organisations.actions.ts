@@ -1,6 +1,6 @@
-import companyEmailValidator from "company-email-validator";
+import { isCompanyDomain } from "company-email-validator";
 import { ObjectId } from "mongodb";
-import type { Filter, FindOptions } from "mongodb";
+import type { AnyBulkWriteOperation } from "mongodb";
 import { getSirenFromSiret } from "shared/helpers/common";
 import type { IOrganisation } from "shared/models/organisation.model";
 import { z } from "zod/v4-mini";
@@ -13,83 +13,63 @@ type IImportOrganisation = {
   siret: unknown;
 };
 
-export const findOrganisations = async (filter: Filter<IOrganisation> | null) => {
-  const organisations = await getDbCollection("organisations")
-    .find(filter ?? {})
-    .toArray();
+export function getImportOrganisationBulkOp(data: IImportOrganisation): AnyBulkWriteOperation<IOrganisation>[] {
+  const emailParsed = z.email().check(z.lowercase()).safeParse(data.email);
+  const siretParsed = z.string().safeParse(data.siret);
 
-  return organisations;
-};
-
-export const findOrganisation = async (filter: Filter<IOrganisation>, options?: FindOptions) => {
-  const organisation = await getDbCollection("organisations").findOne<IOrganisation>(filter, options);
-
-  return organisation;
-};
-
-export async function importOrganisation(data: IImportOrganisation): Promise<boolean> {
-  const now = new Date();
-
-  const emailParsed = z.email().safeParse(data.email);
-  if (!emailParsed.success) {
-    return false;
+  if (!emailParsed.success || !siretParsed.success) {
+    return [];
   }
 
   const [_, domain] = emailParsed.data.split("@");
-
-  // TODO: parse siret
-  const siretParsed = z.string().safeParse(data.siret);
-
-  if (!siretParsed.success) {
-    return false;
-  }
-
   const siren = getSirenFromSiret(siretParsed.data);
 
-  const isCompanyDomain = companyEmailValidator.isCompanyDomain(domain);
-
-  if (!isCompanyDomain) {
-    return false;
+  if (!isCompanyDomain(domain)) {
+    return [];
   }
 
-  const defaultOrganisation: Omit<IOrganisation, "siren" | "updated_at"> = {
+  const now = new Date();
+
+  type UniqueOrganisationField = "siren" | "email_domain" | "source";
+
+  const setOnInsert: Omit<IOrganisation, UniqueOrganisationField | "updated_at"> = {
     _id: new ObjectId(),
-    etablissements: [{ siret: siretParsed.data }],
-    email_domains: [domain.toLowerCase()],
-    _meta: { sources: [data.source] },
     created_at: now,
   };
 
-  // TODO: remove non-company domain
-  await getDbCollection("organisations").updateOne(
-    { siren },
+  return [
     {
-      $setOnInsert: defaultOrganisation,
-      $set: { updated_at: now },
-      $addToSet: {
-        etablissements: { siret: siretParsed.data },
-        email_domains: domain.toLowerCase(),
-        "_meta.sources": data.source,
+      updateOne: {
+        filter: { siren, email_domain: domain.toLowerCase(), source: data.source },
+        update: {
+          $setOnInsert: setOnInsert,
+          $set: { updated_at: now },
+        },
+        upsert: true,
       },
     },
-    {
-      upsert: true,
-    }
-  );
+  ];
+}
 
-  await getDbCollection("organisations").updateOne(
-    { siren },
-    {
-      $addToSet: {
-        etablissements: { siret: siretParsed.data },
-        email_domains: domain.toLowerCase(),
-        "_meta.sources": data.source,
-      },
-    },
-    {
-      upsert: true,
-    }
-  );
+export async function bulkWriteOrganisations(
+  ops: AnyBulkWriteOperation<IOrganisation>[]
+): Promise<{ created: number; updated: number }> {
+  if (ops.length === 0) {
+    return { created: 0, updated: 0 };
+  }
+
+  const result = await getDbCollection("organisations").bulkWrite(ops, { ordered: false });
+  return { created: result.upsertedCount, updated: result.modifiedCount };
+}
+
+export async function importOrganisation(data: IImportOrganisation): Promise<boolean> {
+  const ops = getImportOrganisationBulkOp(data);
+
+  if (ops.length === 0) {
+    return false;
+  }
+
+  await getDbCollection("organisations").bulkWrite(ops);
 
   return true;
 }
@@ -108,4 +88,15 @@ export const updateOrganisation = async (organisation: IOrganisation, data: Part
     },
     { returnDocument: "after" }
   );
+};
+
+export const sanitizeOrganisationDomains = async () => {
+  const cursor = getDbCollection("organisations").find();
+
+  for await (const organisation of cursor) {
+    // Suppression des organisations dont le domaine n'est pas un domaine d'entreprise
+    if (!isCompanyDomain(organisation.email_domain)) {
+      await getDbCollection("organisations").deleteOne({ _id: organisation._id });
+    }
+  }
 };

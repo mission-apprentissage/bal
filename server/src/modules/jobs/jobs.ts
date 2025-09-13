@@ -12,15 +12,15 @@ import {
 } from "../actions/documents.actions";
 import { handleMailingListJob, onMailingListJobExited } from "../actions/mailingLists.actions";
 import { createUser } from "../actions/users.actions";
-import { runCatalogueImporter } from "./catalogueSiretEmailImport";
+import { sanitizeOrganisationDomains } from "../actions/organisations.actions";
+import { importPersonFromCatalogue } from "./catalogueSiretEmailImport";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
 import { streamDataToParquetAndS3 } from "./deca/decaToS3";
 import { hydrateDeca } from "./deca/hydrate-deca";
 import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
-import { hydrateLbaSiretList } from "./lba/hydrate-siretlist";
-import { run_hydrate_from_deca } from "./validation/hydrate-from-deca";
-import { sanitizeOrganisationDomains } from "./validation/organisations_sanitize_domains";
+import { importPersonFromAlgoLba } from "./lba/hydrate-siretlist";
+import { importPersonFromDeca } from "./validation/hydrate-from-deca";
 import { anonymisationService } from "./anonymisation/anonymisation.service";
 import { processMailingList, recoverMailingListJobs } from "./mailing-list/mailing-list.processor";
 import {
@@ -52,13 +52,13 @@ export async function setupJobProcessor() {
             },
             "Mise à jour des couples siret/email provenant du catalogue de formations": {
               cron_string: "30 2 * * *",
-              handler: async () => runCatalogueImporter(),
+              handler: async () => importPersonFromCatalogue(),
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
             "Mise à jour des couples siret/email provenant de l'algo LBA": {
               cron_string: "30 5 10 * *",
-              handler: async () => hydrateLbaSiretList(),
+              handler: async () => importPersonFromAlgoLba(),
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
@@ -66,7 +66,7 @@ export async function setupJobProcessor() {
               cron_string: "30 21 * * *",
               handler: async (signal) => {
                 await hydrateDeca(signal);
-                await run_hydrate_from_deca(0, signal);
+                await importPersonFromDeca(signal);
                 if (config.env === "production") {
                   await streamDataToParquetAndS3();
                 }
@@ -158,14 +158,16 @@ export async function setupJobProcessor() {
           await streamDataToParquetAndS3();
         },
       },
-      "import:catalogue": {
-        handler: async () => runCatalogueImporter(),
+      "import:person:catalogue": {
+        handler: async () => importPersonFromCatalogue(),
       },
-      "job:validation:hydrate_from_deca": {
-        handler: async (job, signal) => {
-          const { offset } = job.payload ?? {};
-          return run_hydrate_from_deca(offset ? parseInt(offset.toString(), 10) : 0, signal);
+      "import:person:deca": {
+        handler: async (_job, signal) => {
+          return importPersonFromDeca(signal);
         },
+      },
+      "import:person:algo-lba": {
+        handler: async () => importPersonFromAlgoLba(),
       },
       anonymisation: {
         handler: anonymisationService,
@@ -185,9 +187,6 @@ export async function setupJobProcessor() {
       },
       "job:lba:hydrate:email-balcklisted": {
         handler: async () => hydrateLbaBlackListed(),
-      },
-      "job:lba:hydrate:siret-list": {
-        handler: async () => hydrateLbaSiretList(),
       },
       "mailing-list:process": {
         handler: processMailingList,
