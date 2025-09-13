@@ -1,4 +1,3 @@
-import type { Jsonify } from "type-fest";
 import { z } from "zod/v4-mini";
 
 export const ZDecaApprenant = z.object({
@@ -20,6 +19,3 @@ export const ZDecaApprenant = z.object({
   ),
   derniere_classe: z.nullish(z.coerce.number()),
 });
-
-export type IDecaApprenant = z.output<typeof ZDecaApprenant>;
-export type IDecaApprenantJson = Jsonify<z.input<typeof ZDecaApprenant>>;

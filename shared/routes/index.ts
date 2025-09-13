@@ -71,18 +71,11 @@ export type IPostRoutes = typeof zRoutesPost;
 export type IPutRoutes = typeof zRoutesPut;
 export type IDeleteRoutes = typeof zRoutesDelete;
 
-export type IRoutes = {
+type IRoutes = {
   get: IGetRoutes;
   post: IPostRoutes;
   put: IPutRoutes;
   delete: IDeleteRoutes;
-};
-
-export type IRoutesPath = {
-  get: keyof IRoutes["get"];
-  post: keyof IRoutes["post"];
-  put: keyof IRoutes["put"];
-  delete: keyof IRoutes["delete"];
 };
 
 export const zRoutes: IRoutes = {
@@ -102,7 +95,7 @@ export type IBody<S extends IRouteSchemaWrite> = S["body"] extends $ZodType ? z.
 
 export type IQuery<S extends IRouteSchema> = S["querystring"] extends $ZodType ? z.input<S["querystring"]> : never;
 
-export type IParam<S extends IRouteSchema> = S["params"] extends $ZodType ? z.input<S["params"]> : never;
+type IParam<S extends IRouteSchema> = S["params"] extends $ZodType ? z.input<S["params"]> : never;
 
 type IHeadersAuth<S extends IRouteSchema> = S extends { securityScheme: { auth: infer A } }
   ? A extends "access-token" | "api-key"
@@ -110,7 +103,7 @@ type IHeadersAuth<S extends IRouteSchema> = S extends { securityScheme: { auth: 
     : object
   : object;
 
-export type IHeaders<S extends IRouteSchema> = S["headers"] extends $ZodType
+type IHeaders<S extends IRouteSchema> = S["headers"] extends $ZodType
   ? Omit<z.input<S["headers"]>, "referrer">
   : object;
 

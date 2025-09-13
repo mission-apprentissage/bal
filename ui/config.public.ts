@@ -1,4 +1,4 @@
-export interface PublicConfig {
+interface PublicConfig {
   sentry: {
     dsn: string;
   };

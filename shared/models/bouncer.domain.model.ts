@@ -11,7 +11,7 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ updated_at: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 30 }], // 30 days TTL
 ];
 
-export const zBouncerDomain = z.object({
+const zBouncerDomain = z.object({
   _id: zObjectId,
   domain: z.string(),
   smtp: z.string(),

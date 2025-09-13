@@ -1,4 +1,3 @@
-import type { Jsonify } from "type-fest";
 import { z } from "zod/v4-mini";
 
 export const ZDecaEmployeur = z.object({
@@ -15,6 +14,3 @@ export const ZDecaEmployeur = z.object({
   courriel: z.optional(z.string()),
   telephone: z.optional(z.string()),
 });
-
-export type IDecaEmployeur = z.output<typeof ZDecaEmployeur>;
-export type IDecaEmployeurJson = Jsonify<z.input<typeof ZDecaEmployeur>>;

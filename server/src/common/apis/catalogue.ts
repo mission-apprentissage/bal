@@ -52,4 +52,4 @@ const ZCatalogueData = z.pick(zFormationCatalogue, {
   etablissement_gestionnaire_siret: true,
 });
 
-export type CatalogueData = z.output<typeof ZCatalogueData>;
+type CatalogueData = z.output<typeof ZCatalogueData>;

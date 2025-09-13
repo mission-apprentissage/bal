@@ -11,7 +11,7 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ kind: 1, created_at: 1 }, {}],
 ];
 
-export const ZUploadDocument = z.object({
+const ZUploadDocument = z.object({
   _id: zObjectId,
   kind: z.literal("upload"),
   type_document: z.string(), // Le type de document (exemple: DECA, etc..)"
@@ -52,7 +52,7 @@ export const ZMailingListDocument = z.object({
   job_status: z.enum(["pending", "paused", "processing", "done", "error"]), //Status du job de génération"
 });
 
-export const ZDocument = z.discriminatedUnion("kind", [ZUploadDocument, ZMailingListDocument]);
+const ZDocument = z.discriminatedUnion("kind", [ZUploadDocument, ZMailingListDocument]);
 
 export const ZUploadDocumentPublic = z.omit(ZUploadDocument, {
   hash_fichier: true,
@@ -64,12 +64,9 @@ export const ZMailingListDocumentPublic = z.omit(ZMailingListDocument, {
   hash_secret: true,
 });
 
-export const zDocumentPublic = z.discriminatedUnion("kind", [ZUploadDocumentPublic, ZMailingListDocumentPublic]);
-
 export type IDocument = z.output<typeof ZDocument>;
 export type IUploadDocument = z.output<typeof ZUploadDocument>;
 export type IMailingListDocument = z.output<typeof ZMailingListDocument>;
-export type IDocumentJson = Jsonify<z.input<typeof zDocumentPublic>>;
 export type IUploadDocumentJson = Jsonify<z.input<typeof ZUploadDocumentPublic>>;
 
 export const toPublicDocument = <T extends IDocument>(

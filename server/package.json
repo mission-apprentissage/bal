@@ -63,8 +63,6 @@
     "nodemailer": "^7.0.5",
     "nodemailer-html-to-text": "^3.2.0",
     "oleoduc": "^0.8.0",
-    "p-map": "^7.0.3",
-    "pino-pretty": "^13.1.1",
     "rate-limiter-flexible": "^7.2.0",
     "shared": "workspace:*",
     "stream-json": "^1.9.1",

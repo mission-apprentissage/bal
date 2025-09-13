@@ -4,17 +4,6 @@ export const asyncForEach = async <T>(array: T[], callback: (item: T, index?: nu
   }
 };
 
-export const asyncGrouped = async <T>(
-  array: T[],
-  groupSize: number,
-  callback: (group: T[], index: number) => Promise<void>
-) => {
-  for (let index = 0; index < array.length; index += groupSize) {
-    const group = array.slice(index, index + groupSize);
-    await callback(group, index);
-  }
-};
-
 export async function timeout<T>(promise: Promise<T>, millis: number): Promise<T> {
   let timeoutID: undefined | NodeJS.Timeout;
   const timeout: Promise<never> = new Promise((_resolve, reject) => {

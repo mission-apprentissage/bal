@@ -22,7 +22,7 @@ export const MAILING_LIST_COMPUTED_COLUMNS = {
   },
 };
 
-export type IMailingListComputedColumns = typeof MAILING_LIST_COMPUTED_COLUMNS;
+type IMailingListComputedColumns = typeof MAILING_LIST_COMPUTED_COLUMNS;
 export type IMailingListComputedColumnsKeys = keyof IMailingListComputedColumns;
 
 export const MAILING_LIST_COMPUTED_COLUMNS_KEYS = Object.keys(

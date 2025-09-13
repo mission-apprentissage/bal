@@ -28,7 +28,7 @@ const MAILING_LIST_DOCUMENT_PREFIX = "mailing-list";
 
 const testMode = config.env === "test";
 
-export const createDocument = async <T extends IDocument>(data: Omit<T, "created_at" | "updated_at">): Promise<T> => {
+const createDocument = async <T extends IDocument>(data: Omit<T, "created_at" | "updated_at">): Promise<T> => {
   const now = new Date();
   const doc = {
     ...data,
@@ -105,7 +105,7 @@ export const saveDocumentsColumns = async () => {
   await Promise.all(documents.map(async (document) => saveDocumentColumns(document)));
 };
 
-export const saveDocumentColumns = async (document: IUploadDocument) => {
+const saveDocumentColumns = async (document: IUploadDocument) => {
   let columns: string[] = [];
   try {
     await readDocumentContent(
@@ -311,7 +311,7 @@ export const uploadFile = async (stream: Readable, doc: IUploadDocument, options
   await checkCsvFile(doc);
 };
 
-export const checkCsvFile = async (document: IUploadDocument) => {
+const checkCsvFile = async (document: IUploadDocument) => {
   // wait 5 seconds to make sure ovh has time to process the file
   await sleep(5000);
   await readDocumentContent(
@@ -373,7 +373,7 @@ export const uploadSupportFile = async (stream: Readable, chemin_fichier: string
 /**
  * Convert a buffer to utf8 if needed and check if file does not contain empty column names
  */
-export const processCsvFile = async (chunk: Buffer) => {
+const processCsvFile = async (chunk: Buffer) => {
   const encoding = chardet.detect(chunk);
 
   if (!encoding || encoding === "utf8" || !iconv.encodingExists(encoding)) return chunk;
@@ -382,7 +382,7 @@ export const processCsvFile = async (chunk: Buffer) => {
   return iconv.encode(toEncodeChunk, "utf8");
 };
 
-export const extractDocumentContent = async (
+const extractDocumentContent = async (
   {
     document,
     delimiter = DEFAULT_DELIMITER,
@@ -440,7 +440,7 @@ export const extractDocumentContent = async (
   logger.info("conversion csv to json ended");
 };
 
-export const updateImportProgress = async (_id: ObjectId, importedLines: number, importedSize: number) => {
+const updateImportProgress = async (_id: ObjectId, importedLines: number, importedSize: number) => {
   if (importedSize === 0) {
     return;
   }

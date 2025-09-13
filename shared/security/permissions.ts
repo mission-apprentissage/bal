@@ -1,6 +1,6 @@
-export type Permission = "admin" | "support";
+type Permission = "admin" | "support";
 
-export type RoleNames = "none" | "admin" | "support";
+type RoleNames = "none" | "admin" | "support";
 
 export interface Role {
   name: RoleNames;
@@ -27,7 +27,7 @@ export type AccessPermission =
   | { some: ReadonlyArray<AccessPermission> }
   | { every: ReadonlyArray<AccessPermission> };
 
-export type AccessResourcePath = {
+type AccessResourcePath = {
   type: "params" | "query";
   key: string;
 };

@@ -10,13 +10,6 @@ const zTemplateResetPassword = z.object({
   resetPasswordToken: z.string(),
 });
 
-type ITemplateResetPassword = z.output<typeof zTemplateResetPassword>;
-
 export const zTemplate = z.discriminatedUnion("name", [zTemplateResetPassword]);
 
 export type ITemplate = z.output<typeof zTemplate>;
-
-export type TemplatePayloads = {
-  reset_password: ITemplateResetPassword;
-};
-export type TemplateName = keyof TemplatePayloads;
