@@ -1,4 +1,3 @@
-import type { Jsonify } from "type-fest";
 import { z } from "zod/v4-mini";
 
 export const ZDecaFormation = z.object({
@@ -9,6 +8,3 @@ export const ZDecaFormation = z.object({
   rncp: z.optional(z.string()),
   type_diplome: z.optional(z.string()),
 });
-
-export type IDecaFormation = z.output<typeof ZDecaFormation>;
-export type IDecaFormationJson = Jsonify<z.input<typeof ZDecaFormation>>;

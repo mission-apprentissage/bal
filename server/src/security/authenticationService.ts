@@ -15,10 +15,7 @@ import type { IAccessToken } from "./accessTokenService";
 import { parseAccessToken } from "./accessTokenService";
 import config from "@/config";
 
-export type IUserWithType =
-  | UserWithType<"token", IAccessToken>
-  | UserWithType<"user", IUser>
-  | UserWithType<"brevo", IBrevo>;
+type IUserWithType = UserWithType<"token", IAccessToken> | UserWithType<"user", IUser> | UserWithType<"brevo", IBrevo>;
 
 type IBrevo = Record<string, never>;
 

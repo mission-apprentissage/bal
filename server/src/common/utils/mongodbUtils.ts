@@ -1,6 +1,6 @@
 import { captureException } from "@sentry/node";
 import { isEqual } from "lodash-es";
-import type { Collection, CollectionInfo, MongoServerError } from "mongodb";
+import type { Collection, MongoServerError } from "mongodb";
 import { MongoClient } from "mongodb";
 import type { CollectionName, IModelDescriptor } from "shared/models/common";
 import type { IDocumentMap } from "shared/models/models";
@@ -67,10 +67,6 @@ export const getCollectionList = async () => {
   return ensureInitialization().db().listCollections().toArray();
 };
 
-export const getDbCollectionIndexes = async (name: CollectionName) => {
-  return await ensureInitialization().db().collection(name).indexes();
-};
-
 /**
  * Création d'une collection si elle n'existe pas
  * @param {string} collectionName
@@ -90,15 +86,6 @@ const createCollectionIfDoesNotExist = async (collectionName: CollectionName) =>
     }
   }
 };
-
-/**
- * Vérification de l'existence d'une collection à partir de la liste des collections
- * @param {*} collectionsInDb
- * @param {*} collectionName
- * @returns
- */
-export const collectionExistInDb = (collectionsInDb: CollectionInfo[], collectionName: string) =>
-  collectionsInDb.map(({ name }: { name: string }) => name).includes(collectionName);
 
 /**
  * Config de la validation
@@ -142,16 +129,6 @@ export const clearAllCollections = async () => {
   const collections = await getDatabase().collections();
   return Promise.all(collections.map(async (c) => c.deleteMany({})));
 };
-
-/**
- * Clear d'une collection
- * @param {string} name
- * @returns
- */
-export async function clearCollection(name: string) {
-  ensureInitialization();
-  await getDatabase().collection(name).deleteMany({});
-}
 
 export const createIndexes = async () => {
   for (const descriptor of modelDescriptors) {

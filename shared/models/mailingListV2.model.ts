@@ -31,8 +31,6 @@ const zOutputColumn = z.object({
   simple: z.boolean(),
 });
 
-export type IOutputColumn = z.infer<typeof zOutputColumn>;
-
 export const ZMailingListV2 = z.object({
   _id: zObjectId,
   name: z.string(),

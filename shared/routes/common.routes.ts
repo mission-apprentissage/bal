@@ -23,13 +23,12 @@ export const ZReqParamsSearchPagination = z.object({
   limit: z.optional(z.coerce.number().check(z.int(), z.gte(0))),
   q: z.optional(z.string()),
 });
-export type IReqParamsSearchPagination = z.input<typeof ZReqParamsSearchPagination>;
 
 export const ZReqHeadersAuthorization = z.looseObject({
   Authorization: z.optional(z.string()),
 });
 
-export type AuthStrategy = "api-key" | "cookie-session" | "access-token" | "brevo-api-key";
+type AuthStrategy = "api-key" | "cookie-session" | "access-token" | "brevo-api-key";
 
 export type SecurityScheme = {
   auth: AuthStrategy;

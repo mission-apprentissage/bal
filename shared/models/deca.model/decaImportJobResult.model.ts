@@ -1,6 +1,4 @@
-import type { Jsonify } from "type-fest";
 import { z } from "zod/v4-mini";
-
 import type { IModelDescriptor } from "../common";
 import { zObjectId } from "../common";
 
@@ -11,7 +9,7 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ import_date: -1 }, {}],
 ];
 
-export const ZDecaImportJobResult = z.object({
+const ZDecaImportJobResult = z.object({
   _id: zObjectId,
   // La date d'un import deca au format yyyy-MM-dd"
   import_date_string: z.string(),
@@ -23,7 +21,6 @@ export const ZDecaImportJobResult = z.object({
 });
 
 export type IDecaImportJobResult = z.output<typeof ZDecaImportJobResult>;
-export type IDecaImportJobResultJson = Jsonify<z.input<typeof ZDecaImportJobResult>>;
 
 export default {
   zod: ZDecaImportJobResult,

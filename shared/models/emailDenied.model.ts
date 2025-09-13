@@ -7,7 +7,7 @@ const collectionName = "emailDenied" as const;
 
 const indexes: IModelDescriptor["indexes"] = [[{ email: 1 }, {}]];
 
-export const ZEmailDenied = z.object({
+const ZEmailDenied = z.object({
   _id: zObjectId,
   email: z.string(),
   reason: z.literal("unsubscribe"),

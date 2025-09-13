@@ -7,7 +7,7 @@ import type { Primitive } from "type-fest";
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
-export function deepFlattenToObject(obj: object, prefix = ""): Record<string, Primitive> {
+function deepFlattenToObject(obj: object, prefix = ""): Record<string, Primitive> {
   return Object.entries(obj).reduce<Record<string, Primitive>>((acc, [k, value]) => {
     const pre = prefix.length ? prefix + "." : "";
     if (typeof value === "object" && value !== null) {

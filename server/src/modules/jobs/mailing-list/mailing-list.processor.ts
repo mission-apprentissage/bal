@@ -68,7 +68,7 @@ export async function processMailingList(job: IJobsSimple, signal: AbortSignal) 
   }
 }
 
-export async function onMailingListJobExited(job: IJobsSimple) {
+export async function onMailingListV2JobExited(job: IJobsSimple) {
   const payload = zJobPayload.parse(job.payload);
   const mailingList = await getDbCollection("mailingListsV2").findOne({
     _id: payload.id,

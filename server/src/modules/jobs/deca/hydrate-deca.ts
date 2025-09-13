@@ -39,7 +39,7 @@ const parseDate = (v: string) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const buildDecaContract = (contrat: any) => {
+const buildDecaContract = (contrat: any) => {
   return {
     alternant: {
       ...ifDefined("date_naissance", contrat.alternant.dateNaissance, parseDate), // TDB, LBA
@@ -98,7 +98,7 @@ export const buildDecaContract = (contrat: any) => {
   };
 };
 
-export const isDecaApiAvailable = () => {
+const isDecaApiAvailable = () => {
   if (config.env !== "production" && config.env !== "test") {
     return true;
   }
@@ -323,7 +323,7 @@ const hydrateDecaPeriod = async (
  * Récupération de la liste des périodes (dateDébut - dateFin) par chunk de NB_DAYS_CHUNK
  * on devra l'appeler plusieurs fois si la durée que l'on souhaite est > NB_DAYS_CHUNK
  */
-export const buildPeriodsToFetch = async (
+const buildPeriodsToFetch = async (
   dateDebut: Date,
   dateFin: Date
 ): Promise<Array<{ dateDebut: string; dateFin: string }>> => {
