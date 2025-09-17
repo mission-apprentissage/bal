@@ -34,7 +34,13 @@ RUN mkdir -p /app/shared/node_modules && mkdir -p /app/server/node_modules
 FROM node:24-slim AS server
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y ca-certificates curl && update-ca-certificates && apt-get clean
+RUN apt-get update \
+  && apt-get install -y curl ca-certificates debsecan \
+  && update-ca-certificates \
+  && codename=$(sh -c '. /etc/os-release; echo $VERSION_CODENAME') \
+  && apt-get install $(debsecan --suite $codename --format packages --only-fixed) \
+  && apt-get purge -y --auto-remove debsecan \
+  && apt-get clean
 
 ENV NODE_ENV=production
 
@@ -80,7 +86,13 @@ RUN yarn workspace ui build
 FROM node:24-slim AS ui
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y ca-certificates curl && update-ca-certificates && apt-get clean
+RUN apt-get update \
+  && apt-get install -y curl ca-certificates debsecan \
+  && update-ca-certificates \
+  && codename=$(sh -c '. /etc/os-release; echo $VERSION_CODENAME') \
+  && apt-get install $(debsecan --suite $codename --format packages --only-fixed) \
+  && apt-get purge -y --auto-remove debsecan \
+  && apt-get clean
 
 ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
