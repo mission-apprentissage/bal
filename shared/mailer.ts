@@ -7,9 +7,6 @@ import { z } from "zod/v4-mini";
 const zTemplateResetPassword = z.object({
   name: z.literal("reset_password"),
   to: z.email(),
-  civility: z.nullish(z.enum(["Madame", "Monsieur"])),
-  nom: z.nullish(z.string()),
-  prenom: z.nullish(z.string()),
   resetPasswordToken: z.string(),
 });
 

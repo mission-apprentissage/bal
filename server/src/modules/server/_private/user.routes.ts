@@ -1,7 +1,7 @@
-import Boom from "@hapi/boom";
+import { notFound } from "@hapi/boom";
 import { zUserPrivateRoutes } from "shared/routes/_private/user.routes";
-import { findUser } from "../../actions/users.actions";
 import type { Server } from "../server";
+import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
 export const userPrivateRoutes = ({ server }: { server: Server }) => {
   server.get(
@@ -11,10 +11,10 @@ export const userPrivateRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zUserPrivateRoutes.get["/_private/users/:id"])],
     },
     async (request, response) => {
-      const user = await findUser({ _id: request.params.id });
+      const user = await getDbCollection("users").findOne({ _id: request.params.id });
 
       if (!user) {
-        throw Boom.notFound();
+        throw notFound();
       }
 
       // Fixme: maybe we return too much data!!

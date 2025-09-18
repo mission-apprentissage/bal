@@ -23,7 +23,6 @@ const MailingListPage = () => {
   });
 
   const setPaginationModel = useCallback((model: { page: number; pageSize: number }) => {
-    console.log("setPaginationModel", model);
     setQuery((prev) => ({
       ...prev,
       page: model.page,
@@ -32,7 +31,6 @@ const MailingListPage = () => {
   }, []);
 
   const setSortModel = useCallback((model: GridSortModel) => {
-    console.log("setSortModel", model);
     const isValidSort = zPrivateMailingListRoutes.get["/_private/mailing-list"].querystring.shape.sort.safeParse(
       model[0]?.field
     );

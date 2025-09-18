@@ -1,13 +1,12 @@
 import assert from "node:assert";
-
-import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
-
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { createUserTokenSimple } from "../../src/common/utils/jwtUtils";
 import { createSession, createSessionToken } from "../../src/modules/actions/sessions.actions";
-import { createUser, findUser } from "../../src/modules/actions/users.actions";
+import { createUser } from "../../src/modules/actions/users.actions";
 import type { Server } from "../../src/modules/server/server";
 import createServer from "../../src/modules/server/server";
 import { useMongo } from "../utils/mongo.utils";
+import { getDbCollection } from "../../src/common/utils/mongodbUtils";
 
 describe("Users routes", () => {
   const mongo = useMongo();
@@ -30,13 +29,12 @@ describe("Users routes", () => {
     const user = await createUser({
       email: "connected@exemple.fr",
       password: "my-password",
-      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const token = createSessionToken(user.email);
     await createSession({ token });
 
-    const userWithToken = await findUser({ _id: user._id });
+    const userWithToken = await getDbCollection("users").findOne({ _id: user._id });
 
     assert.equal(userWithToken?.api_key_used_at, undefined);
 
@@ -59,7 +57,6 @@ describe("Users routes", () => {
     const admin = await createUser({
       email: "admin@exemple.fr",
       password: "my-password",
-      organisation_id: "64520f65d7726475fd54b3b7",
       is_admin: true,
     });
 
@@ -75,28 +72,32 @@ describe("Users routes", () => {
       payload: {
         email: "email@exemple.fr",
         password: "my-password",
-        organisation_id: "64520f65d7726475fd54b3b7",
       },
       headers: {
         ["Cookie"]: `bal_session=${token}`,
       },
     });
 
-    const user = await findUser({
+    const user = await getDbCollection("users").findOne({
       email: "email@exemple.fr",
     });
 
-    assert.equal(response.statusCode, 200);
-    assert.equal(response.json()._id, user?._id.toString());
-    assert.equal(response.json().email, "email@exemple.fr");
-    assert.equal(response.json().password, undefined);
+    expect.soft(response.statusCode).toBe(200);
+    expect.soft(response.json()).toEqual({
+      _id: user?._id.toString(),
+      email: "email@exemple.fr",
+      api_key_used_at: null,
+      is_admin: false,
+      is_support: false,
+      created_at: user?.created_at.toJSON(),
+      updated_at: user?.updated_at.toJSON(),
+    });
   });
 
   it("should not allow non-admin to create a user", async () => {
     const user = await createUser({
       email: "user@exemple.fr",
       password: "my-password",
-      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const token = createUserTokenSimple({ payload: { email: user.email } });
@@ -111,7 +112,6 @@ describe("Users routes", () => {
       payload: {
         email: "email@exemple.fr",
         password: "my-password",
-        organisation_id: "64520f65d7726475fd54b3b7",
       },
       headers: {
         ["Cookie"]: `bal_session=${token}`,

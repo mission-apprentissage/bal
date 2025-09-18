@@ -1,7 +1,7 @@
 import { z } from "zod/v4-mini";
 
 import { zObjectId } from "../models/common";
-import { ZUser, zUserWithPersonPublic } from "../models/user.model";
+import { ZUser, ZUserPublic } from "../models/user.model";
 import type { IRoutesDef } from "./common.routes";
 import { ZReqParamsSearchPagination } from "./common.routes";
 
@@ -11,7 +11,7 @@ export const zUserAdminRoutes = {
       method: "get",
       path: "/admin/users",
       querystring: ZReqParamsSearchPagination,
-      response: { "200": z.array(zUserWithPersonPublic) },
+      response: { "200": z.array(ZUserPublic) },
       securityScheme: {
         auth: "cookie-session",
         access: "admin",
@@ -22,7 +22,7 @@ export const zUserAdminRoutes = {
       method: "get",
       path: "/admin/users/:id",
       params: z.object({ id: zObjectId }),
-      response: { "200": zUserWithPersonPublic },
+      response: { "200": ZUserPublic },
       securityScheme: {
         auth: "cookie-session",
         access: "admin",
@@ -37,10 +37,9 @@ export const zUserAdminRoutes = {
       body: z.object({
         email: ZUser.shape.email,
         password: ZUser.shape.password,
-        organisation_id: z.string(),
       }),
       response: {
-        "200": zUserWithPersonPublic,
+        "200": ZUserPublic,
       },
       securityScheme: {
         auth: "cookie-session",

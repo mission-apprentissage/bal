@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { captureException } from "@sentry/nextjs";
 import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
 import { fr } from "@codegouvfr/react-dsfr";
-import type { IUserWithPersonPublic } from "shared/models/user.model";
+import type { IUserPublic } from "shared/models/user.model";
 import { MailingListResetSource } from "./MailingListResetSource";
 import { queryClient } from "@/utils/query.utils";
 import Toast, { useToast } from "@/components/toast/Toast";
@@ -34,7 +34,7 @@ interface FormValues {
   name: string;
 }
 
-export function MailingListSourceReadonly(props: { mailingList: IMailingListV2Json; user: IUserWithPersonPublic }) {
+export function MailingListSourceReadonly(props: { mailingList: IMailingListV2Json; user: IUserPublic }) {
   const { toast, setToast, handleClose } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 

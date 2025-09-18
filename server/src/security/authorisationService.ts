@@ -1,6 +1,6 @@
 import Boom from "@hapi/boom";
 import type { FastifyRequest } from "fastify";
-import type { IUserWithPerson } from "shared/models/user.model";
+import type { IUser } from "shared/models/user.model";
 import type { IRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
 import type { AccessPermission, Role } from "shared/security/permissions";
 import { AdminRole, NoneRole, SupportRole } from "shared/security/permissions";
@@ -15,7 +15,7 @@ function assertUnreachable(_x: never): never {
   throw new Error("Didn't expect to get here");
 }
 
-function getUserRole(userOrToken: IAccessToken | IUserWithPerson): Role {
+function getUserRole(userOrToken: IAccessToken | IUser): Role {
   if ("identity" in userOrToken) {
     return NoneRole;
   }
@@ -25,7 +25,7 @@ function getUserRole(userOrToken: IAccessToken | IUserWithPerson): Role {
 
 function isAuthorized<S extends Pick<IRouteSchema, "method" | "path"> & WithSecurityScheme>(
   access: AccessPermission,
-  userOrToken: IAccessToken | IUserWithPerson,
+  userOrToken: IAccessToken | IUser,
   role: Role,
   schema: S
 ): boolean {
