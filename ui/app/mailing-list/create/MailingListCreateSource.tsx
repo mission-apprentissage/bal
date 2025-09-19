@@ -98,6 +98,11 @@ export function MailingListCreateSource() {
 
       router.push(PAGES.mailingListView(_id).path);
     } catch (error) {
+      if (error instanceof Error) {
+        const { message } = error;
+        setError("file", { message });
+      }
+
       setToast({
         severity: "error",
         message: "Une erreur s'est produite pendant le téléversement du fichier.",
