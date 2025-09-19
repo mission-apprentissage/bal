@@ -72,7 +72,7 @@ export async function parseMailingList(
         callback();
       },
     }),
-    ...(mailingList.source.file.encoding === "utf8" || !mailingList.source.file.encoding
+    ...(mailingList.source.file.encoding === "utf8"
       ? []
       : [iconv.decodeStream(mailingList.source.file.encoding), iconv.encodeStream("utf8")]),
     parser,

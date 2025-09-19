@@ -75,13 +75,16 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       const { page, size, sort, sortOrder } = request.query;
+
+      const sortValue = sortOrder === "asc" ? 1 : -1;
+
       const [total, items] = await Promise.all([
         getDbCollection("mailingListsV2").countDocuments(),
         getDbCollection("mailingListsV2")
           .find(
             {},
             {
-              sort: { [sort]: sortOrder === "asc" ? 1 : -1, created_at: -1 },
+              sort: { [sort]: sortValue, created_at: sortValue },
               skip: page * size,
               limit: size,
             }
