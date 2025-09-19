@@ -5,7 +5,7 @@ import { getDataFromSample } from "@/app/liste-diffusion/nouvelle-liste/mailingL
 
 interface Props {
   email: string;
-  sample: Array<Record<string, string> | undefined>;
+  sample: Array<Record<string, unknown> | undefined>;
   isLoading?: boolean;
 }
 

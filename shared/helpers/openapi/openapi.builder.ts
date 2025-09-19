@@ -18,6 +18,7 @@ import { modelDescriptors } from "../../models/models.js";
 import { zRoutes } from "../../routes/index.js";
 import { ZResError } from "../../routes/common.routes.js";
 import type { IRouteSchema } from "../../routes/common.routes";
+import { assertUnreachable } from "../../utils/assertUnreachable.js";
 
 type RegistryMeta = { id?: string | undefined; openapi?: Partial<SchemaObject> };
 
@@ -118,7 +119,10 @@ function isRequiredZod(schema: $ZodType): boolean {
     case "optional":
     case "default":
     case "prefault":
+    case "function":
       return false;
+    default:
+      assertUnreachable(schema._zod.def.type);
   }
 }
 

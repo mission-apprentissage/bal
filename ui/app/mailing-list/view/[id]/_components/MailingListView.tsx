@@ -63,7 +63,11 @@ export function MailingListView(props: { id: string }) {
   useLayoutEffect(() => {
     // Make sure first render uses the correct tab
     // Hence the use of useLayoutEffect
-    setTabId(`${step}`);
+    const timeoutId = setTimeout(() => {
+      setTabId(`${step}`);
+    }, 150);
+
+    return () => clearTimeout(timeoutId);
   }, [step]);
 
   if (isLoading) {

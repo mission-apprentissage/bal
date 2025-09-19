@@ -41,6 +41,7 @@ export const ZMailingListV2 = z.object({
       hash_fichier: z.string(),
       delimiter: z.string(),
       size: z.number(),
+      encoding: z.string(),
     }),
     lines: z.number(),
     columns: z.array(z.string()),

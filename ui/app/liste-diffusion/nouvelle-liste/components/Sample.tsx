@@ -4,7 +4,7 @@ import { isComputedColumns, MAILING_LIST_COMPUTED_COLUMNS } from "shared/constan
 import { getDataFromSample } from "@/app/liste-diffusion/nouvelle-liste/mailingLists.utils";
 
 interface Props {
-  sample: Array<Record<string, string> | undefined>;
+  sample: Array<Record<string, unknown> | undefined>;
   column?: string;
   size?: number;
   isLoading?: boolean;
