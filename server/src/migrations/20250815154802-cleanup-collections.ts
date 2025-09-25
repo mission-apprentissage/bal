@@ -18,7 +18,7 @@ export const up = async (db: Db) => {
 
   for (const collectionName of collectionsToDrop) {
     console.log(`Dropping collection: ${collectionName}`);
-    await db.collection(collectionName).drop();
+    //await db.collection(collectionName).drop();
   }
 };
 
