@@ -1,9 +1,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { PersonWithOrganisationJson } from "shared/models/person.model";
-
+import { useCallback } from "react";
 import SearchBar from "@/components/SearchBar";
 import Table from "@/components/table/Table";
 import { apiGet } from "@/utils/api.utils";
@@ -17,24 +15,41 @@ const PersonList = () => {
 
   const { page: page, limit: limit, q: searchValue } = getSearchParamsForQuery(searchParams);
 
-  const { data: persons, isLoading } = useQuery<PersonWithOrganisationJson[]>({
+  const { data, isLoading } = useQuery({
     queryKey: ["persons", { searchValue, page, limit }],
     queryFn: async () =>
       apiGet("/admin/persons", {
         querystring: { q: searchValue, page, limit },
       }),
     throwOnError: true,
+    retry: 5,
   });
 
-  const onSearch = (q: string) => {
-    const url = formatUrlWithNewParams(PAGES.adminPersons().path, searchParams, {
-      q,
-      page,
-      limit,
-    });
+  const setPaginationModel = useCallback(
+    (model: { page: number; pageSize: number }) => {
+      push(
+        formatUrlWithNewParams(PAGES.adminPersons().path, searchParams, {
+          q: searchValue,
+          page: model.page,
+          limit: model.pageSize,
+        })
+      );
+    },
+    [searchValue, push, searchParams]
+  );
 
-    push(url);
-  };
+  const onSearch = useCallback(
+    (q: string) => {
+      const url = formatUrlWithNewParams(PAGES.adminPersons().path, searchParams, {
+        q,
+        page,
+        limit,
+      });
+
+      push(url);
+    },
+    [page, limit, push, searchParams]
+  );
 
   return (
     <>
@@ -44,47 +59,26 @@ const PersonList = () => {
 
       {!isLoading && (
         <Table
-          rows={persons || []}
+          rows={data?.persons || []}
+          pageSizeOptions={[50, 100]}
+          rowCount={data?.pagination?.total || 0}
+          paginationModel={{ page: page as number, pageSize: limit as number }}
+          paginationMode="server"
+          onPaginationModelChange={setPaginationModel}
           columns={[
-            {
-              field: "name",
-              headerName: "Nom complet",
-              flex: 1,
-              valueGetter: (_value, row) => {
-                const { nom, prenom, _id } = row;
-                return nom || prenom ? `${nom ?? ""} ${prenom ?? ""}` : _id;
-              },
-            },
             {
               field: "email",
               headerName: "Email",
               flex: 1,
             },
             {
-              field: "civility",
-              headerName: "Civilité",
-              minWidth: 50,
-            },
-            {
-              field: "organisation_id",
-              headerName: "Organisation",
+              field: "siret",
+              headerName: "SIRET",
               flex: 1,
-              valueFormatter: (_value, row) => {
-                if (!row.organisation) return null;
-                return (
-                  <Link href={PAGES.adminViewOrganisation(row.organisation._id as unknown as string).path}>
-                    {row.organisation.nom}
-                  </Link>
-                );
-              },
             },
             {
-              field: "sources",
-              headerName: "Sources",
-              valueGetter: (_value, row) => {
-                // @ts-expect-error
-                return row._meta?.sources?.join(", ") ?? "";
-              },
+              field: "source",
+              headerName: "Source",
             },
             {
               field: "actions",
@@ -103,6 +97,9 @@ const PersonList = () => {
               ],
             },
           ]}
+          disableColumnFilter
+          disableColumnMenu
+          disableColumnSorting
         />
       )}
     </>

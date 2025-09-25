@@ -6,7 +6,7 @@ import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import type { FC } from "react";
 import { useState } from "react";
-import type { IUserWithPersonPublic } from "shared/models/user.model";
+import type { IUserPublic } from "shared/models/user.model";
 import type { IResErrorJson } from "shared/routes/common.routes";
 
 import { captureException } from "@sentry/nextjs";
@@ -16,10 +16,9 @@ import { apiDelete } from "@/utils/api.utils";
 import { formatDate } from "@/utils/date.utils";
 import { queryClient } from "@/utils/query.utils";
 import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
-import { getPersonDisplayName } from "@/app/admin/personnes/persons.format";
 
 interface Props {
-  user: IUserWithPersonPublic;
+  user: IUserPublic;
 }
 
 const modal = createModal({
@@ -69,25 +68,6 @@ const UserView: FC<Props> = ({ user }) => {
           },
           email: {
             header: () => "Email",
-          },
-          person: {
-            header: () => "Personne",
-            cell: ({ person }) => {
-              if (!person) return null;
-
-              return (
-                <Button
-                  iconId="fr-icon-arrow-right-line"
-                  iconPosition="right"
-                  linkProps={{
-                    href: PAGES.adminViewPerson(person._id).path,
-                  }}
-                  priority="tertiary no outline"
-                >
-                  {getPersonDisplayName(person)}
-                </Button>
-              );
-            },
           },
           is_admin: {
             header: () => "Administrateur",

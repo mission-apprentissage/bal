@@ -3,8 +3,7 @@ import jwt from "jsonwebtoken";
 import { zRoutes } from "shared";
 import type { ITemplate } from "shared/mailer";
 import { zTemplate } from "shared/mailer";
-import type { IUserWithPerson } from "shared/models/user.model";
-
+import type { IUser } from "shared/models/user.model";
 import { generateAccessToken } from "../../security/accessTokenService";
 import config from "@/config";
 
@@ -32,7 +31,7 @@ const createToken = (type: TokenType, subject: string | null = null, options: IC
   return jwt.sign(payload, secret, opts);
 };
 
-export function createResetPasswordToken(user: IUserWithPerson) {
+export function createResetPasswordToken(user: IUser) {
   return generateAccessToken(user, [
     {
       route: zRoutes.post["/auth/reset-password"],
