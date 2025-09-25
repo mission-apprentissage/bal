@@ -93,6 +93,7 @@ export const buildDecaContract = (contrat: any) => {
     ...ifDefined("date_debut_contrat", contrat.detailsContrat.dateDebutContrat, parseDate), // TDB, LBA
     ...ifDefined("date_fin_contrat", contrat.detailsContrat.dateFinContrat, parseDate), // TDB, LBA
     ...ifDefined("date_effet_avenant", contrat.detailsContrat.dateEffetAvenant, parseDate), // TDB, LBA
+    ...ifDefined("date_signature_contrat", contrat.detailsContrat.dateConclusion, parseDate), // LBA
     ...ifDefined("no_avenant", contrat.detailsContrat.noAvenant), // TDB, LBA
     ...ifDefined("statut", contrat.detailsContrat.statut), // TDB, LBA
   };
