@@ -8,6 +8,7 @@ import { useCallback, useState } from "react";
 import type { GridSortModel } from "@mui/x-data-grid";
 import type { IGetRoutes, IQuery } from "shared";
 import { zPrivateMailingListRoutes } from "shared/routes/_private/mailing-list.routes";
+import { AddedBy } from "./_components/AddedBy";
 import Table from "@/components/table/Table";
 import { apiGet } from "@/utils/api.utils";
 import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
@@ -32,7 +33,6 @@ const MailingListPage = () => {
   }, []);
 
   const setSortModel = useCallback((model: GridSortModel) => {
-    console.log("setSortModel", model);
     const isValidSort = zPrivateMailingListRoutes.get["/_private/mailing-list"].querystring.shape.sort.safeParse(
       model[0]?.field
     );
@@ -87,6 +87,12 @@ const MailingListPage = () => {
         onSortModelChange={setSortModel}
         columns={[
           { field: "name", headerName: "Nom", flex: 1 },
+          {
+            field: "added_by",
+            headerName: "Ajouté par",
+            flex: 1,
+            renderCell: (params) => <AddedBy addedBy={params.value} />,
+          },
           { field: "status", headerName: "Statut", flex: 1 },
           {
             field: "created_at",
