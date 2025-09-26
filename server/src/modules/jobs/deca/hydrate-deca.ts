@@ -30,7 +30,7 @@ function getMaxOldestDateForFetching() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
+export const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
   return value ? { [key]: transform(value) } : {};
 };
 
