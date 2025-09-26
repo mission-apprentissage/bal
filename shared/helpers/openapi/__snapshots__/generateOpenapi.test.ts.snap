@@ -1642,6 +1642,9 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                   "delimiter": {
                     "type": "string",
                   },
+                  "encoding": {
+                    "type": "string",
+                  },
                   "hash_fichier": {
                     "type": "string",
                   },
@@ -1653,6 +1656,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                   "hash_fichier",
                   "delimiter",
                   "size",
+                  "encoding",
                 ],
                 "type": "object",
               },

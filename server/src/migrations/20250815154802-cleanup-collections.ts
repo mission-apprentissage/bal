@@ -1,8 +1,8 @@
-import type { Db } from "mongodb";
+//import type { Db } from "mongodb";
 import { modelDescriptors } from "shared/models/models";
 import { getCollectionList } from "../common/utils/mongodbUtils";
 
-export const up = async (db: Db) => {
+export const up = async (/*db: Db*/) => {
   const collections = await getCollectionList();
   const expectedCollections = new Set([
     ...modelDescriptors.map((model): string => model.collectionName),
@@ -18,7 +18,7 @@ export const up = async (db: Db) => {
 
   for (const collectionName of collectionsToDrop) {
     console.log(`Dropping collection: ${collectionName}`);
-    await db.collection(collectionName).drop();
+    //await db.collection(collectionName).drop();
   }
 };
 

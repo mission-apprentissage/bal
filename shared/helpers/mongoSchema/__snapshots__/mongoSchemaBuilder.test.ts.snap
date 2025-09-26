@@ -1545,6 +1545,9 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
             "delimiter": {
               "bsonType": "string",
             },
+            "encoding": {
+              "bsonType": "string",
+            },
             "hash_fichier": {
               "bsonType": "string",
             },
@@ -1556,6 +1559,7 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
             "hash_fichier",
             "delimiter",
             "size",
+            "encoding",
           ],
         },
         "lines": {
