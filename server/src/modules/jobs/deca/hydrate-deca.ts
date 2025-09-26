@@ -48,7 +48,7 @@ export const buildDecaContract = (contrat: any) => {
       ...ifDefined("sexe", contrat.alternant.sexe), // TDB
       ...ifDefined("departement_naissance", contrat.alternant.departementNaissance), // TDB
       ...ifDefined("nationalite", contrat.alternant.nationalite, parseInt), // TDB
-      handicap: contrat.alternant.handicap === "true" ? true : false, // TDB, LBA
+      handicap: contrat.alternant.handicap === "true" || contrat.alternant.handicap === true ? true : false, // TDB, LBA
       ...ifDefined("courriel", contrat.alternant.courriel), // TDB, LBA
       ...ifDefined("telephone", contrat.alternant.telephone), // TDB
       adresse: {
@@ -93,6 +93,7 @@ export const buildDecaContract = (contrat: any) => {
     ...ifDefined("date_debut_contrat", contrat.detailsContrat.dateDebutContrat, parseDate), // TDB, LBA
     ...ifDefined("date_fin_contrat", contrat.detailsContrat.dateFinContrat, parseDate), // TDB, LBA
     ...ifDefined("date_effet_avenant", contrat.detailsContrat.dateEffetAvenant, parseDate), // TDB, LBA
+    ...ifDefined("date_signature_contrat", contrat.detailsContrat.dateConclusion, parseDate), // LBA
     ...ifDefined("no_avenant", contrat.detailsContrat.noAvenant), // TDB, LBA
     ...ifDefined("statut", contrat.detailsContrat.statut), // TDB, LBA
   };
