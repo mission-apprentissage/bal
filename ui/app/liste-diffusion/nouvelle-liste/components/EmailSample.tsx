@@ -4,7 +4,7 @@ import Sample from "./Sample";
 import { getDataFromSample } from "@/app/liste-diffusion/nouvelle-liste/mailingLists.utils";
 
 interface Props {
-  sample: Array<Record<string, string> | undefined>;
+  sample: Array<Record<string, unknown> | undefined>;
   emailKey?: string;
   isLoading?: boolean;
 }
