@@ -218,6 +218,12 @@ program
   .action(createJobAction("deca:hydrate"));
 
 program
+  .command("deca:hydrateSpecific")
+  .description("Récupération des infos de date de signature et de flag handicap")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("deca:hydrateSpecific"));
+
+program
   .command("deca:s3:upload")
   .description("DECA to ovh S3")
   .option("-q, --queued", "Run job asynchronously", false)

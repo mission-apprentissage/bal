@@ -18,6 +18,7 @@ export type CollectionName =
   | "anonymized.deca"
   | "decaHistory"
   | "deca.import.job.result"
+  | "deca.import.job.result.specific"
   | "catalogueEmailSirets"
   | "bouncer.email"
   | "bouncer.domain"
