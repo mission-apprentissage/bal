@@ -238,7 +238,7 @@ const hydrateDecaPeriod = async (
           try {
             const newContratFilter = {
               no_contrat: currentContrat.no_contrat,
-              type_contrat: currentContrat.type_contrat,
+              type_contrat: "" + currentContrat.type_contrat, // was converted to number ? maybe because of deepmerge
               "alternant.nom": currentContrat.alternant.nom,
             };
 
