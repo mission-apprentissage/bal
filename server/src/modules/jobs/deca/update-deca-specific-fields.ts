@@ -14,6 +14,10 @@ import { ifDefined, isDecaApiAvailable } from "./hydrate-deca";
 import parentLogger from "@/common/logger";
 import { getAllContrats } from "@/common/apis/deca";
 
+/**
+ * NB: to be run once and kept dormant until needed again
+ */
+
 const logger = parentLogger.child({ module: "job:hydrate:deca" });
 const DATE_DEBUT_CONTRATS_DISPONIBLES = new Date("2022-06-07T00:00:00.000+02:00"); // Date de début de disponibilité des données dans l'API Deca
 const NB_JOURS_MAX_PERIODE_FETCH = 650;
