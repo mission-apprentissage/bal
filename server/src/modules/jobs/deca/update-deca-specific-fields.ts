@@ -4,11 +4,9 @@ import { addDays, format, isAfter, isBefore } from "date-fns";
 import deepmerge from "deepmerge";
 import { ObjectId } from "mongodb";
 import type { IDeca } from "shared/models/deca.model/deca.model";
-import { ZDeca } from "shared/models/deca.model/deca.model";
 import type { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model";
 
 import z from "zod";
-import { zObjectId } from "shared/models/common";
 import { withCause } from "../../../common/services/errors/withCause";
 import { asyncForEach } from "../../../common/utils/asyncUtils";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
@@ -18,7 +16,7 @@ import { getAllContrats } from "@/common/apis/deca";
 
 const logger = parentLogger.child({ module: "job:hydrate:deca" });
 const DATE_DEBUT_CONTRATS_DISPONIBLES = new Date("2022-06-07T00:00:00.000+02:00"); // Date de début de disponibilité des données dans l'API Deca
-const NB_JOURS_MAX_PERIODE_FETCH = 600;
+const NB_JOURS_MAX_PERIODE_FETCH = 650;
 
 function getMaxOldestDateForFetching() {
   const date = new Date();
@@ -32,10 +30,7 @@ const parseDate = (v: string) => {
 };
 
 export const ZDecaSpecific = z.object({
-  _id: zObjectId,
-
   no_contrat: z.string(),
-  date_debut_contrat: z.date(),
   date_signature_contrat: z.optional(z.date()),
   alternant: z.object({
     nom: z.string(),
@@ -152,8 +147,6 @@ const hydrateDecaPeriod = async (
             })
           );
 
-          console.log(item, tdbContrat);
-
           if (tdbContrat) {
             contrat = deepmerge(item, tdbContrat);
             tdbMap.delete(
@@ -172,16 +165,12 @@ const hydrateDecaPeriod = async (
           try {
             const contratFilter = {
               no_contrat: currentContrat.no_contrat,
-              type_contrat: currentContrat.type_contrat,
+              type_contrat: "" + currentContrat.type_contrat,
               "alternant.nom": currentContrat.alternant.nom,
             };
 
-            console.log("contratFilter", contratFilter);
             /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
-            const preparedContrat = ZDeca.parse({
-              ...currentContrat,
-            });
-            console.log("preparedContrat", preparedContrat);
+            const preparedContrat = ZDecaSpecific.parse(currentContrat);
 
             await getDbCollection("deca").updateOne(contratFilter, {
               $set: {
@@ -204,7 +193,6 @@ const hydrateDecaPeriod = async (
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
-        console.log(err);
         throw withCause(
           internal("Erreur lors de la récupération des données Deca spécifique", {
             error: err,
