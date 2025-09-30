@@ -47,6 +47,8 @@ RUN curl -so - https://cert.certigna.com/CertignaServerAuthenticationOVCPEUCAG1.
   && openssl verify /usr/local/share/ca-certificates/CertignaServerAuthenticationOVCPEUCAG1.crt \
   && update-ca-certificates
 
+ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/CertignaServerAuthenticationOVCPEUCAG1.pem
+
 ENV NODE_ENV=production
 
 ARG PUBLIC_VERSION
