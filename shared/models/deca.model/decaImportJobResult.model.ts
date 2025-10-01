@@ -9,7 +9,7 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ import_date: -1 }, {}],
 ];
 
-const ZDecaImportJobResult = z.object({
+export const ZDecaImportJobResult = z.object({
   _id: zObjectId,
   // La date d'un import deca au format yyyy-MM-dd"
   import_date_string: z.string(),

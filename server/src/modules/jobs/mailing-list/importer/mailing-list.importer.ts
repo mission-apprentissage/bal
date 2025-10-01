@@ -7,6 +7,8 @@ import type { IMailingListV2 } from "shared/models/mailingListV2.model";
 import type { IUser } from "shared/models/user.model";
 import { addDays, differenceInSeconds } from "date-fns";
 import { canScheduleParse } from "shared/mailing-list/mailing-list.utils";
+import { detect } from "chardet";
+import iconv from "iconv-lite";
 import { checksum, cipher, generateKey } from "../../../../common/utils/cryptoUtils";
 import { getMailingListStoragePath } from "../storage/mailing-list-storage";
 import { clamav } from "../../../../services";
@@ -80,12 +82,18 @@ export async function createMailingList(
   const { hashStream, getHash } = checksum();
   let fileSize = 0;
 
+  // Buffer used to detect encoding. We will take a subset of at least 1024 bytes
+  let detectBuffer: Buffer = Buffer.alloc(0);
+
   await pipeline(
     file.file,
     scanStream,
     new Transform({
-      transform(chunk, _encoding, callback) {
+      transform(chunk: Buffer, _encoding, callback) {
         fileSize += chunk.length;
+        if (detectBuffer.length < 1024) {
+          detectBuffer = Buffer.concat([detectBuffer, chunk]);
+        }
         // Push the chunk to the next stream in the pipeline
         this.push(chunk);
         callback();
@@ -109,6 +117,16 @@ export async function createMailingList(
     throw badRequest("Le contenu du fichier est invalide", { viruses });
   }
 
+  const encoding = detect(detectBuffer)?.toLocaleLowerCase() ?? null;
+
+  if (!encoding) {
+    throw badRequest("Impossible de détecter l'encodage du fichier");
+  }
+
+  if (!iconv.encodingExists(encoding.toLowerCase())) {
+    throw badRequest(`L'encodage du fichier n'est pas supporté, "${encoding}" détécté`);
+  }
+
   await sleep(5_000); // Wait for 5 second to ensure the file is fully processed
 
   // Update TTL only when the file is successfully uploaded with no viruses
@@ -121,6 +139,7 @@ export async function createMailingList(
         hash_fichier,
         delimiter,
         size: fileSize,
+        encoding,
       },
       lines: 0, // Will be updated later during parsing
       columns: [], // Will be updated later during parsing

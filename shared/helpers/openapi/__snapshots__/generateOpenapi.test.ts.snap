@@ -71,6 +71,10 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "format": "date-time",
             "type": "string",
           },
+          "date_signature_contrat": {
+            "format": "date-time",
+            "type": "string",
+          },
           "date_suppression": {
             "format": "date-time",
             "type": "string",
@@ -486,6 +490,10 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "type": "string",
           },
           "date_fin_contrat": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "date_signature_contrat": {
             "format": "date-time",
             "type": "string",
           },
@@ -1540,6 +1548,9 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                   "delimiter": {
                     "type": "string",
                   },
+                  "encoding": {
+                    "type": "string",
+                  },
                   "hash_fichier": {
                     "type": "string",
                   },
@@ -1551,6 +1562,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                   "hash_fichier",
                   "delimiter",
                   "size",
+                  "encoding",
                 ],
                 "type": "object",
               },

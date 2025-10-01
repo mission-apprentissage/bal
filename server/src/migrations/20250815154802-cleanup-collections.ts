@@ -9,6 +9,8 @@ export const up = async (db: Db) => {
     "migrations",
     "job_processor.jobs",
     "job_processor.workers",
+    "job_processor.signals",
+    "system.profile",
   ]);
 
   const collectionsToDrop = collections

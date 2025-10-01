@@ -10,6 +10,7 @@ import type { Info } from "csv-parse";
 import { ZMailingListSource } from "shared/models/mailingList.source.model";
 import type { IMailingListSource } from "shared/models/mailingList.source.model";
 import { z } from "zod/v4-mini";
+import iconv from "iconv-lite";
 import { getDbCollection } from "../../../../common/utils/mongodbUtils";
 import { getFromStorage } from "../../../../common/utils/ovhUtils";
 import { decipher } from "../../../../common/utils/cryptoUtils";
@@ -71,6 +72,9 @@ export async function parseMailingList(
         callback();
       },
     }),
+    ...(mailingList.source.file.encoding === "utf8"
+      ? []
+      : [iconv.decodeStream(mailingList.source.file.encoding), iconv.encodeStream("utf8")]),
     parser,
     new Transform({
       objectMode: true,

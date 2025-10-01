@@ -18,16 +18,16 @@
     "job-processor": "^2.1.0-next.3",
     "luhn": "^2.4.1",
     "openapi3-ts": "^4.5.0",
-    "type-fest": "^4.41.0",
-    "zod": "^4.0.17",
+    "type-fest": "^5.0.1",
+    "zod": "^4.1.11",
     "zod-mongodb-schema": "^2.0.0"
   },
   "devDependencies": {
     "@readme/openapi-parser": "^5.0.1",
     "@tsconfig/node24": "^24.0.1",
     "api-alternance-sdk": "^2.14.0",
-    "mongodb": "^6.18.0",
-    "typescript": "^5.9.2",
+    "mongodb": "^6.20.0",
+    "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   }
 }

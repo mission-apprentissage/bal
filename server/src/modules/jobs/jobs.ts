@@ -22,6 +22,7 @@ import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
 import { importPersonFromAlgoLba } from "./lba/hydrate-siretlist";
 import { importPersonFromDeca } from "./validation/hydrate-from-deca";
 import { anonymisationService } from "./anonymisation/anonymisation.service";
+import { updateDecaSpecificFields } from "./deca/update-deca-specific-fields";
 import {
   onMailingListV2JobExited,
   processMailingList,
@@ -155,6 +156,11 @@ export async function setupJobProcessor() {
       "deca:hydrate": {
         handler: async (_job, signal) => {
           await hydrateDeca(signal);
+        },
+      },
+      "deca:hydrateSpecific": {
+        handler: async (_job, signal) => {
+          await updateDecaSpecificFields(signal);
         },
       },
       "deca:s3:upload": {

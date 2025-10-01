@@ -77,6 +77,7 @@ export type IDocumentMap = {
   ["anonymized.deca"]: IDecaAnonymized;
   decaHistory: IDecaHistory;
   ["deca.import.job.result"]: IDecaImportJobResult;
+  ["deca.import.job.result.specific"]: IDecaImportJobResult;
   ["bouncer.email"]: BouncerEmail;
   ["bouncer.domain"]: BouncerDomain;
   ["lba.emailblacklists"]: ILbaEmailBlacklist;
