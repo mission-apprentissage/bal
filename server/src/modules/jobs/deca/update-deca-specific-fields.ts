@@ -35,7 +35,7 @@ const parseDate = (v: string) => {
 
 export const ZDecaSpecific = z.object({
   no_contrat: z.string(),
-  date_signature_contrat: z.optional(z.date()),
+  date_signature_contrat: z.nullish(z.date()),
   alternant: z.object({
     nom: z.string(),
     handicap: z.boolean(),
@@ -178,7 +178,7 @@ const hydrateDecaPeriod = async (
 
             await getDbCollection("deca").updateOne(contratFilter, {
               $set: {
-                date_signature_contrat: preparedContrat.date_signature_contrat,
+                date_signature_contrat: preparedContrat.date_signature_contrat || null,
                 "alternant.handicap": preparedContrat.alternant.handicap,
               },
             });
