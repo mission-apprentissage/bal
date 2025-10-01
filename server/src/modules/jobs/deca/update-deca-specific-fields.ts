@@ -35,7 +35,7 @@ const parseDate = (v: string) => {
 
 export const ZDecaSpecific = z.object({
   no_contrat: z.string(),
-  date_signature_contrat: z.nullish(z.date()),
+  date_signature_contrat: z.nullable(z.date()),
   alternant: z.object({
     nom: z.string(),
     handicap: z.boolean(),
@@ -50,7 +50,7 @@ export const buildDecaContract = (contrat: any) => {
       handicap: contrat.alternant.handicap === "true" || contrat.alternant.handicap === true ? true : false, // TDB, LBA
     },
     no_contrat: contrat.detailsContrat.noContrat, // TDB, LBA
-    ...ifDefined("date_signature_contrat", contrat.detailsContrat.dateConclusion, parseDate), // LBA
+    date_signature_contrat: parseDate(contrat.detailsContrat.dateConclusion), // LBA
     ...ifDefined("type_contrat", contrat.detailsContrat.typeContrat), // TDB, LBA
   };
 };
