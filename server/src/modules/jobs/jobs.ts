@@ -23,6 +23,7 @@ import { importPersonFromAlgoLba } from "./lba/hydrate-siretlist";
 import { importPersonFromDeca } from "./validation/hydrate-from-deca";
 import { anonymisationService } from "./anonymisation/anonymisation.service";
 import { processMailingList, recoverMailingListJobs } from "./mailing-list/mailing-list.processor";
+import { updateDecaSpecificFields } from "./deca/update-deca-specific-fields";
 import {
   create as createMigration,
   status as statusMigration,
@@ -151,6 +152,11 @@ export async function setupJobProcessor() {
       "deca:hydrate": {
         handler: async (_job, signal) => {
           await hydrateDeca(signal);
+        },
+      },
+      "deca:hydrateSpecific": {
+        handler: async (_job, signal) => {
+          await updateDecaSpecificFields(signal);
         },
       },
       "deca:s3:upload": {

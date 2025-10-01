@@ -23,6 +23,9 @@ exports[`zodToMongoSchema > should convert anonymized.deca schema 1`] = `
     "date_fin_contrat": {
       "bsonType": "date",
     },
+    "date_signature_contrat": {
+      "bsonType": "date",
+    },
     "date_suppression": {
       "bsonType": "date",
     },
@@ -396,6 +399,9 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
       "bsonType": "date",
     },
     "date_fin_contrat": {
+      "bsonType": "date",
+    },
+    "date_signature_contrat": {
       "bsonType": "date",
     },
     "date_suppression": {
