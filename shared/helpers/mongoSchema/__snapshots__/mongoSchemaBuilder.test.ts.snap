@@ -24,7 +24,10 @@ exports[`zodToMongoSchema > should convert anonymized.deca schema 1`] = `
       "bsonType": "date",
     },
     "date_signature_contrat": {
-      "bsonType": "date",
+      "bsonType": [
+        "date",
+        "null",
+      ],
     },
     "date_suppression": {
       "bsonType": "date",
@@ -77,7 +80,6 @@ exports[`zodToMongoSchema > should convert anonymized.deca schema 1`] = `
       "properties": {
         "siret": {
           "bsonType": "string",
-          "pattern": "^\\d{14}$",
         },
       },
     },
@@ -432,7 +434,10 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
       "bsonType": "date",
     },
     "date_signature_contrat": {
-      "bsonType": "date",
+      "bsonType": [
+        "date",
+        "null",
+      ],
     },
     "date_suppression": {
       "bsonType": "date",
@@ -491,7 +496,6 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
       "properties": {
         "siret": {
           "bsonType": "string",
-          "pattern": "^\\d{14}$",
         },
       },
     },
