@@ -72,8 +72,15 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "type": "string",
           },
           "date_signature_contrat": {
-            "format": "date-time",
-            "type": "string",
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string",
+              },
+              {
+                "type": "null",
+              },
+            ],
           },
           "date_suppression": {
             "format": "date-time",
@@ -207,6 +214,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "no_contrat",
           "date_debut_contrat",
           "date_fin_contrat",
+          "date_signature_contrat",
           "formation",
           "updated_at",
           "created_at",
@@ -522,8 +530,15 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "type": "string",
           },
           "date_signature_contrat": {
-            "format": "date-time",
-            "type": "string",
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string",
+              },
+              {
+                "type": "null",
+              },
+            ],
           },
           "date_suppression": {
             "format": "date-time",
@@ -663,6 +678,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "no_contrat",
           "date_debut_contrat",
           "date_fin_contrat",
+          "date_signature_contrat",
           "alternant",
           "formation",
           "employeur",
