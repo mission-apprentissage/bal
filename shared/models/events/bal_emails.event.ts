@@ -12,7 +12,6 @@ export type IEmailError = z.output<typeof zEmailError>;
 export const ZEventBalEmail = z.object({
   _id: zObjectId,
   type: z.literal("email.bal"),
-  person_id: z.string(),
   template: zTemplate,
   created_at: z.date(),
   updated_at: z.date(),

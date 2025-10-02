@@ -12,7 +12,14 @@ export const zAdminOrganisationRoutes = {
       path: "/admin/organisations",
       querystring: ZReqParamsSearchPagination,
       response: {
-        "200": z.array(ZOrganisation),
+        "200": z.object({
+          organisations: z.array(ZOrganisation),
+          pagination: z.object({
+            page: z.number(),
+            size: z.number(),
+            total: z.number(),
+          }),
+        }),
       },
       securityScheme: {
         auth: "cookie-session",

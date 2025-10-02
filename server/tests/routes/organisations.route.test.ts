@@ -29,7 +29,6 @@ describe("Organisations", () => {
     const user = await createUser({
       email: "connected@exemple.fr",
       password: "my-password",
-      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     userToken = await generateApiKey(user);

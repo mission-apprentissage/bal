@@ -1,6 +1,5 @@
 import { z } from "zod/v4-mini";
-
-import { ZUser, zUserWithPersonPublic } from "../models/user.model";
+import { ZUser, ZUserPublic } from "../models/user.model";
 import type { IRoutesDef } from "./common.routes";
 import { ZReqHeadersAuthorization, ZResOk } from "./common.routes";
 
@@ -27,7 +26,7 @@ export const zAuthRoutes = {
       method: "get",
       path: "/auth/session",
       response: {
-        "200": zUserWithPersonPublic,
+        "200": ZUserPublic,
       },
       headers: ZReqHeadersAuthorization,
       securityScheme: {
@@ -61,7 +60,7 @@ export const zAuthRoutes = {
         password: ZUser.shape.password,
       }),
       response: {
-        "200": zUserWithPersonPublic,
+        "200": ZUserPublic,
       },
       securityScheme: null,
     },

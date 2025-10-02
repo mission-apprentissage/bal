@@ -24,7 +24,6 @@ const MailingListPage = () => {
   });
 
   const setPaginationModel = useCallback((model: { page: number; pageSize: number }) => {
-    console.log("setPaginationModel", model);
     setQuery((prev) => ({
       ...prev,
       page: model.page,

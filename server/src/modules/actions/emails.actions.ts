@@ -3,13 +3,12 @@ import type { IEmailError, IEventBalEmail } from "shared/models/events/bal_email
 
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-export async function createBalEmailEvent(person_id: string, template: IEventBalEmail["template"]) {
+export async function createBalEmailEvent(template: IEventBalEmail["template"]) {
   const now = new Date();
 
   const event: IEventBalEmail = {
     _id: new ObjectId(),
     type: "email.bal",
-    person_id,
     template,
     opened_at: null,
     delivered_at: null,

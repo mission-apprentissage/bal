@@ -1,9 +1,8 @@
-import { forbidden } from "@hapi/boom";
-import { ObjectId } from "mongodb";
+import { notFound } from "@hapi/boom";
 import { zRoutes } from "shared";
 
-import { findPerson, findPersons } from "../../actions/persons.actions";
 import type { Server } from "../server";
+import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
 export const personAdminRoutes = ({ server }: { server: Server }) => {
   server.get(
@@ -13,11 +12,32 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/admin/persons"])],
     },
     async (request, response) => {
-      const { q = "" } = request.query;
+      const { q = "", page = 1, limit = 100 } = request.query;
 
-      const persons = await findPersons(q ? { $text: { $search: q } } : null);
+      const filter = q
+        ? {
+            $or: [{ email: { $regex: q, $options: "i" } }, { siret: { $regex: q, $options: "i" } }],
+          }
+        : {};
+      const [persons, count] = await Promise.all([
+        getDbCollection("persons")
+          .find(filter, {
+            skip: (page - 1) * limit,
+            limit,
+            sort: { created_at: 1 },
+          })
+          .toArray(),
+        getDbCollection("persons").countDocuments(filter),
+      ]);
 
-      return response.status(200).send(persons);
+      return response.status(200).send({
+        persons,
+        pagination: {
+          page,
+          size: limit,
+          total: count,
+        },
+      });
     }
   );
 
@@ -28,12 +48,12 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/admin/persons/:id"])],
     },
     async (request, response) => {
-      const person = await findPerson({
-        _id: new ObjectId(request.params.id),
+      const person = await getDbCollection("persons").findOne({
+        _id: request.params.id,
       });
 
       if (!person) {
-        throw forbidden();
+        throw notFound();
       }
 
       return response.status(200).send(person);
