@@ -136,6 +136,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "additionalProperties": false,
             "properties": {
               "siret": {
+                "pattern": "^\\d{14}$",
                 "type": "string",
               },
             },
@@ -599,6 +600,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "additionalProperties": false,
             "properties": {
               "siret": {
+                "pattern": "^\\d{14}$",
                 "type": "string",
               },
             },

@@ -80,6 +80,7 @@ exports[`zodToMongoSchema > should convert anonymized.deca schema 1`] = `
       "properties": {
         "siret": {
           "bsonType": "string",
+          "pattern": "^\\d{14}$",
         },
       },
     },
@@ -497,6 +498,7 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
       "properties": {
         "siret": {
           "bsonType": "string",
+          "pattern": "^\\d{14}$",
         },
       },
     },
