@@ -63,7 +63,7 @@
     "@dword-design/eslint-plugin-import-alias": "^6.0.3",
     "@eslint/compat": "^1.3.2",
     "@eslint/js": "^9.36.0",
-    "@next/eslint-plugin-next": "^15.5.3",
+    "@next/eslint-plugin-next": "^15.5.4",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^7.1.0",
     "@tanstack/eslint-plugin-query": "5.89.0",

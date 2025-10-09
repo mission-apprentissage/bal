@@ -60,7 +60,7 @@
     "luxon": "^3.7.2",
     "mjml": "^4.16.1",
     "mongodb": "^6.20.0",
-    "nodemailer": "^7.0.6",
+    "nodemailer": "^7.0.7",
     "nodemailer-html-to-text": "^3.2.0",
     "oleoduc": "^0.8.0",
     "p-map": "^7.0.3",
