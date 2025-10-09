@@ -2498,74 +2498,74 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/env@npm:15.5.3":
-  version: 15.5.3
-  resolution: "@next/env@npm:15.5.3"
-  checksum: edc40a6ffb7d0bb1b1a360707dec5513cd2cd518f2110b2b248b3f56067eb275321bc2c62c5fcb508572b49d0adbbbf50e80f16a2efe3449959c74d6505de152
+"@next/env@npm:15.5.4":
+  version: 15.5.4
+  resolution: "@next/env@npm:15.5.4"
+  checksum: e0d22306daa5d3936ad947114ac59bb640786b626dc48b24bf58336010688a02eef3d3cb06905d7a79b3033e15471cd25b668958beb051f36103200e669ca7f5
   languageName: node
   linkType: hard
 
-"@next/eslint-plugin-next@npm:^15.5.3":
-  version: 15.5.3
-  resolution: "@next/eslint-plugin-next@npm:15.5.3"
+"@next/eslint-plugin-next@npm:^15.5.4":
+  version: 15.5.4
+  resolution: "@next/eslint-plugin-next@npm:15.5.4"
   dependencies:
     fast-glob: 3.3.1
-  checksum: 3349aaef72e6db0c75a491b25c5da9dec0e0041d9e2af1825ade1674ce247d9122aa65a814753f51bddbdecbe381b05e1edf1d0e1804a7153ac126976adcc08b
+  checksum: 512e14a8ca34939a64fcab4f506f21bd8e68906283b5b943ef9e0f61c6c1bf072fff69db9d04e2d2e7c278fa62160c29450857582cda44516042e2de1568557a
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-arm64@npm:15.5.3":
-  version: 15.5.3
-  resolution: "@next/swc-darwin-arm64@npm:15.5.3"
+"@next/swc-darwin-arm64@npm:15.5.4":
+  version: 15.5.4
+  resolution: "@next/swc-darwin-arm64@npm:15.5.4"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-x64@npm:15.5.3":
-  version: 15.5.3
-  resolution: "@next/swc-darwin-x64@npm:15.5.3"
+"@next/swc-darwin-x64@npm:15.5.4":
+  version: 15.5.4
+  resolution: "@next/swc-darwin-x64@npm:15.5.4"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-gnu@npm:15.5.3":
-  version: 15.5.3
-  resolution: "@next/swc-linux-arm64-gnu@npm:15.5.3"
+"@next/swc-linux-arm64-gnu@npm:15.5.4":
+  version: 15.5.4
+  resolution: "@next/swc-linux-arm64-gnu@npm:15.5.4"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-musl@npm:15.5.3":
-  version: 15.5.3
-  resolution: "@next/swc-linux-arm64-musl@npm:15.5.3"
+"@next/swc-linux-arm64-musl@npm:15.5.4":
+  version: 15.5.4
+  resolution: "@next/swc-linux-arm64-musl@npm:15.5.4"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-gnu@npm:15.5.3":
-  version: 15.5.3
-  resolution: "@next/swc-linux-x64-gnu@npm:15.5.3"
+"@next/swc-linux-x64-gnu@npm:15.5.4":
+  version: 15.5.4
+  resolution: "@next/swc-linux-x64-gnu@npm:15.5.4"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-musl@npm:15.5.3":
-  version: 15.5.3
-  resolution: "@next/swc-linux-x64-musl@npm:15.5.3"
+"@next/swc-linux-x64-musl@npm:15.5.4":
+  version: 15.5.4
+  resolution: "@next/swc-linux-x64-musl@npm:15.5.4"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-win32-arm64-msvc@npm:15.5.3":
-  version: 15.5.3
-  resolution: "@next/swc-win32-arm64-msvc@npm:15.5.3"
+"@next/swc-win32-arm64-msvc@npm:15.5.4":
+  version: 15.5.4
+  resolution: "@next/swc-win32-arm64-msvc@npm:15.5.4"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-win32-x64-msvc@npm:15.5.3":
-  version: 15.5.3
-  resolution: "@next/swc-win32-x64-msvc@npm:15.5.3"
+"@next/swc-win32-x64-msvc@npm:15.5.4":
+  version: 15.5.4
+  resolution: "@next/swc-win32-x64-msvc@npm:15.5.4"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -11838,7 +11838,7 @@ __metadata:
     "@dword-design/eslint-plugin-import-alias": ^6.0.3
     "@eslint/compat": ^1.3.2
     "@eslint/js": ^9.36.0
-    "@next/eslint-plugin-next": ^15.5.3
+    "@next/eslint-plugin-next": ^15.5.4
     "@semantic-release/changelog": ^6.0.3
     "@semantic-release/exec": ^7.1.0
     "@sentry/cli": ^2.54.0
@@ -12063,19 +12063,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:^15.5.3":
-  version: 15.5.3
-  resolution: "next@npm:15.5.3"
+"next@npm:^15.5.4":
+  version: 15.5.4
+  resolution: "next@npm:15.5.4"
   dependencies:
-    "@next/env": 15.5.3
-    "@next/swc-darwin-arm64": 15.5.3
-    "@next/swc-darwin-x64": 15.5.3
-    "@next/swc-linux-arm64-gnu": 15.5.3
-    "@next/swc-linux-arm64-musl": 15.5.3
-    "@next/swc-linux-x64-gnu": 15.5.3
-    "@next/swc-linux-x64-musl": 15.5.3
-    "@next/swc-win32-arm64-msvc": 15.5.3
-    "@next/swc-win32-x64-msvc": 15.5.3
+    "@next/env": 15.5.4
+    "@next/swc-darwin-arm64": 15.5.4
+    "@next/swc-darwin-x64": 15.5.4
+    "@next/swc-linux-arm64-gnu": 15.5.4
+    "@next/swc-linux-arm64-musl": 15.5.4
+    "@next/swc-linux-x64-gnu": 15.5.4
+    "@next/swc-linux-x64-musl": 15.5.4
+    "@next/swc-win32-arm64-msvc": 15.5.4
+    "@next/swc-win32-x64-msvc": 15.5.4
     "@swc/helpers": 0.5.15
     caniuse-lite: ^1.0.30001579
     postcss: 8.4.31
@@ -12118,7 +12118,7 @@ __metadata:
       optional: true
   bin:
     next: dist/bin/next
-  checksum: 91c4ed03d8a8ae1b0fa0b6739e083af2c811809533aeedd013d163a502749e052737b53dccc794752c46ab6934c7fb39104c4e3fb26365b67c847b072b75e925
+  checksum: 3d9064a9f0c3bb6527a93899fa5b006d3a960e376105da6889693f58eb024ba57c74fd4f169c52316121f11990e62b02f04031efb17b8d34c9372a8298539b2c
   languageName: node
   linkType: hard
 
@@ -12243,10 +12243,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^7.0.6":
-  version: 7.0.6
-  resolution: "nodemailer@npm:7.0.6"
-  checksum: d3829aa45c2270942e6fd90a1ac670a93082c00c128f6396c68bee19d94e574a4a2efa14af1d65b05a6d2d8c84aea4ff0b999ed5ca6fd28f11eaef0b409f0c6b
+"nodemailer@npm:^7.0.7":
+  version: 7.0.9
+  resolution: "nodemailer@npm:7.0.9"
+  checksum: b912ad8bafcf6c58ccc5b158a5794f13e6178d8473d167078412ec2a6d90dac52125c9cc9c4722d6f05c91c7f20303ce885af4aa37b4ca10c99e763a58b9feb5
   languageName: node
   linkType: hard
 
@@ -14448,7 +14448,7 @@ __metadata:
     mjml: ^4.16.1
     mongodb: ^6.20.0
     nock: ^14.0.10
-    nodemailer: ^7.0.6
+    nodemailer: ^7.0.7
     nodemailer-html-to-text: ^3.2.0
     oleoduc: ^0.8.0
     p-map: ^7.0.3
@@ -15781,7 +15781,7 @@ __metadata:
     date-fns: ^4.1.0
     dotenv: ^17.2.2
     job-processor: ^2.1.0-next.3
-    next: ^15.5.3
+    next: ^15.5.4
     next-plausible: ^3.12.4
     notion-client: ^7.6.0
     notion-types: ^7.6.0
