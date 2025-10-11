@@ -1640,6 +1640,10 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "source": {
             "type": "string",
           },
+          "ttl": {
+            "format": "date-time",
+            "type": "string",
+          },
           "updated_at": {
             "format": "date-time",
             "type": "string",
@@ -1650,6 +1654,9 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "siren",
           "email_domain",
           "source",
+          "updated_at",
+          "created_at",
+          "ttl",
         ],
         "type": "object",
       },
@@ -1670,6 +1677,10 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "source": {
             "type": "string",
           },
+          "ttl": {
+            "format": "date-time",
+            "type": "string",
+          },
           "updated_at": {
             "format": "date-time",
             "type": "string",
@@ -1682,6 +1693,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "source",
           "updated_at",
           "created_at",
+          "ttl",
         ],
         "type": "object",
       },

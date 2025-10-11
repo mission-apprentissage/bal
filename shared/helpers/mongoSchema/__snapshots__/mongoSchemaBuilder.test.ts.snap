@@ -1546,6 +1546,9 @@ exports[`zodToMongoSchema > should convert organisations schema 1`] = `
     "source": {
       "bsonType": "string",
     },
+    "ttl": {
+      "bsonType": "date",
+    },
     "updated_at": {
       "bsonType": "date",
     },
@@ -1555,6 +1558,9 @@ exports[`zodToMongoSchema > should convert organisations schema 1`] = `
     "siren",
     "email_domain",
     "source",
+    "updated_at",
+    "created_at",
+    "ttl",
   ],
 }
 `;
@@ -1579,6 +1585,9 @@ exports[`zodToMongoSchema > should convert persons schema 1`] = `
     "source": {
       "bsonType": "string",
     },
+    "ttl": {
+      "bsonType": "date",
+    },
     "updated_at": {
       "bsonType": "date",
     },
@@ -1590,6 +1599,7 @@ exports[`zodToMongoSchema > should convert persons schema 1`] = `
     "source",
     "updated_at",
     "created_at",
+    "ttl",
   ],
 }
 `;

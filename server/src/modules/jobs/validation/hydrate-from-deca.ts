@@ -1,6 +1,7 @@
 import type { AnyBulkWriteOperation } from "mongodb";
 import type { IPerson } from "shared/models/person.model";
 import type { IOrganisation } from "shared/models/organisation.model";
+import { addDays } from "date-fns";
 import { bulkWritePersons, getImportPersonBulkOp } from "../../actions/persons.actions";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";
 import { bulkWriteOrganisations, getImportOrganisationBulkOp } from "../../actions/organisations.actions";
@@ -16,6 +17,8 @@ export async function importPersonFromDeca(signal: AbortSignal) {
     total: totalCount,
     start: Date.now(),
   };
+
+  const ttl = addDays(new Date(), 30);
 
   const printProgress = () => {
     const now = Date.now();
@@ -43,6 +46,7 @@ export async function importPersonFromDeca(signal: AbortSignal) {
       email: docDeca.employeur.courriel,
       siret: docDeca.employeur.siret,
       source: "DECA",
+      ttl,
     };
 
     const personOps = getImportPersonBulkOp(input);

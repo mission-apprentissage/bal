@@ -1,4 +1,5 @@
 import { SIRET_REGEX } from "shared/constants/regex";
+import { addDays } from "date-fns";
 import { getDbCollection } from "../../common/utils/mongodbUtils";
 import { getImportPersonBulkOp } from "./persons.actions";
 import { getImportOrganisationBulkOp } from "./organisations.actions";
@@ -32,8 +33,12 @@ export const parseContentLine = (line: ContentLine): DECAParsedContentLine | und
 };
 
 export const importDecaContent = async (emails: string[], siret: string) => {
-  const opsPersons = emails.flatMap((email) => getImportPersonBulkOp({ email, siret, source: "DECA" }));
-  const organisationsOps = emails.flatMap((email) => getImportOrganisationBulkOp({ email, siret, source: "DECA" }));
+  const opsPersons = emails.flatMap((email) =>
+    getImportPersonBulkOp({ email, siret, source: "DECA", ttl: addDays(new Date(), 30) })
+  );
+  const organisationsOps = emails.flatMap((email) =>
+    getImportOrganisationBulkOp({ email, siret, source: "DECA", ttl: addDays(new Date(), 30) })
+  );
 
   await Promise.all([
     getDbCollection("persons").bulkWrite(opsPersons),

@@ -10,6 +10,7 @@ import { z } from "zod/v4-mini";
 import type { AnyBulkWriteOperation } from "mongodb";
 import type { IPerson } from "shared/models/person.model";
 import type { IOrganisation } from "shared/models/organisation.model";
+import { addYears } from "date-fns";
 import { withCause } from "../../../common/services/errors/withCause";
 import { s3ReadAsStream } from "../../../common/utils/awsUtils";
 import { streamJsonArray } from "../../../common/utils/streamUtils";
@@ -37,6 +38,8 @@ export async function importPersonFromAlgoLba() {
       organisationOps: [],
     };
 
+  const ttl = addYears(new Date(), 1);
+
   await pipeline(
     fs.createReadStream(destFile),
     streamJsonArray(),
@@ -54,6 +57,7 @@ export async function importPersonFromAlgoLba() {
           email: parsed.data.email,
           source: "LBA_ALGO",
           siret: parsed.data.siret,
+          ttl,
         };
 
         const personOps = getImportPersonBulkOp(input);

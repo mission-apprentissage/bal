@@ -10,7 +10,8 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ email: 1, created_at: 1 }, {}],
   [{ siret: 1, created_at: 1 }, {}],
   [{ created_at: 1 }, {}],
-  [{ updated_at: 1 }, { expireAfterSeconds: 365 * 24 * 60 * 60 }], // TTL 1 year
+  [{ updated_at: 1 }, {}],
+  [{ ttl: 1 }, { expireAfterSeconds: 0 }],
 ];
 
 export const ZPerson = z.object({
@@ -20,6 +21,7 @@ export const ZPerson = z.object({
   source: z.string(),
   updated_at: z.date(),
   created_at: z.date(),
+  ttl: z.date(),
 });
 
 export type IPerson = z.output<typeof ZPerson>;

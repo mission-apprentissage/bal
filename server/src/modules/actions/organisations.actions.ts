@@ -11,6 +11,7 @@ type IImportOrganisation = {
   email: unknown;
   source: string;
   siret: unknown;
+  ttl: Date;
 };
 
 export function getImportOrganisationBulkOp(data: IImportOrganisation): AnyBulkWriteOperation<IOrganisation>[] {
@@ -32,7 +33,7 @@ export function getImportOrganisationBulkOp(data: IImportOrganisation): AnyBulkW
 
   type UniqueOrganisationField = "siren" | "email_domain" | "source";
 
-  const setOnInsert: Omit<IOrganisation, UniqueOrganisationField | "updated_at"> = {
+  const setOnInsert: Omit<IOrganisation, UniqueOrganisationField | "updated_at" | "ttl"> = {
     _id: new ObjectId(),
     created_at: now,
   };
@@ -43,7 +44,7 @@ export function getImportOrganisationBulkOp(data: IImportOrganisation): AnyBulkW
         filter: { siren, email_domain: domain.toLowerCase(), source: data.source },
         update: {
           $setOnInsert: setOnInsert,
-          $set: { updated_at: now },
+          $set: { updated_at: now, ttl: data.ttl },
         },
         upsert: true,
       },

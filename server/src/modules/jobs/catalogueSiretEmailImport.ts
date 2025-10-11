@@ -1,6 +1,7 @@
 import type { AnyBulkWriteOperation } from "mongodb";
 import type { IOrganisation } from "shared/models/organisation.model";
 import type { IPerson } from "shared/models/person.model";
+import { addDays } from "date-fns";
 import { bulkWritePersons, getImportPersonBulkOp } from "../actions/persons.actions";
 import { bulkWriteOrganisations, getImportOrganisationBulkOp } from "../actions/organisations.actions";
 import logger from "@/common/logger";
@@ -34,6 +35,7 @@ async function importCatalogueFormations(): Promise<Stats> {
       updated: 0,
     },
   };
+  const ttl = addDays(new Date(), 30);
 
   const personOps: AnyBulkWriteOperation<IPerson>[] = [];
   const organisationOps: AnyBulkWriteOperation<IOrganisation>[] = [];
@@ -72,21 +74,25 @@ async function importCatalogueFormations(): Promise<Stats> {
         email,
         siret: etablissement_formateur_siret,
         source: "catalogue",
+        ttl,
       },
       {
         email,
         siret: etablissement_gestionnaire_siret,
         source: "catalogue",
+        ttl,
       },
       {
         email: etablissement_formateur_courriel,
         siret: etablissement_formateur_siret,
         source: "catalogue",
+        ttl,
       },
       {
         email: etablissement_gestionnaire_courriel,
         siret: etablissement_gestionnaire_siret,
         source: "catalogue",
+        ttl,
       },
     ];
 
