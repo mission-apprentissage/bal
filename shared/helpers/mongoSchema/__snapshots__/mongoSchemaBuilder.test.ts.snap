@@ -24,7 +24,10 @@ exports[`zodToMongoSchema > should convert anonymized.deca schema 1`] = `
       "bsonType": "date",
     },
     "date_signature_contrat": {
-      "bsonType": "date",
+      "bsonType": [
+        "date",
+        "null",
+      ],
     },
     "date_suppression": {
       "bsonType": "date",
@@ -150,6 +153,7 @@ exports[`zodToMongoSchema > should convert anonymized.deca schema 1`] = `
     "no_contrat",
     "date_debut_contrat",
     "date_fin_contrat",
+    "date_signature_contrat",
     "formation",
     "updated_at",
     "created_at",
@@ -402,7 +406,10 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
       "bsonType": "date",
     },
     "date_signature_contrat": {
-      "bsonType": "date",
+      "bsonType": [
+        "date",
+        "null",
+      ],
     },
     "date_suppression": {
       "bsonType": "date",
@@ -534,6 +541,7 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
     "no_contrat",
     "date_debut_contrat",
     "date_fin_contrat",
+    "date_signature_contrat",
     "alternant",
     "formation",
     "employeur",
