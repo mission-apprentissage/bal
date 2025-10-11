@@ -1,89 +1,70 @@
-import type { Filter } from "mongodb";
+import type { AnyBulkWriteOperation } from "mongodb";
 import { ObjectId } from "mongodb";
-import type { IPerson, PersonWithOrganisation } from "shared/models/person.model";
-
+import type { IPerson } from "shared/models/person.model";
+import { z } from "zod/v4-mini";
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-type ICreatePerson = {
-  email: string;
-  organisations: string[];
-  _meta: { [x: string]: unknown };
+type IImportPerson = {
+  email: unknown;
+  siret: unknown;
+  source: string;
+  ttl: Date;
 };
 
-const DEFAULT_LOOKUP = {
-  from: "organisations",
-  let: { organisationId: { $toObjectId: "$organisation_id" } },
-  pipeline: [
-    {
-      $match: {
-        $expr: { $eq: ["$_id", "$$organisationId"] },
-      },
-    },
-  ],
-  as: "organisation",
-};
-
-const DEFAULT_UNWIND = {
-  path: "$organisation",
-  preserveNullAndEmptyArrays: true,
-};
-
-export const createPerson = async (data: ICreatePerson) => {
+export function getImportPersonBulkOp(data: IImportPerson): AnyBulkWriteOperation<IPerson>[] {
   const now = new Date();
-  const person: IPerson = {
+
+  const emailParsed = z.email().check(z.lowercase()).safeParse(data.email);
+  const siretParsed = z.string().safeParse(data.siret);
+
+  if (!emailParsed.success || !siretParsed.success) {
+    return [];
+  }
+
+  type UniquePersonField = "email" | "siret" | "source";
+
+  const setOnInsert: Omit<IPerson, UniquePersonField | "updated_at" | "ttl"> = {
     _id: new ObjectId(),
-    ...data,
-    updated_at: now,
     created_at: now,
   };
 
-  await getDbCollection("persons").insertOne(person);
-
-  return person;
-};
-
-export const findPerson = async (filter: Filter<IPerson>): Promise<PersonWithOrganisation | null> => {
-  const person = await getDbCollection("persons")
-    .aggregate<PersonWithOrganisation>([
-      {
-        $match: filter,
-      },
-      {
-        $limit: 1,
-      },
-      {
-        $lookup: DEFAULT_LOOKUP,
-      },
-      {
-        $unwind: DEFAULT_UNWIND,
-      },
-    ])
-    .next();
-
-  return person;
-};
-
-export const findPersons = async (filter: Filter<IPerson> | null): Promise<PersonWithOrganisation[]> => {
-  const pipeline = [
+  return [
     {
-      $lookup: DEFAULT_LOOKUP,
-    },
-    {
-      $unwind: DEFAULT_UNWIND,
+      updateOne: {
+        filter: {
+          email: emailParsed.data,
+          source: data.source,
+          siret: siretParsed.data,
+        },
+        update: {
+          $set: { updated_at: now, ttl: data.ttl },
+          $setOnInsert: setOnInsert,
+        },
+        upsert: true,
+      },
     },
   ];
-  const persons = await getDbCollection("persons")
-    .aggregate<PersonWithOrganisation>(
-      filter
-        ? [
-            {
-              $match: filter,
-            },
-            ...pipeline,
-          ]
-        : pipeline
-    )
-    .toArray();
+}
 
-  return persons;
-};
+export async function bulkWritePersons(
+  ops: AnyBulkWriteOperation<IPerson>[]
+): Promise<{ created: number; updated: number }> {
+  if (ops.length === 0) {
+    return { created: 0, updated: 0 };
+  }
+
+  const result = await getDbCollection("persons").bulkWrite(ops, { ordered: false });
+  return { created: result.upsertedCount, updated: result.modifiedCount };
+}
+
+export async function importPerson(data: IImportPerson): Promise<boolean> {
+  const ops = getImportPersonBulkOp(data);
+
+  if (ops.length === 0) {
+    return false;
+  }
+
+  await getDbCollection("persons").bulkWrite(ops);
+
+  return true;
+}

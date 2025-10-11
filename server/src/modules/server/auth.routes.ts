@@ -1,7 +1,6 @@
 import Boom from "@hapi/boom";
 import { zRoutes } from "shared";
-import type { IUserWithPerson } from "shared/models/user.model";
-import { toPublicUser } from "shared/models/user.model";
+import type { IUser } from "shared/models/user.model";
 
 import { getUserFromRequest } from "../../security/authenticationService";
 import { resetPassword, sendResetPasswordEmail, verifyEmailPassword } from "../actions/auth.actions";
@@ -20,7 +19,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       const user = getUserFromRequest(request, zRoutes.get["/auth/session"]);
-      return response.status(200).send(toPublicUser(user));
+      return response.status(200).send(user);
     }
   );
 
@@ -35,7 +34,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const { email, password } = request.body;
 
-      const user: IUserWithPerson | undefined = await verifyEmailPassword(email, password);
+      const user: IUser | undefined = await verifyEmailPassword(email, password);
 
       if (!user || !user._id) {
         throw Boom.forbidden("Identifiants incorrects");
@@ -43,7 +42,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
 
       await startSession(user.email, response);
 
-      return response.status(200).send(toPublicUser(user));
+      return response.status(200).send(user);
     }
   );
 

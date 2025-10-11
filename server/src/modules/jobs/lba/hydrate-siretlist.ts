@@ -2,17 +2,20 @@ import fs from "node:fs";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
+import { Transform } from "node:stream";
 import type { Readable } from "node:stream";
-
+import { pipeline } from "node:stream/promises";
 import { internal } from "@hapi/boom";
-import { compose, oleoduc, writeData } from "oleoduc";
-import { extensions } from "shared/helpers/zodHelpers/zodPrimitives";
-import type { ILbaRecruteursSiretEmail } from "shared/models/data/lba.recruteurs.siret.email.model";
-
+import { z } from "zod/v4-mini";
+import type { AnyBulkWriteOperation } from "mongodb";
+import type { IPerson } from "shared/models/person.model";
+import type { IOrganisation } from "shared/models/organisation.model";
+import { addYears } from "date-fns";
 import { withCause } from "../../../common/services/errors/withCause";
-import { getS3FileLastUpdate, s3ReadAsStream } from "../../../common/utils/awsUtils";
-import { getDbCollection } from "../../../common/utils/mongodbUtils";
+import { s3ReadAsStream } from "../../../common/utils/awsUtils";
 import { streamJsonArray } from "../../../common/utils/streamUtils";
+import { bulkWritePersons, getImportPersonBulkOp } from "../../actions/persons.actions";
+import { bulkWriteOrganisations, getImportOrganisationBulkOp } from "../../actions/organisations.actions";
 import config from "@/config";
 import parentLogger from "@/common/logger";
 
@@ -20,40 +23,95 @@ const logger = parentLogger.child({ module: "job:lba:hydrate:siret-list" });
 
 const s3File = config.lba.algoRecuteurs.s3File;
 
-export async function hydrateLbaSiretList() {
-  const isAlgoFileUptoDate = await verifyAlgoFileDate();
-  if (!isAlgoFileUptoDate) {
-    logger.info(`Downloading algo file from S3 Bucket...`);
-    const destFile = await downloadFile();
+const schema = z.object({
+  siret: z.string(),
+  email: z.string(),
+});
 
-    await oleoduc(
-      await readJson(destFile),
-      writeData(async ({ siret, email }: { siret: string; email: string | null }) => {
-        if (email) {
-          try {
-            const emailNormalized = extensions.email.parse(email);
-            return getDbCollection("lba.recruteurs.siret.email").updateOne(
-              { email: emailNormalized },
-              {
-                $set: {
-                  siret,
-                  email: emailNormalized,
-                  updated_at: new Date(),
-                },
-                $setOnInsert: {
-                  created_at: new Date(),
-                },
-              },
-              { upsert: true }
-            );
-          } catch (_error) {
-            //
-          }
+export async function importPersonFromAlgoLba() {
+  logger.info(`Downloading algo file from S3 Bucket...`);
+  const destFile = await downloadFile();
+
+  let buffer: { personOps: AnyBulkWriteOperation<IPerson>[]; organisationOps: AnyBulkWriteOperation<IOrganisation>[] } =
+    {
+      personOps: [],
+      organisationOps: [],
+    };
+
+  const ttl = addYears(new Date(), 1);
+
+  await pipeline(
+    fs.createReadStream(destFile),
+    streamJsonArray(),
+    new Transform({
+      objectMode: true,
+      transform: async (data: unknown, _encoding, callback) => {
+        const parsed = schema.safeParse(data);
+
+        if (!parsed.success) {
+          callback();
+          return;
         }
-        return;
-      })
-    );
-  }
+
+        const input = {
+          email: parsed.data.email,
+          source: "LBA_ALGO",
+          siret: parsed.data.siret,
+          ttl,
+        };
+
+        const personOps = getImportPersonBulkOp(input);
+        const organisationOps = getImportOrganisationBulkOp(input);
+        callback(null, { personOps, organisationOps });
+      },
+    }),
+
+    // Regroup bulks operations to make batch of 1000
+    new Transform({
+      objectMode: true,
+      transform: function (
+        data: { personOps: AnyBulkWriteOperation<IPerson>[]; organisationOps: AnyBulkWriteOperation<IOrganisation>[] },
+        _encoding,
+        callback
+      ) {
+        if (data.personOps.length > 0) {
+          buffer.personOps.push(...data.personOps);
+        }
+
+        if (data.organisationOps.length > 0) {
+          buffer.organisationOps.push(...data.organisationOps);
+        }
+
+        if (buffer.personOps.length > 1000 || buffer.organisationOps.length > 1000) {
+          const output = buffer;
+          buffer = { personOps: [], organisationOps: [] };
+          callback(null, output);
+        } else {
+          callback();
+        }
+      },
+      flush: function (callback) {
+        callback(null, buffer);
+      },
+    }),
+
+    new Transform({
+      objectMode: true,
+      transform: async (
+        data: { personOps: AnyBulkWriteOperation<IPerson>[]; organisationOps: AnyBulkWriteOperation<IOrganisation>[] },
+        _encoding,
+        callback
+      ) => {
+        try {
+          await Promise.all([bulkWritePersons(data.personOps), bulkWriteOrganisations(data.organisationOps)]);
+          callback();
+        } catch (error) {
+          logger.error("Error importing person or organisation", { error });
+          callback(error);
+        }
+      },
+    })
+  );
 }
 
 async function downloadFile(): Promise<string> {
@@ -83,17 +141,6 @@ async function downloadFileAsTmp(stream: Readable, filename: string): Promise<st
   }
 }
 
-const readJson = async (filePath: string) => {
-  logger.info(`Reading bonnes boites json`);
-
-  const streamCompanies = async () => {
-    const response = fs.createReadStream(filePath);
-    return compose(response, streamJsonArray());
-  };
-
-  return streamCompanies();
-};
-
 async function cleanupTmp(filePath: string): Promise<void> {
   try {
     await rm(dirname(filePath), { force: true, recursive: true });
@@ -106,23 +153,3 @@ async function cleanupTmp(filePath: string): Promise<void> {
     throw withCause(internal("bal.utils: unable to cleanup downloaded file"), error);
   }
 }
-
-const verifyAlgoFileDate = async () => {
-  const algoFileLastModificationDate = await getS3FileLastUpdate("storage", s3File);
-  if (!algoFileLastModificationDate) {
-    throw new Error("Aucune date de dernière modifications disponible sur le fichier issue de l'algo.");
-  }
-
-  const currentDbCreatedDate = (
-    (await getDbCollection("lba.recruteurs.siret.email").findOne(
-      {},
-      { projection: { created_at: 1 } }
-    )) as ILbaRecruteursSiretEmail
-  ).created_at;
-
-  if (algoFileLastModificationDate.getTime() < currentDbCreatedDate.getTime()) {
-    logger.info("Sociétés issues de l'algo déjà à jour");
-    return true;
-  }
-  return false;
-};

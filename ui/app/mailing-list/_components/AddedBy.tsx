@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import type { IUserWithPersonPublic } from "shared/models/user.model";
+import type { IUserPublic } from "shared/models/user.model";
 import { Box } from "@mui/material";
 import Loading from "@/app/loading";
 import { apiGet } from "@/utils/api.utils";
 
 export function AddedBy(props: { addedBy: string }) {
-  const userQuery = useQuery<IUserWithPersonPublic>({
+  const userQuery = useQuery<IUserPublic>({
     queryKey: ["/_private/users", props.addedBy],
     queryFn: async () =>
       apiGet("/_private/users/:id", {

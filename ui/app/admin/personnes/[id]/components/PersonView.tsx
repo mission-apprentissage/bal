@@ -1,13 +1,11 @@
-import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Typography } from "@mui/material";
 import type { FC } from "react";
-import type { PersonWithOrganisationJson } from "shared/models/person.model";
-
+import type { IPersonJson } from "shared/models/person.model";
 import InfoDetails from "@/components/infoDetails/InfoDetails";
 import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
 
 interface Props {
-  person: PersonWithOrganisationJson;
+  person: IPersonJson;
 }
 
 const PersonView: FC<Props> = ({ person }) => {
@@ -24,47 +22,20 @@ const PersonView: FC<Props> = ({ person }) => {
           _id: {
             header: () => "Identifiant",
           },
-          nom: {
-            header: () => "Nom",
-          },
-          prenom: {
-            header: () => "Prénom",
-          },
           email: {
             header: () => "Email",
           },
-          civility: {
-            header: () => "Civilite",
+          siret: {
+            header: () => "SIRET",
           },
-          organisation: {
-            header: () => "Organisation",
-            cell: ({ organisation }) => {
-              if (!organisation) return null;
-              return (
-                <Button
-                  iconId="fr-icon-arrow-right-line"
-                  iconPosition="right"
-                  linkProps={{
-                    href: PAGES.adminViewOrganisation(organisation._id as unknown as string).path,
-                  }}
-                  priority="tertiary no outline"
-                >
-                  {organisation.nom}
-                </Button>
-              );
-            },
+          source: {
+            header: () => "Source",
           },
-          sirets: {
-            header: () => "Sirets",
-            cell: ({ sirets }) => {
-              return sirets?.join(", ") ?? "";
-            },
+          created_at: {
+            header: () => "Créée le",
           },
-          _meta: {
-            header: () => "Meta",
-            cell: ({ _meta }) => {
-              return <pre>{JSON.stringify(_meta, null, "  ")}</pre>;
-            },
+          updated_at: {
+            header: () => "Dernière mise à jour",
           },
         }}
       />

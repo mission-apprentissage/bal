@@ -1,11 +1,11 @@
-import Boom from "@hapi/boom";
+import Boom, { notFound } from "@hapi/boom";
 import type { RootFilterOperators } from "mongodb";
 import type { IUser } from "shared/models/user.model";
-import { toPublicUser } from "shared/models/user.model";
 import { zUserAdminRoutes } from "shared/routes/user.routes";
 
-import { createUser, deleteUser, findUser, findUsers } from "../../actions/users.actions";
+import { createUser } from "../../actions/users.actions";
 import type { Server } from "../server";
+import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
 export const userAdminRoutes = ({ server }: { server: Server }) => {
   server.post(
@@ -21,7 +21,7 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
         throw Boom.badImplementation("Impossible de créer l'utilisateur");
       }
 
-      return response.status(200).send(toPublicUser(user));
+      return response.status(200).send(user);
     }
   );
 
@@ -40,9 +40,9 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
         filter.$text = { $search: q };
       }
 
-      const users = await findUsers(filter);
+      const users = await getDbCollection("users").find(filter).toArray();
 
-      return response.status(200).send(users.map(toPublicUser));
+      return response.status(200).send(users);
     }
   );
 
@@ -53,13 +53,12 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zUserAdminRoutes.get["/admin/users/:id"])],
     },
     async (request, response) => {
-      const user = await findUser({ _id: request.params.id });
+      const user = await getDbCollection("users").findOne({ _id: request.params.id });
 
       if (!user) {
-        throw Boom.notFound();
+        throw notFound();
       }
 
-      // Fixme: maybe we return too much data!!
       return response.status(200).send(user);
     }
   );
@@ -71,13 +70,11 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zUserAdminRoutes.delete["/admin/users/:id"])],
     },
     async (request, response) => {
-      const user = await findUser({ _id: request.params.id });
+      const result = await getDbCollection("users").deleteOne({ _id: request.params.id });
 
-      if (!user) {
-        throw Boom.notFound();
+      if (result.deletedCount === 0) {
+        throw notFound();
       }
-
-      await deleteUser(request.params.id);
 
       return response.status(200).send({ success: true });
     }
