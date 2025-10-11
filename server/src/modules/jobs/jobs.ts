@@ -162,6 +162,7 @@ export async function setupJobProcessor() {
         handler: async (_job, signal) => {
           await updateDecaSpecificFields(signal);
         },
+        tag: "bouncer",
       },
       "deca:s3:upload": {
         handler: async (_job) => {

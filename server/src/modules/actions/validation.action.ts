@@ -1,6 +1,7 @@
 import { getSirenFromSiret } from "shared/helpers/common";
 import type { IResponse, IPostRoutes } from "shared";
 import { isCompanyEmail } from "company-email-validator";
+import { addDays } from "date-fns";
 import { getAktoVerification } from "../../common/apis/akto";
 import {
   getOpcoEpVerification,
@@ -77,7 +78,7 @@ export const validation = async ({
   const siren = getSirenFromSiret(siret);
   const testAkto = await getAktoVerification(siren, email);
   if (testAkto) {
-    const data = { email, siret, source: "AKTO" };
+    const data = { email, siret, source: "AKTO", ttl: addDays(new Date(), 30) };
     await Promise.all([importPerson(data), importOrganisation(data)]);
 
     return {
@@ -93,6 +94,7 @@ export const validation = async ({
       email,
       siret,
       source: "OPCO_EP",
+      ttl: addDays(new Date(), 30),
     };
     await Promise.all([importPerson(data), importOrganisation(data)]);
 
@@ -108,6 +110,7 @@ export const validation = async ({
       email,
       siret,
       source: "OPCO_EP",
+      ttl: addDays(new Date(), 30),
     });
 
     return {

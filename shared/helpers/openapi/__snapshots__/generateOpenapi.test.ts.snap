@@ -72,8 +72,15 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "type": "string",
           },
           "date_signature_contrat": {
-            "format": "date-time",
-            "type": "string",
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string",
+              },
+              {
+                "type": "null",
+              },
+            ],
           },
           "date_suppression": {
             "format": "date-time",
@@ -207,6 +214,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "no_contrat",
           "date_debut_contrat",
           "date_fin_contrat",
+          "date_signature_contrat",
           "formation",
           "updated_at",
           "created_at",
@@ -494,8 +502,15 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "type": "string",
           },
           "date_signature_contrat": {
-            "format": "date-time",
-            "type": "string",
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string",
+              },
+              {
+                "type": "null",
+              },
+            ],
           },
           "date_suppression": {
             "format": "date-time",
@@ -635,6 +650,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "no_contrat",
           "date_debut_contrat",
           "date_fin_contrat",
+          "date_signature_contrat",
           "alternant",
           "formation",
           "employeur",
@@ -1640,6 +1656,10 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "source": {
             "type": "string",
           },
+          "ttl": {
+            "format": "date-time",
+            "type": "string",
+          },
           "updated_at": {
             "format": "date-time",
             "type": "string",
@@ -1650,6 +1670,9 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "siren",
           "email_domain",
           "source",
+          "updated_at",
+          "created_at",
+          "ttl",
         ],
         "type": "object",
       },
@@ -1670,6 +1693,10 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "source": {
             "type": "string",
           },
+          "ttl": {
+            "format": "date-time",
+            "type": "string",
+          },
           "updated_at": {
             "format": "date-time",
             "type": "string",
@@ -1682,6 +1709,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "source",
           "updated_at",
           "created_at",
+          "ttl",
         ],
         "type": "object",
       },

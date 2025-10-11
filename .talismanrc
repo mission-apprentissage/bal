@@ -74,7 +74,7 @@ fileignoreconfig:
 - filename: .infra/vault/setup-local-env.sh
   checksum: 4e9027abc41ffc563b856d1434f2a3821866e9a5a1601c994edb62cab4c8b256
 - filename: .infra/vault/vault.yml
-  checksum: db8e079c49e2c46970daa012c6b76474c46d6d51d20b3cde9b9495ef9e41d94e
+  checksum: 6cc4f54356f87bb46e357cc655c39e67882ffbd4d033024e6a01f59b57548d93
 - filename: .yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
   checksum: a663e9955c2825bee3af55be1ebd6e26cd0a17fe7c614a13d726ddd4c7959b82
 - filename: CHANGELOG.md

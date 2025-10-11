@@ -11,7 +11,8 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ siren: 1, created_at: 1 }, {}],
   [{ email_domain: 1, created_at: 1 }, {}],
   [{ created_at: 1 }, {}],
-  [{ updated_at: 1 }, { expireAfterSeconds: 365 * 24 * 60 * 60 }], // TTL 1 year
+  [{ updated_at: 1 }, {}],
+  [{ ttl: 1 }, { expireAfterSeconds: 0 }],
 ];
 
 export const ZOrganisation = z.object({
@@ -19,8 +20,9 @@ export const ZOrganisation = z.object({
   siren: z.string(),
   email_domain: z.string(),
   source: z.string(),
-  updated_at: z.optional(z.date()),
-  created_at: z.optional(z.date()),
+  updated_at: z.date(),
+  created_at: z.date(),
+  ttl: z.date(),
 });
 
 export type IOrganisation = z.output<typeof ZOrganisation>;

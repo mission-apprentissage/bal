@@ -8,6 +8,7 @@ type IImportPerson = {
   email: unknown;
   siret: unknown;
   source: string;
+  ttl: Date;
 };
 
 export function getImportPersonBulkOp(data: IImportPerson): AnyBulkWriteOperation<IPerson>[] {
@@ -22,7 +23,7 @@ export function getImportPersonBulkOp(data: IImportPerson): AnyBulkWriteOperatio
 
   type UniquePersonField = "email" | "siret" | "source";
 
-  const setOnInsert: Omit<IPerson, UniquePersonField | "updated_at"> = {
+  const setOnInsert: Omit<IPerson, UniquePersonField | "updated_at" | "ttl"> = {
     _id: new ObjectId(),
     created_at: now,
   };
@@ -36,7 +37,7 @@ export function getImportPersonBulkOp(data: IImportPerson): AnyBulkWriteOperatio
           siret: siretParsed.data,
         },
         update: {
-          $set: { updated_at: now },
+          $set: { updated_at: now, ttl: data.ttl },
           $setOnInsert: setOnInsert,
         },
         upsert: true,

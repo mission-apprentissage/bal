@@ -29,7 +29,7 @@ export const ZDeca = z.object({
   date_suppression: z.optional(z.date()),
   date_debut_contrat: z.date(),
   date_fin_contrat: z.date(),
-  date_signature_contrat: z.optional(z.date()),
+  date_signature_contrat: z.nullable(z.date()),
   date_effet_avenant: z.optional(z.date()),
   date_effet_rupture: z.optional(z.date()),
   no_avenant: z.optional(z.string()),
