@@ -1,6 +1,4 @@
-import type { Jsonify } from "type-fest";
 import { z } from "zod/v4-mini";
-
 import type { IModelDescriptor } from "../common";
 import { zObjectId } from "../common";
 import { ZDecaApprenant } from "./parts/deca.apprenant.part";
@@ -56,7 +54,6 @@ export const ZDeca = z.object({
 });
 
 export type IDeca = z.output<typeof ZDeca>;
-export type IDecaJson = Jsonify<z.input<typeof ZDeca>>;
 
 export default {
   zod: ZDeca,

@@ -220,14 +220,14 @@ export async function* createSmtpConnection(config: SMTPConfig, signal: AbortSig
   }
 }
 
-export type ERROR_RESULT = {
+type ERROR_RESULT = {
   success: false;
   message: string;
   code: IResponseCode;
   cmd: SMTP_COMMAND;
 };
 
-export type ELHO_RESULT = {
+type ELHO_RESULT = {
   success: true;
   extensions: {
     STARTTLS: boolean;
@@ -300,7 +300,7 @@ export async function sayEhlo(connection: SMTPConnection): Promise<ELHO_RESULT |
   return result;
 }
 
-export type VRFY_RESULT = {
+type VRFY_RESULT = {
   success: true;
   status: "valid" | "invalid" | "not_supported";
   message: string;

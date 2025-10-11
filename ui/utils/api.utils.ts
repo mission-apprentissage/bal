@@ -172,7 +172,7 @@ export function generateUrl(path: string, options: WithQueryStringAndPathParam =
   return normalisedEndpoint;
 }
 
-export interface ApiErrorContext {
+interface ApiErrorContext {
   path: string;
   params: PathParam;
   querystring: QueryString;

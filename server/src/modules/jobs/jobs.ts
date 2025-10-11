@@ -22,8 +22,12 @@ import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
 import { importPersonFromAlgoLba } from "./lba/hydrate-siretlist";
 import { importPersonFromDeca } from "./validation/hydrate-from-deca";
 import { anonymisationService } from "./anonymisation/anonymisation.service";
-import { processMailingList, recoverMailingListJobs } from "./mailing-list/mailing-list.processor";
 import { updateDecaSpecificFields } from "./deca/update-deca-specific-fields";
+import {
+  onMailingListV2JobExited,
+  processMailingList,
+  recoverMailingListJobs,
+} from "./mailing-list/mailing-list.processor";
 import {
   create as createMigration,
   status as statusMigration,
@@ -197,7 +201,7 @@ export async function setupJobProcessor() {
       },
       "mailing-list:process": {
         handler: processMailingList,
-        onJobExited: onMailingListJobExited,
+        onJobExited: onMailingListV2JobExited,
         resumable: true,
       },
       "mailing-list:recover": {

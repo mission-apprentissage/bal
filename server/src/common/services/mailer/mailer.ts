@@ -80,7 +80,7 @@ export async function sendEmail<T extends ITemplate>(template: T): Promise<void>
   }
 }
 
-export function getEmailSubject<T extends ITemplate>(template: T): string {
+function getEmailSubject<T extends ITemplate>(template: T): string {
   switch (template.name) {
     case "reset_password":
       return "Réinitialisation du mot de passe";
@@ -89,7 +89,7 @@ export function getEmailSubject<T extends ITemplate>(template: T): string {
   }
 }
 
-export function getPublicUrl(path: string) {
+function getPublicUrl(path: string) {
   return `${config.publicUrl}${path}`;
 }
 

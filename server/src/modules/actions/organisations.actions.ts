@@ -75,22 +75,6 @@ export async function importOrganisation(data: IImportOrganisation): Promise<boo
   return true;
 }
 
-export const updateOrganisation = async (organisation: IOrganisation, data: Partial<IOrganisation>) => {
-  if (Object.keys(data).length === 0) {
-    return organisation;
-  }
-
-  return await getDbCollection("organisations").findOneAndUpdate(
-    {
-      _id: organisation._id,
-    },
-    {
-      $set: { ...data, updated_at: new Date() },
-    },
-    { returnDocument: "after" }
-  );
-};
-
 export const sanitizeOrganisationDomains = async () => {
   const cursor = getDbCollection("organisations").find();
 
