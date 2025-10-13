@@ -1,8 +1,7 @@
 import { notFound } from "@hapi/boom";
 import { zRoutes } from "shared";
-
-import { findOrganisation, findOrganisations } from "../../actions/organisations.actions";
 import type { Server } from "../server";
+import { getDbCollection } from "../../../common/utils/mongodbUtils";
 
 export const organisationAdminRoutes = ({ server }: { server: Server }) => {
   server.get(
@@ -12,11 +11,25 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/admin/organisations"])],
     },
     async (request, response) => {
-      const { q = "" } = request.query;
+      const { q = "", page = 1, limit = 100 } = request.query;
+      const filter = q
+        ? {
+            $or: [{ siren: { $regex: q, $options: "i" } }, { email_domain: { $regex: q, $options: "i" } }],
+          }
+        : {};
 
-      const organisations = await findOrganisations(q ? { $text: { $search: q } } : null);
+      const [organisations, count] = await Promise.all([
+        getDbCollection("organisations")
+          .find(filter, {
+            skip: (page - 1) * limit,
+            limit,
+            sort: { created_at: 1 },
+          })
+          .toArray(),
+        getDbCollection("organisations").countDocuments(filter),
+      ]);
 
-      return response.status(200).send(organisations);
+      return response.status(200).send({ organisations, pagination: { total: count, page, size: limit } });
     }
   );
 
@@ -27,7 +40,7 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/admin/organisations/:id"])],
     },
     async (request, response) => {
-      const organisation = await findOrganisation({
+      const organisation = await getDbCollection("organisations").findOne({
         _id: request.params.id,
       });
 

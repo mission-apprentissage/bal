@@ -12,8 +12,6 @@ const indexes: IModelDescriptor["indexes"] = [
 
 const zEmailStatus = z.enum(["valid", "invalid", "not_supported", "error"]);
 
-export type EmailStatus = z.output<typeof zEmailStatus>;
-
 export const zBouncerPingResult = z.object({
   status: zEmailStatus,
   message: z.string(),
@@ -23,7 +21,7 @@ export const zBouncerPingResult = z.object({
 
 export type BouncerPingResult = z.output<typeof zBouncerPingResult>;
 
-export const zBouncerEmail = z.object({
+const zBouncerEmail = z.object({
   _id: zObjectId,
   email: z.string(),
   domain: z.nullable(z.string()),

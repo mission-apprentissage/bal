@@ -19,15 +19,15 @@
     "luhn": "^2.4.1",
     "openapi3-ts": "^4.5.0",
     "type-fest": "^5.0.1",
-    "zod": "^4.1.9",
+    "zod": "^4.1.12",
     "zod-mongodb-schema": "^2.0.0"
   },
   "devDependencies": {
-    "@readme/openapi-parser": "^5.0.1",
+    "@readme/openapi-parser": "^5.0.2",
     "@tsconfig/node24": "^24.0.1",
     "api-alternance-sdk": "^2.14.0",
     "mongodb": "^6.20.0",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   }
 }

@@ -37,7 +37,6 @@ describe("Authentication", () => {
     const user = await createUser({
       email: "email@exemple.fr",
       password: "my-password",
-      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const response = await app.inject({
@@ -60,7 +59,6 @@ describe("Authentication", () => {
     const user = await createUser({
       email: "email@exemple.fr",
       password: "my-password",
-      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const responseIncorrectEmail = await app.inject({
@@ -90,7 +88,6 @@ describe("Authentication", () => {
     const user = await createUser({
       email: "email@exemple.fr",
       password: "my-password",
-      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const responseLogin = await app.inject({
@@ -127,7 +124,6 @@ describe("Authentication", () => {
     const user = await createUser({
       email: "email@example.fr",
       password: "my-password",
-      organisation_id: "64520f65d7726475fd54b3b7",
     });
 
     const responseLogin = await app.inject({
@@ -169,54 +165,4 @@ describe("Authentication", () => {
 
     assert.equal(response.statusCode, 403);
   });
-
-  // TODO SHOULD BE NOOP EMAIL
-  // it("should send reset password email", async () => {
-  //   const user = await createUser({
-  //     email: "email@exemple.fr",
-  //     password: "my-password",
-  //     organisation_id: "64520f65d7726475fd54b3b7",
-  //   });
-
-  //   const response = await app.inject({
-  //     method: "GET",
-  //     url: "/api/auth/reset-password",
-  //     query: {
-  //       email: user?.email as string,
-  //     },
-  //   });
-
-  //   assert.equal(response.statusCode, 200);
-  // });
-
-  // it("should reset user password", async () => {
-  //   const user = await createUser({
-  //     email: "email@exemple.fr",
-  //     password: "my-password",
-  //     organisation_id: "64520f65d7726475fd54b3b7",
-  //   });
-
-  //   const token = createResetPasswordToken(user?.email as string);
-  //   const newPassword = "new-password";
-  //   const response = await app.inject({
-  //     method: "POST",
-  //     url: "/api/auth/reset-password",
-  //     payload: {
-  //       password: newPassword,
-  //       token,
-  //     },
-  //   });
-
-  //   assert.equal(response.statusCode, 200);
-
-  //   const updatedPasswordUser = await findUser({ _id: user?._id });
-
-  //   const match = verifyPassword(
-  //     newPassword,
-  //     updatedPasswordUser?.password as string
-  //   );
-
-  //   assert.notEqual(updatedPasswordUser?.password, user?.password);
-  //   assert.equal(match, true);
-  // });
 });

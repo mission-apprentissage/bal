@@ -8,7 +8,7 @@ export interface Contrat {
   employeur: Employeur;
 }
 
-export interface Alternant {
+interface Alternant {
   nom: string;
   prenom: string;
   sexe: string;
@@ -22,13 +22,13 @@ export interface Alternant {
   derniereClasse?: string;
 }
 
-export interface Adresse {
+interface Adresse {
   numero?: number;
   voie?: string;
   codePostal?: string;
 }
 
-export interface DetailsContrat {
+interface DetailsContrat {
   noContrat: string;
   dateDebutContrat: string;
   statut: Statut;
@@ -45,15 +45,15 @@ enum Statut {
   Supprime = "Supprimé",
 }
 
-export interface Employeur {
+interface Employeur {
   codeIdcc: string;
 }
 
-export interface EtablissementFormation {
+interface EtablissementFormation {
   siret?: string; // Organisme responsable
 }
 
-export interface Formation {
+interface Formation {
   dateDebutFormation: string;
   dateFinFormation: string;
   codeDiplome: string;
@@ -61,12 +61,12 @@ export interface Formation {
   intituleOuQualification: string;
 }
 
-export interface OrganismeFormationResponsable {
+interface OrganismeFormationResponsable {
   uaiCfa?: string;
   siret?: string;
 }
 
-export interface Rupture {
+interface Rupture {
   dateEffetRupture: string;
 }
 

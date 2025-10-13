@@ -7,11 +7,11 @@ import config from "@/config";
 
 type AccountName = "main" | "support";
 
-export interface IAuthResponse {
+interface IAuthResponse {
   token: Token;
 }
 
-export interface Token {
+interface Token {
   is_domain: boolean;
   methods: string[];
   is_admin_project: boolean;
@@ -21,14 +21,14 @@ export interface Token {
   issued_at: string;
 }
 
-export interface Catalog {
+interface Catalog {
   endpoints: Endpoint[];
   type: string;
   id: string;
   name: string;
 }
 
-export interface Endpoint {
+interface Endpoint {
   url: string;
   interface: string;
   region: string;

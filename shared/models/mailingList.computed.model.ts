@@ -11,7 +11,7 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ ttl: 1 }, { expireAfterSeconds: 0 }],
 ];
 
-export const ZMailingListComputedDatum = z.object({
+const ZMailingListComputedDatum = z.object({
   _id: zObjectId,
   mailing_list_id: zObjectId,
   line_number: z.number(),

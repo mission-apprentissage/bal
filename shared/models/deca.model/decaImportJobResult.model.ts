@@ -1,6 +1,4 @@
-import type { Jsonify } from "type-fest";
 import { z } from "zod/v4-mini";
-
 import type { IModelDescriptor } from "../common";
 import { zObjectId } from "../common";
 
@@ -23,7 +21,6 @@ export const ZDecaImportJobResult = z.object({
 });
 
 export type IDecaImportJobResult = z.output<typeof ZDecaImportJobResult>;
-export type IDecaImportJobResultJson = Jsonify<z.input<typeof ZDecaImportJobResult>>;
 
 export default {
   zod: ZDecaImportJobResult,

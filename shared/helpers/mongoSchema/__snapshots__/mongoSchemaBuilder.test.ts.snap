@@ -318,36 +318,6 @@ exports[`zodToMongoSchema > should convert bouncer.email schema 1`] = `
 }
 `;
 
-exports[`zodToMongoSchema > should convert catalogueEmailSirets schema 1`] = `
-{
-  "additionalProperties": false,
-  "bsonType": "object",
-  "properties": {
-    "_id": {
-      "bsonType": "objectId",
-    },
-    "created_at": {
-      "bsonType": "date",
-    },
-    "email": {
-      "bsonType": "string",
-      "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
-    },
-    "siret": {
-      "bsonType": "string",
-    },
-    "updated_at": {
-      "bsonType": "date",
-    },
-  },
-  "required": [
-    "_id",
-    "email",
-    "siret",
-  ],
-}
-`;
-
 exports[`zodToMongoSchema > should convert deca schema 1`] = `
 {
   "additionalProperties": false,
@@ -984,43 +954,14 @@ exports[`zodToMongoSchema > should convert events schema 1`] = `
         "null",
       ],
     },
-    "person_id": {
-      "bsonType": "string",
-    },
     "template": {
       "additionalProperties": false,
       "bsonType": "object",
       "properties": {
-        "civility": {
-          "anyOf": [
-            {
-              "bsonType": "string",
-              "enum": [
-                "Madame",
-                "Monsieur",
-              ],
-            },
-            {
-              "bsonType": "null",
-            },
-          ],
-        },
         "name": {
           "bsonType": "string",
           "enum": [
             "reset_password",
-          ],
-        },
-        "nom": {
-          "bsonType": [
-            "string",
-            "null",
-          ],
-        },
-        "prenom": {
-          "bsonType": [
-            "string",
-            "null",
           ],
         },
         "resetPasswordToken": {
@@ -1050,7 +991,6 @@ exports[`zodToMongoSchema > should convert events schema 1`] = `
   "required": [
     "_id",
     "type",
-    "person_id",
     "template",
     "created_at",
     "updated_at",
@@ -1088,37 +1028,6 @@ exports[`zodToMongoSchema > should convert lba.emailblacklists schema 1`] = `
     "_id",
     "email",
     "blacklisting_origin",
-    "created_at",
-    "updated_at",
-  ],
-}
-`;
-
-exports[`zodToMongoSchema > should convert lba.recruteurs.siret.email schema 1`] = `
-{
-  "additionalProperties": false,
-  "bsonType": "object",
-  "properties": {
-    "_id": {
-      "bsonType": "objectId",
-    },
-    "created_at": {
-      "bsonType": "date",
-    },
-    "email": {
-      "bsonType": "string",
-    },
-    "siret": {
-      "bsonType": "string",
-    },
-    "updated_at": {
-      "bsonType": "date",
-    },
-  },
-  "required": [
-    "_id",
-    "siret",
-    "email",
     "created_at",
     "updated_at",
   ],
@@ -1633,53 +1542,20 @@ exports[`zodToMongoSchema > should convert organisations schema 1`] = `
     "_id": {
       "bsonType": "objectId",
     },
-    "_meta": {
-      "additionalProperties": true,
-      "bsonType": "object",
-      "properties": {
-        "sources": {
-          "bsonType": "array",
-          "items": {
-            "bsonType": "string",
-          },
-        },
-      },
-    },
     "created_at": {
       "bsonType": "date",
     },
-    "email_domains": {
-      "bsonType": "array",
-      "items": {
-        "bsonType": "string",
-      },
-    },
-    "etablissements": {
-      "bsonType": "array",
-      "items": {
-        "additionalProperties": false,
-        "bsonType": "object",
-        "properties": {
-          "is_close": {
-            "bsonType": "bool",
-          },
-          "is_hq": {
-            "bsonType": "bool",
-          },
-          "nom": {
-            "bsonType": "string",
-          },
-          "siret": {
-            "bsonType": "string",
-          },
-        },
-      },
-    },
-    "nom": {
+    "email_domain": {
       "bsonType": "string",
     },
     "siren": {
       "bsonType": "string",
+    },
+    "source": {
+      "bsonType": "string",
+    },
+    "ttl": {
+      "bsonType": "date",
     },
     "updated_at": {
       "bsonType": "date",
@@ -1687,6 +1563,12 @@ exports[`zodToMongoSchema > should convert organisations schema 1`] = `
   },
   "required": [
     "_id",
+    "siren",
+    "email_domain",
+    "source",
+    "updated_at",
+    "created_at",
+    "ttl",
   ],
 }
 `;
@@ -1699,48 +1581,20 @@ exports[`zodToMongoSchema > should convert persons schema 1`] = `
     "_id": {
       "bsonType": "objectId",
     },
-    "_meta": {
-      "additionalProperties": true,
-      "bsonType": "object",
-      "properties": {
-        "sources": {
-          "bsonType": "array",
-          "items": {
-            "bsonType": "string",
-          },
-        },
-      },
-    },
-    "civility": {
-      "bsonType": "string",
-      "enum": [
-        "Madame",
-        "Monsieur",
-      ],
-    },
     "created_at": {
       "bsonType": "date",
     },
     "email": {
       "bsonType": "string",
     },
-    "nom": {
+    "siret": {
       "bsonType": "string",
     },
-    "organisations": {
-      "bsonType": "array",
-      "items": {
-        "bsonType": "string",
-      },
-    },
-    "prenom": {
+    "source": {
       "bsonType": "string",
     },
-    "sirets": {
-      "bsonType": "array",
-      "items": {
-        "bsonType": "string",
-      },
+    "ttl": {
+      "bsonType": "date",
     },
     "updated_at": {
       "bsonType": "date",
@@ -1749,7 +1603,11 @@ exports[`zodToMongoSchema > should convert persons schema 1`] = `
   "required": [
     "_id",
     "email",
-    "organisations",
+    "siret",
+    "source",
+    "updated_at",
+    "created_at",
+    "ttl",
   ],
 }
 `;
@@ -1794,7 +1652,10 @@ exports[`zodToMongoSchema > should convert users schema 1`] = `
       "bsonType": "objectId",
     },
     "api_key": {
-      "bsonType": "string",
+      "bsonType": [
+        "string",
+        "null",
+      ],
     },
     "api_key_used_at": {
       "bsonType": [
@@ -1818,9 +1679,6 @@ exports[`zodToMongoSchema > should convert users schema 1`] = `
     "password": {
       "bsonType": "string",
     },
-    "person_id": {
-      "bsonType": "string",
-    },
     "updated_at": {
       "bsonType": "date",
     },
@@ -1829,7 +1687,12 @@ exports[`zodToMongoSchema > should convert users schema 1`] = `
     "_id",
     "email",
     "password",
-    "person_id",
+    "is_admin",
+    "is_support",
+    "api_key",
+    "api_key_used_at",
+    "updated_at",
+    "created_at",
   ],
 }
 `;

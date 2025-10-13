@@ -3,22 +3,19 @@ import type { FastifyRequest } from "fastify";
 import type { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
-import type { IUserWithPerson } from "shared/models/user.model";
+import type { IUser } from "shared/models/user.model";
 import type { ISecuredRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
 import type { UserWithType } from "shared/security/permissions";
-
 import { compareKeys } from "../common/utils/cryptoUtils";
 import { decodeToken } from "../common/utils/jwtUtils";
 import { getSession } from "../modules/actions/sessions.actions";
-import { findUser, updateUser } from "../modules/actions/users.actions";
+import { updateUser } from "../modules/actions/users.actions";
+import { getDbCollection } from "../common/utils/mongodbUtils";
 import type { IAccessToken } from "./accessTokenService";
 import { parseAccessToken } from "./accessTokenService";
 import config from "@/config";
 
-export type IUserWithType =
-  | UserWithType<"token", IAccessToken>
-  | UserWithType<"user", IUserWithPerson>
-  | UserWithType<"brevo", IBrevo>;
+type IUserWithType = UserWithType<"token", IAccessToken> | UserWithType<"user", IUser> | UserWithType<"brevo", IBrevo>;
 
 type IBrevo = Record<string, never>;
 
@@ -32,7 +29,7 @@ type AuthenticatedUser<AuthScheme extends WithSecurityScheme["securityScheme"]["
   AuthScheme extends "access-token"
     ? UserWithType<"token", IAccessToken>
     : AuthScheme extends "api-key" | "cookie-session"
-      ? UserWithType<"user", IUserWithPerson>
+      ? UserWithType<"user", IUser>
       : never;
 
 export const getUserFromRequest = <S extends WithSecurityScheme>(
@@ -46,7 +43,7 @@ export const getUserFromRequest = <S extends WithSecurityScheme>(
   return req.user.value as AuthenticatedUser<S["securityScheme"]["auth"]>["value"];
 };
 
-async function authCookieSession(req: FastifyRequest): Promise<UserWithType<"user", IUserWithPerson> | null> {
+async function authCookieSession(req: FastifyRequest): Promise<UserWithType<"user", IUser> | null> {
   const token = req.cookies?.[config.session.cookieName];
 
   if (!token) {
@@ -62,7 +59,7 @@ async function authCookieSession(req: FastifyRequest): Promise<UserWithType<"use
 
     const { email } = jwt.verify(token, config.auth.user.jwtSecret) as JwtPayload;
 
-    const user = await findUser({ email: email.toLowerCase() });
+    const user = await getDbCollection("users").findOne({ email: email.toLowerCase() });
 
     return user ? { type: "user", value: user } : user;
   } catch (_error) {
@@ -70,7 +67,7 @@ async function authCookieSession(req: FastifyRequest): Promise<UserWithType<"use
   }
 }
 
-async function authApiKey(req: FastifyRequest): Promise<UserWithType<"user", IUserWithPerson> | null> {
+async function authApiKey(req: FastifyRequest): Promise<UserWithType<"user", IUser> | null> {
   const token = extractBearerTokenFromHeader(req);
 
   if (!token) {
@@ -80,7 +77,7 @@ async function authApiKey(req: FastifyRequest): Promise<UserWithType<"user", IUs
   try {
     const { _id, api_key } = decodeToken(token) as JwtPayload;
 
-    const user = await findUser({ _id: new ObjectId(_id) });
+    const user = await getDbCollection("users").findOne({ _id: new ObjectId(_id) });
 
     if (!user || !user?.api_key || !compareKeys(user.api_key, api_key)) {
       throw Boom.forbidden("Jeton invalide");
