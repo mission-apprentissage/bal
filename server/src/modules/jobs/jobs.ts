@@ -28,6 +28,7 @@ import {
   processMailingList,
   recoverMailingListJobs,
 } from "./mailing-list/mailing-list.processor";
+import { hydrateDataGouv } from "./lba/hydrate-datagouv";
 import {
   create as createMigration,
   status as statusMigration,
@@ -207,6 +208,9 @@ export async function setupJobProcessor() {
       "mailing-list:recover": {
         handler: async (_job, signal) => recoverMailingListJobs(signal),
         resumable: true,
+      },
+      "hydrate:datagouv": {
+        handler: hydrateDataGouv,
       },
     },
   });
