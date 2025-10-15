@@ -270,6 +270,12 @@ program
   .action(createJobAction("job:lba:hydrate:siret-list"));
 
 program
+  .command("hydrate:datagouv")
+  .description("Import du fichier des organisations française domaine email")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("hydrate:datagouv"));
+
+program
   .command("email:verify")
   .description("Check if an email is valid")
   .requiredOption("-e, --emails <string...>", "Emails to validate")
