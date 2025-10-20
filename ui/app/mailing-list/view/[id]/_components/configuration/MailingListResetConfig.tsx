@@ -88,7 +88,7 @@ export function MailingListResetConfig({ mailingList, readonly }: MailingListRes
         }}
       >
         {canReset
-          ? "La liste est déjà cofigurée, vous pouvez la réinitialiser pour éditer la configuration à nouveau."
+          ? "La liste est déjà configurée, vous pouvez la réinitialiser pour éditer la configuration à nouveau."
           : "La liste est en cours de traitement, vous ne pouvez pas éditer ou réinitialiser la configuration pour le moment."}
       </CallOut>
     </>
