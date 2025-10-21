@@ -28,6 +28,7 @@ import {
   processMailingList,
   recoverMailingListJobs,
 } from "./mailing-list/mailing-list.processor";
+import { hydrateDataGouv } from "./lba/hydrate-datagouv";
 import {
   create as createMigration,
   status as statusMigration,
@@ -91,6 +92,11 @@ export async function setupJobProcessor() {
               cron_string: "*/30 * * * *",
               handler: recoverMailingListJobs,
               resumable: true,
+              maxRuntimeInMinutes: 15,
+            },
+            "Récupération des couples siret/email datagouv": {
+              cron_string: "0 10 * * SUN",
+              handler: hydrateDataGouv,
               maxRuntimeInMinutes: 15,
             },
           },
@@ -207,6 +213,9 @@ export async function setupJobProcessor() {
       "mailing-list:recover": {
         handler: async (_job, signal) => recoverMailingListJobs(signal),
         resumable: true,
+      },
+      "hydrate:datagouv": {
+        handler: hydrateDataGouv,
       },
     },
   });
