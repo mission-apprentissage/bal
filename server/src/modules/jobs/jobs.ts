@@ -44,31 +44,31 @@ export async function setupJobProcessor() {
       config.env === "preview" || config.env === "local"
         ? {}
         : {
-            "Mise à jour des emails blacklisted provenant de la bonne alternance": {
+            "MAJ emails blacklist la bonne alternance": {
               cron_string: "0 3 * * *",
               handler: async () => hydrateLbaBlackListed(),
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
-            "Cleanup company email": {
+            "Nettoyage emails génériques": {
               cron_string: "0 3 2 * *",
               handler: async () => sanitizeOrganisationDomains(),
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
-            "Mise à jour des couples siret/email provenant du catalogue de formations": {
+            "MAJ couples siret-email catalogue RCO": {
               cron_string: "30 2 * * *",
               handler: async () => importPersonFromCatalogue(),
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
-            "Mise à jour des couples siret/email provenant de l'algo LBA": {
+            "MAJ couples siret-email algo LBA": {
               cron_string: "30 5 10 * *",
               handler: async () => importPersonFromAlgoLba(),
               resumable: true,
               maxRuntimeInMinutes: 60,
             },
-            "Mise à jour des données DECA": {
+            "MAJ données DECA": {
               cron_string: "30 21 * * *",
               handler: async (signal) => {
                 await hydrateDeca(signal);
@@ -82,19 +82,19 @@ export async function setupJobProcessor() {
               // Keep long jobs in the main queue
               tag: "main",
             },
-            "Anonymisation des données DECA": {
+            "Anonymisation données DECA": {
               cron_string: "0 8 * * *",
               handler: anonymisationService,
               resumable: true,
               maxRuntimeInMinutes: 15,
             },
-            "Récupération des mailing-lists": {
+            "Récupération mailing-lists": {
               cron_string: "*/30 * * * *",
               handler: recoverMailingListJobs,
               resumable: true,
               maxRuntimeInMinutes: 15,
             },
-            "Récupération des couples siret/email datagouv": {
+            "Récupération couples siret-email datagouv": {
               cron_string: "0 10 * * SUN",
               handler: hydrateDataGouv,
               maxRuntimeInMinutes: 15,
