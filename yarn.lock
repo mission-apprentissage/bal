@@ -681,22 +681,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/s3-request-presigner@npm:^3.908.0":
-  version: 3.908.0
-  resolution: "@aws-sdk/s3-request-presigner@npm:3.908.0"
-  dependencies:
-    "@aws-sdk/signature-v4-multi-region": 3.908.0
-    "@aws-sdk/types": 3.901.0
-    "@aws-sdk/util-format-url": 3.901.0
-    "@smithy/middleware-endpoint": ^4.3.1
-    "@smithy/protocol-http": ^5.3.0
-    "@smithy/smithy-client": ^4.7.1
-    "@smithy/types": ^4.6.0
-    tslib: ^2.6.2
-  checksum: 9832095788a38aaf21f7bfa0ec38cbeda9540ce4a2363ea31659875a597d0140a9cd5d3b543c34b0ec7cfea4b915a42f2e95490829c1d2a76ed370a958c707c4
-  languageName: node
-  linkType: hard
-
 "@aws-sdk/signature-v4-multi-region@npm:3.908.0":
   version: 3.908.0
   resolution: "@aws-sdk/signature-v4-multi-region@npm:3.908.0"
@@ -726,7 +710,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/types@npm:3.901.0, @aws-sdk/types@npm:^3.222.0, @aws-sdk/types@npm:^3.901.0":
+"@aws-sdk/types@npm:3.901.0, @aws-sdk/types@npm:^3.222.0":
   version: 3.901.0
   resolution: "@aws-sdk/types@npm:3.901.0"
   dependencies:
@@ -755,18 +739,6 @@ __metadata:
     "@smithy/util-endpoints": ^3.2.0
     tslib: ^2.6.2
   checksum: 88bb685360ae52d062d4b5b4dd06bc2e8c8f847c6a7ec688b16a69cbc0217868f710fff4de74ee234c13a192bcf4b1b2798932a974995f1e0de97a22499034d5
-  languageName: node
-  linkType: hard
-
-"@aws-sdk/util-format-url@npm:3.901.0":
-  version: 3.901.0
-  resolution: "@aws-sdk/util-format-url@npm:3.901.0"
-  dependencies:
-    "@aws-sdk/types": 3.901.0
-    "@smithy/querystring-builder": ^4.2.0
-    "@smithy/types": ^4.6.0
-    tslib: ^2.6.2
-  checksum: 76094cfae20b0bb6009e37e34ccdbd08fd57f2a9e048a8e038f4c68ef2f1caecb41cd63befac65669ec678a744bafa2999f33a6b107cf21298a345965edd2eb6
   languageName: node
   linkType: hard
 
@@ -14357,8 +14329,6 @@ __metadata:
   dependencies:
     "@aws-sdk/client-s3": ^3.908.0
     "@aws-sdk/lib-storage": ^3.908.0
-    "@aws-sdk/s3-request-presigner": ^3.908.0
-    "@aws-sdk/types": ^3.901.0
     "@fastify/cookie": ^11.0.2
     "@fastify/cors": ^11.1.0
     "@fastify/multipart": ^9.2.1

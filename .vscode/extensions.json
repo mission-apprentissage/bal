@@ -16,8 +16,8 @@
     "esbenp.prettier-vscode",
     "yoavbls.pretty-ts-errors",
     "pflannery.vscode-versionlens",
-    "ZixuanChen.vitest-explorer",
     "fabiospampinato.vscode-terminals",
-    "redhat.vscode-yaml"
+    "redhat.vscode-yaml",
+    "vitest.explorer"
   ]
 }

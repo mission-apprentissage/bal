@@ -5,12 +5,6 @@ import logger from "../../common/logger";
 import { verifyEmails } from "../../common/services/mailer/mailBouncer";
 import { getDatabase } from "../../common/utils/mongodbUtils";
 import config from "../../config";
-import {
-  handleDocumentFileContent,
-  onImportDocumentJobExited,
-  saveDocumentsColumns,
-} from "../actions/documents.actions";
-import { handleMailingListJob, onMailingListJobExited } from "../actions/mailingLists.actions";
 import { createUser } from "../actions/users.actions";
 import { sanitizeOrganisationDomains } from "../actions/organisations.actions";
 import { importPersonFromCatalogue } from "./catalogueSiretEmailImport";
@@ -142,22 +136,6 @@ export async function setupJobProcessor() {
       "migrations:create": {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async (job) => createMigration(job.payload as any),
-      },
-      // BELOW SPECIFIC TO PRODUCT
-      "import:document": {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handler: async (job, signal) => handleDocumentFileContent(job, job.payload as any, signal),
-        onJobExited: onImportDocumentJobExited,
-        resumable: true,
-      },
-      "documents:save-columns": {
-        handler: async () => saveDocumentsColumns(),
-      },
-      "generate:mailing-list": {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handler: async (job, signal) => handleMailingListJob(job, job.payload as any, signal),
-        onJobExited: onMailingListJobExited,
-        resumable: true,
       },
       "deca:hydrate": {
         handler: async (_job, signal) => {

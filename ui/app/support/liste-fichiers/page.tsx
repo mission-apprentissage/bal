@@ -24,7 +24,7 @@ const ListeDiffusionPage = () => {
 
   return (
     <>
-      <Breadcrumb pages={[PAGES.listeDiffusion()]} />
+      <Breadcrumb pages={[PAGES.listeDepot()]} />
 
       <Box display="flex" flexDirection="row">
         <Typography flexGrow={1} variant="h2">

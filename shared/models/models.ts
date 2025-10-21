@@ -13,16 +13,10 @@ import type { IDecaHistory } from "./deca.model/decaHistory.model";
 import decaHistoryModelDescriptor from "./deca.model/decaHistory.model";
 import type { IDecaImportJobResult } from "./deca.model/decaImportJobResult.model";
 import decaImportJobResultModelDescriptor from "./deca.model/decaImportJobResult.model";
-import type { IDocument } from "./document.model";
-import documentsModelDescriptor from "./document.model";
-import type { IDocumentContent } from "./documentContent.model";
-import documentContentsModelDescriptor from "./documentContent.model";
 import type { IEmailDenied } from "./emailDenied.model";
 import emailDeniedModelDescriptor from "./emailDenied.model";
 import type { IEvent } from "./events/event.model";
 import eventsModelDescriptor from "./events/event.model";
-import type { IMailingList } from "./mailingList.model";
-import mailingListModelDescriptor from "./mailingList.model";
 import type { IOrganisation } from "./organisation.model";
 import organisationsModelDescriptor from "./organisation.model";
 import type { IPerson } from "./person.model";
@@ -44,14 +38,11 @@ export const modelDescriptors: IModelDescriptor[] = [
   personsModelDescriptor,
   eventsModelDescriptor,
   sessionsModelDescriptor,
-  documentsModelDescriptor,
-  documentContentsModelDescriptor,
   emailDeniedModelDescriptor,
   decaModelDescriptor,
   decaAnonymizedModelDescriptor,
   decaHistoryModelDescriptor,
   decaImportJobResultModelDescriptor,
-  mailingListModelDescriptor,
   bouncerEmailModelDescriptor,
   bouncerDomailModelDescriptor,
   lbaEmailBlackListedModelDescriptor,
@@ -66,9 +57,6 @@ export type IDocumentMap = {
   persons: IPerson;
   events: IEvent;
   sessions: ISession;
-  documents: IDocument;
-  documentContents: IDocumentContent;
-  mailingLists: IMailingList;
   mailingListsV2: IMailingListV2;
   ["mailingList.source"]: IMailingListSource;
   ["mailingList.computed"]: IMailingListComputedDatum;

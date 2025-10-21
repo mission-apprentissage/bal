@@ -13,7 +13,7 @@ import type { z } from "zod/v4-mini";
 import Toast, { useToast } from "@/components/toast/Toast";
 import { apiPost } from "@/utils/api.utils";
 
-interface FormValues extends z.input<IPostRoutes["/admin/upload"]["querystring"]> {
+interface FormValues extends z.input<IPostRoutes["/support/upload"]["querystring"]> {
   file: FileList;
   email: string;
   verified_key: string;

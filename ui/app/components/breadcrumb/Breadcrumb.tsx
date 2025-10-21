@@ -47,10 +47,6 @@ export const PAGES = {
     title: "Gestion des fichiers",
     path: "/admin/fichier",
   }),
-  adminListeDiffusion: (id: string) => ({
-    title: "Gestion des listes de diffusion",
-    path: `/admin/utilisateurs/${id}/liste-diffusion`,
-  }),
   adminImport: () => ({
     title: "Import de fichier",
     path: "/admin/fichier/import",
@@ -91,29 +87,21 @@ export const PAGES = {
     title: "Healthcheck",
     path: "/usage/healthcheck",
   }),
-  listeDiffusion: () => ({
-    title: "Listes de diffusion",
-    path: "/liste-diffusion",
-  }),
   mailingList: () => ({
-    title: "Listes de diffusion V2",
+    title: "Listes de diffusion",
     path: "/mailing-list",
   }),
   mailingListCreate: () => ({
-    title: "Créer une liste de diffusion V2",
+    title: "Créer une liste de diffusion",
     path: "/mailing-list/create",
   }),
   mailingListView: (id: string) => ({
-    title: `Liste de diffusion V2 ${id}`,
+    title: `Liste de diffusion ${id}`,
     path: `/mailing-list/view/${id}`,
   }),
   listeDepot: () => ({
     title: "Fichiers déposés",
     path: "/support/liste-fichiers",
-  }),
-  nouvelleListe: () => ({
-    title: "Créer une liste de diffusion V2",
-    path: "/liste-diffusion/nouvelle-liste",
   }),
   adminProcessor: () => ({
     path: `/admin/processeur`,
