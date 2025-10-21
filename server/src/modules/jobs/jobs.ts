@@ -94,6 +94,11 @@ export async function setupJobProcessor() {
               resumable: true,
               maxRuntimeInMinutes: 15,
             },
+            "Récupération des couples siret/email datagouv": {
+              cron_string: "0 10 * * SUN",
+              handler: hydrateDataGouv,
+              maxRuntimeInMinutes: 15,
+            },
           },
     jobs: {
       "users:create": {
