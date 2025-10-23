@@ -25,7 +25,7 @@ export interface TrainingLinkData {
   siret_formateur_responsable?: string | null;
 }
 
-export interface TrainingLink {
+interface TrainingLink {
   id: string;
   lien_prdv: string;
   lien_lba: string;

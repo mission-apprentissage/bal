@@ -6,10 +6,6 @@ import config from "@/config";
 
 const KEY = config.ovhStorage.encryptionKey;
 
-export function isCipherAvailable() {
-  return !!KEY;
-}
-
 export function cipher(iv: string) {
   if (!KEY || !iv) {
     throw new Error("Impossible chiffrer la donnée");

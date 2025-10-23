@@ -1,11 +1,8 @@
 import { setMaxListeners } from "node:events";
-
 import { captureException } from "@sentry/node";
 import { program } from "commander";
 import { addJob, startJobProcessor } from "job-processor";
 import HttpTerminator from "lil-http-terminator";
-import { ObjectId } from "mongodb";
-
 import { closeMailer } from "./common/services/mailer/mailer";
 import { closeSentry } from "./common/services/sentry/sentry";
 import { sleep } from "./common/utils/asyncUtils";
@@ -199,19 +196,6 @@ program
   .action(createJobAction("indexes:recreate"));
 
 program
-  .command("import:document")
-  .description("Import document content")
-  .requiredOption("-d, --documentId <string>", "Document Id", (documentId) => new ObjectId(documentId))
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("import:document"));
-
-program
-  .command("documents:save-columns")
-  .description("Gets columns from documents and save them in database")
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("documents:save-columns"));
-
-program
   .command("deca:hydrate")
   .description("Remplissage des contrats Deca")
   .option("-q, --queued", "Run job asynchronously", false)
@@ -262,12 +246,6 @@ program
   .description("Importe liste emails blacklisté lba")
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("job:lba:hydrate:email-balcklisted"));
-
-program
-  .command("job:lba:hydrate:siret-list")
-  .description("Importe liste emails blacklisté lba")
-  .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("job:lba:hydrate:siret-list"));
 
 program
   .command("hydrate:datagouv")

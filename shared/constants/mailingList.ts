@@ -1,5 +1,4 @@
 import { z } from "zod/v4-mini";
-import type { IMailingList } from "../models/mailingList.model";
 
 export const MAILING_LIST_COMPUTED_COLUMNS = {
   WEBHOOK_LBA: {
@@ -7,7 +6,7 @@ export const MAILING_LIST_COMPUTED_COLUMNS = {
     columns: [
       { column: "lien_lba", output: "lien_lba", simple: false },
       { column: "lien_prdv", output: "lien_prdv", simple: false },
-    ] as IMailingList["output_columns"],
+    ] as const,
     sample: "Données récupérées depuis LBA",
   },
   BOUNCER: {
@@ -17,7 +16,7 @@ export const MAILING_LIST_COMPUTED_COLUMNS = {
       { column: "bounce_message", output: "bounce_message", simple: true },
       { column: "bounce_response_code", output: "bounce_response_code", simple: true },
       { column: "bounce_response_message", output: "bounce_response_message", simple: true },
-    ] as IMailingList["output_columns"],
+    ] as const,
     sample: "Données générées par le bouncer BAL",
   },
 };
@@ -34,22 +33,6 @@ export function isComputedColumns(column: string): column is IMailingListCompute
 }
 
 export const zComputedColumnKey = z.enum(MAILING_LIST_COMPUTED_COLUMNS_KEYS);
-
-export function getMailingOutputColumns(
-  mailingList: Pick<IMailingList, "output_columns">
-): IMailingList["output_columns"] {
-  const outputColumns: IMailingList["output_columns"] = [];
-
-  for (const column of mailingList.output_columns) {
-    if (isComputedColumns(column.column)) {
-      outputColumns.push(...MAILING_LIST_COMPUTED_COLUMNS[column.column].columns);
-    } else {
-      outputColumns.push(column);
-    }
-  }
-
-  return outputColumns;
-}
 
 const reservedOutputNames: RegExp[] = [/^email$/i];
 MAILING_LIST_COMPUTED_COLUMNS_KEYS.map((k) => {

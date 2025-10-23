@@ -5,12 +5,9 @@ import type { $ZodType } from "zod/v4/core";
 import { zAuthRoutes } from "./auth.routes";
 import type { IRouteSchema, IRouteSchemaWrite } from "./common.routes";
 import { zCoreRoutes } from "./core.routes";
-import { zDocumentRoutes } from "./document.routes";
 import { zEmailRoutes } from "./emails.routes";
-import { zMailingListRoutes } from "./mailingList.routes";
 import { zAdminOrganisationRoutes } from "./organisation.routes";
 import { zPersonRoutes } from "./person.routes";
-import { zUploadRoutes } from "./upload.routes";
 import { zUploadSupportRoutes } from "./upload.support.routes";
 import { zUserAdminRoutes, zUserRoutes } from "./user.routes";
 import { zBouncerV1Routes } from "./v1/bouncer.routes";
@@ -28,10 +25,7 @@ const zRoutesGet = {
   ...zCoreRoutes.get,
   ...zEmailRoutes.get,
   ...zPersonRoutes.get,
-  ...zUploadRoutes.get,
-  ...zDocumentRoutes.get,
   ...zAdminOrganisationRoutes.get,
-  ...zMailingListRoutes.get,
   ...zUploadSupportRoutes.get,
   ...zProcessorAdminRoutes.get,
   ...zPrivateMailingListRoutes.get,
@@ -42,10 +36,8 @@ const zRoutesPost = {
   ...zUserAdminRoutes.post,
   ...zAuthRoutes.post,
   ...zEmailRoutes.post,
-  ...zUploadRoutes.post,
   ...zOrganisationV1Routes.post,
   ...zDecaV1Routes.post,
-  ...zMailingListRoutes.post,
   ...zUploadSupportRoutes.post,
   ...zBouncerV1Routes.post,
   ...zBrevoWebhooks.post,
@@ -53,14 +45,10 @@ const zRoutesPost = {
 } as const;
 
 const zRoutesPut = {
-  ...zUploadRoutes.put,
-  ...zMailingListRoutes.put,
   ...zPrivateMailingListRoutes.put,
 } as const;
 
 const zRoutesDelete = {
-  ...zUploadRoutes.delete,
-  ...zMailingListRoutes.delete,
   ...zUploadSupportRoutes.delete,
   ...zUserAdminRoutes.delete,
   ...zPrivateMailingListRoutes.delete,
