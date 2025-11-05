@@ -262,7 +262,7 @@ program
 
 program
   .command("import:person:deca")
-  .description("plop")
+  .description("Update the persons and organisations from deca data")
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("import:person:deca"));
 
