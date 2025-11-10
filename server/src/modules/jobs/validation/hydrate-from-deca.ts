@@ -10,6 +10,7 @@ import parentLogger from "@/common/logger";
 const logger = parentLogger.child({ module: "job:validation:hydrate_from_deca" });
 
 export async function importPersonFromDeca(signal: AbortSignal) {
+  logger.info("counting documents");
   const totalCount = await getDbCollection("deca").countDocuments();
 
   const progress = {
@@ -31,6 +32,7 @@ export async function importPersonFromDeca(signal: AbortSignal) {
 
   printProgress();
 
+  logger.info("starting cursor");
   const cursor = getDbCollection("deca").find({}, { signal });
 
   let buffer: { personOps: AnyBulkWriteOperation<IPerson>[]; organisationOps: AnyBulkWriteOperation<IOrganisation>[] } =
@@ -58,19 +60,14 @@ export async function importPersonFromDeca(signal: AbortSignal) {
     if (organisationOps.length > 0) {
       buffer.organisationOps.push(...organisationOps);
     }
-
-    if (personOps.length > 1000 || organisationOps.length > 1000) {
+    if (buffer.personOps.length > 1000 || buffer.organisationOps.length > 1000) {
       await Promise.all([bulkWritePersons(buffer.personOps), bulkWriteOrganisations(buffer.organisationOps)]);
-
       buffer = { personOps: [], organisationOps: [] };
-
       printProgress();
     }
-
-    await Promise.all([bulkWritePersons(buffer.personOps), bulkWriteOrganisations(buffer.organisationOps)]);
-
     progress.done++;
   }
+  await Promise.all([bulkWritePersons(buffer.personOps), bulkWriteOrganisations(buffer.organisationOps)]);
 
   printProgress();
 }

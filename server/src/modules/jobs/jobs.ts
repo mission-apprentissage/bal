@@ -66,10 +66,10 @@ export async function setupJobProcessor() {
               cron_string: "30 21 * * *",
               handler: async (signal) => {
                 await hydrateDeca(signal);
-                await importPersonFromDeca(signal);
                 if (config.env === "production") {
                   await streamDataToParquetAndS3();
                 }
+                await importPersonFromDeca(signal);
               },
               resumable: true,
               maxRuntimeInMinutes: 12 * 60,

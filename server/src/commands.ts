@@ -261,6 +261,12 @@ program
   .action(createJobAction("email:verify"));
 
 program
+  .command("import:person:deca")
+  .description("Update the persons and organisations from deca data")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("import:person:deca"));
+
+program
   .command("job:run")
   .description("Run a job")
   .requiredOption("-n, --name <string>", "Job name")
