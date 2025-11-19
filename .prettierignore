@@ -3,3 +3,8 @@
 .infra/files/configs/mongodb/seed.gpg
 .infra/files/configs/mongodb/mongo_keyfile.txt
 .infra/local/mongo_keyfile
+.infra/habilitations.yml
+.infra/env.yml
+.infra/env.production.yml
+.infra/env.recette.yml
+.infra/env.local.yml

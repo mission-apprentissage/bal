@@ -5,9 +5,9 @@ set -euo pipefail
 dependencies=(
   "ansible"
   "gpg"
+  "sops"
   "node"
   "shred"
-  "sshpass"
   "yq"
 )
 

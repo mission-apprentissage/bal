@@ -2,24 +2,45 @@
 
 set -euo pipefail
 
-function Help() {
-   # Display Help
-   echo "Commands"
-   echo "  bin:setup                                               Installs mna-bal binary with zsh completion on system"
-   echo "  init:env                                                Update local env files using values from vault file"
-   echo "  release:interactive                                                                Build & Push Docker image releases"
-   echo "  release:app                                                                Build & Push Docker image releases"
-   echo "  deploy <env> --user <your_username>                                           Deploy application to <env>"
-   echo "  preview:build                                                                Build preview"
-   echo "  preview:cleanup --user <your_username>                                        Remove preview from close pull-requests"
-   echo "  vault:edit                                                                    Edit vault file"
-   echo "  vault:password                                                                Show vault password"
-   echo "  seed:update                                Update seed using a database"
-   echo "  seed:apply                                 Apply seed to a database"
-   echo "  deploy:log:encrypt                         Encrypt Github ansible logs"
-   echo "  deploy:log:dencrypt                        Decrypt Github ansible logs"
-   echo 
-   echo
+. ${ROOT_DIR}/.bin/shared/commands.sh
+
+function _help() {
+
+   echo -e "Commands\n"
+   
+   echo -e "  bin:setup"
+   echo -e "    \`-> Installs mna-bal binary with zsh completion on system\n"
+   
+   echo -e "  init:env"
+   echo -e "    \`-> Update local env files using values from vault files\n"
+   
+   echo -e "  release:interactive"
+   echo -e "    \`-> Build & Push Docker image releases\n"
+   
+   echo -e "  release:app"
+   echo -e "    \`-> Build & Push Docker image releases\n"
+   
+   echo -e "  product:access:update"
+   echo -e "    \`-> Update product access\n"
+   
+   echo -e "  vault:edit"
+   echo -e "    \`-> Edit vault file\n"
+   
+   echo -e "  app:deploy <env> --user <your_username>"
+   echo -e "    \`-> Deploy application to <env>\n"
+   
+   echo -e "  app:deploy:log:encrypt"
+   echo -e "    \`-> Encrypt Github ansible logs\n"
+   
+   echo -e "  app:deploy:log:decrypt"
+   echo -e "    \`-> Decrypt Github ansible logs\n"
+   
+   echo -e "  seed:update"
+   echo -e "    \`-> Update seed using a database\n"
+
+   echo -e "  seed:apply"
+   echo -e "    \`-> Apply seed to a database\n"
+
 }
 
 function bin:setup() {
@@ -42,27 +63,6 @@ function release:app() {
   "${SCRIPT_DIR}/release-app.sh" "$@"
 }
 
-function deploy() {
-  "${SCRIPT_DIR}/deploy-app.sh" "$@"
-}
-
-function preview:build() {
-  "${SCRIPT_DIR}/build-images.sh" "$@"
-}
-
-function preview:cleanup() {
-  "${SCRIPT_DIR}/run-playbook.sh" "preview_cleanup.yml" "preview"
-}
-
-function vault:edit() {
-  editor=${EDITOR:-'code -w'}
-  EDITOR=$editor "${SCRIPT_DIR}/edit-vault.sh" "$@"
-}
-
-function vault:password() {
-  "${SCRIPT_DIR}/get-vault-password-client.sh" "$@"
-}
-
 function seed:update() {
   "${SCRIPT_DIR}/seed-update.sh" "$@"
 }
@@ -71,10 +71,3 @@ function seed:apply() {
   "${SCRIPT_DIR}/seed-apply.sh" "$@"
 }
 
-function deploy:log:encrypt() {
-  (cd "$ROOT_DIR" && "${SCRIPT_DIR}/deploy-log-encrypt.sh" "$@")
-}
-
-function deploy:log:decrypt() {
-  (cd "$ROOT_DIR" && "${SCRIPT_DIR}/deploy-log-decrypt.sh" "$@")
-}

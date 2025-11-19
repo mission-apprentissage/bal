@@ -1,0 +1,3 @@
+[submodule ".bin/shared"]
+	path = .bin/shared
+	url = git@github.com:mission-apprentissage/mna-shared-bin.git

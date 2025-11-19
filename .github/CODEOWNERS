@@ -1,3 +1,6 @@
 .github/ @mission-apprentissage/mna
 .infra/ @mission-apprentissage/mna
+.infra/env.yml @mission-apprentissage/lba
+.infra/env.production.yml @mission-apprentissage/lba
+.infra/env.recette.yml @mission-apprentissage/lba
 .bin/ @mission-apprentissage/mna
