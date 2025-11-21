@@ -9,7 +9,7 @@ function _help() {
    echo -e "Commands\n"
    
    echo -e "  bin:setup"
-   echo -e "    \`-> Installs mna-bal binary with zsh completion on system\n"
+   echo -e "    \`-> Install mna-bal binary with zsh completion on system\n"
    
    echo -e "  init:env"
    echo -e "    \`-> Update local env files using values from vault files\n"
@@ -23,17 +23,17 @@ function _help() {
    echo -e "  product:access:update"
    echo -e "    \`-> Update product access\n"
    
-   echo -e "  vault:edit"
-   echo -e "    \`-> Edit vault file\n"
+   echo -e "  vault:edit [<env>]"
+   echo -e "    \`-> Edit SOPS env.yml or env.<env>.yml file\n"
    
    echo -e "  app:deploy <env> --user <your_username>"
    echo -e "    \`-> Deploy application to <env>\n"
    
    echo -e "  app:deploy:log:encrypt"
-   echo -e "    \`-> Encrypt Github ansible logs\n"
+   echo -e "    \`-> Encrypt Github Actions Ansible logs\n"
    
    echo -e "  app:deploy:log:decrypt"
-   echo -e "    \`-> Decrypt Github ansible logs\n"
+   echo -e "    \`-> Decrypt Github Actions Ansible logs\n"
    
    echo -e "  seed:update"
    echo -e "    \`-> Update seed using a database\n"
