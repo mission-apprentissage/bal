@@ -61,14 +61,9 @@ brew install pwgen
 brew install bash
 ```
 
-```bash
-brew tap esolitos/ipa
-brew install esolitos/ipa/sshpass
-```
-
 ### Clé OpenPGP
 
-Pour déchiffrer les variables d'environnement, vous avez besoin d'une clé **OpenPGP**, et d'être ajouté dans le fichier d'habilitations par un membre déjà habilité sur le projet. Si vous n'en avez pas, vous pouvez en créer une en suivant la documentation GitHub [ici](https://docs.github.com/fr/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
+Pour déchiffrer les variables d'environnement, vous avez besoin d'une clé **OpenPGP**, et d'être ajouté dans le fichier d'habilitations par un membre déjà habilité sur le projet. Si vous n'en avez pas, vous pouvez en créer une en suivant la documentation **Github** [ici](https://docs.github.com/fr/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
 
 Voici les étapes pour créer votre clé **OpenPGP** :
 
@@ -103,14 +98,6 @@ Voici les étapes pour créer votre clé **OpenPGP** :
    Ces deux fichiers peuvent être sauvegardés, par exemple, sur une clé USB.
 
 5. Communiquez votre clé à votre équipe afin d'être autorisé à déchiffrer les fichiers SOPS.
-
-**Une fois autorisé, vous aurez accès aux fichiers suivants :**
-
-- `.infra/vault/.vault-password.gpg`
-
-6. Installer 1password cli et connecter votre compte
-
-- brew install 1password-cli https://developer.1password.com/docs/cli/get-started/
 
 ## Développement
 
