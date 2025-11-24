@@ -25,4 +25,3 @@
         dest: "{{ inventory_dir }}/../ui/.env"
       with_fileglob:
         - "{{inventory_dir}}/.env_ui"
-
