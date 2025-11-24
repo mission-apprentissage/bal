@@ -39,11 +39,11 @@ Avant d'installer le projet, assurez-vous d'avoir les éléments suivants :
 - **Docker** 23.03.0+
 - **Git LFS**
 - **GnuPG**
+- **SOPS**
 - **pwgen**
 - **1password-cli**
 - **yq**
 - **shred**
-- **sshpass**
 - **NodeJS** 20+
 - **Ansible** 2.7+
 
@@ -51,6 +51,7 @@ Avant d'installer le projet, assurez-vous d'avoir les éléments suivants :
 
 ```bash
 brew install n
+brew install sops
 brew install yq
 brew install coreutils
 brew install git-lfs
@@ -65,11 +66,11 @@ brew tap esolitos/ipa
 brew install esolitos/ipa/sshpass
 ```
 
-### Clé GPG
+### Clé OpenPGP
 
-Pour décrypter les variables d'environnement, vous avez besoin d'une clé GPG. Si vous n'en avez pas, vous pouvez en créer une en suivant la documentation GitHub [ici](https://docs.github.com/fr/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
+Pour déchiffrer les variables d'environnement, vous avez besoin d'une clé **OpenPGP**, et d'être ajouté dans le fichier d'habilitations par un membre déjà habilité sur le projet. Si vous n'en avez pas, vous pouvez en créer une en suivant la documentation GitHub [ici](https://docs.github.com/fr/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
 
-Voici les étapes pour créer votre clé GPG :
+Voici les étapes pour créer votre clé **OpenPGP** :
 
 1. Lors de la création de la clé, choisissez les options suivantes :
    - `Please select what kind of key you want` > `ECC (sign and encrypt)`
@@ -78,7 +79,7 @@ Voici les étapes pour créer votre clé GPG :
    - `Real Name`: `<Prenom> <Nom>`
    - `Email Address`: `email@mail.gouv.fr`
 
-2. Pour utiliser votre clé au sein du projet, publiez-la en exécutant la commande suivante :
+2. Pour utiliser votre clé au sein du projet, publiez-la sur un serveur de clés public en exécutant la commande suivante :
 
    ```bash
    gpg --list-secret-keys --keyid-format=long
