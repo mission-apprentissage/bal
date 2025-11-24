@@ -44,15 +44,11 @@ function _help() {
 }
 
 function bin:setup() {
-  sudo ln -fs "${ROOT_DIR}/.bin/mna-bal" /usr/local/bin/mna-bal
-
-  sudo mkdir -p /usr/local/share/zsh/site-functions
-  sudo ln -fs "${ROOT_DIR}/.bin/zsh-completion" /usr/local/share/zsh/site-functions/_mna-bal
-  sudo rm -f ~/.zcompdump*
+  "${SCRIPT_DIR}/bin-setup.sh"
 }
 
-function init:env() {
-  "${SCRIPT_DIR}/setup-local-env.sh" "$@"
+function env:init() {
+  "${SCRIPT_DIR}/env-init.sh" "$@"
 }
 
 function release:interactive() {
@@ -61,13 +57,5 @@ function release:interactive() {
 
 function release:app() {
   "${SCRIPT_DIR}/release-app.sh" "$@"
-}
-
-function seed:update() {
-  "${SCRIPT_DIR}/seed-update.sh" "$@"
-}
-
-function seed:apply() {
-  "${SCRIPT_DIR}/seed-apply.sh" "$@"
 }
 
