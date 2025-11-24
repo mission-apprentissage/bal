@@ -4,7 +4,7 @@
   - [Fiche Produit](#fiche-produit)
   - [Installation](#installation)
     - [Pré-requis](#pré-requis)
-    - [Clé GPG](#clé-gpg)
+    - [Clé OpenPGP](#clé-openpgp)
   - [Développement](#développement)
     - [Gettting started](#gettting-started)
     - [Détails des commandes globales](#détails-des-commandes-globales)
@@ -17,7 +17,7 @@
       - [Deploiement depuis l'environnement local](#deploiement-depuis-lenvironnement-local)
       - [Gestion des migrations](#gestion-des-migrations)
       - [Talisman](#talisman)
-      - [Vault](#vault)
+      - [SOPS](#sops)
       - [Linter](#linter)
       - [Release depuis l'environnement local](#release-depuis-lenvironnement-local)
     - [Variables d'environnement local](#variables-denvironnement-local)
@@ -102,7 +102,7 @@ Voici les étapes pour créer votre clé **OpenPGP** :
 
    Ces deux fichiers peuvent être sauvegardés, par exemple, sur une clé USB.
 
-5. Communiquez votre clé à votre équipe afin d'être autorisé à décrypter le vault.
+5. Communiquez votre clé à votre équipe afin d'être autorisé à déchiffrer les fichiers SOPS.
 
 **Une fois autorisé, vous aurez accès aux fichiers suivants :**
 
@@ -125,7 +125,7 @@ yarn setup
 
 Cette commande mettra à jour les dépendances du projet.
 
-Le script vous demandera plusieurs fois la phrase secrète de votre clé GPG pour décrypter les variables d'environnement du vault.
+Le script vous demandera plusieurs fois la phrase secrète de votre clé **OpenPGP** pour déchiffrer les variables d'environnement des fichiers SOPS.
 
 ```bash
 yarn dev
@@ -251,12 +251,12 @@ Ajouter une exception à talisman
   yarn talisman:add-exception
 ```
 
-#### Vault
+#### SOPS
 
-Édition du vault ansible
+Édition des fichiers SOPS
 
 ```bash
-  yarn vault:edit
+  yarn vault:edit <env>
 ```
 
 #### Linter
