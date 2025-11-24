@@ -5,7 +5,7 @@
   tasks:
     - name: Chargement des variables chiffrées globales
       community.sops.load_vars:
-        file: "{{ inventory_dir }}/env.yml"
+        file: "{{ inventory_dir }}/env.global.yml"
         expressions: ignore
 
     - name: Chargement des variables chiffrées de l'environnement {{ env_type }}

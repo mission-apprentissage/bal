@@ -24,7 +24,7 @@ function _help() {
    echo -e "    \`-> Update product access\n"
    
    echo -e "  vault:edit [<env>]"
-   echo -e "    \`-> Edit SOPS env.yml or env.<env>.yml file\n"
+   echo -e "    \`-> Edit SOPS env.global.yml or env.<env>.yml file\n"
    
    echo -e "  app:deploy <env> --user <your_username>"
    echo -e "    \`-> Deploy application to <env>\n"
