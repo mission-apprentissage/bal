@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-if [ -f ${ROOT_DIR}/.bin/shared/commands.sh]; then
+if [ -f "${ROOT_DIR}/.bin/shared/commands.sh" ]; then
 
-  . ${ROOT_DIR}/.bin/shared/commands.sh
+  . "${ROOT_DIR}/.bin/shared/commands.sh"
 
 else
 
