@@ -36,8 +36,8 @@ on:
       SLACK_WEBHOOK:
         description: Slack webhook URL
         required: true
-      VAULT_PWD:
-        description: Vault Password
+      OPENPGP_PRIVATE_SUBKEY:
+        description: Github Actions' OpenPGP private subkey
         required: true
 
 jobs:
@@ -56,6 +56,8 @@ jobs:
 
       - name: Checkout project
         uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -67,21 +69,24 @@ jobs:
             Host *
               IdentityFile ~/.ssh/github_actions
 
-      - name: Create vault pwd file
-        run: echo ${{ secrets.VAULT_PWD }} > .infra/.vault_pwd.txt
+      - name: Initialize the GnuPG keyring
+        run: |
+          echo -n "$OPENPGP_KEY" | gpg --import
+        env:
+          OPENPGP_KEY: ${{ secrets.OPENPGP_PRIVATE_SUBKEY }}
+
+      - name: Setup SOPS
+        uses: nhedger/setup-sops@v2
 
       - name: Run playbook
-        run: .bin/mna-bal deploy ${{ inputs.environment }} --extra-vars "app_version=${{ inputs.app_version }}"
+        run: .bin/mna-bal app:deploy ${{ inputs.environment }} --extra-vars "app_version=${{ inputs.app_version }}"
         env:
-          ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
           ANSIBLE_REMOTE_USER: deploy
           ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
 
       - name: Encrypt logs
-        run: .bin/mna-bal deploy:log:encrypt
+        run: .bin/mna-bal app:deploy:log:encrypt
         if: always()
-        env:
-          ANSIBLE_VAULT_PASSWORD_FILE: .infra/.vault_pwd.txt
 
       - name: Upload logs artifacts
         if: always()
@@ -92,7 +97,7 @@ jobs:
 
       - name: Add Job summary
         if: always()
-        run: echo 'You can get logs using `.bin/mna-bal deploy:log:decrypt ${{ github.run_id }} ${{ inputs.environment }}`' >> $GITHUB_STEP_SUMMARY
+        run: echo 'You can get logs using `.bin/mna-bal app:deploy:log:decrypt ${{ github.run_id }} ${{ inputs.environment }}`' >> $GITHUB_STEP_SUMMARY
 
       - name: Notify failure on Slack
         uses: ravsamhq/notify-slack-action@v2
@@ -100,7 +105,7 @@ jobs:
         with:
           status: ${{ job.status }}
           notification_title: "Le déploiement ${{ inputs.app_version }} en ${{ inputs.environment }} a échoué"
-          message_format: "{emoji} *[${{ inputs.environment }}]* *{workflow}* {status_message} in <{repo_url}|{branch}> on <{commit_url}|{commit_sha}>. You can get error logs using `.bin/mna-bal deploy:log:decrypt ${{ github.run_id }} ${{ inputs.environment }}`"
+          message_format: "{emoji} *[${{ inputs.environment }}]* *{workflow}* {status_message} in <{repo_url}|{branch}> on <{commit_url}|{commit_sha}>. You can get error logs using `.bin/mna-bal app:deploy:log:decrypt ${{ github.run_id }} ${{ inputs.environment }}`"
           notify_when: "failure"
           mention_groups: "!channel"
         env:

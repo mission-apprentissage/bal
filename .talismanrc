@@ -5,20 +5,12 @@ fileignoreconfig:
   checksum: 72cf1ee4c73d59010fe1faf035aa4c775064c88e67a3d9c11639ac2ba3be527b
 - filename: .github/workflows/_deploy.yml
   checksum: bfbfdbf9032949561988a0961dce57f2e786716de5fa5b7e937d5d3a6e5a7aad
-- filename: .github/workflows/deploy_preview.yml
-  checksum: f96d49d99fb2a424924f6eb865a75be1cf6cf62a20db64255e8222ecdc39e836
 - filename: .github/workflows/gitguardian.yml
   checksum: 6570536d75569b3826026d9126cff26fc4de473afbab8adbfc9fab833362fb79
-- filename: .github/workflows/preview.yml
-  checksum: f6f0ddbd4c2498156e171b972840d4ff318681c6ef1920c0b8adc3f3e129e912
-- filename: .github/workflows/preview_cleanup.yml
-  checksum: 67819990fb55317219099160544287ce92abebd9f45cd3d4d9d80b8870c4c568
 - filename: .github/workflows/publish.yml
   checksum: cf87922f9cd1d8f4bb965920800187860609408c64406991a6dfad0ab79cc6aa
 - filename: .github/workflows/release.yml
   checksum: 763593fac0f0d7456d095e6df3570795aca98d2bb579aae61a5b3500c3e4787b
-- filename: .github/workflows/remove-preview.yml
-  checksum: 7816bba163d78013cbce6cf0f604658c85851843083c9a59e2037cb6276cd42e
 - filename: .infra/.env_server
   checksum: a8a485cdfdd80b7b85130637e381e540daa4d7d0f0c1e0870fac9f572babd886
 - filename: .infra/.env_ui
@@ -41,12 +33,6 @@ fileignoreconfig:
   checksum: aa93a5ec0e3365d21334481c5f816d3f42775ab08512cf7276b66b28f8df8f86
 - filename: .infra/ansible/roles/setup/tasks/install-app.yml
   checksum: 2c7d8cdb7af638f1f5588ac9969128dddccc0a0650a5b70af5be7711d8dfbbe7
-- filename: .infra/docker-compose.preview-33.yml
-  checksum: d4a2b70da835529d9f90d5a563fecfc3f3ad7782d4d442b049028ed570dc11c2
-- filename: .infra/docker-compose.preview-app.yml
-  checksum: 4b1cb77b35ee397f12b6e02e362a3abf053f21effa5b17ffa5f1876dfe5d68b9
-- filename: .infra/docker-compose.preview.yml
-  checksum: 6eaf3bd555437e5b2adadf285bb2f6772d60018b30fa9cb404894e5bcf9aba10
 - filename: .infra/docker-compose.production.yml
   checksum: 409e085b202e553ed815120416344abcc5798e4ae4bd42beda47445aecf4bb7c
 - filename: .infra/docker-compose.recette.yml
@@ -61,8 +47,6 @@ fileignoreconfig:
   checksum: d15b5301531b42d1f2c235c21f07aef1dc2a8604d3f839507f4653d3ecb43c2f
 - filename: .infra/scripts/ovh/create-backup-partition.sh
   checksum: 4ab5023a5bfef64b0db52158d42fd7635f2754eb3596ac5b53e085815977f1aa
-- filename: .infra/scripts/preview-app.sh
-  checksum: e176b554782fe785e920aa8dd3f420ad02a1c9e3b96dffba98ed86b4bcd97d89
 - filename: .infra/scripts/vault/generate-vault-password.sh
   checksum: 86baa73f9c5559afc69f12d124d9895a104869cfb8fe396568f88954351a38b5
 - filename: .infra/scripts/vault/renew-vault.sh
@@ -106,8 +90,6 @@ fileignoreconfig:
   checksum: 321ded7dbfda62fd68c7a3f8f7702b495204c618bb5cf347d1754273458488d1
 - filename: server/src/modules/actions/users.actions.ts
   checksum: dec754c2aa978bc61d75d53a1d3f65c4ff49a9a0f37b6302532b1c343d9adb25
-- filename: server/src/modules/data/seed/seed-preview.ts
-  checksum: c63289b52d6565490c1fd8176b68af4268602c9a0d5f31126647caf4ba354534
 - filename: server/src/modules/jobs/deca/merge-dumps-deca.ts
   checksum: a1fda02642c8309e5d689ec67b69235bb2c842dcd33719f12b517011c3e16bb0
 - filename: server/src/modules/jobs/deca/watcher.ts
@@ -146,8 +128,6 @@ fileignoreconfig:
   checksum: 185bfafce79a9f548bc9c6e7f98b75d9a028c3452a8bc431ce8f957c9cfe515e
 - filename: ui/Dockerfile
   checksum: 2eb89b135a7f55f39ba6781b377b5e58948e8e1686be9a22257b10b8245c42f0
-- filename: ui/Dockerfile.preview
-  checksum: 03cd37123382c0779373482a2e362c991164ba294fff77a2989cc7d2ca2816cc
 - filename: ui/app/auth/connexion/page.tsx
   checksum: a2131c94803d35f354c09e40c5bff4eb33763290e1cab8569ed57c3d2d07d7e7
 - filename: ui/app/auth/modifier-mot-de-passe/page.tsx

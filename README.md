@@ -4,7 +4,7 @@
   - [Fiche Produit](#fiche-produit)
   - [Installation](#installation)
     - [Pré-requis](#pré-requis)
-    - [Clé GPG](#clé-gpg)
+    - [Clé OpenPGP](#clé-openpgp)
   - [Développement](#développement)
     - [Gettting started](#gettting-started)
     - [Détails des commandes globales](#détails-des-commandes-globales)
@@ -17,7 +17,7 @@
       - [Deploiement depuis l'environnement local](#deploiement-depuis-lenvironnement-local)
       - [Gestion des migrations](#gestion-des-migrations)
       - [Talisman](#talisman)
-      - [Vault](#vault)
+      - [SOPS](#sops)
       - [Linter](#linter)
       - [Release depuis l'environnement local](#release-depuis-lenvironnement-local)
     - [Variables d'environnement local](#variables-denvironnement-local)
@@ -39,11 +39,11 @@ Avant d'installer le projet, assurez-vous d'avoir les éléments suivants :
 - **Docker** 23.03.0+
 - **Git LFS**
 - **GnuPG**
+- **SOPS**
 - **pwgen**
 - **1password-cli**
 - **yq**
 - **shred**
-- **sshpass**
 - **NodeJS** 20+
 - **Ansible** 2.7+
 
@@ -51,6 +51,7 @@ Avant d'installer le projet, assurez-vous d'avoir les éléments suivants :
 
 ```bash
 brew install n
+brew install sops
 brew install yq
 brew install coreutils
 brew install git-lfs
@@ -60,16 +61,11 @@ brew install pwgen
 brew install bash
 ```
 
-```bash
-brew tap esolitos/ipa
-brew install esolitos/ipa/sshpass
-```
+### Clé OpenPGP
 
-### Clé GPG
+Pour déchiffrer les variables d'environnement, vous avez besoin d'une clé **OpenPGP**, et d'être ajouté dans le fichier d'habilitations par un membre déjà habilité sur le projet. Si vous n'en avez pas, vous pouvez en créer une en suivant la documentation **Github** [ici](https://docs.github.com/fr/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
 
-Pour décrypter les variables d'environnement, vous avez besoin d'une clé GPG. Si vous n'en avez pas, vous pouvez en créer une en suivant la documentation GitHub [ici](https://docs.github.com/fr/authentication/managing-commit-signature-verification/generating-a-new-gpg-key).
-
-Voici les étapes pour créer votre clé GPG :
+Voici les étapes pour créer votre clé **OpenPGP** :
 
 1. Lors de la création de la clé, choisissez les options suivantes :
    - `Please select what kind of key you want` > `ECC (sign and encrypt)`
@@ -78,7 +74,7 @@ Voici les étapes pour créer votre clé GPG :
    - `Real Name`: `<Prenom> <Nom>`
    - `Email Address`: `email@mail.gouv.fr`
 
-2. Pour utiliser votre clé au sein du projet, publiez-la en exécutant la commande suivante :
+2. Pour utiliser votre clé au sein du projet, publiez-la sur un serveur de clés public en exécutant la commande suivante :
 
    ```bash
    gpg --list-secret-keys --keyid-format=long
@@ -101,15 +97,7 @@ Voici les étapes pour créer votre clé GPG :
 
    Ces deux fichiers peuvent être sauvegardés, par exemple, sur une clé USB.
 
-5. Communiquez votre clé à votre équipe afin d'être autorisé à décrypter le vault.
-
-**Une fois autorisé, vous aurez accès aux fichiers suivants :**
-
-- `.infra/vault/.vault-password.gpg`
-
-6. Installer 1password cli et connecter votre compte
-
-- brew install 1password-cli https://developer.1password.com/docs/cli/get-started/
+5. Communiquez votre clé à votre équipe afin d'être autorisé à déchiffrer les fichiers SOPS.
 
 ## Développement
 
@@ -124,7 +112,7 @@ yarn setup
 
 Cette commande mettra à jour les dépendances du projet.
 
-Le script vous demandera plusieurs fois la phrase secrète de votre clé GPG pour décrypter les variables d'environnement du vault.
+Le script vous demandera plusieurs fois la phrase secrète de votre clé **OpenPGP** pour déchiffrer les variables d'environnement des fichiers SOPS.
 
 ```bash
 yarn dev
@@ -250,12 +238,12 @@ Ajouter une exception à talisman
   yarn talisman:add-exception
 ```
 
-#### Vault
+#### SOPS
 
-Édition du vault ansible
+Édition des fichiers SOPS
 
 ```bash
-  yarn vault:edit
+  yarn vault:edit <env>
 ```
 
 #### Linter

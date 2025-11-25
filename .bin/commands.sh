@@ -2,36 +2,63 @@
 
 set -euo pipefail
 
-function Help() {
-   # Display Help
-   echo "Commands"
-   echo "  bin:setup                                               Installs mna-bal binary with zsh completion on system"
-   echo "  init:env                                                Update local env files using values from vault file"
-   echo "  release:interactive                                                                Build & Push Docker image releases"
-   echo "  release:app                                                                Build & Push Docker image releases"
-   echo "  deploy <env> --user <your_username>                                           Deploy application to <env>"
-   echo "  preview:build                                                                Build preview"
-   echo "  preview:cleanup --user <your_username>                                        Remove preview from close pull-requests"
-   echo "  vault:edit                                                                    Edit vault file"
-   echo "  vault:password                                                                Show vault password"
-   echo "  seed:update                                Update seed using a database"
-   echo "  seed:apply                                 Apply seed to a database"
-   echo "  deploy:log:encrypt                         Encrypt Github ansible logs"
-   echo "  deploy:log:dencrypt                        Decrypt Github ansible logs"
-   echo 
-   echo
+if [ -f "${ROOT_DIR}/.bin/shared/commands.sh" ]; then
+
+  . "${ROOT_DIR}/.bin/shared/commands.sh"
+
+else
+
+  echo "Mise à jour des sous-modules du dépôt"
+
+  git submodule update --recursive --remote
+
+fi
+
+function _help() {
+
+   echo -e "Commands\n"
+   
+   echo -e "  bin:setup"
+   echo -e "    \`-> Install mna-bal binary with zsh completion on system\n"
+   
+   echo -e "  env:init"
+   echo -e "    \`-> Update local env files using values from SOPS files\n"
+   
+   echo -e "  release:interactive"
+   echo -e "    \`-> Build & Push Docker image releases\n"
+   
+   echo -e "  release:app"
+   echo -e "    \`-> Build & Push Docker image releases\n"
+   
+   echo -e "  product:access:update"
+   echo -e "    \`-> Update product access\n"
+   
+   echo -e "  vault:edit [<env>]"
+   echo -e "    \`-> Edit SOPS env.global.yml or env.<env>.yml file\n"
+   
+   echo -e "  app:deploy <env> --user <your_username>"
+   echo -e "    \`-> Deploy application to <env>\n"
+   
+   echo -e "  app:deploy:log:encrypt"
+   echo -e "    \`-> Encrypt Github Actions Ansible logs\n"
+   
+   echo -e "  app:deploy:log:decrypt"
+   echo -e "    \`-> Decrypt Github Actions Ansible logs\n"
+   
+   echo -e "  seed:update"
+   echo -e "    \`-> Update seed using a database\n"
+
+   echo -e "  seed:apply"
+   echo -e "    \`-> Apply seed to a database\n"
+
 }
 
 function bin:setup() {
-  sudo ln -fs "${ROOT_DIR}/.bin/mna-bal" /usr/local/bin/mna-bal
-
-  sudo mkdir -p /usr/local/share/zsh/site-functions
-  sudo ln -fs "${ROOT_DIR}/.bin/zsh-completion" /usr/local/share/zsh/site-functions/_mna-bal
-  sudo rm -f ~/.zcompdump*
+  "${SCRIPT_DIR}/bin-setup.sh"
 }
 
-function init:env() {
-  "${SCRIPT_DIR}/setup-local-env.sh" "$@"
+function env:init() {
+  "${SCRIPT_DIR}/env-init.sh" "$@"
 }
 
 function release:interactive() {
@@ -42,39 +69,3 @@ function release:app() {
   "${SCRIPT_DIR}/release-app.sh" "$@"
 }
 
-function deploy() {
-  "${SCRIPT_DIR}/deploy-app.sh" "$@"
-}
-
-function preview:build() {
-  "${SCRIPT_DIR}/build-images.sh" "$@"
-}
-
-function preview:cleanup() {
-  "${SCRIPT_DIR}/run-playbook.sh" "preview_cleanup.yml" "preview"
-}
-
-function vault:edit() {
-  editor=${EDITOR:-'code -w'}
-  EDITOR=$editor "${SCRIPT_DIR}/edit-vault.sh" "$@"
-}
-
-function vault:password() {
-  "${SCRIPT_DIR}/get-vault-password-client.sh" "$@"
-}
-
-function seed:update() {
-  "${SCRIPT_DIR}/seed-update.sh" "$@"
-}
-
-function seed:apply() {
-  "${SCRIPT_DIR}/seed-apply.sh" "$@"
-}
-
-function deploy:log:encrypt() {
-  (cd "$ROOT_DIR" && "${SCRIPT_DIR}/deploy-log-encrypt.sh" "$@")
-}
-
-function deploy:log:decrypt() {
-  (cd "$ROOT_DIR" && "${SCRIPT_DIR}/deploy-log-decrypt.sh" "$@")
-}
