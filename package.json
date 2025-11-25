@@ -53,6 +53,7 @@
     "typecheck": "yarn foreach:parallel run typecheck",
     "typecheck:ci": "yarn foreach:ci run typecheck",
     "vault:edit": ".bin/mna-bal vault:edit",
+    "product:access:update": ".bin/mna-bal product:access:update",
     "foreach:seq": "yarn workspaces foreach -Av --exclude mna-bal",
     "foreach:parallel": "yarn foreach:seq -pi",
     "foreach:ci": "yarn foreach:seq -p"
