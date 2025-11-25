@@ -12,7 +12,7 @@ function _help() {
    echo -e "    \`-> Install mna-bal binary with zsh completion on system\n"
    
    echo -e "  env:init"
-   echo -e "    \`-> Update local env files using values from vault files\n"
+   echo -e "    \`-> Update local env files using values from SOPS files\n"
    
    echo -e "  release:interactive"
    echo -e "    \`-> Build & Push Docker image releases\n"
