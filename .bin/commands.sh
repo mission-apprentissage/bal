@@ -2,7 +2,11 @@
 
 set -euo pipefail
 
-. ${ROOT_DIR}/.bin/shared/commands.sh
+if [ -f ${ROOT_DIR}/.bin/shared/commands.sh]; then
+
+  . ${ROOT_DIR}/.bin/shared/commands.sh
+
+fi
 
 function _help() {
 
