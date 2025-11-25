@@ -6,6 +6,12 @@ if [ -f ${ROOT_DIR}/.bin/shared/commands.sh]; then
 
   . ${ROOT_DIR}/.bin/shared/commands.sh
 
+else
+
+  echo "Mise à jour des sous-modules du dépôt"
+
+  git submodule update --recursive --remote
+
 fi
 
 function _help() {

@@ -2,12 +2,6 @@
 
 set -euo pipefail
 
-echo "Mise à jour des sous-modules du dépôt"
-
-git submodule update --recursive --remote
-
-echo "Mise à jour des fichiers de variables d'environnement server/.env et ui/.env"
-
 ansible-galaxy collection install -U community.sops
 
 ANSIBLE_CONFIG="${ROOT_DIR}/.infra/ansible/ansible.cfg" ansible-playbook \
