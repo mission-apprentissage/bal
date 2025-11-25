@@ -11,7 +11,7 @@ function _help() {
    echo -e "  bin:setup"
    echo -e "    \`-> Install mna-bal binary with zsh completion on system\n"
    
-   echo -e "  init:env"
+   echo -e "  env:init"
    echo -e "    \`-> Update local env files using values from vault files\n"
    
    echo -e "  release:interactive"
