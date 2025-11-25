@@ -10,6 +10,7 @@ else
 
   echo "Mise à jour des sous-modules du dépôt"
 
+  git submodule update --recursive --init
   git submodule update --recursive --remote
 
 fi
