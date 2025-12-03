@@ -28,7 +28,7 @@ jobs:
 
       - name: Analyze NPM dependancies
         id: demo
-        run: mna-npm-check/npm-check.sh -p .bin/scripts/ovh/ovh-nodejs-client
+        run: mna-npm-check/npm-check.sh -p .
 
       - name: Notify failure on Slack
         uses: ravsamhq/notify-slack-action@v2
