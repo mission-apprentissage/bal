@@ -111,7 +111,10 @@ async function tryVerifyEmail(email: string, signal: AbortSignal, retryCount = 0
 
     signal?.throwIfAborted();
 
-    captureException(err);
+    if (err.message !== "Connection closed") {
+      // silenced on sentry for this common error
+      captureException(err);
+    }
     logger.error(err, { email });
 
     return {
