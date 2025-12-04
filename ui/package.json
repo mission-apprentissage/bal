@@ -36,7 +36,7 @@
     "next": "^15.5.7",
     "next-plausible": "^3.12.4",
     "react": "^19.2.1",
-    "react-dom": "^19.2.0",
+    "react-dom": "^19.2.1",
     "react-hook-form": "^7.65.0",
     "react-notion-x": "^7.7.1",
     "shared": "workspace:*",
