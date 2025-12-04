@@ -29,18 +29,6 @@ jobs:
       - name: Analyze NPM dependancies
         run: mna-npm-check/npm-check.sh -p .
 
-      - name: Notify failure on Slack
-        uses: ravsamhq/notify-slack-action@v2
-        if: always()
-        with:
-          status: ${{ job.status }}
-          notification_title: "Le déploiement ${{ inputs.app_version }} en ${{ inputs.environment }} a échoué"
-          message_format: "{emoji} *[${{ inputs.environment }}]* *{workflow}* {status_message} in <{repo_url}|{branch}> on <{commit_url}|{commit_sha}>. Suspected traces of known attacks on the NPM supply chain!`"
-          notify_when: "failure"
-          mention_groups: "!channel"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-
   release:
     if: ${{ success() }}
     needs: ["npm-packages-check"]
