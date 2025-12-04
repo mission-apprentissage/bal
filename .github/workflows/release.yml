@@ -43,9 +43,9 @@ jobs:
 
   release:
     if: ${{ success() }}
+    needs: ["npm-packages-check"]
     concurrency:
       group: "release-${{ github.workflow }}-${{ github.ref }}"
-    needs: ["npm-packages-check"]
     permissions: write-all
     outputs:
       VERSION: ${{ steps.get-version.outputs.VERSION }}
