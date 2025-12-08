@@ -1,19 +1,22 @@
 FROM node:24-slim AS builder_root
 WORKDIR /app
-RUN yarn set version 3.3.1
-COPY .yarn /app/.yarn
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
+
 COPY package.json package.json
-COPY yarn.lock yarn.lock
-COPY .yarnrc.yml .yarnrc.yml
+COPY pnpm-lock.yaml pnpm-lock.yaml
+COPY pnpm-workspace.yaml pnpm-workspace.yaml
+COPY .npmrc .npmrc
 COPY ui/package.json ui/package.json
 COPY server/package.json server/package.json
 COPY shared/package.json shared/package.json
 
-RUN yarn install --immutable
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN yarn typecheck
+RUN pnpm typecheck
 
 FROM builder_root AS root
 WORKDIR /app
@@ -26,7 +29,7 @@ WORKDIR /app
 FROM root AS builder_server
 WORKDIR /app
 
-RUN yarn workspace server build
+RUN pnpm --filter server build
 
 RUN mkdir -p /app/shared/node_modules && mkdir -p /app/server/node_modules
 
@@ -86,8 +89,8 @@ ENV NEXT_PUBLIC_VERSION=$PUBLIC_VERSION
 ARG PUBLIC_ENV
 ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
 
-RUN yarn workspace ui build
-# RUN --mount=type=cache,target=/app/ui/.next/cache yarn --cwd ui build
+RUN pnpm --filter ui build
+# RUN --mount=type=cache,target=/app/ui/.next/cache pnpm --filter ui build
 
 # Production image, copy all the files and run next
 FROM node:24-slim AS ui

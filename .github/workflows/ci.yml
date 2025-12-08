@@ -18,39 +18,41 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 24
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
 
       - uses: actions/cache@v3
         with:
           path: |
-            **/node_modules
-            .yarn/install-state.gz
-            .yarn/cache
-          key: yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: yarn-
+            ~/.pnpm-store
+          key: pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: pnpm-
 
       - name: Install dependencies
-        run: yarn install
+        run: pnpm install --frozen-lockfile
 
       - name: Make sure to use same dependencies version across all packages
-        run: yarn dedupe --check
+        run: pnpm dedupe --check
 
       - name: lint
-        run: yarn lint
+        run: pnpm lint
 
       - name: typecheck
-        run: yarn typecheck:ci
+        run: pnpm typecheck:ci
 
       - name: start mongodb service
         run: |
           docker compose up --build -d --wait mongodb
-          yarn setup:mongodb
+          pnpm setup:mongodb
 
       - name: test
-        run: yarn test:ci
+        run: pnpm test:ci
 
       - name: prettier
-        run: yarn prettier:check
+        run: pnpm prettier:check
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v3

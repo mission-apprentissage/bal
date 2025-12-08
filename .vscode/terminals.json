@@ -5,18 +5,18 @@
       "name": "Server",
       "focus": true,
       "description": "This run the server",
-      "commands": ["yarn services:start", "yarn server:dev"]
+      "commands": ["pnpm services:start", "pnpm server:dev"]
     },
     {
       "name": "Ui",
       "description": "This run the ui",
-      "command": "yarn workspace ui dev"
+      "command": "pnpm --filter ui dev"
     },
     {
       "name": "Cli",
       "description": "Cli",
       "execute": false,
-      "command": "yarn cli"
+      "command": "pnpm cli"
     }
   ]
 }

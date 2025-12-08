@@ -35,6 +35,6 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "vitest.enable": true,
-  "vitest.commandLine": "yarn test --single-thread",
+  "vitest.commandLine": "pnpm test --single-thread",
   "ansible.python.interpreterPath": "/opt/homebrew/bin/python3"
 }

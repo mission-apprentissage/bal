@@ -61,6 +61,12 @@ fileignoreconfig:
   checksum: 6cc4f54356f87bb46e357cc655c39e67882ffbd4d033024e6a01f59b57548d93
 - filename: .yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
   checksum: a663e9955c2825bee3af55be1ebd6e26cd0a17fe7c614a13d726ddd4c7959b82
+- filename: package-lock.json
+  ignore_detectors:
+  - filecontent
+- filename: pnpm-lock.yaml
+  ignore_detectors:
+  - filecontent
 - filename: CHANGELOG.md
   checksum: 036d7feec1e69504dacacc7768baf8d97bba1ab093c8fbdc1ee8cb51f94cf024
   ignore_detectors:
