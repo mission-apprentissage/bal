@@ -32,7 +32,7 @@
     "husky": "^9.1.7"
   },
   "scripts": {
-    "setup": ".bin/mna-bal env:init",
+    "setup:env": ".bin/mna-bal env:init",
     "setup:mongodb": "docker compose exec -it mongodb mongosh \"mongodb://__system:password@localhost:27017/mna-bal?authSource=local&directConnection=true\" --eval \"try { rs.status().ok } catch (e) { if (e.code === 94) {rs.initiate();} else {throw e} }\" --quiet",
     "dev": "pnpm services:start && pnpm -r --parallel run dev",
     "cli": "pnpm --filter server cli",
