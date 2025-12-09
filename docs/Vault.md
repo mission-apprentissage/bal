@@ -47,7 +47,7 @@ l'environnement cible.
 
 ## SOPS git diff
 
-Pour résoudre les conflits git sur les fichiers SOPS, il est possible de configurer git pour décrypter automatiquement les fichiers lors des diff.
+Pour résoudre les conflits git sur les fichiers SOPS, il est possible de configurer git pour déchiffrer automatiquement les fichiers lors des diff.
 
 Pour l'installer il faut exécuter les commandes suivantes
 
