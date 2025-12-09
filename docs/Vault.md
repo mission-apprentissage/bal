@@ -45,20 +45,15 @@ Pour référencer cette variable dans un fichier, il faut utiliser la syntaxe `{
 La variable `env_type` qui est définie dans le fichier `env.ini` sera automatiquement valorisée en fonction de
 l'environnement cible.
 
-## SOPS git diff & merge
+## SOPS git diff
 
-Pour résoudre les conflits git sur les fichiers SOPS, il est possible de configurer git pour décrypter automatiquement les fichiers lors des diff et mettre à jour les clés lors des merges.
+Pour résoudre les conflits git sur les fichiers SOPS, il est possible de configurer git pour décrypter automatiquement les fichiers lors des diff.
 
 Pour l'installer il faut exécuter les commandes suivantes
 
 ```bash
-git config --local diff.sopsdiff.textconv "sops -d"
-git config --local merge.sopsmerge.name "sops merge driver"
-git config --local merge.sopsmerge.driver "sops updatekeys %A"
-```
-
-Ensuite lors du merge, vous serez invité à entrer votre passphrase (3 fois) pour décrypter les fichiers (distant, local et resultat). Il sera également affiché un le `git diff` dans le stdout.
-
-```bash
-git merge main
+cat << 'EOF' >> ~/.gitconfig
+[diff "sopsdiffer"]
+  textconv = "sops decrypt"
+EOF
 ```
