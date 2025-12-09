@@ -8,3 +8,4 @@
 .infra/env.production.yml
 .infra/env.recette.yml
 .infra/env.local.yml
+pnpm-lock.yaml
