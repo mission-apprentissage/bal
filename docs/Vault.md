@@ -15,7 +15,7 @@ Le vault ansible `./infra/vault/vault.yml` contient les variables d'environnemen
 Édition du vault ansible.
 
 ```bash
-  yarn vault:edit
+  pnpm vault:edit
 ```
 
 ### Variables du vault

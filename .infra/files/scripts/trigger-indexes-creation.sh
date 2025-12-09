@@ -11,7 +11,7 @@ fi
 
 trigger_indexes_creation(){
     echo "Création des index mongoDb ..."
-    /opt/app/tools/docker-compose.sh run --rm --no-deps server yarn cli indexes:recreate --queued
+    /opt/app/tools/docker-compose.sh run --rm --no-deps server pnpm cli indexes:recreate --queued
 } 
 
 trigger_indexes_creation
