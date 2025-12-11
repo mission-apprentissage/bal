@@ -43,6 +43,8 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: true
+          submodules: recursive
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v3
         with:
