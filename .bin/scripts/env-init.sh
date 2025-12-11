@@ -15,9 +15,9 @@ echo "NEXT_PUBLIC_ENV=local" >> "${ROOT_DIR}/ui/.env"
 echo "NEXT_PUBLIC_VERSION=0.0.0-local" >> "${ROOT_DIR}/ui/.env"
 echo "NEXT_PUBLIC_API_PORT=5001" >> "${ROOT_DIR}/ui/.env"
 
-yarn
-yarn services:start
-yarn setup:mongodb
-yarn build:dev
-yarn cli migrations:up
-yarn cli indexes:recreate
+pnpm install
+pnpm services:start
+pnpm setup:mongodb
+pnpm --filter server build:dev
+pnpm cli migrations:up
+pnpm cli indexes:recreate

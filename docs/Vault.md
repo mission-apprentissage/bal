@@ -15,7 +15,7 @@ Le vault ansible `./infra/vault/vault.yml` contient les variables d'environnemen
 Édition du vault ansible.
 
 ```bash
-  yarn vault:edit
+  pnpm vault:edit
 ```
 
 ### Variables du vault
@@ -45,21 +45,15 @@ Pour référencer cette variable dans un fichier, il faut utiliser la syntaxe `{
 La variable `env_type` qui est définie dans le fichier `env.ini` sera automatiquement valorisée en fonction de
 l'environnement cible.
 
-## Vault git diff & merge
+## SOPS git diff
 
-Pour résoudre les conflits git sur le vault, il est possible de configurer git avec un mergetool custom. L'idée du custom merge tool est de décrypter le fichier pour appliquer le merge automatique de fichier.
+Pour résoudre les conflits git sur les fichiers SOPS, il est possible de configurer git pour déchiffrer automatiquement les fichiers lors des diff.
 
 Pour l'installer il faut exécuter les commandes suivantes
 
 ```bash
-git config --local merge.merge-vault.driver ".bin/scripts/merge-vault.sh %O %A %B"
-git config --local merge.merge-vault.name "ansible-vault merge driver"
-git config --local diff.diff-vault.textconv "ansible-vault decrypt --vault-password-file='.bin/scripts/get-vault-password-client.sh' --output -"
-git config --local diff.diff-vault.cachetextconv "false"
-```
-
-Ensuite lors du merge, vous serez invité à entrer votre passphrase (3 fois) pour décrypter les fichiers (distant, local et resultat). Il sera également affiché un le `git diff` dans le stdout.
-
-```bash
-git merge main
+cat << 'EOF' >> ~/.gitconfig
+[diff "sopsdiffer"]
+  textconv = "sops decrypt"
+EOF
 ```

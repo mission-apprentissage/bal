@@ -12,7 +12,7 @@ Utiliser la Github action deployement puis renseigner les informations demandée
 ### Déploiement Manuel
 
 ```bash
-yarn deploy <nom-de-lenvironnement> --user <nom_utilisateur> --extra-vars=app_version=<app_image_version>
+pnpm deploy <nom-de-lenvironnement> --user <nom_utilisateur> --extra-vars=app_version=<app_image_version>
 ```
 
 > TODO: Optional user & app_version

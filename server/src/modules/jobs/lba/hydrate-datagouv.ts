@@ -2,7 +2,7 @@ import { Readable, Transform } from "node:stream";
 import { pipeline } from "stream/promises";
 import { parse } from "csv-parse";
 import { getSirenFromSiret } from "shared/helpers/common";
-import z from "zod";
+import { z } from "zod/v4-mini";
 import type { IOrganisation } from "shared/models/organisation.model";
 import { ObjectId } from "mongodb";
 import { addYears } from "date-fns";

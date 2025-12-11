@@ -190,6 +190,7 @@ function isJobDone(job: IJobsSimple): boolean {
     case "errored":
     case "finished":
     case "killed":
+    case "skipped":
       return true;
     default:
       assertUnreachable(job.status);

@@ -739,7 +739,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         "type": "object",
       },
       "events": {
-        "anyOf": [
+        "oneOf": [
           {
             "additionalProperties": false,
             "properties": {
@@ -805,7 +805,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                 ],
               },
               "template": {
-                "anyOf": [
+                "oneOf": [
                   {
                     "additionalProperties": false,
                     "properties": {
@@ -1028,7 +1028,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                   "additionalProperties": false,
                   "properties": {
                     "input": {
-                      "anyOf": [
+                      "oneOf": [
                         {
                           "additionalProperties": false,
                           "properties": {
@@ -1826,7 +1826,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "content": {
               "application/json": {
                 "schema": {
-                  "anyOf": [
+                  "oneOf": [
                     {
                       "additionalProperties": false,
                       "properties": {

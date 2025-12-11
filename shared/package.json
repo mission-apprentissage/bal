@@ -9,7 +9,7 @@
   "type": "module",
   "engines": {
     "node": ">=24",
-    "npm": "please-use-yarn"
+    "npm": "please-use-pnpm"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

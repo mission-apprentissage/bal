@@ -64,7 +64,7 @@ Si vous souhaitez effectuer une release manuelle veuillez vous référé à la s
 Pour créer une nouvelle version stable veuillez utiliser la commande suivante:
 
 ```bash
-yarn release:interactive
+pnpm release:interactive
 ```
 
 ## Deploiement de l'application

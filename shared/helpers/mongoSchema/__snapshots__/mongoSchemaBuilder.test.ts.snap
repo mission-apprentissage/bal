@@ -611,263 +611,6 @@ exports[`zodToMongoSchema > should convert decaHistory schema 1`] = `
 }
 `;
 
-exports[`zodToMongoSchema > should convert documentContents schema 1`] = `
-{
-  "additionalProperties": false,
-  "bsonType": "object",
-  "properties": {
-    "_id": {
-      "bsonType": "objectId",
-    },
-    "content": {
-      "additionalProperties": true,
-      "bsonType": "object",
-    },
-    "created_at": {
-      "bsonType": "date",
-    },
-    "document_id": {
-      "bsonType": "string",
-    },
-    "type_document": {
-      "bsonType": "string",
-    },
-    "updated_at": {
-      "bsonType": "date",
-    },
-  },
-  "required": [
-    "_id",
-    "document_id",
-  ],
-}
-`;
-
-exports[`zodToMongoSchema > should convert documents schema 1`] = `
-{
-  "anyOf": [
-    {
-      "additionalProperties": false,
-      "bsonType": "object",
-      "properties": {
-        "_id": {
-          "bsonType": "objectId",
-        },
-        "added_by": {
-          "bsonType": "string",
-        },
-        "chemin_fichier": {
-          "bsonType": "string",
-        },
-        "columns": {
-          "anyOf": [
-            {
-              "bsonType": "array",
-              "items": {
-                "bsonType": "string",
-              },
-            },
-            {
-              "bsonType": "null",
-            },
-          ],
-        },
-        "created_at": {
-          "bsonType": "date",
-        },
-        "delimiter": {
-          "bsonType": [
-            "string",
-            "null",
-          ],
-        },
-        "ext_fichier": {
-          "bsonType": "string",
-          "enum": [
-            "xlsx",
-            "xls",
-            "csv",
-          ],
-        },
-        "hash_fichier": {
-          "bsonType": "string",
-        },
-        "hash_secret": {
-          "bsonType": "string",
-        },
-        "import_progress": {
-          "bsonType": [
-            "number",
-            "null",
-          ],
-        },
-        "job_error": {
-          "bsonType": [
-            "string",
-            "null",
-          ],
-        },
-        "job_id": {
-          "bsonType": [
-            "string",
-            "null",
-          ],
-        },
-        "job_status": {
-          "bsonType": "string",
-          "enum": [
-            "pending",
-            "paused",
-            "importing",
-            "done",
-            "error",
-          ],
-        },
-        "kind": {
-          "bsonType": "string",
-          "enum": [
-            "upload",
-          ],
-        },
-        "lines_count": {
-          "anyOf": [
-            {
-              "bsonType": "int",
-              "maximum": 9007199254740991,
-              "minimum": -9007199254740991,
-            },
-            {
-              "bsonType": "null",
-            },
-          ],
-        },
-        "nom_fichier": {
-          "bsonType": "string",
-        },
-        "taille_fichier": {
-          "bsonType": "int",
-          "maximum": 9007199254740991,
-          "minimum": -9007199254740991,
-        },
-        "type_document": {
-          "bsonType": "string",
-        },
-        "updated_at": {
-          "bsonType": [
-            "date",
-            "null",
-          ],
-        },
-      },
-      "required": [
-        "_id",
-        "kind",
-        "type_document",
-        "ext_fichier",
-        "nom_fichier",
-        "chemin_fichier",
-        "taille_fichier",
-        "hash_secret",
-        "hash_fichier",
-        "added_by",
-        "created_at",
-        "job_status",
-      ],
-    },
-    {
-      "additionalProperties": false,
-      "bsonType": "object",
-      "properties": {
-        "_id": {
-          "bsonType": "objectId",
-        },
-        "added_by": {
-          "bsonType": "string",
-        },
-        "chemin_fichier": {
-          "bsonType": "string",
-        },
-        "created_at": {
-          "bsonType": "date",
-        },
-        "ext_fichier": {
-          "bsonType": "string",
-          "enum": [
-            "xlsx",
-            "xls",
-            "csv",
-          ],
-        },
-        "hash_fichier": {
-          "bsonType": "string",
-        },
-        "hash_secret": {
-          "bsonType": "string",
-        },
-        "job_id": {
-          "bsonType": [
-            "string",
-            "null",
-          ],
-        },
-        "job_status": {
-          "bsonType": "string",
-          "enum": [
-            "pending",
-            "paused",
-            "processing",
-            "done",
-            "error",
-          ],
-        },
-        "kind": {
-          "bsonType": "string",
-          "enum": [
-            "mailingList",
-          ],
-        },
-        "lines_count": {
-          "bsonType": "int",
-          "maximum": 9007199254740991,
-          "minimum": -9007199254740991,
-        },
-        "nom_fichier": {
-          "bsonType": "string",
-        },
-        "process_progress": {
-          "bsonType": "number",
-        },
-        "taille_fichier": {
-          "bsonType": "int",
-          "maximum": 9007199254740991,
-          "minimum": -9007199254740991,
-        },
-        "type_document": {
-          "bsonType": "string",
-        },
-        "updated_at": {
-          "bsonType": "date",
-        },
-      },
-      "required": [
-        "_id",
-        "kind",
-        "type_document",
-        "ext_fichier",
-        "nom_fichier",
-        "chemin_fichier",
-        "taille_fichier",
-        "hash_secret",
-        "hash_fichier",
-        "added_by",
-        "created_at",
-        "job_status",
-      ],
-    },
-  ],
-}
-`;
-
 exports[`zodToMongoSchema > should convert emailDenied schema 1`] = `
 {
   "additionalProperties": false,
@@ -903,101 +646,109 @@ exports[`zodToMongoSchema > should convert emailDenied schema 1`] = `
 
 exports[`zodToMongoSchema > should convert events schema 1`] = `
 {
-  "additionalProperties": false,
-  "bsonType": "object",
-  "properties": {
-    "_id": {
-      "bsonType": "objectId",
-    },
-    "created_at": {
-      "bsonType": "date",
-    },
-    "delivered_at": {
-      "bsonType": [
-        "date",
-        "null",
-      ],
-    },
-    "errors": {
-      "bsonType": "array",
-      "items": {
-        "additionalProperties": false,
-        "bsonType": "object",
-        "properties": {
-          "message": {
-            "bsonType": "string",
-          },
-          "type": {
-            "bsonType": "string",
-            "enum": [
-              "fatal",
-              "soft_bounce",
-              "hard_bounce",
-              "complaint",
-              "invalid_email",
-              "blocked",
-              "error",
-            ],
-          },
-        },
-      },
-    },
-    "messageId": {
-      "bsonType": [
-        "string",
-        "null",
-      ],
-    },
-    "opened_at": {
-      "bsonType": [
-        "date",
-        "null",
-      ],
-    },
-    "template": {
+  "oneOf": [
+    {
       "additionalProperties": false,
       "bsonType": "object",
       "properties": {
-        "name": {
-          "bsonType": "string",
-          "enum": [
-            "reset_password",
+        "_id": {
+          "bsonType": "objectId",
+        },
+        "created_at": {
+          "bsonType": "date",
+        },
+        "delivered_at": {
+          "bsonType": [
+            "date",
+            "null",
           ],
         },
-        "resetPasswordToken": {
-          "bsonType": "string",
+        "errors": {
+          "bsonType": "array",
+          "items": {
+            "additionalProperties": false,
+            "bsonType": "object",
+            "properties": {
+              "message": {
+                "bsonType": "string",
+              },
+              "type": {
+                "bsonType": "string",
+                "enum": [
+                  "fatal",
+                  "soft_bounce",
+                  "hard_bounce",
+                  "complaint",
+                  "invalid_email",
+                  "blocked",
+                  "error",
+                ],
+              },
+            },
+          },
         },
-        "to": {
+        "messageId": {
+          "bsonType": [
+            "string",
+            "null",
+          ],
+        },
+        "opened_at": {
+          "bsonType": [
+            "date",
+            "null",
+          ],
+        },
+        "template": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "name": {
+                  "bsonType": "string",
+                  "enum": [
+                    "reset_password",
+                  ],
+                },
+                "resetPasswordToken": {
+                  "bsonType": "string",
+                },
+                "to": {
+                  "bsonType": "string",
+                  "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                },
+              },
+              "required": [
+                "name",
+                "to",
+                "resetPasswordToken",
+              ],
+            },
+          ],
+        },
+        "type": {
           "bsonType": "string",
-          "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+          "enum": [
+            "email.bal",
+          ],
+        },
+        "updated_at": {
+          "bsonType": "date",
         },
       },
       "required": [
-        "name",
-        "to",
-        "resetPasswordToken",
+        "_id",
+        "type",
+        "template",
+        "created_at",
+        "updated_at",
+        "opened_at",
+        "delivered_at",
+        "messageId",
+        "errors",
       ],
     },
-    "type": {
-      "bsonType": "string",
-      "enum": [
-        "email.bal",
-      ],
-    },
-    "updated_at": {
-      "bsonType": "date",
-    },
-  },
-  "required": [
-    "_id",
-    "type",
-    "template",
-    "created_at",
-    "updated_at",
-    "opened_at",
-    "delivered_at",
-    "messageId",
-    "errors",
   ],
 }
 `;
@@ -1116,116 +867,6 @@ exports[`zodToMongoSchema > should convert mailingList.source schema 1`] = `
 }
 `;
 
-exports[`zodToMongoSchema > should convert mailingLists schema 1`] = `
-{
-  "additionalProperties": false,
-  "bsonType": "object",
-  "properties": {
-    "_id": {
-      "bsonType": "objectId",
-    },
-    "added_by": {
-      "bsonType": "string",
-    },
-    "campaign_name": {
-      "bsonType": "string",
-    },
-    "created_at": {
-      "bsonType": "date",
-    },
-    "document_id": {
-      "bsonType": "string",
-    },
-    "email": {
-      "bsonType": "string",
-    },
-    "identifier_columns": {
-      "bsonType": "array",
-      "items": {
-        "bsonType": "string",
-      },
-    },
-    "output_columns": {
-      "bsonType": "array",
-      "items": {
-        "additionalProperties": false,
-        "bsonType": "object",
-        "properties": {
-          "column": {
-            "bsonType": "string",
-          },
-          "output": {
-            "bsonType": "string",
-          },
-          "simple": {
-            "bsonType": "bool",
-          },
-        },
-        "required": [
-          "column",
-          "output",
-          "simple",
-        ],
-      },
-    },
-    "secondary_email": {
-      "bsonType": "string",
-    },
-    "source": {
-      "bsonType": "string",
-    },
-    "training_columns": {
-      "additionalProperties": false,
-      "bsonType": "object",
-      "properties": {
-        "cfd": {
-          "bsonType": "string",
-        },
-        "cle_ministere_educatif": {
-          "bsonType": "string",
-        },
-        "code_insee": {
-          "bsonType": "string",
-        },
-        "code_postal": {
-          "bsonType": "string",
-        },
-        "mef": {
-          "bsonType": "string",
-        },
-        "rncp": {
-          "bsonType": "string",
-        },
-        "uai_formateur": {
-          "bsonType": "string",
-        },
-        "uai_formateur_responsable": {
-          "bsonType": "string",
-        },
-        "uai_lieu_formation": {
-          "bsonType": "string",
-        },
-      },
-    },
-    "updated_at": {
-      "bsonType": "date",
-    },
-  },
-  "required": [
-    "_id",
-    "campaign_name",
-    "source",
-    "email",
-    "identifier_columns",
-    "output_columns",
-    "training_columns",
-    "added_by",
-    "updated_at",
-    "created_at",
-  ],
-}
-`;
-
 exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
 {
   "additionalProperties": false,
@@ -1302,7 +943,7 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
             "bsonType": "object",
             "properties": {
               "input": {
-                "anyOf": [
+                "oneOf": [
                   {
                     "additionalProperties": false,
                     "bsonType": "object",

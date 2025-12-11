@@ -6,7 +6,7 @@ import { ObjectId } from "mongodb";
 import type { IDeca } from "shared/models/deca.model/deca.model";
 import type { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model";
 
-import z from "zod";
+import { z } from "zod/v4-mini";
 import { withCause } from "../../../common/services/errors/withCause";
 import { asyncForEach } from "../../../common/utils/asyncUtils";
 import { getDbCollection } from "../../../common/utils/mongodbUtils";

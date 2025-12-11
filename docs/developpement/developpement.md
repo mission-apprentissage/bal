@@ -31,15 +31,15 @@ Veuillez consulter le [README](../README.md#développement) principal pour le d�
 
 Pour installer et mettre à jour les dépendences, vous pouvez au choix:
 
-- Modifier les différents `package.json` et appliquer les changements via `yarn install`
-- Ajouter des dépendences via la commande `yarn add -E`
+- Modifier les différents `package.json` et appliquer les changements via `pnpm install`
+- Ajouter des dépendences via la commande `pnpm add -E`
 
 ## Linter
 
 Un linter (via ESLint) est mis en place dans le projet, pour le lancer :
 
 ```bash
-yarn lint
+pnpm lint
 ```
 
 **Note:** eslint est run automatiquement à chaque commit
@@ -49,7 +49,7 @@ yarn lint
 Prettier est mis en place dans le projet, pour le lancer :
 
 ```bash
-yarn prettier:fix
+pnpm prettier:fix
 ```
 
 **Note:** eslint est run automatiquement à chaque commit
@@ -59,7 +59,7 @@ yarn prettier:fix
 L'application utilise TypeScript, pour vérifier que les erreurs liés au type veuillez lancer:
 
 ```bash
-yarn typecheck
+pnpm typecheck
 ```
 
 ### Arrêt des services
@@ -67,7 +67,7 @@ yarn typecheck
 Il est possible de stopper les services en lancant la commande suivante :
 
 ```bash
-yarn services:stop
+pnpm services:stop
 ```
 
 ### Suppression des services
@@ -75,7 +75,7 @@ yarn services:stop
 Pour supprimer l'ensemble des services et tuer tous les conteneurs il suffit de lancer la commande suivante :
 
 ```bash
-yarn services:clean
+pnpm services:clean
 ```
 
 #### Server CLI
@@ -87,11 +87,11 @@ La `cli` du server s'éxécute sur le fichier compilé `server/dist/index.js` ai
 
 Commandes:
 
-- `yarn cli --help`: List l'ensemble des commandes disponibles
-- `yarn cli seed`: Seed de la database
-- `yarn cli migrations:status`: Vérification du status des migrations
-- `yarn cli migrations:up`: Execution des migrations
-- `yarn cli migrations:create`: Creation d'une nouvelle migration
+- `pnpm cli --help`: List l'ensemble des commandes disponibles
+- `pnpm cli seed`: Seed de la database
+- `pnpm cli migrations:status`: Vérification du status des migrations
+- `pnpm cli migrations:up`: Execution des migrations
+- `pnpm cli migrations:create`: Creation d'une nouvelle migration
 
 ### Emails
 

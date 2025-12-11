@@ -58,7 +58,7 @@ services:
         limits:
           memory: 1g
       replicas: 4
-    command: ["yarn", "cli", "processor"]
+    command: ["pnpm", "cli", "processor"]
     stop_grace_period: 2h
     volumes:
       - /opt/app/data/server:/data
