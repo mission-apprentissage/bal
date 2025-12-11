@@ -17,6 +17,9 @@
 /ui/.eslintrc.js
 
 !/package.json
+!/pnpm-lock.yaml
+!/pnpm-workspace.yaml
+!/.npmrc
 !/.yarn/cache
 !/.yarn/patches
 !/.yarn/plugins
