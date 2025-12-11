@@ -54,6 +54,9 @@ jobs:
         with:
           version: 10
 
+      - name: Setup sops
+        uses: nhedger/setup-sops@v2
+
       - uses: actions/cache@v3
         with:
           path: |
