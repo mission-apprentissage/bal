@@ -45,6 +45,9 @@ RUN apt-get update \
   && apt-get purge -y --auto-remove debsecan \
   && apt-get clean
 
+# Install pnpm (needed for migrations and other CLI commands)
+RUN npm install -g pnpm@latest-10
+
 RUN curl -so - https://cert.certigna.com/CertignaServerAuthenticationOVCPEUCAG1.cer \
   | openssl x509 -inform der -out /usr/local/share/ca-certificates/CertignaServerAuthenticationOVCPEUCAG1.crt \
   && openssl verify /usr/local/share/ca-certificates/CertignaServerAuthenticationOVCPEUCAG1.crt \
