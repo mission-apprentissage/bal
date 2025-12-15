@@ -2,7 +2,7 @@ FROM node:24-slim AS builder_root
 WORKDIR /app
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@10.24.0 --activate
+RUN npm install -g pnpm@latest-10
 
 COPY package.json package.json
 COPY pnpm-lock.yaml pnpm-lock.yaml
