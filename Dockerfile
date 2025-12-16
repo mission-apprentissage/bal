@@ -96,16 +96,14 @@ RUN pnpm --filter ui build
 # RUN --mount=type=cache,target=/app/ui/.next/cache pnpm --filter ui build
 
 # Production image, copy all the files and run next
-FROM node:24-slim AS ui
+FROM oven/bun:1-slim AS ui
 WORKDIR /app
 
 RUN apt-get update \
-  && apt-get install -y curl ca-certificates debsecan \
+  && apt-get install -y curl ca-certificates \
   && update-ca-certificates \
-  && codename=$(sh -c '. /etc/os-release; echo $VERSION_CODENAME') \
-  && apt-get install $(debsecan --suite $codename --format packages --only-fixed) \
-  && apt-get purge -y --auto-remove debsecan \
-  && apt-get clean
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
@@ -117,8 +115,8 @@ ENV NEXT_PUBLIC_VERSION=$PUBLIC_VERSION
 ARG PUBLIC_ENV
 ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN groupadd --system --gid 1001 nodejs \
+  && useradd --system --uid 1001 --gid nodejs nextjs
 
 # You only need to copy next.config.mjs if you are NOT using the default configuration
 COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/next.config.mjs /app/
@@ -136,4 +134,4 @@ EXPOSE 3000
 
 ENV PORT=3000
 
-CMD ["node", "ui/server"]
+CMD ["bun", "--bun", "ui/server.js"]
