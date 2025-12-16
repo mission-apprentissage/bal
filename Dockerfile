@@ -115,18 +115,18 @@ ENV NEXT_PUBLIC_VERSION=$PUBLIC_VERSION
 ARG PUBLIC_ENV
 ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
 
-RUN groupadd --system --gid 1001 nodejs \
-  && useradd --system --uid 1001 --gid nodejs nextjs
+RUN groupadd --system --gid 1001 nextjs \
+  && useradd --system --uid 1001 --gid nextjs nextjs
 
 # You only need to copy next.config.mjs if you are NOT using the default configuration
-COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/next.config.mjs /app/
-COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/public /app/ui/public
-COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/package.json /app/ui/package.json
+COPY --from=builder_ui --chown=nextjs:nextjs /app/ui/next.config.mjs /app/
+COPY --from=builder_ui --chown=nextjs:nextjs /app/ui/public /app/ui/public
+COPY --from=builder_ui --chown=nextjs:nextjs /app/ui/package.json /app/ui/package.json
 
-# Automatically leverage output traces to reduce image size 
+# Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/.next/standalone /app/
-COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/.next/static /app/ui/.next/static
+COPY --from=builder_ui --chown=nextjs:nextjs /app/ui/.next/standalone /app/
+COPY --from=builder_ui --chown=nextjs:nextjs /app/ui/.next/static /app/ui/.next/static
 
 USER nextjs
 
