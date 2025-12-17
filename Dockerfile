@@ -100,8 +100,11 @@ FROM oven/bun:1-slim AS ui
 WORKDIR /app
 
 RUN apt-get update \
-  && apt-get install -y curl ca-certificates \
+  && apt-get install -y curl ca-certificates debsecan \
   && update-ca-certificates \
+  && codename=$(sh -c '. /etc/os-release; echo $VERSION_CODENAME') \
+  && apt-get install -y $(debsecan --suite $codename --format packages --only-fixed) \
+  && apt-get purge -y --auto-remove debsecan \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
