@@ -11,7 +11,9 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm predev && next dev",
+    "dev:bun": "pnpm predev && bun --bun next dev",
     "build": "pnpm prebuild && next build",
+    "start:bun": "bun --bun node_modules/.bin/next start",
     "typecheck": "tsc --noEmit",
     "predev": "only-include-used-icons",
     "prebuild": "only-include-used-icons"
