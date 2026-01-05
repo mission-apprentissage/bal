@@ -96,7 +96,7 @@ RUN pnpm --filter ui build
 # RUN --mount=type=cache,target=/app/ui/.next/cache pnpm --filter ui build
 
 # Production image, copy all the files and run next
-FROM oven/bun:1-slim AS ui
+FROM node:24-slim AS ui
 WORKDIR /app
 
 RUN apt-get update \
@@ -105,8 +105,7 @@ RUN apt-get update \
   && codename=$(sh -c '. /etc/os-release; echo $VERSION_CODENAME') \
   && apt-get install -y $(debsecan --suite $codename --format packages --only-fixed) \
   && apt-get purge -y --auto-remove debsecan \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+  && apt-get clean
 
 ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
@@ -118,18 +117,18 @@ ENV NEXT_PUBLIC_VERSION=$PUBLIC_VERSION
 ARG PUBLIC_ENV
 ENV NEXT_PUBLIC_ENV=$PUBLIC_ENV
 
-RUN groupadd --system --gid 1001 nextjs \
-  && useradd --system --uid 1001 --gid nextjs nextjs
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
 # You only need to copy next.config.mjs if you are NOT using the default configuration
-COPY --from=builder_ui --chown=nextjs:nextjs /app/ui/next.config.mjs /app/
-COPY --from=builder_ui --chown=nextjs:nextjs /app/ui/public /app/ui/public
-COPY --from=builder_ui --chown=nextjs:nextjs /app/ui/package.json /app/ui/package.json
+COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/next.config.mjs /app/
+COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/public /app/ui/public
+COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/package.json /app/ui/package.json
 
-# Automatically leverage output traces to reduce image size
+# Automatically leverage output traces to reduce image size 
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder_ui --chown=nextjs:nextjs /app/ui/.next/standalone /app/
-COPY --from=builder_ui --chown=nextjs:nextjs /app/ui/.next/static /app/ui/.next/static
+COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/.next/standalone /app/
+COPY --from=builder_ui --chown=nextjs:nodejs /app/ui/.next/static /app/ui/.next/static
 
 USER nextjs
 
@@ -137,4 +136,4 @@ EXPOSE 3000
 
 ENV PORT=3000
 
-CMD ["bun", "--bun", "ui/server.js"]
+CMD ["node", "ui/server"]
