@@ -8,10 +8,10 @@ if [ -f "${ROOT_DIR}/.bin/shared/commands.sh" ]; then
 
 else
 
-  echo "Mise à jour des sous-modules du dépôt"
+  echo "Mise à jour du sous-module mna-shared-bin"
 
-  git submodule update --recursive --init
-  git submodule update --recursive --remote
+  git submodule update --recursive --init "${ROOT_DIR}/.bin/shared"
+  git submodule update --recursive --remote "${ROOT_DIR}/.bin/shared"
 
 fi
 

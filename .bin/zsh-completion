@@ -4,18 +4,18 @@ _mna-bal_completion() {
   local curcontext="$curcontext" state line
   typeset -A opt_args
   local -a commands=(
-   "help:'Show help message'"
-   "bin\:setup:'Install mna-bal binary with zsh completion on system'"
-   "env\:init:'Update local env files using values from SOPS files'"
-   "release\:app:'Build & Push Docker image releases'"
-   "release\:interactive:'Interactivelly Build & Push Docker image releases'"
    "app:deploy:'Deploy application to <env>'"
    "app:deploy\:log\:encrypt:'Encrypt Github ansible logs'"
    "app:deploy\:log\:dencrypt:'Decrypt Github ansible logs'"
+   "bin\:setup:'Install mna-bal binary with zsh completion on system'"
+   "env\:init:'Update local env files using values from SOPS files'"
+   "help:'Show help message'"
    "product:access\:update:'Update product access'"
-   "vault\:edit:'Edit SOPS env.global.yml or env.<env>.yml file'"
+   "release\:app:'Build & Push Docker image releases'"
+   "release\:interactive:'Interactivelly Build & Push Docker image releases'"
    "seed\:update:'Update seed using a database'"
    "seed\:apply:'Apply seed to a database'"
+   "vault\:edit:'Edit SOPS env.global.yml or env.<env>.yml file'"
   )
 
   # Set completion behavior based on the current word
