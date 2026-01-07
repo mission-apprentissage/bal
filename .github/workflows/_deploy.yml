@@ -39,6 +39,9 @@ on:
       OPENPGP_PRIVATE_SUBKEY:
         description: Github Actions' OpenPGP private subkey
         required: true
+      TOKEN_MNA_SHARED:
+        description: Authentication token for accessing private repositories
+        required: true
 
 jobs:
   deploy:
@@ -57,7 +60,8 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v4
         with:
-          submodules: "recursive"
+          token: ${{ secrets.TOKEN_MNA_SHARED }}
+          submodules: recursive
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2

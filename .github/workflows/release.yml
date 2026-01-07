@@ -41,10 +41,10 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          token: ${{ secrets.TOKEN_MNA_SHARED }}
           persist-credentials: true
           submodules: recursive
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - uses: actions/setup-node@v3
         with:
@@ -153,3 +153,4 @@ jobs:
       DEPLOY_PASS: ${{ secrets.DEPLOY_PASS }}
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       OPENPGP_PRIVATE_SUBKEY: ${{ secrets.OPENPGP_PRIVATE_SUBKEY }}
+      TOKEN_MNA_SHARED: ${{ secrets.TOKEN_MNA_SHARED }}
