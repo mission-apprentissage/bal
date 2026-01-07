@@ -10,8 +10,7 @@ else
 
   echo "Mise à jour du sous-module mna-shared-bin"
 
-  git submodule update --recursive --init "${ROOT_DIR}/.bin/shared"
-  git submodule update --recursive --remote "${ROOT_DIR}/.bin/shared"
+  git submodule update --recursive --init --remote "${ROOT_DIR}/.bin/shared"
 
 fi
 
