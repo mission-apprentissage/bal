@@ -28,7 +28,7 @@ if [[ `command -v $command` != $command ]]; then
   echo "Err: Command '$command' not found"
   echo
   _help
-fi;
+fi
 
 "${SCRIPT_DIR}/check-dependencies.sh"
 
