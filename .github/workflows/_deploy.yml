@@ -79,60 +79,48 @@ jobs:
         env:
           OPENPGP_KEY: ${{ secrets.OPENPGP_PRIVATE_SUBKEY }}
 
-      - name: Debug
-        run: |
-          gpg -K --with-subkey-fingerprint
-
       - name: Setup SOPS
         uses: nhedger/setup-sops@v2
 
-      - name: Debug
-        run: |
-          ls -l .infra/env*
+      - name: Run playbook
+        run: .bin/mna-bal app:deploy ${{ inputs.environment }} --extra-vars "app_version=${{ inputs.app_version }}"
+        env:
+          ANSIBLE_REMOTE_USER: deploy
+          ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
 
-      - name: Debug
-        run: |
-          sops --decrypt --extract '["FOO"]' .infra/env.global.yml
+      - name: Encrypt logs
+        run: .bin/mna-bal app:deploy:log:encrypt
+        if: always()
 
-#      - name: Run playbook
-#        run: .bin/mna-bal app:deploy ${{ inputs.environment }} --extra-vars "app_version=${{ inputs.app_version }}"
-#        env:
-#          ANSIBLE_REMOTE_USER: deploy
-#          ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
-#
-#      - name: Encrypt logs
-#        run: .bin/mna-bal app:deploy:log:encrypt
-#        if: always()
-#
-#      - name: Upload logs artifacts
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: logs-${{ inputs.environment }}
-#          path: /tmp/deploy.log.gpg
-#
-#      - name: Add Job summary
-#        if: always()
-#        run: echo 'You can get logs using `.bin/mna-bal app:deploy:log:decrypt ${{ github.run_id }} ${{ inputs.environment }}`' >> $GITHUB_STEP_SUMMARY
-#
-#      - name: Notify failure on Slack
-#        uses: ravsamhq/notify-slack-action@v2
-#        if: always()
-#        with:
-#          status: ${{ job.status }}
-#          notification_title: "Le déploiement ${{ inputs.app_version }} en ${{ inputs.environment }} a échoué"
-#          message_format: "{emoji} *[${{ inputs.environment }}]* *{workflow}* {status_message} in <{repo_url}|{branch}> on <{commit_url}|{commit_sha}>. You can get error logs using `.bin/mna-bal app:deploy:log:decrypt ${{ github.run_id }} ${{ inputs.environment }}`"
-#          notify_when: "failure"
-#          mention_groups: "!channel"
-#        env:
-#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-#
-#      - name: Notify success on Slack
-#        uses: ravsamhq/notify-slack-action@v2
-#        if: always()
-#        with:
-#          status: ${{ job.status }}
-#          notification_title: "Déploiement ${{ inputs.app_version }} en ${{ inputs.environment }} terminé avec succès"
-#          notify_when: "success"
-#        env:
-#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Upload logs artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-${{ inputs.environment }}
+          path: /tmp/deploy.log.gpg
+
+      - name: Add Job summary
+        if: always()
+        run: echo 'You can get logs using `.bin/mna-bal app:deploy:log:decrypt ${{ github.run_id }} ${{ inputs.environment }}`' >> $GITHUB_STEP_SUMMARY
+
+      - name: Notify failure on Slack
+        uses: ravsamhq/notify-slack-action@v2
+        if: always()
+        with:
+          status: ${{ job.status }}
+          notification_title: "Le déploiement ${{ inputs.app_version }} en ${{ inputs.environment }} a échoué"
+          message_format: "{emoji} *[${{ inputs.environment }}]* *{workflow}* {status_message} in <{repo_url}|{branch}> on <{commit_url}|{commit_sha}>. You can get error logs using `.bin/mna-bal app:deploy:log:decrypt ${{ github.run_id }} ${{ inputs.environment }}`"
+          notify_when: "failure"
+          mention_groups: "!channel"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Notify success on Slack
+        uses: ravsamhq/notify-slack-action@v2
+        if: always()
+        with:
+          status: ${{ job.status }}
+          notification_title: "Déploiement ${{ inputs.app_version }} en ${{ inputs.environment }} terminé avec succès"
+          notify_when: "success"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
