@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { ObjectId } from "mongodb";
 import type { IUser } from "shared/models/user.model";
 import { generateKey, generateSecretHash } from "../../common/utils/cryptoUtils";
@@ -5,19 +6,21 @@ import { createUserTokenSimple } from "../../common/utils/jwtUtils";
 import { hashPassword } from "../server/utils/password.utils";
 import { getDbCollection } from "@/common/utils/mongodbUtils";
 
-type ICreateUser = Pick<IUser, "email" | "password"> & Partial<Pick<IUser, "is_admin" | "is_support">>;
+type ICreateUser = Pick<IUser, "email" | "password"> &
+  Partial<Pick<IUser, "is_admin" | "is_support">> & { api?: boolean };
 
 export const createUser = async (data: ICreateUser) => {
   const _id = new ObjectId();
-
+  const shouldGenerateApiKey = data.api ?? false;
   const password = hashPassword(data.password);
   const now = new Date();
+
   const user: IUser = {
-    is_admin: false,
-    is_support: false,
-    api_key: null,
+    is_admin: data.is_admin ?? false,
+    is_support: data.is_support ?? false,
+    api_key: shouldGenerateApiKey ? randomUUID() : null,
     api_key_used_at: null,
-    ...data,
+    email: data.email,
     _id,
     password,
     updated_at: now,

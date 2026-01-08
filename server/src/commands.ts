@@ -154,15 +154,15 @@ function createJobAction(name: string) {
 }
 
 program
-  .command("users:create")
+  .command("user:create")
   .description("Créer un utilisateur")
-  .requiredOption("-e, --email <string>", "Email de l'utilisateur")
-  .requiredOption("-p, --password <string>", "Mot de passe de l'utilisateur")
-  .requiredOption("-o, --organisationId <string>", "Organisation Id")
-  .option("-a, --admin", "administrateur")
-  .option("-s, --support", "support")
+  .requiredOption("--email <string>", "Email de l'utilisateur")
+  .requiredOption("--password <string>", "Mot de passe de l'utilisateur")
+  .option("--api", "Générer une clé API")
+  .option("--admin", "Administrateur")
+  .option("--support", "Support")
   .option("-q, --queued", "Run job asynchronously", false)
-  .action(createJobAction("users:create"));
+  .action(createJobAction("user:create"));
 
 program
   .command("db:validate")
