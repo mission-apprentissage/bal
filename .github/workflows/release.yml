@@ -41,7 +41,7 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.TOKEN_MNA_SHARED }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
           submodules: recursive
           fetch-depth: 0
