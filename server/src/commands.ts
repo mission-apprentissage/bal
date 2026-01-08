@@ -158,7 +158,6 @@ program
   .description("Créer un utilisateur")
   .requiredOption("--email <string>", "Email de l'utilisateur")
   .requiredOption("--password <string>", "Mot de passe de l'utilisateur")
-  .option("--api", "Générer une clé API")
   .option("--admin", "Administrateur")
   .option("--support", "Support")
   .option("-q, --queued", "Run job asynchronously", false)
