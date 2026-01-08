@@ -81,7 +81,7 @@ jobs:
 
       - name: Debug
         run: |
-          gpg -k --with-subkey-fingerprint
+          gpg -K --with-subkey-fingerprint
 
       - name: Setup SOPS
         uses: nhedger/setup-sops@v2
