@@ -9,15 +9,15 @@ type ICreateUser = Pick<IUser, "email" | "password"> & Partial<Pick<IUser, "is_a
 
 export const createUser = async (data: ICreateUser) => {
   const _id = new ObjectId();
-
   const password = hashPassword(data.password);
   const now = new Date();
+
   const user: IUser = {
-    is_admin: false,
-    is_support: false,
+    is_admin: data.is_admin ?? false,
+    is_support: data.is_support ?? false,
     api_key: null,
     api_key_used_at: null,
-    ...data,
+    email: data.email,
     _id,
     password,
     updated_at: now,
