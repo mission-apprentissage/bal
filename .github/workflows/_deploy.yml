@@ -86,6 +86,14 @@ jobs:
       - name: Setup SOPS
         uses: nhedger/setup-sops@v2
 
+      - name: Debug
+        run: |
+          ls -l .infra/env*
+
+      - name: Debug
+        run: |
+          sops --decrypt --extract '["FOO"]' .infra/env.global.yml
+
 #      - name: Run playbook
 #        run: .bin/mna-bal app:deploy ${{ inputs.environment }} --extra-vars "app_version=${{ inputs.app_version }}"
 #        env:
