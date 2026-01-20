@@ -14,20 +14,6 @@ else
 
 fi
 
-function _help() {
-
-  mapfile -d '' sorted < <(printf '%s\0' "${!_meta_help[@]}" | sort -z)
-
-  echo -e "Commands\n"
-
-  for key in "${sorted[@]}"; do
-    echo -e "  ${key}"
-    echo -e "    \`-> ${_meta_help[$key]}"
-    echo
-  done
-
-}
-
 ################################################################################
 # Non-shared commands
 ################################################################################
