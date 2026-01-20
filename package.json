@@ -53,7 +53,7 @@
     "prettier:fix": "prettier --write -u .",
     "prettier:check": "prettier --check -u .",
     "release": "semantic-release",
-    "release:interactive": ".bin/mna-bal release:interactive",
+    "release:interactive": ".bin/mna-bal app:release:interactive",
     "postinstall": "husky install",
     "talisman:add-exception": "pnpm node-talisman --githook pre-commit -i",
     "test": "vitest",
