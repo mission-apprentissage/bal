@@ -3,6 +3,8 @@
 set -euo pipefail
 
 export PRODUCT_NAME="bal"
+export REPO_NAME="bal"
+export DATABASE_NAME="bal"
 
 export BIN_DIR="$(dirname -- "$( readlink -f -- "$0"; )")"
 export BIN_SHARED_DIR="$BIN_DIR/shared"
@@ -30,6 +32,6 @@ if [[ `command -v $command` != $command ]]; then
   _help
 fi
 
-"${SCRIPT_DIR}/check-dependencies.sh"
+dev:dependencies:check
 
 $command "$@"

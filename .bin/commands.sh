@@ -16,56 +16,43 @@ fi
 
 function _help() {
 
-   echo -e "Commands\n"
-   
-   echo -e "  bin:setup"
-   echo -e "    \`-> Install mna-bal binary with zsh completion on system\n"
-   
-   echo -e "  env:init"
-   echo -e "    \`-> Update local env files using values from SOPS files\n"
-   
-   echo -e "  release:interactive"
-   echo -e "    \`-> Build & Push Docker image releases\n"
-   
-   echo -e "  release:app"
-   echo -e "    \`-> Build & Push Docker image releases\n"
-   
-   echo -e "  product:access:update"
-   echo -e "    \`-> Update product access\n"
-   
-   echo -e "  vault:edit [<env>]"
-   echo -e "    \`-> Edit SOPS env.global.yml or env.<env>.yml file\n"
-   
-   echo -e "  app:deploy <env> --user <your_username>"
-   echo -e "    \`-> Deploy application to <env>\n"
-   
-   echo -e "  app:deploy:log:encrypt"
-   echo -e "    \`-> Encrypt Github Actions Ansible logs\n"
-   
-   echo -e "  app:deploy:log:decrypt"
-   echo -e "    \`-> Decrypt Github Actions Ansible logs\n"
-   
-   echo -e "  seed:update"
-   echo -e "    \`-> Update seed using a database\n"
+  mapfile -d '' sorted < <(printf '%s\0' "${!_meta_help[@]}" | sort -z)
 
-   echo -e "  seed:apply"
-   echo -e "    \`-> Apply seed to a database\n"
+  echo -e "Commands\n"
+
+  for key in "${sorted[@]}"; do
+    echo -e "  ${key}"
+    echo -e "    \`-> ${_meta_help[$key]}"
+    echo
+  done
 
 }
 
-function bin:setup() {
-  "${SCRIPT_DIR}/bin-setup.sh"
+################################################################################
+# Non-shared commands
+################################################################################
+
+_meta_help["app:build"]="Build Ui & Server Docker images"
+
+function app:build() {
+  "${SCRIPT_DIR}/app-build.sh" "$@"
 }
+
+_meta_help["app:release"]="Build & push Docker image releases"
+
+function app:release() {
+  "${SCRIPT_DIR}/app-release.sh" "$@"
+}
+
+_meta_help["app:release:interactive"]="Interactivelly build & push Docker image releases"
+
+function release:interactive() {
+  "${SCRIPT_DIR}/app-release-interactive.sh" "$@"
+}
+
+_meta_help["env:init"]="Update local env files using values from SOPS files"
 
 function env:init() {
   "${SCRIPT_DIR}/env-init.sh" "$@"
-}
-
-function release:interactive() {
-  "${SCRIPT_DIR}/release-interactive.sh" "$@"
-}
-
-function release:app() {
-  "${SCRIPT_DIR}/release-app.sh" "$@"
 }
 
