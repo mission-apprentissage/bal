@@ -7,7 +7,7 @@ module.exports = {
     [
       "@semantic-release/exec",
       {
-        prepareCmd: `.bin/mna-bal release:app \${nextRelease.version} push`,
+        prepareCmd: `.bin/mna-bal app:release \${nextRelease.version} push`,
       },
     ],
     "@semantic-release/github",
