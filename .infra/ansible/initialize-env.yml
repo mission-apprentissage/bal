@@ -17,11 +17,11 @@
         src: "{{ item }}"
         dest: "{{ inventory_dir }}/../../server/.env"
       with_fileglob:
-        - "{{ inventory_dir }}/.env_server"
+        - "{{ inventory_dir }}/../.env_server"
 
     - name: Mise à jour du fichier de variables d'environnement ui
       ansible.builtin.template:
         src: "{{ item }}"
         dest: "{{ inventory_dir }}/../../ui/.env"
       with_fileglob:
-        - "{{inventory_dir}}/.env_ui"
+        - "{{ inventory_dir }}/../.env_ui"
