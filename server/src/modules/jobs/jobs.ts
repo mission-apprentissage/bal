@@ -14,6 +14,7 @@ import { streamDataToParquetAndS3 } from "./deca/decaToS3";
 import { hydrateDeca } from "./deca/hydrate-deca";
 import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
 import { importPersonFromAlgoLba } from "./lba/hydrate-siretlist";
+import { importCompanyEmailsForLbaMailing } from "./lba/hydrate-companyEmailList";
 import { importPersonFromDeca } from "./validation/hydrate-from-deca";
 import { anonymisationService } from "./anonymisation/anonymisation.service";
 import { updateDecaSpecificFields } from "./deca/update-deca-specific-fields";
@@ -181,6 +182,9 @@ export async function setupJobProcessor() {
       },
       "job:lba:hydrate:email-balcklisted": {
         handler: async () => hydrateLbaBlackListed(),
+      },
+      "job:lba:hydrate:company-email-list": {
+        handler: async () => importCompanyEmailsForLbaMailing(),
       },
       "mailing-list:process": {
         handler: processMailingList,

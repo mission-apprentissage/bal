@@ -247,6 +247,12 @@ program
   .action(createJobAction("job:lba:hydrate:email-balcklisted"));
 
 program
+  .command("job:lba:hydrate:company-email-list")
+  .description("Importe liste emails d'entreprises pour mailing LBA")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("job:lba:hydrate:company-email-list"));
+
+program
   .command("hydrate:datagouv")
   .description("Import du fichier des organisations française domaine email")
   .option("-q, --queued", "Run job asynchronously", false)
