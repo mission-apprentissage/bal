@@ -24,6 +24,7 @@ import {
   recoverMailingListJobs,
 } from "./mailing-list/mailing-list.processor";
 import { hydrateDataGouv } from "./lba/hydrate-datagouv";
+import { verifyCompanyEmails } from "./lba/verifyCompanyEmails";
 import {
   create as createMigration,
   status as statusMigration,
@@ -185,6 +186,9 @@ export async function setupJobProcessor() {
       },
       "job:lba:hydrate:company-email-list": {
         handler: async () => importCompanyEmailsForLbaMailing(),
+      },
+      "job:lba:verify:company-email-list": {
+        handler: async (_job, signal) => verifyCompanyEmails(signal),
       },
       "mailing-list:process": {
         handler: processMailingList,
