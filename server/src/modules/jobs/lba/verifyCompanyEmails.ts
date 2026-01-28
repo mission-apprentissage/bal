@@ -23,8 +23,10 @@ export async function verifyCompanyEmails(signal: AbortSignal): Promise<void> {
     await getDbCollection("lba.mailingLists").updateMany(
       { email: pingResults[i].email },
       {
-        $set: { emailStatus: pingResults[i].ping.status === "valid" ? EmailStatus.VALID : EmailStatus.INVALID },
-        updated_at: now,
+        $set: {
+          emailStatus: pingResults[i].ping.status === "valid" ? EmailStatus.VALID : EmailStatus.INVALID,
+          updated_at: now,
+        },
       }
     );
   }
