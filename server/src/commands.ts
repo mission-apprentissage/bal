@@ -259,6 +259,12 @@ program
   .action(createJobAction("job:lba:verify:company-email-list"));
 
 program
+  .command("job:lba:enrich:company-email-list")
+  .description("Enrichit la liste des emails d'entreprises pour mailing LBA")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("job:lba:enrich:company-email-list"));
+
+program
   .command("hydrate:datagouv")
   .description("Import du fichier des organisations française domaine email")
   .option("-q, --queued", "Run job asynchronously", false)
