@@ -7,6 +7,7 @@ import { getDatabase } from "../../common/utils/mongodbUtils";
 import config from "../../config";
 import { createUser } from "../actions/users.actions";
 import { sanitizeOrganisationDomains } from "../actions/organisations.actions";
+import { sendContactsToBrevo } from "../../common/services/brevo/exportContactsToBrevo";
 import { importPersonFromCatalogue } from "./catalogueSiretEmailImport";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
@@ -193,6 +194,9 @@ export async function setupJobProcessor() {
       },
       "job:lba:enrich:company-email-list": {
         handler: enrichCompanyEmails,
+      },
+      "job:lba:export:contacts-to-brevo": {
+        handler: sendContactsToBrevo,
       },
       "mailing-list:process": {
         handler: processMailingList,

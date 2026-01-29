@@ -265,6 +265,12 @@ program
   .action(createJobAction("job:lba:enrich:company-email-list"));
 
 program
+  .command("job:lba:export:contacts-to-brevo")
+  .description("Export contacts to Brevo")
+  .option("-q, --queued", "Run job asynchronously", false)
+  .action(createJobAction("job:lba:export:contacts-to-brevo"));
+
+program
   .command("hydrate:datagouv")
   .description("Import du fichier des organisations française domaine email")
   .option("-q, --queued", "Run job asynchronously", false)
