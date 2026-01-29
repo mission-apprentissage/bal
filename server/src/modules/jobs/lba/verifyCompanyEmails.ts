@@ -7,9 +7,12 @@ export async function verifyCompanyEmails(signal: AbortSignal): Promise<void> {
   logger.info("Starting verification of company emails for LBA mailing list...");
 
   const emailsToVerify: Set<string> = new Set();
-  for await (const doc of getDbCollection("lba.mailingLists").find({
-    emailStatus: EmailStatus.UNVERIFIED,
-  })) {
+  for await (const doc of getDbCollection("lba.mailingLists").find(
+    {
+      emailStatus: EmailStatus.UNVERIFIED,
+    },
+    { projection: { email: 1 } }
+  )) {
     emailsToVerify.add(doc.email);
   }
 
