@@ -10,12 +10,6 @@ export const enum EmailStatus {
   UNVERIFIED = "unverified",
 }
 
-const ZCampagne = z.object({
-  name: z.string(),
-  sentAt: z.coerce.date(),
-  listId: z.string(),
-});
-
 export const ZLbaMailingContact = z.object({
   email: z.email(),
   siren: z.string(),
@@ -38,10 +32,8 @@ export type ILbaMailingContact = z.output<typeof ZLbaMailingContact>;
 export const ZLbaMailingList = z.extend(ZLbaMailingContact, {
   _id: zObjectId,
 
-  nbAlternants: z.nullable(z.number()),
   nbContrats: z.nullable(z.number()),
   nbSocietesMemeNaf: z.nullable(z.number()),
-  campagnes: z.array(ZCampagne),
   emailStatus: z.enum([EmailStatus.VALID, EmailStatus.INVALID, EmailStatus.UNVERIFIED]),
 
   created_at: z.coerce.date(),

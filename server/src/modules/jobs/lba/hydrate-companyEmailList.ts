@@ -80,10 +80,8 @@ export async function importCompanyEmailsForLbaMailing() {
                   $set: { ...lbaMailingContact, updated_at: now },
                   $setOnInsert: {
                     _id: new ObjectId(),
-                    nbAlternants: null,
                     nbContrats: null,
                     nbSocietesMemeNaf: null,
-                    campagnes: [],
                     emailStatus: EmailStatus.UNVERIFIED,
                     created_at: now,
                   },
