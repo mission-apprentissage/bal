@@ -97,6 +97,28 @@ export async function setupJobProcessor() {
               handler: hydrateDataGouv,
               maxRuntimeInMinutes: 15,
             },
+            "Import company emails for LBA mailing": {
+              cron_string: "30 10 * * SUN",
+              handler: importCompanyEmailsForLbaMailing,
+              maxRuntimeInMinutes: 15,
+            },
+            "Verify company emails for LBA mailing": {
+              cron_string: "0 11 * * SUN",
+              handler: async (signal) => {
+                await verifyCompanyEmails(signal);
+              },
+              maxRuntimeInMinutes: 3 * 60,
+            },
+            "Enrich company emails for LBA mailing": {
+              cron_string: "0 15 * * SUN",
+              handler: enrichCompanyEmails,
+              maxRuntimeInMinutes: 15,
+            },
+            "Export LBA contacts to Brevo": {
+              cron_string: "30 15 * * SUN",
+              handler: sendContactsToBrevo,
+              maxRuntimeInMinutes: 15,
+            },
           },
     jobs: {
       "user:create": {
@@ -190,7 +212,9 @@ export async function setupJobProcessor() {
         handler: async () => importCompanyEmailsForLbaMailing(),
       },
       "job:lba:verify:company-email-list": {
-        handler: async (_job, signal) => verifyCompanyEmails(signal),
+        handler: async (_job, signal) => {
+          await verifyCompanyEmails(signal);
+        },
       },
       "job:lba:enrich:company-email-list": {
         handler: enrichCompanyEmails,
