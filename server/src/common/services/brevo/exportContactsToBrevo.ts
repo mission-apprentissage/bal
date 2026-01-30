@@ -90,8 +90,8 @@ type IBrevoContact = {
   activitePrincipaleEtablissement: string;
   nbContrats: number;
   nbSocietesMemeNaf: number;
-  //nafLabel: 1,
-  raisonSociale: string;
+  //nafLabel: 1,  // TODO: à changer quand disponible
+  raisonsociale: string;
 };
 
 let contactCount = 0;
@@ -99,7 +99,7 @@ let contactCount = 0;
 const contactMapper: ColumnOption[] = [
   { key: "email", header: "EMAIL" },
   {
-    key: "raisonSociale",
+    key: "raisonsociale",
     header: "ENTREPRISE_RAISON_SOCIALE",
   },
   { key: "siret", header: "ENTREPRISE_SIRET" },
@@ -112,7 +112,7 @@ const contactMapper: ColumnOption[] = [
     header: "NOMBRE_ENTREPRISES_RECRUTENT_MEME_NAF",
   },
   {
-    key: "activitePrincipaleEtablissement",
+    key: "activitePrincipaleEtablissement", // TODO: à changer quand disponible
     header: "NAF_LABEL",
   },
 ];
@@ -134,8 +134,8 @@ const sendContacts = async () => {
           activitePrincipaleEtablissement: 1,
           nbContrats: 1,
           nbSocietesMemeNaf: 1,
-          //nafLabel: 1,
-          raisonSociale: 1,
+          //nafLabel: 1,  TODO:
+          raisonsociale: 1,
         },
       }
     )
