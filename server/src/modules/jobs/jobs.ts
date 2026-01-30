@@ -7,6 +7,7 @@ import { getDatabase } from "../../common/utils/mongodbUtils";
 import config from "../../config";
 import { createUser } from "../actions/users.actions";
 import { sanitizeOrganisationDomains } from "../actions/organisations.actions";
+import { sendContactsToBrevo } from "../../common/services/brevo/exportContactsToBrevo";
 import { importPersonFromCatalogue } from "./catalogueSiretEmailImport";
 import { recreateIndexes } from "./db/recreateIndexes";
 import { validateModels } from "./db/schemaValidation";
@@ -14,6 +15,7 @@ import { streamDataToParquetAndS3 } from "./deca/decaToS3";
 import { hydrateDeca } from "./deca/hydrate-deca";
 import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
 import { importPersonFromAlgoLba } from "./lba/hydrate-siretlist";
+import { importCompanyEmailsForLbaMailing } from "./lba/hydrate-companyEmailList";
 import { importPersonFromDeca } from "./validation/hydrate-from-deca";
 import { anonymisationService } from "./anonymisation/anonymisation.service";
 import { updateDecaSpecificFields } from "./deca/update-deca-specific-fields";
@@ -23,6 +25,8 @@ import {
   recoverMailingListJobs,
 } from "./mailing-list/mailing-list.processor";
 import { hydrateDataGouv } from "./lba/hydrate-datagouv";
+import { verifyCompanyEmails } from "./lba/verifyCompanyEmails";
+import { enrichCompanyEmails } from "./lba/enrichCompanyEmails";
 import {
   create as createMigration,
   status as statusMigration,
@@ -91,6 +95,28 @@ export async function setupJobProcessor() {
             "Récupération couples siret-email datagouv": {
               cron_string: "0 10 * * SUN",
               handler: hydrateDataGouv,
+              maxRuntimeInMinutes: 15,
+            },
+            "Import company emails for LBA mailing": {
+              cron_string: "30 10 * * SUN",
+              handler: importCompanyEmailsForLbaMailing,
+              maxRuntimeInMinutes: 15,
+            },
+            "Verify company emails for LBA mailing": {
+              cron_string: "0 11 * * SUN",
+              handler: async (signal) => {
+                await verifyCompanyEmails(signal);
+              },
+              maxRuntimeInMinutes: 3 * 60,
+            },
+            "Enrich company emails for LBA mailing": {
+              cron_string: "0 15 * * SUN",
+              handler: enrichCompanyEmails,
+              maxRuntimeInMinutes: 15,
+            },
+            "Export LBA contacts to Brevo": {
+              cron_string: "30 15 * * SUN",
+              handler: sendContactsToBrevo,
               maxRuntimeInMinutes: 15,
             },
           },
@@ -181,6 +207,20 @@ export async function setupJobProcessor() {
       },
       "job:lba:hydrate:email-balcklisted": {
         handler: async () => hydrateLbaBlackListed(),
+      },
+      "job:lba:hydrate:company-email-list": {
+        handler: async () => importCompanyEmailsForLbaMailing(),
+      },
+      "job:lba:verify:company-email-list": {
+        handler: async (_job, signal) => {
+          await verifyCompanyEmails(signal);
+        },
+      },
+      "job:lba:enrich:company-email-list": {
+        handler: enrichCompanyEmails,
+      },
+      "job:lba:export:contacts-to-brevo": {
+        handler: sendContactsToBrevo,
       },
       "mailing-list:process": {
         handler: processMailingList,
