@@ -109,7 +109,7 @@ Avant de lancer l'application, assurez-vous d'installer toutes les dépendances 
 
 ```bash
 pnpm install
-pnpm setup
+pnpm setup:env
 ```
 
 Cette commande mettra à jour les dépendances du projet.
@@ -134,7 +134,7 @@ Les principales opérations sont regroupées dans le `package.json`.
 #### Installation .env
 
 ```bash
-  pnpm setup
+  pnpm setup:env
 ```
 
 installation ou mise à jour de vos fichiers d'environnement de développement depuis le vault.yml (`server/.env` et `ui/.env`)
