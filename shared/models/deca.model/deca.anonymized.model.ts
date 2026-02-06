@@ -7,10 +7,7 @@ import { ZDeca } from "./deca.model";
 const collectionName = "anonymized.deca" as const;
 
 const indexes: IModelDescriptor["indexes"] = [
-  [
-    { no_contrat: 1, type_contrat: 1, "employeur.siret": 1 },
-    { unique: true, name: "no_contrat_1_type_contrat_1_employeur.siret_1" },
-  ],
+  [{ no_contrat: 1, type_contrat: 1 }, {}],
   [{ "organisme_formation.siret": 1 }, {}],
   [{ "etablissement_formation.siret": 1 }, {}],
   [{ created_at: -1 }, {}],
