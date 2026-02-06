@@ -110,7 +110,6 @@ Avant de lancer l'application, assurez-vous d'installer toutes les dépendances 
 ```bash
 pnpm install
 pnpm setup:env
-
 ```
 
 Cette commande mettra à jour les dépendances du projet.
