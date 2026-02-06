@@ -108,6 +108,8 @@ Voici les étapes pour créer votre clé **OpenPGP** :
 Avant de lancer l'application, assurez-vous d'installer toutes les dépendances nécessaires en exécutant la commande suivante :
 
 ```bash
+git submodule update --init --recursive
+
 pnpm install
 pnpm setup:env
 ```
