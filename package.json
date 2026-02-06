@@ -54,7 +54,7 @@
     "prettier:check": "prettier --check -u .",
     "release": "semantic-release",
     "release:interactive": ".bin/mna-bal app:release:interactive",
-    "postinstall": "husky install",
+    "postinstall": "git submodule update --init --recursive && husky install",
     "talisman:add-exception": "pnpm node-talisman --githook pre-commit -i",
     "test": "vitest",
     "test:ci": "pnpm test --run",
