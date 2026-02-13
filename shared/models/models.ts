@@ -31,6 +31,7 @@ import { mailingListSourceModelDescriptor } from "./mailingList.source.model";
 import type { IMailingListSource } from "./mailingList.source.model";
 import { mailingListComputedDatumModelDescriptor } from "./mailingList.computed.model";
 import type { IMailingListComputedDatum } from "./mailingList.computed.model";
+import type { ILbaMailingList } from "./data/lba.mailingList.model";
 
 export const modelDescriptors: IModelDescriptor[] = [
   usersModelDescriptor,
@@ -69,4 +70,5 @@ export type IDocumentMap = {
   ["bouncer.email"]: BouncerEmail;
   ["bouncer.domain"]: BouncerDomain;
   ["lba.emailblacklists"]: ILbaEmailBlacklist;
+  ["lba.mailingLists"]: ILbaMailingList;
 };
