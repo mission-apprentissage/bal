@@ -1,6 +1,10 @@
 fileignoreconfig:
 - filename: .github/workflows/_deploy.yml
   checksum: bfbfdbf9032949561988a0961dce57f2e786716de5fa5b7e937d5d3a6e5a7aad
+- filename: .infra/env.global.yml
+  checksum: e66d1efdb7b53506f1233807548218c4296bdb57aab7267044d7925beffe84a9
+- filename: .infra/env.local.yml
+  checksum: 8487f56451e72d469f66afcbb83068bcf385bf27c96f77f22d411dd03661ee19
 scopeconfig:
 - scope: node
 custom_patterns:
