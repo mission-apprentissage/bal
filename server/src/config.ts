@@ -64,6 +64,9 @@ const config = {
       uri: env.get("LBA_MONGODB_URI").required().asString(),
       blacklistedDbCollection: env.get("LBA_EMAIL_BLACKLISTED_COLLECTION_NAME").required().asString(),
     },
+    companyEmailList: {
+      s3File: env.get("LBA_COMPANY_EMAIL_LIST_S3FILE").required().asString(),
+    },
     algoRecuteurs: {
       s3File: env.get("LBA_ALGO_RECRUTEURS_LBA_S3FILE").required().asString(),
     },
@@ -134,8 +137,9 @@ const config = {
     },
   },
   brevo: {
-    apiKey: env.get("MNA_BAL_BREVO_API_KEY").required().asString(),
+    apiKey: env.get("LBA_BREVO_MARKETING_API_KEY").required().asString(),
     webhookApiKey: env.get("MNA_BAL_BREVO_WEBHOOK_API_KEY").required().asString(),
+    contactListId: env.get("LBA_BREVO_CONTACT_LIST_ID").required().asString(),
   },
 };
 
