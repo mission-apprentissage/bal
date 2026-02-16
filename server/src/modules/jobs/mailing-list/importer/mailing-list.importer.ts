@@ -9,6 +9,7 @@ import { addDays, differenceInSeconds } from "date-fns";
 import { canScheduleParse } from "shared/mailing-list/mailing-list.utils";
 import { detect } from "chardet";
 import iconv from "iconv-lite";
+import { captureException } from "@sentry/node";
 import { checksum, cipher, generateKey } from "../../../../common/utils/cryptoUtils";
 import { getMailingListStoragePath } from "../storage/mailing-list-storage";
 import { clamav } from "../../../../services";
@@ -85,26 +86,31 @@ export async function createMailingList(
   // Buffer used to detect encoding. We will take a subset of at least 1024 bytes
   let detectBuffer: Buffer = Buffer.alloc(0);
 
-  await pipeline(
-    file.file,
-    scanStream,
-    new Transform({
-      transform(chunk: Buffer, _encoding, callback) {
-        fileSize += chunk.length;
-        if (detectBuffer.length < 1024) {
-          detectBuffer = Buffer.concat([detectBuffer, chunk]);
-        }
-        // Push the chunk to the next stream in the pipeline
-        this.push(chunk);
-        callback();
-      },
-    }),
-    hashStream,
-    cipher(mailingListWithoutSource.encode_key),
-    // Initial TTL is 1 hour, will be updated later
-    await uploadToStorage(path, account, 3_600, "text/csv")
-  );
-
+  try {
+    await pipeline(
+      file.file,
+      scanStream,
+      new Transform({
+        transform(chunk: Buffer, _encoding, callback) {
+          fileSize += chunk.length;
+          if (detectBuffer.length < 1024) {
+            detectBuffer = Buffer.concat([detectBuffer, chunk]);
+          }
+          // Push the chunk to the next stream in the pipeline
+          this.push(chunk);
+          callback();
+        },
+      }),
+      hashStream,
+      cipher(mailingListWithoutSource.encode_key),
+      // Initial TTL is 1 hour, will be updated later
+      await uploadToStorage(path, account, 3_600, "text/csv")
+    );
+  } catch (err) {
+    captureException(err);
+    logger.error({ err }, "Error uploading mailingList to Storage");
+    throw err;
+  }
   logger.info(`File ${path} uploaded to storage`);
 
   const hash_fichier = await getHash();
