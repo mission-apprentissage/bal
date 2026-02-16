@@ -70,10 +70,6 @@ const config = {
     algoRecuteurs: {
       s3File: env.get("LBA_ALGO_RECRUTEURS_LBA_S3FILE").required().asString(),
     },
-    brevo: {
-      contactListId: env.get("LBA_BREVO_CONTACT_LIST_ID").required().asString(),
-      apiKey: env.get("LBA_BREVO_MARKETING_API_KEY").required().asString(),
-    },
   },
   ftp: {
     host: env.get("FTP_HOST").required().asString(),
