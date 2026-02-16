@@ -2,17 +2,15 @@
 
 set -euo pipefail
 
-if [ -f "${ROOT_DIR}/.bin/shared/commands.sh" ]; then
-
-  . "${ROOT_DIR}/.bin/shared/commands.sh"
-
-else
+if [ ! -f "${ROOT_DIR}/.bin/shared/commands.sh" ]; then
 
   echo "Mise à jour du sous-module mna-shared-bin"
 
-  git submodule update --recursive --init --remote "${ROOT_DIR}/.bin/shared"
+  git submodule update --init "${ROOT_DIR}/.bin/shared"
 
 fi
+
+. "${ROOT_DIR}/.bin/shared/commands.sh"
 
 ################################################################################
 # Non-shared commands
@@ -32,7 +30,7 @@ function app:release() {
 
 _meta_help["app:release:interactive"]="Interactivelly build & push Docker image releases"
 
-function release:interactive() {
+function app:release:interactive() {
   "${SCRIPT_DIR}/app-release-interactive.sh" "$@"
 }
 
