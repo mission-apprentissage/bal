@@ -139,7 +139,7 @@ Les principales opérations sont regroupées dans le `package.json`.
   pnpm setup:env
 ```
 
-installation ou mise à jour de vos fichiers d'environnement de développement depuis le vault.yml (`server/.env` et `ui/.env`)
+installation ou mise à jour de vos fichiers d'environnement de développement depuis les fichiers **SOPS** (`server/.env` et `ui/.env`)
 
 #### Lancement de la stack compléte
 
@@ -268,7 +268,7 @@ Création d'une release
 
 ### Variables d'environnement local
 
-Les variables d'environnement local du server sont stocké dans le vault (peut contenir des secrets). Si vous souhaitez overwwrite certaines variables ou changer le port de l'api par exemple, il est possible de créer un fichier `server/.env.local` et `ui/.env.local`
+Les variables d'environnement locales du server sont stockées dans le fichier **SOPS** spécifique à cet environnement (peut contenir des secrets). Si vous souhaitez overwwrite certaines variables ou changer le port de l'api par exemple, il est possible de créer un fichier `server/.env.local` et `ui/.env.local`
 
 ### Exécution des tests
 
@@ -297,7 +297,7 @@ pnpm test --update
 ## Aller plus loin
 
 - [Datasouces](./docs/DATASOURCES.md)
-- [Vault](./docs/Vault.md)
+- [SOPS](./docs/sops.md)
 - [Déploiement](./docs/deploy.md)
 - [Développement](./docs/developpement/developpement.md)
 - [Debugging](./docs/developpement/debug.md)
