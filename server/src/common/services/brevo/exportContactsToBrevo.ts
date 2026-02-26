@@ -144,8 +144,13 @@ const sendContacts = async () => {
   const postingTransform = new Transform({
     objectMode: true,
     async transform(contacts, _, callback) {
-      await postToBrevo(contacts as IBrevoContact[]);
-      callback();
+      try {
+        await postToBrevo(contacts as IBrevoContact[]);
+        callback();
+      } catch (err) {
+        logger.error({ err }, `Error posting contacts to Brevo: ${(err as Error).message}`);
+        callback(err);
+      }
     },
   });
 
