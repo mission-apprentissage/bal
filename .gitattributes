@@ -80,4 +80,3 @@
 .infra/env.production.yml diff=sopsdiffer
 .infra/env.recette.yml diff=sopsdiffer
 .infra/env.local.yml diff=sopsdiffer
-.infra/habilitations.yml diff=sopsdiffer
