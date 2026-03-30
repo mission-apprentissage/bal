@@ -13,7 +13,9 @@
   },
   "pnpm": {
     "overrides": {
-      "chokidar": "^5.0.0"
+      "chokidar": "^5.0.0",
+      "handlebars": "^4.7.9",
+      "fast-xml-parser": "^5.5.9"
     },
     "onlyBuiltDependencies": [
       "@parcel/watcher",
