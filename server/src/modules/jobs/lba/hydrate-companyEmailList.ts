@@ -110,10 +110,7 @@ async function downloadFile(): Promise<string> {
     const response = (await s3ReadAsStream("storage", s3File)) as Readable;
     return await downloadFileAsTmp(response, "recruteurslba.json");
   } catch (error) {
-    throw withCause(
-      internal("lba.recruteurs: unable to downloadFile", { file: config.lba.algoRecuteurs.s3File }),
-      error
-    );
+    throw withCause(internal("lba.recruteurs: unable to downloadFile", { file: s3File }), error);
   }
 }
 
@@ -127,7 +124,7 @@ async function downloadFileAsTmp(stream: Readable, filename: string): Promise<st
     return destFile;
   } catch (error) {
     await cleanupTmp(destFile);
-    throw withCause(internal("bal.utils.downloadFileAsTmp: unable to download file"), error);
+    throw withCause(internal("bal.utils.downloadFileAsTmp: unable to write local file"), error);
   }
 }
 
