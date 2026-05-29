@@ -32,6 +32,8 @@ import {
   status as statusMigration,
   up as upMigration,
 } from "@/modules/jobs/migrations/migrations";
+import { uploadFileToStorage } from "@/modules/jobs/storage/uploadToStorage";
+import { hydrateFromAkto } from "@/modules/jobs/validation/hydrate-from-akto";
 
 export async function setupJobProcessor() {
   return initJobProcessor({
@@ -233,6 +235,12 @@ export async function setupJobProcessor() {
       },
       "hydrate:datagouv": {
         handler: hydrateDataGouv,
+      },
+      "storage:upload": {
+        handler: async (job) => uploadFileToStorage(job.payload),
+      },
+      "hydrate:contacts-akto": {
+        handler: async (_job, signal) => hydrateFromAkto(signal),
       },
     },
   });

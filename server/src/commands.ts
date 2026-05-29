@@ -290,6 +290,23 @@ program
   .action(createJobAction("import:person:deca"));
 
 program
+  .command("hydrate:contacts-akto")
+  .description("Importe les contacts AKTO depuis le stockage OVH")
+  .option("-q, --queued", "Exécution asynchrone", false)
+  .action(createJobAction("hydrate:contacts-akto"));
+
+program
+  .command("storage:upload")
+  .description("Upload un fichier vers le stockage OVH")
+  .requiredOption("--file <string>", "Chemin local du fichier")
+  .requiredOption("--path <string>", "Chemin dans le container")
+  .option("--account <string>", "Compte OVH (main|support)", "main")
+  .option("--ttl <number>", "TTL en secondes", String(60 * 60 * 24 * 90))
+  .option("--content-type <string>", "Content-Type", "application/octet-stream")
+  .option("-q, --queued", "Exécution asynchrone", false)
+  .action(createJobAction("storage:upload"));
+
+program
   .command("job:run")
   .description("Run a job")
   .requiredOption("-n, --name <string>", "Job name")
