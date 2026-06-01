@@ -1,7 +1,8 @@
-import { getSirenFromSiret } from "shared/helpers/common";
-import type { IResponse, IPostRoutes } from "shared";
+import { captureException } from "@sentry/node";
 import { isCompanyEmail } from "company-email-validator";
 import { addDays } from "date-fns";
+import type { IPostRoutes, IResponse } from "shared";
+import { getSirenFromSiret } from "shared/helpers/common";
 import { getAktoVerification } from "../../common/apis/akto";
 import {
   getOpcoEpVerification,
@@ -76,16 +77,26 @@ export const validation = async ({
   }
 
   const siren = getSirenFromSiret(siret);
-  const testAkto = await getAktoVerification(siren, email);
-  if (testAkto) {
-    const data = { email, siret, source: "AKTO", ttl: addDays(new Date(), 30) };
-    await Promise.all([importPerson(data), importOrganisation(data)]);
 
-    return {
-      is_valid: true,
-      on: "email",
-      sources: ["AKTO"],
-    };
+  // should we keep it ?
+  try {
+    const testAkto = await getAktoVerification(siren, email);
+    if (testAkto) {
+      const data = { email, siret, source: "AKTO", ttl: addDays(new Date(), 30) };
+      await Promise.all([importPerson(data), importOrganisation(data)]);
+
+      return {
+        is_valid: true,
+        on: "email",
+        sources: ["AKTO"],
+      };
+    }
+  } catch (error) {
+    captureException(error, {
+      tags: {
+        module: "validation",
+      },
+    });
   }
 
   const testOpcoEp = await getOpcoEpVerification(siret, email);
