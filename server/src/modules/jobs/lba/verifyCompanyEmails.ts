@@ -36,7 +36,8 @@ export async function verifyCompanyEmails(signal: AbortSignal): Promise<void> {
             },
           },
         },
-      }))
+      })),
+      { ordered: false }
     );
 
     totalProcessed += uniqueEmails.length;
