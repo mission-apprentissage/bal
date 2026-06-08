@@ -3,34 +3,59 @@ import { getDbCollection } from "../../../common/utils/mongodbUtils";
 import { verifyEmails } from "../../../common/services/mailer/mailBouncer";
 import logger from "../../../common/logger";
 
+const CHUNK_SIZE = 1_000;
+
 export async function verifyCompanyEmails(signal: AbortSignal): Promise<void> {
   logger.info("Starting verification of company emails for LBA mailing list...");
 
-  const emailsToVerify: Set<string> = new Set();
-  for await (const doc of getDbCollection("lba.mailingLists").find(
-    {
-      emailStatus: EmailStatus.UNVERIFIED,
-    },
+  const cursor = getDbCollection("lba.mailingLists").find(
+    { emailStatus: EmailStatus.UNVERIFIED },
     { projection: { email: 1 } }
-  )) {
-    emailsToVerify.add(doc.email);
-  }
+  );
 
-  logger.info(`Found ${emailsToVerify.size} company emails to verify. Starting verification with Bouncer...`);
-  const pingResults = await verifyEmails(Array.from(emailsToVerify), signal);
+  let chunk: string[] = [];
+  let totalProcessed = 0;
+  let chunkIndex = 0;
 
-  logger.info("Updating company email statuses in the database...");
+  const processChunk = async (emails: string[]) => {
+    const uniqueEmails = [...new Set(emails)];
+    chunkIndex++;
+    logger.info(`Processing chunk ${chunkIndex} (${uniqueEmails.length} unique emails)...`);
 
-  const now = new Date();
-  for (let i = 0; i < pingResults.length; i++) {
-    await getDbCollection("lba.mailingLists").updateMany(
-      { email: pingResults[i].email },
-      {
-        $set: {
-          emailStatus: pingResults[i].ping.status === "valid" ? EmailStatus.VALID : EmailStatus.INVALID,
-          updated_at: now,
+    const pingResults = await verifyEmails(uniqueEmails, signal);
+
+    const now = new Date();
+    await getDbCollection("lba.mailingLists").bulkWrite(
+      pingResults.map((result) => ({
+        updateMany: {
+          filter: { email: result.email },
+          update: {
+            $set: {
+              emailStatus: result.ping.status === "valid" ? EmailStatus.VALID : EmailStatus.INVALID,
+              updated_at: now,
+            },
+          },
         },
-      }
+      }))
     );
+
+    totalProcessed += uniqueEmails.length;
+    logger.info(`Chunk ${chunkIndex} done. Total processed: ${totalProcessed}`);
+  };
+
+  for await (const doc of cursor) {
+    signal.throwIfAborted();
+    chunk.push(doc.email);
+
+    if (chunk.length >= CHUNK_SIZE) {
+      await processChunk(chunk);
+      chunk = [];
+    }
   }
+
+  if (chunk.length > 0) {
+    await processChunk(chunk);
+  }
+
+  logger.info(`Verification complete. Total emails processed: ${totalProcessed}`);
 }
