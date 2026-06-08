@@ -2,7 +2,7 @@ fileignoreconfig:
 - filename: .github/workflows/_deploy.yml
   checksum: bfbfdbf9032949561988a0961dce57f2e786716de5fa5b7e937d5d3a6e5a7aad
 - filename: .infra/env.global.yml
-  checksum: 22ed68eddb20cfa5ac9453a46b108966b25c62647f807011ccbea79079f7606c
+  checksum: 468582774ac7b8fc42bbc4d972e24c63cadc643bd4e8edd7d0160781ebb4a1cb
 - filename: .infra/env.local.yml
   checksum: 545013d1fc42080ab4b87c97b2cc1c777aa5bd1bcca73add3be650c2402f0ed2
 - filename: .infra/env.production.yml
