@@ -15,7 +15,7 @@ import parentLogger from "@/common/logger";
 const logger = parentLogger.child({ module: "job:hydrate_from_akto" });
 
 const STORAGE_PATH = "akto/contacts.xlsx";
-const SOURCE = "akto";
+const SOURCE = "AKTO";
 
 async function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
   const chunks: Buffer[] = [];
