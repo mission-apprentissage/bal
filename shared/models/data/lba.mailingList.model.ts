@@ -45,8 +45,9 @@ export type ILbaMailingList = z.output<typeof ZLbaMailingList>;
 export default {
   zod: ZLbaMailingList,
   indexes: [
-    [{ email: 1 }, { unique: true }],
     [{ siret: 1 }, { unique: true }],
+    [{ email: 1, siret: 1 }, { unique: true }],
+    [{ emailStatus: 1, email: 1 }, {}],
   ],
   collectionName,
 } as const satisfies IModelDescriptor;
