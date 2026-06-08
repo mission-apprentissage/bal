@@ -46,7 +46,7 @@ export default {
   zod: ZLbaMailingList,
   indexes: [
     [{ siret: 1 }, { unique: true }],
-    [{ email: 1, siret: 1 }, { unique: true }],
+    [{ email: 1, siret: 1 }, {}],
     [{ emailStatus: 1, email: 1 }, {}],
   ],
   collectionName,
