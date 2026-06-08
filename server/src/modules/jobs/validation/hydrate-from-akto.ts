@@ -65,7 +65,11 @@ export async function hydrateFromAkto(signal: AbortSignal): Promise<void> {
   const fileBuffer = await streamToBuffer(fileStream);
 
   const workbook = read(fileBuffer, { type: "buffer" });
-  const sheet = workbook.Sheets[workbook.SheetNames[0]];
+  const sheetName = workbook.SheetNames[0];
+  if (!sheetName) {
+    throw new Error(`Unable to read AKTO contacts workbook: no sheets found in ${STORAGE_PATH}`);
+  }
+  const sheet = workbook.Sheets[sheetName];
   const rows = utils.sheet_to_json<AktoRow>(sheet, { defval: "" });
 
   logger.info(`${rows.length} rows to process`);
