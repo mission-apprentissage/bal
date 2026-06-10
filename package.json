@@ -15,7 +15,8 @@
     "overrides": {
       "chokidar": "^5.0.0",
       "handlebars": "^4.7.9",
-      "fast-xml-parser": "^5.5.9"
+      "fast-xml-parser": "^5.5.9",
+      "@ungap/structured-clone": "1.3.1"
     },
     "onlyBuiltDependencies": [
       "@parcel/watcher",

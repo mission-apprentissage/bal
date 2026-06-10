@@ -65,6 +65,7 @@
     "shared": "workspace:*",
     "stream-json": "^1.9.1",
     "tcp-port-used": "^1.0.2",
+    "xlsx": "0.18.5",
     "zod": "^4.1.12",
     "zod-mongodb-schema": "^2.0.0"
   },
