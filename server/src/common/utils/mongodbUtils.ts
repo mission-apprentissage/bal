@@ -133,7 +133,7 @@ export const clearAllCollections = async () => {
 export const createIndexes = async () => {
   for (const descriptor of modelDescriptors) {
     if (!descriptor.indexes) {
-      return;
+      continue;
     }
     const indexes = await getDbCollection(descriptor.collectionName)
       .listIndexes()
