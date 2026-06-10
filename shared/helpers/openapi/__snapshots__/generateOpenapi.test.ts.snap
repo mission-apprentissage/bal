@@ -687,6 +687,34 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         ],
         "type": "object",
       },
+      "deca.import.job.result.specific": {
+        "additionalProperties": false,
+        "properties": {
+          "_id": {},
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "has_completed": {
+            "type": "boolean",
+          },
+          "import_date": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "import_date_string": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "_id",
+          "import_date_string",
+          "import_date",
+          "has_completed",
+          "created_at",
+        ],
+        "type": "object",
+      },
       "decaHistory": {
         "additionalProperties": false,
         "properties": {
@@ -880,6 +908,131 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "_id",
           "email",
           "blacklisting_origin",
+          "created_at",
+          "updated_at",
+        ],
+        "type": "object",
+      },
+      "lba.mailingLists": {
+        "additionalProperties": false,
+        "properties": {
+          "Resultat_net": {
+            "type": "number",
+          },
+          "_id": {},
+          "activitePrincipaleEtablissement": {
+            "type": "string",
+          },
+          "codePostalEtablissement": {
+            "type": "string",
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "date_cloture_exercice": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "denominationUsuelleEtablissement": {
+            "type": "string",
+          },
+          "email": {
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+            "type": "string",
+          },
+          "emailStatus": {
+            "enum": [
+              "valid",
+              "invalid",
+              "unverified",
+            ],
+            "type": "string",
+          },
+          "enseigne1Etablissement": {
+            "type": "string",
+          },
+          "enseigne2Etablissement": {
+            "anyOf": [
+              {
+                "type": "string",
+              },
+              {
+                "type": "null",
+              },
+            ],
+          },
+          "enseigne3Etablissement": {
+            "anyOf": [
+              {
+                "type": "string",
+              },
+              {
+                "type": "null",
+              },
+            ],
+          },
+          "exported_at": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "nbContrats": {
+            "anyOf": [
+              {
+                "type": "number",
+              },
+              {
+                "type": "null",
+              },
+            ],
+          },
+          "nbSocietesMemeNaf": {
+            "anyOf": [
+              {
+                "type": "number",
+              },
+              {
+                "type": "null",
+              },
+            ],
+          },
+          "raisonsociale": {
+            "type": "string",
+          },
+          "siren": {
+            "type": "string",
+          },
+          "siret": {
+            "type": "string",
+          },
+          "trancheEffectifsEtablissement": {
+            "type": "string",
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string",
+          },
+        },
+        "required": [
+          "email",
+          "siren",
+          "Resultat_net",
+          "siret",
+          "trancheEffectifsEtablissement",
+          "codePostalEtablissement",
+          "activitePrincipaleEtablissement",
+          "enseigne1Etablissement",
+          "enseigne2Etablissement",
+          "enseigne3Etablissement",
+          "denominationUsuelleEtablissement",
+          "raisonsociale",
+          "exported_at",
+          "date_cloture_exercice",
+          "_id",
+          "nbContrats",
+          "nbSocietesMemeNaf",
+          "emailStatus",
           "created_at",
           "updated_at",
         ],

@@ -13,6 +13,7 @@ import type { IDecaHistory } from "./deca.model/decaHistory.model";
 import decaHistoryModelDescriptor from "./deca.model/decaHistory.model";
 import type { IDecaImportJobResult } from "./deca.model/decaImportJobResult.model";
 import decaImportJobResultModelDescriptor from "./deca.model/decaImportJobResult.model";
+import decaImportJobResultSpecificModelDescriptor from "./deca.model/decaImportJobResultSpecific.model";
 import type { IEmailDenied } from "./emailDenied.model";
 import emailDeniedModelDescriptor from "./emailDenied.model";
 import type { IEvent } from "./events/event.model";
@@ -32,6 +33,7 @@ import type { IMailingListSource } from "./mailingList.source.model";
 import { mailingListComputedDatumModelDescriptor } from "./mailingList.computed.model";
 import type { IMailingListComputedDatum } from "./mailingList.computed.model";
 import type { ILbaMailingList } from "./data/lba.mailingList.model";
+import lbaMailingListModelDescriptor from "./data/lba.mailingList.model";
 
 export const modelDescriptors: IModelDescriptor[] = [
   usersModelDescriptor,
@@ -50,6 +52,8 @@ export const modelDescriptors: IModelDescriptor[] = [
   mailingListModelDescriptorV2,
   mailingListSourceModelDescriptor,
   mailingListComputedDatumModelDescriptor,
+  lbaMailingListModelDescriptor,
+  decaImportJobResultSpecificModelDescriptor,
 ];
 
 export type IDocumentMap = {

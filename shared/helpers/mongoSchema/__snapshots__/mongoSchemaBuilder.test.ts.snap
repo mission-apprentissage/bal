@@ -582,6 +582,37 @@ exports[`zodToMongoSchema > should convert deca.import.job.result schema 1`] = `
 }
 `;
 
+exports[`zodToMongoSchema > should convert deca.import.job.result.specific schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "created_at": {
+      "bsonType": "date",
+    },
+    "has_completed": {
+      "bsonType": "bool",
+    },
+    "import_date": {
+      "bsonType": "date",
+    },
+    "import_date_string": {
+      "bsonType": "string",
+    },
+  },
+  "required": [
+    "_id",
+    "import_date_string",
+    "import_date",
+    "has_completed",
+    "created_at",
+  ],
+}
+`;
+
 exports[`zodToMongoSchema > should convert decaHistory schema 1`] = `
 {
   "additionalProperties": false,
@@ -779,6 +810,115 @@ exports[`zodToMongoSchema > should convert lba.emailblacklists schema 1`] = `
     "_id",
     "email",
     "blacklisting_origin",
+    "created_at",
+    "updated_at",
+  ],
+}
+`;
+
+exports[`zodToMongoSchema > should convert lba.mailingLists schema 1`] = `
+{
+  "additionalProperties": false,
+  "bsonType": "object",
+  "properties": {
+    "Resultat_net": {
+      "bsonType": "number",
+    },
+    "_id": {
+      "bsonType": "objectId",
+    },
+    "activitePrincipaleEtablissement": {
+      "bsonType": "string",
+    },
+    "codePostalEtablissement": {
+      "bsonType": "string",
+    },
+    "created_at": {
+      "bsonType": "date",
+    },
+    "date_cloture_exercice": {
+      "bsonType": "date",
+    },
+    "denominationUsuelleEtablissement": {
+      "bsonType": "string",
+    },
+    "email": {
+      "bsonType": "string",
+      "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+    },
+    "emailStatus": {
+      "bsonType": "string",
+      "enum": [
+        "valid",
+        "invalid",
+        "unverified",
+      ],
+    },
+    "enseigne1Etablissement": {
+      "bsonType": "string",
+    },
+    "enseigne2Etablissement": {
+      "bsonType": [
+        "string",
+        "null",
+      ],
+    },
+    "enseigne3Etablissement": {
+      "bsonType": [
+        "string",
+        "null",
+      ],
+    },
+    "exported_at": {
+      "bsonType": "date",
+    },
+    "nbContrats": {
+      "bsonType": [
+        "number",
+        "null",
+      ],
+    },
+    "nbSocietesMemeNaf": {
+      "bsonType": [
+        "number",
+        "null",
+      ],
+    },
+    "raisonsociale": {
+      "bsonType": "string",
+    },
+    "siren": {
+      "bsonType": "string",
+    },
+    "siret": {
+      "bsonType": "string",
+    },
+    "trancheEffectifsEtablissement": {
+      "bsonType": "string",
+    },
+    "updated_at": {
+      "bsonType": "date",
+    },
+  },
+  "required": [
+    "email",
+    "siren",
+    "Resultat_net",
+    "siret",
+    "trancheEffectifsEtablissement",
+    "codePostalEtablissement",
+    "activitePrincipaleEtablissement",
+    "enseigne1Etablissement",
+    "enseigne2Etablissement",
+    "enseigne3Etablissement",
+    "denominationUsuelleEtablissement",
+    "raisonsociale",
+    "exported_at",
+    "date_cloture_exercice",
+    "_id",
+    "nbContrats",
+    "nbSocietesMemeNaf",
+    "emailStatus",
     "created_at",
     "updated_at",
   ],
