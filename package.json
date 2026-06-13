@@ -35,12 +35,12 @@
     "husky": "^9.1.7"
   },
   "scripts": {
-    "setup:env": ".bin/mna-bal env:init",
+    "setup:env": ".bin/mna env:init",
     "setup:mongodb": "docker compose exec -it mongodb mongosh \"mongodb://__system:password@localhost:27017/mna-bal?authSource=local&directConnection=true\" --eval \"try { rs.status().ok } catch (e) { if (e.code === 94) {rs.initiate();} else {throw e} }\" --quiet",
     "dev": "pnpm services:start && pnpm -r --parallel run dev",
     "cli": "pnpm --filter server cli",
-    "seed": ".bin/mna-bal seed:apply",
-    "deploy": ".bin/mna-bal app:deploy",
+    "seed": ".bin/mna seed:apply",
+    "deploy": ".bin/mna app:deploy",
     "build": "pnpm -r run build",
     "migrations:status": "pnpm cli migrations:status",
     "migrations:up": "pnpm cli migrations:up",
@@ -50,13 +50,13 @@
     "services:start": "docker compose up --build --remove-orphans -d --wait",
     "services:stop": "docker compose down",
     "services:clean": "pnpm services:stop && docker system prune --volumes",
-    "seed:update": ".bin/mna-bal seed:update",
+    "seed:update": ".bin/mna seed:update",
     "lint": "eslint --cache .",
     "lint:fix": "pnpm lint --fix",
     "prettier:fix": "prettier --write -u .",
     "prettier:check": "prettier --check -u .",
     "release": "semantic-release",
-    "release:interactive": ".bin/mna-bal app:release:interactive",
+    "release:interactive": ".bin/mna app:release:interactive",
     "postinstall": "husky install",
     "talisman:add-exception": "pnpm node-talisman --githook pre-commit -i",
     "test": "vitest",
@@ -65,8 +65,8 @@
     "test:watch": "vitest --watch",
     "typecheck": "pnpm -r --parallel run typecheck",
     "typecheck:ci": "pnpm -r run typecheck",
-    "vault:edit": ".bin/mna-bal vault:edit",
-    "product:access:update": ".bin/mna-bal product:access:update"
+    "vault:edit": ".bin/mna vault:edit",
+    "product:access:update": ".bin/mna product:access:update"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
