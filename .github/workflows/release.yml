@@ -41,9 +41,8 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.TOKEN_MNA_SHARED }}
           persist-credentials: false
-          submodules: recursive
+          submodules: true
           fetch-depth: 0
 
       - uses: actions/setup-node@v3
@@ -153,4 +152,3 @@ jobs:
       DEPLOY_PASS: ${{ secrets.DEPLOY_PASS }}
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       OPENPGP_PRIVATE_SUBKEY: ${{ secrets.OPENPGP_PRIVATE_SUBKEY }}
-      TOKEN_MNA_SHARED: ${{ secrets.TOKEN_MNA_SHARED }}
