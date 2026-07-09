@@ -166,7 +166,7 @@ describe("buildDecaContract", () => {
         noContrat: "987654321",
         typeContrat: 11,
         dateConclusion: "",
-      }
+      },
     };
 
     const result = buildDecaContract(contrat);
