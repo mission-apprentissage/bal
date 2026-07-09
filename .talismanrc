@@ -9,6 +9,8 @@ fileignoreconfig:
   checksum: 263a7a050b27dd9674bf65a70d4c6fc0daf3fabfd8c43237227caac0f96eb567
 - filename: .infra/env.recette.yml
   checksum: 129a465ab274b8334990ec48a437f099d2bb5460d6212a45f1937db1c9ea378d
+- filename: server/src/modules/jobs/deca/hydrate-deca.test.ts
+  checksum: 11e5c15cb91e375e2d3d54c8069da08ec0f2a53b33d6cdf522a64b4aaaa38af4
 scopeconfig:
 - scope: node
 custom_patterns:

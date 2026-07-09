@@ -51,6 +51,12 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         "additionalProperties": false,
         "properties": {
           "_id": {},
+          "code_motif_rupture": {
+            "type": "string",
+          },
+          "commentaire_rupture": {
+            "type": "string",
+          },
           "created_at": {
             "format": "date-time",
             "type": "string",
@@ -68,6 +74,14 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "type": "string",
           },
           "date_fin_contrat": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "date_reelle_fin_contrat": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "date_signalement_rupture": {
             "format": "date-time",
             "type": "string",
           },
@@ -481,6 +495,12 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             ],
             "type": "object",
           },
+          "code_motif_rupture": {
+            "type": "string",
+          },
+          "commentaire_rupture": {
+            "type": "string",
+          },
           "created_at": {
             "format": "date-time",
             "type": "string",
@@ -498,6 +518,14 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
             "type": "string",
           },
           "date_fin_contrat": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "date_reelle_fin_contrat": {
+            "format": "date-time",
+            "type": "string",
+          },
+          "date_signalement_rupture": {
             "format": "date-time",
             "type": "string",
           },

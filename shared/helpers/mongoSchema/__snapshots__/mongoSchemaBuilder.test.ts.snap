@@ -8,6 +8,12 @@ exports[`zodToMongoSchema > should convert anonymized.deca schema 1`] = `
     "_id": {
       "bsonType": "objectId",
     },
+    "code_motif_rupture": {
+      "bsonType": "string",
+    },
+    "commentaire_rupture": {
+      "bsonType": "string",
+    },
     "created_at": {
       "bsonType": "date",
     },
@@ -21,6 +27,12 @@ exports[`zodToMongoSchema > should convert anonymized.deca schema 1`] = `
       "bsonType": "date",
     },
     "date_fin_contrat": {
+      "bsonType": "date",
+    },
+    "date_reelle_fin_contrat": {
+      "bsonType": "date",
+    },
+    "date_signalement_rupture": {
       "bsonType": "date",
     },
     "date_signature_contrat": {
@@ -390,6 +402,12 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
         "date_naissance",
       ],
     },
+    "code_motif_rupture": {
+      "bsonType": "string",
+    },
+    "commentaire_rupture": {
+      "bsonType": "string",
+    },
     "created_at": {
       "bsonType": "date",
     },
@@ -403,6 +421,12 @@ exports[`zodToMongoSchema > should convert deca schema 1`] = `
       "bsonType": "date",
     },
     "date_fin_contrat": {
+      "bsonType": "date",
+    },
+    "date_reelle_fin_contrat": {
+      "bsonType": "date",
+    },
+    "date_signalement_rupture": {
       "bsonType": "date",
     },
     "date_signature_contrat": {
