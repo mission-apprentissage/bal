@@ -185,7 +185,7 @@ describe("buildDecaContract", () => {
         adresse: {},
       },
       no_contrat: "987654321",
-      type_contrat: "undefined",
+      type_contrat: "11",
       date_signature_contrat: null,
     });
     expect(result).not.toHaveProperty("code_motif_rupture");
