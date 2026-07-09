@@ -47,7 +47,7 @@ describe("buildDecaContract", () => {
         },
         naf: "6201Z",
         nombreDeSalaries: 50,
-        courriel: "contact@employeur.fr",
+        courriel: "contact@exemple.fr",
         telephone: "0102030405",
         denomination: "ACME SARL",
         typeEmployeur: 1,
