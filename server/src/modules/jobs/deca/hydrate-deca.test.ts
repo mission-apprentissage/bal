@@ -15,7 +15,7 @@ describe("buildDecaContract", () => {
         departementNaissance: "75",
         nationalite: "1",
         handicap: "true",
-        courriel: "jean.dupont@example.com",
+        courriel: "jean.dupont@exemple.fr",
         telephone: "0601020304",
         adresse: {
           numero: "12",
