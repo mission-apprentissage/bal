@@ -6,7 +6,7 @@ export interface Contrat {
   detailsContrat: DetailsContrat;
   rupture?: Rupture;
   employeur: Employeur;
-  suiviASP: SuiviASP;
+  suiviASP?: SuiviASP;
 }
 
 interface Alternant {
