@@ -8,7 +8,7 @@ fileignoreconfig:
 - filename: .infra/env.production.yml
   checksum: 263a7a050b27dd9674bf65a70d4c6fc0daf3fabfd8c43237227caac0f96eb567
 - filename: .infra/env.recette.yml
-  checksum: 129a465ab274b8334990ec48a437f099d2bb5460d6212a45f1937db1c9ea378d
+  checksum: e542f5aeb16135b8a1411364fa5cb6aeae24e7510f853ddd7a9c09b2d36a2271
 scopeconfig:
 - scope: node
 custom_patterns:
