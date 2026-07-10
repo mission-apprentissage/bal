@@ -39,7 +39,7 @@ const parseDate = (v: string) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const buildDecaContract = (contrat: any) => {
+export const buildDecaContract = (contrat: any) => {
   return {
     alternant: {
       ...ifDefined("date_naissance", contrat.alternant.dateNaissance, parseDate), // TDB, LBA
@@ -89,9 +89,13 @@ const buildDecaContract = (contrat: any) => {
     no_contrat: contrat.detailsContrat.noContrat, // TDB, LBA
     ...ifDefined("type_contrat", "" + contrat.detailsContrat.typeContrat), // TDB, LBA
     ...ifDefined("date_effet_rupture", contrat.rupture?.dateEffetRupture, parseDate), // TDB, LBA
+    ...ifDefined("code_motif_rupture", contrat.rupture?.codeMotifRupture), // TDB, LBA
+    ...ifDefined("commentaire_rupture", contrat.rupture?.commentaireRupture), // TDB, LBA
+    ...ifDefined("date_signalement_rupture", contrat.rupture?.dateSignalement, parseDate), // TDB, LBA
     ...ifDefined("dispositif", contrat.detailsContrat.dispositif), // LBA
     ...ifDefined("date_debut_contrat", contrat.detailsContrat.dateDebutContrat, parseDate), // TDB, LBA
     ...ifDefined("date_fin_contrat", contrat.detailsContrat.dateFinContrat, parseDate), // TDB, LBA
+    ...ifDefined("date_reelle_fin_contrat", contrat.suiviASP?.drfc, parseDate), // TDB, LBA
     ...ifDefined("date_effet_avenant", contrat.detailsContrat.dateEffetAvenant, parseDate), // TDB, LBA
     date_signature_contrat: parseDate(contrat.detailsContrat.dateConclusion), // LBA
     ...ifDefined("no_avenant", contrat.detailsContrat.noAvenant), // TDB, LBA

@@ -6,6 +6,7 @@ export interface Contrat {
   detailsContrat: DetailsContrat;
   rupture?: Rupture;
   employeur: Employeur;
+  suiviASP?: SuiviASP;
 }
 
 interface Alternant {
@@ -68,6 +69,13 @@ interface OrganismeFormationResponsable {
 
 interface Rupture {
   dateEffetRupture: string;
+  codeMotifRupture?: string;
+  commentaireRupture?: string;
+  dateSignalement?: string;
+}
+
+interface SuiviASP {
+  drfc?: string;
 }
 
 interface Metadonnees {
