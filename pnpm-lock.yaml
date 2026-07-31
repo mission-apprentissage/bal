@@ -94,7 +94,7 @@ importers:
         specifier: ^8.46.0
         version: 8.48.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
       vitest:
-        specifier: ^3.2.6
+        specifier: ^3.2.7
         version: 3.2.7(@types/node@24.10.1)(jiti@2.6.1)(sass@1.94.2)(terser@5.44.1)(yaml@2.8.1)
 
   server:
@@ -296,7 +296,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       vitest:
-        specifier: ^3.2.6
+        specifier: ^3.2.7
         version: 3.2.7(@types/node@24.10.1)(jiti@2.6.1)(sass@1.94.2)(terser@5.44.1)(yaml@2.8.1)
 
   shared:
@@ -336,7 +336,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       vitest:
-        specifier: ^3.2.6
+        specifier: ^3.2.7
         version: 3.2.7(@types/node@24.10.1)(jiti@2.6.1)(sass@1.94.2)(terser@5.44.1)(yaml@2.8.1)
 
   ui:
@@ -430,7 +430,7 @@ importers:
         specifier: ^5.0.1
         version: 5.2.0
       vitest:
-        specifier: ^3.2.6
+        specifier: ^3.2.7
         version: 3.2.7(@types/node@24.10.1)(jiti@2.6.1)(sass@1.94.2)(terser@5.44.1)(yaml@2.8.1)
 
 packages:
