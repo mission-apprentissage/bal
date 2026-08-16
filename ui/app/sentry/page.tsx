@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import * as Sentry from "@sentry/nextjs";
-import Head from "next/head";
+import * as Sentry from "@sentry/nextjs"
+import Head from "next/head"
 
 export default function Home() {
   return (
@@ -53,28 +53,24 @@ export default function Home() {
                 name: "Example Frontend Transaction",
               },
               async () => {
-                const res = await fetch("/sentry/sentry-example-api");
+                const res = await fetch("/sentry/sentry-example-api")
                 if (!res.ok) {
-                  throw new Error("Sentry Example Frontend Error");
+                  throw new Error("Sentry Example Frontend Error")
                 }
               }
-            );
+            )
           }}
         >
           Throw error!
         </button>
 
         <p>
-          Next, look for the error on the{" "}
-          <a href="https://sentry.apprentissage.beta.gouv.fr/organizations/sentry/issues/?project=3">Issues Page</a>.
+          Next, look for the error on the <a href="https://sentry.apprentissage.beta.gouv.fr/organizations/sentry/issues/?project=3">Issues Page</a>.
         </p>
         <p style={{ marginTop: "24px" }}>
-          For more information, see{" "}
-          <a href="https://docs.sentry.io/platforms/javascript/guides/nextjs/">
-            https://docs.sentry.io/platforms/javascript/guides/nextjs/
-          </a>
+          For more information, see <a href="https://docs.sentry.io/platforms/javascript/guides/nextjs/">https://docs.sentry.io/platforms/javascript/guides/nextjs/</a>
         </p>
       </main>
     </div>
-  );
+  )
 }

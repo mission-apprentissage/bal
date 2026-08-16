@@ -1,26 +1,26 @@
-"use client";
+"use client"
 
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Select } from "@codegouvfr/react-dsfr/Select";
-import { Upload as DSFRUpload } from "@codegouvfr/react-dsfr/Upload";
-import { Box, styled } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import type { SubmitHandler } from "react-hook-form";
-import { useForm } from "react-hook-form";
-import { captureException } from "@sentry/nextjs";
-import { formatDate } from "date-fns";
-import Toast, { useToast } from "@/components/toast/Toast";
-import { apiPost } from "@/utils/api.utils";
-import { queryClient } from "@/utils/query.utils";
-import { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { Input } from "@codegouvfr/react-dsfr/Input"
+import { Select } from "@codegouvfr/react-dsfr/Select"
+import { Upload as DSFRUpload } from "@codegouvfr/react-dsfr/Upload"
+import { Box, styled } from "@mui/material"
+import { captureException } from "@sentry/nextjs"
+import { formatDate } from "date-fns"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import type { SubmitHandler } from "react-hook-form"
+import { useForm } from "react-hook-form"
+import { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import Toast, { useToast } from "@/components/toast/Toast"
+import { apiPost } from "@/utils/api.utils"
+import { queryClient } from "@/utils/query.utils"
 
 interface FormValues {
-  name: string | null;
-  delimiter: string;
-  file: FileList | null;
-  expiresInDays: number;
+  name: string | null
+  delimiter: string
+  file: FileList | null
+  expiresInDays: number
 }
 
 const FormContainer = styled("div")(({ theme }) => ({
@@ -30,13 +30,13 @@ const FormContainer = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     width: "50%",
   },
-}));
+}))
 
 export function MailingListCreateSource() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast, setToast, handleClose } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { toast, setToast, handleClose } = useToast()
 
-  const router = useRouter();
+  const router = useRouter()
 
   const {
     register,
@@ -52,35 +52,32 @@ export function MailingListCreateSource() {
       file: null,
       expiresInDays: 30,
     },
-  });
+  })
 
-  const fileName = watch("file")?.[0]?.name ?? null;
-  const name = watch("name");
+  const fileName = watch("file")?.[0]?.name ?? null
+  const name = watch("name")
 
   useEffect(() => {
     if (fileName && name === null) {
-      setValue(
-        "name",
-        `${formatDate(new Date(), "yyyyMMdd")}_${fileName.replaceAll(/\s/g, "_").replace(/\.csv$/, "")}`
-      );
+      setValue("name", `${formatDate(new Date(), "yyyyMMdd")}_${fileName.replaceAll(/\s/g, "_").replace(/\.csv$/, "")}`)
     }
-  }, [fileName, name, setValue]);
+  }, [fileName, name, setValue])
 
   const onSubmit: SubmitHandler<FormValues> = async ({ file, delimiter, name, expiresInDays }) => {
-    setIsSubmitting(true);
+    setIsSubmitting(true)
     try {
       if (!file || file.length === 0) {
-        setError("file", { message: "Vous devez ajouter un fichier à importer." });
-        return;
+        setError("file", { message: "Vous devez ajouter un fichier à importer." })
+        return
       }
 
       if (!name || name.trim() === "") {
-        setError("name", { message: "Veuillez saisir le nom de votre liste de diffusion." });
-        return;
+        setError("name", { message: "Veuillez saisir le nom de votre liste de diffusion." })
+        return
       }
 
-      const formData = new FormData();
-      formData.append("file", file[0]);
+      const formData = new FormData()
+      formData.append("file", file[0])
 
       const { _id } = await apiPost("/_private/mailing-list", {
         querystring: {
@@ -89,31 +86,31 @@ export function MailingListCreateSource() {
           expiresInDays: expiresInDays.toString(),
         },
         body: formData,
-      });
+      })
 
       setToast({
         severity: "success",
         message: "Fichier importé avec succès.",
-      });
+      })
 
-      router.push(PAGES.mailingListView(_id).path);
+      router.push(PAGES.mailingListView(_id).path)
     } catch (error) {
       if (error instanceof Error) {
-        const { message } = error;
-        setError("file", { message });
+        const { message } = error
+        setError("file", { message })
       }
 
       setToast({
         severity: "error",
         message: "Une erreur s'est produite pendant le téléversement du fichier.",
-      });
-      captureException(error);
-      console.error(error);
+      })
+      captureException(error)
+      console.error(error)
     } finally {
-      setIsSubmitting(false);
-      queryClient.invalidateQueries({ queryKey: ["/_private/mailing-list"] });
+      setIsSubmitting(false)
+      queryClient.invalidateQueries({ queryKey: ["/_private/mailing-list"] })
     }
-  };
+  }
 
   return (
     <FormContainer>
@@ -131,10 +128,10 @@ export function MailingListCreateSource() {
                 required: "Obligatoire: Vous devez ajouter un fichier à importer",
                 validate: {
                   notEmpty: (value) => {
-                    return (value && value.length > 0) || "Obligatoire: Vous devez ajouter un fichier à importer";
+                    return (value && value.length > 0) || "Obligatoire: Vous devez ajouter un fichier à importer"
                   },
                   extension: (value) => {
-                    return value?.[0]?.name?.endsWith(".csv") || "Le fichier doit être au format .csv";
+                    return value?.[0]?.name?.endsWith(".csv") || "Le fichier doit être au format .csv"
                   },
                 },
               }),
@@ -191,5 +188,5 @@ export function MailingListCreateSource() {
       </form>
       <Toast severity={toast?.severity} message={toast?.message} handleClose={handleClose} />
     </FormContainer>
-  );
+  )
 }

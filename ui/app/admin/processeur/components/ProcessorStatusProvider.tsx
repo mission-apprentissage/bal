@@ -1,28 +1,28 @@
-"use client";
+"use client"
 
-import { fr } from "@codegouvfr/react-dsfr";
-import { Box, CircularProgress } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import type { ProcessorStatusJson } from "job-processor/dist/react";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Box, CircularProgress } from "@mui/material"
+import { useQuery } from "@tanstack/react-query"
+import type { ProcessorStatusJson } from "job-processor/dist/react"
 
-import { apiGet } from "@/utils/api.utils";
+import { apiGet } from "@/utils/api.utils"
 
 type ProcessorStatusProviderProps = {
-  children: (status: ProcessorStatusJson) => React.ReactNode;
-};
+  children: (status: ProcessorStatusJson) => React.ReactNode
+}
 
 export function ProcessorStatusProvider(props: ProcessorStatusProviderProps): React.ReactNode {
   const result = useQuery({
     queryKey: ["/admin/processor"],
     queryFn: async () => {
-      const data = await apiGet("/admin/processor", {});
+      const data = await apiGet("/admin/processor", {})
 
-      return data;
+      return data
     },
-  });
+  })
 
   if (result.isError) {
-    throw result.error;
+    throw result.error
   }
 
   if (result.isPending) {
@@ -37,8 +37,8 @@ export function ProcessorStatusProvider(props: ProcessorStatusProviderProps): Re
       >
         <CircularProgress />
       </Box>
-    );
+    )
   }
 
-  return props.children(result.data);
+  return props.children(result.data)
 }

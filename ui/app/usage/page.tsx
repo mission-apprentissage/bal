@@ -1,16 +1,16 @@
-"use client";
+"use client"
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"
 
-import { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
 
 const UsagePage = () => {
-  const { push } = useRouter();
+  const { push } = useRouter()
 
   // redirect to first tab
-  push(PAGES.usageApiValidation().path);
+  push(PAGES.usageApiValidation().path)
 
-  return null;
-};
+  return null
+}
 
-export default UsagePage;
+export default UsagePage

@@ -1,19 +1,18 @@
-import querystring from "querystring";
-import axios from "axios";
+import axios from "axios"
+import querystring from "querystring"
+import config from "@/config"
+import { ApiError } from "../utils/apiUtils"
 
-import { ApiError } from "../utils/apiUtils";
-import config from "@/config";
+export const OPCO_EP_BASE_URL = `https://${config.opcoEp.baseUrl}`
+export const OPCO_EP_AUTH_BASE_URL = `https://${config.opcoEp.baseAuthUrl}`
 
-export const OPCO_EP_BASE_URL = `https://${config.opcoEp.baseUrl}`;
-export const OPCO_EP_AUTH_BASE_URL = `https://${config.opcoEp.baseAuthUrl}`;
-
-export const OPCO_EP_CODE_RETOUR_EMAIL_TROUVE = 1;
-export const OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE = 2;
+export const OPCO_EP_CODE_RETOUR_EMAIL_TROUVE = 1
+export const OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE = 2
 
 const axiosClient = axios.create({
   timeout: 5_000,
   baseURL: OPCO_EP_BASE_URL,
-});
+})
 
 /**
  * @description get auth token from gateway
@@ -35,14 +34,13 @@ const getToken = async () => {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       }
-    );
+    )
 
-    return response.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return response.data
   } catch (error: any) {
-    throw new ApiError("Api Opco Ep token", error.message, error.code || error.response?.status);
+    throw new ApiError("Api Opco Ep token", error.message, error.code || error.response?.status)
   }
-};
+}
 
 /**
  * @description Check Opco Ep referential using siret & email submitted by user
@@ -51,19 +49,16 @@ const getToken = async () => {
  * @returns {boolean}
  */
 export const getOpcoEpVerification = async (siret: string, email: string) => {
-  const token_ep = await getToken();
+  const token_ep = await getToken()
 
   try {
-    const { data } = await axiosClient.get(
-      `/apis/referentiel-entreprise/v2/entreprises/securisation-echange?email=${email}&siret=${siret}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token_ep.access_token}`,
-          "X-Audience-Id": "etatiques-lba",
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const { data } = await axiosClient.get(`/apis/referentiel-entreprise/v2/entreprises/securisation-echange?email=${email}&siret=${siret}`, {
+      headers: {
+        Authorization: `Bearer ${token_ep.access_token}`,
+        "X-Audience-Id": "etatiques-lba",
+        "Content-Type": "application/json",
+      },
+    })
 
     //   1-	SIRET et courriel connus
     // {
@@ -89,9 +84,8 @@ export const getOpcoEpVerification = async (siret: string, email: string) => {
     //     "detailRetour": "Siret inconnu"
     // }
 
-    return data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return data
   } catch (error: any) {
-    throw new ApiError("Api Opco Ep", error.message, error.code || error.response?.status);
+    throw new ApiError("Api Opco Ep", error.message, error.code || error.response?.status)
   }
-};
+}

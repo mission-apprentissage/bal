@@ -1,39 +1,30 @@
-import { addJob, initJobProcessor } from "job-processor";
-import { z } from "zod/v4-mini";
-
-import logger from "../../common/logger";
-import { verifyEmails } from "../../common/services/mailer/mailBouncer";
-import { getDatabase } from "../../common/utils/mongodbUtils";
-import config from "../../config";
-import { createUser } from "../actions/users.actions";
-import { sanitizeOrganisationDomains } from "../actions/organisations.actions";
-import { sendContactsToBrevo } from "../../common/services/brevo/exportContactsToBrevo";
-import { importPersonFromCatalogue } from "./catalogueSiretEmailImport";
-import { recreateIndexes } from "./db/recreateIndexes";
-import { validateModels } from "./db/schemaValidation";
-import { streamDataToParquetAndS3 } from "./deca/decaToS3";
-import { hydrateDeca } from "./deca/hydrate-deca";
-import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted";
-import { importPersonFromAlgoLba } from "./lba/hydrate-siretlist";
-import { importCompanyEmailsForLbaMailing } from "./lba/hydrate-companyEmailList";
-import { importPersonFromDeca } from "./validation/hydrate-from-deca";
-import { anonymisationService } from "./anonymisation/anonymisation.service";
-import { updateDecaSpecificFields } from "./deca/update-deca-specific-fields";
-import {
-  onMailingListV2JobExited,
-  processMailingList,
-  recoverMailingListJobs,
-} from "./mailing-list/mailing-list.processor";
-import { hydrateDataGouv } from "./lba/hydrate-datagouv";
-import { verifyCompanyEmails } from "./lba/verifyCompanyEmails";
-import { enrichCompanyEmails } from "./lba/enrichCompanyEmails";
-import {
-  create as createMigration,
-  status as statusMigration,
-  up as upMigration,
-} from "@/modules/jobs/migrations/migrations";
-import { uploadFileToStorage } from "@/modules/jobs/storage/uploadToStorage";
-import { hydrateFromAkto } from "@/modules/jobs/validation/hydrate-from-akto";
+import { addJob, initJobProcessor } from "job-processor"
+import { z } from "zod/v4-mini"
+import { create as createMigration, status as statusMigration, up as upMigration } from "@/modules/jobs/migrations/migrations"
+import { uploadFileToStorage } from "@/modules/jobs/storage/uploadToStorage"
+import { hydrateFromAkto } from "@/modules/jobs/validation/hydrate-from-akto"
+import logger from "../../common/logger"
+import { sendContactsToBrevo } from "../../common/services/brevo/exportContactsToBrevo"
+import { verifyEmails } from "../../common/services/mailer/mailBouncer"
+import { getDatabase } from "../../common/utils/mongodbUtils"
+import config from "../../config"
+import { sanitizeOrganisationDomains } from "../actions/organisations.actions"
+import { createUser } from "../actions/users.actions"
+import { anonymisationService } from "./anonymisation/anonymisation.service"
+import { importPersonFromCatalogue } from "./catalogueSiretEmailImport"
+import { recreateIndexes } from "./db/recreateIndexes"
+import { validateModels } from "./db/schemaValidation"
+import { streamDataToParquetAndS3 } from "./deca/decaToS3"
+import { hydrateDeca } from "./deca/hydrate-deca"
+import { updateDecaSpecificFields } from "./deca/update-deca-specific-fields"
+import { enrichCompanyEmails } from "./lba/enrichCompanyEmails"
+import { importCompanyEmailsForLbaMailing } from "./lba/hydrate-companyEmailList"
+import { hydrateDataGouv } from "./lba/hydrate-datagouv"
+import { hydrateLbaBlackListed } from "./lba/hydrate-email-blacklisted"
+import { importPersonFromAlgoLba } from "./lba/hydrate-siretlist"
+import { verifyCompanyEmails } from "./lba/verifyCompanyEmails"
+import { onMailingListV2JobExited, processMailingList, recoverMailingListJobs } from "./mailing-list/mailing-list.processor"
+import { importPersonFromDeca } from "./validation/hydrate-from-deca"
 
 export async function setupJobProcessor() {
   return initJobProcessor({
@@ -71,11 +62,11 @@ export async function setupJobProcessor() {
             "MAJ données DECA": {
               cron_string: "30 21 * * *",
               handler: async (signal) => {
-                await hydrateDeca(signal);
+                await hydrateDeca(signal)
                 if (config.env === "production") {
-                  await streamDataToParquetAndS3();
+                  await streamDataToParquetAndS3()
                 }
-                await importPersonFromDeca(signal);
+                await importPersonFromDeca(signal)
               },
               resumable: true,
               maxRuntimeInMinutes: 12 * 60,
@@ -107,7 +98,7 @@ export async function setupJobProcessor() {
             "Verify company emails for LBA mailing": {
               cron_string: "0 11 * * SUN",
               handler: async (signal) => {
-                await verifyCompanyEmails(signal);
+                await verifyCompanyEmails(signal)
               },
               maxRuntimeInMinutes: 3 * 60,
             },
@@ -125,17 +116,15 @@ export async function setupJobProcessor() {
     jobs: {
       "user:create": {
         handler: async (job) => {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { admin, support, ...rest } = job.payload as any;
+          const { admin, support, ...rest } = job.payload as any
           return createUser({
             ...rest,
             is_admin: admin ?? false,
             is_support: support ?? false,
-          });
+          })
         },
       },
       "indexes:recreate": {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async (job) => recreateIndexes(job.payload as any),
       },
       "db:validate": {
@@ -143,41 +132,40 @@ export async function setupJobProcessor() {
       },
       "migrations:up": {
         handler: async () => {
-          await upMigration();
+          await upMigration()
           // Validate all documents after the migration
-          await addJob({ name: "db:validate", queued: true });
-          return;
+          await addJob({ name: "db:validate", queued: true })
+          return
         },
       },
       "migrations:status": {
         handler: async () => {
-          const { count, requireShutdown } = await statusMigration();
+          const { count, requireShutdown } = await statusMigration()
           if (count === 0) {
-            console.log("migrations-status=synced");
+            console.log("migrations-status=synced")
           } else {
-            console.log(`migrations-status=${requireShutdown ? "require-shutdown" : "pending"}`);
+            console.log(`migrations-status=${requireShutdown ? "require-shutdown" : "pending"}`)
           }
-          return;
+          return
         },
       },
       "migrations:create": {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async (job) => createMigration(job.payload as any),
       },
       "deca:hydrate": {
         handler: async (_job, signal) => {
-          await hydrateDeca(signal);
+          await hydrateDeca(signal)
         },
       },
       "deca:hydrateSpecific": {
         handler: async (_job, signal) => {
-          await updateDecaSpecificFields(signal);
+          await updateDecaSpecificFields(signal)
         },
         tag: "bouncer",
       },
       "deca:s3:upload": {
         handler: async (_job) => {
-          await streamDataToParquetAndS3();
+          await streamDataToParquetAndS3()
         },
       },
       "import:person:catalogue": {
@@ -185,7 +173,7 @@ export async function setupJobProcessor() {
       },
       "import:person:deca": {
         handler: async (_job, signal) => {
-          return importPersonFromDeca(signal);
+          return importPersonFromDeca(signal)
         },
       },
       "import:person:algo-lba": {
@@ -196,9 +184,9 @@ export async function setupJobProcessor() {
       },
       "email:verify": {
         handler: async (job, signal) => {
-          const { emails } = z.object({ emails: z.array(z.string()) }).parse(job.payload);
-          const result = await verifyEmails(emails, signal);
-          logger.info("Email verification result", { result });
+          const { emails } = z.object({ emails: z.array(z.string()) }).parse(job.payload)
+          const result = await verifyEmails(emails, signal)
+          logger.info("Email verification result", { result })
         },
         resumable: true,
         // Keep long jobs in the main queue
@@ -215,7 +203,7 @@ export async function setupJobProcessor() {
       },
       "job:lba:verify:company-email-list": {
         handler: async (_job, signal) => {
-          await verifyCompanyEmails(signal);
+          await verifyCompanyEmails(signal)
         },
       },
       "job:lba:enrich:company-email-list": {
@@ -243,5 +231,5 @@ export async function setupJobProcessor() {
         handler: async (_job, signal) => hydrateFromAkto(signal),
       },
     },
-  });
+  })
 }

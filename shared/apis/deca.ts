@@ -1,41 +1,41 @@
 export interface Contrat {
-  alternant: Alternant;
-  formation: Formation;
-  etablissementFormation: EtablissementFormation;
-  organismeFormationResponsable: OrganismeFormationResponsable;
-  detailsContrat: DetailsContrat;
-  rupture?: Rupture;
-  employeur: Employeur;
-  suiviASP?: SuiviASP;
+  alternant: Alternant
+  formation: Formation
+  etablissementFormation: EtablissementFormation
+  organismeFormationResponsable: OrganismeFormationResponsable
+  detailsContrat: DetailsContrat
+  rupture?: Rupture
+  employeur: Employeur
+  suiviASP?: SuiviASP
 }
 
 interface Alternant {
-  nom: string;
-  prenom: string;
-  sexe: string;
-  dateNaissance: string;
-  departementNaissance: string;
-  nationalite?: number;
-  handicap?: boolean;
-  courriel?: string;
-  telephone?: string;
-  adresse?: Adresse;
-  derniereClasse?: string;
+  nom: string
+  prenom: string
+  sexe: string
+  dateNaissance: string
+  departementNaissance: string
+  nationalite?: number
+  handicap?: boolean
+  courriel?: string
+  telephone?: string
+  adresse?: Adresse
+  derniereClasse?: string
 }
 
 interface Adresse {
-  numero?: number;
-  voie?: string;
-  codePostal?: string;
+  numero?: number
+  voie?: string
+  codePostal?: string
 }
 
 interface DetailsContrat {
-  noContrat: string;
-  dateDebutContrat: string;
-  statut: Statut;
-  dateFinContrat: string;
-  dateEffetAvenant: string;
-  noAvenant?: string;
+  noContrat: string
+  dateDebutContrat: string
+  statut: Statut
+  dateFinContrat: string
+  dateEffetAvenant: string
+  noAvenant?: string
 }
 
 enum Statut {
@@ -47,44 +47,44 @@ enum Statut {
 }
 
 interface Employeur {
-  codeIdcc: string;
+  codeIdcc: string
 }
 
 interface EtablissementFormation {
-  siret?: string; // Organisme responsable
+  siret?: string // Organisme responsable
 }
 
 interface Formation {
-  dateDebutFormation: string;
-  dateFinFormation: string;
-  codeDiplome: string;
-  rncp?: string;
-  intituleOuQualification: string;
+  dateDebutFormation: string
+  dateFinFormation: string
+  codeDiplome: string
+  rncp?: string
+  intituleOuQualification: string
 }
 
 interface OrganismeFormationResponsable {
-  uaiCfa?: string;
-  siret?: string;
+  uaiCfa?: string
+  siret?: string
 }
 
 interface Rupture {
-  dateEffetRupture: string;
-  codeMotifRupture?: string;
-  commentaireRupture?: string;
-  dateSignalement?: string;
+  dateEffetRupture: string
+  codeMotifRupture?: string
+  commentaireRupture?: string
+  dateSignalement?: string
 }
 
 interface SuiviASP {
-  drfc?: string;
+  drfc?: string
 }
 
 interface Metadonnees {
-  page: number;
-  totalPages: number;
-  totalElements: number;
+  page: number
+  totalPages: number
+  totalElements: number
 }
 
 export type ApiDeca = {
-  metadonnees: Metadonnees;
-  contrats: Contrat[];
-};
+  metadonnees: Metadonnees
+  contrats: Contrat[]
+}

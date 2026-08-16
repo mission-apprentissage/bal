@@ -1,57 +1,49 @@
-"use client";
+"use client"
 
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Box, Container, Typography } from "@mui/material";
-import { captureException } from "@sentry/nextjs";
-import { useEffect } from "react";
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { Box, Container, Typography } from "@mui/material"
+import { captureException } from "@sentry/nextjs"
+import { useQueryErrorResetBoundary } from "@tanstack/react-query"
 
-import Link from "next/link";
-import { useQueryErrorResetBoundary } from "@tanstack/react-query";
-import { NotFound } from "@/icons/NotFound";
-import { ApiError } from "@/utils/api.utils";
+import Link from "next/link"
+import { useEffect } from "react"
+import { NotFound } from "@/icons/NotFound"
+import { ApiError } from "@/utils/api.utils"
 
 function getErrorDescription(error: unknown): string | null {
   if (!error) {
-    return null;
+    return null
   }
 
   if (error instanceof ApiError) {
-    return error.context.statusCode < 500 ? error.context.message : null;
+    return error.context.statusCode < 500 ? error.context.message : null
   }
 
   if (error instanceof Error) {
-    return error.message;
+    return error.message
   }
 
   if (typeof error === "string") {
-    return error;
+    return error
   }
 
-  return null;
+  return null
 }
 
 export default function ErrorComponent({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
-    captureException(error);
-    console.error(error);
-  }, [error]);
+    captureException(error)
+    console.error(error)
+  }, [error])
 
-  const resetUseQuery = useQueryErrorResetBoundary();
+  const resetUseQuery = useQueryErrorResetBoundary()
 
-  const details = getErrorDescription(error);
+  const details = getErrorDescription(error)
 
   return (
     <Container maxWidth="xl">
       <Box>
-        <Box
-          padding={8}
-          display="flex"
-          justifyContent="center"
-          flexDirection="column"
-          margin="auto"
-          maxWidth="600px"
-          textAlign="center"
-        >
+        <Box padding={8} display="flex" justifyContent="center" flexDirection="column" margin="auto" maxWidth="600px" textAlign="center">
           <NotFound />
 
           <Box mt={4}>
@@ -63,8 +55,8 @@ export default function ErrorComponent({ error, reset }: { error: Error & { dige
             <Box mt={2}>
               <Button
                 onClick={() => {
-                  resetUseQuery.reset();
-                  reset();
+                  resetUseQuery.reset()
+                  reset()
                 }}
                 type="button"
               >
@@ -79,5 +71,5 @@ export default function ErrorComponent({ error, reset }: { error: Error & { dige
         </Box>
       </Box>
     </Container>
-  );
+  )
 }

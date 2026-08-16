@@ -1,32 +1,32 @@
-import { randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto"
 
-import { captureException } from "@sentry/node";
-import { ObjectId } from "mongodb";
-import type { BouncerPingResult } from "shared/models/bouncer.email.model";
+import { captureException } from "@sentry/node"
+import { ObjectId } from "mongodb"
+import type { BouncerPingResult } from "shared/models/bouncer.email.model"
 
-import logger from "../../logger";
-import { sleep } from "../../utils/asyncUtils";
-import { getDbCollection } from "../../utils/mongodbUtils";
-import { createSmtpConnection, getSmtpServer, quit, sayEhlo, vrfy, vrfyWorkaround } from "./smtpConnection";
+import logger from "../../logger"
+import { sleep } from "../../utils/asyncUtils"
+import { getDbCollection } from "../../utils/mongodbUtils"
+import { createSmtpConnection, getSmtpServer, quit, sayEhlo, vrfy, vrfyWorkaround } from "./smtpConnection"
 
-const ONE_HOUR = 60 * 60 * 1000;
-const ONE_DAY = 24 * ONE_HOUR;
+const ONE_HOUR = 60 * 60 * 1000
+const ONE_DAY = 24 * ONE_HOUR
 
-type SmtpSupportMap = Map<string, BouncerPingResult | null>;
+type SmtpSupportMap = Map<string, BouncerPingResult | null>
 
 async function tryVerifyEmail(email: string, signal: AbortSignal, retryCount = 0): Promise<BouncerPingResult> {
-  const smtp = await getSmtpServer(email);
+  const smtp = await getSmtpServer(email)
 
   const retry = async (r: BouncerPingResult): Promise<BouncerPingResult> => {
     if (r.status === "error" && r.responseCode?.startsWith("4") && retryCount < 3) {
       // Exponential backoff (10s, 60s, 360s)
-      await sleep(10_000 * 6 ** retryCount, signal);
-      signal?.throwIfAborted();
-      return tryVerifyEmail(email, signal, retryCount + 1);
+      await sleep(10_000 * 6 ** retryCount, signal)
+      signal?.throwIfAborted()
+      return tryVerifyEmail(email, signal, retryCount + 1)
     }
 
-    return r;
-  };
+    return r
+  }
 
   if (!smtp) {
     return {
@@ -34,10 +34,10 @@ async function tryVerifyEmail(email: string, signal: AbortSignal, retryCount = 0
       message: "No SMTP server found for domain",
       responseCode: null,
       responseMessage: null,
-    };
+    }
   }
 
-  signal.throwIfAborted();
+  signal.throwIfAborted()
 
   const smtpConnection = createSmtpConnection(
     {
@@ -48,48 +48,48 @@ async function tryVerifyEmail(email: string, signal: AbortSignal, retryCount = 0
       smtp,
     },
     signal
-  );
+  )
 
   try {
-    const elhoResult = await sayEhlo(smtpConnection);
+    const elhoResult = await sayEhlo(smtpConnection)
     if (!elhoResult.success) {
-      await quit(smtpConnection);
+      await quit(smtpConnection)
 
       return retry({
         status: "error",
         message: "Connection to SMTP server failed",
         responseCode: elhoResult.code,
         responseMessage: elhoResult.message,
-      });
+      })
     }
 
-    const vrfyResult = await vrfy(smtpConnection, elhoResult.extensions);
+    const vrfyResult = await vrfy(smtpConnection, elhoResult.extensions)
 
     if (!vrfyResult.success) {
-      await quit(smtpConnection);
+      await quit(smtpConnection)
 
       return retry({
         status: "error",
         message: "VRFY command failed",
         responseCode: vrfyResult.code,
         responseMessage: vrfyResult.message,
-      });
+      })
     }
 
     // Try to detect softbounce
     if (vrfyResult.status !== "not_supported" && vrfyResult.status !== "valid") {
-      await quit(smtpConnection);
+      await quit(smtpConnection)
 
       return retry({
         status: vrfyResult.status,
         message: "VRFY validation succeeded",
         responseCode: vrfyResult.code,
         responseMessage: vrfyResult.message,
-      });
+      })
     }
 
-    const workaroundResult = await vrfyWorkaround(smtpConnection, elhoResult.extensions);
-    await quit(smtpConnection);
+    const workaroundResult = await vrfyWorkaround(smtpConnection, elhoResult.extensions)
+    await quit(smtpConnection)
 
     if (!workaroundResult.success) {
       return retry({
@@ -97,7 +97,7 @@ async function tryVerifyEmail(email: string, signal: AbortSignal, retryCount = 0
         message: "VRFY workaround command failed",
         responseCode: workaroundResult.code,
         responseMessage: workaroundResult.message,
-      });
+      })
     }
 
     return {
@@ -105,40 +105,36 @@ async function tryVerifyEmail(email: string, signal: AbortSignal, retryCount = 0
       message: "VRFY workaround validation succeeded",
       responseCode: workaroundResult.code,
       responseMessage: workaroundResult.message,
-    };
+    }
   } catch (err) {
-    await smtpConnection.throw(err);
+    await smtpConnection.throw(err)
 
-    signal?.throwIfAborted();
+    signal?.throwIfAborted()
 
     if (err.message !== "Connection closed") {
       // silenced on sentry for this common error
-      captureException(err);
+      captureException(err)
     }
-    logger.error(err, { email });
+    logger.error(err, { email })
 
     return {
       status: "error",
       message: "Unknown error occurred",
       responseCode: null,
       responseMessage: null,
-    };
+    }
   }
 }
 
-async function tryWithRandomEmail(
-  _smtp: string,
-  email: string,
-  signal: AbortSignal
-): Promise<BouncerPingResult | null> {
-  const randomEmail = `${randomUUID()}@${email.split("@")[1]}`;
-  const randomResult = await tryVerifyEmail(randomEmail, signal);
+async function tryWithRandomEmail(_smtp: string, email: string, signal: AbortSignal): Promise<BouncerPingResult | null> {
+  const randomEmail = `${randomUUID()}@${email.split("@")[1]}`
+  const randomResult = await tryVerifyEmail(randomEmail, signal)
 
   if (randomResult.status === "error") {
     return {
       ...randomResult,
       message: "Random email verification failed",
-    };
+    }
   }
 
   if (randomResult.status === "valid" || randomResult.status === "not_supported") {
@@ -146,23 +142,18 @@ async function tryWithRandomEmail(
       ...randomResult,
       status: "not_supported",
       message: "Detection not supported",
-    };
+    }
   }
 
-  return null;
+  return null
 }
 
-async function verifyDomain(
-  smtp: string,
-  email: string,
-  smtpSupportMap: SmtpSupportMap,
-  signal: AbortSignal
-): Promise<BouncerPingResult | null> {
+async function verifyDomain(smtp: string, email: string, smtpSupportMap: SmtpSupportMap, signal: AbortSignal): Promise<BouncerPingResult | null> {
   if (!smtpSupportMap.has(smtp)) {
-    const domain = email.split("@")[1];
-    const randomResult = await tryWithRandomEmail(smtp, email, signal);
+    const domain = email.split("@")[1]
+    const randomResult = await tryWithRandomEmail(smtp, email, signal)
 
-    const now = new Date();
+    const now = new Date()
     await getDbCollection("bouncer.domain").updateOne(
       { domain, smtp },
       {
@@ -177,19 +168,15 @@ async function verifyDomain(
         },
       },
       { upsert: true }
-    );
+    )
 
-    smtpSupportMap.set(smtp, randomResult);
+    smtpSupportMap.set(smtp, randomResult)
   }
 
-  return smtpSupportMap.get(smtp)!;
+  return smtpSupportMap.get(smtp)!
 }
 
-async function persistPingResultCache(
-  email: string,
-  smtp: string | null,
-  ping: BouncerPingResult
-): Promise<{ email: string; ping: BouncerPingResult }> {
+async function persistPingResultCache(email: string, smtp: string | null, ping: BouncerPingResult): Promise<{ email: string; ping: BouncerPingResult }> {
   if (ping.status !== "error") {
     await getDbCollection("bouncer.email").insertOne({
       _id: new ObjectId(),
@@ -199,27 +186,23 @@ async function persistPingResultCache(
       ping,
       created_at: new Date(),
       ttl: ping.status === "invalid" ? null : new Date(Date.now() + 90 * ONE_DAY),
-    });
+    })
   }
 
-  return { email, ping };
+  return { email, ping }
 }
 
-async function verifyEmail(
-  email: string,
-  domainMap: SmtpSupportMap,
-  signal: AbortSignal
-): Promise<{ email: string; ping: BouncerPingResult }> {
+async function verifyEmail(email: string, domainMap: SmtpSupportMap, signal: AbortSignal): Promise<{ email: string; ping: BouncerPingResult }> {
   try {
-    const cached = await getDbCollection("bouncer.email").findOne({ email });
+    const cached = await getDbCollection("bouncer.email").findOne({ email })
 
     if (cached) {
-      return { email, ping: cached.ping };
+      return { email, ping: cached.ping }
     }
 
-    const smtp = await getSmtpServer(email);
+    const smtp = await getSmtpServer(email)
 
-    signal.throwIfAborted();
+    signal.throwIfAborted()
 
     if (!smtp) {
       return persistPingResultCache(email, null, {
@@ -227,21 +210,21 @@ async function verifyEmail(
         message: "No SMTP server found for domain",
         responseCode: null,
         responseMessage: null,
-      });
+      })
     }
 
-    const domainResult = await verifyDomain(smtp, email, domainMap, signal);
+    const domainResult = await verifyDomain(smtp, email, domainMap, signal)
 
     if (domainResult) {
-      return { email, ping: domainResult };
+      return { email, ping: domainResult }
     }
 
-    return persistPingResultCache(email, smtp, await tryVerifyEmail(email, signal));
+    return persistPingResultCache(email, smtp, await tryVerifyEmail(email, signal))
   } catch (err) {
-    signal.throwIfAborted();
+    signal.throwIfAborted()
 
-    captureException(err);
-    logger.error(err, { email });
+    captureException(err)
+    logger.error(err, { email })
 
     return {
       email,
@@ -251,7 +234,7 @@ async function verifyEmail(
         responseCode: null,
         responseMessage: null,
       },
-    };
+    }
   }
 }
 
@@ -260,49 +243,40 @@ async function getDomainMap(): Promise<SmtpSupportMap> {
     .find({
       "ping.status": { $ne: "error" },
     })
-    .toArray();
+    .toArray()
 
-  return new Map(knownDomains.map((d) => [d.smtp, d.ping]));
+  return new Map(knownDomains.map((d) => [d.smtp, d.ping]))
 }
 
-async function verifyEmailsSequentially(
-  emails: string[],
-  domainMap: SmtpSupportMap,
-  signal: AbortSignal
-): Promise<{ email: string; ping: BouncerPingResult }[]> {
-  const result: { email: string; ping: BouncerPingResult }[] = [];
+async function verifyEmailsSequentially(emails: string[], domainMap: SmtpSupportMap, signal: AbortSignal): Promise<{ email: string; ping: BouncerPingResult }[]> {
+  const result: { email: string; ping: BouncerPingResult }[] = []
 
   for (const email of emails) {
     if (signal?.aborted) {
-      throw signal.reason;
+      throw signal.reason
     }
 
-    result.push(await verifyEmail(email, domainMap, signal));
+    result.push(await verifyEmail(email, domainMap, signal))
   }
 
-  return result;
+  return result
 }
 
-export async function verifyEmails(
-  emails: string[],
-  signal: AbortSignal
-): Promise<{ email: string; ping: BouncerPingResult }[]> {
-  const domainMap: Map<string, BouncerPingResult | null> = await getDomainMap();
+export async function verifyEmails(emails: string[], signal: AbortSignal): Promise<{ email: string; ping: BouncerPingResult }[]> {
+  const domainMap: Map<string, BouncerPingResult | null> = await getDomainMap()
 
   const perDomain = emails.reduce((acc, email) => {
-    const domain = email.split("@")[1];
+    const domain = email.split("@")[1]
     if (!acc.has(domain)) {
-      acc.set(domain, []);
+      acc.set(domain, [])
     }
 
-    acc.get(domain)!.push(email);
+    acc.get(domain)!.push(email)
 
-    return acc;
-  }, new Map<string, string[]>());
+    return acc
+  }, new Map<string, string[]>())
 
-  const data = await Promise.all(
-    Array.from(perDomain.entries()).map(async ([_, emails]) => verifyEmailsSequentially(emails, domainMap, signal))
-  );
+  const data = await Promise.all(Array.from(perDomain.entries()).map(async ([_, emails]) => verifyEmailsSequentially(emails, domainMap, signal)))
 
-  return data.flat();
+  return data.flat()
 }

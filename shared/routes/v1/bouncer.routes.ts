@@ -1,13 +1,13 @@
-import { z } from "zod/v4-mini";
-import type { IRoutesDef } from "../common.routes";
-import { ZReqHeadersAuthorization } from "../common.routes";
+import { z } from "zod/v4-mini"
+import type { IRoutesDef } from "../common.routes"
+import { ZReqHeadersAuthorization } from "../common.routes"
 
 const zEmailResult = z.object({
   email: z.email(),
   status: z.enum(["valid", "invalid", "unknown", "queued"]),
-});
+})
 
-export type IEmailResult = z.output<typeof zEmailResult>;
+export type IEmailResult = z.output<typeof zEmailResult>
 
 export const zBouncerV1Routes = {
   post: {
@@ -33,4 +33,4 @@ export const zBouncerV1Routes = {
       },
     },
   },
-} as const satisfies IRoutesDef;
+} as const satisfies IRoutesDef

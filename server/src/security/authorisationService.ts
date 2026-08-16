@@ -1,26 +1,26 @@
-import Boom from "@hapi/boom";
-import type { FastifyRequest } from "fastify";
-import type { IUser } from "shared/models/user.model";
-import type { IRouteSchema, WithSecurityScheme } from "shared/routes/common.routes";
-import type { AccessPermission, Role } from "shared/security/permissions";
-import { AdminRole, NoneRole, SupportRole } from "shared/security/permissions";
+import Boom from "@hapi/boom"
+import type { FastifyRequest } from "fastify"
+import type { IUser } from "shared/models/user.model"
+import type { IRouteSchema, WithSecurityScheme } from "shared/routes/common.routes"
+import type { AccessPermission, Role } from "shared/security/permissions"
+import { AdminRole, NoneRole, SupportRole } from "shared/security/permissions"
 
-import type { IAccessToken } from "./accessTokenService";
-import { getUserFromRequest } from "./authenticationService";
+import type { IAccessToken } from "./accessTokenService"
+import { getUserFromRequest } from "./authenticationService"
 
 // Specify what we need to simplify mocking in tests
-type IRequest = Pick<FastifyRequest, "user" | "params" | "query">;
+type IRequest = Pick<FastifyRequest, "user" | "params" | "query">
 
 function assertUnreachable(_x: never): never {
-  throw new Error("Didn't expect to get here");
+  throw new Error("Didn't expect to get here")
 }
 
 function getUserRole(userOrToken: IAccessToken | IUser): Role {
   if ("identity" in userOrToken) {
-    return NoneRole;
+    return NoneRole
   }
 
-  return userOrToken.is_admin ? AdminRole : userOrToken.is_support ? SupportRole : NoneRole;
+  return userOrToken.is_admin ? AdminRole : userOrToken.is_support ? SupportRole : NoneRole
 }
 
 function isAuthorized<S extends Pick<IRouteSchema, "method" | "path"> & WithSecurityScheme>(
@@ -31,39 +31,36 @@ function isAuthorized<S extends Pick<IRouteSchema, "method" | "path"> & WithSecu
 ): boolean {
   if (typeof access === "object") {
     if ("some" in access) {
-      return access.some.some((a) => isAuthorized(a, userOrToken, role, schema));
+      return access.some.some((a) => isAuthorized(a, userOrToken, role, schema))
     }
 
     if ("every" in access) {
-      return access.every.every((a) => isAuthorized(a, userOrToken, role, schema));
+      return access.every.every((a) => isAuthorized(a, userOrToken, role, schema))
     }
 
-    assertUnreachable(access);
+    assertUnreachable(access)
   }
 
-  return role.permissions.includes(access);
+  return role.permissions.includes(access)
 }
 
-export async function authorizationnMiddleware<S extends Pick<IRouteSchema, "method" | "path"> & WithSecurityScheme>(
-  schema: S,
-  req: IRequest
-) {
+export async function authorizationnMiddleware<S extends Pick<IRouteSchema, "method" | "path"> & WithSecurityScheme>(schema: S, req: IRequest) {
   if (!schema.securityScheme) {
     throw Boom.internal(`authorizationnMiddleware: route doesn't have security scheme`, {
       method: schema.method,
       path: schema.path,
-    });
+    })
   }
 
-  const userWithType = getUserFromRequest(req, schema);
+  const userWithType = getUserFromRequest(req, schema)
 
   if (schema.securityScheme.access === null) {
-    return;
+    return
   }
 
-  const role = getUserRole(userWithType);
+  const role = getUserRole(userWithType)
 
   if (!isAuthorized(schema.securityScheme.access, userWithType, role, schema)) {
-    throw Boom.forbidden();
+    throw Boom.forbidden()
   }
 }

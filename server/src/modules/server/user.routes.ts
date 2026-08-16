@@ -1,8 +1,8 @@
-import { zRoutes } from "shared";
+import { zRoutes } from "shared"
 
-import { getUserFromRequest } from "../../security/authenticationService";
-import { generateApiKey } from "../actions/users.actions";
-import type { Server } from "./server";
+import { getUserFromRequest } from "../../security/authenticationService"
+import { generateApiKey } from "../actions/users.actions"
+import type { Server } from "./server"
 
 export const userRoutes = ({ server }: { server: Server }) => {
   /**
@@ -15,9 +15,9 @@ export const userRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/user/generate-api-key"])],
     },
     async (request, response) => {
-      const user = getUserFromRequest(request, zRoutes.get["/user/generate-api-key"]);
-      const api_key = await generateApiKey(user);
-      return response.status(200).send({ api_key });
+      const user = getUserFromRequest(request, zRoutes.get["/user/generate-api-key"])
+      const api_key = await generateApiKey(user)
+      return response.status(200).send({ api_key })
     }
-  );
-};
+  )
+}

@@ -1,55 +1,51 @@
-import { dereference } from "@readme/openapi-parser";
-import type { OpenapiOperation } from "api-alternance-sdk/internal";
-import { compareOperationObjectsStructure, getOpenapiOperations } from "api-alternance-sdk/internal";
-import type { OpenAPIObject } from "openapi3-ts/oas31";
-import { buildOpenApiSchema } from "./openapi.builder";
+import { dereference } from "@readme/openapi-parser"
+import type { OpenapiOperation } from "api-alternance-sdk/internal"
+import { compareOperationObjectsStructure, getOpenapiOperations } from "api-alternance-sdk/internal"
+import type { OpenAPIObject } from "openapi3-ts/oas31"
+import { buildOpenApiSchema } from "./openapi.builder"
 
 async function dereferenceOpenapiSchema(data: OpenAPIObject): Promise<OpenAPIObject> {
   if (data.openapi !== "3.1.0") {
-    throw new Error("Unsupported OpenAPI version");
+    throw new Error("Unsupported OpenAPI version")
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (await dereference(data as any)) as any;
+  return (await dereference(data as any)) as any
 }
 async function fetchDistOperations(): Promise<Record<string, OpenapiOperation>> {
-  const response = await fetch("https://bal.apprentissage.beta.gouv.fr/api/documentation/json");
-  const data = await response.json();
+  const response = await fetch("https://bal.apprentissage.beta.gouv.fr/api/documentation/json")
+  const data = await response.json()
 
-  const doc = await dereferenceOpenapiSchema(data as OpenAPIObject);
+  const doc = await dereferenceOpenapiSchema(data as OpenAPIObject)
 
   if (doc.openapi !== "3.1.0") {
-    throw new Error("Unsupported OpenAPI version");
+    throw new Error("Unsupported OpenAPI version")
   }
 
-  return getOpenapiOperations(doc.paths);
+  return getOpenapiOperations(doc.paths)
 }
 
 async function buildLocalOpenapiPathItems(): Promise<Record<string, OpenapiOperation>> {
-  const data = buildOpenApiSchema("", "", "");
+  const data = buildOpenApiSchema("", "", "")
 
-  const doc = await dereferenceOpenapiSchema(data);
+  const doc = await dereferenceOpenapiSchema(data)
 
   if (doc.openapi !== "3.1.0") {
-    throw new Error("Unsupported OpenAPI version");
+    throw new Error("Unsupported OpenAPI version")
   }
 
-  return getOpenapiOperations(doc.paths);
+  return getOpenapiOperations(doc.paths)
 }
 
 export async function checkDocumentationSync() {
-  const [distOperations, localOperations] = await Promise.all([fetchDistOperations(), buildLocalOpenapiPathItems()]);
+  const [distOperations, localOperations] = await Promise.all([fetchDistOperations(), buildLocalOpenapiPathItems()])
 
-  const errors = [];
+  const errors = []
 
   for (const id of Object.keys(localOperations)) {
-    const localOperation = localOperations[id];
-    const distOperation = distOperations[id];
+    const localOperation = localOperations[id]
+    const distOperation = distOperations[id]
 
-    const d = compareOperationObjectsStructure(
-      { name: "dist", op: distOperation?.operation },
-      { name: "local", op: localOperation?.operation }
-    );
+    const d = compareOperationObjectsStructure({ name: "dist", op: distOperation?.operation }, { name: "local", op: localOperation?.operation })
 
     if (d !== null) {
       errors.push({
@@ -57,7 +53,7 @@ export async function checkDocumentationSync() {
         distOperation,
         localOperation,
         diff: d,
-      });
+      })
     }
   }
 
@@ -68,9 +64,9 @@ export async function checkDocumentationSync() {
         distOperation: distOperations[id],
         localOperation: null,
         diff: null,
-      });
+      })
     }
   }
 
-  return errors;
+  return errors
 }

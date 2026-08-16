@@ -1,13 +1,13 @@
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
-import { fr } from "@codegouvfr/react-dsfr";
-import { Box, LinearProgress, Typography } from "@mui/material";
-import { assertUnreachable } from "shared/utils/assertUnreachable";
-import { KillJob } from "./KillJob";
-import { MailingListRetry } from "@/app/mailing-list/view/[id]/_hooks/useMailingListRetry";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Alert } from "@codegouvfr/react-dsfr/Alert"
+import { Box, LinearProgress, Typography } from "@mui/material"
+import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
+import { assertUnreachable } from "shared/utils/assertUnreachable"
+import { MailingListRetry } from "@/app/mailing-list/view/[id]/_hooks/useMailingListRetry"
+import { KillJob } from "./KillJob"
 
 export function MailingListGenerating(props: { mailingList: IMailingListV2Json }) {
-  const { mailingList } = props;
+  const { mailingList } = props
 
   switch (mailingList.status) {
     case "initial":
@@ -15,15 +15,9 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
     case "parse:in_progress":
     case "parse:failure":
     case "parse:success":
-      return null;
+      return null
     case "generate:scheduled":
-      return (
-        <Alert
-          title="Génération de la liste de diffusion planifiée"
-          description="La génération de la liste va commencer prochainement."
-          severity="info"
-        />
-      );
+      return <Alert title="Génération de la liste de diffusion planifiée" description="La génération de la liste va commencer prochainement." severity="info" />
     case "generate:in_progress":
       return (
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
@@ -44,7 +38,7 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
           </Box>
           <KillJob mailingList={mailingList} />
         </Box>
-      );
+      )
     case "generate:failure":
       return (
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
@@ -55,7 +49,7 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
           />
           <MailingListRetry mailingListId={mailingList._id} status="generate:scheduled" />
         </Box>
-      );
+      )
     case "generate:success":
     case "export:in_progress":
     case "export:scheduled":
@@ -77,7 +71,7 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
           </Box>
           <KillJob mailingList={mailingList} />
         </Box>
-      );
+      )
     case "export:failure":
       return (
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
@@ -88,18 +82,14 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
           />
           <MailingListRetry mailingListId={mailingList._id} status="export:scheduled" />
         </Box>
-      );
+      )
     case "export:success":
       return (
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
-          <Alert
-            title="La liste est prête !"
-            description="Vous pouvez télécharger la liste de diffusion dans l'onglet 'Téléchargement'."
-            severity="success"
-          />
+          <Alert title="La liste est prête !" description="Vous pouvez télécharger la liste de diffusion dans l'onglet 'Téléchargement'." severity="success" />
         </Box>
-      );
+      )
     default:
-      assertUnreachable(mailingList.status);
+      assertUnreachable(mailingList.status)
   }
 }

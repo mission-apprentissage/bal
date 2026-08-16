@@ -1,26 +1,26 @@
-import { fr } from "@codegouvfr/react-dsfr";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Select } from "@codegouvfr/react-dsfr/Select";
-import { Box, Typography } from "@mui/material";
-import { useCallback } from "react";
-import { useForm } from "react-hook-form";
-import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import { MailingListSourceSample } from "@/app/mailing-list/view/[id]/_components/MailingListSourceSample";
-import { useMailingListConfigMutation } from "@/app/mailing-list/view/[id]/_hooks/useMailingListConfigMutation";
-import { useMailingListSample } from "@/app/mailing-list/view/[id]/_hooks/useMailingListSample";
-import MailingListSectionRow from "@/app/liste-diffusion/nouvelle-liste/components/MailingListSectionRow";
-import MailingListSectionCell from "@/app/liste-diffusion/nouvelle-liste/components/MailingListSectionCell";
-import EmailSample from "@/app/liste-diffusion/nouvelle-liste/components/EmailSample";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Alert } from "@codegouvfr/react-dsfr/Alert"
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { Select } from "@codegouvfr/react-dsfr/Select"
+import { Box, Typography } from "@mui/material"
+import { useCallback } from "react"
+import { useForm } from "react-hook-form"
+import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
+import EmailSample from "@/app/liste-diffusion/nouvelle-liste/components/EmailSample"
+import MailingListSectionCell from "@/app/liste-diffusion/nouvelle-liste/components/MailingListSectionCell"
+import MailingListSectionRow from "@/app/liste-diffusion/nouvelle-liste/components/MailingListSectionRow"
+import { MailingListSourceSample } from "@/app/mailing-list/view/[id]/_components/MailingListSourceSample"
+import { useMailingListConfigMutation } from "@/app/mailing-list/view/[id]/_hooks/useMailingListConfigMutation"
+import { useMailingListSample } from "@/app/mailing-list/view/[id]/_hooks/useMailingListSample"
 
 interface Props {
-  onNext: () => void;
-  mailingList: IMailingListV2Json;
-  readonly: boolean;
+  onNext: () => void
+  mailingList: IMailingListV2Json
+  readonly: boolean
 }
 
 interface IIdentifierColumnForm {
-  email: string;
+  email: string
 }
 
 export function ChoixColonnesIdentifiant({ onNext, mailingList, readonly }: Props) {
@@ -32,11 +32,11 @@ export function ChoixColonnesIdentifiant({ onNext, mailingList, readonly }: Prop
   } = useForm<IIdentifierColumnForm>({
     disabled: readonly,
     defaultValues: { email: mailingList.config.email_column },
-  });
+  })
 
-  const watchEmail = watch("email");
+  const watchEmail = watch("email")
 
-  const { mutateAsync, isError: isMutationError, error: mutationError } = useMailingListConfigMutation();
+  const { mutateAsync, isError: isMutationError, error: mutationError } = useMailingListConfigMutation()
 
   const onSubmit = useCallback(
     async (data: IIdentifierColumnForm) => {
@@ -47,13 +47,13 @@ export function ChoixColonnesIdentifiant({ onNext, mailingList, readonly }: Prop
         body: {
           email_column: data.email,
         },
-      });
-      onNext();
+      })
+      onNext()
     },
     [mailingList._id, onNext, mutateAsync]
-  );
+  )
 
-  const sampleResult = useMailingListSample(mailingList._id);
+  const sampleResult = useMailingListSample(mailingList._id)
 
   return (
     <Box>
@@ -80,7 +80,7 @@ export function ChoixColonnesIdentifiant({ onNext, mailingList, readonly }: Prop
                 ...register("email", {
                   required: "Obligatoire",
                   validate: (value) => {
-                    return value && mailingList.source.columns.includes(value);
+                    return value && mailingList.source.columns.includes(value)
                   },
                 }),
               }}
@@ -103,11 +103,7 @@ export function ChoixColonnesIdentifiant({ onNext, mailingList, readonly }: Prop
         <Box>
           {isMutationError && (
             <Box color="error" my={2}>
-              <Alert
-                title=" Une erreur est survenue lors de la configuration"
-                description={mutationError.message}
-                severity="error"
-              />
+              <Alert title=" Une erreur est survenue lors de la configuration" description={mutationError.message} severity="error" />
             </Box>
           )}
           <Box sx={{ display: "flex", gap: fr.spacing("4w"), justifyContent: "flex-end" }}>
@@ -125,5 +121,5 @@ export function ChoixColonnesIdentifiant({ onNext, mailingList, readonly }: Prop
         </Box>
       </form>
     </Box>
-  );
+  )
 }

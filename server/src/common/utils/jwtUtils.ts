@@ -1,35 +1,35 @@
-import type { SignOptions } from "jsonwebtoken";
-import jwt from "jsonwebtoken";
-import { zRoutes } from "shared";
-import type { ITemplate } from "shared/mailer";
-import { zTemplate } from "shared/mailer";
-import type { IUser } from "shared/models/user.model";
-import { generateAccessToken } from "../../security/accessTokenService";
-import config from "@/config";
+import type { SignOptions } from "jsonwebtoken"
+import jwt from "jsonwebtoken"
+import { zRoutes } from "shared"
+import type { ITemplate } from "shared/mailer"
+import { zTemplate } from "shared/mailer"
+import type { IUser } from "shared/models/user.model"
+import config from "@/config"
+import { generateAccessToken } from "../../security/accessTokenService"
 
 interface ICreateTokenOptions {
-  secret?: string;
-  expiresIn?: SignOptions["expiresIn"];
-  payload?: string | Buffer | object;
+  secret?: string
+  expiresIn?: SignOptions["expiresIn"]
+  payload?: string | Buffer | object
 }
 
-type TokenType = "user" | "resetPasswordToken" | "activation";
+type TokenType = "user" | "resetPasswordToken" | "activation"
 
 const createToken = (type: TokenType, subject: string | null = null, options: ICreateTokenOptions = {}) => {
-  const defaults = config.auth[type];
-  const secret = options.secret ?? defaults.jwtSecret;
-  const expiresIn = options.expiresIn ?? defaults.expiresIn;
-  const payload = options.payload ?? {};
+  const defaults = config.auth[type]
+  const secret = options.secret ?? defaults.jwtSecret
+  const expiresIn = options.expiresIn ?? defaults.expiresIn
+  const payload = options.payload ?? {}
 
   const opts: SignOptions = {
     issuer: config.appName,
     expiresIn: expiresIn,
-  };
-  if (subject) {
-    opts.subject = subject;
   }
-  return jwt.sign(payload, secret, opts);
-};
+  if (subject) {
+    opts.subject = subject
+  }
+  return jwt.sign(payload, secret, opts)
+}
 
 export function createResetPasswordToken(user: IUser) {
   return generateAccessToken(user, [
@@ -37,24 +37,24 @@ export function createResetPasswordToken(user: IUser) {
       route: zRoutes.post["/auth/reset-password"],
       resources: {},
     },
-  ]);
+  ])
 }
 
 export function serializeEmailTemplate(template: ITemplate): string {
   // We do not set expiry as the result is not used as a token but as serialized data
   return jwt.sign(template, config.auth.user.jwtSecret, {
     issuer: config.appName,
-  });
+  })
 }
 
 export function deserializeEmailTemplate(data: string): ITemplate {
-  return zTemplate.parse(jwt.verify(data, config.auth.user.jwtSecret));
+  return zTemplate.parse(jwt.verify(data, config.auth.user.jwtSecret))
 }
 
 export function createUserTokenSimple(options = {}) {
-  return createToken("user", null, options);
+  return createToken("user", null, options)
 }
 
 export const decodeToken = (token: string, type: TokenType = "user") => {
-  return jwt.verify(token, config.auth[type].jwtSecret);
-};
+  return jwt.verify(token, config.auth[type].jwtSecret)
+}

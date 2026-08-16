@@ -1,14 +1,14 @@
-import { Box } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import type { DataGridProps, GridValidRowModel } from "@mui/x-data-grid";
-import { DataGrid } from "@mui/x-data-grid";
-import { frFR } from "@mui/x-data-grid/locales";
+import { Box } from "@mui/material"
+import { styled } from "@mui/material/styles"
+import type { DataGridProps, GridValidRowModel } from "@mui/x-data-grid"
+import { DataGrid } from "@mui/x-data-grid"
+import { frFR } from "@mui/x-data-grid/locales"
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   "& .MuiTablePagination-selectLabel": {
     margin: theme.spacing(0),
   },
-}));
+}))
 
 const Table = <R extends GridValidRowModel>(props: DataGridProps<R>) => {
   return (
@@ -21,7 +21,7 @@ const Table = <R extends GridValidRowModel>(props: DataGridProps<R>) => {
         {...props}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default Table;
+export default Table

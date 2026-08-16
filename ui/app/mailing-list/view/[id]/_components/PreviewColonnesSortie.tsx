@@ -1,16 +1,16 @@
-import { Table } from "@codegouvfr/react-dsfr/Table";
-import { Box, Typography } from "@mui/material";
-import { useMemo } from "react";
-import type { ReactNode } from "react";
-import { MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList";
-import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
+import { Table } from "@codegouvfr/react-dsfr/Table"
+import { Box, Typography } from "@mui/material"
+import type { ReactNode } from "react"
+import { useMemo } from "react"
+import { MAILING_LIST_COMPUTED_COLUMNS } from "shared/constants/mailingList"
+import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
 
 interface Props {
-  columns: IMailingListV2Json["config"]["output_columns"];
+  columns: IMailingListV2Json["config"]["output_columns"]
 }
 
 function generateColumnArray(name: string): string[] {
-  return Array.from({ length: 10 }, (_, index) => `${name}_${index + 1}`);
+  return Array.from({ length: 10 }, (_, index) => `${name}_${index + 1}`)
 }
 
 export default function PreviewColonnesSortie({ columns }: Props): ReactNode {
@@ -19,21 +19,21 @@ export default function PreviewColonnesSortie({ columns }: Props): ReactNode {
       if (column.input.type === "computed") {
         return MAILING_LIST_COMPUTED_COLUMNS[column.input.name]?.columns.flatMap((computedColumn) => {
           if (computedColumn.simple) {
-            return [computedColumn.output];
+            return [computedColumn.output]
           }
-          return generateColumnArray(computedColumn.output);
-        });
+          return generateColumnArray(computedColumn.output)
+        })
       }
 
       if (column.simple) {
-        return [column.output];
+        return [column.output]
       }
 
-      return generateColumnArray(column.output);
-    });
-  }, [columns]);
+      return generateColumnArray(column.output)
+    })
+  }, [columns])
 
-  if (columns.length === 0) return null;
+  if (columns.length === 0) return null
 
   return (
     <Box my={2}>
@@ -42,5 +42,5 @@ export default function PreviewColonnesSortie({ columns }: Props): ReactNode {
       </Typography>
       <Table data={[]} headers={["email", ...finalColumns]} />
     </Box>
-  );
+  )
 }

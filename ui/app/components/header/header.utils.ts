@@ -1,11 +1,11 @@
-import type { MainNavigationProps } from "@codegouvfr/react-dsfr/MainNavigation";
-import type { IUserPublic } from "shared/models/user.model";
+import type { MainNavigationProps } from "@codegouvfr/react-dsfr/MainNavigation"
+import type { IUserPublic } from "shared/models/user.model"
 
-import { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
 
 interface GetNavigationItemsProps {
-  user?: IUserPublic;
-  pathname: string;
+  user?: IUserPublic
+  pathname: string
 }
 
 export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps): MainNavigationProps.Item[] => {
@@ -17,7 +17,7 @@ export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps):
         href: PAGES.homepage().path,
       },
     },
-  ];
+  ]
 
   if (user) {
     navigation = [
@@ -49,7 +49,7 @@ export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps):
           href: PAGES.mailingList().path,
         },
       },
-    ];
+    ]
   }
 
   if (user?.is_support || user?.is_admin) {
@@ -68,7 +68,7 @@ export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps):
           },
         ],
       },
-    ];
+    ]
   }
 
   if (user?.is_admin) {
@@ -76,13 +76,7 @@ export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps):
       ...navigation,
       {
         text: "Administration",
-        isActive: [
-          PAGES.adminUsers().path,
-          PAGES.adminPersons().path,
-          PAGES.adminOrganisations().path,
-          PAGES.adminFichier().path,
-          PAGES.adminProcessor().path,
-        ].includes(pathname),
+        isActive: [PAGES.adminUsers().path, PAGES.adminPersons().path, PAGES.adminOrganisations().path, PAGES.adminFichier().path, PAGES.adminProcessor().path].includes(pathname),
         menuLinks: [
           {
             text: PAGES.adminUsers().title,
@@ -121,15 +115,15 @@ export const getNavigationItems = ({ user, pathname }: GetNavigationItemsProps):
           },
         ],
       },
-    ];
+    ]
   }
 
   return navigation.map((item) => {
-    const { menuLinks } = item;
+    const { menuLinks } = item
 
-    const menuLinkWithActive = menuLinks?.map((link) => ({ ...link, isActive: link.linkProps.href === pathname }));
-    const isActive = pathname === item.linkProps?.href || menuLinkWithActive?.some((link) => link.isActive);
+    const menuLinkWithActive = menuLinks?.map((link) => ({ ...link, isActive: link.linkProps.href === pathname }))
+    const isActive = pathname === item.linkProps?.href || menuLinkWithActive?.some((link) => link.isActive)
 
-    return { ...item, isActive, menuLinks };
-  }) as MainNavigationProps.Item[];
-};
+    return { ...item, isActive, menuLinks }
+  }) as MainNavigationProps.Item[]
+}

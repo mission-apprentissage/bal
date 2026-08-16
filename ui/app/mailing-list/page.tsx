@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Box, Typography } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { formatDate } from "date-fns";
-import { useCallback, useState } from "react";
-import type { GridSortModel } from "@mui/x-data-grid";
-import type { IGetRoutes, IQuery } from "shared";
-import { zPrivateMailingListRoutes } from "shared/routes/_private/mailing-list.routes";
-import { AddedBy } from "./_components/AddedBy";
-import Table from "@/components/table/Table";
-import { apiGet } from "@/utils/api.utils";
-import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { Box, Typography } from "@mui/material"
+import type { GridSortModel } from "@mui/x-data-grid"
+import { useQuery } from "@tanstack/react-query"
+import { formatDate } from "date-fns"
+import { useCallback, useState } from "react"
+import type { IGetRoutes, IQuery } from "shared"
+import { zPrivateMailingListRoutes } from "shared/routes/_private/mailing-list.routes"
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import Table from "@/components/table/Table"
+import { apiGet } from "@/utils/api.utils"
+import { AddedBy } from "./_components/AddedBy"
 
-type QueryKey = ["/_private/mailing-list", IQuery<IGetRoutes["/_private/mailing-list"]>];
+type QueryKey = ["/_private/mailing-list", IQuery<IGetRoutes["/_private/mailing-list"]>]
 
 const MailingListPage = () => {
   const [query, setQuery] = useState<IQuery<IGetRoutes["/_private/mailing-list"]>>({
@@ -21,27 +21,25 @@ const MailingListPage = () => {
     size: 100,
     sort: "created_at",
     sortOrder: "desc",
-  });
+  })
 
   const setPaginationModel = useCallback((model: { page: number; pageSize: number }) => {
     setQuery((prev) => ({
       ...prev,
       page: model.page,
       size: model.pageSize,
-    }));
-  }, []);
+    }))
+  }, [])
 
   const setSortModel = useCallback((model: GridSortModel) => {
-    const isValidSort = zPrivateMailingListRoutes.get["/_private/mailing-list"].querystring.shape.sort.safeParse(
-      model[0]?.field
-    );
+    const isValidSort = zPrivateMailingListRoutes.get["/_private/mailing-list"].querystring.shape.sort.safeParse(model[0]?.field)
 
     setQuery((prev) => ({
       ...prev,
       sort: isValidSort.success ? isValidSort.data : "created_at",
       sortOrder: model[0]?.sort ?? "desc",
-    }));
-  }, []);
+    }))
+  }, [])
 
   const { data, isLoading } = useQuery({
     queryKey: ["/_private/mailing-list", query] as QueryKey,
@@ -55,7 +53,7 @@ const MailingListPage = () => {
       ),
     throwOnError: true,
     retry: 5,
-  });
+  })
 
   return (
     <>
@@ -98,7 +96,7 @@ const MailingListPage = () => {
             headerName: "Date de création",
             width: 200,
             valueFormatter: (value) => {
-              return value && formatDate(value, "dd/MM/yyyy à HH:mm");
+              return value && formatDate(value, "dd/MM/yyyy à HH:mm")
             },
           },
           {
@@ -106,7 +104,7 @@ const MailingListPage = () => {
             headerName: "Date d'expiration",
             width: 200,
             valueFormatter: (value) => {
-              return value && formatDate(value, "dd/MM/yyyy à HH:mm");
+              return value && formatDate(value, "dd/MM/yyyy à HH:mm")
             },
           },
           {
@@ -125,7 +123,7 @@ const MailingListPage = () => {
                   priority="tertiary no outline"
                   title="Voir la liste de diffusion"
                 />,
-              ];
+              ]
             },
           },
         ]}
@@ -133,6 +131,6 @@ const MailingListPage = () => {
         rows={data?.items || []}
       />
     </>
-  );
-};
-export default MailingListPage;
+  )
+}
+export default MailingListPage

@@ -1,14 +1,14 @@
-import { fr } from "@codegouvfr/react-dsfr";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Box, Typography } from "@mui/material";
-import { useMutation } from "@tanstack/react-query";
-import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import { queryClient } from "@/utils/query.utils";
-import { apiPost } from "@/utils/api.utils";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Alert } from "@codegouvfr/react-dsfr/Alert"
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { Box, Typography } from "@mui/material"
+import { useMutation } from "@tanstack/react-query"
+import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
+import { apiPost } from "@/utils/api.utils"
+import { queryClient } from "@/utils/query.utils"
 
 export function KillJob(props: { mailingList: IMailingListV2Json }) {
-  const { mailingList } = props;
+  const { mailingList } = props
 
   const mutation = useMutation({
     mutationKey: ["_private/mailing-list", mailingList._id, "kill-job"],
@@ -16,15 +16,15 @@ export function KillJob(props: { mailingList: IMailingListV2Json }) {
       await apiPost("/_private/mailing-list/:id/kill", {
         params: { id: mailingList._id },
         body: null,
-      });
+      })
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/_private/mailing-list"] });
+      queryClient.invalidateQueries({ queryKey: ["/_private/mailing-list"] })
     },
     onError: (error) => {
-      console.error(error);
+      console.error(error)
     },
-  });
+  })
 
   return (
     <Box
@@ -38,21 +38,15 @@ export function KillJob(props: { mailingList: IMailingListV2Json }) {
       }}
     >
       <Typography>Vous pouvez annuler le traitement</Typography>
-      {mutation.isError && (
-        <Alert
-          severity="error"
-          title="Une erreur est survenue lors de l'annulation du job"
-          description={mutation.error.message}
-        />
-      )}
+      {mutation.isError && <Alert severity="error" title="Une erreur est survenue lors de l'annulation du job" description={mutation.error.message} />}
       <Button
         disabled={mutation.isPending}
         onClick={async () => {
-          await mutation.mutateAsync();
+          await mutation.mutateAsync()
         }}
       >
         Annuler le traitement
       </Button>
     </Box>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import { fr } from "@codegouvfr/react-dsfr";
-import { styled } from "@mui/material";
+import { fr } from "@codegouvfr/react-dsfr"
+import { styled } from "@mui/material"
 
 const FormContainer = styled("div")(({ theme }) => ({
   padding: theme.spacing(4),
@@ -10,6 +10,6 @@ const FormContainer = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     width: "50%",
   },
-}));
+}))
 
-export default FormContainer;
+export default FormContainer

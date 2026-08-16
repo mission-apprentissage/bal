@@ -1,8 +1,8 @@
-import { z } from "zod/v4-mini";
-import { zObjectIdMini } from "zod-mongodb-schema";
-import type { IRoutesDef } from "../common.routes";
-import { ZMailingListV2, zMailingListV2ConfigUpdateQuery } from "../../models/mailingListV2.model";
-import { ZMailingListSource } from "../../models/mailingList.source.model";
+import { z } from "zod/v4-mini"
+import { zObjectIdMini } from "zod-mongodb-schema"
+import { ZMailingListSource } from "../../models/mailingList.source.model"
+import { ZMailingListV2, zMailingListV2ConfigUpdateQuery } from "../../models/mailingListV2.model"
+import type { IRoutesDef } from "../common.routes"
 
 export const zPrivateMailingListRoutes = {
   get: {
@@ -222,12 +222,7 @@ export const zPrivateMailingListRoutes = {
       body: z.object({
         name: z.string(),
         delimiter: z.string(),
-        expiresInDays: z
-          .number()
-          .check(
-            z.minimum(1, "La durée d'expiration doit être au moins de 1 jour"),
-            z.maximum(365, "La durée d'expiration ne peut pas dépasser 365 jours")
-          ),
+        expiresInDays: z.number().check(z.minimum(1, "La durée d'expiration doit être au moins de 1 jour"), z.maximum(365, "La durée d'expiration ne peut pas dépasser 365 jours")),
       }),
       response: {
         "200": z.object({ success: z.boolean() }),
@@ -257,4 +252,4 @@ export const zPrivateMailingListRoutes = {
       },
     },
   },
-} as const satisfies IRoutesDef;
+} as const satisfies IRoutesDef

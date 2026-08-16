@@ -1,15 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Box } from "@mui/material";
-import { fr } from "@codegouvfr/react-dsfr";
-import { apiPost } from "@/utils/api.utils";
-import { queryClient } from "@/utils/query.utils";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { Box } from "@mui/material"
+import { useMutation } from "@tanstack/react-query"
+import { apiPost } from "@/utils/api.utils"
+import { queryClient } from "@/utils/query.utils"
 
-export function MailingListRetry(props: {
-  mailingListId: string;
-  status: "parse:scheduled" | "generate:scheduled" | "export:scheduled";
-}) {
-  const { mailingListId, status } = props;
+export function MailingListRetry(props: { mailingListId: string; status: "parse:scheduled" | "generate:scheduled" | "export:scheduled" }) {
+  const { mailingListId, status } = props
 
   const { mutate: retryProcess, isPending } = useMutation({
     mutationKey: ["/_private/mailing-list", mailingListId, "schedule", status],
@@ -20,9 +17,9 @@ export function MailingListRetry(props: {
         params: { id: mailingListId },
       }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["/_private/mailing-list"] });
+      await queryClient.invalidateQueries({ queryKey: ["/_private/mailing-list"] })
     },
-  });
+  })
 
   return (
     <Box
@@ -35,5 +32,5 @@ export function MailingListRetry(props: {
         Réessayer le traitement de la liste de diffusion
       </Button>
     </Box>
-  );
+  )
 }

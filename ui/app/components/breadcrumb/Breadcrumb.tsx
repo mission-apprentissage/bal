@@ -1,6 +1,6 @@
-import { Breadcrumb as DSFRBreadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb";
-import type { FC } from "react";
-import React from "react";
+import { Breadcrumb as DSFRBreadcrumb } from "@codegouvfr/react-dsfr/Breadcrumb"
+import type { FC } from "react"
+import React from "react"
 
 export const PAGES = {
   homepage: () => ({
@@ -128,20 +128,20 @@ export const PAGES = {
     index: false,
     title: `Tâche CRON ${params.id}`,
   }),
-};
+}
 
 export interface Page {
-  title: string;
-  path: string;
+  title: string
+  path: string
 }
 
 interface Props {
-  pages: Page[];
+  pages: Page[]
 }
 
 const Breadcrumb: FC<Props> = ({ pages }) => {
-  const currentPage = pages.at(-1);
-  const parentPages = pages.slice(0, -1);
+  const currentPage = pages.at(-1)
+  const parentPages = pages.slice(0, -1)
 
   return (
     <DSFRBreadcrumb
@@ -156,7 +156,7 @@ const Breadcrumb: FC<Props> = ({ pages }) => {
         },
       }))}
     />
-  );
-};
+  )
+}
 
-export default Breadcrumb;
+export default Breadcrumb

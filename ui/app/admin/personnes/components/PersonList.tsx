@@ -1,19 +1,19 @@
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
-import SearchBar from "@/components/SearchBar";
-import Table from "@/components/table/Table";
-import { apiGet } from "@/utils/api.utils";
-import { formatUrlWithNewParams, getSearchParamsForQuery } from "@/utils/query.utils";
-import { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
-import Loading from "@/app/loading";
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { useQuery } from "@tanstack/react-query"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useCallback } from "react"
+import { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import Loading from "@/app/loading"
+import SearchBar from "@/components/SearchBar"
+import Table from "@/components/table/Table"
+import { apiGet } from "@/utils/api.utils"
+import { formatUrlWithNewParams, getSearchParamsForQuery } from "@/utils/query.utils"
 
 const PersonList = () => {
-  const searchParams = useSearchParams();
-  const { push } = useRouter();
+  const searchParams = useSearchParams()
+  const { push } = useRouter()
 
-  const { page: page, limit: limit, q: searchValue } = getSearchParamsForQuery(searchParams);
+  const { page: page, limit: limit, q: searchValue } = getSearchParamsForQuery(searchParams)
 
   const { data, isLoading } = useQuery({
     queryKey: ["persons", { searchValue, page, limit }],
@@ -23,7 +23,7 @@ const PersonList = () => {
       }),
     throwOnError: true,
     retry: 5,
-  });
+  })
 
   const setPaginationModel = useCallback(
     (model: { page: number; pageSize: number }) => {
@@ -33,10 +33,10 @@ const PersonList = () => {
           page: model.page,
           limit: model.pageSize,
         })
-      );
+      )
     },
     [searchValue, push, searchParams]
-  );
+  )
 
   const onSearch = useCallback(
     (q: string) => {
@@ -44,12 +44,12 @@ const PersonList = () => {
         q,
         page,
         limit,
-      });
+      })
 
-      push(url);
+      push(url)
     },
     [page, limit, push, searchParams]
-  );
+  )
 
   return (
     <>
@@ -103,7 +103,7 @@ const PersonList = () => {
         />
       )}
     </>
-  );
-};
+  )
+}
 
-export default PersonList;
+export default PersonList

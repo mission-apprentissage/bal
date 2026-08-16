@@ -1,12 +1,12 @@
-import Boom from "@hapi/boom";
-import { zRoutes } from "shared";
-import type { IEmailError } from "shared/models/events/bal_emails.event";
+import Boom from "@hapi/boom"
+import { zRoutes } from "shared"
+import type { IEmailError } from "shared/models/events/bal_emails.event"
 
-import { renderEmail } from "../../common/services/mailer/mailer";
-import { deserializeEmailTemplate } from "../../common/utils/jwtUtils";
-import config from "../../config";
-import { markEmailAsDelivered, markEmailAsFailed, markEmailAsOpened, unsubscribe } from "../actions/emails.actions";
-import type { Server } from "./server";
+import { renderEmail } from "../../common/services/mailer/mailer"
+import { deserializeEmailTemplate } from "../../common/utils/jwtUtils"
+import config from "../../config"
+import { markEmailAsDelivered, markEmailAsFailed, markEmailAsOpened, unsubscribe } from "../actions/emails.actions"
+import type { Server } from "./server"
 
 export const emailsRoutes = ({ server }: { server: Server }) => {
   server.get(
@@ -15,15 +15,15 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
       schema: zRoutes.get["/emails/preview"],
     },
     async (request, response) => {
-      const template = deserializeEmailTemplate(request.query.data);
+      const template = deserializeEmailTemplate(request.query.data)
       // No need to set markAsOpenedActionLink as the email as already be openned
-      const html = await renderEmail(template, null);
+      const html = await renderEmail(template, null)
       return response
         .header("Content-Type", "text/html")
         .status(200)
-        .send(Buffer.from(html as string));
+        .send(Buffer.from(html as string))
     }
-  );
+  )
 
   server.get(
     "/emails/:id/markAsOpened",
@@ -32,14 +32,11 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/emails/:id/markAsOpened"])],
     },
     async (request, response) => {
-      await markEmailAsOpened(request.params.id);
+      await markEmailAsOpened(request.params.id)
 
-      return response
-        .header("Content-Type", "image/gif")
-        .status(200)
-        .send(Buffer.from("R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==", "base64"));
+      return response.header("Content-Type", "image/gif").status(200).send(Buffer.from("R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==", "base64"))
     }
-  );
+  )
 
   server.get(
     "/emails/unsubscribe",
@@ -47,9 +44,9 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
       schema: zRoutes.get["/emails/unsubscribe"],
     },
     async (request, response) => {
-      const template = deserializeEmailTemplate(request.query.data);
+      const template = deserializeEmailTemplate(request.query.data)
 
-      await unsubscribe(template.to);
+      await unsubscribe(template.to)
 
       return response
         .header("Content-Type", "text/html")
@@ -76,9 +73,9 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
             </html>
             `
           )
-        );
+        )
     }
-  );
+  )
 
   server.post(
     "/emails/webhook",
@@ -86,21 +83,21 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
       schema: zRoutes.post["/emails/webhook"],
     },
     async (request, response) => {
-      const { webhookKey } = request.query;
+      const { webhookKey } = request.query
 
       if (config.smtp.webhookKey !== webhookKey) {
-        throw Boom.forbidden("Non autorisé");
+        throw Boom.forbidden("Non autorisé")
       }
 
-      const { event, "message-id": messageId } = request.body;
+      const { event, "message-id": messageId } = request.body
 
       if (event === "delivered") {
-        await markEmailAsDelivered(messageId);
+        await markEmailAsDelivered(messageId)
       } else {
-        await markEmailAsFailed(messageId, event as IEmailError["type"]);
+        await markEmailAsFailed(messageId, event as IEmailError["type"])
       }
 
-      return response.status(200).send();
+      return response.status(200).send()
     }
-  );
-};
+  )
+}

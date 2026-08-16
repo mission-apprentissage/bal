@@ -1,21 +1,21 @@
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import { useMutation } from "@tanstack/react-query";
-import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
-import { captureException } from "@sentry/nextjs";
-import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
-import { canResetMailingList } from "shared/mailing-list/mailing-list.utils";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { apiPost } from "@/utils/api.utils";
-import { queryClient } from "@/utils/query.utils";
+import { Alert } from "@codegouvfr/react-dsfr/Alert"
+import { CallOut } from "@codegouvfr/react-dsfr/CallOut"
+import { createModal } from "@codegouvfr/react-dsfr/Modal"
+import { captureException } from "@sentry/nextjs"
+import { useMutation } from "@tanstack/react-query"
+import { canResetMailingList } from "shared/mailing-list/mailing-list.utils"
+import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
+import { apiPost } from "@/utils/api.utils"
+import { queryClient } from "@/utils/query.utils"
 
 type MailingListResetSourceProps = {
-  mailingList: IMailingListV2Json;
-};
+  mailingList: IMailingListV2Json
+}
 
 const modal = createModal({
   id: "reset-config-parse",
   isOpenedByDefault: false,
-});
+})
 
 export function MailingListResetSource({ mailingList }: MailingListResetSourceProps) {
   const { error, isPending, isError, mutateAsync } = useMutation({
@@ -23,24 +23,24 @@ export function MailingListResetSource({ mailingList }: MailingListResetSourcePr
       await apiPost("/_private/mailing-list/:id/reset", {
         params: { id: mailingList._id },
         body: { status: "initial" },
-      });
+      })
     },
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["/_private/mailing-list"], exact: true }),
         queryClient.invalidateQueries({ queryKey: ["/_private/mailing-list", mailingList._id], exact: true }),
-      ]);
+      ])
     },
     onError: (error) => {
-      captureException(error);
+      captureException(error)
     },
-  });
+  })
 
   if (mailingList.status === "initial") {
-    return null;
+    return null
   }
 
-  const canReset = canResetMailingList(mailingList);
+  const canReset = canResetMailingList(mailingList)
 
   return (
     <>
@@ -55,26 +55,16 @@ export function MailingListResetSource({ mailingList }: MailingListResetSourcePr
             doClosesModal: false,
             children: "Réinitialiser",
             onClick: async () => {
-              await mutateAsync();
-              modal.close();
+              await mutateAsync()
+              modal.close()
             },
           },
         ]}
         size="large"
       >
-        <Alert
-          title="Êtes-vous sûr de vouloir réinitialiser la liste de diffusion ? "
-          description="Cette action est irréversible."
-          severity="warning"
-        />
+        <Alert title="Êtes-vous sûr de vouloir réinitialiser la liste de diffusion ? " description="Cette action est irréversible." severity="warning" />
 
-        {isError && (
-          <Alert
-            title="Une erreur est survenue lors de la réinitialisation"
-            description={error.message}
-            severity="error"
-          />
-        )}
+        {isError && <Alert title="Une erreur est survenue lors de la réinitialisation" description={error.message} severity="error" />}
       </modal.Component>
       <CallOut
         title="Les paramètres d'extractions ne peuvent pas être modifiés"
@@ -91,5 +81,5 @@ export function MailingListResetSource({ mailingList }: MailingListResetSourcePr
           : "La liste est en cours de traitement, vous ne pouvez pas la réinitialiser pour le moment."}
       </CallOut>
     </>
-  );
+  )
 }

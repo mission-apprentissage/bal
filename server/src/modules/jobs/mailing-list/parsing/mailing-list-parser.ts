@@ -1,36 +1,32 @@
-import { pipeline } from "node:stream/promises";
-import { Transform } from "node:stream";
-import type { IMailingListV2 } from "shared/models/mailingListV2.model";
-import type { IJobsSimple } from "job-processor";
-import { internal } from "@hapi/boom";
-import { ObjectId } from "mongodb";
-import type { AnyBulkWriteOperation } from "mongodb";
-import { parse } from "csv-parse";
-import type { Info } from "csv-parse";
-import { ZMailingListSource } from "shared/models/mailingList.source.model";
-import type { IMailingListSource } from "shared/models/mailingList.source.model";
-import { z } from "zod/v4-mini";
-import iconv from "iconv-lite";
-import { getDbCollection } from "../../../../common/utils/mongodbUtils";
-import { getFromStorage } from "../../../../common/utils/ovhUtils";
-import { decipher } from "../../../../common/utils/cryptoUtils";
-import { withCause } from "../../../../common/services/errors/withCause";
-import { createBatchTransformStream } from "../../../../common/utils/streamUtils";
-import { getMailingListStoragePath } from "../storage/mailing-list-storage";
+import { Transform } from "node:stream"
+import { pipeline } from "node:stream/promises"
+import { internal } from "@hapi/boom"
+import type { Info } from "csv-parse"
+import { parse } from "csv-parse"
+import iconv from "iconv-lite"
+import type { IJobsSimple } from "job-processor"
+import type { AnyBulkWriteOperation } from "mongodb"
+import { ObjectId } from "mongodb"
+import type { IMailingListSource } from "shared/models/mailingList.source.model"
+import { ZMailingListSource } from "shared/models/mailingList.source.model"
+import type { IMailingListV2 } from "shared/models/mailingListV2.model"
+import { z } from "zod/v4-mini"
+import { withCause } from "../../../../common/services/errors/withCause"
+import { decipher } from "../../../../common/utils/cryptoUtils"
+import { getDbCollection } from "../../../../common/utils/mongodbUtils"
+import { getFromStorage } from "../../../../common/utils/ovhUtils"
+import { createBatchTransformStream } from "../../../../common/utils/streamUtils"
+import { getMailingListStoragePath } from "../storage/mailing-list-storage"
 
-export async function parseMailingList(
-  mailingList: IMailingListV2,
-  job: IJobsSimple,
-  signal: AbortSignal
-): Promise<void> {
+export async function parseMailingList(mailingList: IMailingListV2, job: IJobsSimple, signal: AbortSignal): Promise<void> {
   const lastImported = await getDbCollection("mailingList.source").findOne(
     {
       mailing_list_id: mailingList._id,
     },
     { sort: { line_number: -1 } }
-  );
+  )
 
-  const skipCount = lastImported?.line_number ?? 0;
+  const skipCount = lastImported?.line_number ?? 0
 
   await getDbCollection("mailingListsV2").updateOne(
     { _id: mailingList._id },
@@ -44,7 +40,7 @@ export async function parseMailingList(
         "source.lines": lastImported?.line_number ?? 0,
       },
     }
-  );
+  )
 
   const parser = parse({
     trim: true,
@@ -53,37 +49,35 @@ export async function parseMailingList(
     bom: true,
     relax_column_count: true,
     info: true,
-  });
+  })
 
-  let importedSize = 0;
-  let lineCount = 0;
+  let importedSize = 0
+  let lineCount = 0
 
-  const { source: storagePath, account } = getMailingListStoragePath(mailingList._id);
-  const startedAt = Date.now();
+  const { source: storagePath, account } = getMailingListStoragePath(mailingList._id)
+  const startedAt = Date.now()
 
   await pipeline(
     await getFromStorage(storagePath, account, signal),
     decipher(mailingList.encode_key),
     new Transform({
       transform(chunk, _encoding, callback) {
-        importedSize += chunk.length;
+        importedSize += chunk.length
         // Push the chunk to the next stream in the pipeline
-        this.push(chunk);
-        callback();
+        this.push(chunk)
+        callback()
       },
     }),
-    ...(mailingList.source.file.encoding === "utf8"
-      ? []
-      : [iconv.decodeStream(mailingList.source.file.encoding), iconv.encodeStream("utf8")]),
+    ...(mailingList.source.file.encoding === "utf8" ? [] : [iconv.decodeStream(mailingList.source.file.encoding), iconv.encodeStream("utf8")]),
     parser,
     new Transform({
       objectMode: true,
       async transform(chunk: { info: Info; record: unknown }, _encoding, callback) {
         try {
-          lineCount++;
+          lineCount++
 
           if (lineCount <= skipCount) {
-            return callback();
+            return callback()
           }
 
           const item = ZMailingListSource.parse({
@@ -92,7 +86,7 @@ export async function parseMailingList(
             line_number: lineCount,
             data: chunk.record as Record<string, unknown>,
             ttl: mailingList.ttl,
-          });
+          })
 
           const op: AnyBulkWriteOperation<IMailingListSource> = {
             updateOne: {
@@ -103,13 +97,11 @@ export async function parseMailingList(
               update: { $set: item },
               upsert: true,
             },
-          };
+          }
 
-          callback(null, op);
+          callback(null, op)
         } catch (error) {
-          callback(
-            withCause(internal("Erreur lors de la ligne pour insérer dans la base de données", { chunk }), error)
-          );
+          callback(withCause(internal("Erreur lors de la ligne pour insérer dans la base de données", { chunk }), error))
         }
       },
     }),
@@ -120,12 +112,12 @@ export async function parseMailingList(
         try {
           await getDbCollection("mailingList.source").bulkWrite(batch, {
             ordered: false,
-          });
+          })
 
-          const now = Date.now();
-          const elapsed = now - startedAt;
-          const remainingSize = mailingList.source.file.size - importedSize;
-          const eta = new Date(now + (elapsed / importedSize) * remainingSize);
+          const now = Date.now()
+          const elapsed = now - startedAt
+          const remainingSize = mailingList.source.file.size - importedSize
+          const eta = new Date(now + (elapsed / importedSize) * remainingSize)
 
           await getDbCollection("mailingListsV2").updateOne(
             { _id: mailingList._id },
@@ -137,20 +129,20 @@ export async function parseMailingList(
                 updated_at: new Date(),
               },
             }
-          );
+          )
 
-          return callback();
+          return callback()
         } catch (error) {
-          callback(withCause(internal("mailing-list-parser: error while bulkWrite"), error));
+          callback(withCause(internal("mailing-list-parser: error while bulkWrite"), error))
         }
       },
     }),
     { signal }
-  );
+  )
 
-  const columns = z.array(z.object({ name: z.string() })).safeParse(parser.options.columns);
+  const columns = z.array(z.object({ name: z.string() })).safeParse(parser.options.columns)
   if (!columns.success) {
-    throw internal("Aucune colonne trouvée dans le fichier CSV", { columns });
+    throw internal("Aucune colonne trouvée dans le fichier CSV", { columns })
   }
 
   await getDbCollection("mailingListsV2").updateOne(
@@ -168,5 +160,5 @@ export async function parseMailingList(
         "source.columns": Array.from(new Set(columns.data.map((col) => col.name)).values()),
       },
     }
-  );
+  )
 }

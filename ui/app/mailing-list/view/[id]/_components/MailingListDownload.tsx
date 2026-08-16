@@ -1,24 +1,20 @@
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
-import { fr } from "@codegouvfr/react-dsfr";
-import { Box, Typography } from "@mui/material";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { generateUrl } from "@/utils/api.utils";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Alert } from "@codegouvfr/react-dsfr/Alert"
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { Box, Typography } from "@mui/material"
+import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
+import { generateUrl } from "@/utils/api.utils"
 
 export function MailingListDownload(props: { mailingList: IMailingListV2Json }) {
-  const { mailingList } = props;
+  const { mailingList } = props
 
   if (mailingList.status !== "export:success") {
-    return null;
+    return null
   }
 
   return (
     <Box sx={{ display: "grid", gap: fr.spacing("4w"), alignItems: "center" }}>
-      <Alert
-        title="La liste est prête !"
-        description="Vous pouvez télécharger la liste de diffusion !"
-        severity="success"
-      />
+      <Alert title="La liste est prête !" description="Vous pouvez télécharger la liste de diffusion !" severity="success" />
       <Box sx={{ textAlign: "center" }}>
         <Button
           iconId="fr-icon-download-line"
@@ -57,5 +53,5 @@ export function MailingListDownload(props: { mailingList: IMailingListV2Json }) 
         <Typography>{mailingList.output.invalid_email_count}</Typography>
       </Box>
     </Box>
-  );
+  )
 }

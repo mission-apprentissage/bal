@@ -1,7 +1,7 @@
-import { z } from "zod/v4-mini";
-import { extensions } from "../../helpers/zodHelpers/zodPrimitives";
-import type { IRoutesDef } from "../common.routes";
-import { ZReqHeadersAuthorization } from "../common.routes";
+import { z } from "zod/v4-mini"
+import { extensions } from "../../helpers/zodHelpers/zodPrimitives"
+import type { IRoutesDef } from "../common.routes"
+import { ZReqHeadersAuthorization } from "../common.routes"
 
 const validationSchema = {
   body: z.object({
@@ -29,7 +29,7 @@ const validationSchema = {
       ),
     }),
   },
-} as const;
+} as const
 
 export const zDecaV1Routes = {
   post: {
@@ -47,4 +47,4 @@ export const zDecaV1Routes = {
       ...validationSchema,
     },
   },
-} as const satisfies IRoutesDef;
+} as const satisfies IRoutesDef

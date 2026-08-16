@@ -1,14 +1,14 @@
-import { fr } from "@codegouvfr/react-dsfr";
-import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
-import { Box } from "@mui/material";
-import { useState } from "react";
-import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import { ChoixColonnesIdentifiant } from "./configuration/ChoixColonnesIdentifiant";
-import { ChoixColonnesSortie } from "./configuration/ChoixColonnesSortie";
-import { ChoixColonnesFormation } from "./configuration/ChoixColonnesFormation";
-import { MailingListBuildForm } from "./configuration/MailingListBuildForm";
-import { MailingListResetConfig } from "./configuration/MailingListResetConfig";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Accordion } from "@codegouvfr/react-dsfr/Accordion"
+import { Alert } from "@codegouvfr/react-dsfr/Alert"
+import { Box } from "@mui/material"
+import { useState } from "react"
+import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
+import { ChoixColonnesFormation } from "./configuration/ChoixColonnesFormation"
+import { ChoixColonnesIdentifiant } from "./configuration/ChoixColonnesIdentifiant"
+import { ChoixColonnesSortie } from "./configuration/ChoixColonnesSortie"
+import { MailingListBuildForm } from "./configuration/MailingListBuildForm"
+import { MailingListResetConfig } from "./configuration/MailingListResetConfig"
 
 const STEPS = {
   CHOIX_IDENTIFIANT: {
@@ -31,12 +31,12 @@ const STEPS = {
     label: "4. Genération de la liste de diffusion",
     id: "choix-generate",
   },
-} as const;
+} as const
 
 export function MailingListConfigure(props: { mailingList: IMailingListV2Json }) {
-  const [step, setStep] = useState<number>(STEPS.CHOIX_IDENTIFIANT.number);
+  const [step, setStep] = useState<number>(STEPS.CHOIX_IDENTIFIANT.number)
 
-  const readonly = props.mailingList.status !== "parse:success";
+  const readonly = props.mailingList.status !== "parse:success"
 
   return (
     <>
@@ -46,21 +46,17 @@ export function MailingListConfigure(props: { mailingList: IMailingListV2Json })
           id={STEPS.CHOIX_IDENTIFIANT.id}
           expanded={step === STEPS.CHOIX_IDENTIFIANT.number}
           onExpandedChange={(expanded) => {
-            if (expanded) setStep(STEPS.CHOIX_IDENTIFIANT.number);
+            if (expanded) setStep(STEPS.CHOIX_IDENTIFIANT.number)
           }}
           label={STEPS.CHOIX_IDENTIFIANT.label}
         >
-          <ChoixColonnesIdentifiant
-            readonly={readonly}
-            mailingList={props.mailingList}
-            onNext={() => setStep(STEPS.CHOIX_OUTPUT.number)}
-          />
+          <ChoixColonnesIdentifiant readonly={readonly} mailingList={props.mailingList} onNext={() => setStep(STEPS.CHOIX_OUTPUT.number)} />
         </Accordion>
         <Accordion
           id={STEPS.CHOIX_OUTPUT.id}
           expanded={step === STEPS.CHOIX_OUTPUT.number}
           onExpandedChange={(expanded) => {
-            if (expanded) setStep(STEPS.CHOIX_OUTPUT.number);
+            if (expanded) setStep(STEPS.CHOIX_OUTPUT.number)
           }}
           label={STEPS.CHOIX_OUTPUT.label}
         >
@@ -73,11 +69,7 @@ export function MailingListConfigure(props: { mailingList: IMailingListV2Json })
             />
           ) : (
             <Box my={3}>
-              <Alert
-                title="Compléter les étapes précédentes"
-                description="Il est nécessaire de compléter les étapes précédentes pour continuer."
-                severity="info"
-              />
+              <Alert title="Compléter les étapes précédentes" description="Il est nécessaire de compléter les étapes précédentes pour continuer." severity="info" />
             </Box>
           )}
         </Accordion>
@@ -85,7 +77,7 @@ export function MailingListConfigure(props: { mailingList: IMailingListV2Json })
           id={STEPS.CHOIX_LBA_OUTPUT.id}
           expanded={step === STEPS.CHOIX_LBA_OUTPUT.number}
           onExpandedChange={(expanded) => {
-            if (expanded) setStep(STEPS.CHOIX_LBA_OUTPUT.number);
+            if (expanded) setStep(STEPS.CHOIX_LBA_OUTPUT.number)
           }}
           label={STEPS.CHOIX_LBA_OUTPUT.label}
         >
@@ -100,17 +92,13 @@ export function MailingListConfigure(props: { mailingList: IMailingListV2Json })
           id={STEPS.CHOIX_GENERATE.id}
           expanded={step === STEPS.CHOIX_GENERATE.number}
           onExpandedChange={(expanded) => {
-            if (expanded) setStep(STEPS.CHOIX_GENERATE.number);
+            if (expanded) setStep(STEPS.CHOIX_GENERATE.number)
           }}
           label={STEPS.CHOIX_GENERATE.label}
         >
-          <MailingListBuildForm
-            readonly={readonly}
-            mailingList={props.mailingList}
-            onPrev={() => setStep(STEPS.CHOIX_OUTPUT.number)}
-          />
+          <MailingListBuildForm readonly={readonly} mailingList={props.mailingList} onPrev={() => setStep(STEPS.CHOIX_OUTPUT.number)} />
         </Accordion>
       </Box>
     </>
-  );
+  )
 }

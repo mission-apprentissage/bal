@@ -1,25 +1,25 @@
-import { z } from "zod/v4-mini";
+import { z } from "zod/v4-mini"
 
-import type { IModelDescriptor } from "./common";
-import { zObjectId } from "./common";
+import type { IModelDescriptor } from "./common"
+import { zObjectId } from "./common"
 
-const collectionName = "bouncer.email" as const;
+const collectionName = "bouncer.email" as const
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ email: 1 }, { unique: true }],
   [{ ttl: 1 }, { expireAfterSeconds: 0 }],
-];
+]
 
-const zEmailStatus = z.enum(["valid", "invalid", "not_supported", "error"]);
+const zEmailStatus = z.enum(["valid", "invalid", "not_supported", "error"])
 
 export const zBouncerPingResult = z.object({
   status: zEmailStatus,
   message: z.string(),
   responseCode: z.nullable(z.string()),
   responseMessage: z.nullable(z.string()),
-});
+})
 
-export type BouncerPingResult = z.output<typeof zBouncerPingResult>;
+export type BouncerPingResult = z.output<typeof zBouncerPingResult>
 
 const zBouncerEmail = z.object({
   _id: zObjectId,
@@ -29,12 +29,12 @@ const zBouncerEmail = z.object({
   ping: zBouncerPingResult,
   created_at: z.date(),
   ttl: z.nullable(z.date()),
-});
+})
 
-export type BouncerEmail = z.output<typeof zBouncerEmail>;
+export type BouncerEmail = z.output<typeof zBouncerEmail>
 
 export const bouncerEmailModelDescriptor = {
   zod: zBouncerEmail,
   indexes,
   collectionName,
-};
+}

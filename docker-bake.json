@@ -6,16 +6,28 @@
   },
   "group": {
     "production": {
-      "targets": ["server", "ui-production"]
+      "targets": [
+        "server",
+        "ui-production"
+      ]
     },
     "recette": {
-      "targets": ["server", "ui-recette"]
+      "targets": [
+        "server",
+        "ui-recette"
+      ]
     },
     "preview": {
-      "targets": ["server", "ui-preview"]
+      "targets": [
+        "server",
+        "ui-preview"
+      ]
     },
     "local": {
-      "targets": ["server", "ui-local"]
+      "targets": [
+        "server",
+        "ui-local"
+      ]
     }
   },
   "target": {
@@ -24,16 +36,24 @@
         "PUBLIC_VERSION": "${VERSION}"
       },
       "dockerfile": "Dockerfile",
-      "platforms": ["linux/amd64"],
+      "platforms": [
+        "linux/amd64"
+      ],
       "labels": {
         "org.opencontainers.image.source": "https://github.com/mission-apprentissage/bal",
         "org.opencontainers.image.licenses": "MIT"
       },
-      "cache-from": ["type=gha,scope=${DEPS_ID}"],
-      "cache-to": ["type=gha,mode=max,scope=${DEPS_ID}"]
+      "cache-from": [
+        "type=gha,scope=${DEPS_ID}"
+      ],
+      "cache-to": [
+        "type=gha,mode=max,scope=${DEPS_ID}"
+      ]
     },
     "server": {
-      "inherits": ["common"],
+      "inherits": [
+        "common"
+      ],
       "tags": [
         "ghcr.io/mission-apprentissage/mna_bal_server:${VERSION}",
         "ghcr.io/mission-apprentissage/mna_bal_server:${CHANNEL}"
@@ -44,9 +64,16 @@
       "target": "server"
     },
     "ui": {
-      "inherits": ["common"],
+      "inherits": [
+        "common"
+      ],
       "matrix": {
-        "ENV": ["production", "recette", "preview", "local"]
+        "ENV": [
+          "production",
+          "recette",
+          "preview",
+          "local"
+        ]
       },
       "name": "ui-${ENV}",
       "args": {

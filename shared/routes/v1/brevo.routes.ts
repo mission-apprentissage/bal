@@ -1,5 +1,5 @@
-import { z } from "zod/v4-mini";
-import type { IRoutesDef } from "../common.routes";
+import { z } from "zod/v4-mini"
+import type { IRoutesDef } from "../common.routes"
 
 export const zBrevoWebhooks = {
   post: {
@@ -48,4 +48,4 @@ export const zBrevoWebhooks = {
       },
     },
   },
-} as const satisfies IRoutesDef;
+} as const satisfies IRoutesDef

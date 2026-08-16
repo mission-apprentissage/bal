@@ -1,6 +1,6 @@
-import { z } from "zod/v4-mini";
-import { SIRET_REGEX, UAI_REGEX } from "../../constants/regex";
-import { validateSIRET } from "../../validators/siretValidator";
+import { z } from "zod/v4-mini"
+import { SIRET_REGEX, UAI_REGEX } from "../../constants/regex"
+import { validateSIRET } from "../../validators/siretValidator"
 
 export const extensions = {
   siret: z.pipe(
@@ -17,4 +17,4 @@ export const extensions = {
   phone: z.string(),
   codeCommuneInsee: z.string().check(z.regex(/^([0-9]{2}|2A|2B)[0-9]{3}$/, "Format invalide")),
   email: z.pipe(z.string().check(z.trim(), z.toLowerCase()), z.email()),
-};
+}

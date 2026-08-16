@@ -1,27 +1,51 @@
 {
   "workspaces": {
     "server": {
-      "entry": ["src/index.ts!", "src/migrations/*.ts!"],
-      "project": ["src/**/*.ts!", "tests/**/*.ts", "!src/**/*.test.ts!"],
+      "entry": [
+        "src/index.ts!",
+        "src/migrations/*.ts!"
+      ],
+      "project": [
+        "src/**/*.ts!",
+        "tests/**/*.ts",
+        "!src/**/*.test.ts!"
+      ],
       "tsup": false
     },
     "shared": {
-      "entry": ["**/*.ts", "!**/*.test.ts!", "!dist/**"],
-      "project": ["**/*.ts", "!**/*.test.ts!", "!dist/**"],
+      "entry": [
+        "**/*.ts",
+        "!**/*.test.ts!",
+        "!dist/**"
+      ],
+      "project": [
+        "**/*.ts",
+        "!**/*.test.ts!",
+        "!dist/**"
+      ],
       "includeEntryExports": true
     },
     "ui": {
-      "project": ["./**/*.{ts,tsx}", "!.next"],
+      "project": [
+        "./**/*.{ts,tsx}",
+        "!.next"
+      ],
       "paths": {
-        "@/*": ["./*"]
+        "@/*": [
+          "./*"
+        ]
       },
       "next": true,
-      "ignoreDependencies": ["@sentry/cli"]
+      "ignoreDependencies": [
+        "@sentry/cli"
+      ]
     },
     ".": {
       "husky": true,
       "commitlint": true,
-      "project": ["!.husky/commitlint.config.js"]
+      "project": [
+        "!.husky/commitlint.config.js"
+      ]
     }
   }
 }

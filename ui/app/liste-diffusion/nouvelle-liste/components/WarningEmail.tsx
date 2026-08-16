@@ -1,23 +1,23 @@
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import { Box } from "@mui/material";
-import type { FC } from "react";
-import { getDataFromSample } from "@/app/liste-diffusion/nouvelle-liste/mailingLists.utils";
+import { Alert } from "@codegouvfr/react-dsfr/Alert"
+import { Box } from "@mui/material"
+import type { FC } from "react"
+import { getDataFromSample } from "@/app/liste-diffusion/nouvelle-liste/mailingLists.utils"
 
 interface Props {
-  email: string;
-  sample: Array<Record<string, unknown> | undefined>;
-  isLoading?: boolean;
+  email: string
+  sample: Array<Record<string, unknown> | undefined>
+  isLoading?: boolean
 }
 
 const WarningEmail: FC<Props> = ({ email, sample, isLoading }) => {
-  if (isLoading) return null;
+  if (isLoading) return null
 
-  const data = getDataFromSample(sample, email);
+  const data = getDataFromSample(sample, email)
 
   // check if data has at least an email
-  const hasEmail = data.some((d) => d.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/));
+  const hasEmail = data.some((d) => d.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/))
 
-  if (hasEmail) return null;
+  if (hasEmail) return null
 
   return (
     <Box mb={4}>
@@ -28,7 +28,7 @@ const WarningEmail: FC<Props> = ({ email, sample, isLoading }) => {
         small
       />
     </Box>
-  );
-};
+  )
+}
 
-export default WarningEmail;
+export default WarningEmail

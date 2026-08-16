@@ -1,4 +1,4 @@
-import { z } from "zod/v4-mini";
+import { z } from "zod/v4-mini"
 
 export const ZDecaEmployeur = z.object({
   siret: z.optional(z.string()),
@@ -13,4 +13,4 @@ export const ZDecaEmployeur = z.object({
   nombre_de_salaries: z.nullish(z.number()),
   courriel: z.optional(z.string()),
   telephone: z.optional(z.string()),
-});
+})

@@ -1,37 +1,31 @@
-import { modelDescriptors } from "shared/models/models";
+import { modelDescriptors } from "shared/models/models"
 
-import {
-  clearAllCollections,
-  closeMongodbConnection,
-  configureDbSchemaValidation,
-  connectToMongodb,
-  createIndexes,
-} from "@/common/utils/mongodbUtils";
-import config from "@/config";
+import { clearAllCollections, closeMongodbConnection, configureDbSchemaValidation, connectToMongodb, createIndexes } from "@/common/utils/mongodbUtils"
+import config from "@/config"
 
 const startAndConnectMongodb = async () => {
-  const workerId = `${process.env.VITEST_POOL_ID}-${process.env.VITEST_WORKER_ID}`;
+  const workerId = `${process.env.VITEST_POOL_ID}-${process.env.VITEST_WORKER_ID}`
 
-  await connectToMongodb(config.mongodb.uri.replace("VITEST_POOL_ID", workerId));
-  await Promise.all([createIndexes(), configureDbSchemaValidation(modelDescriptors)]);
-};
+  await connectToMongodb(config.mongodb.uri.replace("VITEST_POOL_ID", workerId))
+  await Promise.all([createIndexes(), configureDbSchemaValidation(modelDescriptors)])
+}
 
 const stopMongodb = async () => {
-  await closeMongodbConnection();
-};
+  await closeMongodbConnection()
+}
 
 export const useMongo = () => {
   return {
     beforeAll: async () => {
-      await startAndConnectMongodb();
+      await startAndConnectMongodb()
     },
 
     afterAll: async () => {
-      await stopMongodb();
+      await stopMongodb()
     },
 
     beforeEach: async () => {
-      await clearAllCollections();
+      await clearAllCollections()
     },
-  };
-};
+  }
+}

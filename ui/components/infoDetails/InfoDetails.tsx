@@ -1,16 +1,17 @@
-import { fr } from "@codegouvfr/react-dsfr";
-import { Box, Grid, Typography } from "@mui/material";
-import React, { Fragment } from "react";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Box, Grid, Typography } from "@mui/material"
+import type React from "react"
+import { Fragment } from "react"
 
 interface Props<TData> {
-  title?: string;
-  data: TData;
+  title?: string
+  data: TData
   rows: {
     [key: string]: {
-      header?: () => React.ReactNode;
-      cell?: (data: TData) => React.ReactNode;
-    };
-  };
+      header?: () => React.ReactNode
+      cell?: (data: TData) => React.ReactNode
+    }
+  }
 }
 /**
  * A handy component to display a list of key/value pairs
@@ -26,8 +27,8 @@ const InfoDetails = <TData,>({ title, rows, data }: Props<TData>) => {
       )}
       <Grid container spacing={2}>
         {Object.entries(rows).map(([key, { header, cell }]) => {
-          const dataKey = key as keyof TData;
-          const value = data[dataKey];
+          const dataKey = key as keyof TData
+          const value = data[dataKey]
 
           return (
             <Fragment key={key}>
@@ -39,11 +40,11 @@ const InfoDetails = <TData,>({ title, rows, data }: Props<TData>) => {
                 {cell?.(data) ?? value}
               </Grid>
             </Fragment>
-          );
+          )
         })}
       </Grid>
     </Box>
-  );
-};
+  )
+}
 
-export default InfoDetails;
+export default InfoDetails

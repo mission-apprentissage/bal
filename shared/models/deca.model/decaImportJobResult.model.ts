@@ -1,13 +1,13 @@
-import { z } from "zod/v4-mini";
-import type { IModelDescriptor } from "../common";
-import { zObjectId } from "../common";
+import { z } from "zod/v4-mini"
+import type { IModelDescriptor } from "../common"
+import { zObjectId } from "../common"
 
-const collectionName = "deca.import.job.result" as const;
+const collectionName = "deca.import.job.result" as const
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ import_date_string: 1 }, {}],
   [{ import_date: -1 }, {}],
-];
+]
 
 export const ZDecaImportJobResult = z.object({
   _id: zObjectId,
@@ -18,12 +18,12 @@ export const ZDecaImportJobResult = z.object({
   // true marque que l'import pour ce jour précis est complet. informatif uniquement. false ne sera jamais enregistré
   has_completed: z.boolean(),
   created_at: z.date(),
-});
+})
 
-export type IDecaImportJobResult = z.output<typeof ZDecaImportJobResult>;
+export type IDecaImportJobResult = z.output<typeof ZDecaImportJobResult>
 
 export default {
   zod: ZDecaImportJobResult,
   indexes,
   collectionName,
-};
+}

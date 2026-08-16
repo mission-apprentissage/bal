@@ -1,13 +1,13 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest"
 
-import { getDatabase } from "../../../../src/common/utils/mongodbUtils";
-import { countInvalidDocuments, validateDocuments } from "../../../../src/modules/jobs/db/schemaValidation";
-import { useMongo } from "../../../utils/mongo.utils";
+import { getDatabase } from "../../../../src/common/utils/mongodbUtils"
+import { countInvalidDocuments, validateDocuments } from "../../../../src/modules/jobs/db/schemaValidation"
+import { useMongo } from "../../../utils/mongo.utils"
 
-const mongo = useMongo();
+const mongo = useMongo()
 
 beforeAll(async () => {
-  await mongo.beforeAll();
+  await mongo.beforeAll()
   await getDatabase().createCollection("shipping", {
     validator: {
       $jsonSchema: {
@@ -21,17 +21,17 @@ beforeAll(async () => {
         },
       },
     },
-  });
-});
+  })
+})
 
 beforeEach(async () => {
-  await mongo.beforeEach();
-});
+  await mongo.beforeEach()
+})
 
 afterAll(async () => {
-  await getDatabase().dropCollection("shipping");
-  await mongo.afterAll();
-});
+  await getDatabase().dropCollection("shipping")
+  await mongo.afterAll()
+})
 
 describe("countInvalidDocuments", () => {
   it("should return invalid documents count", async () => {
@@ -58,10 +58,10 @@ describe("countInvalidDocuments", () => {
         {
           bypassDocumentValidation: true,
         }
-      );
+      )
 
-    await expect(countInvalidDocuments("shipping")).resolves.toBe(2);
-  });
+    await expect(countInvalidDocuments("shipping")).resolves.toBe(2)
+  })
 
   it("should return 0 when documents are valid", async () => {
     await getDatabase()
@@ -87,11 +87,11 @@ describe("countInvalidDocuments", () => {
         {
           bypassDocumentValidation: true,
         }
-      );
+      )
 
-    await expect(countInvalidDocuments("shipping")).resolves.toBe(0);
-  });
-});
+    await expect(countInvalidDocuments("shipping")).resolves.toBe(0)
+  })
+})
 
 describe("validateDocuments", () => {
   it("should reject when at least one document is invalid", async () => {
@@ -118,12 +118,10 @@ describe("validateDocuments", () => {
         {
           bypassDocumentValidation: true,
         }
-      );
+      )
 
-    await expect(validateDocuments("shipping")).rejects.toThrowError(
-      "Collection shipping contains 2 invalid documents"
-    );
-  });
+    await expect(validateDocuments("shipping")).rejects.toThrowError("Collection shipping contains 2 invalid documents")
+  })
 
   it("should resolves when all documents are valid", async () => {
     await getDatabase()
@@ -149,8 +147,8 @@ describe("validateDocuments", () => {
         {
           bypassDocumentValidation: true,
         }
-      );
+      )
 
-    await expect(validateDocuments("shipping")).resolves.toBeUndefined();
-  });
-});
+    await expect(validateDocuments("shipping")).resolves.toBeUndefined()
+  })
+})

@@ -1,36 +1,30 @@
-import { assertUnreachable } from "shared/utils/assertUnreachable";
-import {
-  canResetConfiguration,
-  canResetMailingList,
-  canScheduleExport,
-  canScheduleGenerate,
-  canScheduleParse,
-} from "shared/mailing-list/mailing-list.utils";
-import { getSimpleJob, killJob, scheduleJob } from "job-processor";
-import type { IJobsSimple } from "job-processor";
-import type { ObjectId } from "mongodb";
-import { zObjectIdMini } from "zod-mongodb-schema";
-import { z } from "zod/v4-mini";
-import type { IMailingListV2 } from "shared/models/mailingListV2.model";
-import { conflict, internal, notFound } from "@hapi/boom";
-import { getDbCollection } from "../../../common/utils/mongodbUtils";
-import { parseMailingList } from "./parsing/mailing-list-parser";
-import { generateMailingList, validateMailingListConfiguration } from "./generator/mailing-list-generator";
-import { exportMailingList } from "./exporter/mailing-list-exporter";
-import { deleteMailingListFile } from "./storage/mailing-list-storage";
+import { conflict, internal, notFound } from "@hapi/boom"
+import type { IJobsSimple } from "job-processor"
+import { getSimpleJob, killJob, scheduleJob } from "job-processor"
+import type { ObjectId } from "mongodb"
+import { canResetConfiguration, canResetMailingList, canScheduleExport, canScheduleGenerate, canScheduleParse } from "shared/mailing-list/mailing-list.utils"
+import type { IMailingListV2 } from "shared/models/mailingListV2.model"
+import { assertUnreachable } from "shared/utils/assertUnreachable"
+import { z } from "zod/v4-mini"
+import { zObjectIdMini } from "zod-mongodb-schema"
+import { getDbCollection } from "../../../common/utils/mongodbUtils"
+import { exportMailingList } from "./exporter/mailing-list-exporter"
+import { generateMailingList, validateMailingListConfiguration } from "./generator/mailing-list-generator"
+import { parseMailingList } from "./parsing/mailing-list-parser"
+import { deleteMailingListFile } from "./storage/mailing-list-storage"
 
 const zJobPayload = z.object({
   id: zObjectIdMini,
-});
+})
 
 export async function processMailingList(job: IJobsSimple, signal: AbortSignal) {
-  const payload = zJobPayload.parse(job.payload);
+  const payload = zJobPayload.parse(job.payload)
   const mailingList = await getDbCollection("mailingListsV2").findOne({
     _id: payload.id,
-  });
+  })
 
   if (!mailingList) {
-    throw notFound("Liste de diffusion introuvable", { id: payload.id });
+    throw notFound("Liste de diffusion introuvable", { id: payload.id })
   }
 
   try {
@@ -38,54 +32,51 @@ export async function processMailingList(job: IJobsSimple, signal: AbortSignal) 
       throw internal(`L'ID du travail de la liste de diffusion ne correspond pas`, {
         mailingList,
         job,
-      });
+      })
     }
 
     if (mailingList.status === "parse:scheduled") {
-      await parseMailingList(mailingList, job, signal);
-      return;
+      await parseMailingList(mailingList, job, signal)
+      return
     }
 
     if (mailingList.status === "generate:scheduled") {
-      await generateMailingList(mailingList, job, signal);
-      await scheduleMailingListJob(mailingList._id, "export:scheduled");
-      return;
+      await generateMailingList(mailingList, job, signal)
+      await scheduleMailingListJob(mailingList._id, "export:scheduled")
+      return
     }
 
     if (mailingList.status === "export:scheduled") {
-      await exportMailingList(mailingList, job, signal);
-      return;
+      await exportMailingList(mailingList, job, signal)
+      return
     }
 
-    throw internal("La liste de diffusion n'est pas planifiée pour l'analyse ou la génération", { mailingList });
+    throw internal("La liste de diffusion n'est pas planifiée pour l'analyse ou la génération", { mailingList })
   } catch (error) {
     if (signal.aborted) {
-      await onMailingListJobFailed(mailingList, "Le traitement de la liste de diffusion a été annulé");
-      return;
+      await onMailingListJobFailed(mailingList, "Le traitement de la liste de diffusion a été annulé")
+      return
     }
-    await onMailingListJobFailed(mailingList, error.message);
-    throw error;
+    await onMailingListJobFailed(mailingList, error.message)
+    throw error
   }
 }
 
 export async function onMailingListV2JobExited(job: IJobsSimple) {
-  const payload = zJobPayload.parse(job.payload);
+  const payload = zJobPayload.parse(job.payload)
   const mailingList = await getDbCollection("mailingListsV2").findOne({
     _id: payload.id,
-  });
+  })
 
   if (!mailingList || !job._id.equals(mailingList.job_id)) {
-    return;
+    return
   }
 
   if (job.status === "errored") {
-    await onMailingListJobFailed(
-      mailingList,
-      job.output?.error ?? "Une erreur est survenue lors du traitement de la liste de diffusion"
-    );
+    await onMailingListJobFailed(mailingList, job.output?.error ?? "Une erreur est survenue lors du traitement de la liste de diffusion")
   }
   if (job.status === "killed") {
-    await onMailingListJobFailed(mailingList, "Le traitement de la liste de diffusion a été annulé");
+    await onMailingListJobFailed(mailingList, "Le traitement de la liste de diffusion a été annulé")
   }
 }
 
@@ -94,12 +85,12 @@ function getFailingStatus(mailingList: IMailingListV2): IMailingListV2["status"]
     case "parse:scheduled":
     case "parse:in_progress":
     case "parse:failure":
-      return "parse:failure";
+      return "parse:failure"
 
     case "generate:scheduled":
     case "generate:in_progress":
     case "generate:failure":
-      return "generate:failure";
+      return "generate:failure"
 
     // If generate:success fails, it means auto schedule to export:scheduled failed
     // We need to try to export again
@@ -107,23 +98,23 @@ function getFailingStatus(mailingList: IMailingListV2): IMailingListV2["status"]
     case "export:scheduled":
     case "export:in_progress":
     case "export:failure":
-      return "export:failure";
+      return "export:failure"
 
     case "initial":
     case "export:success":
     case "parse:success":
-      return mailingList.status;
+      return mailingList.status
     default:
-      assertUnreachable(mailingList.status);
+      assertUnreachable(mailingList.status)
   }
 }
 
 async function onMailingListJobFailed(mailingList: IMailingListV2, error: string) {
-  const refreshed = await getDbCollection("mailingListsV2").findOne({ _id: mailingList._id });
+  const refreshed = await getDbCollection("mailingListsV2").findOne({ _id: mailingList._id })
   if (!refreshed) {
-    throw notFound();
+    throw notFound()
   }
-  const failingStatus = getFailingStatus(refreshed);
+  const failingStatus = getFailingStatus(refreshed)
   await getDbCollection("mailingListsV2").updateOne(
     { _id: mailingList._id },
     {
@@ -134,21 +125,21 @@ async function onMailingListJobFailed(mailingList: IMailingListV2, error: string
         updated_at: new Date(),
       },
     }
-  );
+  )
 }
 
-type ScheduledStatus = "parse:scheduled" | "generate:scheduled" | "export:scheduled";
+type ScheduledStatus = "parse:scheduled" | "generate:scheduled" | "export:scheduled"
 
 function canTransitionToStatus(mailingList: IMailingListV2, expectedStatus: ScheduledStatus): boolean {
   switch (expectedStatus) {
     case "parse:scheduled":
-      return canScheduleParse(mailingList);
+      return canScheduleParse(mailingList)
     case "generate:scheduled":
-      return canScheduleGenerate(mailingList);
+      return canScheduleGenerate(mailingList)
     case "export:scheduled":
-      return canScheduleExport(mailingList);
+      return canScheduleExport(mailingList)
     default:
-      assertUnreachable(expectedStatus);
+      assertUnreachable(expectedStatus)
   }
 }
 
@@ -156,14 +147,14 @@ export async function scheduleMailingListJob(id: ObjectId, status: ScheduledStat
   const mailingList = await getDbCollection("mailingListsV2").findOne({
     _id: id,
     job_id: null,
-  });
+  })
 
   if (!mailingList) {
-    throw conflict("La liste de diffusion est déjà en cours de traitement");
+    throw conflict("La liste de diffusion est déjà en cours de traitement")
   }
 
   if (!canTransitionToStatus(mailingList, status)) {
-    throw conflict(`La liste de diffusion ne peut pas passer au statut ${status}`);
+    throw conflict(`La liste de diffusion ne peut pas passer au statut ${status}`)
   }
 
   const job = await scheduleJob({
@@ -171,14 +162,11 @@ export async function scheduleMailingListJob(id: ObjectId, status: ScheduledStat
     payload: {
       id,
     },
-  });
+  })
 
-  await getDbCollection("mailingListsV2").updateOne(
-    { _id: id },
-    { $set: { job_id: job._id, status, updated_at: new Date() } }
-  );
+  await getDbCollection("mailingListsV2").updateOne({ _id: id }, { $set: { job_id: job._id, status, updated_at: new Date() } })
 
-  return true;
+  return true
 }
 
 function isJobDone(job: IJobsSimple): boolean {
@@ -186,34 +174,34 @@ function isJobDone(job: IJobsSimple): boolean {
     case "pending":
     case "running":
     case "paused":
-      return false;
+      return false
     case "errored":
     case "finished":
     case "killed":
     case "skipped":
-      return true;
+      return true
     default:
-      assertUnreachable(job.status);
+      assertUnreachable(job.status)
   }
 }
 
 export async function recoverMailingListJobs(signal: AbortSignal) {
-  const cursor = getDbCollection("mailingListsV2").find({ job_id: { $ne: null } }, { signal });
+  const cursor = getDbCollection("mailingListsV2").find({ job_id: { $ne: null } }, { signal })
 
   for await (const mailingList of cursor) {
     if (signal.aborted) {
-      break;
+      break
     }
 
     if (mailingList.job_id) {
       try {
-        const job = await getSimpleJob(mailingList.job_id);
+        const job = await getSimpleJob(mailingList.job_id)
         if (job === null || isJobDone(job)) {
           // Even if the job finished without error, we consider it failed because the mailing list job_id was not reset
-          await onMailingListJobFailed(mailingList, "Le traitement a échoué de manière inattendue");
+          await onMailingListJobFailed(mailingList, "Le traitement a échoué de manière inattendue")
         }
       } catch (error) {
-        console.error("Error scheduling mailing list job:", error);
+        console.error("Error scheduling mailing list job:", error)
       }
     }
   }
@@ -222,51 +210,48 @@ export async function recoverMailingListJobs(signal: AbortSignal) {
 export async function resetMailingList(id: ObjectId, status: "initial" | "parse:success") {
   const mailingList = await getDbCollection("mailingListsV2").findOne({
     _id: id,
-  });
+  })
 
   if (!mailingList) {
-    throw notFound("La liste de diffusion n'existe pas");
+    throw notFound("La liste de diffusion n'existe pas")
   }
 
   switch (status) {
     case "initial": {
       if (!canResetMailingList(mailingList)) {
-        throw conflict("La liste de diffusion ne peut pas être réinitialisée");
+        throw conflict("La liste de diffusion ne peut pas être réinitialisée")
       }
 
-      break;
+      break
     }
     case "parse:success": {
       if (!canResetConfiguration(mailingList)) {
-        throw conflict("La configuration de la liste ne peut pas être réinitialisée");
+        throw conflict("La configuration de la liste ne peut pas être réinitialisée")
       }
 
-      break;
+      break
     }
     default:
-      assertUnreachable(status);
+      assertUnreachable(status)
   }
 
-  await getDbCollection("mailingListsV2").updateOne(
-    { _id: id },
-    { $set: { status: status, error: null, updated_at: new Date() } }
-  );
+  await getDbCollection("mailingListsV2").updateOne({ _id: id }, { $set: { status: status, error: null, updated_at: new Date() } })
 }
 
 export async function scheduleGenerate(id: ObjectId) {
   const mailingList = await getDbCollection("mailingListsV2").findOne({
     _id: id,
-  });
+  })
 
   if (!mailingList) {
-    throw notFound("La liste de diffusion n'existe pas");
+    throw notFound("La liste de diffusion n'existe pas")
   }
 
   if (!canScheduleGenerate(mailingList)) {
-    throw conflict("La liste de diffusion ne peut pas être générée");
+    throw conflict("La liste de diffusion ne peut pas être générée")
   }
 
-  await validateMailingListConfiguration(mailingList);
+  await validateMailingListConfiguration(mailingList)
 
   await getDbCollection("mailingListsV2").updateOne(
     { _id: mailingList._id },
@@ -276,43 +261,43 @@ export async function scheduleGenerate(id: ObjectId) {
         updated_at: new Date(),
       },
     }
-  );
+  )
 
-  await getDbCollection("mailingList.computed").deleteMany({ mailing_list_id: mailingList._id });
+  await getDbCollection("mailingList.computed").deleteMany({ mailing_list_id: mailingList._id })
 
-  await scheduleMailingListJob(mailingList._id, "generate:scheduled");
+  await scheduleMailingListJob(mailingList._id, "generate:scheduled")
 }
 
 export async function killMailingList(mailingListId: ObjectId): Promise<void> {
   const mailingList = await getDbCollection("mailingListsV2").findOne({
     _id: mailingListId,
-  });
+  })
 
   if (!mailingList) {
-    throw notFound("La liste de diffusion n'existe pas");
+    throw notFound("La liste de diffusion n'existe pas")
   }
 
   if (mailingList.job_id) {
-    await killJob(mailingList.job_id);
+    await killJob(mailingList.job_id)
   }
 }
 
 export async function deleteMailingList(mailingListId: ObjectId): Promise<void> {
   const mailingList = await getDbCollection("mailingListsV2").findOne({
     _id: mailingListId,
-  });
+  })
 
   if (!mailingList) {
-    throw notFound("La liste de diffusion n'existe pas");
+    throw notFound("La liste de diffusion n'existe pas")
   }
 
   if (mailingList.job_id !== null) {
-    throw conflict("La liste de diffusion est en cours de traitement et ne peut pas être supprimée");
+    throw conflict("La liste de diffusion est en cours de traitement et ne peut pas être supprimée")
   }
 
-  await deleteMailingListFile(mailingListId, "result");
-  await getDbCollection("mailingList.computed").deleteMany({ mailing_list_id: mailingListId });
-  await getDbCollection("mailingList.source").deleteMany({ mailing_list_id: mailingListId });
-  await deleteMailingListFile(mailingListId, "source");
-  await getDbCollection("mailingListsV2").deleteOne({ _id: mailingListId });
+  await deleteMailingListFile(mailingListId, "result")
+  await getDbCollection("mailingList.computed").deleteMany({ mailing_list_id: mailingListId })
+  await getDbCollection("mailingList.source").deleteMany({ mailing_list_id: mailingListId })
+  await deleteMailingListFile(mailingListId, "source")
+  await getDbCollection("mailingListsV2").deleteOne({ _id: mailingListId })
 }

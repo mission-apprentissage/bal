@@ -1,48 +1,46 @@
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
-import "react-notion-x/src/styles.css";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter"
+import "react-notion-x/src/styles.css"
 
-import { createGetHtmlAttributes, DsfrHeadBase } from "@codegouvfr/react-dsfr/next-app-router/server-only-index";
+import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui"
+import { createGetHtmlAttributes, DsfrHeadBase } from "@codegouvfr/react-dsfr/next-app-router/server-only-index"
+import { captureException } from "@sentry/nextjs"
+import type { Metadata, Viewport } from "next"
+import { cookies } from "next/headers"
+import Link from "next/link"
+import type { PropsWithChildren } from "react"
+import { Suspense } from "react"
+import type { IUserPublic } from "shared/models/user.model"
+import { AuthContextProvider } from "@/context/AuthContext"
+import type { ApiError } from "@/utils/api.utils"
+import { apiGet } from "@/utils/api.utils"
+import { DsfrProvider, StartDsfrOnHydration } from "./DsfrProvider"
+import { defaultColorScheme } from "./defaultColorScheme"
 
-import type { Metadata, Viewport } from "next";
-import Link from "next/link";
-import { Suspense } from "react";
-import type { PropsWithChildren } from "react";
-import type { IUserPublic } from "shared/models/user.model";
-import { cookies } from "next/headers";
-
-import { captureException } from "@sentry/nextjs";
-import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
-import { DsfrProvider, StartDsfrOnHydration } from "./DsfrProvider";
-import { defaultColorScheme } from "./defaultColorScheme";
-import { AuthContextProvider } from "@/context/AuthContext";
-import { apiGet } from "@/utils/api.utils";
-import type { ApiError } from "@/utils/api.utils";
-
-const { getHtmlAttributes } = createGetHtmlAttributes({ defaultColorScheme });
+const { getHtmlAttributes } = createGetHtmlAttributes({ defaultColorScheme })
 
 async function getSession(): Promise<IUserPublic | undefined> {
   try {
-    const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get("bal_session");
+    const cookieStore = await cookies()
+    const sessionCookie = cookieStore.get("bal_session")
 
     if (!sessionCookie) {
-      return;
+      return
     }
 
-    const session = await apiGet(`/auth/session`, {}, { cache: "no-store" });
-    return session;
+    const session = await apiGet(`/auth/session`, {}, { cache: "no-store" })
+    return session
   } catch (error) {
     if ((error as ApiError).context?.statusCode !== 401) {
-      captureException(error);
+      captureException(error)
     }
-    return;
+    return
   }
 }
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-};
+}
 
 export const metadata: Metadata = {
   icons: {
@@ -56,11 +54,11 @@ export const metadata: Metadata = {
   },
   title: "BAL",
   description: "BAL apprentissage",
-};
+}
 
 export default async function RootLayout({ children }: PropsWithChildren) {
-  const session = await getSession();
-  const lang = "fr";
+  const session = await getSession()
+  const lang = "fr"
   return (
     <html {...getHtmlAttributes({ lang })}>
       <head>
@@ -93,5 +91,5 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         </AppRouterCacheProvider>
       </body>
     </html>
-  );
+  )
 }

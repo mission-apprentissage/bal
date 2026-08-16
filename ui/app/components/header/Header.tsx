@@ -1,24 +1,23 @@
-import type { HeaderProps } from "@codegouvfr/react-dsfr/Header";
-import { Header as DSFRHeader } from "@codegouvfr/react-dsfr/Header";
-import { usePathname, useRouter } from "next/navigation";
-
-import { getNavigationItems } from "./header.utils";
-import { useAuth } from "@/context/AuthContext";
-import { apiGet } from "@/utils/api.utils";
-import { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import type { HeaderProps } from "@codegouvfr/react-dsfr/Header"
+import { Header as DSFRHeader } from "@codegouvfr/react-dsfr/Header"
+import { usePathname, useRouter } from "next/navigation"
+import { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import { useAuth } from "@/context/AuthContext"
+import { apiGet } from "@/utils/api.utils"
+import { getNavigationItems } from "./header.utils"
 
 export const Header = () => {
-  const { user, setUser } = useAuth();
-  const { push } = useRouter();
-  const pathname = usePathname();
+  const { user, setUser } = useAuth()
+  const { push } = useRouter()
+  const pathname = usePathname()
 
   const handleLogout = async () => {
-    await apiGet("/auth/logout", {});
-    setUser();
-    push(PAGES.homepage().path);
-  };
+    await apiGet("/auth/logout", {})
+    setUser()
+    push(PAGES.homepage().path)
+  }
 
-  const navigation = getNavigationItems({ user, pathname });
+  const navigation = getNavigationItems({ user, pathname })
 
   const loggedOut: HeaderProps.QuickAccessItem[] = [
     {
@@ -28,7 +27,7 @@ export const Header = () => {
       },
       text: "Se connecter",
     },
-  ];
+  ]
 
   const loggedIn: HeaderProps.QuickAccessItem[] = [
     {
@@ -45,7 +44,7 @@ export const Header = () => {
       text: "Se deconnecter",
       iconId: "fr-icon-logout-box-r-line",
     },
-  ];
+  ]
 
   return (
     <DSFRHeader
@@ -64,5 +63,5 @@ export const Header = () => {
       serviceTitle="BAL"
       navigation={navigation}
     />
-  );
-};
+  )
+}

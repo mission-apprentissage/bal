@@ -1,32 +1,33 @@
-"use client";
+"use client"
 
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import { PasswordInput } from "@codegouvfr/react-dsfr/blocks/PasswordInput";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Box, Typography } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import type { SubmitHandler } from "react-hook-form";
-import { useForm } from "react-hook-form";
-import type { IPostRoutes } from "shared";
-import type { IStatus } from "shared/routes/auth.routes";
+import { Alert } from "@codegouvfr/react-dsfr/Alert"
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { PasswordInput } from "@codegouvfr/react-dsfr/blocks/PasswordInput"
+import { Box, Typography } from "@mui/material"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useState } from "react"
+import type { SubmitHandler } from "react-hook-form"
+import { useForm } from "react-hook-form"
+import type { IPostRoutes } from "shared"
+import type { IStatus } from "shared/routes/auth.routes"
 
-import type { z } from "zod/v4-mini";
-import { apiPost } from "@/utils/api.utils";
-import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
-import FormContainer from "@/app/auth/components/FormContainer";
+import type { z } from "zod/v4-mini"
+import FormContainer from "@/app/auth/components/FormContainer"
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import { apiPost } from "@/utils/api.utils"
+
 // import { NavLink } from "../../components/NavLink";
 
 type IFormValues = z.input<IPostRoutes["/auth/reset-password"]["body"]> & {
-  password_confirmation: string;
-};
+  password_confirmation: string
+}
 
 const ModifierMotDePassePage = () => {
-  const [status, setStatus] = useState<IStatus>();
-  const { push } = useRouter();
-  const searchParams = useSearchParams();
+  const [status, setStatus] = useState<IStatus>()
+  const { push } = useRouter()
+  const searchParams = useSearchParams()
 
-  const token = searchParams?.get("passwordToken") ?? "";
+  const token = searchParams?.get("passwordToken") ?? ""
 
   const {
     register,
@@ -34,13 +35,13 @@ const ModifierMotDePassePage = () => {
     formState: { errors },
     reset,
     watch,
-  } = useForm<IFormValues>();
+  } = useForm<IFormValues>()
 
   if (!token) {
-    return push(PAGES.homepage().path);
+    return push(PAGES.homepage().path)
   }
 
-  const password = watch("password");
+  const password = watch("password")
 
   const onSubmit: SubmitHandler<IFormValues> = async ({ password }) => {
     try {
@@ -51,27 +52,27 @@ const ModifierMotDePassePage = () => {
         body: {
           password,
         },
-      });
+      })
 
       setStatus({
         error: false,
         message: "Votre mot de passe a bien été modifié",
-      });
-      reset();
+      })
+      reset()
 
       setTimeout(() => {
-        push("/auth/connexion");
-      }, 3000);
+        push("/auth/connexion")
+      }, 3000)
     } catch (error) {
-      const errorMessage = (error as Record<string, string>)?.message;
+      const errorMessage = (error as Record<string, string>)?.message
 
       setStatus({
         error: true,
         message: errorMessage ?? "Impossible de modifier votre mot de passe.",
-      });
-      console.error(error);
+      })
+      console.error(error)
     }
-  };
+  }
 
   return (
     <>
@@ -131,6 +132,6 @@ const ModifierMotDePassePage = () => {
         </form>
       </FormContainer>
     </>
-  );
-};
-export default ModifierMotDePassePage;
+  )
+}
+export default ModifierMotDePassePage

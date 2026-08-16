@@ -1,14 +1,14 @@
-import { fr } from "@codegouvfr/react-dsfr";
-import { Box, Typography } from "@mui/material";
-import type { FC } from "react";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Box, Typography } from "@mui/material"
+import type { FC } from "react"
 
 interface Props {
-  title: string;
-  data?: unknown;
+  title: string
+  data?: unknown
 }
 
 const ViewData: FC<Props> = ({ data, title }) => {
-  if (!data) return null;
+  if (!data) return null
   return (
     <Box my={4}>
       <Typography variant="h6" gutterBottom>
@@ -18,7 +18,7 @@ const ViewData: FC<Props> = ({ data, title }) => {
         <pre>{JSON.stringify(data, null, "\t")}</pre>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default ViewData;
+export default ViewData

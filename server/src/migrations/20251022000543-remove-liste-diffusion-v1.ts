@@ -1,5 +1,5 @@
-import type { Db } from "mongodb";
-import { deleteFromStorage, listFromStorage } from "../common/utils/ovhUtils";
+import type { Db } from "mongodb"
+import { deleteFromStorage, listFromStorage } from "../common/utils/ovhUtils"
 
 export const up = async (db: Db) => {
   await db
@@ -7,35 +7,35 @@ export const up = async (db: Db) => {
     .drop()
     .catch((e) => {
       if (e.codeName !== "NamespaceNotFound") {
-        throw e;
+        throw e
       }
-    });
+    })
   await db
     .collection("documentContents")
     .drop()
     .catch((e) => {
       if (e.codeName !== "NamespaceNotFound") {
-        throw e;
+        throw e
       }
-    });
+    })
   await db
     .collection("documents")
     .drop()
     .catch((e) => {
       if (e.codeName !== "NamespaceNotFound") {
-        throw e;
+        throw e
       }
-    });
+    })
 
-  const supportFiles = await listFromStorage("support");
+  const supportFiles = await listFromStorage("support")
   for (const file of supportFiles) {
-    await deleteFromStorage(file.name, "support");
+    await deleteFromStorage(file.name, "support")
   }
 
-  const mainFiles = await listFromStorage("main");
+  const mainFiles = await listFromStorage("main")
   for (const file of mainFiles) {
-    await deleteFromStorage(file.name, "main");
+    await deleteFromStorage(file.name, "main")
   }
-};
+}
 
-export const requireShutdown: boolean = true;
+export const requireShutdown: boolean = true

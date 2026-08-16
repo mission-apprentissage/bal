@@ -1,11 +1,10 @@
-import Boom, { notFound } from "@hapi/boom";
-import type { RootFilterOperators } from "mongodb";
-import type { IUser } from "shared/models/user.model";
-import { zUserAdminRoutes } from "shared/routes/user.routes";
-
-import { createUser } from "../../actions/users.actions";
-import type { Server } from "../server";
-import { getDbCollection } from "../../../common/utils/mongodbUtils";
+import Boom, { notFound } from "@hapi/boom"
+import type { RootFilterOperators } from "mongodb"
+import type { IUser } from "shared/models/user.model"
+import { zUserAdminRoutes } from "shared/routes/user.routes"
+import { getDbCollection } from "../../../common/utils/mongodbUtils"
+import { createUser } from "../../actions/users.actions"
+import type { Server } from "../server"
 
 export const userAdminRoutes = ({ server }: { server: Server }) => {
   server.post(
@@ -15,15 +14,15 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zUserAdminRoutes.post["/admin/user"])],
     },
     async (request, response) => {
-      const user = await createUser(request.body);
+      const user = await createUser(request.body)
 
       if (!user) {
-        throw Boom.badImplementation("Impossible de créer l'utilisateur");
+        throw Boom.badImplementation("Impossible de créer l'utilisateur")
       }
 
-      return response.status(200).send(user);
+      return response.status(200).send(user)
     }
-  );
+  )
 
   server.get(
     "/admin/users",
@@ -32,19 +31,19 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zUserAdminRoutes.get["/admin/users"])],
     },
     async (request, response) => {
-      const filter: RootFilterOperators<IUser> = {};
+      const filter: RootFilterOperators<IUser> = {}
 
-      const { q } = request.query;
+      const { q } = request.query
 
       if (q) {
-        filter.$text = { $search: q };
+        filter.$text = { $search: q }
       }
 
-      const users = await getDbCollection("users").find(filter).toArray();
+      const users = await getDbCollection("users").find(filter).toArray()
 
-      return response.status(200).send(users);
+      return response.status(200).send(users)
     }
-  );
+  )
 
   server.get(
     "/admin/users/:id",
@@ -53,15 +52,15 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zUserAdminRoutes.get["/admin/users/:id"])],
     },
     async (request, response) => {
-      const user = await getDbCollection("users").findOne({ _id: request.params.id });
+      const user = await getDbCollection("users").findOne({ _id: request.params.id })
 
       if (!user) {
-        throw notFound();
+        throw notFound()
       }
 
-      return response.status(200).send(user);
+      return response.status(200).send(user)
     }
-  );
+  )
 
   server.delete(
     "/admin/users/:id",
@@ -70,13 +69,13 @@ export const userAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zUserAdminRoutes.delete["/admin/users/:id"])],
     },
     async (request, response) => {
-      const result = await getDbCollection("users").deleteOne({ _id: request.params.id });
+      const result = await getDbCollection("users").deleteOne({ _id: request.params.id })
 
       if (result.deletedCount === 0) {
-        throw notFound();
+        throw notFound()
       }
 
-      return response.status(200).send({ success: true });
+      return response.status(200).send({ success: true })
     }
-  );
-};
+  )
+}

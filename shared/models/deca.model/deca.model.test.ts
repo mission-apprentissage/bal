@@ -1,7 +1,7 @@
-import { ObjectId } from "mongodb";
-import { describe, expect, it } from "vitest";
+import { ObjectId } from "mongodb"
+import { describe, expect, it } from "vitest"
 
-import { ZDeca } from "./deca.model";
+import { ZDeca } from "./deca.model"
 
 describe("ZDeca", () => {
   const baseContrat = {
@@ -15,23 +15,23 @@ describe("ZDeca", () => {
     employeur: {},
     updated_at: new Date(),
     created_at: new Date(),
-  };
+  }
 
   it("should coerce a numeric code_motif_rupture to a string", () => {
-    const result = ZDeca.parse({ ...baseContrat, code_motif_rupture: 1 });
+    const result = ZDeca.parse({ ...baseContrat, code_motif_rupture: 1 })
 
-    expect(result.code_motif_rupture).toBe("1");
-  });
+    expect(result.code_motif_rupture).toBe("1")
+  })
 
   it("should keep a string code_motif_rupture as-is", () => {
-    const result = ZDeca.parse({ ...baseContrat, code_motif_rupture: "01" });
+    const result = ZDeca.parse({ ...baseContrat, code_motif_rupture: "01" })
 
-    expect(result.code_motif_rupture).toBe("01");
-  });
+    expect(result.code_motif_rupture).toBe("01")
+  })
 
   it("should allow code_motif_rupture to be absent", () => {
-    const result = ZDeca.parse(baseContrat);
+    const result = ZDeca.parse(baseContrat)
 
-    expect(result.code_motif_rupture).toBeUndefined();
-  });
-});
+    expect(result.code_motif_rupture).toBeUndefined()
+  })
+})

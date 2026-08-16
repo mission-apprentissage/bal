@@ -1,1 +1,1 @@
-declare module "lil-http-terminator";
+declare module "lil-http-terminator"

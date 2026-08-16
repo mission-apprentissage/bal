@@ -1,39 +1,39 @@
-import crypto from "crypto";
-import Boom from "@hapi/boom";
+import Boom from "@hapi/boom"
+import crypto from "crypto"
 
-import config from "@/config";
+import config from "@/config"
 
 const generateSalt = () => {
-  return crypto.randomBytes(16).toString("hex");
-};
+  return crypto.randomBytes(16).toString("hex")
+}
 
 export const hashPassword = (password: crypto.BinaryLike, salt?: crypto.BinaryLike) => {
-  const iterations = config.auth.hashRounds;
-  const keylen = 64;
-  const digest = "sha512";
+  const iterations = config.auth.hashRounds
+  const keylen = 64
+  const digest = "sha512"
 
   if (!salt) {
-    salt = generateSalt();
+    salt = generateSalt()
   }
 
-  const hashedPassword = crypto.pbkdf2Sync(password, salt, iterations, keylen, digest);
+  const hashedPassword = crypto.pbkdf2Sync(password, salt, iterations, keylen, digest)
 
-  return `${hashedPassword.toString("hex")}$${iterations}$${salt}`;
-};
+  return `${hashedPassword.toString("hex")}$${iterations}$${salt}`
+}
 
 export const verifyPassword = (password: crypto.BinaryLike, storedHash: string) => {
-  const [hashedStoredPassword, _iterations, salt] = storedHash.split("$");
+  const [hashedStoredPassword, _iterations, salt] = storedHash.split("$")
 
   if (!hashedStoredPassword) {
-    throw Boom.internal("verifyPassword: Invalid stored hash");
+    throw Boom.internal("verifyPassword: Invalid stored hash")
   }
 
-  const hashedPasswordWithSalt = hashPassword(password, salt);
-  const [hashedPassword] = hashedPasswordWithSalt.split("$");
+  const hashedPasswordWithSalt = hashPassword(password, salt)
+  const [hashedPassword] = hashedPasswordWithSalt.split("$")
 
   if (!hashedPassword) {
-    throw Boom.internal("verifyPassword: Invalid hashed password");
+    throw Boom.internal("verifyPassword: Invalid hashed password")
   }
 
-  return crypto.timingSafeEqual(Buffer.from(hashedPassword), Buffer.from(hashedStoredPassword));
-};
+  return crypto.timingSafeEqual(Buffer.from(hashedPassword), Buffer.from(hashedStoredPassword))
+}

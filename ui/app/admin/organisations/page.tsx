@@ -1,9 +1,8 @@
-"use client";
+"use client"
 
-import { Typography } from "@mui/material";
-
-import OrganisationList from "./components/OrganisationList";
-import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import { Typography } from "@mui/material"
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import OrganisationList from "./components/OrganisationList"
 
 const AdminOrganisationsPage = () => {
   return (
@@ -14,7 +13,7 @@ const AdminOrganisationsPage = () => {
       </Typography>
       <OrganisationList />
     </>
-  );
-};
+  )
+}
 
-export default AdminOrganisationsPage;
+export default AdminOrganisationsPage

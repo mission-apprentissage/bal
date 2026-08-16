@@ -1,3 +1,3 @@
-import { LoggedUser } from "@/components/connexion/LoggedUser";
+import { LoggedUser } from "@/components/connexion/LoggedUser"
 
-export default LoggedUser;
+export default LoggedUser

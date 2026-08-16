@@ -1,54 +1,52 @@
-import { fr } from "@codegouvfr/react-dsfr";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import type { FC } from "react";
-import { useState } from "react";
-import type { IResErrorJson } from "shared/routes/common.routes";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { createModal } from "@codegouvfr/react-dsfr/Modal"
+import type { FC } from "react"
+import { useState } from "react"
+import type { IResErrorJson } from "shared/routes/common.routes"
 
-import Table from "@/components/table/Table";
-import Toast, { useToast } from "@/components/toast/Toast";
-import { apiDelete, generateUrl } from "@/utils/api.utils";
+import Table from "@/components/table/Table"
+import Toast, { useToast } from "@/components/toast/Toast"
+import { apiDelete, generateUrl } from "@/utils/api.utils"
 
 type fichier = {
-  id: string;
-};
+  id: string
+}
 
 interface Props {
-  list?: fichier[];
-  onDelete?: () => void;
+  list?: fichier[]
+  onDelete?: () => void
 }
 
 const modal = createModal({
   id: "delete-mailing-list-modal",
   isOpenedByDefault: false,
-});
+})
 
 const SupportFileList: FC<Props> = ({ list, onDelete }) => {
-  const [toDelete, setToDelete] = useState<string | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const { toast, setToast, handleClose } = useToast();
+  const [toDelete, setToDelete] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const { toast, setToast, handleClose } = useToast()
 
   const handleDelete = async () => {
-    setIsDeleting(true);
+    setIsDeleting(true)
     try {
-      if (!toDelete) throw new Error("Nothing to delete");
-      await apiDelete("/support/file/delete", { querystring: { id: toDelete } });
-      onDelete?.();
+      if (!toDelete) throw new Error("Nothing to delete")
+      await apiDelete("/support/file/delete", { querystring: { id: toDelete } })
+      onDelete?.()
     } catch (error) {
-      console.error(error);
-      const serverError = error as IResErrorJson;
+      console.error(error)
+      const serverError = error as IResErrorJson
       setToast({
         severity: "error",
-        message: `Une erreur est survenue lors de la suppression du fichier${
-          serverError?.message ? ` : ${serverError.message}` : ""
-        }`,
-      });
+        message: `Une erreur est survenue lors de la suppression du fichier${serverError?.message ? ` : ${serverError.message}` : ""}`,
+      })
     } finally {
-      setToDelete(null);
-      setIsDeleting(false);
-      modal.close();
+      setToDelete(null)
+      setIsDeleting(false)
+      modal.close()
     }
-  };
+  }
 
   return (
     <>
@@ -66,7 +64,7 @@ const SupportFileList: FC<Props> = ({ list, onDelete }) => {
             headerName: "Actions",
             width: 150,
             getActions: ({ row }) => {
-              const actions = [];
+              const actions = []
               actions.push(
                 <Button
                   key="download"
@@ -83,14 +81,14 @@ const SupportFileList: FC<Props> = ({ list, onDelete }) => {
                   priority="tertiary no outline"
                   title="Télécharger"
                 />
-              );
+              )
               actions.push(
                 <Button
                   key="delete"
                   iconId="ri-delete-bin-line"
                   onClick={() => {
-                    setToDelete(row.id);
-                    modal.open();
+                    setToDelete(row.id)
+                    modal.open()
                   }}
                   priority="tertiary no outline"
                   title="Supprimer"
@@ -98,9 +96,9 @@ const SupportFileList: FC<Props> = ({ list, onDelete }) => {
                     color: fr.colors.decisions.text.actionHigh.redMarianne.default,
                   }}
                 />
-              );
+              )
 
-              return actions;
+              return actions
             },
           },
         ]}
@@ -126,7 +124,7 @@ const SupportFileList: FC<Props> = ({ list, onDelete }) => {
       </modal.Component>
       <Toast severity={toast?.severity} message={toast?.message} handleClose={handleClose} />
     </>
-  );
-};
+  )
+}
 
-export default SupportFileList;
+export default SupportFileList

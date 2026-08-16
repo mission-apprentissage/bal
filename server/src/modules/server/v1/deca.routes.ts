@@ -1,8 +1,8 @@
-import Boom from "@hapi/boom";
-import { zRoutes } from "shared";
+import Boom from "@hapi/boom"
+import { zRoutes } from "shared"
 
-import { getDbCollection } from "../../../common/utils/mongodbUtils";
-import type { Server } from "../server";
+import { getDbCollection } from "../../../common/utils/mongodbUtils"
+import type { Server } from "../server"
 
 export const decaRoutes = ({ server }: { server: Server }) => {
   server.post(
@@ -12,15 +12,12 @@ export const decaRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.post["/v1/deca/search/organisme"])],
     },
     async (request, response) => {
-      const { siret } = request.body;
+      const { siret } = request.body
 
       try {
         const dbContrats = await getDbCollection("deca")
-          .find(
-            { $or: [{ "organisme_formation.siret": siret }, { "etablissement_formation.siret": siret }] },
-            { sort: { date_debut_contrat: 1 } }
-          )
-          .toArray();
+          .find({ $or: [{ "organisme_formation.siret": siret }, { "etablissement_formation.siret": siret }] }, { sort: { date_debut_contrat: 1 } })
+          .toArray()
 
         if (!dbContrats.length) {
           return response.status(200).send({
@@ -31,10 +28,10 @@ export const decaRoutes = ({ server }: { server: Server }) => {
             },
             premier_contrat: null,
             dernier_contrat: null,
-          });
+          })
         }
 
-        const contratsAppr = dbContrats.filter((c) => c.dispositif === "APPR");
+        const contratsAppr = dbContrats.filter((c) => c.dispositif === "APPR")
 
         return response.status(200).send({
           contrats: {
@@ -50,10 +47,10 @@ export const decaRoutes = ({ server }: { server: Server }) => {
             date_debut_contrat: dbContrats.at(-1)?.date_debut_contrat,
             date_fin_contrat: dbContrats.at(-1)?.date_fin_contrat,
           },
-        });
+        })
       } catch (error) {
-        throw Boom.badImplementation(error as Error);
+        throw Boom.badImplementation(error as Error)
       }
     }
-  );
-};
+  )
+}

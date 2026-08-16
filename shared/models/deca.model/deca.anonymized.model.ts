@@ -1,17 +1,17 @@
-import { z } from "zod/v4-mini";
+import { z } from "zod/v4-mini"
 
-import type { IModelDescriptor } from "../common";
-import { ZDecaEmployeur } from "./parts/deca.employeur.part";
-import { ZDeca } from "./deca.model";
+import type { IModelDescriptor } from "../common"
+import { ZDeca } from "./deca.model"
+import { ZDecaEmployeur } from "./parts/deca.employeur.part"
 
-const collectionName = "anonymized.deca" as const;
+const collectionName = "anonymized.deca" as const
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ no_contrat: 1, type_contrat: 1 }, {}],
   [{ "organisme_formation.siret": 1 }, {}],
   [{ "etablissement_formation.siret": 1 }, {}],
   [{ created_at: -1 }, {}],
-];
+]
 
 export const ZDecaAnonymized = z.extend(
   z.omit(ZDeca, {
@@ -24,12 +24,12 @@ export const ZDecaAnonymized = z.extend(
       courriel: true,
     }),
   }
-);
+)
 
-export type IDecaAnonymized = z.output<typeof ZDecaAnonymized>;
+export type IDecaAnonymized = z.output<typeof ZDecaAnonymized>
 
 export default {
   zod: ZDecaAnonymized,
   indexes,
   collectionName,
-};
+}

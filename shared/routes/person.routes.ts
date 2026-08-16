@@ -1,9 +1,9 @@
-import { z } from "zod/v4-mini";
+import { z } from "zod/v4-mini"
 
-import { zObjectId } from "../models/common";
-import { ZPerson } from "../models/person.model";
-import type { IRoutesDef } from "./common.routes";
-import { ZReqParamsSearchPagination } from "./common.routes";
+import { zObjectId } from "../models/common"
+import { ZPerson } from "../models/person.model"
+import type { IRoutesDef } from "./common.routes"
+import { ZReqParamsSearchPagination } from "./common.routes"
 
 export const zPersonRoutes = {
   get: {
@@ -41,4 +41,4 @@ export const zPersonRoutes = {
       },
     },
   },
-} as const satisfies IRoutesDef;
+} as const satisfies IRoutesDef
