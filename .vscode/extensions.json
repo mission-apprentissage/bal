@@ -5,15 +5,14 @@
   // List of extensions which should be recommended for users of this workspace.
   "recommendations": [
     "redhat.ansible",
+    "biomejs.biome",
     "ms-azuretools.vscode-docker",
     "IronGeek.vscode-env",
-    "dbaeumer.vscode-eslint",
     "github.vscode-github-actions",
     "eamodio.gitlens",
     "bierner.markdown-preview-github-styles",
     "bierner.markdown-mermaid",
     "christian-kohler.npm-intellisense",
-    "esbenp.prettier-vscode",
     "yoavbls.pretty-ts-errors",
     "pflannery.vscode-versionlens",
     "fabiospampinato.vscode-terminals",

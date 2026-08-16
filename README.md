@@ -252,10 +252,10 @@ Ajouter une exception à talisman
 
 #### Linter
 
-Lint global du projet
+Lint et formatage global du projet
 
 ```bash
-  pnpm lint
+  pnpm check
 ```
 
 #### Release depuis l'environnement local

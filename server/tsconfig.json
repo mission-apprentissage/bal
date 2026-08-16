@@ -32,8 +32,9 @@
     /* Emit */
     // `tsc` ne fait que du typecheck ici (l'émission est confiée à tsup) : `rootDir` couvre
     // la racine du monorepo pour que les sources de `shared/`, importées via `paths`, soient acceptées.
+    // `noEmit` évite qu'un `tsc` sans option n'écrive une arborescence `server/src/**` calquée sur ce `rootDir`.
     "rootDir": "..",
-    "outDir": "./dist",
+    "noEmit": true,
     /* Interop Constraints */
     "esModuleInterop": true,
     "isolatedModules": true,
