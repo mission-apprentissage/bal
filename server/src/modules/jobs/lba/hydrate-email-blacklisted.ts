@@ -15,7 +15,7 @@ export async function hydrateLbaBlackListed() {
   const count = { created: 0, updated: 0 }
   let totalCount = 0
 
-  const processBuffer = async (buffer: any) => {
+  const processBuffer = async (buffer: Promise<unknown>[]) => {
     await Promise.allSettled(buffer)
 
     totalCount += buffer.length
@@ -28,7 +28,7 @@ export async function hydrateLbaBlackListed() {
 
     const cursor = client.db().collection<ILbaEmailBlacklist>(config.lba.mongodb.blacklistedDbCollection).find(query)
 
-    let promiseArray: Array<any> = []
+    let promiseArray: Array<Promise<unknown>> = []
     for await (const document of cursor) {
       promiseArray.push(
         new Promise((res, rej) => {

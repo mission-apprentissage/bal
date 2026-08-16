@@ -270,7 +270,6 @@
             }
           },
           "suspicious": {
-            "noExplicitAny": "off",
             "noTsIgnore": "off"
           }
         }
@@ -309,11 +308,8 @@
         "rules": {
           "correctness": {
             "noNextAsyncClientComponent": "warn",
-            "useExhaustiveDependencies": "off",
+            "useExhaustiveDependencies": "error",
             "useHookAtTopLevel": "error"
-          },
-          "nursery": {
-            "noFloatingPromises": "off"
           },
           "performance": {
             "noImgElement": "warn",

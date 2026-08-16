@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/node"
 import { addDays, format, isAfter, isBefore } from "date-fns"
 import deepmerge from "deepmerge"
 import { ObjectId } from "mongodb"
-import type { IDeca } from "shared/models/deca.model/deca.model"
+import type { Contrat } from "shared/apis/deca"
 import type { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model"
 
 import { z } from "zod/v4-mini"
@@ -12,6 +12,7 @@ import parentLogger from "@/common/logger"
 import { withCause } from "../../../common/services/errors/withCause"
 import { asyncForEach } from "../../../common/utils/asyncUtils"
 import { getDbCollection } from "../../../common/utils/mongodbUtils"
+import type { DecaContractDraft } from "./hydrate-deca"
 import { ifDefined, isDecaApiAvailable } from "./hydrate-deca"
 
 /**
@@ -29,7 +30,7 @@ function getMaxOldestDateForFetching() {
   return date
 }
 
-const parseDate = (v: string) => {
+const parseDate = (v: string | undefined) => {
   return v ? new Date(`${v}T00:00:00.000Z`) : null
 }
 
@@ -42,7 +43,7 @@ export const ZDecaSpecific = z.object({
   }),
 })
 
-export const buildDecaContract = (contrat: any) => {
+export const buildDecaContract = (contrat: Contrat): DecaContractDraft => {
   return {
     alternant: {
       ...ifDefined("nom", contrat.alternant.nom), // TDB, LBA
@@ -51,7 +52,7 @@ export const buildDecaContract = (contrat: any) => {
     no_contrat: contrat.detailsContrat.noContrat, // TDB, LBA
     date_signature_contrat: parseDate(contrat.detailsContrat.dateConclusion), // LBA
     ...ifDefined("type_contrat", contrat.detailsContrat.typeContrat), // TDB, LBA
-  }
+  } as DecaContractDraft
 }
 
 /**
@@ -140,9 +141,9 @@ const hydrateDecaPeriod = async ({ dateDebut, dateFin }: { dateDebut: string; da
           acc.push(formattedContract)
 
           return acc
-        }, [] as any[])
+        }, [] as DecaContractDraft[])
 
-        await asyncForEach(decaContratsForPeriod, async (currentContrat: IDeca) => {
+        await asyncForEach(decaContratsForPeriod, async (currentContrat: DecaContractDraft) => {
           try {
             const contratFilter = {
               no_contrat: currentContrat.no_contrat,
@@ -171,7 +172,7 @@ const hydrateDecaPeriod = async ({ dateDebut, dateFin }: { dateDebut: string; da
             )
           }
         })
-      } catch (err: any) {
+      } catch (err) {
         throw withCause(
           internal("Erreur lors de la récupération des données Deca spécifique", {
             error: err,

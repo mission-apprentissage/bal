@@ -45,7 +45,7 @@ export const getTrainingLinks = async (data: TrainingLinkData[], signal: AbortSi
     const responses = await Promise.all(tasks)
 
     return responses.flatMap((response) => response.data)
-  } catch (error: any) {
+  } catch (error) {
     if (isAxiosError(error)) {
       throw internal(
         `Erreur lors de la génération des liens de prises de rendez-vous. ${error.code ?? ""}: ${error.message}. Le serveur a répondu avec le message suivant : ${JSON.stringify(
@@ -55,6 +55,6 @@ export const getTrainingLinks = async (data: TrainingLinkData[], signal: AbortSi
       )
     }
 
-    throw internal(`Erreur lors de la génération des liens de prises de rendez-vous. ${error.message}`, { error })
+    throw internal(`Erreur lors de la génération des liens de prises de rendez-vous. ${error instanceof Error ? error.message : String(error)}`, { error })
   }
 }

@@ -2,7 +2,7 @@ import axios from "axios"
 import { formatDuration, intervalToDuration } from "date-fns"
 import type { ApiDeca, Contrat } from "shared/apis/deca"
 import logger from "@/common/logger"
-import { ApiError, apiRateLimiter } from "@/common/utils/apiUtils"
+import { ApiError, apiRateLimiter, toApiErrorDetails } from "@/common/utils/apiUtils"
 import config from "@/config"
 
 const axiosClient = axios.create({
@@ -38,7 +38,7 @@ const configFor = {
  * @returns
  */
 const getDeca = async (dateDebut: string, dateFin: string, page: number, product: "LBA" | "TDB" = "LBA"): Promise<ApiDeca> => {
-  return executeWithRateLimiting(async (client: any) => {
+  return executeWithRateLimiting(async (client) => {
     try {
       console.log(dateDebut, dateFin, page)
       const startDate = new Date()
@@ -60,17 +60,17 @@ const getDeca = async (dateDebut: string, dateFin: string, page: number, product
       const ts = endDate.getTime() - startDate.getTime()
       const duration = formatDuration(intervalToDuration({ start: startDate, end: endDate })) || `${ts}ms`
       console.log(duration)
-      logger.debug(
-        `[API Deca] Récupération contrats du ${dateDebut} au ${dateFin} - page ${page} sur ${response?.data?.metadonnees?.totalPages} ${response.cached ? "(depuis le cache)" : ""}`
-      )
+      logger.debug(`[API Deca] Récupération contrats du ${dateDebut} au ${dateFin} - page ${page} sur ${response?.data?.metadonnees?.totalPages}`)
       if (!response?.data) {
         throw new ApiError("Api Deca", "No data received")
       }
       return response.data
-    } catch (e: any) {
-      logger.info(e.response)
-      if (!e.response) logger.info(e)
-      throw new ApiError("Api Deca getDeca", e.message, e.code || e.response?.status)
+    } catch (e) {
+      const response = axios.isAxiosError(e) ? e.response : undefined
+      logger.info(response)
+      if (!response) logger.info(e)
+      const { message, reason } = toApiErrorDetails(e)
+      throw new ApiError("Api Deca getDeca", message, reason)
     }
   })
 }

@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb"
+import type { Contrat } from "shared/apis/deca"
 import { ZDeca } from "shared/models/deca.model/deca.model"
 import { describe, expect, it } from "vitest"
 
@@ -6,7 +7,7 @@ import { buildDecaContract } from "./hydrate-deca"
 
 describe("buildDecaContract", () => {
   it("should map a fully populated Deca contract, including rupture and fin de contrat réelle", () => {
-    const contrat = {
+    const contrat: Contrat = {
       alternant: {
         nom: "Dupont",
         prenom: "Jean",
@@ -150,7 +151,7 @@ describe("buildDecaContract", () => {
   })
 
   it("should omit optional fields (rupture, avenant, etc.) when absent from the source contract", () => {
-    const contrat = {
+    const contrat: Contrat = {
       alternant: {
         nom: "Martin",
         dateNaissance: "2000-01-01",

@@ -1,7 +1,15 @@
+/**
+ * Payload de l'API Deca.
+ *
+ * Hormis `detailsContrat.noContrat`, tous les champs feuilles sont optionnels : `buildDecaContract`
+ * les lit systématiquement au travers de `ifDefined`, et les fixtures de `hydrate-deca.test.ts`
+ * couvrent explicitement le cas d'un contrat quasi vide. Certains champs numériques arrivent tantôt
+ * en nombre, tantôt en chaîne, d'où les unions.
+ */
 export interface Contrat {
   alternant: Alternant
   formation: Formation
-  etablissementFormation: EtablissementFormation
+  etablissementFormation?: EtablissementFormation
   organismeFormationResponsable: OrganismeFormationResponsable
   detailsContrat: DetailsContrat
   rupture?: Rupture
@@ -10,13 +18,13 @@ export interface Contrat {
 }
 
 interface Alternant {
-  nom: string
-  prenom: string
-  sexe: string
-  dateNaissance: string
-  departementNaissance: string
-  nationalite?: number
-  handicap?: boolean
+  nom?: string
+  prenom?: string
+  sexe?: string
+  dateNaissance?: string
+  departementNaissance?: string
+  nationalite?: number | string
+  handicap?: boolean | string
   courriel?: string
   telephone?: string
   adresse?: Adresse
@@ -24,30 +32,36 @@ interface Alternant {
 }
 
 interface Adresse {
-  numero?: number
+  numero?: number | string
   voie?: string
   codePostal?: string
 }
 
 interface DetailsContrat {
   noContrat: string
-  dateDebutContrat: string
-  statut: Statut
-  dateFinContrat: string
-  dateEffetAvenant: string
+  dateDebutContrat?: string
+  statut?: Statut
+  dateFinContrat?: string
+  dateEffetAvenant?: string
   noAvenant?: string
+  typeContrat?: number | string
+  dispositif?: string
+  dateConclusion?: string
 }
 
-enum Statut {
-  Annule = "Annulé",
-  Corrige = "Corrigé",
-  Empty = "",
-  Rompu = "Rompu",
-  Supprime = "Supprimé",
-}
+// union plutôt qu'un enum : jamais utilisé comme valeur, et un enum refuse les littéraux bruts
+type Statut = "Annulé" | "Corrigé" | "" | "Rompu" | "Supprimé"
 
 interface Employeur {
-  codeIdcc: string
+  codeIdcc?: string
+  siret?: string
+  adresse?: Adresse
+  naf?: string
+  nombreDeSalaries?: number
+  courriel?: string
+  telephone?: string
+  denomination?: string
+  typeEmployeur?: number | string
 }
 
 interface EtablissementFormation {
@@ -55,11 +69,12 @@ interface EtablissementFormation {
 }
 
 interface Formation {
-  dateDebutFormation: string
-  dateFinFormation: string
-  codeDiplome: string
+  dateDebutFormation?: string
+  dateFinFormation?: string
+  codeDiplome?: string
   rncp?: string
-  intituleOuQualification: string
+  intituleOuQualification?: string
+  typeDiplome?: string
 }
 
 interface OrganismeFormationResponsable {
@@ -68,7 +83,7 @@ interface OrganismeFormationResponsable {
 }
 
 interface Rupture {
-  dateEffetRupture: string
+  dateEffetRupture?: string
   codeMotifRupture?: string
   commentaireRupture?: string
   dateSignalement?: string

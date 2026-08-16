@@ -38,20 +38,25 @@ export const uploadContactListToBrevo = async (contacts: IBrevoContact[], contac
 
   const maxRetries = 5
   let attempt = 0
-  let lastError: Error | null = null
+  let lastError: unknown = null
 
   while (attempt < maxRetries) {
     try {
       await clientBrevo.importContacts(requestContactImport)
       return
-    } catch (error: any) {
+    } catch (error) {
       lastError = error
-      const statusCode = error?.response?.statusCode || error?.response?.status
+      // le SDK Brevo expose `response.statusCode`, axios `response.status` : on lit les deux.
+      const response =
+        error instanceof Object && "response" in error
+          ? (error.response as { statusCode?: number; status?: number; headers?: Record<string, string | undefined> } | undefined)
+          : undefined
+      const statusCode = response?.statusCode || response?.status
 
       if (statusCode === 429) {
         attempt++
         if (attempt < maxRetries) {
-          const headers = error?.response?.headers || {}
+          const headers = response?.headers ?? {}
           const rateLimitReset = headers["x-sib-ratelimit-reset"]
           const rateLimitRemaining = headers["x-sib-ratelimit-remaining"]
 

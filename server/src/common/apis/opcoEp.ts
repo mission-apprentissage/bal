@@ -1,7 +1,7 @@
 import axios from "axios"
 import querystring from "querystring"
 import config from "@/config"
-import { ApiError } from "../utils/apiUtils"
+import { ApiError, toApiErrorDetails } from "../utils/apiUtils"
 
 export const OPCO_EP_BASE_URL = `https://${config.opcoEp.baseUrl}`
 export const OPCO_EP_AUTH_BASE_URL = `https://${config.opcoEp.baseAuthUrl}`
@@ -37,8 +37,9 @@ const getToken = async () => {
     )
 
     return response.data
-  } catch (error: any) {
-    throw new ApiError("Api Opco Ep token", error.message, error.code || error.response?.status)
+  } catch (error) {
+    const { message, reason } = toApiErrorDetails(error)
+    throw new ApiError("Api Opco Ep token", message, reason)
   }
 }
 
@@ -85,7 +86,8 @@ export const getOpcoEpVerification = async (siret: string, email: string) => {
     // }
 
     return data
-  } catch (error: any) {
-    throw new ApiError("Api Opco Ep", error.message, error.code || error.response?.status)
+  } catch (error) {
+    const { message, reason } = toApiErrorDetails(error)
+    throw new ApiError("Api Opco Ep", message, reason)
   }
 }

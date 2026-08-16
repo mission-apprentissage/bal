@@ -35,7 +35,8 @@ export const createClamav = (uri: string) => {
   async function getScanner() {
     const clamscan = await getClamscan(uri)
     const scanStream = clamscan.passthrough()
-    const scanResults = new Promise<any>((resolve) => {
+    // shape émise par `scan-complete` du passthrough clamscan
+    const scanResults = new Promise<{ isInfected: boolean | null; viruses: string[] }>((resolve) => {
       scanStream.on("scan-complete", (res) => {
         resolve(res)
       })

@@ -1,4 +1,5 @@
 import type { AxiosInstance } from "axios"
+import { isAxiosError } from "axios"
 import { RateLimiterMemory, RateLimiterQueue } from "rate-limiter-flexible"
 
 import { timeout } from "./asyncUtils"
@@ -30,9 +31,11 @@ export const apiRateLimiter = (name: string, options: ApiRateLimiterOptions) => 
 export class ApiError extends Error {
   apiName: string
   message: string
-  reason: string | undefined
+  // les appelants passent `error.code || error.response?.status`, donc un status HTTP numérique
+  // peut arriver ici : le type reflète ce qui transite réellement.
+  reason: string | number | undefined
 
-  constructor(apiName: string, message: string, reason?: string) {
+  constructor(apiName: string, message: string, reason?: string | number) {
     super()
     Error.captureStackTrace(this, this.constructor)
     this.name = this.constructor.name
@@ -40,4 +43,20 @@ export class ApiError extends Error {
     this.message = `[${apiName}] ${message}`
     this.reason = reason
   }
+}
+
+/**
+ * Extrait message et code d'une erreur de client HTTP sans passer par `any`.
+ * Reproduit le comportement historique `error.message` / `error.code || error.response?.status`.
+ */
+export function toApiErrorDetails(error: unknown): { message: string; reason: string | number | undefined } {
+  if (isAxiosError(error)) {
+    return { message: error.message, reason: error.code || error.response?.status }
+  }
+
+  if (error instanceof Error) {
+    return { message: error.message, reason: (error as NodeJS.ErrnoException).code }
+  }
+
+  return { message: String(error), reason: undefined }
 }

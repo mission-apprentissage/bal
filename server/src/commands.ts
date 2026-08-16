@@ -131,12 +131,12 @@ program
   })
 
 function createJobAction(name: string) {
-  return async (options: any) => {
+  return async (options: Record<string, unknown>) => {
     try {
       const { queued = false, ...payload } = options
       const exitCode = await addJob({
         name,
-        queued,
+        queued: Boolean(queued),
         payload,
       })
 

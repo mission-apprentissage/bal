@@ -9,7 +9,8 @@ async function dereferenceOpenapiSchema(data: OpenAPIObject): Promise<OpenAPIObj
     throw new Error("Unsupported OpenAPI version")
   }
 
-  return (await dereference(data as any)) as any
+  // `dereference` attend un document JSON Schema générique, pas un OpenAPIObject typé
+  return (await dereference(data as Parameters<typeof dereference>[0])) as OpenAPIObject
 }
 async function fetchDistOperations(): Promise<Record<string, OpenapiOperation>> {
   const response = await fetch("https://bal.apprentissage.beta.gouv.fr/api/documentation/json")

@@ -5,6 +5,7 @@ import deepmerge from "deepmerge"
 import { addJob } from "job-processor"
 import { DateTime } from "luxon"
 import { ObjectId } from "mongodb"
+import type { Contrat } from "shared/apis/deca"
 import type { IDeca } from "shared/models/deca.model/deca.model"
 import { ZDeca } from "shared/models/deca.model/deca.model"
 import type { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model"
@@ -28,15 +29,26 @@ function getMaxOldestDateForFetching() {
   return date
 }
 
-export const ifDefined = (key: string, value: any, transform = (v: any) => v) => {
+export const ifDefined = <T>(key: string, value: T, transform: (v: T) => unknown = (v) => v) => {
   return value ? { [key]: transform(value) } : {}
 }
 
-const parseDate = (v: string) => {
+const parseDate = (v: string | undefined) => {
   return v ? new Date(`${v}T00:00:00.000Z`) : null
 }
 
-export const buildDecaContract = (contrat: any) => {
+// l'API Deca renvoie ces champs tantôt en nombre, tantôt en chaîne : `parseInt` les acceptait
+// tous les deux via `any`, `String()` préserve ce comportement en restant typé.
+const toInt = (v: number | string | undefined) => parseInt(String(v))
+
+/**
+ * Forme produite par `buildDecaContract` : un `IDeca` sans les champs posés par la base.
+ * Les spreads `ifDefined` rendent le type inférable impossible à exprimer, d'où l'assertion
+ * unique en sortie — c'est ce que le `any` d'origine masquait.
+ */
+export type DecaContractDraft = Partial<Omit<IDeca, "_id" | "updated_at" | "created_at">> & Pick<IDeca, "no_contrat" | "alternant" | "date_signature_contrat">
+
+export const buildDecaContract = (contrat: Contrat): DecaContractDraft => {
   return {
     alternant: {
       ...ifDefined("date_naissance", contrat.alternant.dateNaissance, parseDate), // TDB, LBA
@@ -44,12 +56,12 @@ export const buildDecaContract = (contrat: any) => {
       ...ifDefined("prenom", contrat.alternant.prenom), // TDB, LBA
       ...ifDefined("sexe", contrat.alternant.sexe), // TDB
       ...ifDefined("departement_naissance", contrat.alternant.departementNaissance), // TDB
-      ...ifDefined("nationalite", contrat.alternant.nationalite, parseInt), // TDB
+      ...ifDefined("nationalite", contrat.alternant.nationalite, toInt), // TDB
       handicap: contrat.alternant.handicap === "true" || contrat.alternant.handicap === true ? true : false, // TDB, LBA
       ...ifDefined("courriel", contrat.alternant.courriel), // TDB, LBA
       ...ifDefined("telephone", contrat.alternant.telephone), // TDB
       adresse: {
-        ...ifDefined("numero", contrat.alternant.adresse?.numero, parseInt), // TDB
+        ...ifDefined("numero", contrat.alternant.adresse?.numero, toInt), // TDB
         ...ifDefined("voie", contrat.alternant.adresse?.voie), // TDB
         ...ifDefined("code_postal", contrat.alternant.adresse?.codePostal), // TDB
       },
@@ -74,7 +86,7 @@ export const buildDecaContract = (contrat: any) => {
       ...ifDefined("code_idcc", contrat.employeur.codeIdcc), // TDB, LBA
       ...ifDefined("siret", contrat.employeur.siret), // LBA
       adresse: {
-        ...ifDefined("code_postal", contrat.employeur.adresse.codePostal), // LBA
+        ...ifDefined("code_postal", contrat.employeur.adresse?.codePostal), // LBA
       },
       ...ifDefined("naf", contrat.employeur.naf), // LBA
       ...ifDefined("nombre_de_salaries", contrat.employeur.nombreDeSalaries), // LBA
@@ -97,7 +109,7 @@ export const buildDecaContract = (contrat: any) => {
     date_signature_contrat: parseDate(contrat.detailsContrat.dateConclusion), // LBA
     ...ifDefined("no_avenant", contrat.detailsContrat.noAvenant), // TDB, LBA
     ...ifDefined("statut", contrat.detailsContrat.statut), // TDB, LBA
-  }
+  } as DecaContractDraft
 }
 
 export const isDecaApiAvailable = () => {
@@ -211,9 +223,9 @@ const hydrateDecaPeriod = async ({ dateDebut, dateFin }: { dateDebut: string; da
           acc.push(formattedContract)
 
           return acc
-        }, [] as any[])
+        }, [] as DecaContractDraft[])
 
-        await asyncForEach(decaContratsForPeriod, async (currentContrat: IDeca) => {
+        await asyncForEach(decaContratsForPeriod, async (currentContrat: DecaContractDraft) => {
           try {
             const newContratFilter = {
               no_contrat: currentContrat.no_contrat,
@@ -275,7 +287,7 @@ const hydrateDecaPeriod = async ({ dateDebut, dateFin }: { dateDebut: string; da
           },
           queued: true,
         })
-      } catch (err: any) {
+      } catch (err) {
         throw withCause(
           internal("Erreur lors de la récupération des données Deca", {
             error: err,

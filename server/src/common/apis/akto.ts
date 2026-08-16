@@ -1,7 +1,7 @@
 import axios from "axios"
 import querystring from "querystring"
 import config from "@/config"
-import { ApiError } from "../utils/apiUtils"
+import { ApiError, toApiErrorDetails } from "../utils/apiUtils"
 
 export const AKTO_API_BASE_URL = "https://api.akto.fr/referentiel/api/v1"
 export const AKTO_AUTH_BASE_URL = "https://login.microsoftonline.com"
@@ -34,8 +34,9 @@ const getToken = async () => {
     )
 
     return response.data
-  } catch (error: any) {
-    throw new ApiError("Api Akto token", error.message, error.code || error.response?.status)
+  } catch (error) {
+    const { message, reason } = toApiErrorDetails(error)
+    throw new ApiError("Api Akto token", message, reason)
   }
 }
 
@@ -56,7 +57,8 @@ export const getAktoVerification = async (siren: string, email: string) => {
     })
 
     return data.data.match
-  } catch (error: any) {
-    throw new ApiError("Api Akto", error.message, error.code || error.response?.status)
+  } catch (error) {
+    const { message, reason } = toApiErrorDetails(error)
+    throw new ApiError("Api Akto", message, reason)
   }
 }

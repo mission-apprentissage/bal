@@ -33,7 +33,7 @@ const createStreams = () => {
   return streams
 }
 
-function errorSerialiser(err: any) {
+function errorSerialiser(err: Error & { errInfo?: unknown }) {
   return {
     ...bunyan.stdSerializers.err(err),
     ...(err.errInfo ? { errInfo: err.errInfo } : {}),

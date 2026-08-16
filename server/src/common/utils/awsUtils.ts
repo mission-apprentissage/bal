@@ -36,9 +36,9 @@ export async function s3ReadAsStream(bucket: Bucket, key: string) {
   try {
     const object = await s3Client.send(new GetObjectCommand({ Bucket: getBucketName(bucket), Key: key }))
     return object.Body?.transformToWebStream()
-  } catch (error: any) {
+  } catch (error) {
     const newError = internal(`Error reading S3 file stream`, { key: key, bucket: getBucketName(bucket) })
-    newError.cause = error.message
+    newError.cause = error instanceof Error ? error.message : String(error)
     throw newError
   }
 }
@@ -53,9 +53,9 @@ export async function s3Upload(bucket: Bucket, fileKey: string, options: Omit<Pu
     })
     await upload.done()
     logger.info("upload complete:", { bucket: bucketName, key: fileKey })
-  } catch (error: any) {
+  } catch (error) {
     const newError = internal(`Error uploading S3 file`, { key: fileKey, bucket: getBucketName(bucket) })
-    newError.cause = error.message
+    newError.cause = error instanceof Error ? error.message : String(error)
     throw newError
   }
 }

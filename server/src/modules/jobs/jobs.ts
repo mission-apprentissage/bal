@@ -116,7 +116,7 @@ export async function setupJobProcessor() {
     jobs: {
       "user:create": {
         handler: async (job) => {
-          const { admin, support, ...rest } = job.payload as any
+          const { admin, support, ...rest } = job.payload as { email: string; password: string; admin?: boolean; support?: boolean }
           return createUser({
             ...rest,
             is_admin: admin ?? false,
@@ -125,7 +125,7 @@ export async function setupJobProcessor() {
         },
       },
       "indexes:recreate": {
-        handler: async (job) => recreateIndexes(job.payload as any),
+        handler: async (job) => recreateIndexes(job.payload as { drop: boolean } | undefined),
       },
       "db:validate": {
         handler: async () => validateModels(),
@@ -150,7 +150,7 @@ export async function setupJobProcessor() {
         },
       },
       "migrations:create": {
-        handler: async (job) => createMigration(job.payload as any),
+        handler: async (job) => createMigration(job.payload as { description: string }),
       },
       "deca:hydrate": {
         handler: async (_job, signal) => {

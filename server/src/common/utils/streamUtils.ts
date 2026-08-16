@@ -39,7 +39,8 @@ export function streamJsonArray() {
   return _compose(
     streamJson.parser(),
     streamers.streamArray(),
-    transformData((data: any) => data.value)
+    // `streamers.streamArray()` émet des paires `{ key, value }`, on ne garde que la valeur.
+    transformData((data: { key: number; value: unknown }) => data.value)
   )
 }
 

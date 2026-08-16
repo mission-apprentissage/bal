@@ -87,9 +87,9 @@ export const uploadSupportRoutes = ({ server }: { server: Server }) => {
       await oleoduc(
         // @ts-ignore
         stream,
-        transformData((line: any) => JSON.parse(line)),
-        writeData((resp: any) => {
-          result = resp.map(({ name }: any) => ({ id: name }))
+        transformData((line: string) => JSON.parse(line) as { name: string }[]),
+        writeData((resp: { name: string }[]) => {
+          result = resp.map(({ name }) => ({ id: name }))
         })
       )
       return response.status(200).send(result)
@@ -111,8 +111,8 @@ export const uploadSupportRoutes = ({ server }: { server: Server }) => {
       let fileNotFound = false
       try {
         stream = await getFromStorage(id, "support")
-      } catch (error: any) {
-        if (error.message.includes("Status code 404")) {
+      } catch (error) {
+        if (error instanceof Error && error.message.includes("Status code 404")) {
           fileNotFound = true
         } else {
           throw Boom.badData("Impossible de télécharger le fichier")
