@@ -1,5 +1,5 @@
-import { zProcessorStatus } from "job-processor/dist/core.js";
-import type { IRoutesDef } from "../common.routes";
+import { zProcessorStatus } from "job-processor/dist/core.js"
+import type { IRoutesDef } from "../common.routes"
 
 export const zProcessorAdminRoutes = {
   get: {
@@ -15,4 +15,4 @@ export const zProcessorAdminRoutes = {
     },
   },
   post: {},
-} as const satisfies IRoutesDef;
+} as const satisfies IRoutesDef

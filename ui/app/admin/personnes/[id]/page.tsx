@@ -1,17 +1,17 @@
-import PersonView from "./components/PersonView";
-import { apiGet } from "@/utils/api.utils";
+import { apiGet } from "@/utils/api.utils"
+import PersonView from "./components/PersonView"
 
 interface Props {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>
 }
 
 const AdminPersonViewPage = async ({ params }: Props) => {
-  const { id } = await params;
+  const { id } = await params
   const person = await apiGet(`/admin/persons/:id`, {
     params: { id },
-  });
+  })
 
-  return <PersonView person={person} />;
-};
+  return <PersonView person={person} />
+}
 
-export default AdminPersonViewPage;
+export default AdminPersonViewPage

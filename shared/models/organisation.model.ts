@@ -1,10 +1,10 @@
-import type { Jsonify } from "type-fest";
-import { z } from "zod/v4-mini";
+import type { Jsonify } from "type-fest"
+import { z } from "zod/v4-mini"
 
-import type { IModelDescriptor } from "./common";
-import { zObjectId } from "./common";
+import type { IModelDescriptor } from "./common"
+import { zObjectId } from "./common"
 
-const collectionName = "organisations" as const;
+const collectionName = "organisations" as const
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ siren: 1, email_domain: 1, source: 1 }, { unique: true }],
@@ -13,7 +13,7 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ created_at: 1 }, {}],
   [{ updated_at: 1 }, {}],
   [{ ttl: 1 }, { expireAfterSeconds: 0 }],
-];
+]
 
 export const ZOrganisation = z.object({
   _id: zObjectId,
@@ -23,13 +23,13 @@ export const ZOrganisation = z.object({
   updated_at: z.date(),
   created_at: z.date(),
   ttl: z.date(),
-});
+})
 
-export type IOrganisation = z.output<typeof ZOrganisation>;
-export type IOrganisationJson = Jsonify<z.input<typeof ZOrganisation>>;
+export type IOrganisation = z.output<typeof ZOrganisation>
+export type IOrganisationJson = Jsonify<z.input<typeof ZOrganisation>>
 
 export default {
   zod: ZOrganisation,
   indexes,
   collectionName,
-};
+}

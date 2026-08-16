@@ -1,44 +1,43 @@
-"use client";
+"use client"
 
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Box, Typography } from "@mui/material";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import type { IBody, IPostRoutes, IResponse } from "shared";
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { Input } from "@codegouvfr/react-dsfr/Input"
+import { Box, Typography } from "@mui/material"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import type { IBody, IPostRoutes, IResponse } from "shared"
+import ViewData from "@/app/usage/components/ViewData"
+import { apiPost } from "@/utils/api.utils"
 
-import { apiPost } from "@/utils/api.utils";
-import ViewData from "@/app/usage/components/ViewData";
-
-type Route = IPostRoutes["/v1/organisation/validation"];
-type Req = IBody<Route>;
-type Res = IResponse<Route>;
+type Route = IPostRoutes["/v1/organisation/validation"]
+type Req = IBody<Route>
+type Res = IResponse<Route>
 
 const UsageVerificationPage = () => {
-  const [requestData, setRequestData] = useState<Req>();
-  const [responseData, setResponseData] = useState<Res | Error>();
+  const [requestData, setRequestData] = useState<Req>()
+  const [responseData, setResponseData] = useState<Res | Error>()
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Req>();
+  } = useForm<Req>()
 
   const onSubmit = async (body: Req) => {
     try {
-      setRequestData(body);
+      setRequestData(body)
       const data = await apiPost("/test/v1/organisation/validation", {
         body,
-      });
+      })
 
-      setResponseData(data);
+      setResponseData(data)
     } catch (error) {
       if (error instanceof Error) {
-        setResponseData(error);
+        setResponseData(error)
       }
 
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   return (
     <>
@@ -74,7 +73,7 @@ const UsageVerificationPage = () => {
         <ViewData title="Réponse" data={responseData} />
       </form>
     </>
-  );
-};
+  )
+}
 
-export default UsageVerificationPage;
+export default UsageVerificationPage

@@ -3,4 +3,4 @@ module.exports = {
   rules: {
     "body-max-length": [2, "always", 1000],
   },
-};
+}

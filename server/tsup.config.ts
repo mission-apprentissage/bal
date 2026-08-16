@@ -1,19 +1,19 @@
-import fs from "node:fs";
-import { basename } from "node:path";
+import fs from "node:fs"
+import { basename } from "node:path"
 
-import { defineConfig } from "tsup";
+import { defineConfig } from "tsup"
 
 export default defineConfig((options) => {
-  const isDev = options.env?.NODE_ENV !== "production";
-  const isWatched = options.env?.TSUP_WATCH === "true";
-  const migrationFiles = fs.readdirSync("./src/migrations");
+  const isDev = options.env?.NODE_ENV !== "production"
+  const isWatched = options.env?.TSUP_WATCH === "true"
+  const migrationFiles = fs.readdirSync("./src/migrations")
 
   const entry: Record<string, string> = {
     index: "src/index.ts",
-  };
+  }
 
   for (const file of migrationFiles) {
-    entry[`migrations/${basename(file, ".ts")}`] = `src/migrations/${file}`;
+    entry[`migrations/${basename(file, ".ts")}`] = `src/migrations/${file}`
   }
 
   return {
@@ -40,7 +40,7 @@ export default defineConfig((options) => {
         ...options.define,
         "process.env.IS_BUILT": '"true"',
         "process.env.NODE_ENV": isDev ? '"developpement"' : '"production"',
-      };
+      }
     },
-  };
-});
+  }
+})

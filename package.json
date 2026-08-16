@@ -51,10 +51,9 @@
     "services:stop": "docker compose down",
     "services:clean": "pnpm services:stop && docker system prune --volumes",
     "seed:update": ".bin/mna seed:update",
-    "lint": "eslint --cache .",
-    "lint:fix": "pnpm lint --fix",
-    "prettier:fix": "prettier --write -u .",
-    "prettier:check": "prettier --check -u .",
+    "check": "biome check .",
+    "check:ci": "biome ci .",
+    "check:fix": "biome check --write .",
     "release": "semantic-release",
     "release:interactive": ".bin/mna app:release:interactive",
     "postinstall": "husky install",
@@ -69,44 +68,22 @@
     "product:access:update": ".bin/mna product:access:update"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.8",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
-    "@dword-design/eslint-plugin-import-alias": "~6.0.3",
-    "@eslint/compat": "^1.4.0",
-    "@eslint/js": "^9.37.0",
-    "@next/eslint-plugin-next": "^15.5.4",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^7.1.0",
-    "@tanstack/eslint-plugin-query": "5.91.0",
     "commander": "^14.0.1",
-    "eslint": "^9.37.0",
-    "eslint-import-resolver-typescript": "^4.4.4",
-    "eslint-plugin-import-x": "^4.16.1",
-    "eslint-plugin-n": "^17.23.1",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "globals": "^16.4.0",
     "lint-staged": "^16.2.4",
     "node-talisman": "^1.29.22",
-    "prettier": "^3.6.2",
     "semantic-release": "^24.2.9",
     "semantic-release-slack-bot": "^4.0.2",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.0",
+    "typescript": "^7.0.2",
     "vitest": "^3.2.7"
   },
-  "prettier": {
-    "printWidth": 120,
-    "bracketSpacing": true,
-    "trailingComma": "es5",
-    "arrowParens": "always"
-  },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,mjs,cjs}": [
-      "eslint --cache --fix",
-      "prettier --write -u"
-    ],
-    "!(*.{js,jsx,ts,tsx,mjs,cjs})": [
-      "prettier --write -u"
+    "*.{js,mjs,cjs,ts,tsx,jsx,json,jsonc}": [
+      "biome check --write --no-errors-on-unmatched"
     ],
     "pnpm-lock.yaml": [
       "pnpm dedupe"

@@ -1,5 +1,5 @@
-import type { CreateIndexesOptions, IndexSpecification } from "mongodb";
-import type { $ZodType } from "zod/v4/core";
+import type { CreateIndexesOptions, IndexSpecification } from "mongodb"
+import type { $ZodType } from "zod/v4/core"
 
 export type CollectionName =
   | "users"
@@ -19,12 +19,12 @@ export type CollectionName =
   | "bouncer.email"
   | "bouncer.domain"
   | "lba.emailblacklists"
-  | "lba.mailingLists";
+  | "lba.mailingLists"
 
 export interface IModelDescriptor {
-  zod: $ZodType;
-  indexes: [IndexSpecification, CreateIndexesOptions][];
-  collectionName: CollectionName;
+  zod: $ZodType
+  indexes: [IndexSpecification, CreateIndexesOptions][]
+  collectionName: CollectionName
 }
 
-export { zObjectIdMini as zObjectId } from "zod-mongodb-schema";
+export { zObjectIdMini as zObjectId } from "zod-mongodb-schema"

@@ -1,49 +1,48 @@
-"use client";
+"use client"
 
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import { PasswordInput } from "@codegouvfr/react-dsfr/blocks/PasswordInput";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Box } from "@mui/material";
-import Typography from "@mui/material/Typography";
-import { useState } from "react";
-import type { SubmitHandler } from "react-hook-form";
-import { useForm } from "react-hook-form";
-import type { IBody, IPostRoutes } from "shared";
-import type { IStatus } from "shared/routes/auth.routes";
+import { Alert } from "@codegouvfr/react-dsfr/Alert"
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { PasswordInput } from "@codegouvfr/react-dsfr/blocks/PasswordInput"
+import { Input } from "@codegouvfr/react-dsfr/Input"
+import { Box } from "@mui/material"
+import Typography from "@mui/material/Typography"
+import { captureException } from "@sentry/nextjs"
+import { useState } from "react"
+import type { SubmitHandler } from "react-hook-form"
+import { useForm } from "react-hook-form"
+import type { IBody, IPostRoutes } from "shared"
+import type { IStatus } from "shared/routes/auth.routes"
+import FormContainer from "@/app/auth/components/FormContainer"
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import { useAuth } from "@/context/AuthContext"
+import { apiPost } from "@/utils/api.utils"
 
-import { captureException } from "@sentry/nextjs";
-import { useAuth } from "@/context/AuthContext";
-import { apiPost } from "@/utils/api.utils";
-import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
-import FormContainer from "@/app/auth/components/FormContainer";
-
-type Route = IPostRoutes["/auth/login"];
+type Route = IPostRoutes["/auth/login"]
 
 export function ConnexionComponent() {
-  const { setUser } = useAuth();
-  const [status, setStatus] = useState<IStatus>();
+  const { setUser } = useAuth()
+  const [status, setStatus] = useState<IStatus>()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IBody<Route>>();
+  } = useForm<IBody<Route>>()
 
   const onSubmit: SubmitHandler<IBody<Route>> = async (data) => {
     try {
-      setUser(await apiPost("/auth/login", { body: data }));
+      setUser(await apiPost("/auth/login", { body: data }))
     } catch (error) {
-      const errorMessage = (error as Record<string, string>)?.message;
+      const errorMessage = (error as Record<string, string>)?.message
 
       setStatus({
         error: true,
         message: errorMessage ?? "Impossible de se connecter.",
-      });
+      })
 
-      captureException(error);
+      captureException(error)
     }
-  };
+  }
 
   return (
     <>
@@ -97,5 +96,5 @@ export function ConnexionComponent() {
         </form>
       </FormContainer>
     </>
-  );
+  )
 }

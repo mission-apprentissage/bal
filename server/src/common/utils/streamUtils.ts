@@ -1,125 +1,110 @@
-import { Transform } from "node:stream";
-import type { TransformCallback, TransformOptions } from "node:stream";
-import { compose as _compose, transformData } from "oleoduc";
-import streamJson from "stream-json";
-import streamers from "stream-json/streamers/StreamArray.js";
-import { parse } from "zod/v4/core";
-import type { $ZodType, $ZodArray } from "zod/v4/core";
+import type { TransformCallback, TransformOptions } from "node:stream"
+import { Transform } from "node:stream"
+import { compose as _compose, transformData } from "oleoduc"
+import streamJson from "stream-json"
+import streamers from "stream-json/streamers/StreamArray.js"
+import type { $ZodArray, $ZodType } from "zod/v4/core"
+import { parse } from "zod/v4/core"
 
-export function createToJsonTransformStream<T extends $ZodType>({
-  schema,
-  opt = { noParse: false },
-}: {
-  schema: $ZodArray<T> | null;
-  opt?: { noParse?: boolean };
-}): Transform {
-  let inited = false;
+export function createToJsonTransformStream<T extends $ZodType>({ schema, opt = { noParse: false } }: { schema: $ZodArray<T> | null; opt?: { noParse?: boolean } }): Transform {
+  let inited = false
   return new Transform({
     writableObjectMode: true,
     readableObjectMode: false,
     transform(chunk, _encoding, callback) {
       try {
         if (!inited) {
-          this.push("[");
-          inited = true;
+          this.push("[")
+          inited = true
         } else {
-          this.push(",\n");
+          this.push(",\n")
         }
-        this.push(
-          opt.noParse ? JSON.stringify(chunk) : JSON.stringify(schema ? parse(schema._zod.def.element, chunk) : chunk)
-        );
-        callback();
+        this.push(opt.noParse ? JSON.stringify(chunk) : JSON.stringify(schema ? parse(schema._zod.def.element, chunk) : chunk))
+        callback()
       } catch (error) {
-        callback(error);
+        callback(error)
       }
     },
     flush(callback) {
       if (!inited) {
-        this.push("[");
+        this.push("[")
       }
-      this.push("]");
-      callback();
+      this.push("]")
+      callback()
     },
-  });
+  })
 }
 
 export function streamJsonArray() {
   return _compose(
     streamJson.parser(),
     streamers.streamArray(),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    transformData((data: any) => data.value)
-  );
+    // `streamers.streamArray()` émet des paires `{ key, value }`, on ne garde que la valeur.
+    transformData((data: { key: number; value: unknown }) => data.value)
+  )
 }
 
 export function createBatchTransformStream(size: number): Transform {
-  let currentBatch: unknown[] = [];
+  let currentBatch: unknown[] = []
 
   return new Transform({
     objectMode: true,
     transform(chunk, _encoding, callback) {
-      currentBatch.push(chunk);
+      currentBatch.push(chunk)
 
       if (currentBatch.length >= size) {
-        this.push(currentBatch);
-        currentBatch = [];
+        this.push(currentBatch)
+        currentBatch = []
       }
 
-      callback();
+      callback()
     },
     flush(callback) {
       if (currentBatch.length > 0) {
-        this.push(currentBatch);
+        this.push(currentBatch)
       }
-      callback();
+      callback()
     },
-  });
+  })
 }
 
-type AccumulateDataOptions<TAcc> = TransformOptions & { accumulator?: TAcc };
+type AccumulateDataOptions<TAcc> = TransformOptions & { accumulator?: TAcc }
 
-type AccumulateDataCallback<TInput, TOutput, TAcc> = (
-  acc: TAcc,
-  data: TInput,
-  flush: (data: TOutput) => void
-) => TAcc | Promise<TAcc>;
+type AccumulateDataCallback<TInput, TOutput, TAcc> = (acc: TAcc, data: TInput, flush: (data: TOutput) => void) => TAcc | Promise<TAcc>
 
-function accumulateData<TInput, TOutput, TAcc = TInput>(
-  accumulate: AccumulateDataCallback<TInput, TOutput, TAcc>,
-  options: AccumulateDataOptions<TAcc> = {}
-): Transform {
-  const { accumulator, ...rest } = options;
-  let acc = (accumulator === undefined ? null : accumulator) as TAcc;
-  let flushed = false;
+function accumulateData<TInput, TOutput, TAcc = TInput>(accumulate: AccumulateDataCallback<TInput, TOutput, TAcc>, options: AccumulateDataOptions<TAcc> = {}): Transform {
+  const { accumulator, ...rest } = options
+  let acc = (accumulator === undefined ? null : accumulator) as TAcc
+  let flushed = false
 
   return new Transform({
     objectMode: true,
     ...rest,
     async transform(this: Transform, chunk: TInput, _encoding: BufferEncoding, callback: TransformCallback) {
       try {
-        flushed = false;
+        flushed = false
         acc = await accumulate(acc, chunk, (data: TOutput) => {
-          flushed = true;
-          this.push(data);
-        });
+          flushed = true
+          this.push(data)
+        })
 
-        callback();
+        callback()
       } catch (e) {
-        callback(e as Error);
+        callback(e as Error)
       }
     },
     flush(this: Transform, callback: TransformCallback) {
       if (!flushed && acc !== undefined && acc !== null) {
-        this.push(acc);
+        this.push(acc)
       }
-      callback();
+      callback()
     },
-  });
+  })
 }
 
 type GroupDataOptions<TInput> = {
-  size?: number;
-} & AccumulateDataOptions<TInput[]>;
+  size?: number
+} & AccumulateDataOptions<TInput[]>
 
 /**
  * Groups incoming stream data into batches of a given size.
@@ -130,19 +115,19 @@ type GroupDataOptions<TInput> = {
 export function groupStreamData<TInput>(options: GroupDataOptions<TInput> = {}): Transform {
   return accumulateData<TInput, TInput[], TInput[]>(
     (acc, data, flush) => {
-      const group = [...acc, data];
-      const groupSize = options.size || 1;
+      const group = [...acc, data]
+      const groupSize = options.size || 1
 
       if (group.length === groupSize) {
-        flush(group);
-        return [];
+        flush(group)
+        return []
       }
 
-      return group;
+      return group
     },
     {
       ...options,
       accumulator: [],
     }
-  );
+  )
 }

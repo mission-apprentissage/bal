@@ -1,4 +1,4 @@
-import { z } from "zod/v4-mini";
+import { z } from "zod/v4-mini"
 
 export const ZDecaApprenant = z.object({
   nom: z.string(),
@@ -18,4 +18,4 @@ export const ZDecaApprenant = z.object({
     })
   ),
   derniere_classe: z.nullish(z.coerce.number()),
-});
+})

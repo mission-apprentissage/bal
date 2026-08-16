@@ -1,13 +1,13 @@
-import { z } from "zod/v4-mini";
+import { z } from "zod/v4-mini"
 
-import { zTemplate } from "../../mailer";
-import { zObjectId } from "../common";
+import { zTemplate } from "../../mailer"
+import { zObjectId } from "../common"
 
 const zEmailError = z.object({
   type: z.optional(z.enum(["fatal", "soft_bounce", "hard_bounce", "complaint", "invalid_email", "blocked", "error"])),
   message: z.optional(z.string()),
-});
-export type IEmailError = z.output<typeof zEmailError>;
+})
+export type IEmailError = z.output<typeof zEmailError>
 
 export const ZEventBalEmail = z.object({
   _id: zObjectId,
@@ -19,6 +19,6 @@ export const ZEventBalEmail = z.object({
   delivered_at: z.nullable(z.date()),
   messageId: z.nullable(z.string()),
   errors: z.array(zEmailError),
-});
+})
 
-export type IEventBalEmail = z.output<typeof ZEventBalEmail>;
+export type IEventBalEmail = z.output<typeof ZEventBalEmail>

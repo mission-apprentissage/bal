@@ -1,38 +1,38 @@
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Box, Typography } from "@mui/material";
-import { FormProvider, useForm } from "react-hook-form";
-import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
-import { fr } from "@codegouvfr/react-dsfr";
-import { ChoixColonnesFormationRow } from "./ChoixColonnesFormationRow";
-import { useMailingListConfigMutation } from "@/app/mailing-list/view/[id]/_hooks/useMailingListConfigMutation";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Alert } from "@codegouvfr/react-dsfr/Alert"
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { Box, Typography } from "@mui/material"
+import { FormProvider, useForm } from "react-hook-form"
+import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
+import { useMailingListConfigMutation } from "@/app/mailing-list/view/[id]/_hooks/useMailingListConfigMutation"
+import { ChoixColonnesFormationRow } from "./ChoixColonnesFormationRow"
 
 interface Props {
-  onNext: () => void;
-  onPrev: () => void;
-  mailingList: IMailingListV2Json;
-  readonly: boolean;
+  onNext: () => void
+  onPrev: () => void
+  mailingList: IMailingListV2Json
+  readonly: boolean
 }
 
 type ITrainingColumnForm = {
-  cle_ministere_educatif: string;
-  cfd: string;
-  rncp: string;
-  mef: string;
-  uai_lieu_formation: string;
-  uai_formateur: string;
-  uai_formateur_responsable: string;
-  code_postal: string;
-  code_insee: string;
-};
+  cle_ministere_educatif: string
+  cfd: string
+  rncp: string
+  mef: string
+  uai_lieu_formation: string
+  uai_formateur: string
+  uai_formateur_responsable: string
+  code_postal: string
+  code_insee: string
+}
 
 export interface ITrainingField {
-  name: keyof ITrainingColumnForm;
-  label: string;
+  name: keyof ITrainingColumnForm
+  label: string
   tooltip?: {
-    title: string;
-    description: string;
-  };
+    title: string
+    description: string
+  }
 }
 
 const fields: ITrainingField[] = [
@@ -59,8 +59,7 @@ const fields: ITrainingField[] = [
     label: "Code RNCP",
     tooltip: {
       title: "Répertoire national des certifications professionnelles",
-      description:
-        "Recense tous les diplômes reconnus en France et délivrés par l’État https://www.francecompetences.fr/recherche_certificationprofessionnelle/",
+      description: "Recense tous les diplômes reconnus en France et délivrés par l’État https://www.francecompetences.fr/recherche_certificationprofessionnelle/",
     },
   },
   {
@@ -107,7 +106,7 @@ const fields: ITrainingField[] = [
     name: "code_insee",
     label: "Code INSEE",
   },
-];
+]
 
 export function ChoixColonnesFormation({ mailingList, onNext, onPrev, readonly }: Props) {
   const form = useForm<ITrainingColumnForm>({
@@ -123,14 +122,14 @@ export function ChoixColonnesFormation({ mailingList, onNext, onPrev, readonly }
       code_insee: mailingList?.config.lba_columns?.code_insee ?? "",
     },
     disabled: readonly,
-  });
+  })
 
   const {
     handleSubmit,
     formState: { isSubmitting },
-  } = form;
+  } = form
 
-  const { mutateAsync, isError: isMutationError, error: mutationError } = useMailingListConfigMutation();
+  const { mutateAsync, isError: isMutationError, error: mutationError } = useMailingListConfigMutation()
 
   const onSubmit = async (data: ITrainingColumnForm) => {
     await mutateAsync({
@@ -148,19 +147,15 @@ export function ChoixColonnesFormation({ mailingList, onNext, onPrev, readonly }
           code_insee: data.code_insee,
         },
       },
-    });
+    })
 
-    onNext();
-  };
+    onNext()
+  }
 
   if (!mailingList.config.output_columns.some((c) => c.input.type === "computed" && c.input.name === "WEBHOOK_LBA")) {
     return (
       <Box sx={{ display: "grid", gap: fr.spacing("4w") }}>
-        <Alert
-          title="Cette étape est facultative"
-          description="Vous n'avez pas sélectionné le champs WEBHOOK_LBA."
-          severity="info"
-        />
+        <Alert title="Cette étape est facultative" description="Vous n'avez pas sélectionné le champs WEBHOOK_LBA." severity="info" />
         <Box sx={{ display: "flex", gap: fr.spacing("4w"), justifyContent: "flex-end" }}>
           <Button type="button" priority="tertiary" onClick={onPrev}>
             Retour
@@ -170,15 +165,14 @@ export function ChoixColonnesFormation({ mailingList, onNext, onPrev, readonly }
           </Button>
         </Box>
       </Box>
-    );
+    )
   }
 
   return (
     <Box>
       <Typography mb={2}>
-        Les champs liés à la formation nous permettent de générer les liens profonds vers La bonne alternance. En
-        l'absence de la clé ME, les autres champs seront associés pour faire la correspondance entre les formations et
-        les offres d'emploi.
+        Les champs liés à la formation nous permettent de générer les liens profonds vers La bonne alternance. En l'absence de la clé ME, les autres champs seront associés pour
+        faire la correspondance entre les formations et les offres d'emploi.
       </Typography>
       <Typography>Veuillez renseigner au moins un des codes suivants : CFD, RNCP ou MEF</Typography>
       <Typography mb={4}>Veuillez renseigner au moins un des code UAI.</Typography>
@@ -190,11 +184,7 @@ export function ChoixColonnesFormation({ mailingList, onNext, onPrev, readonly }
           <Box sx={{ display: "grid", gap: fr.spacing("4w") }}>
             {isMutationError && (
               <Box color="error" my={2}>
-                <Alert
-                  title=" Une erreur est survenue lors de la configuration"
-                  description={mutationError.message}
-                  severity="error"
-                />
+                <Alert title=" Une erreur est survenue lors de la configuration" description={mutationError.message} severity="error" />
               </Box>
             )}
             <Box sx={{ display: "flex", gap: fr.spacing("4w"), justifyContent: "flex-end" }}>
@@ -216,5 +206,5 @@ export function ChoixColonnesFormation({ mailingList, onNext, onPrev, readonly }
         </form>
       </FormProvider>
     </Box>
-  );
+  )
 }

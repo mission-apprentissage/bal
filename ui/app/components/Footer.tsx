@@ -1,11 +1,11 @@
-import { Footer as DSFRFooter, FooterBottomItem } from "@codegouvfr/react-dsfr/Footer";
-import Link from "next/link";
+import { Footer as DSFRFooter, FooterBottomItem } from "@codegouvfr/react-dsfr/Footer"
+import Link from "next/link"
 // import { usePlausible } from "next-plausible";
-import React from "react";
+import React from "react"
 
-import { PAGES } from "./breadcrumb/Breadcrumb";
+import { PAGES } from "./breadcrumb/Breadcrumb"
 
-const APP_VERSION = process.env.NEXT_PUBLIC_VERSION;
+const APP_VERSION = process.env.NEXT_PUBLIC_VERSION
 
 const Footer = () => {
   return (
@@ -13,10 +13,7 @@ const Footer = () => {
       accessibility="partially compliant"
       contentDescription={
         <span>
-          Mandatée par plusieurs ministères, la{" "}
-          <Link href="https://beta.gouv.fr/startups/?incubateur=mission-apprentissage">
-            Mission interministérielle pour l'apprentissage
-          </Link>{" "}
+          Mandatée par plusieurs ministères, la <Link href="https://beta.gouv.fr/startups/?incubateur=mission-apprentissage">Mission interministérielle pour l'apprentissage</Link>{" "}
           développe plusieurs services destinés à faciliter les entrées en apprentissage.
         </span>
       }
@@ -120,7 +117,7 @@ const Footer = () => {
         />,
       ]}
     />
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

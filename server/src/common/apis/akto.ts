@@ -1,16 +1,15 @@
-import querystring from "querystring";
-import axios from "axios";
+import axios from "axios"
+import querystring from "querystring"
+import config from "@/config"
+import { ApiError, toApiErrorDetails } from "../utils/apiUtils"
 
-import { ApiError } from "../utils/apiUtils";
-import config from "@/config";
-
-export const AKTO_API_BASE_URL = "https://api.akto.fr/referentiel/api/v1";
-export const AKTO_AUTH_BASE_URL = "https://login.microsoftonline.com";
+export const AKTO_API_BASE_URL = "https://api.akto.fr/referentiel/api/v1"
+export const AKTO_AUTH_BASE_URL = "https://login.microsoftonline.com"
 
 const axiosClient = axios.create({
   timeout: 5_000,
   baseURL: AKTO_API_BASE_URL,
-});
+})
 
 /**
  * @description get auth token from gateway
@@ -32,14 +31,14 @@ const getToken = async () => {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       }
-    );
+    )
 
-    return response.data;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    throw new ApiError("Api Akto token", error.message, error.code || error.response?.status);
+    return response.data
+  } catch (error) {
+    const { message, reason } = toApiErrorDetails(error)
+    throw new ApiError("Api Akto token", message, reason)
   }
-};
+}
 
 /**
  * @description Check Akto referential using siren & email submitted by user
@@ -48,18 +47,18 @@ const getToken = async () => {
  * @returns {boolean}
  */
 export const getAktoVerification = async (siren: string, email: string) => {
-  const token_akto = await getToken();
+  const token_akto = await getToken()
 
   try {
     const { data } = await axiosClient.get(`/Relations/Validation?email=${email}&siren=${siren}`, {
       headers: {
         Authorization: `Bearer ${token_akto.access_token}`,
       },
-    });
+    })
 
-    return data.data.match;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    throw new ApiError("Api Akto", error.message, error.code || error.response?.status);
+    return data.data.match
+  } catch (error) {
+    const { message, reason } = toApiErrorDetails(error)
+    throw new ApiError("Api Akto", message, reason)
   }
-};
+}

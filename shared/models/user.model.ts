@@ -1,9 +1,9 @@
-import type { Jsonify } from "type-fest";
-import { z } from "zod/v4-mini";
-import type { IModelDescriptor } from "./common";
-import { zObjectId } from "./common";
+import type { Jsonify } from "type-fest"
+import { z } from "zod/v4-mini"
+import type { IModelDescriptor } from "./common"
+import { zObjectId } from "./common"
 
-const collectionName = "users" as const;
+const collectionName = "users" as const
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ email: 1 }, { unique: true }],
@@ -20,7 +20,7 @@ const indexes: IModelDescriptor["indexes"] = [
       },
     },
   ],
-];
+]
 
 export const ZUser = z.object({
   _id: zObjectId,
@@ -32,7 +32,7 @@ export const ZUser = z.object({
   api_key_used_at: z.nullable(z.date()),
   updated_at: z.date(),
   created_at: z.date(),
-});
+})
 
 export const ZUserPublic = z.object({
   _id: zObjectId,
@@ -42,13 +42,13 @@ export const ZUserPublic = z.object({
   api_key_used_at: ZUser.shape.api_key_used_at,
   updated_at: ZUser.shape.updated_at,
   created_at: ZUser.shape.created_at,
-});
+})
 
-export type IUser = z.output<typeof ZUser>;
-export type IUserPublic = Jsonify<z.output<typeof ZUserPublic>>;
+export type IUser = z.output<typeof ZUser>
+export type IUserPublic = Jsonify<z.output<typeof ZUserPublic>>
 
 export default {
   zod: ZUser,
   indexes,
   collectionName,
-};
+}

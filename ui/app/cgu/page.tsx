@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import Cgu from "./components/Cgu";
-import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import Cgu from "./components/Cgu"
 
 const CGUPage = () => {
   return (
@@ -9,6 +9,6 @@ const CGUPage = () => {
       <Breadcrumb pages={[PAGES.cgu()]} />
       <Cgu />
     </>
-  );
-};
-export default CGUPage;
+  )
+}
+export default CGUPage

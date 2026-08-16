@@ -10,17 +10,31 @@
     ] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
     /* Modules */
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["./src/*"],
-      "@tests/*": ["./tests/*"],
-      "shared/*": ["../shared/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@tests/*": [
+        "./tests/*"
+      ],
+      "shared/*": [
+        "../shared/*"
+      ]
     },
     "resolveJsonModule": true,
-    "typeRoots": ["./types", "./node_modules/@types/"],
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types/"
+    ],
     /* JavaScript Support */
     "allowJs": false,
     /* Emit */
+    // `tsc` ne fait que du typecheck ici (l'émission est confiée à tsup) : `rootDir` couvre
+    // la racine du monorepo pour que les sources de `shared/`, importées via `paths`, soient acceptées.
+    // `outDir` n'est donc jamais utilisé par `tsc` (tsup a le sien) ; s'il devait le devenir un jour,
+    // la sortie suivrait `rootDir` et atterrirait dans `dist/server/src/**`, pas dans `dist/**`.
+    "rootDir": "..",
     "outDir": "./dist",
     /* Interop Constraints */
     "esModuleInterop": true,
@@ -39,6 +53,13 @@
     /* Output Formatting */
     "pretty": true
   },
-  "include": ["./**/*.ts", "./**/*.js"],
-  "exclude": ["**/node_modules", "coverage", "dist"]
+  "include": [
+    "./**/*.ts",
+    "./**/*.js"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "coverage",
+    "dist"
+  ]
 }

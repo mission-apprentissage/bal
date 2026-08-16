@@ -1,7 +1,7 @@
-import { z } from "zod/v4-mini";
+import { z } from "zod/v4-mini"
 
-import type { IRoutesDef } from "./common.routes";
-import { ZResOk } from "./common.routes";
+import type { IRoutesDef } from "./common.routes"
+import { ZResOk } from "./common.routes"
 
 export const zUploadSupportRoutes = {
   get: {
@@ -69,4 +69,4 @@ export const zUploadSupportRoutes = {
       },
     },
   },
-} as const satisfies IRoutesDef;
+} as const satisfies IRoutesDef

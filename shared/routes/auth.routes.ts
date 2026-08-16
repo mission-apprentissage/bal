@@ -1,7 +1,7 @@
-import { z } from "zod/v4-mini";
-import { ZUser, ZUserPublic } from "../models/user.model";
-import type { IRoutesDef } from "./common.routes";
-import { ZReqHeadersAuthorization, ZResOk } from "./common.routes";
+import { z } from "zod/v4-mini"
+import { ZUser, ZUserPublic } from "../models/user.model"
+import type { IRoutesDef } from "./common.routes"
+import { ZReqHeadersAuthorization, ZResOk } from "./common.routes"
 
 export const zAuthRoutes = {
   get: {
@@ -65,9 +65,9 @@ export const zAuthRoutes = {
       securityScheme: null,
     },
   },
-} as const satisfies IRoutesDef;
+} as const satisfies IRoutesDef
 
 export interface IStatus {
-  error?: boolean;
-  message?: string;
+  error?: boolean
+  message?: string
 }

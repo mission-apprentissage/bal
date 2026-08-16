@@ -1,16 +1,15 @@
-"use client";
+"use client"
 
-import type { PropsWithChildren } from "react";
-
-import { ConnexionComponent } from "./ConnexionComponent";
-import { useAuth } from "@/context/AuthContext";
+import type { PropsWithChildren } from "react"
+import { useAuth } from "@/context/AuthContext"
+import { ConnexionComponent } from "./ConnexionComponent"
 
 export function LoggedUser({ children }: PropsWithChildren) {
-  const { user } = useAuth();
+  const { user } = useAuth()
 
   if (!user) {
-    return <ConnexionComponent />;
+    return <ConnexionComponent />
   }
 
-  return <>{children}</>;
+  return <>{children}</>
 }

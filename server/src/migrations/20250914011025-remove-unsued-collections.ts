@@ -1,4 +1,4 @@
-import type { Db } from "mongodb";
+import type { Db } from "mongodb"
 
 export const up = async (db: Db) => {
   const collectionsToDrop = [
@@ -63,15 +63,15 @@ export const up = async (db: Db) => {
     "unsubscribedofs",
     "unsubscribedrecruteurslba",
     "userswithaccounts",
-  ];
+  ]
 
   for (const collectionName of collectionsToDrop) {
     await db.dropCollection(collectionName).catch((e) => {
       if (e.codeName !== "NamespaceNotFound") {
-        throw e;
+        throw e
       }
-    });
+    })
   }
-};
+}
 
-export const requireShutdown: boolean = true;
+export const requireShutdown: boolean = true

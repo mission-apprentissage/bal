@@ -5,7 +5,10 @@
       "name": "Server",
       "focus": true,
       "description": "This run the server",
-      "commands": ["pnpm services:start", "pnpm server:dev"]
+      "commands": [
+        "pnpm services:start",
+        "pnpm server:dev"
+      ]
     },
     {
       "name": "Ui",

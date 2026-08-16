@@ -1,26 +1,19 @@
-import { captureException } from "@sentry/node";
-import { isCompanyEmail } from "company-email-validator";
-import { addDays } from "date-fns";
-import type { IPostRoutes, IResponse } from "shared";
-import { getSirenFromSiret } from "shared/helpers/common";
-import { getAktoVerification } from "../../common/apis/akto";
-import {
-  getOpcoEpVerification,
-  OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE,
-  OPCO_EP_CODE_RETOUR_EMAIL_TROUVE,
-} from "../../common/apis/opcoEp";
-import { getDbCollection } from "../../common/utils/mongodbUtils";
-import { importOrganisation } from "./organisations.actions";
-import { importPerson } from "./persons.actions";
+import { captureException } from "@sentry/node"
+import { isCompanyEmail } from "company-email-validator"
+import { addDays } from "date-fns"
+import type { IPostRoutes, IResponse } from "shared"
+import { getSirenFromSiret } from "shared/helpers/common"
+import { getAktoVerification } from "../../common/apis/akto"
+import { getOpcoEpVerification, OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE, OPCO_EP_CODE_RETOUR_EMAIL_TROUVE } from "../../common/apis/opcoEp"
+import { getDbCollection } from "../../common/utils/mongodbUtils"
+import { importOrganisation } from "./organisations.actions"
+import { importPerson } from "./persons.actions"
 
-async function getDbVerification(
-  siret: string,
-  rawEmail: string
-): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> {
+async function getDbVerification(siret: string, rawEmail: string): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> {
   // TODO: parse email
-  const email = rawEmail.toLowerCase();
-  const [_user, domain] = email.split("@");
-  const siren = getSirenFromSiret(siret);
+  const email = rawEmail.toLowerCase()
+  const [_user, domain] = email.split("@")
+  const siren = getSirenFromSiret(siret)
 
   // check siren / email
   const personsFromEmail = await getDbCollection("persons")
@@ -28,16 +21,16 @@ async function getDbVerification(
       email: email,
       siret: { $regex: `^${siren}` },
     })
-    .toArray();
+    .toArray()
 
   if (personsFromEmail.length > 0) {
-    const sources = personsFromEmail.map((p) => p.source);
+    const sources = personsFromEmail.map((p) => p.source)
 
     return {
       is_valid: true,
       on: "email",
       sources: Array.from(new Set(sources)),
-    };
+    }
   }
 
   // check siren / domain
@@ -47,73 +40,67 @@ async function getDbVerification(
         email_domain: domain,
         siren,
       })
-      .toArray();
+      .toArray()
 
     if (organisationsFromDomain.length > 0) {
-      const sources = personsFromEmail.map((p) => p.source);
+      const sources = personsFromEmail.map((p) => p.source)
       return {
         is_valid: true,
         on: "domain",
         sources: Array.from(new Set(sources)),
-      };
+      }
     }
 
-    return { is_valid: false, is_company_email: true };
+    return { is_valid: false, is_company_email: true }
   }
 
-  return { is_valid: false, is_company_email: false };
+  return { is_valid: false, is_company_email: false }
 }
 
-export const validation = async ({
-  email,
-  siret,
-}: {
-  email: string;
-  siret: string;
-}): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
-  const testDb = await getDbVerification(siret, email);
+export const validation = async ({ email, siret }: { email: string; siret: string }): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
+  const testDb = await getDbVerification(siret, email)
   if (testDb.is_valid) {
-    return testDb;
+    return testDb
   }
 
-  const siren = getSirenFromSiret(siret);
+  const siren = getSirenFromSiret(siret)
 
   try {
-    const testAkto = await getAktoVerification(siren, email);
+    const testAkto = await getAktoVerification(siren, email)
     if (testAkto) {
-      const data = { email, siret, source: "AKTO", ttl: addDays(new Date(), 30) };
-      await Promise.all([importPerson(data), importOrganisation(data)]);
+      const data = { email, siret, source: "AKTO", ttl: addDays(new Date(), 30) }
+      await Promise.all([importPerson(data), importOrganisation(data)])
 
       return {
         is_valid: true,
         on: "email",
         sources: ["AKTO"],
-      };
+      }
     }
   } catch (error) {
     captureException(error, {
       tags: {
         module: "validation",
       },
-    });
+    })
   }
 
   try {
-    const testOpcoEp = await getOpcoEpVerification(siret, email);
+    const testOpcoEp = await getOpcoEpVerification(siret, email)
     if (testOpcoEp.codeRetour === OPCO_EP_CODE_RETOUR_EMAIL_TROUVE) {
       const data = {
         email,
         siret,
         source: "OPCO_EP",
         ttl: addDays(new Date(), 30),
-      };
-      await Promise.all([importPerson(data), importOrganisation(data)]);
+      }
+      await Promise.all([importPerson(data), importOrganisation(data)])
 
       return {
         is_valid: true,
         on: "email",
         sources: ["OPCO_EP"],
-      };
+      }
     }
 
     if (testOpcoEp.codeRetour === OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE) {
@@ -122,21 +109,21 @@ export const validation = async ({
         siret,
         source: "OPCO_EP",
         ttl: addDays(new Date(), 30),
-      });
+      })
 
       return {
         is_valid: true,
         on: "domain",
         sources: ["OPCO_EP"],
-      };
+      }
     }
   } catch (error) {
     captureException(error, {
       tags: {
         module: "validation",
       },
-    });
+    })
   }
 
-  return testDb;
-};
+  return testDb
+}

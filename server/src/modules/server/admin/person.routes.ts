@@ -1,8 +1,7 @@
-import { notFound } from "@hapi/boom";
-import { zRoutes } from "shared";
-
-import type { Server } from "../server";
-import { getDbCollection } from "../../../common/utils/mongodbUtils";
+import { notFound } from "@hapi/boom"
+import { zRoutes } from "shared"
+import { getDbCollection } from "../../../common/utils/mongodbUtils"
+import type { Server } from "../server"
 
 export const personAdminRoutes = ({ server }: { server: Server }) => {
   server.get(
@@ -12,13 +11,13 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/admin/persons"])],
     },
     async (request, response) => {
-      const { q = "", page = 1, limit = 100 } = request.query;
+      const { q = "", page = 1, limit = 100 } = request.query
 
       const filter = q
         ? {
             $or: [{ email: { $regex: q, $options: "i" } }, { siret: { $regex: q, $options: "i" } }],
           }
-        : {};
+        : {}
       const [persons, count] = await Promise.all([
         getDbCollection("persons")
           .find(filter, {
@@ -28,7 +27,7 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
           })
           .toArray(),
         getDbCollection("persons").countDocuments(filter),
-      ]);
+      ])
 
       return response.status(200).send({
         persons,
@@ -37,9 +36,9 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
           size: limit,
           total: count,
         },
-      });
+      })
     }
-  );
+  )
 
   server.get(
     "/admin/persons/:id",
@@ -50,13 +49,13 @@ export const personAdminRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const person = await getDbCollection("persons").findOne({
         _id: request.params.id,
-      });
+      })
 
       if (!person) {
-        throw notFound();
+        throw notFound()
       }
 
-      return response.status(200).send(person);
+      return response.status(200).send(person)
     }
-  );
-};
+  )
+}

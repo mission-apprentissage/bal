@@ -1,7 +1,7 @@
-import { notFound } from "@hapi/boom";
-import { zRoutes } from "shared";
-import type { Server } from "../server";
-import { getDbCollection } from "../../../common/utils/mongodbUtils";
+import { notFound } from "@hapi/boom"
+import { zRoutes } from "shared"
+import { getDbCollection } from "../../../common/utils/mongodbUtils"
+import type { Server } from "../server"
 
 export const organisationAdminRoutes = ({ server }: { server: Server }) => {
   server.get(
@@ -11,12 +11,12 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/admin/organisations"])],
     },
     async (request, response) => {
-      const { q = "", page = 1, limit = 100 } = request.query;
+      const { q = "", page = 1, limit = 100 } = request.query
       const filter = q
         ? {
             $or: [{ siren: { $regex: q, $options: "i" } }, { email_domain: { $regex: q, $options: "i" } }],
           }
-        : {};
+        : {}
 
       const [organisations, count] = await Promise.all([
         getDbCollection("organisations")
@@ -27,11 +27,11 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
           })
           .toArray(),
         getDbCollection("organisations").countDocuments(filter),
-      ]);
+      ])
 
-      return response.status(200).send({ organisations, pagination: { total: count, page, size: limit } });
+      return response.status(200).send({ organisations, pagination: { total: count, page, size: limit } })
     }
-  );
+  )
 
   server.get(
     "/admin/organisations/:id",
@@ -42,13 +42,13 @@ export const organisationAdminRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const organisation = await getDbCollection("organisations").findOne({
         _id: request.params.id,
-      });
+      })
 
       if (!organisation) {
-        throw notFound();
+        throw notFound()
       }
 
-      return response.status(200).send(organisation);
+      return response.status(200).send(organisation)
     }
-  );
-};
+  )
+}

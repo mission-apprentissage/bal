@@ -1,12 +1,11 @@
-import { z } from "zod/v4-mini";
+import type { Jsonify } from "type-fest"
+import { z } from "zod/v4-mini"
+import { zObjectIdMini } from "zod-mongodb-schema"
+import { zComputedColumnKey } from "../constants/mailingList"
+import type { IModelDescriptor } from "./common"
+import { zObjectId } from "./common"
 
-import { zObjectIdMini } from "zod-mongodb-schema";
-import type { Jsonify } from "type-fest";
-import { zComputedColumnKey } from "../constants/mailingList";
-import type { IModelDescriptor } from "./common";
-import { zObjectId } from "./common";
-
-const collectionName = "mailingListsV2" as const;
+const collectionName = "mailingListsV2" as const
 
 const indexes: IModelDescriptor["indexes"] = [
   [{ name: 1, created_at: -1 }, {}],
@@ -14,7 +13,7 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ ttl: 1 }, { expireAfterSeconds: 0 }],
   [{ created_at: -1 }, {}],
   [{ updated_at: -1 }, {}],
-];
+]
 
 const zOutputColumn = z.object({
   input: z.discriminatedUnion("type", [
@@ -29,7 +28,7 @@ const zOutputColumn = z.object({
   ]),
   output: z.string(),
   simple: z.boolean(),
-});
+})
 
 export const ZMailingListV2 = z.object({
   _id: zObjectId,
@@ -95,16 +94,16 @@ export const ZMailingListV2 = z.object({
   added_by: zObjectIdMini,
   updated_at: z.date(),
   created_at: z.date(),
-});
+})
 
-export const zMailingListV2ConfigUpdateQuery = z.partial(ZMailingListV2.shape.config);
-export type IMailingListV2ConfigUpdateQuery = z.infer<typeof zMailingListV2ConfigUpdateQuery>;
+export const zMailingListV2ConfigUpdateQuery = z.partial(ZMailingListV2.shape.config)
+export type IMailingListV2ConfigUpdateQuery = z.infer<typeof zMailingListV2ConfigUpdateQuery>
 
-export type IMailingListV2 = z.infer<typeof ZMailingListV2>;
-export type IMailingListV2Json = Jsonify<IMailingListV2>;
+export type IMailingListV2 = z.infer<typeof ZMailingListV2>
+export type IMailingListV2Json = Jsonify<IMailingListV2>
 
 export const mailingListModelDescriptorV2 = {
   zod: ZMailingListV2,
   indexes,
   collectionName,
-} as const satisfies IModelDescriptor;
+} as const satisfies IModelDescriptor

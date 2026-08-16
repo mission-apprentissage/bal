@@ -1,13 +1,13 @@
-"use client";
+"use client"
 
-import { Typography } from "@mui/material";
-import type { FC } from "react";
-import type { IOrganisationJson } from "shared/models/organisation.model";
-import InfoDetails from "@/components/infoDetails/InfoDetails";
-import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import { Typography } from "@mui/material"
+import type { FC } from "react"
+import type { IOrganisationJson } from "shared/models/organisation.model"
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import InfoDetails from "@/components/infoDetails/InfoDetails"
 
 interface Props {
-  organisation: IOrganisationJson;
+  organisation: IOrganisationJson
 }
 
 const OrganisationView: FC<Props> = ({ organisation }) => {
@@ -42,7 +42,7 @@ const OrganisationView: FC<Props> = ({ organisation }) => {
         }}
       />
     </>
-  );
-};
+  )
+}
 
-export default OrganisationView;
+export default OrganisationView

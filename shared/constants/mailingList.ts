@@ -1,4 +1,4 @@
-import { z } from "zod/v4-mini";
+import { z } from "zod/v4-mini"
 
 export const MAILING_LIST_COMPUTED_COLUMNS = {
   WEBHOOK_LBA: {
@@ -19,31 +19,29 @@ export const MAILING_LIST_COMPUTED_COLUMNS = {
     ] as const,
     sample: "Données générées par le bouncer BAL",
   },
-};
-
-type IMailingListComputedColumns = typeof MAILING_LIST_COMPUTED_COLUMNS;
-export type IMailingListComputedColumnsKeys = keyof IMailingListComputedColumns;
-
-export const MAILING_LIST_COMPUTED_COLUMNS_KEYS = Object.keys(
-  MAILING_LIST_COMPUTED_COLUMNS
-) as IMailingListComputedColumnsKeys[];
-
-export function isComputedColumns(column: string): column is IMailingListComputedColumnsKeys {
-  return MAILING_LIST_COMPUTED_COLUMNS_KEYS.includes(column as IMailingListComputedColumnsKeys);
 }
 
-export const zComputedColumnKey = z.enum(MAILING_LIST_COMPUTED_COLUMNS_KEYS);
+type IMailingListComputedColumns = typeof MAILING_LIST_COMPUTED_COLUMNS
+export type IMailingListComputedColumnsKeys = keyof IMailingListComputedColumns
 
-const reservedOutputNames: RegExp[] = [/^email$/i];
+export const MAILING_LIST_COMPUTED_COLUMNS_KEYS = Object.keys(MAILING_LIST_COMPUTED_COLUMNS) as IMailingListComputedColumnsKeys[]
+
+export function isComputedColumns(column: string): column is IMailingListComputedColumnsKeys {
+  return MAILING_LIST_COMPUTED_COLUMNS_KEYS.includes(column as IMailingListComputedColumnsKeys)
+}
+
+export const zComputedColumnKey = z.enum(MAILING_LIST_COMPUTED_COLUMNS_KEYS)
+
+const reservedOutputNames: RegExp[] = [/^email$/i]
 MAILING_LIST_COMPUTED_COLUMNS_KEYS.map((k) => {
   MAILING_LIST_COMPUTED_COLUMNS[k].columns.forEach((c) => {
-    const reserved = c.simple ? new RegExp(`^${c.output}$`, "i") : new RegExp(`^${c.output}(_[0-9]+)?$`, "i");
+    const reserved = c.simple ? new RegExp(`^${c.output}$`, "i") : new RegExp(`^${c.output}(_[0-9]+)?$`, "i")
 
-    reservedOutputNames.push(reserved);
-  });
-});
+    reservedOutputNames.push(reserved)
+  })
+})
 
 // Returns true is a simple column name is reserved (used by Bouncer or LBA)
 export function isColumnReserved(name: string): boolean {
-  return reservedOutputNames.some((r) => r.test(name));
+  return reservedOutputNames.some((r) => r.test(name))
 }

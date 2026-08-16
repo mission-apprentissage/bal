@@ -34,25 +34,21 @@ Pour installer et mettre à jour les dépendences, vous pouvez au choix:
 - Modifier les différents `package.json` et appliquer les changements via `pnpm install`
 - Ajouter des dépendences via la commande `pnpm add -E`
 
-## Linter
+## Linter et formatage
 
-Un linter (via ESLint) est mis en place dans le projet, pour le lancer :
-
-```bash
-pnpm lint
-```
-
-**Note:** eslint est run automatiquement à chaque commit
-
-## Prettier
-
-Prettier est mis en place dans le projet, pour le lancer :
+Le lint et le formatage sont assurés par [Biome](https://biomejs.dev/). Pour vérifier le projet :
 
 ```bash
-pnpm prettier:fix
+pnpm check
 ```
 
-**Note:** eslint est run automatiquement à chaque commit
+Pour appliquer les corrections automatiques :
+
+```bash
+pnpm check:fix
+```
+
+**Note:** Biome est run automatiquement à chaque commit (via lint-staged)
 
 ## Typescript
 

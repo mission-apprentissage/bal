@@ -1,19 +1,28 @@
-"use client";
+"use client"
 
-import { Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import type { IGetRoutes, IResponse } from "shared";
-
-import { apiGet } from "@/utils/api.utils";
-import ViewData from "@/app/usage/components/ViewData";
+import { Typography } from "@mui/material"
+import { captureException } from "@sentry/nextjs"
+import { useEffect, useState } from "react"
+import type { IGetRoutes, IResponse } from "shared"
+import ViewData from "@/app/usage/components/ViewData"
+import { apiGet } from "@/utils/api.utils"
 
 const UsageHealthcheckPage = () => {
-  const [responseData, setResponseData] = useState<IResponse<IGetRoutes["/healthcheck"]>>();
+  const [responseData, setResponseData] = useState<IResponse<IGetRoutes["/healthcheck"]>>()
   useEffect(() => {
-    apiGet("/healthcheck", {}).then((data) => {
-      setResponseData(data);
-    });
-  }, []);
+    let cancelled = false
+    apiGet("/healthcheck", {})
+      .then((data) => {
+        if (!cancelled) {
+          setResponseData(data)
+        }
+      })
+      .catch(captureException)
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
     <>
@@ -23,7 +32,7 @@ const UsageHealthcheckPage = () => {
 
       <ViewData title="Réponse" data={responseData} />
     </>
-  );
-};
+  )
+}
 
-export default UsageHealthcheckPage;
+export default UsageHealthcheckPage

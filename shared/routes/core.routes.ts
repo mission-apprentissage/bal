@@ -1,5 +1,5 @@
-import { z } from "zod/v4-mini";
-import type { IRoutesDef } from "./common.routes";
+import { z } from "zod/v4-mini"
+import type { IRoutesDef } from "./common.routes"
 
 export const zCoreRoutes = {
   get: {
@@ -27,4 +27,4 @@ export const zCoreRoutes = {
       securityScheme: null,
     },
   },
-} as const satisfies IRoutesDef;
+} as const satisfies IRoutesDef

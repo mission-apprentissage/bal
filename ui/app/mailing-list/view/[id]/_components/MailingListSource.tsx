@@ -1,16 +1,16 @@
-"use client";
+"use client"
 
-import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
-import { useQuery } from "@tanstack/react-query";
-import { Box } from "@mui/material";
-import type { IUserPublic } from "shared/models/user.model";
-import { MailingListEditSourceForm } from "./source/MailingListEditSourceForm";
-import { MailingListSourceReadonly } from "./source/MailingListSourceReadonly";
-import { apiGet } from "@/utils/api.utils";
-import Loading from "@/app/loading";
+import { Box } from "@mui/material"
+import { useQuery } from "@tanstack/react-query"
+import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
+import type { IUserPublic } from "shared/models/user.model"
+import Loading from "@/app/loading"
+import { apiGet } from "@/utils/api.utils"
+import { MailingListEditSourceForm } from "./source/MailingListEditSourceForm"
+import { MailingListSourceReadonly } from "./source/MailingListSourceReadonly"
 
 export function MailingListSource(props: { mailingList: IMailingListV2Json }) {
-  const readonly = props.mailingList.status !== "initial";
+  const readonly = props.mailingList.status !== "initial"
 
   const userQuery = useQuery<IUserPublic>({
     queryKey: ["/_private/users", props.mailingList.added_by],
@@ -20,27 +20,19 @@ export function MailingListSource(props: { mailingList: IMailingListV2Json }) {
       }),
     throwOnError: true,
     retry: 5,
-  });
+  })
 
   if (!userQuery.isSuccess) {
     return (
-      <Box
-        padding={8}
-        display="flex"
-        justifyContent="center"
-        flexDirection="column"
-        margin="auto"
-        maxWidth="600px"
-        textAlign="center"
-      >
+      <Box padding={8} display="flex" justifyContent="center" flexDirection="column" margin="auto" maxWidth="600px" textAlign="center">
         <Loading />
       </Box>
-    );
+    )
   }
 
   return readonly ? (
     <MailingListSourceReadonly mailingList={props.mailingList} user={userQuery.data} />
   ) : (
     <MailingListEditSourceForm mailingList={props.mailingList} user={userQuery.data} />
-  );
+  )
 }

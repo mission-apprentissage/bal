@@ -1,1 +1,1 @@
-declare module "oleoduc";
+declare module "oleoduc"

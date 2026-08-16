@@ -1,27 +1,18 @@
-import { ObjectId } from "mongodb";
-import { zRoutes } from "shared";
-import type { MultipartFile } from "@fastify/multipart";
-import { FILE_SIZE_LIMIT } from "shared/constants";
-import type { IMailingListSource } from "shared/models/mailingList.source.model";
-import { captureException } from "@sentry/node";
-import { badImplementation, badRequest, notFound } from "@hapi/boom";
-import { getUserFromRequest } from "../../../security/authenticationService";
-import type { Server } from "../server";
-import logger from "../../../common/logger";
-import { getDbCollection } from "../../../common/utils/mongodbUtils";
-import {
-  deleteMailingList,
-  killMailingList,
-  resetMailingList,
-  scheduleGenerate,
-  scheduleMailingListJob,
-} from "../../jobs/mailing-list/mailing-list.processor";
-import { updateMailingListConfiguration } from "../../jobs/mailing-list/generator/mailing-list-generator";
-import { downloadMailingListFile } from "../../jobs/mailing-list/storage/mailing-list-storage";
-import {
-  createMailingList,
-  updateMailingListParseSettings,
-} from "../../jobs/mailing-list/importer/mailing-list.importer";
+import type { MultipartFile } from "@fastify/multipart"
+import { badImplementation, badRequest, notFound } from "@hapi/boom"
+import { captureException } from "@sentry/node"
+import { ObjectId } from "mongodb"
+import { zRoutes } from "shared"
+import { FILE_SIZE_LIMIT } from "shared/constants"
+import type { IMailingListSource } from "shared/models/mailingList.source.model"
+import logger from "../../../common/logger"
+import { getDbCollection } from "../../../common/utils/mongodbUtils"
+import { getUserFromRequest } from "../../../security/authenticationService"
+import { updateMailingListConfiguration } from "../../jobs/mailing-list/generator/mailing-list-generator"
+import { createMailingList, updateMailingListParseSettings } from "../../jobs/mailing-list/importer/mailing-list.importer"
+import { deleteMailingList, killMailingList, resetMailingList, scheduleGenerate, scheduleMailingListJob } from "../../jobs/mailing-list/mailing-list.processor"
+import { downloadMailingListFile } from "../../jobs/mailing-list/storage/mailing-list-storage"
+import type { Server } from "../server"
 
 export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
   server.post(
@@ -31,24 +22,24 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.post["/_private/mailing-list"])],
     },
     async (request, response) => {
-      const user = getUserFromRequest(request, zRoutes.post["/_private/mailing-list"]);
+      const user = getUserFromRequest(request, zRoutes.post["/_private/mailing-list"])
 
-      let data: MultipartFile | null | undefined = null;
+      let data: MultipartFile | null | undefined = null
       try {
         data = await request.file({
           limits: {
             fileSize: FILE_SIZE_LIMIT,
           },
-        });
+        })
       } catch (error) {
-        const err = server.multipartErrors;
-        logger.error(err);
-        captureException(error);
-        throw badImplementation("Erreur lors du traitement du fichier");
+        const err = server.multipartErrors
+        logger.error(err)
+        captureException(error)
+        throw badImplementation("Erreur lors du traitement du fichier")
       }
 
       if (!data) {
-        throw badRequest("Le fichier est requis");
+        throw badRequest("Le fichier est requis")
       }
 
       const mailingList = await createMailingList(
@@ -59,13 +50,13 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
           file: data,
         },
         user
-      );
+      )
 
       return response.status(201).send({
         _id: mailingList._id,
-      });
+      })
     }
-  );
+  )
 
   server.get(
     "/_private/mailing-list",
@@ -74,9 +65,9 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/_private/mailing-list"])],
     },
     async (request, response) => {
-      const { page, size, sort, sortOrder } = request.query;
+      const { page, size, sort, sortOrder } = request.query
 
-      const sortValue = sortOrder === "asc" ? 1 : -1;
+      const sortValue = sortOrder === "asc" ? 1 : -1
 
       const [total, items] = await Promise.all([
         getDbCollection("mailingListsV2").countDocuments(),
@@ -90,16 +81,16 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
             }
           )
           .toArray(),
-      ]);
+      ])
 
       return response.status(200).send({
         items,
         total,
         page,
         size,
-      });
+      })
     }
-  );
+  )
 
   server.get(
     "/_private/mailing-list/:id",
@@ -108,15 +99,15 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/_private/mailing-list/:id"])],
     },
     async (request, response) => {
-      const { id } = request.params;
+      const { id } = request.params
 
       const mailingList = await getDbCollection("mailingListsV2").findOne({
         _id: id,
-      });
+      })
 
-      return response.status(200).send(mailingList);
+      return response.status(200).send(mailingList)
     }
-  );
+  )
 
   server.post(
     "/_private/mailing-list/:id/schedule",
@@ -125,14 +116,14 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.post["/_private/mailing-list/:id/schedule"])],
     },
     async (request, response) => {
-      const { id } = request.params;
-      const { status } = request.body;
+      const { id } = request.params
+      const { status } = request.body
 
-      const success = await scheduleMailingListJob(new ObjectId(id), status);
+      const success = await scheduleMailingListJob(new ObjectId(id), status)
 
-      return response.status(200).send({ success });
+      return response.status(200).send({ success })
     }
-  );
+  )
 
   server.post(
     "/_private/mailing-list/:id/reset",
@@ -141,14 +132,14 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.post["/_private/mailing-list/:id/reset"])],
     },
     async (request, response) => {
-      const { id } = request.params;
-      const { status } = request.body;
+      const { id } = request.params
+      const { status } = request.body
 
-      await resetMailingList(id, status);
+      await resetMailingList(id, status)
 
-      return response.status(200).send({ success: true });
+      return response.status(200).send({ success: true })
     }
-  );
+  )
 
   server.get(
     "/_private/mailing-list/:id/source/sample",
@@ -157,15 +148,15 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/_private/mailing-list/:id/source/sample"])],
     },
     async (request, response) => {
-      const { id } = request.params;
+      const { id } = request.params
 
       const data = await getDbCollection("mailingList.source")
         .aggregate<IMailingListSource>([{ $match: { mailing_list_id: id } }, { $sample: { size: 10 } }])
-        .toArray();
+        .toArray()
 
-      return response.status(200).send(data.map((d) => d.data));
+      return response.status(200).send(data.map((d) => d.data))
     }
-  );
+  )
 
   server.put(
     "/_private/mailing-list/:id/config",
@@ -174,13 +165,13 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.put["/_private/mailing-list/:id/config"])],
     },
     async (request, response) => {
-      const { id } = request.params;
+      const { id } = request.params
 
-      await updateMailingListConfiguration(id, request.body);
+      await updateMailingListConfiguration(id, request.body)
 
-      return response.status(200).send({ success: true });
+      return response.status(200).send({ success: true })
     }
-  );
+  )
 
   server.put(
     "/_private/mailing-list/:id/source",
@@ -189,13 +180,13 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.put["/_private/mailing-list/:id/source"])],
     },
     async (request, response) => {
-      const { id } = request.params;
+      const { id } = request.params
 
-      await updateMailingListParseSettings(id, request.body);
+      await updateMailingListParseSettings(id, request.body)
 
-      return response.status(200).send({ success: true });
+      return response.status(200).send({ success: true })
     }
-  );
+  )
 
   server.post(
     "/_private/mailing-list/:id/generate",
@@ -204,13 +195,13 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.post["/_private/mailing-list/:id/generate"])],
     },
     async (request, response) => {
-      const { id } = request.params;
+      const { id } = request.params
 
-      await scheduleGenerate(id);
+      await scheduleGenerate(id)
 
-      return response.status(200).send({ success: true });
+      return response.status(200).send({ success: true })
     }
-  );
+  )
 
   server.get(
     "/_private/mailing-list/:id/output/download",
@@ -219,20 +210,20 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/_private/mailing-list/:id/output/download"])],
     },
     async (request, response) => {
-      const { id } = request.params;
+      const { id } = request.params
 
-      const controller = new AbortController();
+      const controller = new AbortController()
       request.raw.on("close", () => {
         if (request.raw.destroyed) {
-          controller.abort();
+          controller.abort()
         }
-      });
+      })
 
-      const { headers, stream } = await downloadMailingListFile(id, "result", controller.signal);
+      const { headers, stream } = await downloadMailingListFile(id, "result", controller.signal)
 
-      return response.status(200).headers(headers).send(stream);
+      return response.status(200).headers(headers).send(stream)
     }
-  );
+  )
 
   server.get(
     "/_private/mailing-list/:id/source/download",
@@ -241,20 +232,20 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.get["/_private/mailing-list/:id/source/download"])],
     },
     async (request, response) => {
-      const { id } = request.params;
+      const { id } = request.params
 
-      const controller = new AbortController();
+      const controller = new AbortController()
       request.raw.on("close", () => {
         if (request.raw.destroyed) {
-          controller.abort();
+          controller.abort()
         }
-      });
+      })
 
-      const { headers, stream } = await downloadMailingListFile(id, "source", controller.signal);
+      const { headers, stream } = await downloadMailingListFile(id, "source", controller.signal)
 
-      return response.status(200).headers(headers).send(stream);
+      return response.status(200).headers(headers).send(stream)
     }
-  );
+  )
 
   server.put(
     "/_private/mailing-list/:id/name",
@@ -263,23 +254,23 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.put["/_private/mailing-list/:id/name"])],
     },
     async (request, response) => {
-      const { id } = request.params;
-      const { name } = request.body;
+      const { id } = request.params
+      const { name } = request.body
 
       const mailingList = await getDbCollection("mailingListsV2").updateOne(
         {
           _id: id,
         },
         { $set: { name, updated_at: new Date() } }
-      );
+      )
 
       if (mailingList.matchedCount === 0) {
-        throw notFound("La liste de diffusion n'existe pas");
+        throw notFound("La liste de diffusion n'existe pas")
       }
 
-      return response.status(200).send({ success: true });
+      return response.status(200).send({ success: true })
     }
-  );
+  )
 
   server.post(
     "/_private/mailing-list/:id/kill",
@@ -288,13 +279,13 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.post["/_private/mailing-list/:id/kill"])],
     },
     async (request, response) => {
-      const { id } = request.params;
+      const { id } = request.params
 
-      await killMailingList(id);
+      await killMailingList(id)
 
-      return response.status(200).send({ success: true });
+      return response.status(200).send({ success: true })
     }
-  );
+  )
 
   server.delete(
     "/_private/mailing-list/:id",
@@ -303,11 +294,11 @@ export const mailingListRoutesPrivate = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.delete["/_private/mailing-list/:id"])],
     },
     async (request, response) => {
-      const { id } = request.params;
+      const { id } = request.params
 
-      await deleteMailingList(id);
+      await deleteMailingList(id)
 
-      return response.status(200).send({ success: true });
+      return response.status(200).send({ success: true })
     }
-  );
-};
+  )
+}

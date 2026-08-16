@@ -1,4 +1,4 @@
-import { z } from "zod/v4-mini";
+import { z } from "zod/v4-mini"
 
 const etablissementFormateurSchema = z.object({
   etablissement_formateur_id: z.nullish(z.string()),
@@ -28,7 +28,7 @@ const etablissementFormateurSchema = z.object({
   etablissement_formateur_catalogue_published: z.nullish(z.boolean()),
   rncp_etablissement_formateur_habilite: z.nullish(z.boolean()),
   etablissement_formateur_date_creation: z.nullish(z.string()),
-});
+})
 const etablissementGestionnaireSchema = z.object({
   etablissement_gestionnaire_id: z.nullish(z.string()),
   etablissement_gestionnaire_siret: z.nullish(z.string()),
@@ -57,15 +57,15 @@ const etablissementGestionnaireSchema = z.object({
   etablissement_gestionnaire_catalogue_published: z.nullish(z.boolean()),
   rncp_etablissement_gestionnaire_habilite: z.nullish(z.boolean()),
   etablissement_gestionnaire_date_creation: z.nullish(z.string()),
-});
+})
 const etablissementReferenceSchema = z.object({
   etablissement_reference: z.nullish(z.string()),
   etablissement_reference_published: z.nullish(z.boolean()),
   etablissement_reference_habilite_rncp: z.nullish(z.boolean()),
   etablissement_reference_certifie_qualite: z.nullish(z.boolean()),
   etablissement_reference_date_creation: z.nullish(z.string()),
-});
-const stringOrArraySchema = z.union([z.string(), z.array(z.string())]);
+})
+const stringOrArraySchema = z.union([z.string(), z.array(z.string())])
 
 export const zFormationCatalogue = z.object({
   _id: z.string(),
@@ -164,4 +164,4 @@ export const zFormationCatalogue = z.object({
   ...etablissementFormateurSchema.shape,
   ...etablissementGestionnaireSchema.shape,
   ...etablissementReferenceSchema.shape,
-});
+})

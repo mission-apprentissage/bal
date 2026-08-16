@@ -1,0 +1,5 @@
+# Révisions à ignorer dans `git blame` : reformatages massifs sans changement de comportement.
+# Activer localement : git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# style: applique le formatage biome
+de41d5e4fe06ee8ee980237d8fb4711602529e63

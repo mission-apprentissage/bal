@@ -1,12 +1,12 @@
-import { Box, Typography } from "@mui/material";
-import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import { useMailingListSample } from "@/app/mailing-list/view/[id]/_hooks/useMailingListSample";
-import Table from "@/components/table/Table";
+import { Alert } from "@codegouvfr/react-dsfr/Alert"
+import { Box, Typography } from "@mui/material"
+import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
+import { useMailingListSample } from "@/app/mailing-list/view/[id]/_hooks/useMailingListSample"
+import Table from "@/components/table/Table"
 
 export function MailingListSourceSample(props: { mailingList: IMailingListV2Json }) {
-  const { mailingList } = props;
-  const sampleResult = useMailingListSample(mailingList._id);
+  const { mailingList } = props
+  const sampleResult = useMailingListSample(mailingList._id)
 
   return (
     <Box>
@@ -19,11 +19,7 @@ export function MailingListSourceSample(props: { mailingList: IMailingListV2Json
         />
       )}
       {sampleResult.data && sampleResult.data.length === 0 && (
-        <Alert
-          severity="warning"
-          title="Aucune donnée disponible"
-          description="Cette source ne comporte aucune donnée. Veuillez vérifier le fichier source."
-        />
+        <Alert severity="warning" title="Aucune donnée disponible" description="Cette source ne comporte aucune donnée. Veuillez vérifier le fichier source." />
       )}
       {sampleResult.data && sampleResult.data.length > 0 && (
         <Table
@@ -42,5 +38,5 @@ export function MailingListSourceSample(props: { mailingList: IMailingListV2Json
         />
       )}
     </Box>
-  );
+  )
 }

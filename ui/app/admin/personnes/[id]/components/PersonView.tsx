@@ -1,11 +1,11 @@
-import { Typography } from "@mui/material";
-import type { FC } from "react";
-import type { IPersonJson } from "shared/models/person.model";
-import InfoDetails from "@/components/infoDetails/InfoDetails";
-import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import { Typography } from "@mui/material"
+import type { FC } from "react"
+import type { IPersonJson } from "shared/models/person.model"
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import InfoDetails from "@/components/infoDetails/InfoDetails"
 
 interface Props {
-  person: IPersonJson;
+  person: IPersonJson
 }
 
 const PersonView: FC<Props> = ({ person }) => {
@@ -40,7 +40,7 @@ const PersonView: FC<Props> = ({ person }) => {
         }}
       />
     </>
-  );
-};
+  )
+}
 
-export default PersonView;
+export default PersonView

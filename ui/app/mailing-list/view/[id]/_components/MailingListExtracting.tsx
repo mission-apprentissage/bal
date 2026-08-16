@@ -1,16 +1,16 @@
-import { Alert } from "@codegouvfr/react-dsfr/Alert";
-import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
-import { fr } from "@codegouvfr/react-dsfr";
-import { Box, LinearProgress, Typography } from "@mui/material";
-import { assertUnreachable } from "shared/utils/assertUnreachable";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import byteSize from "byte-size";
-import { MailingListSourceSample } from "./MailingListSourceSample";
-import { KillJob } from "./KillJob";
-import { MailingListRetry } from "@/app/mailing-list/view/[id]/_hooks/useMailingListRetry";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Alert } from "@codegouvfr/react-dsfr/Alert"
+import { Input } from "@codegouvfr/react-dsfr/Input"
+import { Box, LinearProgress, Typography } from "@mui/material"
+import byteSize from "byte-size"
+import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
+import { assertUnreachable } from "shared/utils/assertUnreachable"
+import { MailingListRetry } from "@/app/mailing-list/view/[id]/_hooks/useMailingListRetry"
+import { KillJob } from "./KillJob"
+import { MailingListSourceSample } from "./MailingListSourceSample"
 
 function MailingListParseResult(props: { mailingList: IMailingListV2Json }) {
-  const { mailingList } = props;
+  const { mailingList } = props
 
   return (
     <Box>
@@ -31,23 +31,17 @@ function MailingListParseResult(props: { mailingList: IMailingListV2Json }) {
       />
       <MailingListSourceSample mailingList={mailingList} />
     </Box>
-  );
+  )
 }
 
 export function MailingListExtracting(props: { mailingList: IMailingListV2Json }) {
-  const { mailingList } = props;
+  const { mailingList } = props
 
   switch (mailingList.status) {
     case "initial":
-      return null;
+      return null
     case "parse:scheduled":
-      return (
-        <Alert
-          title="Extraction du fichier planifiée"
-          description="L'extraction du fichier va commencer prochainement."
-          severity="info"
-        />
-      );
+      return <Alert title="Extraction du fichier planifiée" description="L'extraction du fichier va commencer prochainement." severity="info" />
     case "parse:in_progress":
       return (
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
@@ -67,7 +61,7 @@ export function MailingListExtracting(props: { mailingList: IMailingListV2Json }
             <KillJob mailingList={mailingList} />
           </Box>
         </Box>
-      );
+      )
     case "parse:failure":
       return (
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
@@ -78,18 +72,14 @@ export function MailingListExtracting(props: { mailingList: IMailingListV2Json }
           />
           <MailingListRetry mailingListId={mailingList._id} status="parse:scheduled" />
         </Box>
-      );
+      )
     case "parse:success":
       return (
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
-          <Alert
-            title="Le fichier a été extrait avec succès !"
-            description="Vous pouvez maintenant configurer votre liste de diffusion."
-            severity="success"
-          />
+          <Alert title="Le fichier a été extrait avec succès !" description="Vous pouvez maintenant configurer votre liste de diffusion." severity="success" />
           <MailingListParseResult mailingList={mailingList} />
         </Box>
-      );
+      )
     case "generate:scheduled":
     case "generate:in_progress":
     case "generate:failure":
@@ -98,8 +88,8 @@ export function MailingListExtracting(props: { mailingList: IMailingListV2Json }
     case "export:scheduled":
     case "export:failure":
     case "export:success":
-      return <MailingListParseResult mailingList={mailingList} />;
+      return <MailingListParseResult mailingList={mailingList} />
     default:
-      assertUnreachable(mailingList.status);
+      assertUnreachable(mailingList.status)
   }
 }

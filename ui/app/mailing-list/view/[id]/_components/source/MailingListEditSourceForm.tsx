@@ -1,25 +1,25 @@
-"use client";
+"use client"
 
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Select } from "@codegouvfr/react-dsfr/Select";
-import { Box, styled } from "@mui/material";
-import { useState } from "react";
-import type { SubmitHandler } from "react-hook-form";
-import { useForm } from "react-hook-form";
-import { captureException } from "@sentry/nextjs";
-import { fr } from "@codegouvfr/react-dsfr";
-import type { IMailingListV2Json } from "shared/models/mailingListV2.model";
-import { differenceInDays } from "date-fns";
-import type { IUserPublic } from "shared/models/user.model";
-import Toast, { useToast } from "@/components/toast/Toast";
-import { apiPut, generateUrl } from "@/utils/api.utils";
-import { queryClient } from "@/utils/query.utils";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { Input } from "@codegouvfr/react-dsfr/Input"
+import { Select } from "@codegouvfr/react-dsfr/Select"
+import { Box, styled } from "@mui/material"
+import { captureException } from "@sentry/nextjs"
+import { differenceInDays } from "date-fns"
+import { useState } from "react"
+import type { SubmitHandler } from "react-hook-form"
+import { useForm } from "react-hook-form"
+import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
+import type { IUserPublic } from "shared/models/user.model"
+import Toast, { useToast } from "@/components/toast/Toast"
+import { apiPut, generateUrl } from "@/utils/api.utils"
+import { queryClient } from "@/utils/query.utils"
 
 interface FormValues {
-  name: string | null;
-  delimiter: string;
-  expiresInDays: number;
+  name: string | null
+  delimiter: string
+  expiresInDays: number
 }
 
 const FormContainer = styled("div")(({ theme }) => ({
@@ -29,11 +29,11 @@ const FormContainer = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     width: "50%",
   },
-}));
+}))
 
 export function MailingListEditSourceForm(props: { mailingList: IMailingListV2Json; user: IUserPublic }) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast, setToast, handleClose } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { toast, setToast, handleClose } = useToast()
 
   const {
     register,
@@ -46,14 +46,14 @@ export function MailingListEditSourceForm(props: { mailingList: IMailingListV2Js
       delimiter: props.mailingList.source.file.delimiter,
       expiresInDays: differenceInDays(props.mailingList.ttl, new Date()),
     },
-  });
+  })
 
   const onSubmit: SubmitHandler<FormValues> = async ({ delimiter, name, expiresInDays }) => {
-    setIsSubmitting(true);
+    setIsSubmitting(true)
     try {
       if (!name || name.trim() === "") {
-        setError("name", { message: "Veuillez saisir le nom de votre liste de diffusion." });
-        return;
+        setError("name", { message: "Veuillez saisir le nom de votre liste de diffusion." })
+        return
       }
 
       await apiPut("/_private/mailing-list/:id/source", {
@@ -63,21 +63,21 @@ export function MailingListEditSourceForm(props: { mailingList: IMailingListV2Js
           delimiter,
           expiresInDays: parseInt(expiresInDays.toString(), 10),
         },
-      });
+      })
 
       setToast({
         severity: "success",
         message: "Liste de diffusion mise à jour avec succès.",
-      });
+      })
     } catch (error) {
-      setToast({ severity: "error", message: "Une erreur s'est produite pendant la mise à jour." });
-      captureException(error);
-      console.error(error);
+      setToast({ severity: "error", message: "Une erreur s'est produite pendant la mise à jour." })
+      captureException(error)
+      console.error(error)
     } finally {
-      setIsSubmitting(false);
-      queryClient.invalidateQueries({ queryKey: ["/_private/mailing-list"] });
+      setIsSubmitting(false)
+      queryClient.invalidateQueries({ queryKey: ["/_private/mailing-list"] })
     }
-  };
+  }
 
   return (
     <FormContainer>
@@ -154,5 +154,5 @@ export function MailingListEditSourceForm(props: { mailingList: IMailingListV2Js
       </form>
       <Toast severity={toast?.severity} message={toast?.message} handleClose={handleClose} />
     </FormContainer>
-  );
+  )
 }

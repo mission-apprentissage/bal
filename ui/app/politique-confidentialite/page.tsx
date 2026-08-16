@@ -1,5 +1,5 @@
-import PolitiqueConfidentialite from "./components/PolitiqueConfidentialite";
-import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import PolitiqueConfidentialite from "./components/PolitiqueConfidentialite"
 
 const PolitiqueConfidentialitePage = () => {
   return (
@@ -7,6 +7,6 @@ const PolitiqueConfidentialitePage = () => {
       <Breadcrumb pages={[PAGES.homepage(), PAGES.politiqueConfidentialite()]} />
       <PolitiqueConfidentialite />
     </>
-  );
-};
-export default PolitiqueConfidentialitePage;
+  )
+}
+export default PolitiqueConfidentialitePage

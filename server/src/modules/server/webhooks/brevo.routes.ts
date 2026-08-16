@@ -1,8 +1,8 @@
-import { zRoutes } from "shared";
+import { zRoutes } from "shared"
 
-import type { IBrevoWebhookEvent } from "../../../common/services/brevo/brevo";
-import type { Server } from "../server";
-import { processHardbounce } from "../../actions/brevo.actions";
+import type { IBrevoWebhookEvent } from "../../../common/services/brevo/brevo"
+import { processHardbounce } from "../../actions/brevo.actions"
+import type { Server } from "../server"
 
 export const brevoWebhookRoutes = ({ server }: { server: Server }) => {
   server.post(
@@ -12,8 +12,8 @@ export const brevoWebhookRoutes = ({ server }: { server: Server }) => {
       onRequest: [server.auth(zRoutes.post["/v1/webhooks/brevo/hardbounce"])],
     },
     async (request, response) => {
-      await processHardbounce(request.body as IBrevoWebhookEvent);
-      response.code(204).send();
+      await processHardbounce(request.body as IBrevoWebhookEvent)
+      response.code(204).send()
     }
-  );
-};
+  )
+}

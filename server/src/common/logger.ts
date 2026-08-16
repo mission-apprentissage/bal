@@ -1,13 +1,13 @@
-import bunyan from "bunyan";
-import PrettyStream from "bunyan-prettystream";
+import bunyan from "bunyan"
+import PrettyStream from "bunyan-prettystream"
 
-import config from "@/config";
+import config from "@/config"
 
 const createStreams = () => {
-  const { type, level } = config.log;
+  const { type, level } = config.log
 
   if (process.env.NODE_ENV === "test") {
-    return [];
+    return []
   }
 
   const jsonStream = () => {
@@ -15,30 +15,29 @@ const createStreams = () => {
       name: "json",
       level,
       stream: process.stdout,
-    };
-  };
+    }
+  }
 
   const consoleStream = () => {
-    const pretty = new PrettyStream();
-    pretty.pipe(process.stdout);
+    const pretty = new PrettyStream()
+    pretty.pipe(process.stdout)
     return {
       name: "console",
       level,
       stream: pretty,
-    };
-  };
+    }
+  }
 
-  const streams = type === "console" ? [consoleStream()] : [jsonStream()];
+  const streams = type === "console" ? [consoleStream()] : [jsonStream()]
 
-  return streams;
-};
+  return streams
+}
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function errorSerialiser(err: any) {
+function errorSerialiser(err: Error & { errInfo?: unknown }) {
   return {
     ...bunyan.stdSerializers.err(err),
     ...(err.errInfo ? { errInfo: err.errInfo } : {}),
-  };
+  }
 }
 
 export default bunyan.createLogger({
@@ -50,4 +49,4 @@ export default bunyan.createLogger({
   },
   /** @ts-expect-error */
   streams: createStreams(),
-});
+})

@@ -1,32 +1,32 @@
-import type { AlertProps, SnackbarProps } from "@mui/material";
-import { Alert, Snackbar } from "@mui/material";
-import type { FC } from "react";
-import { useState } from "react";
+import type { AlertProps, SnackbarProps } from "@mui/material"
+import { Alert, Snackbar } from "@mui/material"
+import type { FC } from "react"
+import { useState } from "react"
 
 interface Props extends SnackbarProps {
-  severity?: AlertProps["severity"];
-  message?: string;
-  handleClose?: (event?: React.SyntheticEvent | Event, reason?: string) => void;
+  severity?: AlertProps["severity"]
+  message?: string
+  handleClose?: (event?: React.SyntheticEvent | Event, reason?: string) => void
 }
 
 interface UseToast {
-  severity: AlertProps["severity"];
-  message: string;
+  severity: AlertProps["severity"]
+  message: string
 }
 
 export const useToast = () => {
-  const [toast, setToast] = useState<UseToast | undefined>();
+  const [toast, setToast] = useState<UseToast | undefined>()
 
   const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
-      return;
+      return
     }
 
-    setToast(undefined);
-  };
+    setToast(undefined)
+  }
 
-  return { toast, setToast, handleClose };
-};
+  return { toast, setToast, handleClose }
+}
 
 const Toast: FC<Props> = ({ severity, message, handleClose, ...rest }) => {
   return (
@@ -35,7 +35,7 @@ const Toast: FC<Props> = ({ severity, message, handleClose, ...rest }) => {
         {message}
       </Alert>
     </Snackbar>
-  );
-};
+  )
+}
 
-export default Toast;
+export default Toast

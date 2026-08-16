@@ -1,9 +1,8 @@
-import querystring from "querystring";
-import nock from "nock";
-
-import { AKTO_API_BASE_URL, AKTO_AUTH_BASE_URL } from "../../../src/common/apis/akto";
-import { aktoMatch, aktoNotMatch, aktoToken, aktoValid } from "../../data/akto";
-import config from "@/config";
+import nock from "nock"
+import querystring from "querystring"
+import config from "@/config"
+import { AKTO_API_BASE_URL, AKTO_AUTH_BASE_URL } from "../../../src/common/apis/akto"
+import { aktoMatch, aktoNotMatch, aktoToken, aktoValid } from "../../data/akto"
 
 export const aktoTokenMock = () => {
   return nock(AKTO_AUTH_BASE_URL)
@@ -17,14 +16,14 @@ export const aktoTokenMock = () => {
         scope: config.akto.scope,
       })
     )
-    .reply(200, aktoToken);
-};
+    .reply(200, aktoToken)
+}
 
 export const aktoVerificationMock = (email: string, siren: string) => {
-  let response = aktoNotMatch;
+  let response = aktoNotMatch
 
   if (email === aktoValid.email && siren === aktoValid.siren) {
-    response = aktoMatch;
+    response = aktoMatch
   }
-  return nock(AKTO_API_BASE_URL).persist().get("/Relations/Validation").query({ email, siren }).reply(200, response);
-};
+  return nock(AKTO_API_BASE_URL).persist().get("/Relations/Validation").query({ email, siren }).reply(200, response)
+}

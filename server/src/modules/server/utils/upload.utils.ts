@@ -1,5 +1,5 @@
-import { PassThrough } from "stream";
+import { PassThrough } from "stream"
 
 export const noop = () => {
-  return new PassThrough();
-};
+  return new PassThrough()
+}

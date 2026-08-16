@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import DonneesPersonnelles from "./components/DonneesPersonnelles";
-import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import DonneesPersonnelles from "./components/DonneesPersonnelles"
 
 const DonneesPersonnellesPage = () => {
   return (
@@ -9,6 +9,6 @@ const DonneesPersonnellesPage = () => {
       <Breadcrumb pages={[PAGES.donneesPersonnelles()]} />
       <DonneesPersonnelles />
     </>
-  );
-};
-export default DonneesPersonnellesPage;
+  )
+}
+export default DonneesPersonnellesPage

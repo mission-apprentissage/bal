@@ -1,19 +1,19 @@
-"use client";
-import { useRouter } from "next/navigation";
-import type { FC, PropsWithChildren } from "react";
+"use client"
+import { useRouter } from "next/navigation"
+import type { FC, PropsWithChildren } from "react"
 
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext"
 
 const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
-  const { user } = useAuth();
-  const { push } = useRouter();
+  const { user } = useAuth()
+  const { push } = useRouter()
 
   if (!user?.is_admin) {
-    push("/auth/connexion");
-    return null;
+    push("/auth/connexion")
+    return null
   }
 
-  return <>{children}</>;
-};
+  return <>{children}</>
+}
 
-export default AdminLayout;
+export default AdminLayout

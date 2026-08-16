@@ -1,13 +1,13 @@
-import { z } from "zod/v4-mini";
-import type { IModelDescriptor } from "../common";
-import { zObjectId } from "../common";
-import { ZDecaApprenant } from "./parts/deca.apprenant.part";
-import { ZDecaEmployeur } from "./parts/deca.employeur.part";
-import { ZDecaEtablissementFormation } from "./parts/deca.etablissementFormation.part";
-import { ZDecaFormation } from "./parts/deca.formation.part";
-import { ZDecaOrganismeFormation } from "./parts/deca.organismeFormation.part";
+import { z } from "zod/v4-mini"
+import type { IModelDescriptor } from "../common"
+import { zObjectId } from "../common"
+import { ZDecaApprenant } from "./parts/deca.apprenant.part"
+import { ZDecaEmployeur } from "./parts/deca.employeur.part"
+import { ZDecaEtablissementFormation } from "./parts/deca.etablissementFormation.part"
+import { ZDecaFormation } from "./parts/deca.formation.part"
+import { ZDecaOrganismeFormation } from "./parts/deca.organismeFormation.part"
 
-const collectionName = "deca" as const;
+const collectionName = "deca" as const
 
 const indexes: IModelDescriptor["indexes"] = [
   [
@@ -21,7 +21,7 @@ const indexes: IModelDescriptor["indexes"] = [
   [{ "employeur.naf": 1, created_at: -1 }, {}],
   [{ created_at: -1 }, {}],
   [{ date_fin_contrat: 1 }, {}],
-];
+]
 
 export const ZDeca = z.object({
   _id: zObjectId,
@@ -58,12 +58,12 @@ export const ZDeca = z.object({
   employeur: ZDecaEmployeur,
   updated_at: z.date(),
   created_at: z.date(),
-});
+})
 
-export type IDeca = z.output<typeof ZDeca>;
+export type IDeca = z.output<typeof ZDeca>
 
 export default {
   zod: ZDeca,
   indexes,
   collectionName,
-};
+}

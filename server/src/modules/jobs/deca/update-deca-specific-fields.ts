@@ -1,37 +1,38 @@
-import { internal } from "@hapi/boom";
-import * as Sentry from "@sentry/node";
-import { addDays, format, isAfter, isBefore } from "date-fns";
-import deepmerge from "deepmerge";
-import { ObjectId } from "mongodb";
-import type { IDeca } from "shared/models/deca.model/deca.model";
-import type { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model";
+import { internal } from "@hapi/boom"
+import * as Sentry from "@sentry/node"
+import { addDays, format, isAfter, isBefore } from "date-fns"
+import deepmerge from "deepmerge"
+import { ObjectId } from "mongodb"
+import type { Contrat } from "shared/apis/deca"
+import type { IDecaImportJobResult } from "shared/models/deca.model/decaImportJobResult.model"
 
-import { z } from "zod/v4-mini";
-import { withCause } from "../../../common/services/errors/withCause";
-import { asyncForEach } from "../../../common/utils/asyncUtils";
-import { getDbCollection } from "../../../common/utils/mongodbUtils";
-import { ifDefined, isDecaApiAvailable } from "./hydrate-deca";
-import parentLogger from "@/common/logger";
-import { getAllContrats } from "@/common/apis/deca";
+import { z } from "zod/v4-mini"
+import { getAllContrats } from "@/common/apis/deca"
+import parentLogger from "@/common/logger"
+import { withCause } from "../../../common/services/errors/withCause"
+import { asyncForEach } from "../../../common/utils/asyncUtils"
+import { getDbCollection } from "../../../common/utils/mongodbUtils"
+import type { DecaContractDraft } from "./hydrate-deca"
+import { ifDefined, isDecaApiAvailable } from "./hydrate-deca"
 
 /**
  * NB: to be run once and kept dormant until needed again
  */
 
-const logger = parentLogger.child({ module: "job:hydrate:deca" });
-const DATE_DEBUT_CONTRATS_DISPONIBLES = new Date("2022-06-07T00:00:00.000+02:00"); // Date de début de disponibilité des données dans l'API Deca
-const NB_JOURS_MAX_PERIODE_FETCH = 650;
+const logger = parentLogger.child({ module: "job:hydrate:deca" })
+const DATE_DEBUT_CONTRATS_DISPONIBLES = new Date("2022-06-07T00:00:00.000+02:00") // Date de début de disponibilité des données dans l'API Deca
+const NB_JOURS_MAX_PERIODE_FETCH = 650
 
 function getMaxOldestDateForFetching() {
-  const date = new Date();
-  date.setDate(date.getDate() - NB_JOURS_MAX_PERIODE_FETCH);
-  date.setHours(0, 0, 0, 0);
-  return date;
+  const date = new Date()
+  date.setDate(date.getDate() - NB_JOURS_MAX_PERIODE_FETCH)
+  date.setHours(0, 0, 0, 0)
+  return date
 }
 
-const parseDate = (v: string) => {
-  return v ? new Date(`${v}T00:00:00.000Z`) : null;
-};
+const parseDate = (v: string | undefined) => {
+  return v ? new Date(`${v}T00:00:00.000Z`) : null
+}
 
 export const ZDecaSpecific = z.object({
   no_contrat: z.string(),
@@ -40,10 +41,9 @@ export const ZDecaSpecific = z.object({
     nom: z.string(),
     handicap: z.boolean(),
   }),
-});
+})
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const buildDecaContract = (contrat: any) => {
+export const buildDecaContract = (contrat: Contrat): DecaContractDraft => {
   return {
     alternant: {
       ...ifDefined("nom", contrat.alternant.nom), // TDB, LBA
@@ -52,8 +52,8 @@ export const buildDecaContract = (contrat: any) => {
     no_contrat: contrat.detailsContrat.noContrat, // TDB, LBA
     date_signature_contrat: parseDate(contrat.detailsContrat.dateConclusion), // LBA
     ...ifDefined("type_contrat", contrat.detailsContrat.typeContrat), // TDB, LBA
-  };
-};
+  } as DecaContractDraft
+}
 
 /**
  * Ce job peuple la collection contratsDeca via l'API Deca
@@ -63,46 +63,39 @@ export const buildDecaContract = (contrat: any) => {
  * Le fonctionnement nominal est un appel quotidien de récupération des données de la veille
  */
 export const updateDecaSpecificFields = async (signal: AbortSignal) => {
-  const now = new Date();
-  const yesterday = addDays(now, -1);
-  yesterday.setHours(23);
-  yesterday.setMinutes(59);
-  yesterday.setSeconds(59);
-  yesterday.setMilliseconds(0);
+  const now = new Date()
+  const yesterday = addDays(now, -1)
+  yesterday.setHours(23)
+  yesterday.setMinutes(59)
+  yesterday.setSeconds(59)
+  yesterday.setMilliseconds(0)
 
   // Récupération de la date début / fin
-  const dateDebutToFetch: Date = await getLastDecaCreatedDateInDb();
-  const dateFinToFetch: Date = yesterday;
+  const dateDebutToFetch: Date = await getLastDecaCreatedDateInDb()
+  const dateFinToFetch: Date = yesterday
 
   if (isAfter(dateDebutToFetch, dateFinToFetch)) {
-    logger.error("La date de debut de peut pas être après la date de fin");
-    return;
+    logger.error("La date de debut de peut pas être après la date de fin")
+    return
   } else if (dateDebutToFetch.toLocaleDateString() === dateFinToFetch.toLocaleDateString()) {
-    logger.error("La date de debut doit toujours être inférieur la date de fin");
-    return;
+    logger.error("La date de debut doit toujours être inférieur la date de fin")
+    return
   } else if (isBefore(dateDebutToFetch, DATE_DEBUT_CONTRATS_DISPONIBLES)) {
-    logger.error("Limite deca date de debut au 2022-06-07");
-    return;
+    logger.error("Limite deca date de debut au 2022-06-07")
+    return
   }
 
-  logger.info(
-    `Récupération des contrats depuis l'API Deca du ${dateDebutToFetch.toLocaleDateString()} au ${dateFinToFetch.toLocaleDateString()} ...`
-  );
+  logger.info(`Récupération des contrats depuis l'API Deca du ${dateDebutToFetch.toLocaleDateString()} au ${dateFinToFetch.toLocaleDateString()} ...`)
 
   // Récupération des périodes (liste dateDebut/fin) à fetch dans l'API
-  const periods = await buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch);
+  const periods = await buildPeriodsToFetch(dateDebutToFetch, dateFinToFetch)
 
-  await asyncForEach(periods, async (period: { dateDebut: string; dateFin: string }) =>
-    hydrateDecaPeriod(period, signal)
-  );
+  await asyncForEach(periods, async (period: { dateDebut: string; dateFin: string }) => hydrateDecaPeriod(period, signal))
 
-  logger.info("Collection deca mise à jour avec succès !");
-};
+  logger.info("Collection deca mise à jour avec succès !")
+}
 
-const hydrateDecaPeriod = async (
-  { dateDebut, dateFin }: { dateDebut: string; dateFin: string },
-  signal: AbortSignal
-) => {
+const hydrateDecaPeriod = async ({ dateDebut, dateFin }: { dateDebut: string; dateFin: string }, signal: AbortSignal) => {
   return Sentry.startSpan(
     {
       name: "Hydrate DECA period specific",
@@ -110,78 +103,63 @@ const hydrateDecaPeriod = async (
       forceTransaction: true,
     },
     async () => {
-      Sentry.getCurrentScope().setExtras({ dateDebut, dateFin });
+      Sentry.getCurrentScope().setExtras({ dateDebut, dateFin })
       if (signal.aborted) {
-        throw signal.reason;
+        throw signal.reason
       }
 
       if (!isDecaApiAvailable()) {
-        logger.warn("L'API Deca n'est pas accessible actuellement");
-        return;
+        logger.warn("L'API Deca n'est pas accessible actuellement")
+        return
       }
 
       try {
-        logger.info(`> Fetch des données Deca du ${dateDebut} au ${dateFin}`);
+        logger.info(`> Fetch des données Deca du ${dateDebut} au ${dateFin}`)
 
-        const [decaContrats_TDB, decaContrats_LBA] = await Promise.all([
-          getAllContrats(dateDebut, dateFin, "TDB"),
-          getAllContrats(dateDebut, dateFin, "LBA"),
-        ]);
+        const [decaContrats_TDB, decaContrats_LBA] = await Promise.all([getAllContrats(dateDebut, dateFin, "TDB"), getAllContrats(dateDebut, dateFin, "LBA")])
 
-        logger.info(
-          `Insertion des ${decaContrats_TDB.length} contrats dans la collection deca TDB du ${dateDebut} au ${dateFin} `
-        );
-        logger.info(
-          `Insertion des ${decaContrats_LBA.length} contrats dans la collection deca LBA du ${dateDebut} au ${dateFin} `
-        );
+        logger.info(`Insertion des ${decaContrats_TDB.length} contrats dans la collection deca TDB du ${dateDebut} au ${dateFin} `)
+        logger.info(`Insertion des ${decaContrats_LBA.length} contrats dans la collection deca LBA du ${dateDebut} au ${dateFin} `)
 
-        const tdbMap = new Map(
-          decaContrats_TDB.map((item) => [
-            JSON.stringify({ noContrat: item.detailsContrat.noContrat, dateNaissance: item.alternant.dateNaissance }),
-            item,
-          ])
-        );
+        const tdbMap = new Map(decaContrats_TDB.map((item) => [JSON.stringify({ noContrat: item.detailsContrat.noContrat, dateNaissance: item.alternant.dateNaissance }), item]))
 
         const decaContratsForPeriod = decaContrats_LBA.reduce((acc, item) => {
-          let contrat = structuredClone(item);
+          let contrat = structuredClone(item)
           const tdbContrat = tdbMap.get(
             JSON.stringify({
               noContrat: item.detailsContrat.noContrat,
               dateNaissance: item.alternant.dateNaissance,
             })
-          );
+          )
 
           if (tdbContrat) {
-            contrat = deepmerge(item, tdbContrat);
-            tdbMap.delete(
-              JSON.stringify({ noContrat: item.detailsContrat.noContrat, dateNaissance: item.alternant.dateNaissance })
-            );
+            contrat = deepmerge(item, tdbContrat)
+            tdbMap.delete(JSON.stringify({ noContrat: item.detailsContrat.noContrat, dateNaissance: item.alternant.dateNaissance }))
           }
 
-          const formattedContract = buildDecaContract(contrat);
-          acc.push(formattedContract);
+          const formattedContract = buildDecaContract(contrat)
+          acc.push(formattedContract)
 
-          return acc;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        }, [] as any[]);
+          return acc
+        }, [] as DecaContractDraft[])
 
-        await asyncForEach(decaContratsForPeriod, async (currentContrat: IDeca) => {
+        await asyncForEach(decaContratsForPeriod, async (currentContrat: DecaContractDraft) => {
           try {
             const contratFilter = {
               no_contrat: currentContrat.no_contrat,
               type_contrat: "" + currentContrat.type_contrat,
               "alternant.nom": currentContrat.alternant.nom,
-            };
+            }
 
             /* decaHistory contient les modifs lorsque modif sur numéro de contrat + alternant.nom + type contrat identique */
-            const preparedContrat = ZDecaSpecific.parse(currentContrat);
+            const preparedContrat = ZDecaSpecific.parse(currentContrat)
 
             await getDbCollection("deca").updateOne(contratFilter, {
               $set: {
                 date_signature_contrat: preparedContrat.date_signature_contrat || null,
                 "alternant.handicap": preparedContrat.alternant.handicap,
               },
-            });
+            })
           } catch (err) {
             throw withCause(
               internal("Error while processing deca specific contract", {
@@ -191,12 +169,10 @@ const hydrateDecaPeriod = async (
                 dateFin,
               }),
               err
-            );
+            )
           }
-        });
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
+        })
+      } catch (err) {
         throw withCause(
           internal("Erreur lors de la récupération des données Deca spécifique", {
             error: err,
@@ -204,7 +180,7 @@ const hydrateDecaPeriod = async (
             dateFin,
           }),
           err
-        );
+        )
       }
 
       await getDbCollection("deca.import.job.result.specific").insertOne({
@@ -213,36 +189,32 @@ const hydrateDecaPeriod = async (
         import_date_string: dateDebut,
         import_date: parseDate(dateDebut)!,
         created_at: new Date(),
-      } as IDecaImportJobResult);
+      } as IDecaImportJobResult)
     }
-  );
-};
+  )
+}
 
 /**
  * Récupération de la liste des périodes (dateDébut - dateFin) par chunk de NB_DAYS_CHUNK
  * on devra l'appeler plusieurs fois si la durée que l'on souhaite est > NB_DAYS_CHUNK
  */
-const buildPeriodsToFetch = async (
-  dateDebut: Date,
-  dateFin: Date
-): Promise<Array<{ dateDebut: string; dateFin: string }>> => {
-  const periods: Array<{ dateDebut: string; dateFin: string }> = [];
+const buildPeriodsToFetch = async (dateDebut: Date, dateFin: Date): Promise<Array<{ dateDebut: string; dateFin: string }>> => {
+  const periods: Array<{ dateDebut: string; dateFin: string }> = []
 
-  let currentDate = dateDebut;
+  let currentDate = dateDebut
 
   while (isBefore(currentDate, dateFin)) {
-    const dateFinPeriod = addDays(currentDate, 1);
+    const dateFinPeriod = addDays(currentDate, 1)
     if (isAfter(dateFinPeriod, dateFin)) {
-      if (format(currentDate, "yyyy-MM-dd") !== format(dateFin, "yyyy-MM-dd"))
-        await pushPeriod(periods, dateDebut, dateFin);
+      if (format(currentDate, "yyyy-MM-dd") !== format(dateFin, "yyyy-MM-dd")) await pushPeriod(periods, dateDebut, dateFin)
     } else {
-      await pushPeriod(periods, currentDate, dateFinPeriod);
+      await pushPeriod(periods, currentDate, dateFinPeriod)
     }
-    currentDate = addDays(currentDate, 1);
+    currentDate = addDays(currentDate, 1)
   }
 
-  return periods;
-};
+  return periods
+}
 
 const pushPeriod = async (periods: Array<{ dateDebut: string; dateFin: string }>, dateDebut: Date, dateFin: Date) => {
   if (
@@ -250,30 +222,27 @@ const pushPeriod = async (periods: Array<{ dateDebut: string; dateFin: string }>
       import_date_string: format(dateDebut, "yyyy-MM-dd"),
     }))
   ) {
-    periods.push({ dateDebut: format(dateDebut, "yyyy-MM-dd"), dateFin: format(dateFin, "yyyy-MM-dd") });
+    periods.push({ dateDebut: format(dateDebut, "yyyy-MM-dd"), dateFin: format(dateFin, "yyyy-MM-dd") })
   }
-};
+}
 
 /**
  * Fonction de récupération de la dernière date de contrat Deca ajouté en base
  * @returns
  */
 const getLastDecaCreatedDateInDb = async () => {
-  const lastDecaLogEntry = await getDbCollection("deca.import.job.result.specific").findOne(
-    {},
-    { sort: { import_date: -1 } }
-  );
+  const lastDecaLogEntry = await getDbCollection("deca.import.job.result.specific").findOne({}, { sort: { import_date: -1 } })
 
-  let lastCreatedAt = lastDecaLogEntry?.import_date ?? null;
+  let lastCreatedAt = lastDecaLogEntry?.import_date ?? null
 
   // Si la dernière date est plus tard qu'hier, on prend d'avant hier en date de debut de référence
   if (lastCreatedAt) {
     if (isAfter(lastCreatedAt, addDays(new Date(), -1))) {
-      lastCreatedAt = addDays(new Date(), -2);
+      lastCreatedAt = addDays(new Date(), -2)
     }
 
-    return lastCreatedAt;
+    return lastCreatedAt
   } else {
-    return getMaxOldestDateForFetching();
+    return getMaxOldestDateForFetching()
   }
-};
+}

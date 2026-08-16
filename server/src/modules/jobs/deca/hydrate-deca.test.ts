@@ -1,12 +1,13 @@
-import { ObjectId } from "mongodb";
-import { describe, expect, it } from "vitest";
-import { ZDeca } from "shared/models/deca.model/deca.model";
+import { ObjectId } from "mongodb"
+import type { Contrat } from "shared/apis/deca"
+import { ZDeca } from "shared/models/deca.model/deca.model"
+import { describe, expect, it } from "vitest"
 
-import { buildDecaContract } from "./hydrate-deca";
+import { buildDecaContract } from "./hydrate-deca"
 
 describe("buildDecaContract", () => {
   it("should map a fully populated Deca contract, including rupture and fin de contrat réelle", () => {
-    const contrat = {
+    const contrat: Contrat = {
       alternant: {
         nom: "Dupont",
         prenom: "Jean",
@@ -72,9 +73,9 @@ describe("buildDecaContract", () => {
       suiviASP: {
         drfc: "2024-06-15",
       },
-    };
+    }
 
-    const result = buildDecaContract(contrat);
+    const result = buildDecaContract(contrat)
 
     expect(result).toEqual({
       alternant: {
@@ -136,7 +137,7 @@ describe("buildDecaContract", () => {
       date_signature_contrat: new Date("2023-08-15T00:00:00.000Z"),
       no_avenant: "AV1",
       statut: "Rompu",
-    });
+    })
 
     // Le contrat mappé doit rester conforme au schéma ZDeca une fois les champs techniques ajoutés
     expect(() =>
@@ -146,11 +147,11 @@ describe("buildDecaContract", () => {
         created_at: new Date(),
         updated_at: new Date(),
       })
-    ).not.toThrow();
-  });
+    ).not.toThrow()
+  })
 
   it("should omit optional fields (rupture, avenant, etc.) when absent from the source contract", () => {
-    const contrat = {
+    const contrat: Contrat = {
       alternant: {
         nom: "Martin",
         dateNaissance: "2000-01-01",
@@ -167,9 +168,9 @@ describe("buildDecaContract", () => {
         typeContrat: 11,
         dateConclusion: "",
       },
-    };
+    }
 
-    const result = buildDecaContract(contrat);
+    const result = buildDecaContract(contrat)
 
     expect(result).toEqual({
       alternant: {
@@ -187,11 +188,11 @@ describe("buildDecaContract", () => {
       no_contrat: "987654321",
       type_contrat: "11",
       date_signature_contrat: null,
-    });
-    expect(result).not.toHaveProperty("code_motif_rupture");
-    expect(result).not.toHaveProperty("commentaire_rupture");
-    expect(result).not.toHaveProperty("date_signalement_rupture");
-    expect(result).not.toHaveProperty("date_reelle_fin_contrat");
-    expect(result).not.toHaveProperty("date_effet_rupture");
-  });
-});
+    })
+    expect(result).not.toHaveProperty("code_motif_rupture")
+    expect(result).not.toHaveProperty("commentaire_rupture")
+    expect(result).not.toHaveProperty("date_signalement_rupture")
+    expect(result).not.toHaveProperty("date_reelle_fin_contrat")
+    expect(result).not.toHaveProperty("date_effet_rupture")
+  })
+})

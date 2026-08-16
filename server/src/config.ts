@@ -1,4 +1,4 @@
-import env from "env-var";
+import env from "env-var"
 
 const config = {
   appName: env.get("APP_NAME").default("bal").asString(),
@@ -56,10 +56,7 @@ const config = {
     },
   },
   lba: {
-    baseURL: env
-      .get("MNA_BAL_LBA_BASE_URL")
-      .default("https://labonnealternance-recette.apprentissage.beta.gouv.fr")
-      .asString(),
+    baseURL: env.get("MNA_BAL_LBA_BASE_URL").default("https://labonnealternance-recette.apprentissage.beta.gouv.fr").asString(),
     mongodb: {
       uri: env.get("LBA_MONGODB_URI").required().asString(),
       blacklistedDbCollection: env.get("LBA_EMAIL_BLACKLISTED_COLLECTION_NAME").required().asString(),
@@ -141,6 +138,6 @@ const config = {
     webhookApiKey: env.get("MNA_BAL_BREVO_WEBHOOK_API_KEY").required().asString(),
     contactListId: env.get("LBA_BREVO_CONTACT_LIST_ID").required().asString(),
   },
-};
+}
 
-export default config;
+export default config

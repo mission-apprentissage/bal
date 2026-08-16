@@ -1,9 +1,8 @@
-"use client";
+"use client"
 
-import { Typography } from "@mui/material";
-
-import UserList from "./components/UserList";
-import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import { Typography } from "@mui/material"
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import UserList from "./components/UserList"
 
 const AdminUsersPage = () => {
   return (
@@ -14,7 +13,7 @@ const AdminUsersPage = () => {
       </Typography>
       <UserList />
     </>
-  );
-};
+  )
+}
 
-export default AdminUsersPage;
+export default AdminUsersPage

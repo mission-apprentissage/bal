@@ -1,7 +1,7 @@
-import { z } from "zod/v4-mini";
+import { z } from "zod/v4-mini"
 
-import { zObjectId } from "../models/common";
-import type { IRoutesDef } from "./common.routes";
+import { zObjectId } from "../models/common"
+import type { IRoutesDef } from "./common.routes"
 
 export const zEmailRoutes = {
   get: {
@@ -60,4 +60,4 @@ export const zEmailRoutes = {
       securityScheme: null,
     },
   },
-} as const satisfies IRoutesDef;
+} as const satisfies IRoutesDef

@@ -1,15 +1,15 @@
-import UserView from "./components/UserView";
-import { apiGet } from "@/utils/api.utils";
+import { apiGet } from "@/utils/api.utils"
+import UserView from "./components/UserView"
 
 interface Props {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>
 }
 
 const AdminUserViewPage = async ({ params }: Props) => {
-  const { id } = await params;
-  const user = await apiGet(`/admin/users/:id`, { params: { id } });
+  const { id } = await params
+  const user = await apiGet(`/admin/users/:id`, { params: { id } })
 
-  return <UserView user={user} />;
-};
+  return <UserView user={user} />
+}
 
-export default AdminUserViewPage;
+export default AdminUserViewPage

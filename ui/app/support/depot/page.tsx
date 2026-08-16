@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Upload as DSFRUpload } from "@codegouvfr/react-dsfr/Upload";
-import { Box, styled, Typography } from "@mui/material";
-import { useState } from "react";
-import type { SubmitHandler } from "react-hook-form";
-import { useForm } from "react-hook-form";
-import type { IPostRoutes } from "shared";
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { Input } from "@codegouvfr/react-dsfr/Input"
+import { Upload as DSFRUpload } from "@codegouvfr/react-dsfr/Upload"
+import { Box, styled, Typography } from "@mui/material"
+import { useState } from "react"
+import type { SubmitHandler } from "react-hook-form"
+import { useForm } from "react-hook-form"
+import type { IPostRoutes } from "shared"
 
-import type { z } from "zod/v4-mini";
-import Toast, { useToast } from "@/components/toast/Toast";
-import { apiPost } from "@/utils/api.utils";
+import type { z } from "zod/v4-mini"
+import Toast, { useToast } from "@/components/toast/Toast"
+import { apiPost } from "@/utils/api.utils"
 
 interface FormValues extends z.input<IPostRoutes["/support/upload"]["querystring"]> {
-  file: FileList;
-  email: string;
-  verified_key: string;
+  file: FileList
+  email: string
+  verified_key: string
 }
 
 const FormContainer = styled("div")(({ theme }) => ({
@@ -26,11 +26,11 @@ const FormContainer = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     width: "50%",
   },
-}));
+}))
 
 const SupportDepotPage = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast, setToast, handleClose } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { toast, setToast, handleClose } = useToast()
 
   const {
     register,
@@ -43,13 +43,13 @@ const SupportDepotPage = () => {
       email: "",
       verified_key: "",
     },
-  });
+  })
 
   const onSubmit: SubmitHandler<FormValues> = async ({ email, verified_key, file }) => {
-    setIsSubmitting(true);
+    setIsSubmitting(true)
     try {
-      const formData = new FormData();
-      formData.append("file", file[0]);
+      const formData = new FormData()
+      formData.append("file", file[0])
 
       await apiPost("/support/upload", {
         querystring: {
@@ -57,25 +57,25 @@ const SupportDepotPage = () => {
           verified_key,
         },
         body: formData,
-      });
+      })
 
       setToast({
         severity: "success",
         message: "Fichier importé avec succès",
-      });
-      reset();
+      })
+      reset()
     } catch (error) {
       if (error instanceof Error) {
-        const { message } = error;
-        setError("file", { message });
+        const { message } = error
+        setError("file", { message })
       } else {
-        setToast({ severity: "error", message: "Une erreur s'est produite pendant le téléversement du fichier." });
+        setToast({ severity: "error", message: "Une erreur s'est produite pendant le téléversement du fichier." })
       }
-      console.error(error);
+      console.error(error)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   return (
     <Box mt={5}>
@@ -117,15 +117,10 @@ const SupportDepotPage = () => {
                   required: "Obligatoire: Vous devez ajouter un fichier à importer",
                   validate: {
                     notEmpty: (value) => {
-                      return (value && value.length > 0) || "Obligatoire: Vous devez ajouter un fichier à importer";
+                      return (value && value.length > 0) || "Obligatoire: Vous devez ajouter un fichier à importer"
                     },
                     extension: (value) => {
-                      return (
-                        value[0]?.name?.endsWith(".csv") ||
-                        value[0]?.name?.endsWith(".xlsx") ||
-                        value[0]?.name?.endsWith(".xls") ||
-                        "Le fichier doit être au format .csv"
-                      );
+                      return value[0]?.name?.endsWith(".csv") || value[0]?.name?.endsWith(".xlsx") || value[0]?.name?.endsWith(".xls") || "Le fichier doit être au format .csv"
                     },
                   },
                 }),
@@ -139,14 +134,9 @@ const SupportDepotPage = () => {
             </Button>
           </Box>
         </form>
-        <Toast
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          severity={toast?.severity}
-          message={toast?.message}
-          handleClose={handleClose}
-        />
+        <Toast anchorOrigin={{ vertical: "top", horizontal: "right" }} severity={toast?.severity} message={toast?.message} handleClose={handleClose} />
       </FormContainer>
     </Box>
-  );
-};
-export default SupportDepotPage;
+  )
+}
+export default SupportDepotPage

@@ -1,8 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
-import type { IUserPublic } from "shared/models/user.model";
-import { Box } from "@mui/material";
-import Loading from "@/app/loading";
-import { apiGet } from "@/utils/api.utils";
+import { Box } from "@mui/material"
+import { useQuery } from "@tanstack/react-query"
+import type { IUserPublic } from "shared/models/user.model"
+import Loading from "@/app/loading"
+import { apiGet } from "@/utils/api.utils"
 
 export function AddedBy(props: { addedBy: string }) {
   const userQuery = useQuery<IUserPublic>({
@@ -13,23 +13,15 @@ export function AddedBy(props: { addedBy: string }) {
       }),
     throwOnError: true,
     retry: 5,
-  });
+  })
 
   if (!userQuery.isSuccess) {
     return (
-      <Box
-        padding={8}
-        display="flex"
-        justifyContent="center"
-        flexDirection="column"
-        margin="auto"
-        maxWidth="600px"
-        textAlign="center"
-      >
+      <Box padding={8} display="flex" justifyContent="center" flexDirection="column" margin="auto" maxWidth="600px" textAlign="center">
         <Loading />
       </Box>
-    );
+    )
   }
 
-  return <>{userQuery.data.email}</>;
+  return <>{userQuery.data.email}</>
 }

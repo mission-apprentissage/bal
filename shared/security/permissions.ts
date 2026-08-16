@@ -1,47 +1,44 @@
-type Permission = "admin" | "support";
+type Permission = "admin" | "support"
 
-type RoleNames = "none" | "admin" | "support";
+type RoleNames = "none" | "admin" | "support"
 
 export interface Role {
-  name: RoleNames;
-  permissions: Permission[];
+  name: RoleNames
+  permissions: Permission[]
 }
 
 export const NoneRole = {
   name: "none",
   permissions: [],
-} satisfies Role;
+} satisfies Role
 
 export const SupportRole = {
   name: "support",
   permissions: ["support"],
-} satisfies Role;
+} satisfies Role
 
 export const AdminRole = {
   name: "admin",
   permissions: ["admin"],
-} satisfies Role;
+} satisfies Role
 
-export type AccessPermission =
-  | Permission
-  | { some: ReadonlyArray<AccessPermission> }
-  | { every: ReadonlyArray<AccessPermission> };
+export type AccessPermission = Permission | { some: ReadonlyArray<AccessPermission> } | { every: ReadonlyArray<AccessPermission> }
 
 type AccessResourcePath = {
-  type: "params" | "query";
-  key: string;
-};
+  type: "params" | "query"
+  key: string
+}
 
 export type AccessRessouces = {
   events?: ReadonlyArray<{
-    _id: AccessResourcePath;
-  }>;
+    _id: AccessResourcePath
+  }>
   users?: ReadonlyArray<{
-    _id: AccessResourcePath;
-  }>;
-};
+    _id: AccessResourcePath
+  }>
+}
 
 export type UserWithType<T, V> = Readonly<{
-  type: T;
-  value: V;
-}>;
+  type: T
+  value: V
+}>

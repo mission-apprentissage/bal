@@ -1,8 +1,8 @@
-import { z } from "zod/v4-mini";
-import type { IModelDescriptor } from "../common";
-import { zObjectId } from "../common";
+import { z } from "zod/v4-mini"
+import type { IModelDescriptor } from "../common"
+import { zObjectId } from "../common"
 
-const collectionName = "lba.mailingLists" as const;
+const collectionName = "lba.mailingLists" as const
 
 export const enum EmailStatus {
   VALID = "valid",
@@ -25,9 +25,9 @@ export const ZLbaMailingContact = z.object({
   raisonsociale: z.string(),
   exported_at: z.coerce.date(),
   date_cloture_exercice: z.coerce.date(),
-});
+})
 
-export type ILbaMailingContact = z.output<typeof ZLbaMailingContact>;
+export type ILbaMailingContact = z.output<typeof ZLbaMailingContact>
 
 export const ZLbaMailingList = z.extend(ZLbaMailingContact, {
   _id: zObjectId,
@@ -38,9 +38,9 @@ export const ZLbaMailingList = z.extend(ZLbaMailingContact, {
 
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
-});
+})
 
-export type ILbaMailingList = z.output<typeof ZLbaMailingList>;
+export type ILbaMailingList = z.output<typeof ZLbaMailingList>
 
 export default {
   zod: ZLbaMailingList,
@@ -50,4 +50,4 @@ export default {
     [{ emailStatus: 1, email: 1 }, {}],
   ],
   collectionName,
-} as const satisfies IModelDescriptor;
+} as const satisfies IModelDescriptor

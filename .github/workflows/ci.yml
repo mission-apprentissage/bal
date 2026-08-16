@@ -37,11 +37,11 @@ jobs:
       - name: Make sure to use same dependencies version across all packages
         run: pnpm dedupe --check
 
-      - name: lint
-        run: pnpm lint
-
       - name: typecheck
         run: pnpm typecheck:ci
+
+      - name: lint & format
+        run: pnpm check:ci
 
       - name: start mongodb service
         run: |
@@ -50,9 +50,6 @@ jobs:
 
       - name: test
         run: pnpm test:ci
-
-      - name: prettier
-        run: pnpm prettier:check
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v3

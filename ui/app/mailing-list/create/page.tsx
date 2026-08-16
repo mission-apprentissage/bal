@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import { Box, Typography } from "@mui/material";
-import { Tabs } from "@codegouvfr/react-dsfr/Tabs";
-import { fr } from "@codegouvfr/react-dsfr";
-import { MailingListCreateSource } from "./MailingListCreateSource";
-import { MailingListStepper } from "@/app/mailing-list/_components/MailingListStepper";
-import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
+import { fr } from "@codegouvfr/react-dsfr"
+import { Tabs } from "@codegouvfr/react-dsfr/Tabs"
+import { Box, Typography } from "@mui/material"
+import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import { MailingListStepper } from "@/app/mailing-list/_components/MailingListStepper"
+import { MailingListCreateSource } from "./MailingListCreateSource"
 
 const AdminImportPage = () => {
   return (
@@ -57,6 +57,6 @@ const AdminImportPage = () => {
         />
       </Box>
     </>
-  );
-};
-export default AdminImportPage;
+  )
+}
+export default AdminImportPage

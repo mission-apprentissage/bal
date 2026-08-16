@@ -10,7 +10,11 @@
       "request": "launch",
       "command": "npm run dev",
       "cwd": "${workspaceFolder}/server",
-      "skipFiles": ["<node_internals>/**", "**/node_modules/**", "**/$KNOWN_TOOLS$/**"]
+      "skipFiles": [
+        "<node_internals>/**",
+        "**/node_modules/**",
+        "**/$KNOWN_TOOLS$/**"
+      ]
     },
     {
       "name": "Ui: Debug Server-Side",
@@ -18,7 +22,11 @@
       "request": "launch",
       "command": "npm run dev",
       "cwd": "${workspaceFolder}/ui",
-      "skipFiles": ["<node_internals>/**", "**/node_modules/**", "**/$KNOWN_TOOLS$/**"]
+      "skipFiles": [
+        "<node_internals>/**",
+        "**/node_modules/**",
+        "**/$KNOWN_TOOLS$/**"
+      ]
     },
     {
       "name": "Cli: Debug",
@@ -26,7 +34,11 @@
       "request": "launch",
       "command": "npm run cli -- ${input:command}",
       "cwd": "${workspaceFolder}/server",
-      "skipFiles": ["<node_internals>/**", "**/node_modules/**", "**/$KNOWN_TOOLS$/**"],
+      "skipFiles": [
+        "<node_internals>/**",
+        "**/node_modules/**",
+        "**/$KNOWN_TOOLS$/**"
+      ],
       "preLaunchTask": {
         "type": "npm",
         "script": "build:dev",

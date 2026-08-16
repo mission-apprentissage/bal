@@ -1,42 +1,42 @@
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
-import type { IUserPublic } from "shared/models/user.model";
-import SearchBar from "@/components/SearchBar";
-import Table from "@/components/table/Table";
-import { apiGet } from "@/utils/api.utils";
-import { formatDate } from "@/utils/date.utils";
-import { formatUrlWithNewParams, getSearchParamsForQuery } from "@/utils/query.utils";
-import { PAGES } from "@/app/components/breadcrumb/Breadcrumb";
-import Loading from "@/app/loading";
+import { Button } from "@codegouvfr/react-dsfr/Button"
+import { useQuery } from "@tanstack/react-query"
+import { useRouter, useSearchParams } from "next/navigation"
+import type { IUserPublic } from "shared/models/user.model"
+import { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import Loading from "@/app/loading"
+import SearchBar from "@/components/SearchBar"
+import Table from "@/components/table/Table"
+import { apiGet } from "@/utils/api.utils"
+import { formatDate } from "@/utils/date.utils"
+import { formatUrlWithNewParams, getSearchParamsForQuery } from "@/utils/query.utils"
 
 const UserList = () => {
-  const searchParams = useSearchParams();
-  const { push } = useRouter();
+  const searchParams = useSearchParams()
+  const { push } = useRouter()
 
-  const { page: page, limit: limit, q: searchValue } = getSearchParamsForQuery(searchParams);
+  const { page: page, limit: limit, q: searchValue } = getSearchParamsForQuery(searchParams)
 
   const { data: users, isLoading } = useQuery<IUserPublic[]>({
     queryKey: ["users", { searchValue, page, limit }],
     queryFn: async () => {
       const data = await apiGet("/admin/users", {
         querystring: { q: searchValue, page, limit },
-      });
+      })
 
-      return data;
+      return data
     },
     throwOnError: true,
-  });
+  })
 
   const onSearch = (q: string) => {
     const url = formatUrlWithNewParams(PAGES.adminUsers().path, searchParams, {
       q,
       page,
       limit,
-    });
+    })
 
-    push(url);
-  };
+    push(url)
+  }
 
   return (
     <>
@@ -60,7 +60,7 @@ const UserList = () => {
             field: "api_key_used_at",
             headerName: "Dernière utilisation API",
             valueGetter: (value) => {
-              return value ? formatDate(value, "PPP à p") : "Jamais";
+              return value ? formatDate(value, "PPP à p") : "Jamais"
             },
             minWidth: 180,
           },
@@ -84,7 +84,7 @@ const UserList = () => {
       />
       {isLoading && <Loading />}
     </>
-  );
-};
+  )
+}
 
-export default UserList;
+export default UserList
