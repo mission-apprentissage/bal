@@ -1,26 +1,26 @@
-"use client";
-import type { FC, PropsWithChildren } from "react";
-import { createContext, useContext, useState } from "react";
-import type { IUserPublic } from "shared/models/user.model";
+"use client"
+import type { FC, PropsWithChildren } from "react"
+import { createContext, useContext, useState } from "react"
+import type { IUserPublic } from "shared/models/user.model"
 
 interface IAuthContext {
-  user?: IUserPublic;
-  setUser: (user?: IUserPublic) => void;
+  user?: IUserPublic
+  setUser: (user?: IUserPublic) => void
 }
 
 const AuthContext = createContext<IAuthContext>({
   user: undefined,
-  setUser: () => {},
-});
+  setUser: () => undefined,
+})
 
 interface Props extends PropsWithChildren {
-  initialUser?: IUserPublic;
+  initialUser?: IUserPublic
 }
 
 export const AuthContextProvider: FC<Props> = ({ initialUser, children }) => {
-  const [user, setUser] = useState<IUserPublic | undefined>(initialUser);
+  const [user, setUser] = useState<IUserPublic | undefined>(initialUser)
 
-  return <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>;
-};
+  return <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>
+}
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext)
