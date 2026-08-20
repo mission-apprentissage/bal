@@ -1,5 +1,6 @@
 import type { IJobsCronTask } from "job-processor"
 import { getProcessorStatus } from "job-processor"
+import type { ObjectId } from "mongodb"
 
 import logger from "../../../common/logger"
 import { verifyEmails } from "../../../common/services/mailer/mailBouncer"
@@ -28,9 +29,11 @@ async function isProcessorBusy(currentJob: IJobsCronTask | undefined): Promise<b
 }
 
 export async function retryBouncerErrorEmails(signal: AbortSignal, currentJob?: IJobsCronTask): Promise<void> {
-  // Emails déjà traités pendant ce run : ceux qui retombent en erreur sont ré-insérés
-  // dans le cache par verifyEmails, il ne faut pas les repêcher en boucle
+  // Emails déjà traités pendant ce run : ceux qui retombent en erreur sont ré-insérés dans le
+  // cache par verifyEmails avec un nouvel _id (donc au-delà du curseur), il ne faut pas les repêcher
   const processed = new Set<string>()
+  // Pagination par curseur : chaque page relit CHUNK_SIZE documents au plus, sans rescanner les précédents
+  let lastId: ObjectId | null = null
   let retriedCount = 0
 
   while (!signal.aborted) {
@@ -40,25 +43,33 @@ export async function retryBouncerErrorEmails(signal: AbortSignal, currentJob?: 
     }
 
     const errorDocs = await getDbCollection("bouncer.email")
-      .find({ "ping.status": "error" }, { projection: { email: 1 }, signal })
-      .limit(CHUNK_SIZE + processed.size)
+      .find({ "ping.status": "error", ...(lastId === null ? {} : { _id: { $gt: lastId } }) }, { projection: { email: 1 }, signal })
+      .sort({ _id: 1 })
+      .limit(CHUNK_SIZE)
       .toArray()
+
+    if (errorDocs.length === 0) {
+      break
+    }
+
+    lastId = errorDocs[errorDocs.length - 1]._id
 
     const emails = errorDocs.map((doc) => doc.email).filter((email) => !processed.has(email))
 
     if (emails.length === 0) {
-      break
+      continue
     }
 
-    const chunk = emails.slice(0, CHUNK_SIZE)
-    chunk.forEach((email) => processed.add(email))
+    emails.forEach((email) => processed.add(email))
 
     // On supprime les entrées en erreur pour que verifyEmails re-vérifie réellement
     // (il court-circuite sinon sur le cache). En cas de nouvel échec, l'entrée est ré-insérée
     // avec un TTL court par persistPingResultCache.
-    await getDbCollection("bouncer.email").deleteMany({ email: { $in: chunk }, "ping.status": "error" })
+    // Le driver n'accepte pas d'AbortSignal sur les écritures : on vérifie l'annulation juste avant
+    signal.throwIfAborted()
+    await getDbCollection("bouncer.email").deleteMany({ email: { $in: emails }, "ping.status": "error" })
 
-    const results = await verifyEmails(chunk, signal)
+    const results = await verifyEmails(emails, signal)
     retriedCount += results.length
   }
 

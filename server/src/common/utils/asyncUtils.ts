@@ -13,6 +13,10 @@ export async function timeout<T>(promise: Promise<T>, millis: number): Promise<T
 }
 
 export async function mapWithConcurrency<T, R>(items: T[], concurrency: number, callback: (item: T) => Promise<R>): Promise<R[]> {
+  if (!Number.isInteger(concurrency) || concurrency <= 0) {
+    throw new Error(`mapWithConcurrency: concurrency doit être un entier positif (reçu ${concurrency})`)
+  }
+
   const results: R[] = new Array(items.length)
   let nextIndex = 0
 

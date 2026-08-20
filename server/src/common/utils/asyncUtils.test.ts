@@ -46,6 +46,14 @@ describe("mapWithConcurrency", () => {
     await expect(mapWithConcurrency([], 5, callback)).resolves.toEqual([])
   })
 
+  it("should reject when concurrency is not a positive integer", async () => {
+    const callback = async (i: number) => i
+
+    await expect(mapWithConcurrency([1], 0, callback)).rejects.toThrow("concurrency doit être un entier positif")
+    await expect(mapWithConcurrency([1], -2, callback)).rejects.toThrow("concurrency doit être un entier positif")
+    await expect(mapWithConcurrency([1], 1.5, callback)).rejects.toThrow("concurrency doit être un entier positif")
+  })
+
   it("should propagate callback errors", async () => {
     await expect(
       mapWithConcurrency([1, 2, 3], 2, async (i) => {

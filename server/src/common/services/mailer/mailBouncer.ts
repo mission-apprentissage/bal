@@ -195,7 +195,10 @@ function getPingCacheTtl(ping: BouncerPingResult, now: Date): Date | null {
   }
 }
 
-async function persistPingResultCache(email: string, smtp: string | null, ping: BouncerPingResult): Promise<{ email: string; ping: BouncerPingResult }> {
+async function persistPingResultCache(email: string, smtp: string | null, ping: BouncerPingResult, signal: AbortSignal): Promise<{ email: string; ping: BouncerPingResult }> {
+  // Le driver n'accepte pas d'AbortSignal sur les écritures : on vérifie l'annulation juste avant
+  signal.throwIfAborted()
+
   const now = new Date()
 
   await getDbCollection("bouncer.email").updateOne(
@@ -227,12 +230,17 @@ async function verifyEmail(email: string, domainMap: SmtpSupportMap, signal: Abo
     signal.throwIfAborted()
 
     if (!smtp) {
-      return persistPingResultCache(email, null, {
-        status: "invalid",
-        message: "No SMTP server found for domain",
-        responseCode: null,
-        responseMessage: null,
-      })
+      return persistPingResultCache(
+        email,
+        null,
+        {
+          status: "invalid",
+          message: "No SMTP server found for domain",
+          responseCode: null,
+          responseMessage: null,
+        },
+        signal
+      )
     }
 
     const domainResult = await verifyDomain(smtp, email, domainMap, signal)
@@ -241,7 +249,7 @@ async function verifyEmail(email: string, domainMap: SmtpSupportMap, signal: Abo
       return { email, ping: domainResult }
     }
 
-    return persistPingResultCache(email, smtp, await tryVerifyEmail(email, signal))
+    return persistPingResultCache(email, smtp, await tryVerifyEmail(email, signal), signal)
   } catch (err) {
     signal.throwIfAborted()
 
@@ -303,7 +311,7 @@ export async function verifyEmails(emails: string[], signal: AbortSignal): Promi
   }
 
   const cachedDocs = await getDbCollection("bouncer.email")
-    .find({ email: { $in: emails } }, { projection: { email: 1, ping: 1 } })
+    .find({ email: { $in: emails } }, { projection: { email: 1, ping: 1 }, signal })
     .toArray()
 
   const cachedPings = new Map(cachedDocs.map((doc) => [doc.email, doc.ping]))
