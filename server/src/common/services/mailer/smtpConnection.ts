@@ -50,6 +50,11 @@ function getEmailDomain(email: string) {
   return email.split("@")[1]?.toLocaleLowerCase()
 }
 
+const MX_CACHE_TTL_MS = 60 * 60 * 1000
+const MX_CACHE_MAX_SIZE = 50_000
+
+const mxCache = new Map<string, { smtp: string | null; expiresAt: number }>()
+
 export async function getSmtpServer(email: string): Promise<string | null> {
   const domain = getEmailDomain(email)
 
@@ -57,6 +62,22 @@ export async function getSmtpServer(email: string): Promise<string | null> {
     return null
   }
 
+  const cached = mxCache.get(domain)
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.smtp
+  }
+
+  const smtp = await resolveSmtpServer(domain)
+
+  if (mxCache.size >= MX_CACHE_MAX_SIZE) {
+    mxCache.clear()
+  }
+  mxCache.set(domain, { smtp, expiresAt: Date.now() + MX_CACHE_TTL_MS })
+
+  return smtp
+}
+
+async function resolveSmtpServer(domain: string): Promise<string | null> {
   try {
     const addresses = await resolveMxPromise(domain)
 

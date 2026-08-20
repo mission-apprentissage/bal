@@ -10,6 +10,7 @@ import { zObjectIdMini } from "zod-mongodb-schema"
 import { getDbCollection } from "../../../common/utils/mongodbUtils"
 import { exportMailingList } from "./exporter/mailing-list-exporter"
 import { generateMailingList, validateMailingListConfiguration } from "./generator/mailing-list-generator"
+import { sendMailingListFailureNotification } from "./mailing-list.notifications"
 import { parseMailingList } from "./parsing/mailing-list-parser"
 import { deleteMailingListFile } from "./storage/mailing-list-storage"
 
@@ -126,6 +127,11 @@ async function onMailingListJobFailed(mailingList: IMailingListV2, error: string
       },
     }
   )
+
+  // Ne notifier que les vrais échecs (getFailingStatus peut conserver initial/parse:success/export:success)
+  if (failingStatus.endsWith(":failure")) {
+    await sendMailingListFailureNotification(refreshed, error)
+  }
 }
 
 type ScheduledStatus = "parse:scheduled" | "generate:scheduled" | "export:scheduled"

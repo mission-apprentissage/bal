@@ -5,12 +5,19 @@ import { ObjectId } from "mongodb"
 import type { BouncerPingResult } from "shared/models/bouncer.email.model"
 
 import logger from "../../logger"
-import { sleep } from "../../utils/asyncUtils"
+import { mapWithConcurrency, sleep } from "../../utils/asyncUtils"
 import { getDbCollection } from "../../utils/mongodbUtils"
 import { createSmtpConnection, getSmtpServer, quit, sayEhlo, vrfy, vrfyWorkaround } from "./smtpConnection"
 
 const ONE_HOUR = 60 * 60 * 1000
 const ONE_DAY = 24 * ONE_HOUR
+
+// Nombre de domaines vérifiés en parallèle (la vérification reste séquentielle au sein d'un même domaine)
+const DOMAIN_CONCURRENCY = 20
+// Un seul retry court : les erreurs 4xx persistantes (greylisting) sont persistées en cache
+// avec un TTL court et re-vérifiées par le job de fond "Re-vérification des emails en erreur"
+const MAX_RETRY_COUNT = 1
+const RETRY_DELAY_MS = 10_000
 
 type SmtpSupportMap = Map<string, BouncerPingResult | null>
 
@@ -18,9 +25,8 @@ async function tryVerifyEmail(email: string, signal: AbortSignal, retryCount = 0
   const smtp = await getSmtpServer(email)
 
   const retry = async (r: BouncerPingResult): Promise<BouncerPingResult> => {
-    if (r.status === "error" && r.responseCode?.startsWith("4") && retryCount < 3) {
-      // Exponential backoff (10s, 60s, 360s)
-      await sleep(10_000 * 6 ** retryCount, signal)
+    if (r.status === "error" && r.responseCode?.startsWith("4") && retryCount < MAX_RETRY_COUNT) {
+      await sleep(RETRY_DELAY_MS, signal)
       signal?.throwIfAborted()
       return tryVerifyEmail(email, signal, retryCount + 1)
     }
@@ -176,30 +182,46 @@ async function verifyDomain(smtp: string, email: string, smtpSupportMap: SmtpSup
   return smtpSupportMap.get(smtp)!
 }
 
-async function persistPingResultCache(email: string, smtp: string | null, ping: BouncerPingResult): Promise<{ email: string; ping: BouncerPingResult }> {
-  if (ping.status !== "error") {
-    await getDbCollection("bouncer.email").insertOne({
-      _id: new ObjectId(),
-      email,
-      domain: email.split("@")[1],
-      smtp,
-      ping,
-      created_at: new Date(),
-      ttl: ping.status === "invalid" ? null : new Date(Date.now() + 90 * ONE_DAY),
-    })
+function getPingCacheTtl(ping: BouncerPingResult, now: Date): Date | null {
+  switch (ping.status) {
+    case "invalid":
+      // Permanent : un email invalide le reste
+      return null
+    case "error":
+      // TTL court : re-vérifié par le job de fond ou au plus tard après expiration
+      return new Date(now.getTime() + ONE_DAY)
+    default:
+      return new Date(now.getTime() + 90 * ONE_DAY)
   }
+}
+
+async function persistPingResultCache(email: string, smtp: string | null, ping: BouncerPingResult): Promise<{ email: string; ping: BouncerPingResult }> {
+  const now = new Date()
+
+  await getDbCollection("bouncer.email").updateOne(
+    { email },
+    {
+      $set: {
+        domain: email.split("@")[1],
+        smtp,
+        ping,
+        ttl: getPingCacheTtl(ping, now),
+      },
+      $setOnInsert: {
+        _id: new ObjectId(),
+        email,
+        created_at: now,
+      },
+    },
+    { upsert: true }
+  )
 
   return { email, ping }
 }
 
 async function verifyEmail(email: string, domainMap: SmtpSupportMap, signal: AbortSignal): Promise<{ email: string; ping: BouncerPingResult }> {
   try {
-    const cached = await getDbCollection("bouncer.email").findOne({ email })
-
-    if (cached) {
-      return { email, ping: cached.ping }
-    }
-
+    // Le cache bouncer.email est consulté en batch dans verifyEmails
     const smtp = await getSmtpServer(email)
 
     signal.throwIfAborted()
@@ -238,14 +260,27 @@ async function verifyEmail(email: string, domainMap: SmtpSupportMap, signal: Abo
   }
 }
 
+const DOMAIN_MAP_CACHE_TTL_MS = 5 * 60 * 1000
+
+let domainMapCache: { map: SmtpSupportMap; expiresAt: number } | null = null
+
 async function getDomainMap(): Promise<SmtpSupportMap> {
+  if (domainMapCache && domainMapCache.expiresAt > Date.now()) {
+    return domainMapCache.map
+  }
+
   const knownDomains = await getDbCollection("bouncer.domain")
     .find({
       "ping.status": { $ne: "error" },
     })
     .toArray()
 
-  return new Map(knownDomains.map((d) => [d.smtp, d.ping]))
+  // La Map est partagée entre les appels : les domaines découverts par verifyDomain
+  // pendant la durée du cache profitent aux batchs suivants
+  const map: SmtpSupportMap = new Map(knownDomains.map((d) => [d.smtp, d.ping]))
+  domainMapCache = { map, expiresAt: Date.now() + DOMAIN_MAP_CACHE_TTL_MS }
+
+  return map
 }
 
 async function verifyEmailsSequentially(emails: string[], domainMap: SmtpSupportMap, signal: AbortSignal): Promise<{ email: string; ping: BouncerPingResult }[]> {
@@ -263,9 +298,35 @@ async function verifyEmailsSequentially(emails: string[], domainMap: SmtpSupport
 }
 
 export async function verifyEmails(emails: string[], signal: AbortSignal): Promise<{ email: string; ping: BouncerPingResult }[]> {
+  if (emails.length === 0) {
+    return []
+  }
+
+  const cachedDocs = await getDbCollection("bouncer.email")
+    .find({ email: { $in: emails } }, { projection: { email: 1, ping: 1 } })
+    .toArray()
+
+  const cachedPings = new Map(cachedDocs.map((doc) => [doc.email, doc.ping]))
+
+  const results: { email: string; ping: BouncerPingResult }[] = []
+  const toVerify: string[] = []
+
+  for (const email of emails) {
+    const ping = cachedPings.get(email)
+    if (ping) {
+      results.push({ email, ping })
+    } else {
+      toVerify.push(email)
+    }
+  }
+
+  if (toVerify.length === 0) {
+    return results
+  }
+
   const domainMap: Map<string, BouncerPingResult | null> = await getDomainMap()
 
-  const perDomain = emails.reduce((acc, email) => {
+  const perDomain = toVerify.reduce((acc, email) => {
     const domain = email.split("@")[1]
     if (!acc.has(domain)) {
       acc.set(domain, [])
@@ -276,7 +337,7 @@ export async function verifyEmails(emails: string[], signal: AbortSignal): Promi
     return acc
   }, new Map<string, string[]>())
 
-  const data = await Promise.all(Array.from(perDomain.entries()).map(async ([_, emails]) => verifyEmailsSequentially(emails, domainMap, signal)))
+  const data = await mapWithConcurrency(Array.from(perDomain.values()), DOMAIN_CONCURRENCY, async (domainEmails) => verifyEmailsSequentially(domainEmails, domainMap, signal))
 
-  return data.flat()
+  return results.concat(data.flat())
 }

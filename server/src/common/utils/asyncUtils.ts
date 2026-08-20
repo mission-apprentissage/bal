@@ -12,6 +12,22 @@ export async function timeout<T>(promise: Promise<T>, millis: number): Promise<T
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timeoutID))
 }
 
+export async function mapWithConcurrency<T, R>(items: T[], concurrency: number, callback: (item: T) => Promise<R>): Promise<R[]> {
+  const results: R[] = new Array(items.length)
+  let nextIndex = 0
+
+  const workers = Array.from({ length: Math.min(concurrency, items.length) }, async () => {
+    while (nextIndex < items.length) {
+      const index = nextIndex++
+      results[index] = await callback(items[index])
+    }
+  })
+
+  await Promise.all(workers)
+
+  return results
+}
+
 export async function sleep(durationMs: number, signal: AbortSignal | null = null): Promise<void> {
   await new Promise<void>((resolve, reject) => {
     let timeout: NodeJS.Timeout | null = null

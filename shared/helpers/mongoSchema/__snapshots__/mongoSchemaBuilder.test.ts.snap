@@ -780,6 +780,66 @@ exports[`zodToMongoSchema > should convert events schema 1`] = `
                 "resetPasswordToken",
               ],
             },
+            {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "mailingListId": {
+                  "bsonType": "string",
+                },
+                "mailingListName": {
+                  "bsonType": "string",
+                },
+                "name": {
+                  "bsonType": "string",
+                  "enum": [
+                    "mailing_list_success",
+                  ],
+                },
+                "to": {
+                  "bsonType": "string",
+                  "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                },
+              },
+              "required": [
+                "name",
+                "to",
+                "mailingListId",
+                "mailingListName",
+              ],
+            },
+            {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "error": {
+                  "bsonType": "string",
+                },
+                "mailingListId": {
+                  "bsonType": "string",
+                },
+                "mailingListName": {
+                  "bsonType": "string",
+                },
+                "name": {
+                  "bsonType": "string",
+                  "enum": [
+                    "mailing_list_failure",
+                  ],
+                },
+                "to": {
+                  "bsonType": "string",
+                  "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                },
+              },
+              "required": [
+                "name",
+                "to",
+                "mailingListId",
+                "mailingListName",
+                "error",
+              ],
+            },
           ],
         },
         "type": {

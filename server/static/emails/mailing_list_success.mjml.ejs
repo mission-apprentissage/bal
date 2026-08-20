@@ -1,0 +1,33 @@
+<mjml>
+  <%- include('./common/head.ejs'); %>
+
+  <mj-body background-color="#f9fafc">
+    <%- include('./common/header.ejs'); %>
+    <mj-wrapper padding="10px 20px">
+      <mj-section background-color="#ffffff" padding-top="0">
+        <mj-column>
+          <mj-text>
+            Bonjour,
+          </mj-text>
+          <mj-text font-size="16px" line-height="24px" color="#000000">
+            <div>
+              La génération de votre liste de diffusion <strong><%= template.mailingListName %></strong> est terminée.
+              <br /><br />Le fichier est prêt à être téléchargé :
+            </div>
+          </mj-text>
+
+          <mj-button
+            href="<%= utils.getPublicUrl(`/mailing-list/view/${template.mailingListId}`) %>"
+            background-color="#0e4194"
+            color="white"
+          >
+            Télécharger la liste de diffusion
+          </mj-button>
+
+          <%- include('./common/signature.ejs'); %>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+    <%- include('./common/footer.ejs'); %>
+  </mj-body>
+</mjml>

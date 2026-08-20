@@ -11,6 +11,7 @@ import { sleep } from "../../../../common/utils/asyncUtils"
 import { cipher } from "../../../../common/utils/cryptoUtils"
 import { getDbCollection } from "../../../../common/utils/mongodbUtils"
 import { uploadToStorage } from "../../../../common/utils/ovhUtils"
+import { sendMailingListSuccessNotification } from "../mailing-list.notifications"
 import { getMailingListStoragePath } from "../storage/mailing-list-storage"
 
 function addColumnData(line: Record<string, string>, data: IMailingListComputedDatum["data"][], columnName: string, simple: boolean, groupSize: number) {
@@ -184,4 +185,6 @@ export async function exportMailingList(mailingList: IMailingListV2, job: IJobsS
       },
     }
   )
+
+  await sendMailingListSuccessNotification(mailingList)
 }

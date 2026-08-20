@@ -885,6 +885,64 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                     ],
                     "type": "object",
                   },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "mailingListId": {
+                        "type": "string",
+                      },
+                      "mailingListName": {
+                        "type": "string",
+                      },
+                      "name": {
+                        "const": "mailing_list_success",
+                        "type": "string",
+                      },
+                      "to": {
+                        "format": "email",
+                        "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                        "type": "string",
+                      },
+                    },
+                    "required": [
+                      "name",
+                      "to",
+                      "mailingListId",
+                      "mailingListName",
+                    ],
+                    "type": "object",
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                      },
+                      "mailingListId": {
+                        "type": "string",
+                      },
+                      "mailingListName": {
+                        "type": "string",
+                      },
+                      "name": {
+                        "const": "mailing_list_failure",
+                        "type": "string",
+                      },
+                      "to": {
+                        "format": "email",
+                        "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                        "type": "string",
+                      },
+                    },
+                    "required": [
+                      "name",
+                      "to",
+                      "mailingListId",
+                      "mailingListName",
+                      "error",
+                    ],
+                    "type": "object",
+                  },
                 ],
               },
               "type": {

@@ -10,6 +10,21 @@ const zTemplateResetPassword = z.object({
   resetPasswordToken: z.string(),
 })
 
-export const zTemplate = z.discriminatedUnion("name", [zTemplateResetPassword])
+const zTemplateMailingListSuccess = z.object({
+  name: z.literal("mailing_list_success"),
+  to: z.email(),
+  mailingListId: z.string(),
+  mailingListName: z.string(),
+})
+
+const zTemplateMailingListFailure = z.object({
+  name: z.literal("mailing_list_failure"),
+  to: z.email(),
+  mailingListId: z.string(),
+  mailingListName: z.string(),
+  error: z.string(),
+})
+
+export const zTemplate = z.discriminatedUnion("name", [zTemplateResetPassword, zTemplateMailingListSuccess, zTemplateMailingListFailure])
 
 export type ITemplate = z.output<typeof zTemplate>

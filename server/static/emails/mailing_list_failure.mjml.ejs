@@ -1,0 +1,34 @@
+<mjml>
+  <%- include('./common/head.ejs'); %>
+
+  <mj-body background-color="#f9fafc">
+    <%- include('./common/header.ejs'); %>
+    <mj-wrapper padding="10px 20px">
+      <mj-section background-color="#ffffff" padding-top="0">
+        <mj-column>
+          <mj-text>
+            Bonjour,
+          </mj-text>
+          <mj-text font-size="16px" line-height="24px" color="#000000">
+            <div>
+              Le traitement de votre liste de diffusion <strong><%= template.mailingListName %></strong> a échoué avec l'erreur suivante :
+              <br /><br /><em><%= template.error %></em>
+              <br /><br />Vous pouvez relancer le traitement depuis la page de la liste :
+            </div>
+          </mj-text>
+
+          <mj-button
+            href="<%= utils.getPublicUrl(`/mailing-list/view/${template.mailingListId}`) %>"
+            background-color="#0e4194"
+            color="white"
+          >
+            Voir la liste de diffusion
+          </mj-button>
+
+          <%- include('./common/signature.ejs'); %>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+    <%- include('./common/footer.ejs'); %>
+  </mj-body>
+</mjml>
