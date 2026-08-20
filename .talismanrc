@@ -26,6 +26,7 @@ allowed_patterns:
 - api_key
 - '@mail.com'
 - '@exemple.fr'
+- '.exemple.fr'
 - '@mail.fr'
 - '@apprentissage.beta.gouv.fr'
 - '@alternance.beta.gouv.fr'

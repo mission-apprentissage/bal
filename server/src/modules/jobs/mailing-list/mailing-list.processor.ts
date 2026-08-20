@@ -128,8 +128,10 @@ async function onMailingListJobFailed(mailingList: IMailingListV2, error: string
     }
   )
 
-  // Ne notifier que les vrais échecs (getFailingStatus peut conserver initial/parse:success/export:success)
-  if (failingStatus.endsWith(":failure")) {
+  // Ne notifier que les vrais échecs (getFailingStatus peut conserver initial/parse:success/export:success),
+  // et uniquement à la transition : un abort suivi d'une reprise ou le cron de récupération
+  // repassent ici avec un statut déjà en échec, sans qu'un nouvel email soit justifié
+  if (failingStatus.endsWith(":failure") && refreshed.status !== failingStatus) {
     await sendMailingListFailureNotification(refreshed, error)
   }
 }

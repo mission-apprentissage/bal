@@ -69,10 +69,14 @@ export async function getSmtpServer(email: string): Promise<string | null> {
 
   const smtp = await resolveSmtpServer(domain)
 
-  if (mxCache.size >= MX_CACHE_MAX_SIZE) {
-    mxCache.clear()
+  // Ne jamais cacher une résolution nulle : une erreur DNS transitoire marquerait sinon
+  // tout le domaine "invalid" (cache permanent côté bouncer.email) pendant la durée du cache
+  if (smtp !== null) {
+    if (mxCache.size >= MX_CACHE_MAX_SIZE) {
+      mxCache.clear()
+    }
+    mxCache.set(domain, { smtp, expiresAt: Date.now() + MX_CACHE_TTL_MS })
   }
-  mxCache.set(domain, { smtp, expiresAt: Date.now() + MX_CACHE_TTL_MS })
 
   return smtp
 }
