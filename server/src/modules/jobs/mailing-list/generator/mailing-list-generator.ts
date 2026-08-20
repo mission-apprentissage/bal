@@ -114,7 +114,14 @@ async function addLbaData({
     lineNumberToIndex.set(line.line_number, i)
   })
 
-  const queryData: TrainingLinkData[] = sourceLines.map(
+  // L'export ne conserve que les lignes email_status === "valid" : inutile de générer des liens pour les autres
+  const validSourceLines = sourceLines.filter((_, i) => computedLines[i].email_status === "valid")
+
+  if (validSourceLines.length === 0) {
+    return
+  }
+
+  const queryData: TrainingLinkData[] = validSourceLines.map(
     (line): TrainingLinkData => ({
       id: `${line.line_number}`,
       cle_ministere_educatif: line.data[lbaColummns.cle_ministere_educatif] ?? "",
@@ -154,10 +161,19 @@ async function addBouncerData({ computedLines, signal }: { computedLines: IMaili
     computedLines[i].data["bounce_response_code"] = ""
     computedLines[i].data["bounce_response_message"] = ""
 
+    // L'export ne conserve que les lignes email_status === "valid" : inutile de vérifier les autres
+    if (line.email_status !== "valid") {
+      return
+    }
+
     const indexes = emailToIndexes.get(line.email) ?? []
     indexes.push(i)
     emailToIndexes.set(line.email, indexes)
   })
+
+  if (emailToIndexes.size === 0) {
+    return
+  }
 
   const pingResults = await verifyEmails(Array.from(emailToIndexes.keys()), signal)
 
@@ -175,7 +191,6 @@ async function addBouncerData({ computedLines, signal }: { computedLines: IMaili
   }
 }
 
-// TODO: Stop the process if the signal is aborted
 async function generateMailingListBatch(mailingList: IMailingListV2, signal: AbortSignal, bounds: { from: number; to: number }) {
   const sourceLines = await getDbCollection("mailingList.source")
     .find(
@@ -183,7 +198,9 @@ async function generateMailingListBatch(mailingList: IMailingListV2, signal: Abo
         mailing_list_id: mailingList._id,
         line_number: { $gte: bounds.from, $lte: bounds.to },
       },
-      { signal }
+      // Tri ascendant requis : la reprise repart du plus grand line_number écrit,
+      // le bulkWrite ordered doit donc écrire les lignes en ordre croissant
+      { signal, sort: { line_number: 1 } }
     )
     .toArray()
 
@@ -221,19 +238,23 @@ async function generateMailingListBatch(mailingList: IMailingListV2, signal: Abo
   }
 
   // Clear Blacklist emails
-  await Promise.all(
-    computedLines.map(async (line) => {
-      if (line.email === "") {
-        return
-      }
+  const emails = Array.from(new Set(computedLines.filter((line) => line.email !== "").map((line) => line.email)))
 
-      const isBlacklisted = await getDbCollection("lba.emailblacklists").findOne({ email: line.email }, { signal })
+  if (emails.length > 0) {
+    const blacklistedDocs = await getDbCollection("lba.emailblacklists")
+      .find({ email: { $in: emails } }, { projection: { email: 1 }, signal })
+      .toArray()
 
-      if (isBlacklisted !== null) {
+    const blacklistedEmails = new Set(blacklistedDocs.map((doc) => doc.email))
+
+    for (const line of computedLines) {
+      if (line.email !== "" && blacklistedEmails.has(line.email)) {
         line.email_status = "blacklisted"
       }
-    })
-  )
+    }
+  }
+
+  signal.throwIfAborted()
 
   // Add special columns (BOUNCER & LBA) but they are process in a whole batch
   await Promise.all(
@@ -254,6 +275,8 @@ async function generateMailingListBatch(mailingList: IMailingListV2, signal: Abo
     })
   )
 
+  signal.throwIfAborted()
+
   await getDbCollection("mailingList.computed").bulkWrite(
     computedLines.map((line) => ({
       updateOne: {
@@ -262,7 +285,7 @@ async function generateMailingListBatch(mailingList: IMailingListV2, signal: Abo
         upsert: true,
       },
     })),
-    // Ordered to ensure line_number order
+    // Ordered: la reprise repart du plus grand line_number écrit, un write désordonné interrompu laisserait des trous
     { ordered: true }
   )
 }

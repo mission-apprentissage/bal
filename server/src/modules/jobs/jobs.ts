@@ -11,6 +11,7 @@ import config from "../../config"
 import { sanitizeOrganisationDomains } from "../actions/organisations.actions"
 import { createUser } from "../actions/users.actions"
 import { anonymisationService } from "./anonymisation/anonymisation.service"
+import { retryBouncerErrorEmails } from "./bouncer/retry-bouncer-errors"
 import { importPersonFromCatalogue } from "./catalogueSiretEmailImport"
 import { recreateIndexes } from "./db/recreateIndexes"
 import { validateModels } from "./db/schemaValidation"
@@ -84,6 +85,12 @@ export async function setupJobProcessor() {
               handler: recoverMailingListJobs,
               resumable: true,
               maxRuntimeInMinutes: 15,
+            },
+            "Re-vérification des emails en erreur": {
+              cron_string: "*/15 * * * *",
+              handler: async (signal, job) => retryBouncerErrorEmails(signal, job),
+              resumable: false,
+              maxRuntimeInMinutes: 10,
             },
             "Récupération couples siret-email datagouv": {
               cron_string: "0 10 * * SUN",

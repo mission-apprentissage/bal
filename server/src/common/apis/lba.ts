@@ -1,12 +1,15 @@
 import { internal } from "@hapi/boom"
 import axios, { isAxiosError } from "axios"
 import config from "@/config"
+import { mapWithConcurrency, sleep } from "../utils/asyncUtils"
 
 const LIMIT_TRAINING_LINKS_PER_REQUEST = 100
+const MAX_CONCURRENT_REQUESTS = 3
+const RETRY_DELAYS_MS = [1_000, 5_000]
 
 const client = axios.create({
   baseURL: config.lba.baseURL,
-  timeout: 0, // no timeout
+  timeout: 60_000,
 })
 
 export interface TrainingLinkData {
@@ -31,20 +34,42 @@ interface TrainingLink {
   lien_lba: string
 }
 
+function isRetryableError(error: unknown): boolean {
+  if (!isAxiosError(error)) {
+    return false
+  }
+
+  // Erreur réseau (timeout, connexion coupée) ou erreur serveur transitoire
+  return error.response == null || error.response.status >= 500
+}
+
+async function postTrainingLinksChunk(chunk: TrainingLinkData[], signal: AbortSignal | null): Promise<TrainingLink[]> {
+  const opts = signal ? { signal: signal } : undefined
+
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const response = await client.post<TrainingLink[]>(`/api/traininglinks`, chunk, opts)
+      return response.data
+    } catch (error) {
+      if (signal?.aborted || attempt >= RETRY_DELAYS_MS.length || !isRetryableError(error)) {
+        throw error
+      }
+      await sleep(RETRY_DELAYS_MS[attempt], signal)
+    }
+  }
+}
+
 export const getTrainingLinks = async (data: TrainingLinkData[], signal: AbortSignal | null = null): Promise<TrainingLink[]> => {
   try {
-    const tasks = []
-
-    const opts = signal ? { signal: signal } : undefined
+    const chunks: TrainingLinkData[][] = []
 
     for (let i = 0; i < data.length; i += LIMIT_TRAINING_LINKS_PER_REQUEST) {
-      const chunk = data.slice(i, i + LIMIT_TRAINING_LINKS_PER_REQUEST)
-      tasks.push(client.post<TrainingLink[]>(`/api/traininglinks`, chunk, opts))
+      chunks.push(data.slice(i, i + LIMIT_TRAINING_LINKS_PER_REQUEST))
     }
 
-    const responses = await Promise.all(tasks)
+    const responses = await mapWithConcurrency(chunks, MAX_CONCURRENT_REQUESTS, async (chunk) => postTrainingLinksChunk(chunk, signal))
 
-    return responses.flatMap((response) => response.data)
+    return responses.flat()
   } catch (error) {
     if (isAxiosError(error)) {
       throw internal(

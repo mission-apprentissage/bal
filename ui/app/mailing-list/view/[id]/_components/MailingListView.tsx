@@ -10,6 +10,7 @@ import { captureException } from "@sentry/nextjs"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { notFound, useRouter } from "next/navigation"
 import { useLayoutEffect, useState } from "react"
+import { isMailingListProcessing } from "shared/mailing-list/mailing-list.utils"
 import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
 import Loading from "@/app/loading"
 import { getStepNumber, MailingListStepper } from "@/app/mailing-list/_components/MailingListStepper"
@@ -37,7 +38,11 @@ export function MailingListView(props: { id: string }) {
         params: { id: queryKey[1] },
       }),
     throwOnError: true,
-    refetchInterval: 10_000,
+    // Ne rafraîchir que tant qu'un traitement est en cours : les états terminaux n'évoluent plus d'eux-mêmes
+    refetchInterval: (query) => {
+      const data = query.state.data
+      return data == null || isMailingListProcessing(data) ? 5_000 : false
+    },
     retry: 5,
   })
 

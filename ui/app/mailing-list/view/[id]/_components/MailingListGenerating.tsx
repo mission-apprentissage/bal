@@ -23,8 +23,8 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
           <Alert
             title="Génération de la liste de diffusion en cours"
-            description={`La génération de la liste est en cours. Cette opération peut durer plusieurs heures selon la taille du fichier, vous pouvez quitter cette page et
-                revenir plus tard.`}
+            description={`La génération de la liste est en cours. Cette opération peut durer plusieurs heures selon la taille du fichier, vous pouvez quitter cette page :
+                vous recevrez un email dès que la liste sera prête à télécharger, ou en cas d'échec.`}
             severity="info"
           />
           <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
@@ -57,14 +57,14 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
           <Alert
             title="Préparation du fichier de la liste de diffusion en cours"
-            description={`La liste de diffusion est prête. Il ne reste plus qu'à préparer le fichier à télécharger.`}
+            description={`La liste de diffusion est prête. Il ne reste plus qu'à préparer le fichier à télécharger. Vous recevrez un email dès que la liste sera disponible.`}
             severity="info"
           />
           <Box sx={{ display: "grid" }}>
             <Typography
               textAlign="center"
               className={fr.cx("fr-text--lead")}
-            >{`${mailingList.progress.generate}% - ETA estimée: ${mailingList.eta === null ? "En cours de calcul" : new Date(mailingList.eta).toLocaleString()}`}</Typography>
+            >{`${mailingList.progress.export}% - ETA estimée: ${mailingList.eta === null ? "En cours de calcul" : new Date(mailingList.eta).toLocaleString()}`}</Typography>
             <Box>
               <LinearProgress variant="determinate" color="primary" value={mailingList.progress.export} />
             </Box>

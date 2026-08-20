@@ -38,6 +38,34 @@ export function getStepCompletion(mailingList: IMailingListV2 | IMailingListV2Js
   }
 }
 
+export function isMailingListProcessing(mailingList: IMailingListV2 | IMailingListV2Json): boolean {
+  if (mailingList.job_id !== null) {
+    return true
+  }
+
+  switch (mailingList.status) {
+    case "parse:scheduled":
+    case "parse:in_progress":
+    case "generate:scheduled":
+    case "generate:in_progress":
+    // generate:success chaîne automatiquement vers export:scheduled
+    case "generate:success":
+    case "export:scheduled":
+    case "export:in_progress":
+      return true
+
+    case "initial":
+    case "parse:failure":
+    case "parse:success":
+    case "generate:failure":
+    case "export:failure":
+    case "export:success":
+      return false
+    default:
+      assertUnreachable(mailingList.status)
+  }
+}
+
 export function canScheduleParse(mailingList: IMailingListV2 | IMailingListV2Json): boolean {
   if (mailingList.job_id !== null) {
     return false

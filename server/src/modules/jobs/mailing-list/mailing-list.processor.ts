@@ -10,6 +10,7 @@ import { zObjectIdMini } from "zod-mongodb-schema"
 import { getDbCollection } from "../../../common/utils/mongodbUtils"
 import { exportMailingList } from "./exporter/mailing-list-exporter"
 import { generateMailingList, validateMailingListConfiguration } from "./generator/mailing-list-generator"
+import { sendMailingListFailureNotification } from "./mailing-list.notifications"
 import { parseMailingList } from "./parsing/mailing-list-parser"
 import { deleteMailingListFile } from "./storage/mailing-list-storage"
 
@@ -126,6 +127,13 @@ async function onMailingListJobFailed(mailingList: IMailingListV2, error: string
       },
     }
   )
+
+  // Ne notifier que les vrais échecs (getFailingStatus peut conserver initial/parse:success/export:success),
+  // et uniquement à la transition : un abort suivi d'une reprise ou le cron de récupération
+  // repassent ici avec un statut déjà en échec, sans qu'un nouvel email soit justifié
+  if (failingStatus.endsWith(":failure") && refreshed.status !== failingStatus) {
+    await sendMailingListFailureNotification(refreshed, error)
+  }
 }
 
 type ScheduledStatus = "parse:scheduled" | "generate:scheduled" | "export:scheduled"

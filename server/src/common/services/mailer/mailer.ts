@@ -75,12 +75,16 @@ export async function sendEmail<T extends ITemplate>(template: T): Promise<void>
   }
 }
 
-function getEmailSubject<T extends ITemplate>(template: T): string {
+function getEmailSubject(template: ITemplate): string {
   switch (template.name) {
     case "reset_password":
       return "Réinitialisation du mot de passe"
+    case "mailing_list_success":
+      return `Votre liste de diffusion "${template.mailingListName}" est prête`
+    case "mailing_list_failure":
+      return `Échec de la génération de la liste de diffusion "${template.mailingListName}"`
     default:
-      assertUnreachable(template.name)
+      assertUnreachable(template)
   }
 }
 
