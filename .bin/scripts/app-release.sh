@@ -20,4 +20,8 @@ fi
 readonly next_version="${1}"
 readonly mode=${2:-$defaultMode}
 
-"$ROOT_DIR"/.bin/mna app:build $next_version $mode production recette
+# app-build.sh attend : <version> <mode> <commit_hash> <environnement> (un seul environnement)
+readonly commit_hash="$(git rev-parse HEAD)"
+
+"$ROOT_DIR"/.bin/mna app:build "$next_version" "$mode" "$commit_hash" production
+"$ROOT_DIR"/.bin/mna app:build "$next_version" "$mode" "$commit_hash" recette
