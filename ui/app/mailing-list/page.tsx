@@ -7,11 +7,13 @@ import { useQuery } from "@tanstack/react-query"
 import { formatDate } from "date-fns"
 import { useCallback, useState } from "react"
 import type { IGetRoutes, IQuery } from "shared"
+import { isMailingListProcessing } from "shared/mailing-list/mailing-list.utils"
 import { zPrivateMailingListRoutes } from "shared/routes/_private/mailing-list.routes"
 import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
 import Table from "@/components/table/Table"
 import { apiGet } from "@/utils/api.utils"
 import { AddedBy } from "./_components/AddedBy"
+import { MailingListProgress } from "./_components/MailingListProgress"
 
 type QueryKey = ["/_private/mailing-list", IQuery<IGetRoutes["/_private/mailing-list"]>]
 
@@ -52,6 +54,12 @@ const MailingListPage = () => {
         {}
       ),
     throwOnError: true,
+    // Rafraîchir tant qu'au moins une liste est en cours de traitement, pour que
+    // la colonne Avancement reste à jour sans action de l'utilisateur
+    refetchInterval: (currentQuery) => {
+      const items = currentQuery.state.data?.items
+      return items?.some((item) => isMailingListProcessing(item)) ? 10_000 : false
+    },
     retry: 5,
   })
 
@@ -90,7 +98,12 @@ const MailingListPage = () => {
             flex: 1,
             renderCell: (params) => <AddedBy addedBy={params.value} />,
           },
-          { field: "status", headerName: "Statut", flex: 1 },
+          {
+            field: "status",
+            headerName: "Avancement",
+            flex: 1.5,
+            renderCell: (params) => <MailingListProgress mailingList={params.row} />,
+          },
           {
             field: "created_at",
             headerName: "Date de création",

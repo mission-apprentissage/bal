@@ -77,6 +77,9 @@ export const ZMailingListV2 = z.object({
   ]),
   error: z.nullable(z.string()),
   eta: z.nullable(z.date()),
+  // Durée du traitement : début du dernier run de génération, fin de l'export
+  generation_started_at: z.nullable(z.date()),
+  generation_ended_at: z.nullable(z.date()),
   progress: z.object({
     parse: z.int(),
     generate: z.int(),

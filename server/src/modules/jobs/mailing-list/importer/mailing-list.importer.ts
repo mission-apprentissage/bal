@@ -59,6 +59,8 @@ export async function createMailingList({ name, delimiter, expiresInDays, file }
     },
     eta: null,
     error: null,
+    generation_started_at: null,
+    generation_ended_at: null,
     progress: {
       parse: 0,
       generate: 0,
