@@ -17,7 +17,22 @@ export function MailingListGenerating(props: { mailingList: IMailingListV2Json }
     case "parse:success":
       return null
     case "generate:scheduled":
-      return <Alert title="Génération de la liste de diffusion planifiée" description="La génération de la liste va commencer prochainement." severity="info" />
+      return (
+        <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
+          <Alert
+            title="Génération de la liste de diffusion planifiée"
+            description={`La génération démarrera dès qu'un créneau de traitement se libère. Vous pouvez fermer cette page :
+                vous recevrez un email dès que la liste sera prête à télécharger, ou en cas d'échec.`}
+            severity="info"
+          />
+          <Box sx={{ display: "flex", alignItems: "center", gap: fr.spacing("2w"), justifyContent: "center" }}>
+            <LinearProgress color="primary" sx={{ width: "340px", borderRadius: "3px" }} />
+            <Typography variant="body2" color="textSecondary">
+              En attente d'un créneau de traitement…
+            </Typography>
+          </Box>
+        </Box>
+      )
     case "generate:in_progress":
       return (
         <Box sx={{ display: "grid", gap: fr.spacing("2w"), alignItems: "center" }}>
