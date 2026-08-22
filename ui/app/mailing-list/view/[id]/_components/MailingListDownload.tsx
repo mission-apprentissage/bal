@@ -16,8 +16,10 @@ function formatGenerationDuration(mailingList: IMailingListV2Json): string | nul
     return "moins d'une minute"
   }
 
-  const hours = Math.floor(durationMs / 3_600_000)
-  const minutes = Math.round((durationMs % 3_600_000) / 60_000)
+  // Arrondi en minutes totales avant décomposition, sinon 1 h 59 min 59 s afficherait « 1 h 60 min »
+  const totalMinutes = Math.round(durationMs / 60_000)
+  const hours = Math.floor(totalMinutes / 60)
+  const minutes = totalMinutes % 60
 
   return hours > 0 ? `${hours} h ${minutes} min` : `${minutes} min`
 }
