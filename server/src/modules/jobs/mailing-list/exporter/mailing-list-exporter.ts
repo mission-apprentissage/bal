@@ -181,6 +181,7 @@ export async function exportMailingList(mailingList: IMailingListV2, job: IJobsS
         error: null,
         job_id: null,
         "progress.export": 100,
+        generation_ended_at: new Date(),
         updated_at: new Date(),
       },
     }

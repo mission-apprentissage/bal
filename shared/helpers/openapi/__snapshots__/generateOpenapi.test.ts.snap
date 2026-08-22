@@ -1360,6 +1360,28 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
               },
             ],
           },
+          "generation_ended_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string",
+              },
+              {
+                "type": "null",
+              },
+            ],
+          },
+          "generation_started_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string",
+              },
+              {
+                "type": "null",
+              },
+            ],
+          },
           "job_id": {
             "anyOf": [
               {},
@@ -1494,6 +1516,8 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "status",
           "error",
           "eta",
+          "generation_started_at",
+          "generation_ended_at",
           "progress",
           "output",
           "job_id",

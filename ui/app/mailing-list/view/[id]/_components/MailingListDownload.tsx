@@ -5,12 +5,31 @@ import { Box, Typography } from "@mui/material"
 import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
 import { generateUrl } from "@/utils/api.utils"
 
+function formatGenerationDuration(mailingList: IMailingListV2Json): string | null {
+  if (mailingList.generation_started_at === null || mailingList.generation_ended_at === null) {
+    return null
+  }
+
+  const durationMs = new Date(mailingList.generation_ended_at).getTime() - new Date(mailingList.generation_started_at).getTime()
+
+  if (durationMs < 60_000) {
+    return "moins d'une minute"
+  }
+
+  const hours = Math.floor(durationMs / 3_600_000)
+  const minutes = Math.round((durationMs % 3_600_000) / 60_000)
+
+  return hours > 0 ? `${hours} h ${minutes} min` : `${minutes} min`
+}
+
 export function MailingListDownload(props: { mailingList: IMailingListV2Json }) {
   const { mailingList } = props
 
   if (mailingList.status !== "export:success") {
     return null
   }
+
+  const generationDuration = formatGenerationDuration(mailingList)
 
   return (
     <Box sx={{ display: "grid", gap: fr.spacing("4w"), alignItems: "center" }}>
@@ -39,6 +58,13 @@ export function MailingListDownload(props: { mailingList: IMailingListV2Json }) 
         <Typography>
           {new Date(mailingList.ttl).toLocaleDateString()} à {new Date(mailingList.ttl).toLocaleTimeString()}
         </Typography>
+
+        {generationDuration !== null && (
+          <>
+            <Typography>Durée de la génération</Typography>
+            <Typography>{generationDuration}</Typography>
+          </>
+        )}
 
         <Typography>Nombre d'emails de la liste</Typography>
         <Typography>{mailingList.output.lines}</Typography>

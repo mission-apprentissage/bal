@@ -329,6 +329,9 @@ export async function generateMailingList(mailingList: IMailingListV2, job: IJob
         eta: null,
         error: null,
         job_id: job._id,
+        // Durée du dernier run : une reprise après échec repart d'ici
+        generation_started_at: new Date(),
+        generation_ended_at: null,
         updated_at: new Date(),
       },
     }

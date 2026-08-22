@@ -1251,6 +1251,18 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
         "null",
       ],
     },
+    "generation_ended_at": {
+      "bsonType": [
+        "date",
+        "null",
+      ],
+    },
+    "generation_started_at": {
+      "bsonType": [
+        "date",
+        "null",
+      ],
+    },
     "job_id": {
       "bsonType": [
         "objectId",
@@ -1387,6 +1399,8 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
     "status",
     "error",
     "eta",
+    "generation_started_at",
+    "generation_ended_at",
     "progress",
     "output",
     "job_id",

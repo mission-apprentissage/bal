@@ -64,6 +64,8 @@ function buildMailingList(id: ObjectId, jobId: ObjectId): IMailingListV2 {
     status: "generate:scheduled",
     error: null,
     eta: null,
+    generation_started_at: null,
+    generation_ended_at: null,
     progress: { parse: 100, generate: 0, export: 0 },
     output: { lines: 0, empty_source_lines: 0, blacklisted_email_count: 0, invalid_email_count: 0 },
     job_id: jobId,
