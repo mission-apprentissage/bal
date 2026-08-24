@@ -10,6 +10,7 @@ import type { TrainingLinkData } from "../../../../common/apis/lba"
 import { getTrainingLinks } from "../../../../common/apis/lba"
 import { verifyEmails } from "../../../../common/services/mailer/mailBouncer"
 import { getDbCollection } from "../../../../common/utils/mongodbUtils"
+import { toBounceColumns } from "../bouncer-columns"
 
 export async function validateMailingListConfiguration(mailingList: IMailingListV2) {
   if (mailingList.config.email_column === "") {
@@ -180,13 +181,10 @@ async function addBouncerData({ computedLines, signal }: { computedLines: IMaili
   for (let i = 0; i < pingResults.length; i++) {
     const { email, ping } = pingResults[i]
     const indexes = emailToIndexes.get(email) ?? []
+    const bounceColumns = toBounceColumns(ping)
 
     for (const index of indexes) {
-      const computedLine = computedLines[index]
-      computedLine.data["bounce_status"] = ping.status
-      computedLine.data["bounce_message"] = ping.message
-      computedLine.data["bounce_response_code"] = ping.responseCode ?? ""
-      computedLine.data["bounce_response_message"] = ping.responseMessage ?? ""
+      Object.assign(computedLines[index].data, bounceColumns)
     }
   }
 }

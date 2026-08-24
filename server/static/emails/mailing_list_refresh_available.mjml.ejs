@@ -1,0 +1,35 @@
+<mjml>
+  <%- include('./common/head.ejs'); %>
+
+  <mj-body background-color="#f9fafc">
+    <%- include('./common/header.ejs'); %>
+    <mj-wrapper padding="10px 20px">
+      <mj-section background-color="#ffffff" padding-top="0">
+        <mj-column>
+          <mj-text>
+            Bonjour,
+          </mj-text>
+          <mj-text font-size="16px" line-height="24px" color="#000000">
+            <div>
+              Depuis la génération de votre liste de diffusion <strong><%= template.mailingListName %></strong>, des adresses email
+              qui étaient en erreur ont pu être re-vérifiées avec succès.
+              <br /><br />Vous pouvez régénérer le fichier pour bénéficier de ces statuts affinés,
+              via le bouton « Régénérer le fichier » de l'onglet Téléchargement :
+            </div>
+          </mj-text>
+
+          <mj-button
+            href="<%= utils.getPublicUrl(`/mailing-list/view/${template.mailingListId}`) %>"
+            background-color="#0e4194"
+            color="white"
+          >
+            Voir la liste de diffusion
+          </mj-button>
+
+          <%- include('./common/signature.ejs'); %>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+    <%- include('./common/footer.ejs'); %>
+  </mj-body>
+</mjml>

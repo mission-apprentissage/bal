@@ -11,6 +11,7 @@ import { sleep } from "../../../../common/utils/asyncUtils"
 import { cipher } from "../../../../common/utils/cryptoUtils"
 import { getDbCollection } from "../../../../common/utils/mongodbUtils"
 import { uploadToStorage } from "../../../../common/utils/ovhUtils"
+import { refreshBouncerStatuses } from "../bouncer-refresh"
 import { sendMailingListSuccessNotification } from "../mailing-list.notifications"
 import { getMailingListStoragePath } from "../storage/mailing-list-storage"
 
@@ -24,7 +25,8 @@ function addColumnData(line: Record<string, string>, data: IMailingListComputedD
   }
 }
 
-async function* buildLine(mailingList: IMailingListV2, signal: AbortSignal) {
+// Exporté pour les tests : permet de vérifier le groupement et les compteurs sans le stockage OVH
+export async function* buildLine(mailingList: IMailingListV2, signal: AbortSignal) {
   const filter: Filter<IMailingListComputedDatum> = { mailing_list_id: mailingList._id, email_status: "valid" }
 
   const maxByGroup = await getDbCollection("mailingList.computed")
@@ -84,7 +86,7 @@ async function* buildLine(mailingList: IMailingListV2, signal: AbortSignal) {
     }
   }
 
-  const [empty, blacklisted, invalid] = await Promise.all([
+  const [empty, blacklisted, invalid, valid] = await Promise.all([
     getDbCollection("mailingList.computed").countDocuments({
       mailing_list_id: mailingList._id,
       email_status: "empty",
@@ -95,6 +97,7 @@ async function* buildLine(mailingList: IMailingListV2, signal: AbortSignal) {
     getDbCollection("mailingList.computed")
       .aggregate<{ count: number }>([{ $match: { mailing_list_id: mailingList._id, email_status: "invalid" } }, { $count: "count" }])
       .toArray(),
+    getDbCollection("mailingList.computed").countDocuments(filter),
   ])
 
   await getDbCollection("mailingListsV2").updateOne(
@@ -106,6 +109,8 @@ async function* buildLine(mailingList: IMailingListV2, signal: AbortSignal) {
         "output.empty_source_lines": empty,
         "output.blacklisted_email_count": blacklisted[0]?.count ?? 0,
         "output.invalid_email_count": invalid[0]?.count ?? 0,
+        // Lignes valides partageant le même email après normalisation, fusionnées par le groupement
+        "output.duplicate_email_count": Math.max(0, valid - groupCountProcessed),
       },
     }
   )
@@ -125,6 +130,10 @@ export async function exportMailingList(mailingList: IMailingListV2, job: IJobsS
       },
     }
   )
+
+  // Applique au passage les résolutions du cron « Re-vérification des emails en erreur » :
+  // no-op au premier export, statuts affinés lors d'une régénération du fichier
+  await refreshBouncerStatuses(mailingList, signal)
 
   const { account, result: path } = getMailingListStoragePath(mailingList._id)
 
@@ -182,6 +191,8 @@ export async function exportMailingList(mailingList: IMailingListV2, job: IJobsS
         job_id: null,
         "progress.export": 100,
         generation_ended_at: new Date(),
+        // Réarme la notification « statuts affinés » : un email max par cycle export → affinage
+        bounce_refresh_notified_at: null,
         updated_at: new Date(),
       },
     }

@@ -840,6 +840,34 @@ exports[`zodToMongoSchema > should convert events schema 1`] = `
                 "error",
               ],
             },
+            {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "mailingListId": {
+                  "bsonType": "string",
+                },
+                "mailingListName": {
+                  "bsonType": "string",
+                },
+                "name": {
+                  "bsonType": "string",
+                  "enum": [
+                    "mailing_list_refresh_available",
+                  ],
+                },
+                "to": {
+                  "bsonType": "string",
+                  "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                },
+              },
+              "required": [
+                "name",
+                "to",
+                "mailingListId",
+                "mailingListName",
+              ],
+            },
           ],
         },
         "type": {
@@ -1102,6 +1130,12 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
     "added_by": {
       "bsonType": "objectId",
     },
+    "bounce_refresh_notified_at": {
+      "bsonType": [
+        "date",
+        "null",
+      ],
+    },
     "config": {
       "additionalProperties": false,
       "bsonType": "object",
@@ -1279,6 +1313,9 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
         "blacklisted_email_count": {
           "bsonType": "number",
         },
+        "duplicate_email_count": {
+          "bsonType": "number",
+        },
         "empty_source_lines": {
           "bsonType": "number",
         },
@@ -1294,6 +1331,7 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
         "empty_source_lines",
         "blacklisted_email_count",
         "invalid_email_count",
+        "duplicate_email_count",
       ],
     },
     "progress": {
@@ -1401,6 +1439,7 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
     "eta",
     "generation_started_at",
     "generation_ended_at",
+    "bounce_refresh_notified_at",
     "progress",
     "output",
     "job_id",

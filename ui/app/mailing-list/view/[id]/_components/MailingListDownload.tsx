@@ -2,8 +2,10 @@ import { fr } from "@codegouvfr/react-dsfr"
 import { Alert } from "@codegouvfr/react-dsfr/Alert"
 import { Button } from "@codegouvfr/react-dsfr/Button"
 import { Box, Typography } from "@mui/material"
+import { useMutation } from "@tanstack/react-query"
 import type { IMailingListV2Json } from "shared/models/mailingListV2.model"
-import { generateUrl } from "@/utils/api.utils"
+import { apiPost, generateUrl } from "@/utils/api.utils"
+import { queryClient } from "@/utils/query.utils"
 
 function formatGenerationDuration(mailingList: IMailingListV2Json): string | null {
   if (mailingList.generation_started_at === null || mailingList.generation_ended_at === null) {
@@ -26,6 +28,18 @@ function formatGenerationDuration(mailingList: IMailingListV2Json): string | nul
 
 export function MailingListDownload(props: { mailingList: IMailingListV2Json }) {
   const { mailingList } = props
+
+  const regenerateMutation = useMutation({
+    mutationKey: ["/_private/mailing-list", mailingList._id, "schedule", "export:scheduled"],
+    mutationFn: async () =>
+      apiPost(`/_private/mailing-list/:id/schedule`, {
+        body: { status: "export:scheduled" },
+        params: { id: mailingList._id },
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["/_private/mailing-list"] })
+    },
+  })
 
   if (mailingList.status !== "export:success") {
     return null
@@ -79,6 +93,18 @@ export function MailingListDownload(props: { mailingList: IMailingListV2Json }) 
 
         <Typography>Nombre d'emails invalides ignorés</Typography>
         <Typography>{mailingList.output.invalid_email_count}</Typography>
+
+        <Typography>Doublons fusionnés (même email)</Typography>
+        <Typography>{mailingList.output.duplicate_email_count}</Typography>
+      </Box>
+      <Box sx={{ textAlign: "center" }}>
+        <Button priority="secondary" iconId="fr-icon-refresh-line" onClick={() => regenerateMutation.mutate()} disabled={regenerateMutation.isPending}>
+          Régénérer le fichier avec les statuts à jour
+        </Button>
+        <Typography variant="caption" component="p" color="textSecondary" className={fr.cx("fr-mt-1w")}>
+          Les emails en erreur sont re-vérifiés régulièrement : régénérer le fichier applique les statuts les plus récents.
+        </Typography>
+        {regenerateMutation.isError && <Alert title="Impossible de lancer la régénération" description={regenerateMutation.error.message} severity="error" />}
       </Box>
     </Box>
   )

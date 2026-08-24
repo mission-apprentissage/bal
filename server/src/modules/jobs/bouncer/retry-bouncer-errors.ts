@@ -1,10 +1,12 @@
 import type { IJobsCronTask } from "job-processor"
 import { getProcessorStatus } from "job-processor"
 import type { ObjectId } from "mongodb"
+import type { IMailingListV2 } from "shared/models/mailingListV2.model"
 
 import logger from "../../../common/logger"
 import { verifyEmails } from "../../../common/services/mailer/mailBouncer"
 import { getDbCollection } from "../../../common/utils/mongodbUtils"
+import { sendMailingListRefreshAvailableNotification } from "../mailing-list/mailing-list.notifications"
 
 const CHUNK_SIZE = 500
 
@@ -74,4 +76,45 @@ export async function retryBouncerErrorEmails(signal: AbortSignal, currentJob?: 
   }
 
   logger.info({ retriedCount }, "retryBouncerErrorEmails: terminé")
+
+  // La file d'erreurs est vidée : « le maximum a été fait ». On prévient les créateurs
+  // des listes exportées dont au moins un email en erreur a été résolu depuis l'export.
+  if (!signal.aborted) {
+    await notifyRefreshableMailingLists(signal)
+  }
+}
+
+async function hasResolvedBounceErrors(mailingList: IMailingListV2, signal: AbortSignal): Promise<boolean> {
+  const emails = await getDbCollection("mailingList.computed").distinct("email", {
+    mailing_list_id: mailingList._id,
+    "data.bounce_status": "error",
+  })
+
+  for (let i = 0; i < emails.length; i += CHUNK_SIZE) {
+    signal.throwIfAborted()
+
+    const chunk = emails.slice(i, i + CHUNK_SIZE)
+    const resolvedCount = await getDbCollection("bouncer.email").countDocuments({ email: { $in: chunk }, "ping.status": { $ne: "error" } })
+
+    if (resolvedCount > 0) {
+      return true
+    }
+  }
+
+  return false
+}
+
+async function notifyRefreshableMailingLists(signal: AbortSignal): Promise<void> {
+  const cursor = getDbCollection("mailingListsV2").find({ status: "export:success", job_id: null, bounce_refresh_notified_at: null }, { signal })
+
+  for await (const mailingList of cursor) {
+    signal.throwIfAborted()
+
+    if (!(await hasResolvedBounceErrors(mailingList, signal))) {
+      continue
+    }
+
+    await sendMailingListRefreshAvailableNotification(mailingList)
+    await getDbCollection("mailingListsV2").updateOne({ _id: mailingList._id }, { $set: { bounce_refresh_notified_at: new Date(), updated_at: new Date() } })
+  }
 }

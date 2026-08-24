@@ -31,6 +31,21 @@ export async function sendMailingListSuccessNotification(mailingList: IMailingLi
   })
 }
 
+export async function sendMailingListRefreshAvailableNotification(mailingList: IMailingListV2): Promise<void> {
+  const to = await getMailingListOwnerEmail(mailingList)
+
+  if (!to) {
+    return
+  }
+
+  await sendEmail({
+    name: "mailing_list_refresh_available",
+    to,
+    mailingListId: mailingList._id.toString(),
+    mailingListName: mailingList.name,
+  })
+}
+
 export async function sendMailingListFailureNotification(mailingList: IMailingListV2, error: string): Promise<void> {
   const to = await getMailingListOwnerEmail(mailingList)
 

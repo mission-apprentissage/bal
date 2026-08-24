@@ -943,6 +943,33 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                     ],
                     "type": "object",
                   },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "mailingListId": {
+                        "type": "string",
+                      },
+                      "mailingListName": {
+                        "type": "string",
+                      },
+                      "name": {
+                        "const": "mailing_list_refresh_available",
+                        "type": "string",
+                      },
+                      "to": {
+                        "format": "email",
+                        "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                        "type": "string",
+                      },
+                    },
+                    "required": [
+                      "name",
+                      "to",
+                      "mailingListId",
+                      "mailingListName",
+                    ],
+                    "type": "object",
+                  },
                 ],
               },
               "type": {
@@ -1205,6 +1232,17 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         "properties": {
           "_id": {},
           "added_by": {},
+          "bounce_refresh_notified_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string",
+              },
+              {
+                "type": "null",
+              },
+            ],
+          },
           "config": {
             "additionalProperties": false,
             "properties": {
@@ -1399,6 +1437,9 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
               "blacklisted_email_count": {
                 "type": "number",
               },
+              "duplicate_email_count": {
+                "type": "number",
+              },
               "empty_source_lines": {
                 "type": "number",
               },
@@ -1414,6 +1455,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
               "empty_source_lines",
               "blacklisted_email_count",
               "invalid_email_count",
+              "duplicate_email_count",
             ],
             "type": "object",
           },
@@ -1518,6 +1560,7 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "eta",
           "generation_started_at",
           "generation_ended_at",
+          "bounce_refresh_notified_at",
           "progress",
           "output",
           "job_id",
