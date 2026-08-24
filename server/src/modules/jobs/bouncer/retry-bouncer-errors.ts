@@ -85,23 +85,34 @@ export async function retryBouncerErrorEmails(signal: AbortSignal, currentJob?: 
 }
 
 async function hasResolvedBounceErrors(mailingList: IMailingListV2, signal: AbortSignal): Promise<boolean> {
-  const emails = await getDbCollection("mailingList.computed").distinct("email", {
-    mailing_list_id: mailingList._id,
-    "data.bounce_status": "error",
-  })
+  // Curseur borné en mémoire (une liste peut avoir des centaines de milliers de lignes en erreur,
+  // un distinct() les matérialiserait toutes) avec sortie au premier email résolu
+  const cursor = getDbCollection("mailingList.computed").find({ mailing_list_id: mailingList._id, "data.bounce_status": "error" }, { projection: { email: 1 }, signal })
 
-  for (let i = 0; i < emails.length; i += CHUNK_SIZE) {
+  let batch = new Set<string>()
+
+  const batchHasResolvedEmail = async (): Promise<boolean> => {
+    if (batch.size === 0) {
+      return false
+    }
+
+    const emails = Array.from(batch)
+    batch = new Set()
+
+    const resolvedCount = await getDbCollection("bouncer.email").countDocuments({ email: { $in: emails }, "ping.status": { $ne: "error" } })
+    return resolvedCount > 0
+  }
+
+  for await (const doc of cursor) {
     signal.throwIfAborted()
+    batch.add(doc.email)
 
-    const chunk = emails.slice(i, i + CHUNK_SIZE)
-    const resolvedCount = await getDbCollection("bouncer.email").countDocuments({ email: { $in: chunk }, "ping.status": { $ne: "error" } })
-
-    if (resolvedCount > 0) {
+    if (batch.size >= CHUNK_SIZE && (await batchHasResolvedEmail())) {
       return true
     }
   }
 
-  return false
+  return batchHasResolvedEmail()
 }
 
 async function notifyRefreshableMailingLists(signal: AbortSignal): Promise<void> {
