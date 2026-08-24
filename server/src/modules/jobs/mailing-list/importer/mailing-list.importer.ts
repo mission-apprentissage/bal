@@ -61,6 +61,7 @@ export async function createMailingList({ name, delimiter, expiresInDays, file }
     error: null,
     generation_started_at: null,
     generation_ended_at: null,
+    bounce_refresh_notified_at: null,
     progress: {
       parse: 0,
       generate: 0,
@@ -71,6 +72,7 @@ export async function createMailingList({ name, delimiter, expiresInDays, file }
       empty_source_lines: 0,
       blacklisted_email_count: 0,
       invalid_email_count: 0,
+      duplicate_email_count: 0,
     },
     status: "initial",
     job_id: null,

@@ -25,6 +25,13 @@ const zTemplateMailingListFailure = z.object({
   error: z.string(),
 })
 
-export const zTemplate = z.discriminatedUnion("name", [zTemplateResetPassword, zTemplateMailingListSuccess, zTemplateMailingListFailure])
+const zTemplateMailingListRefreshAvailable = z.object({
+  name: z.literal("mailing_list_refresh_available"),
+  to: z.email(),
+  mailingListId: z.string(),
+  mailingListName: z.string(),
+})
+
+export const zTemplate = z.discriminatedUnion("name", [zTemplateResetPassword, zTemplateMailingListSuccess, zTemplateMailingListFailure, zTemplateMailingListRefreshAvailable])
 
 export type ITemplate = z.output<typeof zTemplate>

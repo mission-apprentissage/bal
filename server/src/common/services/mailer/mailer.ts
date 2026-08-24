@@ -83,6 +83,8 @@ function getEmailSubject(template: ITemplate): string {
       return `Votre liste de diffusion "${template.mailingListName}" est prête`
     case "mailing_list_failure":
       return `Échec de la génération de la liste de diffusion "${template.mailingListName}"`
+    case "mailing_list_refresh_available":
+      return `Des statuts d'emails ont été affinés pour votre liste "${template.mailingListName}"`
     default:
       assertUnreachable(template)
   }

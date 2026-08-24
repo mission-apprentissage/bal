@@ -1,13 +1,14 @@
+import { buildComputedLineFixture, buildMailingListFixture } from "@tests/utils/mailing-list.test.utils"
 import { useMongo } from "@tests/utils/mongo.utils"
 import type { ProcessorStatus } from "job-processor"
 import { getProcessorStatus } from "job-processor"
 import { ObjectId } from "mongodb"
 import type { BouncerEmail, BouncerPingResult } from "shared/models/bouncer.email.model"
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
-
 import { verifyEmails } from "@/common/services/mailer/mailBouncer"
 import { getDbCollection } from "@/common/utils/mongodbUtils"
 import { retryBouncerErrorEmails } from "@/modules/jobs/bouncer/retry-bouncer-errors"
+import { sendMailingListRefreshAvailableNotification } from "@/modules/jobs/mailing-list/mailing-list.notifications"
 
 vi.mock("job-processor", async (importOriginal) => {
   const actual = await importOriginal<typeof import("job-processor")>()
@@ -16,6 +17,10 @@ vi.mock("job-processor", async (importOriginal) => {
 
 vi.mock("@/common/services/mailer/mailBouncer", () => ({
   verifyEmails: vi.fn(),
+}))
+
+vi.mock("@/modules/jobs/mailing-list/mailing-list.notifications", () => ({
+  sendMailingListRefreshAvailableNotification: vi.fn(),
 }))
 
 const mongo = useMongo()
@@ -120,5 +125,70 @@ describe("retryBouncerErrorEmails", () => {
     // Un seul passage malgré la ré-insertion en erreur : pas de boucle infinie
     expect(verifyEmails).toHaveBeenCalledTimes(1)
     await expect(getDbCollection("bouncer.email").countDocuments({ email: "greylisted@exemple.fr", "ping.status": "error" })).resolves.toBe(1)
+  })
+
+  it("should notify once the owner of an exported list whose error emails got resolved", async () => {
+    mockProcessorStatus({})
+
+    const mailingList = buildMailingListFixture()
+    await getDbCollection("mailingListsV2").insertOne(mailingList)
+    await getDbCollection("mailingList.computed").insertOne(
+      buildComputedLineFixture({ mailingListId: mailingList._id, lineNumber: 1, email: "resolu@exemple.fr", emailStatus: "valid", bounceStatus: "error" })
+    )
+    await getDbCollection("bouncer.email").insertOne(buildBouncerEmailDoc("resolu@exemple.fr", "error"))
+
+    // Simule le comportement réel : la re-vérification aboutit et le cache repasse à valid
+    vi.mocked(verifyEmails).mockImplementation(async (emails) => {
+      await getDbCollection("bouncer.email").insertMany(emails.map((email) => buildBouncerEmailDoc(email, "valid")))
+      return emails.map((email) => ({ email, ping: buildPing("valid") }))
+    })
+
+    await retryBouncerErrorEmails(new AbortController().signal)
+
+    expect(sendMailingListRefreshAvailableNotification).toHaveBeenCalledTimes(1)
+    expect(vi.mocked(sendMailingListRefreshAvailableNotification).mock.calls[0][0]._id).toEqual(mailingList._id)
+
+    const updated = await getDbCollection("mailingListsV2").findOne({ _id: mailingList._id })
+    expect(updated?.bounce_refresh_notified_at).not.toBeNull()
+
+    // Second run : la file d'erreurs est vide et la liste est déjà notifiée → aucun nouvel email
+    await retryBouncerErrorEmails(new AbortController().signal)
+    expect(sendMailingListRefreshAvailableNotification).toHaveBeenCalledTimes(1)
+  })
+
+  it("should not notify a list whose error emails are still failing", async () => {
+    mockProcessorStatus({})
+
+    const mailingList = buildMailingListFixture()
+    await getDbCollection("mailingListsV2").insertOne(mailingList)
+    await getDbCollection("mailingList.computed").insertOne(
+      buildComputedLineFixture({ mailingListId: mailingList._id, lineNumber: 1, email: "toujours-ko@exemple.fr", emailStatus: "valid", bounceStatus: "error" })
+    )
+    await getDbCollection("bouncer.email").insertOne(buildBouncerEmailDoc("toujours-ko@exemple.fr", "error"))
+
+    vi.mocked(verifyEmails).mockImplementation(async (emails) => {
+      await getDbCollection("bouncer.email").insertMany(emails.map((email) => buildBouncerEmailDoc(email, "error")))
+      return emails.map((email) => ({ email, ping: buildPing("error") }))
+    })
+
+    await retryBouncerErrorEmails(new AbortController().signal)
+
+    expect(sendMailingListRefreshAvailableNotification).not.toHaveBeenCalled()
+  })
+
+  it("should not notify when the run stops because another task is running", async () => {
+    mockProcessorStatus({ runningTaskName: "mailing-list:process" })
+
+    const mailingList = buildMailingListFixture()
+    await getDbCollection("mailingListsV2").insertOne(mailingList)
+    await getDbCollection("mailingList.computed").insertOne(
+      buildComputedLineFixture({ mailingListId: mailingList._id, lineNumber: 1, email: "resolu@exemple.fr", emailStatus: "valid", bounceStatus: "error" })
+    )
+    // Amélioration déjà disponible dans le cache, mais le run est interrompu par le garde
+    await getDbCollection("bouncer.email").insertOne(buildBouncerEmailDoc("resolu@exemple.fr", "valid"))
+
+    await retryBouncerErrorEmails(new AbortController().signal)
+
+    expect(sendMailingListRefreshAvailableNotification).not.toHaveBeenCalled()
   })
 })

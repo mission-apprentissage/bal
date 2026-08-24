@@ -1,10 +1,12 @@
 import type { IJobsCronTask } from "job-processor"
 import { getProcessorStatus } from "job-processor"
 import type { ObjectId } from "mongodb"
+import type { IMailingListV2 } from "shared/models/mailingListV2.model"
 
 import logger from "../../../common/logger"
 import { verifyEmails } from "../../../common/services/mailer/mailBouncer"
 import { getDbCollection } from "../../../common/utils/mongodbUtils"
+import { sendMailingListRefreshAvailableNotification } from "../mailing-list/mailing-list.notifications"
 
 const CHUNK_SIZE = 500
 
@@ -74,4 +76,56 @@ export async function retryBouncerErrorEmails(signal: AbortSignal, currentJob?: 
   }
 
   logger.info({ retriedCount }, "retryBouncerErrorEmails: terminé")
+
+  // La file d'erreurs est vidée : « le maximum a été fait ». On prévient les créateurs
+  // des listes exportées dont au moins un email en erreur a été résolu depuis l'export.
+  if (!signal.aborted) {
+    await notifyRefreshableMailingLists(signal)
+  }
+}
+
+async function hasResolvedBounceErrors(mailingList: IMailingListV2, signal: AbortSignal): Promise<boolean> {
+  // Curseur borné en mémoire (une liste peut avoir des centaines de milliers de lignes en erreur,
+  // un distinct() les matérialiserait toutes) avec sortie au premier email résolu
+  const cursor = getDbCollection("mailingList.computed").find({ mailing_list_id: mailingList._id, "data.bounce_status": "error" }, { projection: { email: 1 }, signal })
+
+  let batch = new Set<string>()
+
+  const batchHasResolvedEmail = async (): Promise<boolean> => {
+    if (batch.size === 0) {
+      return false
+    }
+
+    const emails = Array.from(batch)
+    batch = new Set()
+
+    const resolvedCount = await getDbCollection("bouncer.email").countDocuments({ email: { $in: emails }, "ping.status": { $ne: "error" } })
+    return resolvedCount > 0
+  }
+
+  for await (const doc of cursor) {
+    signal.throwIfAborted()
+    batch.add(doc.email)
+
+    if (batch.size >= CHUNK_SIZE && (await batchHasResolvedEmail())) {
+      return true
+    }
+  }
+
+  return batchHasResolvedEmail()
+}
+
+async function notifyRefreshableMailingLists(signal: AbortSignal): Promise<void> {
+  const cursor = getDbCollection("mailingListsV2").find({ status: "export:success", job_id: null, bounce_refresh_notified_at: null }, { signal })
+
+  for await (const mailingList of cursor) {
+    signal.throwIfAborted()
+
+    if (!(await hasResolvedBounceErrors(mailingList, signal))) {
+      continue
+    }
+
+    await sendMailingListRefreshAvailableNotification(mailingList)
+    await getDbCollection("mailingListsV2").updateOne({ _id: mailingList._id }, { $set: { bounce_refresh_notified_at: new Date(), updated_at: new Date() } })
+  }
 }

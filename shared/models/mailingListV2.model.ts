@@ -80,6 +80,8 @@ export const ZMailingListV2 = z.object({
   // Durée du traitement : début du dernier run de génération, fin de l'export
   generation_started_at: z.nullable(z.date()),
   generation_ended_at: z.nullable(z.date()),
+  // Date de la notification « statuts affinés disponibles » ; null = notification armée
+  bounce_refresh_notified_at: z.nullable(z.date()),
   progress: z.object({
     parse: z.int(),
     generate: z.int(),
@@ -90,6 +92,8 @@ export const ZMailingListV2 = z.object({
     empty_source_lines: z.number(),
     blacklisted_email_count: z.number(),
     invalid_email_count: z.number(),
+    // Lignes valides fusionnées à l'export car partageant le même email après normalisation
+    duplicate_email_count: z.number(),
   }),
   job_id: z.nullable(zObjectIdMini),
   ttl: z.date(),
