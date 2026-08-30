@@ -14,6 +14,7 @@ import type { IStatus } from "shared/routes/auth.routes"
 import type { z } from "zod/v4-mini"
 import FormContainer from "@/app/auth/components/FormContainer"
 import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import { Redirect } from "@/components/Redirect"
 import { apiPost } from "@/utils/api.utils"
 
 // import { NavLink } from "../../components/NavLink";
@@ -38,7 +39,7 @@ const ModifierMotDePassePage = () => {
   } = useForm<IFormValues>()
 
   if (!token) {
-    return push(PAGES.homepage().path)
+    return <Redirect to={PAGES.homepage().path} />
   }
 
   const password = watch("password")

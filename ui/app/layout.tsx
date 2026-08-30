@@ -30,7 +30,10 @@ async function getSession(): Promise<IUserPublic | undefined> {
     const session = await apiGet(`/auth/session`, {}, { cache: "no-store" })
     return session
   } catch (error) {
-    if ((error as ApiError).context?.statusCode !== 401) {
+    // 401/403 : cookie de session expiré ou invalide, l'utilisateur est simplement
+    // considéré comme déconnecté. Ce n'est pas une erreur applicative.
+    const statusCode = (error as ApiError).context?.statusCode
+    if (statusCode !== 401 && statusCode !== 403) {
       captureException(error)
     }
     return

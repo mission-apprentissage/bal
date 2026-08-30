@@ -109,7 +109,10 @@ export default async (): Promise<Server> => {
   const app: Server = fastify({
     logger: logMiddleware(),
     trustProxy: 1,
-    caseSensitive: false,
+    // Les options de routage à la racine sont dépréciées depuis Fastify 5 (FSTDEP022)
+    routerOptions: {
+      caseSensitive: false,
+    },
   }).withTypeProvider<ZodTypeProvider>()
 
   return bind(app)

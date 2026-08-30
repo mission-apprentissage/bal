@@ -1,11 +1,19 @@
+import { EventEmitter } from "node:events"
+
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { getSmtpServer } from "./smtpConnection"
+import { createSmtpConnection, getSmtpServer, isExpectedSmtpError } from "./smtpConnection"
 
 const resolveMxMock = vi.hoisted(() => vi.fn())
+const createConnectionMock = vi.hoisted(() => vi.fn())
 
 vi.mock("dns", async (importOriginal) => {
   const actual = await importOriginal<typeof import("dns")>()
   return { ...actual, resolveMx: resolveMxMock }
+})
+
+vi.mock("net", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("net")>()
+  return { ...actual, createConnection: createConnectionMock }
 })
 
 type MxRecord = { exchange: string; priority: number }
@@ -68,5 +76,90 @@ describe("getSmtpServer", () => {
   it("should return null when the email has no domain", async () => {
     await expect(getSmtpServer("pas-un-email")).resolves.toBeNull()
     expect(resolveMxMock).not.toHaveBeenCalled()
+  })
+})
+
+describe("isExpectedSmtpError", () => {
+  it.each(["connection error", "connection timeout", "Connection closed"])("should treat %s as an expected transport error", (message) => {
+    expect(isExpectedSmtpError(new Error(message))).toBe(true)
+  })
+
+  it.each([
+    // Near-miss : un message proche ne doit pas être silencié
+    new Error("connection errored"),
+    new Error("Connection closed by peer"),
+    new Error("connection error: ECONNREFUSED"),
+    // Une vraie erreur applicative doit rester remontée
+    new Error("Unknown command: FOO"),
+    new TypeError("terminated"),
+  ])("should not treat %s as an expected transport error", (err) => {
+    expect(isExpectedSmtpError(err)).toBe(false)
+  })
+
+  it("should not treat a non-Error value as an expected transport error", () => {
+    expect(isExpectedSmtpError("connection error")).toBe(false)
+    expect(isExpectedSmtpError(null)).toBe(false)
+  })
+})
+
+describe("createSmtpConnection", () => {
+  const tick = () => new Promise((resolve) => setTimeout(resolve, 0))
+
+  class FakeSocket extends EventEmitter {
+    destroyed = false
+    setEncoding = vi.fn()
+    setTimeout = vi.fn()
+
+    write(_data: Buffer, callback: () => void) {
+      callback()
+      return true
+    }
+
+    destroy() {
+      this.destroyed = true
+    }
+  }
+
+  function connect(socket: FakeSocket) {
+    createConnectionMock.mockReturnValueOnce(socket)
+
+    return createSmtpConnection(
+      { port: 25, fqdn: "bal.test", sender: "expediteur@exemple.fr", email: "destinataire@exemple.fr", smtp: "mx.exemple.fr" },
+      new AbortController().signal
+    )
+  }
+
+  it("should surface the original transport error instead of the QUIT failure", async () => {
+    const socket = new FakeSocket()
+    const connection = connect(socket)
+
+    const banner = connection.next("CONNECT")
+    await tick()
+    socket.emit("data", "220 mx.exemple.fr ready\r\n")
+    await expect(banner).resolves.toMatchObject({ value: { code: "220" } })
+
+    const ehlo = connection.next("EHLO")
+    await tick()
+
+    // Le serveur coupe la connexion : le QUIT de courtoisie ne peut plus être écrit
+    socket.destroyed = true
+    socket.emit("error", Object.assign(new Error("connect ECONNREFUSED 127.0.0.1:25"), { code: "ECONNREFUSED" }))
+
+    // Sans propagation de l'erreur d'origine, l'échec du QUIT ("Connection closed") la masquerait
+    await expect(ehlo).rejects.toThrow("connection error")
+    await expect(ehlo).rejects.toMatchObject({ cause: { code: "ECONNREFUSED" } })
+  })
+
+  it("should surface a connection timeout", async () => {
+    const socket = new FakeSocket()
+    const connection = connect(socket)
+
+    const banner = connection.next("CONNECT")
+    await tick()
+
+    // Déclenche le handler passé à socket.setTimeout()
+    socket.setTimeout.mock.calls[0][1]()
+
+    await expect(banner).rejects.toThrow("connection timeout")
   })
 })

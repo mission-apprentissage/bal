@@ -7,7 +7,7 @@ import type { BouncerPingResult } from "shared/models/bouncer.email.model"
 import logger from "../../logger"
 import { mapWithConcurrency, sleep } from "../../utils/asyncUtils"
 import { getDbCollection } from "../../utils/mongodbUtils"
-import { createSmtpConnection, getSmtpServer, quit, sayEhlo, vrfy, vrfyWorkaround } from "./smtpConnection"
+import { createSmtpConnection, getSmtpServer, isExpectedSmtpError, quit, sayEhlo, vrfy, vrfyWorkaround } from "./smtpConnection"
 
 const ONE_HOUR = 60 * 60 * 1000
 const ONE_DAY = 24 * ONE_HOUR
@@ -113,19 +113,22 @@ async function tryVerifyEmail(email: string, signal: AbortSignal, retryCount = 0
       responseMessage: workaroundResult.message,
     }
   } catch (err) {
-    await smtpConnection.throw(err)
+    // Le générateur relance systématiquement l'erreur injectée : sans ce catch, elle
+    // remonterait à verifyEmail et le résultat ci-dessous ne serait jamais mis en cache
+    await smtpConnection.throw(err).catch(() => undefined)
 
     signal?.throwIfAborted()
 
-    if (err.message !== "Connection closed") {
-      // silenced on sentry for this common error
+    const expected = isExpectedSmtpError(err)
+
+    if (!expected) {
       captureException(err)
     }
     logger.error(err, { email })
 
     return {
       status: "error",
-      message: "Unknown error occurred",
+      message: expected ? "SMTP connection failed" : "Unknown error occurred",
       responseCode: null,
       responseMessage: null,
     }
@@ -253,7 +256,9 @@ async function verifyEmail(email: string, domainMap: SmtpSupportMap, signal: Abo
   } catch (err) {
     signal.throwIfAborted()
 
-    captureException(err)
+    if (!isExpectedSmtpError(err)) {
+      captureException(err)
+    }
     logger.error(err, { email })
 
     return {

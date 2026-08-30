@@ -112,6 +112,14 @@ type Response = {
   message: string[]
 }
 
+// Erreurs de transport attendues lorsqu'on sonde des serveurs MX tiers : hôte injoignable,
+// qui coupe la connexion ou qui ne répond pas. Ce n'est pas un défaut applicatif.
+const EXPECTED_SMTP_ERRORS: ReadonlySet<string> = new Set(["connection error", "connection timeout", "Connection closed"])
+
+export function isExpectedSmtpError(err: unknown): boolean {
+  return err instanceof Error && EXPECTED_SMTP_ERRORS.has(err.message)
+}
+
 type SMTPConnection = AsyncGenerator<Response, Response, SMTP_COMMAND>
 
 export async function* createSmtpConnection(config: SMTPConfig, signal: AbortSignal): SMTPConnection {
@@ -240,7 +248,11 @@ export async function* createSmtpConnection(config: SMTPConfig, signal: AbortSig
     write("QUIT\r\n")
     return await waitResponse()
   } catch (err) {
-    write("QUIT\r\n")
+    try {
+      write("QUIT\r\n")
+    } catch (_quitErr) {
+      // La connexion est déjà fermée : ne pas laisser l'échec du QUIT masquer l'erreur d'origine
+    }
     throw err
   }
 }
