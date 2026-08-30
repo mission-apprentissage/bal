@@ -112,12 +112,21 @@ type Response = {
   message: string[]
 }
 
-// Erreurs de transport attendues lorsqu'on sonde des serveurs MX tiers : hôte injoignable,
-// qui coupe la connexion ou qui ne répond pas. Ce n'est pas un défaut applicatif.
-const EXPECTED_SMTP_ERRORS: ReadonlySet<string> = new Set(["connection error", "connection timeout", "Connection closed"])
+/**
+ * Échec de transport en sondant un serveur MX tiers : hôte injoignable, qui coupe la
+ * connexion ou qui ne répond pas. Ce n'est pas un défaut applicatif, et ça ne doit donc
+ * pas remonter dans Sentry. Le type porte l'information plutôt que le message, pour
+ * qu'un renommage ne désactive pas le filtre en silence.
+ */
+export class SmtpTransportError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options)
+    this.name = "SmtpTransportError"
+  }
+}
 
-export function isExpectedSmtpError(err: unknown): boolean {
-  return err instanceof Error && EXPECTED_SMTP_ERRORS.has(err.message)
+export function isExpectedSmtpError(err: unknown): err is SmtpTransportError {
+  return err instanceof SmtpTransportError
 }
 
 type SMTPConnection = AsyncGenerator<Response, Response, SMTP_COMMAND>
@@ -171,13 +180,13 @@ export async function* createSmtpConnection(config: SMTPConfig, signal: AbortSig
 
   connection.setTimeout(10_000, () => {
     connection.destroy()
-    error = new Error("connection timeout")
+    error = new SmtpTransportError("connection timeout")
     state = "error"
     event.emit("update")
   })
 
   connection.once("error", (err) => {
-    error = new Error("connection error", { cause: err })
+    error = new SmtpTransportError("connection error", { cause: err })
     state = "error"
     event.emit("update")
   })
@@ -207,7 +216,7 @@ export async function* createSmtpConnection(config: SMTPConfig, signal: AbortSig
 
   const write = (str: string) => {
     if (connection.destroyed) {
-      throw new Error("Connection closed")
+      throw new SmtpTransportError("Connection closed")
     }
     connection.write(Buffer.from(str + "\r\n", "utf-8"), () => {
       buffer = ""

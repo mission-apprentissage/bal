@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events"
 
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { createSmtpConnection, getSmtpServer, isExpectedSmtpError } from "./smtpConnection"
+import { createSmtpConnection, getSmtpServer, isExpectedSmtpError, SmtpTransportError } from "./smtpConnection"
 
 const resolveMxMock = vi.hoisted(() => vi.fn())
 const createConnectionMock = vi.hoisted(() => vi.fn())
@@ -80,15 +80,19 @@ describe("getSmtpServer", () => {
 })
 
 describe("isExpectedSmtpError", () => {
-  it.each(["connection error", "connection timeout", "Connection closed"])("should treat %s as an expected transport error", (message) => {
-    expect(isExpectedSmtpError(new Error(message))).toBe(true)
+  it.each(["connection error", "connection timeout", "Connection closed"])("should treat a transport error carrying %s as expected", (message) => {
+    expect(isExpectedSmtpError(new SmtpTransportError(message))).toBe(true)
   })
 
   it.each([
+    // Le filtre porte sur le type, pas sur le texte : une Error nue au message identique
+    // reste remontée, sinon n'importe quel code tiers pourrait se faire silencier
+    new Error("connection error"),
+    new Error("connection timeout"),
+    new Error("Connection closed"),
     // Near-miss : un message proche ne doit pas être silencié
     new Error("connection errored"),
     new Error("Connection closed by peer"),
-    new Error("connection error: ECONNREFUSED"),
     // Une vraie erreur applicative doit rester remontée
     new Error("Unknown command: FOO"),
     new TypeError("terminated"),
