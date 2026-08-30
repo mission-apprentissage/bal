@@ -1,8 +1,8 @@
-FROM node:26-slim AS builder_root
+FROM node:26.8.1-slim AS builder_root
 WORKDIR /app
 
-# Install pnpm
-RUN npm install -g pnpm@latest-10
+# pnpm via corepack : la version vient du champ packageManager
+RUN npm install -g corepack@0.34.6 && corepack enable
 
 COPY package.json package.json
 COPY pnpm-lock.yaml pnpm-lock.yaml
@@ -34,7 +34,7 @@ RUN pnpm --filter server build
 RUN mkdir -p /app/shared/node_modules && mkdir -p /app/server/node_modules
 
 # Production image, copy all the files and run next
-FROM node:26-slim AS server
+FROM node:26.8.1-slim AS server
 WORKDIR /app
 
 RUN apt-get update \
@@ -45,8 +45,8 @@ RUN apt-get update \
   && apt-get purge -y --auto-remove debsecan \
   && apt-get clean
 
-# Install pnpm (needed for migrations and other CLI commands)
-RUN npm install -g pnpm@latest-10
+# pnpm via corepack, nécessaire aux migrations et aux commandes CLI
+RUN npm install -g corepack@0.34.6 && corepack enable
 
 RUN curl -so - https://cert.certigna.com/CertignaServerAuthenticationOVCPEUCAG1.cer \
   | openssl x509 -inform der -out /usr/local/share/ca-certificates/CertignaServerAuthenticationOVCPEUCAG1.crt \
@@ -60,12 +60,17 @@ ENV NODE_ENV=production
 ARG PUBLIC_VERSION
 ENV PUBLIC_VERSION=$PUBLIC_VERSION
 
+# package.json racine : porte le champ packageManager que corepack résout pour les CLI
+COPY --from=builder_server /app/package.json ./package.json
 COPY --from=builder_server /app/server ./server
 COPY --from=builder_server /app/shared ./shared
 COPY --from=builder_server /app/node_modules ./node_modules
 COPY --from=builder_server /app/server/node_modules ./server/node_modules
 COPY --from=builder_server /app/shared/node_modules ./shared/node_modules
 COPY ./server/static /app/server/static
+
+# Fige pnpm dans l'image : sans ça corepack le télécharge à la première commande CLI
+RUN corepack install
 
 EXPOSE 5000
 WORKDIR /app/server
@@ -96,7 +101,7 @@ RUN pnpm --filter ui build
 # RUN --mount=type=cache,target=/app/ui/.next/cache pnpm --filter ui build
 
 # Production image, copy all the files and run next
-FROM node:26-slim AS ui
+FROM node:26.8.1-slim AS ui
 WORKDIR /app
 
 RUN apt-get update \
