@@ -107,10 +107,12 @@ describe("createSmtpConnection", () => {
 
   class FakeSocket extends EventEmitter {
     destroyed = false
+    written: string[] = []
     setEncoding = vi.fn()
     setTimeout = vi.fn()
 
-    write(_data: Buffer, callback: () => void) {
+    write(data: Buffer, callback: () => void) {
+      this.written.push(data.toString("utf-8"))
       callback()
       return true
     }
@@ -148,6 +150,29 @@ describe("createSmtpConnection", () => {
     // Sans propagation de l'erreur d'origine, l'échec du QUIT ("Connection closed") la masquerait
     await expect(ehlo).rejects.toThrow("connection error")
     await expect(ehlo).rejects.toMatchObject({ cause: { code: "ECONNREFUSED" } })
+  })
+
+  it("should terminate each command with a single CRLF", async () => {
+    const socket = new FakeSocket()
+    const connection = connect(socket)
+
+    const banner = connection.next("CONNECT")
+    await tick()
+    socket.emit("data", "220 mx.exemple.fr ready\r\n")
+    await banner
+
+    const ehlo = connection.next("EHLO")
+    await tick()
+    socket.emit("data", "250 mx.exemple.fr\r\n")
+    await ehlo
+
+    const quit = connection.next("QUIT")
+    await tick()
+    socket.emit("data", "221 bye\r\n")
+    await quit
+
+    // write() ajoute le CRLF : une commande passée avec son propre "\r\n" enverrait une ligne vide
+    expect(socket.written).toEqual(["EHLO bal.test\r\n", "QUIT\r\n"])
   })
 
   it("should surface a connection timeout", async () => {

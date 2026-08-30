@@ -245,11 +245,12 @@ export async function* createSmtpConnection(config: SMTPConfig, signal: AbortSig
       cmd = yield response
     }
 
-    write("QUIT\r\n")
+    // write() ajoute déjà le CRLF : passer "QUIT\r\n" enverrait une ligne vide de plus
+    write("QUIT")
     return await waitResponse()
   } catch (err) {
     try {
-      write("QUIT\r\n")
+      write("QUIT")
     } catch (_quitErr) {
       // La connexion est déjà fermée : ne pas laisser l'échec du QUIT masquer l'erreur d'origine
     }
