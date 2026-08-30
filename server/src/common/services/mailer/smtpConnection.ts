@@ -112,6 +112,23 @@ type Response = {
   message: string[]
 }
 
+/**
+ * Échec de transport en sondant un serveur MX tiers : hôte injoignable, qui coupe la
+ * connexion ou qui ne répond pas. Ce n'est pas un défaut applicatif, et ça ne doit donc
+ * pas remonter dans Sentry. Le type porte l'information plutôt que le message, pour
+ * qu'un renommage ne désactive pas le filtre en silence.
+ */
+export class SmtpTransportError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options)
+    this.name = "SmtpTransportError"
+  }
+}
+
+export function isExpectedSmtpError(err: unknown): err is SmtpTransportError {
+  return err instanceof SmtpTransportError
+}
+
 type SMTPConnection = AsyncGenerator<Response, Response, SMTP_COMMAND>
 
 export async function* createSmtpConnection(config: SMTPConfig, signal: AbortSignal): SMTPConnection {
@@ -163,13 +180,13 @@ export async function* createSmtpConnection(config: SMTPConfig, signal: AbortSig
 
   connection.setTimeout(10_000, () => {
     connection.destroy()
-    error = new Error("connection timeout")
+    error = new SmtpTransportError("connection timeout")
     state = "error"
     event.emit("update")
   })
 
   connection.once("error", (err) => {
-    error = new Error("connection error", { cause: err })
+    error = new SmtpTransportError("connection error", { cause: err })
     state = "error"
     event.emit("update")
   })
@@ -199,7 +216,7 @@ export async function* createSmtpConnection(config: SMTPConfig, signal: AbortSig
 
   const write = (str: string) => {
     if (connection.destroyed) {
-      throw new Error("Connection closed")
+      throw new SmtpTransportError("Connection closed")
     }
     connection.write(Buffer.from(str + "\r\n", "utf-8"), () => {
       buffer = ""
@@ -237,10 +254,15 @@ export async function* createSmtpConnection(config: SMTPConfig, signal: AbortSig
       cmd = yield response
     }
 
-    write("QUIT\r\n")
+    // write() ajoute déjà le CRLF : passer "QUIT\r\n" enverrait une ligne vide de plus
+    write("QUIT")
     return await waitResponse()
   } catch (err) {
-    write("QUIT\r\n")
+    try {
+      write("QUIT")
+    } catch (_quitErr) {
+      // La connexion est déjà fermée : ne pas laisser l'échec du QUIT masquer l'erreur d'origine
+    }
     throw err
   }
 }

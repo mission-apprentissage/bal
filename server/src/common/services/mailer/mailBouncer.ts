@@ -7,7 +7,7 @@ import type { BouncerPingResult } from "shared/models/bouncer.email.model"
 import logger from "../../logger"
 import { mapWithConcurrency, sleep } from "../../utils/asyncUtils"
 import { getDbCollection } from "../../utils/mongodbUtils"
-import { createSmtpConnection, getSmtpServer, quit, sayEhlo, vrfy, vrfyWorkaround } from "./smtpConnection"
+import { createSmtpConnection, getSmtpServer, isExpectedSmtpError, quit, sayEhlo, vrfy, vrfyWorkaround } from "./smtpConnection"
 
 const ONE_HOUR = 60 * 60 * 1000
 const ONE_DAY = 24 * ONE_HOUR
@@ -18,8 +18,14 @@ const DOMAIN_CONCURRENCY = 20
 // avec un TTL court et re-vérifiées par le job de fond "Re-vérification des emails en erreur"
 const MAX_RETRY_COUNT = 1
 const RETRY_DELAY_MS = 10_000
+// Durée pendant laquelle un MX en échec de transport reste condamné en mémoire
+const DOMAIN_ERROR_CACHE_TTL_MS = 60_000
 
-type SmtpSupportMap = Map<string, BouncerPingResult | null>
+// L'expiration est portée par entrée : une erreur de transport peut être transitoire,
+// la mémoriser aussi longtemps qu'un résultat fiable maintiendrait tout un domaine en
+// échec bien après le rétablissement du réseau
+type SmtpSupportEntry = { ping: BouncerPingResult | null; expiresAt: number }
+type SmtpSupportMap = Map<string, SmtpSupportEntry>
 
 async function tryVerifyEmail(email: string, signal: AbortSignal, retryCount = 0): Promise<BouncerPingResult> {
   const smtp = await getSmtpServer(email)
@@ -113,19 +119,22 @@ async function tryVerifyEmail(email: string, signal: AbortSignal, retryCount = 0
       responseMessage: workaroundResult.message,
     }
   } catch (err) {
-    await smtpConnection.throw(err)
+    // Le générateur relance systématiquement l'erreur injectée : sans ce catch, elle
+    // remonterait à verifyEmail et le résultat ci-dessous ne serait jamais mis en cache
+    await smtpConnection.throw(err).catch(() => undefined)
 
     signal?.throwIfAborted()
 
-    if (err.message !== "Connection closed") {
-      // silenced on sentry for this common error
+    const expected = isExpectedSmtpError(err)
+
+    if (!expected) {
       captureException(err)
     }
     logger.error(err, { email })
 
     return {
       status: "error",
-      message: "Unknown error occurred",
+      message: expected ? "SMTP connection failed" : "Unknown error occurred",
       responseCode: null,
       responseMessage: null,
     }
@@ -154,32 +163,42 @@ async function tryWithRandomEmail(_smtp: string, email: string, signal: AbortSig
   return null
 }
 
+function getDomainCacheExpiry(ping: BouncerPingResult | null): number {
+  return ping?.status === "error" ? Date.now() + DOMAIN_ERROR_CACHE_TTL_MS : Number.POSITIVE_INFINITY
+}
+
 async function verifyDomain(smtp: string, email: string, smtpSupportMap: SmtpSupportMap, signal: AbortSignal): Promise<BouncerPingResult | null> {
-  if (!smtpSupportMap.has(smtp)) {
-    const domain = email.split("@")[1]
-    const randomResult = await tryWithRandomEmail(smtp, email, signal)
+  const cached = smtpSupportMap.get(smtp)
 
-    const now = new Date()
-    await getDbCollection("bouncer.domain").updateOne(
-      { domain, smtp },
-      {
-        $set: {
-          ping: randomResult,
-          updated_at: now,
-        },
-        $setOnInsert: {
-          domain,
-          smtp,
-          created_at: now,
-        },
-      },
-      { upsert: true }
-    )
-
-    smtpSupportMap.set(smtp, randomResult)
+  // `ping` peut valoir null (détection supportée) : c'est l'absence d'entrée, pas la valeur,
+  // qui déclenche un nouveau sondage
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.ping
   }
 
-  return smtpSupportMap.get(smtp)!
+  const domain = email.split("@")[1]
+  const randomResult = await tryWithRandomEmail(smtp, email, signal)
+
+  const now = new Date()
+  await getDbCollection("bouncer.domain").updateOne(
+    { domain, smtp },
+    {
+      $set: {
+        ping: randomResult,
+        updated_at: now,
+      },
+      $setOnInsert: {
+        domain,
+        smtp,
+        created_at: now,
+      },
+    },
+    { upsert: true }
+  )
+
+  smtpSupportMap.set(smtp, { ping: randomResult, expiresAt: getDomainCacheExpiry(randomResult) })
+
+  return randomResult
 }
 
 function getPingCacheTtl(ping: BouncerPingResult, now: Date): Date | null {
@@ -246,6 +265,15 @@ async function verifyEmail(email: string, domainMap: SmtpSupportMap, signal: Abo
     const domainResult = await verifyDomain(smtp, email, domainMap, signal)
 
     if (domainResult) {
+      // Une erreur doit rejoindre le cache par email : c'est le seul point d'entrée du cron
+      // « Re-vérification des emails en erreur » et de refreshBouncerStatuses au (re-)export.
+      // Sans ça, la ligne reste bloquée en erreur dans la liste, sans rattrapage possible.
+      // Les autres statuts restent hors cache : les persister écrirait une ligne pour chaque
+      // adresse des gros domaines, ce que le court-circuit par domaine sert justement à éviter.
+      if (domainResult.status === "error") {
+        return persistPingResultCache(email, smtp, domainResult, signal)
+      }
+
       return { email, ping: domainResult }
     }
 
@@ -253,7 +281,9 @@ async function verifyEmail(email: string, domainMap: SmtpSupportMap, signal: Abo
   } catch (err) {
     signal.throwIfAborted()
 
-    captureException(err)
+    if (!isExpectedSmtpError(err)) {
+      captureException(err)
+    }
     logger.error(err, { email })
 
     return {
@@ -285,7 +315,9 @@ async function getDomainMap(): Promise<SmtpSupportMap> {
 
   // La Map est partagée entre les appels : les domaines découverts par verifyDomain
   // pendant la durée du cache profitent aux batchs suivants
-  const map: SmtpSupportMap = new Map(knownDomains.map((d) => [d.smtp, d.ping]))
+  // La requête exclut déjà les statuts en erreur : ces entrées n'ont pas besoin d'expirer
+  // avant le rafraîchissement de la Map elle-même
+  const map: SmtpSupportMap = new Map(knownDomains.map((d) => [d.smtp, { ping: d.ping, expiresAt: Number.POSITIVE_INFINITY }]))
   domainMapCache = { map, expiresAt: Date.now() + DOMAIN_MAP_CACHE_TTL_MS }
 
   return map
@@ -332,7 +364,7 @@ export async function verifyEmails(emails: string[], signal: AbortSignal): Promi
     return results
   }
 
-  const domainMap: Map<string, BouncerPingResult | null> = await getDomainMap()
+  const domainMap = await getDomainMap()
 
   const perDomain = toVerify.reduce((acc, email) => {
     const domain = email.split("@")[1]

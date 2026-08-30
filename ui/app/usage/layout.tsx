@@ -6,6 +6,7 @@ import type { FC, PropsWithChildren } from "react"
 
 import type { Page } from "@/app/components/breadcrumb/Breadcrumb"
 import Breadcrumb, { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import { Redirect } from "@/components/Redirect"
 import { useAuth } from "@/context/AuthContext"
 
 interface Tab extends Page {
@@ -21,8 +22,7 @@ const UsageLayout: FC<PropsWithChildren> = ({ children }) => {
   const selectedTabId = tabs.find((tab) => pathname.startsWith(tab.path))?.path ?? tabs[0].path
 
   if (!user) {
-    push("/auth/connexion")
-    return null
+    return <Redirect to="/auth/connexion" />
   }
 
   return (

@@ -1,16 +1,11 @@
 "use client"
 
-import { useRouter } from "next/navigation"
-
 import { PAGES } from "@/app/components/breadcrumb/Breadcrumb"
+import { Redirect } from "@/components/Redirect"
 
 const UsagePage = () => {
-  const { push } = useRouter()
-
   // redirect to first tab
-  push(PAGES.usageApiValidation().path)
-
-  return null
+  return <Redirect to={PAGES.usageApiValidation().path} />
 }
 
 export default UsagePage
