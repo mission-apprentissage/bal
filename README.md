@@ -1,4 +1,4 @@
-# BAL - Boite Aux Lettres [![codecov](https://codecov.io/gh/mission-apprentissage/bal/graph/badge.svg?token=0IHUD6ZMQ2)](https://codecov.io/gh/mission-apprentissage/bal)
+# BAL - Boite Aux Lettres
 
 - [BAL - Boite Aux Lettres ](#bal---boite-aux-lettres-)
   - [Fiche Produit](#fiche-produit)

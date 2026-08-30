@@ -2,10 +2,6 @@ name: CI
 
 on:
   workflow_call:
-    secrets:
-      CODECOV_TOKEN:
-        description: Code coverrage token
-        required: true
 jobs:
   tests:
     timeout-minutes: 10
@@ -14,17 +10,15 @@ jobs:
 
     steps:
       - name: Checkout project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version-file: .node-version
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 10
+      - uses: pnpm/action-setup@v6
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v6
         with:
           path: |
             ~/.pnpm-store
@@ -50,8 +44,3 @@ jobs:
 
       - name: test
         run: pnpm test:ci
-
-      - name: Upload coverage report to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
