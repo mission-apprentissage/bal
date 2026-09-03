@@ -35,7 +35,6 @@ export function ChoixColonnesFormationRow({ field, mailingList }: Props) {
     cfd: string
     rncp: string
     mef: string
-    uai_lieu_formation: string
     uai_formateur: string
     uai_formateur_responsable: string
     code_postal: string

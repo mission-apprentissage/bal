@@ -131,7 +131,6 @@ async function addLbaData({
       rncp: line.data[lbaColummns.rncp] ?? "",
       code_postal: line.data[lbaColummns.code_postal] ?? "",
       code_insee: line.data[lbaColummns.code_insee] ?? "",
-      uai_lieu_formation: line.data[lbaColummns.uai_lieu_formation] ?? "",
       uai_formateur: line.data[lbaColummns.uai_formateur] ?? "",
       uai_formateur_responsable: line.data[lbaColummns.uai_formateur_responsable] ?? "",
     })

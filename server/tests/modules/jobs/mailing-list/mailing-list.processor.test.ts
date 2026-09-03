@@ -56,7 +56,6 @@ function buildMailingList(id: ObjectId, jobId: ObjectId, addedBy: ObjectId): IMa
         cfd: "",
         rncp: "",
         code_postal: "",
-        uai_lieu_formation: "",
         uai_formateur: "",
         uai_formateur_responsable: "",
         code_insee: "",

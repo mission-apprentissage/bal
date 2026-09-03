@@ -19,7 +19,6 @@ export interface TrainingLinkData {
   cfd: string | null
   rncp: string | null
   code_postal: string | null
-  uai_lieu_formation: string | null
   uai_formateur: string | null
   uai_formateur_responsable: string | null
   code_insee: string | null

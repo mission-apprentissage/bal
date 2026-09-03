@@ -27,7 +27,6 @@ function buildData(count: number): TrainingLinkData[] {
       rncp: "",
       code_postal: "",
       code_insee: "",
-      uai_lieu_formation: "",
       uai_formateur: "",
       uai_formateur_responsable: "",
     })
