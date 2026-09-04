@@ -1173,9 +1173,6 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
                 "uai_formateur_responsable": {
                   "bsonType": "string",
                 },
-                "uai_lieu_formation": {
-                  "bsonType": "string",
-                },
               },
               "required": [
                 "cle_ministere_educatif",
@@ -1183,7 +1180,6 @@ exports[`zodToMongoSchema > should convert mailingListsV2 schema 1`] = `
                 "cfd",
                 "rncp",
                 "code_postal",
-                "uai_lieu_formation",
                 "uai_formateur",
                 "uai_formateur_responsable",
                 "code_insee",

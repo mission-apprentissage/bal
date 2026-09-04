@@ -53,7 +53,6 @@ export const ZMailingListV2 = z.object({
         cfd: z.string(),
         rncp: z.string(),
         code_postal: z.string(),
-        uai_lieu_formation: z.string(),
         uai_formateur: z.string(),
         uai_formateur_responsable: z.string(),
         code_insee: z.string(),

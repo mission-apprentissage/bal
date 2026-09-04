@@ -1278,9 +1278,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                       "uai_formateur_responsable": {
                         "type": "string",
                       },
-                      "uai_lieu_formation": {
-                        "type": "string",
-                      },
                     },
                     "required": [
                       "cle_ministere_educatif",
@@ -1288,7 +1285,6 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                       "cfd",
                       "rncp",
                       "code_postal",
-                      "uai_lieu_formation",
                       "uai_formateur",
                       "uai_formateur_responsable",
                       "code_insee",

@@ -19,7 +19,6 @@ type ITrainingColumnForm = {
   cfd: string
   rncp: string
   mef: string
-  uai_lieu_formation: string
   uai_formateur: string
   uai_formateur_responsable: string
   code_postal: string
@@ -72,15 +71,6 @@ const fields: ITrainingField[] = [
     },
   },
   {
-    name: "uai_lieu_formation",
-    label: "Code UAI lieu de formation",
-    tooltip: {
-      title: "Unité Administrative Immatriculée",
-      description:
-        "Ce code est composé de 7 chiffres suivis d’une lettre, les trois premiers chiffres indiquant le département. https://data.education.gouv.fr/explore/dataset/fr-en-annuaire-education/table/",
-    },
-  },
-  {
     name: "uai_formateur",
     label: "Code UAI formateur",
     tooltip: {
@@ -115,7 +105,6 @@ export function ChoixColonnesFormation({ mailingList, onNext, onPrev, readonly }
       cfd: mailingList?.config.lba_columns?.cfd ?? "",
       rncp: mailingList?.config.lba_columns?.rncp ?? "",
       mef: mailingList?.config.lba_columns?.mef ?? "",
-      uai_lieu_formation: mailingList?.config.lba_columns?.uai_lieu_formation ?? "",
       uai_formateur: mailingList?.config.lba_columns?.uai_formateur ?? "",
       uai_formateur_responsable: mailingList?.config.lba_columns?.uai_formateur_responsable ?? "",
       code_postal: mailingList?.config.lba_columns?.code_postal ?? "",
@@ -140,7 +129,6 @@ export function ChoixColonnesFormation({ mailingList, onNext, onPrev, readonly }
           cfd: data.cfd,
           rncp: data.rncp,
           mef: data.mef,
-          uai_lieu_formation: data.uai_lieu_formation,
           uai_formateur: data.uai_formateur,
           uai_formateur_responsable: data.uai_formateur_responsable,
           code_postal: data.code_postal,
