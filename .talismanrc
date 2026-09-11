@@ -6,9 +6,9 @@ fileignoreconfig:
 - filename: .infra/env.local.yml
   checksum: 545013d1fc42080ab4b87c97b2cc1c777aa5bd1bcca73add3be650c2402f0ed2
 - filename: .infra/env.production.yml
-  checksum: 263a7a050b27dd9674bf65a70d4c6fc0daf3fabfd8c43237227caac0f96eb567
+  checksum: 4edf6e5fe90d6eab45dcac7c1f2c79b90f6c218e05f044b0ce476c559b7a50de
 - filename: .infra/env.recette.yml
-  checksum: e542f5aeb16135b8a1411364fa5cb6aeae24e7510f853ddd7a9c09b2d36a2271
+  checksum: ef9f5b02dc43d1524f70387d72efaf7cd7bf36189e3578882c9a3c09ab09c6fb
 scopeconfig:
 - scope: node
 custom_patterns:
@@ -26,7 +26,7 @@ allowed_patterns:
 - api_key
 - '@mail.com'
 - '@exemple.fr'
-- '.exemple.fr'
+- .exemple.fr
 - '@mail.fr'
 - '@apprentissage.beta.gouv.fr'
 - '@alternance.beta.gouv.fr'
