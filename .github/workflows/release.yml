@@ -49,9 +49,6 @@ jobs:
 
       - uses: pnpm/action-setup@v6
 
-      - name: Setup sops
-        uses: nhedger/setup-sops@v3
-
       - uses: actions/cache@v6
         with:
           path: |
