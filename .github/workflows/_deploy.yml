@@ -43,7 +43,7 @@ on:
 jobs:
   deploy:
     name: Deploy ${{ inputs.app_version }} on ${{ inputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, deploy-lba]
     steps:
       - name: Checkout project
         uses: actions/checkout@v7
