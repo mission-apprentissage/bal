@@ -24,7 +24,7 @@ export function closeMailer() {
 }
 
 export function initMailer() {
-  const settings = { ...config.smtp, secure: false }
+  const settings = { ...config.brevo.smtp, secure: false }
   const needsAuthentication = !!settings.auth.user
   // @ts-expect-error
   transporter = nodemailer.createTransport(needsAuthentication ? settings : omit(settings, ["auth"]))
@@ -40,7 +40,7 @@ async function sendEmailMessage(template: ITemplate, emailEvent: IEventBalEmail 
   }
 
   const { messageId } = await transporter.sendMail({
-    from: `${config.email_from} <${config.email}>`,
+    from: `${config.brevo.emailFrom} <${config.brevo.email}>`,
     to: template.to,
     subject: getEmailSubject(template),
     html: await renderEmail(template, emailEvent),

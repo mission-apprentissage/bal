@@ -85,7 +85,7 @@ export const emailsRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const { webhookKey } = request.query
 
-      if (config.smtp.webhookKey !== webhookKey) {
+      if (config.brevo.webhooks.transactionalKey !== webhookKey) {
         throw Boom.forbidden("Non autorisé")
       }
 
