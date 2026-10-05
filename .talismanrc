@@ -4,7 +4,7 @@ fileignoreconfig:
 - filename: .infra/env.global.yml
   checksum: cce89eff81cc1e25e6bb432e276f8b2f64e3cf38a7c6338972dbb593da563540
 - filename: .infra/env.local.yml
-  checksum: 4b1a3a11f2bf444f52ecdd8c41bc4c35abd11d55880f21579fd79446ead5a189
+  checksum: 9f536c636ce303506a432ddd2f8947640cc8b18b4cb7a38a2b118cd43baedfac
 - filename: .infra/env.production.yml
   checksum: e51673f0966269495a6486172e0ed905383b47e77075076ed188895892df4a77
 - filename: .infra/env.recette.yml
