@@ -6,8 +6,6 @@ const config = {
   version: env.get("PUBLIC_VERSION").default("0.0.0-local").asString(),
   env: env.get("MNA_BAL_ENV").required().asEnum(["local", "recette", "production", "preview", "test"]),
   publicUrl: env.get("MNA_BAL_PUBLIC_URL").required().asString(),
-  email: env.get("MNA_BAL_EMAIL").default("contact@apprentissage.beta.gouv.fr").asString(),
-  email_from: env.get("MNA_BAL_EMAIL_FROM").default("Boîte aux lettres").asString(),
   mongodb: {
     uri: env.get("MNA_BAL_MONGODB_URI").required().asString(),
   },
@@ -44,16 +42,6 @@ const config = {
       expiresIn: "1h" as const,
     },
     hashRounds: env.get("MNA_BAL_AUTH_HASH_ROUNDS").default(1000).asIntPositive(),
-  },
-  smtp: {
-    host: env.get("MNA_BAL_SMTP_HOST").required().asString(),
-    port: env.get("MNA_BAL_SMTP_PORT").asString(),
-    secure: env.get("MNA_BAL_SMTP_SECURE").asBool(),
-    webhookKey: env.get("MNA_BAL_SMTP_WEBHOOK_KEY").default("").asString(),
-    auth: {
-      user: env.get("MNA_BAL_SMTP_AUTH_USER").asString(),
-      pass: env.get("MNA_BAL_SMTP_AUTH_PASS").asString(),
-    },
   },
   lba: {
     baseURL: env.get("MNA_BAL_LBA_BASE_URL").default("https://labonnealternance-recette.apprentissage.beta.gouv.fr").asString(),
@@ -134,9 +122,23 @@ const config = {
     },
   },
   brevo: {
+    email: env.get("MNA_BAL_EMAIL").default("contact@apprentissage.beta.gouv.fr").asString(),
+    emailFrom: env.get("MNA_BAL_EMAIL_FROM").default("Boîte aux lettres").asString(),
+    smtp: {
+      host: env.get("MNA_BAL_SMTP_HOST").required().asString(),
+      port: env.get("MNA_BAL_SMTP_PORT").asString(),
+      secure: env.get("MNA_BAL_SMTP_SECURE").asBool(),
+      auth: {
+        user: env.get("MNA_BAL_SMTP_AUTH_USER").asString(),
+        pass: env.get("MNA_BAL_SMTP_AUTH_PASS").asString(),
+      },
+    },
     apiKey: env.get("LBA_BREVO_MARKETING_API_KEY").required().asString(),
-    webhookApiKey: env.get("MNA_BAL_BREVO_WEBHOOK_API_KEY").required().asString(),
     contactListId: env.get("LBA_BREVO_CONTACT_LIST_ID").required().asString(),
+    webhooks: {
+      transactionalKey: env.get("MNA_BAL_SMTP_WEBHOOK_KEY").default("").asString(),
+      hardbounceApiKey: env.get("MNA_BAL_BREVO_WEBHOOK_API_KEY").required().asString(),
+    },
   },
 }
 

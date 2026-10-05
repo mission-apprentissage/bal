@@ -114,7 +114,7 @@ async function authAccessToken<S extends ISecuredRouteSchema>(req: FastifyReques
 function authBrevoApiKey(req: FastifyRequest): UserWithType<"brevo", IBrevo> | null {
   const { apiKey } = req.query as { apiKey: string }
 
-  if (config.brevo.webhookApiKey !== apiKey) {
+  if (config.brevo.webhooks.hardbounceApiKey !== apiKey) {
     throw Boom.forbidden("Invalid API key")
   }
 
