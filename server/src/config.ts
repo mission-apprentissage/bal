@@ -133,8 +133,8 @@ const config = {
         pass: env.get("MNA_BAL_SMTP_AUTH_PASS").asString(),
       },
     },
-    apiKey: env.get("LBA_BREVO_MARKETING_API_KEY").required().asString(),
-    contactListId: env.get("LBA_BREVO_CONTACT_LIST_ID").required().asString(),
+    apiKey: env.get("MNA_BAL_BREVO_API_KEY").required().asString(),
+    contactListId: env.get("MNA_BAL_BREVO_CONTACT_LIST_ID").required().asString(),
     webhooks: {
       transactionalKey: env.get("MNA_BAL_SMTP_WEBHOOK_KEY").default("").asString(),
       hardbounceApiKey: env.get("MNA_BAL_BREVO_WEBHOOK_API_KEY").required().asString(),
