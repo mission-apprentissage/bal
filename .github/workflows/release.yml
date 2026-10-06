@@ -34,7 +34,7 @@ jobs:
     outputs:
       VERSION: ${{ steps.get-version.outputs.VERSION }}
       PREV_VERSION: ${{ steps.get-prev-version.outputs.VERSION }}
-    runs-on: [self-hosted, deploy-lba]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout project
         uses: actions/checkout@v7
@@ -48,6 +48,9 @@ jobs:
           node-version-file: .node-version
 
       - uses: pnpm/action-setup@v6
+
+      - name: Setup sops
+        uses: nhedger/setup-sops@v3
 
       - uses: actions/cache@v6
         with:
