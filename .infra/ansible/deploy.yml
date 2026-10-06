@@ -112,11 +112,6 @@
         chdir: /opt/app
         cmd: "sudo /opt/app/tools/maintenance/maintenance-off.sh"
 
-    - name: "Verification des certificats SSL"
-      shell:
-        chdir: /opt/app
-        cmd: "sudo /opt/app/tools/ssl/renew-certificate.sh {{dns_name}}"
-
     - name: "Setup de la Metabase"
       shell:
         chdir: /opt/app
