@@ -2149,8 +2149,13 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                           },
                           "type": "array",
                         },
+                        "status": {
+                          "const": "valid",
+                          "type": "string",
+                        },
                       },
                       "required": [
+                        "status",
                         "is_valid",
                         "sources",
                       ],
@@ -2166,10 +2171,49 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                           "const": false,
                           "type": "boolean",
                         },
+                        "status": {
+                          "const": "invalid",
+                          "type": "string",
+                        },
                       },
                       "required": [
+                        "status",
                         "is_valid",
                         "is_company_email",
+                      ],
+                      "type": "object",
+                    },
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "is_company_email": {
+                          "type": "boolean",
+                        },
+                        "is_valid": {
+                          "const": false,
+                          "type": "boolean",
+                        },
+                        "status": {
+                          "const": "indeterminate",
+                          "type": "string",
+                        },
+                        "unavailable_sources": {
+                          "items": {
+                            "enum": [
+                              "akto",
+                              "opco_ep",
+                            ],
+                            "type": "string",
+                          },
+                          "minItems": 1,
+                          "type": "array",
+                        },
+                      },
+                      "required": [
+                        "status",
+                        "is_valid",
+                        "is_company_email",
+                        "unavailable_sources",
                       ],
                       "type": "object",
                     },

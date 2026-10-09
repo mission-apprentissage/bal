@@ -6,8 +6,10 @@ import { ApiError, toApiErrorDetails } from "../utils/apiUtils"
 export const AKTO_API_BASE_URL = "https://api.akto.fr/referentiel/api/v1"
 export const AKTO_AUTH_BASE_URL = "https://login.microsoftonline.com"
 
+const TIMEOUT_MS = 5_000
+
 const axiosClient = axios.create({
-  timeout: 5_000,
+  timeout: TIMEOUT_MS,
   baseURL: AKTO_API_BASE_URL,
 })
 
@@ -30,6 +32,7 @@ const getToken = async () => {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
+        timeout: TIMEOUT_MS,
       }
     )
 
@@ -41,24 +44,28 @@ const getToken = async () => {
 }
 
 /**
- * @description Check Akto referential using siren & email submitted by user
- * @param {string} siren
- * @param {string} email
- * @returns {boolean}
+ * Lève une `ApiError` quand AKTO ne répond pas ou répond hors contrat : seul un booléen `match` est une réponse métier.
  */
-export const getAktoVerification = async (siren: string, email: string) => {
+export const getAktoVerification = async (siren: string, email: string): Promise<boolean> => {
   const token_akto = await getToken()
 
+  let data: { data?: { match?: unknown } } | undefined
   try {
-    const { data } = await axiosClient.get(`/Relations/Validation?email=${email}&siren=${siren}`, {
+    const response = await axiosClient.get("/Relations/Validation", {
+      params: { email, siren },
       headers: {
         Authorization: `Bearer ${token_akto.access_token}`,
       },
     })
-
-    return data.data.match
+    data = response.data
   } catch (error) {
     const { message, reason } = toApiErrorDetails(error)
     throw new ApiError("Api Akto", message, reason)
   }
+
+  const match = data?.data?.match
+  if (typeof match !== "boolean") {
+    throw new ApiError("Api Akto", "réponse inattendue")
+  }
+  return match
 }

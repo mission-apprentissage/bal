@@ -3,13 +3,27 @@ import { isCompanyEmail } from "company-email-validator"
 import { addDays } from "date-fns"
 import type { IPostRoutes, IResponse } from "shared"
 import { getSirenFromSiret } from "shared/helpers/common"
+import type { IValidationExternalSource } from "shared/routes/v1/organisation.routes"
 import { getAktoVerification } from "../../common/apis/akto"
 import { getOpcoEpVerification, OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE, OPCO_EP_CODE_RETOUR_EMAIL_TROUVE } from "../../common/apis/opcoEp"
 import { getDbCollection } from "../../common/utils/mongodbUtils"
 import { importOrganisation } from "./organisations.actions"
 import { importPerson } from "./persons.actions"
 
-async function getDbVerification(siret: string, rawEmail: string): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> {
+type IValidationResponse = IResponse<IPostRoutes["/v1/organisation/validation"]>
+type IValidationMatch = "email" | "domain"
+type IExternalVerification = IValidationMatch | "no_match"
+
+// Valeur stockée dans `persons.source` et `organisations.source`, partagée avec les jobs d'import.
+const DB_SOURCE: Record<IValidationExternalSource, string> = {
+  akto: "AKTO",
+  opco_ep: "OPCO_EP",
+}
+
+// cf. `sources` dans le schéma de réponse : les valeurs stockées sont renvoyées en minuscules.
+const toResponseSources = (sources: string[]): string[] => Array.from(new Set(sources.map((source) => source.toLowerCase())))
+
+async function getDbVerification(siret: string, rawEmail: string): Promise<Extract<IValidationResponse, { status: "valid" | "invalid" }>> {
   // TODO: parse email
   const email = rawEmail.toLowerCase()
   const [_user, domain] = email.split("@")
@@ -24,12 +38,11 @@ async function getDbVerification(siret: string, rawEmail: string): Promise<IResp
     .toArray()
 
   if (personsFromEmail.length > 0) {
-    const sources = personsFromEmail.map((p) => p.source)
-
     return {
+      status: "valid",
       is_valid: true,
       on: "email",
-      sources: Array.from(new Set(sources)),
+      sources: toResponseSources(personsFromEmail.map((p) => p.source)),
     }
   }
 
@@ -43,86 +56,73 @@ async function getDbVerification(siret: string, rawEmail: string): Promise<IResp
       .toArray()
 
     if (organisationsFromDomain.length > 0) {
-      const sources = personsFromEmail.map((p) => p.source)
       return {
+        status: "valid",
         is_valid: true,
         on: "domain",
-        sources: Array.from(new Set(sources)),
+        sources: toResponseSources(organisationsFromDomain.map((o) => o.source)),
       }
     }
 
-    return { is_valid: false, is_company_email: true }
+    return { status: "invalid", is_valid: false, is_company_email: true }
   }
 
-  return { is_valid: false, is_company_email: false }
+  return { status: "invalid", is_valid: false, is_company_email: false }
 }
 
-export const validation = async ({ email, siret }: { email: string; siret: string }): Promise<IResponse<IPostRoutes["/v1/organisation/validation"]>> => {
+async function verifyWithAkto(siret: string, email: string): Promise<IExternalVerification> {
+  return (await getAktoVerification(getSirenFromSiret(siret), email)) ? "email" : "no_match"
+}
+
+async function verifyWithOpcoEp(siret: string, email: string): Promise<IExternalVerification> {
+  const { codeRetour } = await getOpcoEpVerification(siret, email)
+  if (codeRetour === OPCO_EP_CODE_RETOUR_EMAIL_TROUVE) return "email"
+  if (codeRetour === OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE) return "domain"
+  return "no_match"
+}
+
+const EXTERNAL_VERIFICATIONS: Array<[IValidationExternalSource, (siret: string, email: string) => Promise<IExternalVerification>]> = [
+  ["akto", verifyWithAkto],
+  ["opco_ep", verifyWithOpcoEp],
+]
+
+// Un échec d'écriture du cache ne doit pas faire perdre la réponse positive du fournisseur.
+async function cacheExternalMatch(source: IValidationExternalSource, on: IValidationMatch, email: string, siret: string) {
+  const data = { email, siret, source: DB_SOURCE[source], ttl: addDays(new Date(), 30) }
+  try {
+    await Promise.all(on === "email" ? [importPerson(data), importOrganisation(data)] : [importOrganisation(data)])
+  } catch (error) {
+    captureException(error, { tags: { module: "validation" } })
+  }
+}
+
+export const validation = async ({ email, siret }: { email: string; siret: string }): Promise<IValidationResponse> => {
   const testDb = await getDbVerification(siret, email)
   if (testDb.is_valid) {
     return testDb
   }
 
-  const siren = getSirenFromSiret(siret)
+  const unavailableSources: IValidationExternalSource[] = []
 
-  try {
-    const testAkto = await getAktoVerification(siren, email)
-    if (testAkto) {
-      const data = { email, siret, source: "AKTO", ttl: addDays(new Date(), 30) }
-      await Promise.all([importPerson(data), importOrganisation(data)])
-
-      return {
-        is_valid: true,
-        on: "email",
-        sources: ["AKTO"],
-      }
+  for (const [source, verify] of EXTERNAL_VERIFICATIONS) {
+    let result: IExternalVerification | "unavailable"
+    try {
+      result = await verify(siret, email)
+    } catch (error) {
+      captureException(error, { tags: { module: "validation" } })
+      result = "unavailable"
     }
-  } catch (error) {
-    captureException(error, {
-      tags: {
-        module: "validation",
-      },
-    })
+
+    if (result === "unavailable") {
+      unavailableSources.push(source)
+    } else if (result !== "no_match") {
+      await cacheExternalMatch(source, result, email, siret)
+      return { status: "valid", is_valid: true, on: result, sources: [source] }
+    }
   }
 
-  try {
-    const testOpcoEp = await getOpcoEpVerification(siret, email)
-    if (testOpcoEp.codeRetour === OPCO_EP_CODE_RETOUR_EMAIL_TROUVE) {
-      const data = {
-        email,
-        siret,
-        source: "OPCO_EP",
-        ttl: addDays(new Date(), 30),
-      }
-      await Promise.all([importPerson(data), importOrganisation(data)])
-
-      return {
-        is_valid: true,
-        on: "email",
-        sources: ["OPCO_EP"],
-      }
-    }
-
-    if (testOpcoEp.codeRetour === OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE) {
-      await importOrganisation({
-        email,
-        siret,
-        source: "OPCO_EP",
-        ttl: addDays(new Date(), 30),
-      })
-
-      return {
-        is_valid: true,
-        on: "domain",
-        sources: ["OPCO_EP"],
-      }
-    }
-  } catch (error) {
-    captureException(error, {
-      tags: {
-        module: "validation",
-      },
-    })
+  if (unavailableSources.length > 0) {
+    return { status: "indeterminate", is_valid: false, is_company_email: testDb.is_company_email, unavailable_sources: unavailableSources }
   }
 
   return testDb
