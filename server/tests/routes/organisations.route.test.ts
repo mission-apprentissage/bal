@@ -1,18 +1,34 @@
 import assert from "node:assert"
 
+import { setTimeout as sleep } from "node:timers/promises"
 import { addDays } from "date-fns"
 import nock from "nock"
-import { afterAll, beforeAll, beforeEach, describe, it, vi } from "vitest"
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
 
+import { AKTO_API_BASE_URL, aktoTokenProvider } from "../../src/common/apis/akto"
+import { opcoEpTokenProvider } from "../../src/common/apis/opcoEp"
+import logger from "../../src/common/logger"
+import config from "../../src/config"
 import { importOrganisation } from "../../src/modules/actions/organisations.actions"
 import * as personsActions from "../../src/modules/actions/persons.actions"
 import { createUser, generateApiKey } from "../../src/modules/actions/users.actions"
+import { resetValidationBreakers } from "../../src/modules/actions/validationProviders"
 import type { Server } from "../../src/modules/server/server"
 import createServer from "../../src/modules/server/server"
 import { aktoMatch, aktoNotMatch, aktoValid } from "../data/akto"
 import { opcoEpEmailOuDomaineInconnu, opcoEpEmailTrouve, opcoEpInvalid, opcoEpSiretInconnu, opcoEpValidDomain, opcoEpValidEmail } from "../data/opcoEp"
-import { aktoTokenErrorMock, aktoTokenMock, aktoVerificationMock, aktoVerificationNetworkErrorMock, aktoVerificationReplyMock } from "../utils/mocks/akto.mock"
-import { opcoEpTokenMock, opcoEpVerificationMock, opcoEpVerificationReplyMock } from "../utils/mocks/opcoEp.mock"
+import {
+  aktoTokenDelayedMock,
+  aktoTokenErrorMock,
+  aktoTokenMock,
+  aktoTokenSequenceMock,
+  aktoVerificationDelayedMock,
+  aktoVerificationMock,
+  aktoVerificationNetworkErrorMock,
+  aktoVerificationReplyMock,
+  aktoVerificationSequenceMock,
+} from "../utils/mocks/akto.mock"
+import { opcoEpTokenMock, opcoEpTokenSequenceMock, opcoEpVerificationMock, opcoEpVerificationReplyMock, opcoEpVerificationSequenceMock } from "../utils/mocks/opcoEp.mock"
 import { useMongo } from "../utils/mongo.utils"
 
 let userToken: string
@@ -37,6 +53,9 @@ describe("Organisations", () => {
 
     userToken = await generateApiKey(user)
     nock.cleanAll()
+    aktoTokenProvider.invalidate()
+    opcoEpTokenProvider.invalidate()
+    resetValidationBreakers()
   })
 
   afterAll(async () => {
@@ -284,6 +303,167 @@ describe("Organisations", () => {
       aktoVerificationReplyMock(emailWithPlus, siren, 200, aktoMatch)
 
       assert.deepEqual(await postValidation({ email: emailWithPlus, siret }), { status: "valid", is_valid: true, on: "email", sources: ["akto"] })
+    })
+  })
+
+  describe("Validation : résilience des fournisseurs", () => {
+    const siret = opcoEpValidEmail.siret
+    const siren = siret.substring(0, 9)
+    const email = "contact@entreprise.exemple.fr"
+    const defaultValidationConfig = { ...config.validation }
+
+    beforeEach(() => {
+      config.validation.retryDelayMs = 0
+    })
+
+    afterEach(() => {
+      Object.assign(config.validation, defaultValidationConfig)
+      vi.restoreAllMocks()
+    })
+
+    const postValidation = async (payload: { email: string; siret: string }) => {
+      const response = await app.inject({
+        method: "POST",
+        url: "/api/v1/organisation/validation",
+        payload,
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+      assert.equal(response.statusCode, 200)
+      return response.json()
+    }
+
+    const mockOpcoEpSiretInconnu = (forEmail = email) => {
+      opcoEpTokenMock()
+      opcoEpVerificationReplyMock(forEmail, siret, 200, opcoEpSiretInconnu)
+    }
+
+    it("retente une fois un 503 d'AKTO puis valide", async () => {
+      aktoTokenMock()
+      const verification = aktoVerificationSequenceMock(email, siren, [{ status: 503 }, { status: 200, body: aktoMatch }])
+
+      assert.deepEqual(await postValidation({ email, siret }), { status: "valid", is_valid: true, on: "email", sources: ["akto"] })
+      assert.equal(verification.isDone(), true)
+    })
+
+    it.each([
+      ["un 401", { status: 401 }, { status: "indeterminate", is_valid: false, is_company_email: true, unavailable_sources: ["akto"] }],
+      ["une réponse métier négative", { status: 200, body: aktoNotMatch }, { status: "invalid", is_valid: false, is_company_email: true }],
+    ])("ne retente pas %s d'AKTO", async (_label, firstReply, expected) => {
+      aktoTokenMock()
+      const verification = aktoVerificationSequenceMock(email, siren, [firstReply, { status: 200, body: aktoMatch }])
+      mockOpcoEpSiretInconnu()
+
+      assert.deepEqual(await postValidation({ email, siret }), expected)
+      assert.equal(verification.pendingMocks().length, 1)
+    })
+
+    it("réutilise le token AKTO d'une validation à l'autre", async () => {
+      const otherEmail = "rh@entreprise.exemple.fr"
+      const token = aktoTokenSequenceMock(1)
+      aktoVerificationReplyMock(email, siren, 200, aktoNotMatch)
+      aktoVerificationReplyMock(otherEmail, siren, 200, aktoNotMatch)
+      mockOpcoEpSiretInconnu()
+      mockOpcoEpSiretInconnu(otherEmail)
+
+      assert.equal((await postValidation({ email, siret })).status, "invalid")
+      assert.equal((await postValidation({ email: otherEmail, siret })).status, "invalid")
+      assert.equal(token.isDone(), true)
+    })
+
+    it("redemande un token AKTO après un 401", async () => {
+      const token = aktoTokenSequenceMock(2)
+      aktoVerificationSequenceMock(email, siren, [{ status: 401 }, { status: 200, body: aktoMatch }])
+      mockOpcoEpSiretInconnu()
+
+      assert.equal((await postValidation({ email, siret })).status, "indeterminate")
+      assert.deepEqual(await postValidation({ email, siret }), { status: "valid", is_valid: true, on: "email", sources: ["akto"] })
+      assert.equal(token.isDone(), true)
+    })
+
+    it("redemande un token OPCO EP après un 401", async () => {
+      aktoTokenMock()
+      aktoVerificationReplyMock(email, siren, 200, aktoNotMatch)
+      const token = opcoEpTokenSequenceMock(2)
+      opcoEpVerificationSequenceMock(email, siret, [{ status: 401 }, { status: 200, body: opcoEpEmailTrouve }])
+
+      assert.equal((await postValidation({ email, siret })).status, "indeterminate")
+      assert.deepEqual(await postValidation({ email, siret }), { status: "valid", is_valid: true, on: "email", sources: ["opco_ep"] })
+      assert.equal(token.isDone(), true)
+    })
+
+    it("coupe un appel de token qui dépasse le timeout par appel", async () => {
+      config.validation.providerTimeoutMs = 100
+      aktoTokenDelayedMock(500)
+      aktoVerificationReplyMock(email, siren, 200, aktoMatch)
+      mockOpcoEpSiretInconnu()
+
+      assert.deepEqual(await postValidation({ email, siret }), { status: "indeterminate", is_valid: false, is_company_email: true, unavailable_sources: ["akto"] })
+    })
+
+    it("répond avant l'échéance de la cascade, sans appeler OPCO EP quand le budget est épuisé", async () => {
+      config.validation.budgetMs = 300
+      aktoTokenMock()
+      aktoVerificationDelayedMock(email, siren, 1_000, aktoMatch)
+      const opcoEpToken = opcoEpTokenMock()
+
+      const startedAt = Date.now()
+      assert.deepEqual(await postValidation({ email, siret }), {
+        status: "indeterminate",
+        is_valid: false,
+        is_company_email: true,
+        unavailable_sources: ["akto", "opco_ep"],
+      })
+      expect(Date.now() - startedAt).toBeLessThan(800)
+      assert.equal(opcoEpToken.isDone(), false)
+    })
+
+    it("n'appelle plus AKTO une fois le circuit ouvert, puis le rappelle après la fenêtre", async () => {
+      config.validation.retries = 0
+      config.validation.breakerThreshold = 2
+      config.validation.breakerCooldownMs = 100
+      let aktoCalls = 0
+      let aktoUp = false
+      aktoTokenMock()
+      nock(AKTO_API_BASE_URL)
+        .persist()
+        .get("/Relations/Validation")
+        .query({ email, siren })
+        .reply(() => {
+          aktoCalls++
+          return aktoUp ? [200, aktoMatch] : [500]
+        })
+      mockOpcoEpSiretInconnu()
+
+      for (let i = 0; i < 3; i++) {
+        assert.deepEqual((await postValidation({ email, siret })).unavailable_sources, ["akto"])
+      }
+      assert.equal(aktoCalls, 2)
+
+      aktoUp = true
+      await sleep(150)
+      assert.deepEqual(await postValidation({ email, siret }), { status: "valid", is_valid: true, on: "email", sources: ["akto"] })
+      assert.equal(aktoCalls, 3)
+    })
+
+    it("journalise chaque appel fournisseur sans donnée de la requête", async () => {
+      const info = vi.spyOn(logger, "info")
+      const warn = vi.spyOn(logger, "warn")
+      aktoTokenMock()
+      aktoVerificationSequenceMock(email, siren, [{ status: 503 }, { status: 200, body: aktoMatch }])
+
+      await postValidation({ email, siret })
+
+      const providerLogs = [...warn.mock.calls, ...info.mock.calls].filter(([, msg]) => msg === "appel fournisseur de validation").map(([entry]) => entry)
+      expect(providerLogs).toEqual([
+        { module: "validation", provider: "akto", outcome: "http_5xx", attempt: 1, duration_ms: expect.any(Number), http_status: 503 },
+        { module: "validation", provider: "akto", outcome: "match", attempt: 2, duration_ms: expect.any(Number) },
+      ])
+      const serialized = JSON.stringify(providerLogs)
+      for (const personalData of [email, siret, siren, "entreprise.exemple.fr"]) {
+        expect(serialized).not.toContain(personalData)
+      }
     })
   })
 })

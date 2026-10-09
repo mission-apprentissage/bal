@@ -81,6 +81,15 @@ const config = {
     clientSecret: env.get("MNA_BAL_OPCO_EP_CLIENT_SECRET").default("").asString(),
     scope: env.get("MNA_BAL_OPCO_EP_SCOPE").default("").asString(),
   },
+  validation: {
+    // Budget de toute la cascade, sous le timeout de 5 s du client LBA.
+    budgetMs: env.get("MNA_BAL_VALIDATION_BUDGET_MS").default(4000).asIntPositive(),
+    providerTimeoutMs: env.get("MNA_BAL_VALIDATION_PROVIDER_TIMEOUT_MS").default(2000).asIntPositive(),
+    retries: env.get("MNA_BAL_VALIDATION_RETRIES").default(1).asIntPositive(),
+    retryDelayMs: env.get("MNA_BAL_VALIDATION_RETRY_DELAY_MS").default(200).asIntPositive(),
+    breakerThreshold: env.get("MNA_BAL_VALIDATION_BREAKER_THRESHOLD").default(5).asIntPositive(),
+    breakerCooldownMs: env.get("MNA_BAL_VALIDATION_BREAKER_COOLDOWN_MS").default(60_000).asIntPositive(),
+  },
   decaApi: {
     endpoint: env.get("MNA_BAL_API_DECA_URL").required().asString(),
     loginLba: env.get("MNA_BAL_API_DECA_LOGIN_LBA").required().asString(),

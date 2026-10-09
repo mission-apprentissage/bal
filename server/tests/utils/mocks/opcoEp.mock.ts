@@ -19,6 +19,24 @@ export const opcoEpTokenMock = () => {
   return nock(OPCO_EP_AUTH_BASE_URL).persist().post("/auth/realms/partenaires-etatiques/protocol/openid-connect/token").reply(200, opcoEptoken)
 }
 
+/** Une réponse par appel, dans l'ordre : un appel de trop ne trouve aucun mock. */
+export const opcoEpTokenSequenceMock = (count: number) => {
+  const scope = nock(OPCO_EP_AUTH_BASE_URL)
+  for (let i = 0; i < count; i++) {
+    scope.post("/auth/realms/partenaires-etatiques/protocol/openid-connect/token").reply(200, opcoEptoken)
+  }
+  return scope
+}
+
+/** Une réponse par appel, dans l'ordre : un appel de trop ne trouve aucun mock. */
+export const opcoEpVerificationSequenceMock = (email: string, siret: string, replies: Array<{ status: number; body?: nock.Body }>) => {
+  const scope = nock(OPCO_EP_BASE_URL)
+  for (const { status, body } of replies) {
+    scope.get("/apis/referentiel-entreprise/v2/entreprises/securisation-echange").query({ email, siret }).reply(status, body)
+  }
+  return scope
+}
+
 export const opcoEpVerificationMock = (email: string, siret: string) => {
   let response = opcoEpSiretInconnu
 

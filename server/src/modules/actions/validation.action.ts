@@ -7,12 +7,13 @@ import type { IValidationExternalSource } from "shared/routes/v1/organisation.ro
 import { getAktoVerification } from "../../common/apis/akto"
 import { getOpcoEpVerification, OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE, OPCO_EP_CODE_RETOUR_EMAIL_TROUVE } from "../../common/apis/opcoEp"
 import { getDbCollection } from "../../common/utils/mongodbUtils"
+import config from "../../config"
 import { importOrganisation } from "./organisations.actions"
 import { importPerson } from "./persons.actions"
+import type { IExternalVerification, IValidationMatch } from "./validationProviders"
+import { callValidationProvider } from "./validationProviders"
 
 type IValidationResponse = IResponse<IPostRoutes["/v1/organisation/validation"]>
-type IValidationMatch = "email" | "domain"
-type IExternalVerification = IValidationMatch | "no_match"
 
 // Valeur stockée dans `persons.source` et `organisations.source`, partagée avec les jobs d'import.
 const DB_SOURCE: Record<IValidationExternalSource, string> = {
@@ -70,18 +71,18 @@ async function getDbVerification(siret: string, rawEmail: string): Promise<Extra
   return { status: "invalid", is_valid: false, is_company_email: false }
 }
 
-async function verifyWithAkto(siret: string, email: string): Promise<IExternalVerification> {
-  return (await getAktoVerification(getSirenFromSiret(siret), email)) ? "email" : "no_match"
+async function verifyWithAkto(siret: string, email: string, deadline: number): Promise<IExternalVerification> {
+  return (await getAktoVerification(getSirenFromSiret(siret), email, deadline)) ? "email" : "no_match"
 }
 
-async function verifyWithOpcoEp(siret: string, email: string): Promise<IExternalVerification> {
-  const { codeRetour } = await getOpcoEpVerification(siret, email)
+async function verifyWithOpcoEp(siret: string, email: string, deadline: number): Promise<IExternalVerification> {
+  const { codeRetour } = await getOpcoEpVerification(siret, email, deadline)
   if (codeRetour === OPCO_EP_CODE_RETOUR_EMAIL_TROUVE) return "email"
   if (codeRetour === OPCO_EP_CODE_RETOUR_DOMAINE_IDENTIQUE) return "domain"
   return "no_match"
 }
 
-const EXTERNAL_VERIFICATIONS: Array<[IValidationExternalSource, (siret: string, email: string) => Promise<IExternalVerification>]> = [
+const EXTERNAL_VERIFICATIONS: Array<[IValidationExternalSource, (siret: string, email: string, deadline: number) => Promise<IExternalVerification>]> = [
   ["akto", verifyWithAkto],
   ["opco_ep", verifyWithOpcoEp],
 ]
@@ -97,6 +98,7 @@ async function cacheExternalMatch(source: IValidationExternalSource, on: IValida
 }
 
 export const validation = async ({ email, siret }: { email: string; siret: string }): Promise<IValidationResponse> => {
+  const deadline = Date.now() + config.validation.budgetMs
   const testDb = await getDbVerification(siret, email)
   if (testDb.is_valid) {
     return testDb
@@ -105,13 +107,7 @@ export const validation = async ({ email, siret }: { email: string; siret: strin
   const unavailableSources: IValidationExternalSource[] = []
 
   for (const [source, verify] of EXTERNAL_VERIFICATIONS) {
-    let result: IExternalVerification | "unavailable"
-    try {
-      result = await verify(siret, email)
-    } catch (error) {
-      captureException(error, { tags: { module: "validation" } })
-      result = "unavailable"
-    }
+    const result = await callValidationProvider(source, () => verify(siret, email, deadline), deadline)
 
     if (result === "unavailable") {
       unavailableSources.push(source)
