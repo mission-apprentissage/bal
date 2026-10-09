@@ -15,8 +15,8 @@ import {
 const opcoEpVerificationScope = (email: string, siret: string) =>
   nock(OPCO_EP_BASE_URL).persist().get("/apis/referentiel-entreprise/v2/entreprises/securisation-echange").query({ email, siret })
 
-export const opcoEpTokenMock = () => {
-  return nock(OPCO_EP_AUTH_BASE_URL).persist().post("/auth/realms/partenaires-etatiques/protocol/openid-connect/token").reply(200, opcoEptoken)
+export const opcoEpTokenMock = (token: nock.Body = opcoEptoken) => {
+  return nock(OPCO_EP_AUTH_BASE_URL).persist().post("/auth/realms/partenaires-etatiques/protocol/openid-connect/token").reply(200, token)
 }
 
 /** Une réponse par appel, dans l'ordre : un appel de trop ne trouve aucun mock. */

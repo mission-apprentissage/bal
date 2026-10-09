@@ -19,8 +19,8 @@ const aktoTokenScope = () =>
 
 const aktoVerificationScope = (email: string, siren: string) => nock(AKTO_API_BASE_URL).persist().get("/Relations/Validation").query({ email, siren })
 
-export const aktoTokenMock = () => {
-  return aktoTokenScope().reply(200, aktoToken)
+export const aktoTokenMock = (token: nock.Body = aktoToken) => {
+  return aktoTokenScope().reply(200, token)
 }
 
 export const aktoTokenErrorMock = (status: number) => {

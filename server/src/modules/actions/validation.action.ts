@@ -1,4 +1,4 @@
-import { captureException } from "@sentry/node"
+import { captureException, getIsolationScope } from "@sentry/node"
 import { isCompanyEmail } from "company-email-validator"
 import { addDays } from "date-fns"
 import type { IPostRoutes, IResponse } from "shared"
@@ -11,7 +11,7 @@ import config from "../../config"
 import { importOrganisation } from "./organisations.actions"
 import { importPerson } from "./persons.actions"
 import type { IExternalVerification, IValidationMatch } from "./validationProviders"
-import { callValidationProvider } from "./validationProviders"
+import { callValidationProvider, getValidationSentryContext } from "./validationProviders"
 
 type IValidationResponse = IResponse<IPostRoutes["/v1/organisation/validation"]>
 
@@ -93,13 +93,27 @@ async function cacheExternalMatch(source: IValidationExternalSource, on: IValida
   try {
     await Promise.all(on === "email" ? [importPerson(data), importOrganisation(data)] : [importOrganisation(data)])
   } catch (error) {
-    captureException(error, { tags: { module: "validation" } })
+    // Une erreur d'écriture MongoDB embarque l'opération (e-mail, SIRET) : seuls son nom et son code sont remontés.
+    const name = error instanceof Error ? error.name : "UnknownError"
+    const code = (error as { code?: unknown })?.code
+    captureException(
+      new Error(`écriture du cache de validation impossible (${name})`),
+      getValidationSentryContext("internal", "cache_write", { source, error_name: name, error_code: typeof code === "number" || typeof code === "string" ? code : undefined })
+    )
   }
 }
 
 export const validation = async ({ email, siret }: { email: string; siret: string }): Promise<IValidationResponse> => {
   const deadline = Date.now() + config.validation.budgetMs
-  const testDb = await getDbVerification(siret, email)
+  let testDb: Awaited<ReturnType<typeof getDbVerification>>
+  try {
+    testDb = await getDbVerification(siret, email)
+  } catch (error) {
+    // L'erreur remonte en 500 et le gestionnaire d'erreurs la capture : la portée de la requête porte le contexte.
+    const { tags, contexts, fingerprint } = getValidationSentryContext("internal", "database", {})
+    getIsolationScope().setTags(tags).setContext("validation", contexts.validation).setFingerprint(fingerprint)
+    throw error
+  }
   if (testDb.is_valid) {
     return testDb
   }
