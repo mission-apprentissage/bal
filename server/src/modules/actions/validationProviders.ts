@@ -1,11 +1,14 @@
 import { setTimeout as sleep } from "node:timers/promises"
-import { captureException } from "@sentry/node"
+import { captureException, captureMessage } from "@sentry/node"
 import type { IValidationExternalSource } from "shared/routes/v1/organisation.routes"
 import { BudgetExhaustedError } from "@/common/apis/providerRequest"
 import logger from "@/common/logger"
 import { ApiError } from "@/common/utils/apiUtils"
 import { CircuitBreaker } from "@/common/utils/circuitBreaker"
 import config from "@/config"
+
+/** Sous-source de la cascade, telle que remontée à Sentry et dans les logs. */
+export type IValidationSubSource = "internal" | IValidationExternalSource
 
 export type IValidationMatch = "email" | "domain"
 export type IExternalVerification = IValidationMatch | "no_match"
@@ -47,6 +50,19 @@ function categorizeFailure(error: unknown): { outcome: IFailureOutcome; httpStat
     return { outcome: TIMEOUT_CODES.has(reason) ? "timeout" : "network" }
   }
   return { outcome: "unexpected" }
+}
+
+/**
+ * Tags, contexte et empreinte d'un incident de validation : un groupe Sentry par sous-source et par catégorie.
+ * Aucune donnée de la requête (e-mail, SIRET) n'y figure.
+ */
+export function getValidationSentryContext(provider: IValidationSubSource, outcome: string, details: Record<string, string | number | undefined>) {
+  const definedDetails = Object.fromEntries(Object.entries(details).filter(([, value]) => value !== undefined))
+  return {
+    tags: { module: "validation", provider, outcome },
+    contexts: { validation: { provider, outcome, ...definedDetails } },
+    fingerprint: ["validation", provider, outcome],
+  }
 }
 
 // Une ligne par appel, lue dans Loki : rien de la requête (e-mail, SIRET) n'y figure.
@@ -101,8 +117,12 @@ export async function callValidationProvider(
       } else {
         if (breaker.recordFailure()) {
           logger.warn({ module: "validation", provider }, "circuit ouvert sur le fournisseur de validation")
+          captureMessage("circuit ouvert sur le fournisseur de validation", {
+            level: "warning",
+            ...getValidationSentryContext(provider, "circuit_open", {}),
+          })
         }
-        captureException(error, { tags: { module: "validation" } })
+        captureException(error, getValidationSentryContext(provider, outcome, { http_status: httpStatus, duration_ms: Date.now() - startedAt, attempts: attempt }))
       }
       return "unavailable"
     }
