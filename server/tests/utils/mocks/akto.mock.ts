@@ -27,6 +27,19 @@ export const aktoTokenErrorMock = (status: number) => {
   return aktoTokenScope().reply(status)
 }
 
+export const aktoTokenDelayedMock = (delayMs: number) => {
+  return aktoTokenScope().delay(delayMs).reply(200, aktoToken)
+}
+
+/** Une réponse par appel, dans l'ordre : un appel de trop ne trouve aucun mock. */
+export const aktoTokenSequenceMock = (count: number) => {
+  const scope = nock(AKTO_AUTH_BASE_URL)
+  for (let i = 0; i < count; i++) {
+    scope.post("/0285c9cb-dd17-4c1e-9621-c83e9204ad68/oauth2/v2.0/token").reply(200, aktoToken)
+  }
+  return scope
+}
+
 export const aktoVerificationMock = (email: string, siren: string) => {
   let response = aktoNotMatch
 
@@ -38,6 +51,19 @@ export const aktoVerificationMock = (email: string, siren: string) => {
 
 export const aktoVerificationReplyMock = (email: string, siren: string, status: number, body?: nock.Body) => {
   return aktoVerificationScope(email, siren).reply(status, body)
+}
+
+export const aktoVerificationDelayedMock = (email: string, siren: string, delayMs: number, body: nock.Body) => {
+  return aktoVerificationScope(email, siren).delay(delayMs).reply(200, body)
+}
+
+/** Une réponse par appel, dans l'ordre : un appel de trop ne trouve aucun mock. */
+export const aktoVerificationSequenceMock = (email: string, siren: string, replies: Array<{ status: number; body?: nock.Body }>) => {
+  const scope = nock(AKTO_API_BASE_URL)
+  for (const { status, body } of replies) {
+    scope.get("/Relations/Validation").query({ email, siren }).reply(status, body)
+  }
+  return scope
 }
 
 export const aktoVerificationNetworkErrorMock = (email: string, siren: string) => {
