@@ -401,6 +401,17 @@ describe("Organisations", () => {
       assert.deepEqual(await postValidation({ email, siret }), { status: "indeterminate", is_valid: false, is_company_email: true, unavailable_sources: ["akto"] })
     })
 
+    it("ne retente pas un timeout d'AKTO et laisse le budget restant à OPCO EP", async () => {
+      config.validation.budgetMs = 400
+      config.validation.providerTimeoutMs = 200
+      aktoTokenMock()
+      aktoVerificationDelayedMock(email, siren, 300, aktoNotMatch)
+      opcoEpTokenMock()
+      opcoEpVerificationReplyMock(email, siret, 200, opcoEpEmailTrouve)
+
+      assert.deepEqual(await postValidation({ email, siret }), { status: "valid", is_valid: true, on: "email", sources: ["opco_ep"] })
+    })
+
     it("répond avant l'échéance de la cascade, sans appeler OPCO EP quand le budget est épuisé", async () => {
       config.validation.budgetMs = 300
       aktoTokenMock()

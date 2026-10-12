@@ -13,7 +13,8 @@ export type IExternalVerification = IValidationMatch | "no_match"
 type IFailureOutcome = "timeout" | "network" | "http_5xx" | "http_auth" | "http_4xx" | "unexpected" | "budget_exhausted"
 type IProviderCallOutcome = "match" | "no_match" | "circuit_open" | IFailureOutcome
 
-const RETRYABLE_OUTCOMES: ReadonlySet<IProviderCallOutcome> = new Set(["timeout", "network", "http_5xx"])
+// Pas de nouvelle tentative sur un timeout : elle consommerait le reste du budget et priverait le fournisseur suivant de réponse.
+const RETRYABLE_OUTCOMES: ReadonlySet<IProviderCallOutcome> = new Set(["network", "http_5xx"])
 const TIMEOUT_CODES: ReadonlySet<string> = new Set(["ECONNABORTED", "ETIMEDOUT"])
 
 const getBreakerOptions = () => ({ threshold: config.validation.breakerThreshold, cooldownMs: config.validation.breakerCooldownMs })
