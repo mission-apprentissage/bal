@@ -455,6 +455,31 @@ describe("Organisations", () => {
       assert.equal(aktoCalls, 3)
     })
 
+    it.each([
+      [400, 3],
+      [500, 2],
+    ])("après des réponses %i, n'ouvre le circuit que sur une panne du fournisseur (%i appels sur 3 validations)", async (httpStatus, expectedCalls) => {
+      config.validation.retries = 0
+      config.validation.breakerThreshold = 2
+      config.validation.breakerCooldownMs = 60_000
+      let aktoCalls = 0
+      aktoTokenMock()
+      nock(AKTO_API_BASE_URL)
+        .persist()
+        .get("/Relations/Validation")
+        .query({ email, siren })
+        .reply(() => {
+          aktoCalls++
+          return [httpStatus]
+        })
+      mockOpcoEpSiretInconnu()
+
+      for (let i = 0; i < 3; i++) {
+        assert.deepEqual((await postValidation({ email, siret })).unavailable_sources, ["akto"])
+      }
+      assert.equal(aktoCalls, expectedCalls)
+    })
+
     it("journalise chaque appel fournisseur sans donnée de la requête", async () => {
       const info = vi.spyOn(logger, "info")
       const warn = vi.spyOn(logger, "warn")

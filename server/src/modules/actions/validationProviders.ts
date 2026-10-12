@@ -30,6 +30,16 @@ export const resetValidationBreakers = () => {
   breakers.opco_ep = new CircuitBreaker(getBreakerOptions)
 }
 
+// Une 4xx autre qu'un refus d'authentification tient à la requête (e-mail atypique...), pas à la santé du fournisseur :
+// elle ne compte pas pour le circuit, sinon quelques saisies atypiques suffiraient à le couper.
+function recordBreakerFailure(breaker: CircuitBreaker, outcome: IFailureOutcome): boolean {
+  if (outcome === "http_4xx") {
+    breaker.release()
+    return false
+  }
+  return breaker.recordFailure()
+}
+
 function categorizeFailure(error: unknown): { outcome: IFailureOutcome; httpStatus?: number | undefined } {
   if (error instanceof BudgetExhaustedError) {
     return { outcome: "budget_exhausted" }
@@ -100,7 +110,7 @@ export async function callValidationProvider(
       if (outcome === "budget_exhausted") {
         breaker.release()
       } else {
-        if (breaker.recordFailure()) {
+        if (recordBreakerFailure(breaker, outcome)) {
           logger.warn({ module: "validation", provider }, "circuit ouvert sur le fournisseur de validation")
         }
         captureException(error, { tags: { module: "validation" } })
