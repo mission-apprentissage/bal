@@ -94,8 +94,9 @@ export async function setupJobProcessor() {
             },
             "Récupération couples siret-email datagouv": {
               cron_string: "0 10 * * SUN",
-              handler: hydrateDataGouv,
-              maxRuntimeInMinutes: 15,
+              handler: async (signal) => hydrateDataGouv(signal),
+              // Couvre les trois tentatives de hydrateDataGouv et leurs délais (cf. RETRY_DELAYS_MS)
+              maxRuntimeInMinutes: 30,
             },
             "Import company emails for LBA mailing": {
               cron_string: "30 10 * * SUN",
@@ -229,7 +230,7 @@ export async function setupJobProcessor() {
         resumable: true,
       },
       "hydrate:datagouv": {
-        handler: hydrateDataGouv,
+        handler: async (_job, signal) => hydrateDataGouv(signal),
       },
       "storage:upload": {
         handler: async (job) => uploadFileToStorage(job.payload),
