@@ -4,8 +4,8 @@ import { POST } from "./route"
 
 const EVENT = JSON.stringify({ n: "pageview", u: "https://bal.apprentissage.beta.gouv.fr/", d: "bal.apprentissage.beta.gouv.fr", r: null })
 
-function buildRequest(headers: Record<string, string>): Request {
-  return new Request("https://bal.apprentissage.beta.gouv.fr/proxy/api/event", { method: "POST", headers, body: EVENT })
+function buildRequest(headers: Record<string, string>, body: string = EVENT): Request {
+  return new Request("https://bal.apprentissage.beta.gouv.fr/proxy/api/event", { method: "POST", headers, body })
 }
 
 describe("POST /proxy/api/event", () => {
@@ -41,6 +41,23 @@ describe("POST /proxy/api/event", () => {
 
     const headers = new Headers(fetchMock.mock.calls[0][1]?.headers)
     expect([...headers.keys()]).toEqual(["content-type"])
+  })
+
+  it("refuse un corps au-delà de 64 Ko sans appeler Plausible", async () => {
+    const response = await POST(buildRequest({ "content-type": "text/plain" }, "a".repeat(64 * 1024 + 1)))
+
+    expect(response.status).toBe(413)
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it("relaie un corps d'exactement 64 Ko", async () => {
+    fetchMock.mockResolvedValue(new Response("ok", { status: 202 }))
+    const body = "é".repeat(32 * 1024)
+
+    const response = await POST(buildRequest({ "content-type": "text/plain" }, body))
+
+    expect(response.status).toBe(202)
+    expect(fetchMock.mock.calls[0][1]?.body).toBe(body)
   })
 
   it("renvoie le statut d'erreur de Plausible tel quel", async () => {
