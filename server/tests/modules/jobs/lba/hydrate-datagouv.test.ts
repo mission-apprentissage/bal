@@ -90,13 +90,16 @@ describe("hydrateDataGouv", () => {
     expect(vi.mocked(sleep).mock.calls.map(([ms]) => ms)).toEqual([30_000, 120_000])
   })
 
-  it("ne rejoue pas une erreur client", async () => {
-    fetchMock.mockResolvedValue(new Response("", { status: 404, statusText: "Not Found" }))
+  it("ne rejoue pas une erreur client et libère le corps de la réponse", async () => {
+    const cancel = vi.fn()
+    const body = new ReadableStream<Uint8Array>({ cancel })
+    fetchMock.mockResolvedValue(new Response(body, { status: 404, statusText: "Not Found" }))
 
     await expect(hydrateDataGouv()).rejects.toThrow("Failed to fetch data: 404 Not Found")
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
     expect(sleep).not.toHaveBeenCalled()
+    expect(cancel).toHaveBeenCalled()
   })
 
   it("ne rejoue pas un TypeError qui ne vient pas du réseau", async () => {

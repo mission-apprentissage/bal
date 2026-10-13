@@ -31,7 +31,7 @@ class DataGouvHttpError extends Error {
 }
 
 // undici lève un TypeError "fetch failed" quand la connexion échoue et "terminated" quand le flux est coupé
-// en cours de lecture (BAL-API-CE65CDM). Les autres TypeError sont des bugs : les rejouer ne sert à rien.
+// en cours de lecture. Les autres TypeError sont des bugs : les rejouer ne sert à rien.
 function isRetryableError(error: unknown): boolean {
   if (error instanceof DataGouvHttpError) {
     return error.status >= 500 || error.status === 429
@@ -59,6 +59,7 @@ export const hydrateDataGouv = async (signal: AbortSignal | null = null): Promis
 const importDataGouv = async (signal: AbortSignal | null): Promise<void> => {
   const response = await fetch(DATAGOUV_URL, { signal })
   if (!response.ok) {
+    await response.body?.cancel()
     throw new DataGouvHttpError(response.status, response.statusText)
   }
 
