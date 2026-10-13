@@ -2,54 +2,38 @@ import * as Sentry from "@sentry/node"
 import type { FastifyRequest } from "fastify"
 import type { Server } from "../../../modules/server/server"
 
-type UserData = {
-  id?: string | number
-  username: string
-  email?: string
-} & Record<string, unknown>
-
-function extractUserData(request: FastifyRequest): UserData {
+// Le compte appelant n'est remonté que par son identifiant, jamais par son e-mail.
+function extractUserData(request: FastifyRequest): Sentry.User {
   const user = request.user
 
   if (!user) {
-    // @ts-expect-error
-    return {
-      segment: "anonymous",
-    }
+    return { segment: "anonymous" }
   }
-
   if (user.type === "token") {
-    const identity = user.value.identity
-    return {
-      segment: "access-token",
-      id: identity.email,
-      email: identity.email,
-      username: identity.email,
-    }
+    return { segment: "access-token" }
   }
-
-  const data: UserData = {
-    segment: "session",
+  if (user.type === "brevo") {
+    return { segment: "brevo" }
+  }
+  return {
+    segment: "user",
     id: user.value._id.toString(),
-    username: user.value.email ?? user.value._id.toString(),
     type: user.value.is_admin ? "admin" : "standard",
   }
-
-  if (user.value.email) {
-    data.email = user.value.email
-  }
-
-  return data
 }
 
 export function initSentryFastify(app: Server) {
   app.addHook("onRequest", async (request, _reply) => {
-    const scope = Sentry.getIsolationScope()
-    scope
-      .setUser(extractUserData(request))
+    Sentry.getIsolationScope()
       .setExtra("headers", request.headers)
       .setExtra("method", request.method)
       .setExtra("protocol", request.protocol)
-      .setExtra("query_string", request.query)
+      // Les valeurs de la query peuvent être des données personnelles (cf. scrubCommonEventData) : seuls les noms de paramètres sont gardés.
+      .setExtra("query_keys", Object.keys((request.query as Record<string, unknown> | undefined) ?? {}))
+  })
+
+  // Les routes s'authentifient dans leur propre `onRequest`, exécuté après les hooks globaux : l'utilisateur n'est connu qu'ici.
+  app.addHook("preHandler", async (request, _reply) => {
+    Sentry.getIsolationScope().setUser(extractUserData(request))
   })
 }
