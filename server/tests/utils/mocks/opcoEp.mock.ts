@@ -12,6 +12,9 @@ import {
   opcoEpValidEmail,
 } from "../../data/opcoEp"
 
+const opcoEpVerificationScope = (email: string, siret: string) =>
+  nock(OPCO_EP_BASE_URL).persist().get("/apis/referentiel-entreprise/v2/entreprises/securisation-echange").query({ email, siret })
+
 export const opcoEpTokenMock = () => {
   return nock(OPCO_EP_AUTH_BASE_URL).persist().post("/auth/realms/partenaires-etatiques/protocol/openid-connect/token").reply(200, opcoEptoken)
 }
@@ -31,5 +34,9 @@ export const opcoEpVerificationMock = (email: string, siret: string) => {
     response = opcoEpEmailOuDomaineInconnu
   }
 
-  return nock(OPCO_EP_BASE_URL).persist().get("/apis/referentiel-entreprise/v2/entreprises/securisation-echange").query({ email, siret }).reply(200, response)
+  return opcoEpVerificationScope(email, siret).reply(200, response)
+}
+
+export const opcoEpVerificationReplyMock = (email: string, siret: string, status: number, body?: nock.Body) => {
+  return opcoEpVerificationScope(email, siret).reply(status, body)
 }
