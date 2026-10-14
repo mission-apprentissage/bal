@@ -144,4 +144,3 @@ jobs:
       app_version: ${{ needs.release.outputs.VERSION }}
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-      OPENPGP_PRIVATE_SUBKEY: ${{ secrets.OPENPGP_PRIVATE_SUBKEY }}
