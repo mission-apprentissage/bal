@@ -27,12 +27,6 @@ on:
         required: false
         default: latest
     secrets:
-      DEPLOY_SSH_PRIVATE_KEY:
-        description: SSH private key
-        required: true
-      DEPLOY_PASS:
-        description: SSH PWD TO DEPLOY
-        required: true
       SLACK_WEBHOOK:
         description: Slack webhook URL
         required: true
@@ -69,7 +63,7 @@ jobs:
         run: .bin/mna app:deploy ${{ inputs.environment }} --extra-vars "app_version=${{ inputs.app_version }}"
         env:
           ANSIBLE_REMOTE_USER: runner-deploy
-          ANSIBLE_BECOME_PASS: ${{ secrets.DEPLOY_PASS }}
+          ANSIBLE_SKIP_GALAXY: "true"
 
       - name: Encrypt logs
         run: .bin/mna app:deploy:log:encrypt
