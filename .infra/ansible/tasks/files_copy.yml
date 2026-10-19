@@ -68,13 +68,13 @@
     - "{{ inventory_dir }}/../docker-compose.production.yml"
   when: env_type != 'preview'
 
-- name: copy du fichier recette docker compose
+- name: copy du fichier staging docker compose
   ansible.builtin.template:
     src: "{{ item }}"
-    dest: "/opt/app/docker-compose.recette.yml"
+    dest: "/opt/app/docker-compose.staging.yml"
   with_fileglob:
-    - "{{ inventory_dir }}/../docker-compose.recette.yml"
-  when: env_type == 'recette'
+    - "{{ inventory_dir }}/../docker-compose.staging.yml"
+  when: env_type == 'staging'
 
 - name: creation du fichier docker compose preview system
   ansible.builtin.template:

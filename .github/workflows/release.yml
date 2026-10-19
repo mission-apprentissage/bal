@@ -137,10 +137,10 @@ jobs:
     concurrency:
       group: "deploy-${{ github.workflow }}-${{ github.ref }}"
     needs: ["release"]
-    name: Deploy ${{ needs.release.outputs.VERSION }} on recette
+    name: Deploy ${{ needs.release.outputs.VERSION }} on staging
     uses: "./.github/workflows/_deploy.yml"
     with:
-      environment: recette
+      environment: staging
       app_version: ${{ needs.release.outputs.VERSION }}
     secrets:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

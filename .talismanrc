@@ -7,7 +7,7 @@ fileignoreconfig:
   checksum: 9f536c636ce303506a432ddd2f8947640cc8b18b4cb7a38a2b118cd43baedfac
 - filename: .infra/env.production.yml
   checksum: e51673f0966269495a6486172e0ed905383b47e77075076ed188895892df4a77
-- filename: .infra/env.recette.yml
+- filename: .infra/env.staging.yml
   checksum: 6f2e6356c3ca27e6fd53801b873adebb28d6255758642776efbfac2fc2595107
 scopeconfig:
 - scope: node

@@ -8,7 +8,7 @@ on:
         required: true
         options:
           - production
-          - recette
+          - staging
       app_version:
         description: app version
         type: string

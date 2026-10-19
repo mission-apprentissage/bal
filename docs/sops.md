@@ -6,7 +6,7 @@ Les variables d'environnement sont réparties dans des fichiers spécifiques à 
 
 - `.infra/env.global.yml` : variables d'environnement globales
 - `.infra/env.production.yml` : environnement de production
-- `.infra/env.recette.yml` : environnement de recette
+- `.infra/env.staging.yml` : environnement de staging
 - `.infra/env.preview.yml` : environnement de prévisualisation
 - `.infra/env.local.yml` : environnement de développement local
 
