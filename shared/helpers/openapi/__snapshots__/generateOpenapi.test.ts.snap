@@ -1769,10 +1769,11 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
                     "env": {
                       "enum": [
                         "local",
+                        "test",
+                        "preview",
+                        "staging",
                         "recette",
                         "production",
-                        "preview",
-                        "test",
                       ],
                       "type": "string",
                     },
