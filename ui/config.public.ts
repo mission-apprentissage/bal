@@ -5,7 +5,7 @@ interface PublicConfig {
   host: string
   baseUrl: string
   apiEndpoint: string
-  env: "local" | "preview" | "recette" | "production"
+  env: "local" | "preview" | "staging" | "recette" | "production"
   version: string
 }
 
@@ -34,6 +34,21 @@ function getRecettePublicConfig(): PublicConfig {
     host,
     baseUrl: `https://${host}`,
     env: "recette",
+    apiEndpoint: `https://${host}/api`,
+    version: getVersion(),
+  }
+}
+
+function getStagingPublicConfig(): PublicConfig {
+  const host = "bal-recette.apprentissage.beta.gouv.fr"
+
+  return {
+    sentry: {
+      dsn: "https://9517661db1de4c869b89a1a1a8678480@sentry.apprentissage.beta.gouv.fr/3",
+    },
+    host,
+    baseUrl: `https://${host}`,
+    env: "staging",
     apiEndpoint: `https://${host}/api`,
     version: getVersion(),
   }
@@ -89,6 +104,7 @@ function getEnv(): PublicConfig["env"] {
   const env = process.env.NEXT_PUBLIC_ENV
   switch (env) {
     case "production":
+    case "staging":
     case "recette":
     case "preview":
     case "local":
@@ -102,6 +118,8 @@ function getPublicConfig(): PublicConfig {
   switch (getEnv()) {
     case "production":
       return getProductionPublicConfig()
+    case "staging":
+      return getStagingPublicConfig()
     case "recette":
       return getRecettePublicConfig()
     case "preview":

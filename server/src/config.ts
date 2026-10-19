@@ -4,7 +4,7 @@ const config = {
   appName: env.get("APP_NAME").default("bal").asString(),
   port: env.get("MNA_BAL_SERVER_PORT").default(5000).asPortNumber(),
   version: env.get("PUBLIC_VERSION").default("0.0.0-local").asString(),
-  env: env.get("MNA_BAL_ENV").required().asEnum(["local", "recette", "production", "preview", "test"]),
+  env: env.get("MNA_BAL_ENV").required().asEnum(["local", "test", "preview", "staging", "recette", "production"]),
   publicUrl: env.get("MNA_BAL_PUBLIC_URL").required().asString(),
   mongodb: {
     uri: env.get("MNA_BAL_MONGODB_URI").required().asString(),
