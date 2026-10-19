@@ -11,10 +11,10 @@
         "ui-production"
       ]
     },
-    "recette": {
+    "staging": {
       "targets": [
         "server",
-        "ui-recette"
+        "ui-staging"
       ]
     },
     "preview": {
@@ -70,7 +70,7 @@
       "matrix": {
         "ENV": [
           "production",
-          "recette",
+          "staging",
           "preview",
           "local"
         ]

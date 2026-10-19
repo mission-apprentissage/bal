@@ -16,7 +16,7 @@ _Windows 10/Windows 7/..._
 _Firefox 96.0/Chrome 32/..._
 
 **Environnement**
-_production/recette/dev_
+_production/staging/dev_
 
 **Description du problème**
 _L'utilisateur CMA n'arrive pas à chercher un organisme dans le filtre CFA_

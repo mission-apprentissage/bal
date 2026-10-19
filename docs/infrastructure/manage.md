@@ -41,7 +41,7 @@ dans ce fichier en renseignant les informations suivantes :
 [<nom de l'environnement>:vars]
 dns_name=bal-<nom de l'environnement>.apprentissage.beta.gouv.fr
 host_name=bal-<nom de l'environnement>
-env_type=recette
+env_type=staging
 ```
 
 Pour information, vous pouvez obtenir l'adresse ip du vps en consultant les emails de

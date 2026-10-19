@@ -19,7 +19,7 @@ shift 1
 export COMMIT_HASH="${1:?"Veuillez préciser le hash du commit"}"
 shift 1
 
-environement=${1:?"Veuillez spécifier l'environnement à build (production, recette, preview, local)"}
+environement=${1:?"Veuillez spécifier l'environnement à build (production, staging, preview, local)"}
 shift 1
 
 get_channel() {

@@ -27,4 +27,4 @@ commit_hash="$(git -C "$ROOT_DIR" rev-parse HEAD)"
 readonly commit_hash
 
 "$ROOT_DIR"/.bin/mna app:build "$next_version" "$mode" "$commit_hash" production
-"$ROOT_DIR"/.bin/mna app:build "$next_version" "$mode" "$commit_hash" recette
+"$ROOT_DIR"/.bin/mna app:build "$next_version" "$mode" "$commit_hash" staging
