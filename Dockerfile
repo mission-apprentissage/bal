@@ -1,4 +1,4 @@
-FROM node:26.8.1-slim AS builder_root
+FROM node:26.12.1-slim AS builder_root
 WORKDIR /app
 
 # pnpm via corepack : la version vient du champ packageManager
@@ -34,7 +34,7 @@ RUN pnpm --filter server build
 RUN mkdir -p /app/shared/node_modules && mkdir -p /app/server/node_modules
 
 # Production image, copy all the files and run next
-FROM node:26.8.1-slim AS server
+FROM node:26.12.1-slim AS server
 WORKDIR /app
 
 RUN apt-get update \
@@ -101,7 +101,7 @@ RUN pnpm --filter ui build
 # RUN --mount=type=cache,target=/app/ui/.next/cache pnpm --filter ui build
 
 # Production image, copy all the files and run next
-FROM node:26.8.1-slim AS ui
+FROM node:26.12.1-slim AS ui
 WORKDIR /app
 
 RUN apt-get update \
