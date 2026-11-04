@@ -66,11 +66,10 @@ const getDeca = async (dateDebut: string, dateFin: string, page: number, product
       }
       return response.data
     } catch (e) {
-      const response = axios.isAxiosError(e) ? e.response : undefined
-      logger.info(response)
-      if (!response) logger.info(e)
-      const { message, reason } = toApiErrorDetails(e)
-      throw new ApiError("Api Deca getDeca", message, reason)
+      // ne pas logger l'erreur axios brute : sa config contient les identifiants Basic Auth
+      const { message, reason, status } = toApiErrorDetails(e)
+      logger.error(`[API Deca] ${configFor[product].endpoint} du ${dateDebut} au ${dateFin} - page ${page} : ${message}`)
+      throw new ApiError("Api Deca getDeca", message, reason, status)
     }
   })
 }
