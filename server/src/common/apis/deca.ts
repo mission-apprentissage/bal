@@ -29,6 +29,20 @@ const configFor = {
   },
 }
 
+const MAX_ERROR_BODY_LENGTH = 500
+
+// Deca renvoie un message JSON (ex : 503 hors plage horaire) ou une page d'erreur HTML (ex : 404 en maintenance)
+const formatErrorBody = (data: unknown): string => {
+  if (data === undefined || data === null) return ""
+  const raw = typeof data === "string" ? data : JSON.stringify(data)
+  const text = raw
+    .replace(/<(style|script)[^>]*>[\s\S]*?<\/\1>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+  return text.length > MAX_ERROR_BODY_LENGTH ? `${text.slice(0, MAX_ERROR_BODY_LENGTH)}…` : text
+}
+
 /**
  * Fonction de récupération des contrats DECA depuis l'API mise à disposition par la DGEFP
  * @param dateDebut
@@ -66,11 +80,11 @@ const getDeca = async (dateDebut: string, dateFin: string, page: number, product
       }
       return response.data
     } catch (e) {
-      const response = axios.isAxiosError(e) ? e.response : undefined
-      logger.info(response)
-      if (!response) logger.info(e)
-      const { message, reason } = toApiErrorDetails(e)
-      throw new ApiError("Api Deca getDeca", message, reason)
+      // ne pas logger l'erreur axios brute : sa config contient les identifiants Basic Auth
+      const { message, reason, status } = toApiErrorDetails(e)
+      const body = axios.isAxiosError(e) ? formatErrorBody(e.response?.data) : ""
+      logger.error(`[API Deca] ${configFor[product].endpoint} du ${dateDebut} au ${dateFin} - page ${page} : ${message}${body ? ` - ${body}` : ""}`)
+      throw new ApiError("Api Deca getDeca", message, reason, status)
     }
   })
 }
