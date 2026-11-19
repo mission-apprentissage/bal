@@ -25,6 +25,8 @@ export async function importCompanyEmailsForLbaMailing() {
   const destFile = await downloadFile()
 
   let buffer: ILbaMailingContact[] = []
+  let rejected = 0
+  const rejectedByIssue = new Map<string, number>()
 
   await pipeline(
     fs.createReadStream(destFile),
@@ -35,6 +37,11 @@ export async function importCompanyEmailsForLbaMailing() {
         const parsed = ZLbaMailingContact.safeParse(data)
 
         if (!parsed.success) {
+          rejected++
+          for (const issue of parsed.error.issues) {
+            const key = `${issue.path.join(".")}: ${issue.code}`
+            rejectedByIssue.set(key, (rejectedByIssue.get(key) ?? 0) + 1)
+          }
           callback()
           return
         }
@@ -76,7 +83,14 @@ export async function importCompanyEmailsForLbaMailing() {
               updateOne: {
                 filter: { siret: lbaMailingContact.siret },
                 update: {
-                  $set: { ...lbaMailingContact, updated_at: now },
+                  $set: {
+                    ...lbaMailingContact,
+                    // une provenance absente du dernier export efface celle de l'export précédent
+                    email_source: lbaMailingContact.email_source ?? null,
+                    email_confirme_deca: lbaMailingContact.email_confirme_deca ?? null,
+                    email_source_date: lbaMailingContact.email_source_date ?? null,
+                    updated_at: now,
+                  },
                   $setOnInsert: {
                     _id: new ObjectId(),
                     nbContrats: null,
@@ -101,6 +115,11 @@ export async function importCompanyEmailsForLbaMailing() {
       },
     })
   )
+
+  if (rejected) {
+    logger.warn({ rejectedByIssue: Object.fromEntries(rejectedByIssue) }, `${rejected} lignes invalides ignorées`)
+  }
+  return { rejected }
 }
 
 async function downloadFile(): Promise<string> {

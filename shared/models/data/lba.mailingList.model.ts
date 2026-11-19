@@ -25,6 +25,10 @@ export const ZLbaMailingContact = z.object({
   raisonsociale: z.string(),
   exported_at: z.coerce.date(),
   date_cloture_exercice: z.coerce.date(),
+  email_source: z.nullish(z.enum(["france_travail", "deca_employeur", "deca_maitre_apprentissage"])),
+  // email issu de France Travail et également renseigné dans DECA
+  email_confirme_deca: z.nullish(z.boolean()),
+  email_source_date: z.nullish(z.iso.date()),
 })
 
 export type ILbaMailingContact = z.output<typeof ZLbaMailingContact>
