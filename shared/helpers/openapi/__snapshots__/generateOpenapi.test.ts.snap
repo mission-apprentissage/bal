@@ -1978,6 +1978,568 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
         ],
       },
     },
+    "/v1/deca/contrats": {
+      "get": {
+        "description": "Export complet des contrats d'apprentissage DECA, page par page, pour une lecture complète.
+
+- Pagination par curseur : passer en \`after\` la valeur \`pagination.next\` de la page précédente. \`next: null\` est le seul marqueur de fin : une page peut être courte, voire vide, sans être la dernière.
+- On peut reprendre une lecture à partir de n'importe quel \`next\` déjà reçu.
+- \`pagination.ecartes\` compte les contrats de la page que la BAL n'a pas pu renvoyer.
+- Envoyer \`Accept-Encoding: gzip\`, et lire chaque réponse en entier dès réception : le proxy coupe une réponse que le client ne lit pas pendant 10 secondes.
+- Une erreur passagère de la BAL peut répondre 403 « Jeton invalide », comme une clé refusée : réessayer aussi sur 403, avec un nombre de tentatives limité.
+- \`updated_at\` vaut la date de la période DECA importée, à minuit UTC, et non l'heure d'écriture. Certains changements, comme \`alternant.handicap\`, ne le modifient pas.
+- Les contrats dont \`date_fin_contrat\` date de plus de deux ans sont anonymisés et disparaissent sans être signalés.
+- Une correction du nom de l'alternant ou du type de contrat crée un nouveau contrat, avec un nouveau \`_id\`. L'ancien reste renvoyé jusqu'à son anonymisation.
+- Un paramètre inconnu ou mal formé répond 400, plutôt que de relire la première page.",
+        "operationId": "get_v1_deca_contrats",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "pattern": "^[0-9a-f]{24}$",
+              "type": "string",
+            },
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 1000,
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+            },
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": false,
+            "schema": {
+              "type": "string",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "contrats": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "_id": {
+                            "pattern": "^[0-9a-f]{24}$",
+                            "type": "string",
+                          },
+                          "alternant": {
+                            "anyOf": [
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "adresse": {
+                                    "anyOf": [
+                                      {
+                                        "additionalProperties": false,
+                                        "properties": {
+                                          "code_postal": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                              },
+                                              {
+                                                "type": "null",
+                                              },
+                                            ],
+                                          },
+                                          "numero": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                              },
+                                              {
+                                                "type": "null",
+                                              },
+                                            ],
+                                          },
+                                          "voie": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                              },
+                                              {
+                                                "type": "null",
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        "type": "object",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "courriel": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "date_naissance": {
+                                    "anyOf": [
+                                      {
+                                        "format": "date-time",
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "derniere_classe": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "handicap": {
+                                    "anyOf": [
+                                      {
+                                        "type": "boolean",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "nationalite": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "nom": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "prenom": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "sexe": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "telephone": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                },
+                                "type": "object",
+                              },
+                              {
+                                "type": "null",
+                              },
+                            ],
+                          },
+                          "date_debut_contrat": {
+                            "anyOf": [
+                              {
+                                "format": "date-time",
+                                "type": "string",
+                              },
+                              {
+                                "type": "null",
+                              },
+                            ],
+                          },
+                          "date_effet_rupture": {
+                            "anyOf": [
+                              {
+                                "format": "date-time",
+                                "type": "string",
+                              },
+                              {
+                                "type": "null",
+                              },
+                            ],
+                          },
+                          "date_fin_contrat": {
+                            "anyOf": [
+                              {
+                                "format": "date-time",
+                                "type": "string",
+                              },
+                              {
+                                "type": "null",
+                              },
+                            ],
+                          },
+                          "employeur": {
+                            "anyOf": [
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "adresse": {
+                                    "anyOf": [
+                                      {
+                                        "additionalProperties": false,
+                                        "properties": {
+                                          "code_postal": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string",
+                                              },
+                                              {
+                                                "type": "null",
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        "type": "object",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "denomination": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "naf": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "nombre_de_salaries": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "siret": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                },
+                                "type": "object",
+                              },
+                              {
+                                "type": "null",
+                              },
+                            ],
+                          },
+                          "etablissement_formation": {
+                            "anyOf": [
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "siret": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                },
+                                "type": "object",
+                              },
+                              {
+                                "type": "null",
+                              },
+                            ],
+                          },
+                          "formation": {
+                            "anyOf": [
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "code_diplome": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "date_debut_formation": {
+                                    "anyOf": [
+                                      {
+                                        "format": "date-time",
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "date_fin_formation": {
+                                    "anyOf": [
+                                      {
+                                        "format": "date-time",
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "intitule_ou_qualification": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "rncp": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                },
+                                "type": "object",
+                              },
+                              {
+                                "type": "null",
+                              },
+                            ],
+                          },
+                          "no_contrat": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                              },
+                              {
+                                "type": "null",
+                              },
+                            ],
+                          },
+                          "organisme_formation": {
+                            "anyOf": [
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "siret": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                  "uai_cfa": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                      },
+                                      {
+                                        "type": "null",
+                                      },
+                                    ],
+                                  },
+                                },
+                                "type": "object",
+                              },
+                              {
+                                "type": "null",
+                              },
+                            ],
+                          },
+                          "statut": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                              },
+                              {
+                                "type": "null",
+                              },
+                            ],
+                          },
+                          "type_contrat": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                              },
+                              {
+                                "type": "null",
+                              },
+                            ],
+                          },
+                          "type_employeur": {
+                            "anyOf": [
+                              {
+                                "type": "number",
+                              },
+                              {
+                                "type": "null",
+                              },
+                            ],
+                          },
+                          "updated_at": {
+                            "format": "date-time",
+                            "type": "string",
+                          },
+                        },
+                        "required": [
+                          "_id",
+                          "updated_at",
+                        ],
+                        "type": "object",
+                      },
+                      "type": "array",
+                    },
+                    "pagination": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "ecartes": {
+                          "type": "number",
+                        },
+                        "next": {
+                          "anyOf": [
+                            {
+                              "pattern": "^[0-9a-f]{24}$",
+                              "type": "string",
+                            },
+                            {
+                              "type": "null",
+                            },
+                          ],
+                        },
+                      },
+                      "required": [
+                        "next",
+                        "ecartes",
+                      ],
+                      "type": "object",
+                    },
+                  },
+                  "required": [
+                    "contrats",
+                    "pagination",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
+            "description": "",
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse",
+          },
+          "401": {
+            "$ref": "#/components/responses/ErrorResponse",
+          },
+          "403": {
+            "$ref": "#/components/responses/ErrorResponse",
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse",
+          },
+          "409": {
+            "$ref": "#/components/responses/ErrorResponse",
+          },
+          "419": {
+            "$ref": "#/components/responses/ErrorResponse",
+          },
+          "500": {
+            "$ref": "#/components/responses/ErrorResponse",
+          },
+          "502": {
+            "$ref": "#/components/responses/ErrorResponse",
+          },
+          "503": {
+            "$ref": "#/components/responses/ErrorResponse",
+          },
+        },
+        "security": [
+          {
+            "api-key": [],
+          },
+        ],
+        "tags": [
+          "v1",
+        ],
+      },
+    },
     "/v1/deca/search/organisme": {
       "post": {
         "operationId": "post_v1_deca_search_organisme",

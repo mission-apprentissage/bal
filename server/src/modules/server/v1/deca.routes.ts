@@ -2,9 +2,24 @@ import Boom from "@hapi/boom"
 import { zRoutes } from "shared"
 
 import { getDbCollection } from "../../../common/utils/mongodbUtils"
+import { getDecaContratsPage } from "../../actions/deca.actions"
 import type { Server } from "../server"
 
 export const decaRoutes = ({ server }: { server: Server }) => {
+  server.get(
+    "/v1/deca/contrats",
+    {
+      schema: zRoutes.get["/v1/deca/contrats"],
+      onRequest: [server.auth(zRoutes.get["/v1/deca/contrats"])],
+    },
+    async (request, response) => {
+      const { contrats, next, ecartes } = await getDecaContratsPage(request.query)
+
+      // Données nominatives : le cache du proxy sur /api ne tient pas compte de l'en-tête Authorization.
+      return response.status(200).header("Cache-Control", "no-store").send({ contrats, pagination: { next, ecartes } })
+    }
+  )
+
   server.post(
     "/v1/deca/search/organisme",
     {
