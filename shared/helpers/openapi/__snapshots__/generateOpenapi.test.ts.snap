@@ -1745,6 +1745,9 @@ exports[`generateOpenApiSchema > should generate proper schema 1`] = `
           "is_admin": {
             "type": "boolean",
           },
+          "is_deca_export": {
+            "type": "boolean",
+          },
           "is_support": {
             "type": "boolean",
           },

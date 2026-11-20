@@ -47,6 +47,24 @@ export const updateUser = async (email: IUser["email"], data: Partial<IUser>): P
   }
 }
 
+// Donne ("true") ou retire ("false") l'accès à l'export DECA. La valeur arrive en chaîne de la CLI :
+// Boolean("false") vaut true, d'où le contrôle explicite. Retirer l'accès supprime le champ plutôt
+// que de l'écrire à false, pour que seuls les comptes qui ont l'accès le portent.
+export const setUserDecaExport = async (email: IUser["email"], value: string): Promise<void> => {
+  if (value !== "true" && value !== "false") {
+    throw new Error(`Valeur invalide : "${value}". Valeurs acceptées : "true" ou "false"`)
+  }
+
+  const updated_at = new Date()
+  const update = value === "true" ? { $set: { is_deca_export: true, updated_at } } : { $set: { updated_at }, $unset: { is_deca_export: "" as const } }
+
+  const { matchedCount } = await getDbCollection("users").updateOne({ email }, update)
+
+  if (matchedCount === 0) {
+    throw new Error(`Aucun utilisateur avec l'email ${email}`)
+  }
+}
+
 export const generateApiKey = async (user: IUser) => {
   const generatedKey = generateKey()
   const secretHash = generateSecretHash(generatedKey)

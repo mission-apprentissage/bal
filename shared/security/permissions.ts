@@ -1,4 +1,4 @@
-type Permission = "admin" | "support"
+type Permission = "admin" | "support" | "deca_export"
 
 type RoleNames = "none" | "admin" | "support"
 

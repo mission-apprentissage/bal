@@ -20,7 +20,14 @@ function getUserRole(userOrToken: IAccessToken | IUser): Role {
     return NoneRole
   }
 
-  return userOrToken.is_admin ? AdminRole : userOrToken.is_support ? SupportRole : NoneRole
+  const role: Role = userOrToken.is_admin ? AdminRole : userOrToken.is_support ? SupportRole : NoneRole
+
+  if (userOrToken.is_deca_export !== true) {
+    return role
+  }
+
+  // Nouvel objet : les rôles sont des constantes partagées par tous les utilisateurs.
+  return { ...role, permissions: [...role.permissions, "deca_export"] }
 }
 
 function isAuthorized<S extends Pick<IRouteSchema, "method" | "path"> & WithSecurityScheme>(

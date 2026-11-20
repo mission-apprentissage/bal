@@ -9,7 +9,7 @@ import { verifyEmails } from "../../common/services/mailer/mailBouncer"
 import { getDatabase } from "../../common/utils/mongodbUtils"
 import config from "../../config"
 import { sanitizeOrganisationDomains } from "../actions/organisations.actions"
-import { createUser } from "../actions/users.actions"
+import { createUser, setUserDecaExport } from "../actions/users.actions"
 import { anonymisationService } from "./anonymisation/anonymisation.service"
 import { retryBouncerErrorEmails } from "./bouncer/retry-bouncer-errors"
 import { importPersonFromCatalogue } from "./catalogueSiretEmailImport"
@@ -130,6 +130,12 @@ export async function setupJobProcessor() {
             is_admin: admin ?? false,
             is_support: support ?? false,
           })
+        },
+      },
+      "user:set-deca-export": {
+        handler: async (job) => {
+          const { email, value } = job.payload as { email: string; value: string }
+          await setUserDecaExport(email, value)
         },
       },
       "indexes:recreate": {
