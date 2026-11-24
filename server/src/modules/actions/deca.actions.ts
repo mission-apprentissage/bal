@@ -1,9 +1,10 @@
 import { captureMessage } from "@sentry/node"
 import type { ObjectId } from "mongodb"
+import { zObjectId } from "shared/models/common"
 import type { IDecaContratExport } from "shared/models/deca.model/deca.export.model"
 import { ZDecaContratExport } from "shared/models/deca.model/deca.export.model"
 import type { $ZodType } from "zod/v4/core"
-import { $ZodBoolean, $ZodCustom, $ZodDate, $ZodNullable, $ZodNumber, $ZodObject, $ZodOptional, $ZodPipe, $ZodString } from "zod/v4/core"
+import { $ZodBoolean, $ZodDate, $ZodNullable, $ZodNumber, $ZodObject, $ZodOptional, $ZodPipe, $ZodString } from "zod/v4/core"
 
 import logger from "@/common/logger"
 import { getDbCollection } from "@/common/utils/mongodbUtils"
@@ -18,14 +19,14 @@ const isLeaf = (schema: $ZodType): boolean =>
   schema instanceof $ZodNumber ||
   schema instanceof $ZodBoolean ||
   schema instanceof $ZodDate ||
-  // Identifiants seulement : zObjectId est un pipe qui part d'un contrôle custom (ObjectId.isValid).
-  (schema instanceof $ZodPipe && pipeEntry(schema) instanceof $ZodCustom)
+  // Identifiants seulement : un pipe qui part du contrôle de zObjectId lui-même, pas d'un autre custom.
+  (schema instanceof $ZodPipe && pipeEntry(schema) === pipeEntry(zObjectId))
 
 // Chemins pointés des feuilles du schéma : { "alternant.nom": 1, ... }. Ne jamais projeter un objet et
 // l'un de ses champs à la fois, Mongo le refuse (« path collision »). Tout autre type échoue au
 // chargement : projeter un objet enveloppé (default, tableau, autre pipe...) lirait tous ses champs,
 // nominatifs compris.
-const toProjection = (shape: Readonly<Record<string, $ZodType>>, prefix = ""): Record<string, 1> =>
+export const toProjection = (shape: Readonly<Record<string, $ZodType>>, prefix = ""): Record<string, 1> =>
   Object.entries(shape).reduce<Record<string, 1>>((acc, [key, schema]) => {
     const path = `${prefix}${key}`
     const inner = unwrap(schema)
