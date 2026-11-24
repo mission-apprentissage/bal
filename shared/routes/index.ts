@@ -29,6 +29,7 @@ const zRoutesGet = {
   ...zProcessorAdminRoutes.get,
   ...zPrivateMailingListRoutes.get,
   ...zUserPrivateRoutes.get,
+  ...zDecaV1Routes.get,
 } as const
 
 const zRoutesPost = {

@@ -160,6 +160,13 @@ program
   .option("-q, --queued", "Run job asynchronously", false)
   .action(createJobAction("user:create"))
 
+program
+  .command("user:set-deca-export")
+  .description("Donner ou retirer l'accès à l'export des contrats DECA")
+  .requiredOption("--email <string>", "Email de l'utilisateur")
+  .requiredOption("--value <string>", "true pour donner l'accès, false pour le retirer")
+  .action(createJobAction("user:set-deca-export"))
+
 program.command("db:validate").description("Validate Documents").option("-q, --queued", "Run job asynchronously", false).action(createJobAction("db:validate"))
 
 program.command("migrations:up").description("Run migrations up").option("-q, --queued", "Run job asynchronously", false).action(createJobAction("migrations:up"))

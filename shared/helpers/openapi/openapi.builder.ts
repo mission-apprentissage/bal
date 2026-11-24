@@ -218,6 +218,7 @@ function generateOpenApiOperationObjectFromZod(route: IRouteSchema | undefined, 
     return {
       tags: [tag],
       operationId: `${method}${path.replaceAll(/[^\w\s]/gi, "_")}`,
+      ...(route.openapi?.description ? { description: route.openapi.description } : {}),
       ...generateOpenApiRequest(route, registry),
       responses: {
         ...responses,

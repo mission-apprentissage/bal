@@ -30,6 +30,9 @@ export const ZUser = z.object({
   is_support: z.boolean(),
   api_key: z.nullable(z.string()),
   api_key_used_at: z.nullable(z.date()),
+  // Accès à l'export des contrats DECA. Absent sauf pour les comptes qui l'ont, et vaut alors true :
+  // optionnel pour que le validateur strict accepte les comptes existants sans migration.
+  is_deca_export: z.optional(z.boolean()),
   updated_at: z.date(),
   created_at: z.date(),
 })

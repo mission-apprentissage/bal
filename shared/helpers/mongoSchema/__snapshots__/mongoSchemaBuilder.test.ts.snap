@@ -1619,6 +1619,9 @@ exports[`zodToMongoSchema > should convert users schema 1`] = `
     "is_admin": {
       "bsonType": "bool",
     },
+    "is_deca_export": {
+      "bsonType": "bool",
+    },
     "is_support": {
       "bsonType": "bool",
     },
